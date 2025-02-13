@@ -1,0 +1,162 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>ACS actor properties</title>
+  <ns>0</ns>
+  <id>5341</id>
+  <revision>
+    <id>52946</id>
+    <parentid>50611</parentid>
+    <timestamp>2024-08-22T06:03:21Z</timestamp>
+    <contributor>
+      <username>Blue Shadow</username>
+      <id>2021</id>
+    </contributor>
+    <minor />
+    <comment>remove {{new}}</comment>
+    <origin>52946</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="10816" sha1="7206i2ru8lwid40ve14ob14givffh6w" xml:space="preserve">&lt;noinclude&gt;This list the subset of [[actor properties]] that are available to the [[ACS]] functions [[CheckActorProperty]], [[GetActorProperty]] and [[SetActorProperty]].&lt;/noinclude&gt;
+&lt;!-- Use an #if:1 block for properties that should not appear in GetActorProperty because they return strings. Use an #if:2 block for those that should not appear in SetActorProperty because they are read-only. --&gt;
+&lt;onlyinclude&gt;{| width="100%" class="wikitable"
+{{#if:{{{1|}}}||{{!}}-
+{{!}} {{c|APROP_{{Property|ActiveSound}}}} {{!}}{{!}} [[Data_types#String|string]] {{!}}{{!}} Sound played when the actor is walking around, as defined in [[SNDINFO]].}}
+|-
+| {{c|APROP_[[Accuracy]]}} || [[Data_types#Integer|integer]] || Accuracy of the actor.
+|-
+| {{c|APROP_{{Property|Alpha}}}} || [[Data_types#Fixed_point|fixed point]] || Alpha of the actor. Range is [0.0, 1.0] 
+|-
+| {{c|APROP_{{flag|AMBUSH|Ambush}}}} || [[Data_types#Boolean|bool]] || Whether the actor's {{flag|AMBUSH}} flag is set or not.
+{{#if:{{{1|}}}||{{!}}-
+{{!}} {{c|APROP_{{Property|AttackSound}}}} {{!}}{{!}} [[Data_types#String|string]] {{!}}{{!}} Sound played when the actor attacks, as defined in [[SNDINFO]].}}
+|-
+| {{c|APROP_{{property|Player.AttackZOffset|AttackZOffset}}}} || [[Data_types#Fixed_point|fixed point]] || The attack z offset of the player.
+|-
+| {{c|APROP_ChaseGoal}} || [[Data_types#Boolean|bool]] || Walks to goal instead of target if a valid [[Thing_SetGoal|goal is set]]
+|-
+| {{c|APROP_{{Property|Damage}}}} || [[Data_types#Integer|integer]] || Actor's damage.
+|-
+| {{c|APROP_{{Property|DamageFactor}}}} || [[Data_types#Fixed_point|fixed point]] || Generic damage factor for the actor. It is applied before any specific {{Property|DamageFactor}}.
+|-
+| {{c|APROP_{{Property|DamageMultiply|DamageMultiplier}}}} || [[Data_types#Fixed_point|fixed point]] || Generic damage multiplier for the actor. This is typically used on actors (e.g [[monster]]s) to strengthen or weaken the damage they deal from their attacks.
+|-
+| {{c|APROP_{{Property|DamageType}}}} || [[Data_types#String|string]] || Actor's damage type.
+{{#if:{{{1|}}}||{{!}}-
+{{!}} {{c|APROP_{{Property|DeathSound}}}} {{!}}{{!}} [[Data_types#String|string]] {{!}}{{!}} Sound played when the actor dies, as defined in [[SNDINFO]].}}
+{{#if:{{{2|}}}||{{!}}-
+{{!}} {{c|APROP_{{flag|DORMANT|Dormant}}}} {{!}}{{!}} [[Data_types#Boolean|bool]] {{!}}{{!}} Whether or not actor has the {{flag|DORMANT}} flag.}}
+|-
+| valign="top" |{{c|APROP_{{flag|DROPPED|Dropped}}}} || [[Data_types#Boolean|bool]] || Whether or not actor has the {{flag|DROPPED}} flag. Dropped items are destroyed by closing doors and crushers while non-dropped items are not; and in games with the “Weapons Stay” option of [[DMFlags]] turned on, only weapons with the DROPPED flag set to 0 stay. By default, any item not placed originally on the map has the DROPPED flag set to 1.
+|-
+| {{c|APROP_{{Property|Friction}}}} || [[Data_types#Fixed_point|fixed point]] || Actor's current [[friction]] factor.
+|-
+| {{c|APROP_Friendly}} || [[Data_types#Boolean|bool]] || Actor is friendly to the player and hostile to enemies. In addition to setting and clearing the {{Flag|FRIENDLY}} flag, when the property is set to ''true'', the total kill count of the map is decreased by one for each affected actor, provided they are {{Flag|COUNTKILL|countable}} (only hostile monsters are countable), and is increased when the property is set to ''false''.
+|-
+| {{c|APROP_{{Property|FriendlySeeBlocks}}}} || [[Data_types#Integer|integer]] ||The range in which friendly monsters or hostile monsters with {{Flag|SEEFRIENDLYMONSTERS}} on can see other non-player actors. This value is measured in increments of 128 map units, e.g a value of 32 equals a range of 4096 map units.
+|-
+| {{c|APROP_Frightened}} || [[Data_types#Boolean|bool]] || Monster runs away from player.
+|-
+| {{c|APROP_{{Property|Gravity}}}} || [[Data_types#Fixed_point|fixed point]] || Current [[gravity]] factor of actor.
+|-
+| {{c|APROP_{{Property|Health}}}} || [[Data_types#Integer|integer]] || Actor's current [[health]]. Setting this property to 0 or less, kills the actor.
+{{#if:{{{2|}}}||{{!}}-
+{{!}} {{c|APROP_{{Property|Height}}}} {{!}}{{!}} [[Data_types#Fixed_point|fixed point]] {{!}}{{!}} Actor's current height.}}
+|-
+| {{c|APROP_Invulnerable}} || [[Data_types#Boolean|bool]] || Actor will not lose any health.
+|-
+| valign="top" | {{c|APROP_JumpZ}} || [[Data_types#Fixed_point|fixed point]] || Player's jump height. The formula for jumping distance is {{c|(JumpZ * 2) / 2 + {{Property|MaxStepHeight}}}}, and to get a specific JumpZ from a jumping height you want to achieve, use {{c|[[Sqrt]]((jump height - {{Property|MaxStepHeight}}) / 2 ) * 2}}.
+|-
+| {{c|APROP_{{Property|Mass}}}} || [[Data_types#Integer|integer]] || Actor's mass.
+|-
+| {{c|APROP_MasterTID}} || [[Data_types#Integer|integer]] || The [[TID]] of the actor linked to by the actor's {{c|master}} field.
+|-
+| {{c|APROP_{{Property|MaxDropOffHeight}}}} || [[Data_types#Fixed_point|fixed point]] || Defines the maximum height of a step this actor can climb down when moving.
+|-
+| {{c|APROP_{{Property|MaxStepHeight}}}} || [[Data_types#Fixed_point|fixed point]] || Defines the maximum height of a step this actor can climb up when moving.
+{{!}}-
+{{!}} {{c|APROP_{{Property|MeleeRange}}}} {{!}}{{!}} [[Data_types#Fixed_point|fixed point]] {{!}}{{!}} Actor's melee range.
+{{#if:{{{1|}}}||{{!}}-
+{{!}} {{c|APROP_NameTag}} {{!}}{{!}} [[Data_types#String|string]] {{!}}{{!}} Name of the actor. If the actor has not been explicitly named by the {{Property|Tag}} property or in a script, its name is by default the same as its class name.}}
+|-
+| {{c|APROP_{{flag|NOTRIGGER|NoTrigger}}}} || [[Data_types#Boolean|bool]] || Whether or not actor has the {{flag|NOTRIGGER}} flag.
+|-
+| {{c|APROP_{{flag|NOTARGET|NoTarget}}}} || [[Data_types#Boolean|bool]] || Actor cannot be targeted by other monsters.
+{{#if:{{{1|}}}||{{!}}-
+{{!}} {{c|APROP_{{Property|PainSound}}}} {{!}}{{!}} [[Data_types#String|string]] {{!}}{{!}} Sound played when the actor is injured, as defined in [[SNDINFO]].}}
+{{#if:{{{2|}}}||{{!}}-
+{{!}} {{c|APROP_{{Property|Radius}}}} {{!}}{{!}} [[Data_types#Fixed_point|fixed point]] {{!}}{{!}} Actor's current radius.}}
+|-
+| {{c|APROP_{{Property|ReactionTime}}}} || [[Data_types#Integer|integer]] || The time in [[tic]]s a monster needs to attack back. However, the main use of this property is to serve as a counter for [[A_Countdown]].
+|-
+| valign="top" |{{c|APROP_{{Property|RenderStyle}}}} || [[Data_types#Integer|integer]] || How the actor is rendered:
+{|
+|-
+| {{c|STYLE_None}} || Do not draw
+|-
+| {{c|STYLE_Normal}} || Normal; just copy the image to the screen
+|-
+| {{c|STYLE_Fuzzy}} || Draw silhouette using “[[fuzz]]” effect
+|-
+| {{c|STYLE_SoulTrans}} || Draw translucent with amount in {{c|{{CVAR|R|transsouls}}}} [[CVARs|CVAR]]
+|-
+| {{c|STYLE_OptFuzzy}} || Draw as fuzzy or translucent, based on {{CVAR|R|r_drawfuzz|user preference}}
+|-
+| {{c|STYLE_Stencil}} || Draw as single color
+|-
+| {{c|STYLE_AddStencil}} || Draw as single additive color
+|-
+| {{c|STYLE_AddShaded}} || Treats 8-bit indexed images as an alpha map while applying additive translucency. Index 0 = fully transparent, index 255 = fully opaque.
+|-
+| {{c|STYLE_Translucent}} || Draw translucent
+|-
+| {{c|STYLE_Add}} || Draw additive
+|-
+| {{c|STYLE_Shaded}} || Treats 8-bit indexed images as an alpha map. Index 0 = fully transparent, index 255 = fully opaque.
+|-
+| {{c|STYLE_TranslucentStencil}} || Draw as single translucent color
+|-
+| {{c|STYLE_Shadow}} || Draw dark translucent stencil
+|-
+| {{c|STYLE_Subtract}} || Draw subtractive
+|}
+|-
+| {{c|APROP_{{Property|XScale|ScaleX}}}} || [[Data_types#Fixed_point|fixed point]] || Horizontal scaling of the actor's sprite. Does not affect collision box size.
+|-
+| {{c|APROP_{{Property|YScale|ScaleY}}}} || [[Data_types#Fixed_point|fixed point]] || Vertical scaling of the actor's sprite. Does not affect collision box size.
+|-
+| {{c|APROP_[[Score]]}} || [[Data_types#Integer|integer]] || A simple counter. {{Class|ScoreItem|Score items}} automatically increase it by their amount.
+{{#if:{{{1|}}}||{{!}}-
+{{!}} {{c|APROP_{{Property|SeeSound}}}} {{!}}{{!}} [[Data_types#String|string]] {{!}}{{!}} Sound played when actor sees the player, as defined in [[SNDINFO]].}}
+{{#if:{{{1|}}}||{{!}}-
+{{!}} {{c|APROP_{{Property|Player.SoundClass|SoundClass}}}} {{!}}{{!}} [[Data_types#String|string]] {{!}}{{!}} Sound class of the player.}}
+|-
+| {{c|APROP_SpawnHealth}} || [[Data_types#Integer|integer]] || The current max health of the actor. Only players may have their max health set this way. Note that for them the default value is 0, which is interpreted as "100 unless modified by [[DeHackEd]]". The {{Property|Player.MaxHealth}} property can change the default value.
+{{#if:{{{1|}}}||{{!}}-
+{{!}} {{c|APROP_{{Property|Species}}}} {{!}}{{!}} [[Data_types#String|string]] {{!}}{{!}} Species the actor belongs to.}}
+|-
+| valign="top" |{{c|APROP_{{Property|Speed}}}} || [[Data_types#Fixed_point|fixed point]] || Actor's speed.
+For monsters, this is the distance they move every time [[A_Chase]] is called.
+For projectiles, this is the distance they move each tic.
+For players, this is multiplied by the player's class speed to determine the final speed the player will move for each tic that they have a movement key held down. Consequently, the standard {{c|APROP_Speed}} for a player is always 1.0, not what their actual speed is.
+|-
+| {{c|APROP_[[Stamina]]}} || [[Data_types#Integer|integer]] || Stamina of the actor.
+|-
+| {{c|APROP_{{property|StencilColor}}}} || color || Stencil color of the actor, as a hexadecimal value, e.g. {{c|0xFFFFFF}} (white).
+{{#if:{{{2|}}}||{{!}}-
+{{!}} {{c|APROP_TargetTID}} {{!}}{{!}} [[Data_types#Integer|integer]] {{!}}{{!}} The [[TID]] of the actor linked to by the actor's {{c|target}} field.}}
+{{#if:{{{2|}}}||{{!}}-
+{{!}} {{c|APROP_TracerTID}} {{!}}{{!}} [[Data_types#Integer|integer]] {{!}}{{!}} The TID of the actor linked to by the actor's {{c|tracer}} field.}}
+|-
+| {{c|APROP_{{property|Player.ViewHeight|ViewHeight}}}} || [[Data_types#Fixed_point|fixed point]] || The view height of the player.
+{{#if:{{{2|}}}||{{!}}-
+{{!}} {{c|APROP_[[DECORATE expressions|Waterlevel]]}} {{!}}{{!}} [[Data_types#Integer|integer]] {{!}}{{!}} How "submerged" the actor is.
+:'''0''': Not submerged at all (e.g. standing on solid ground)
+:'''1''': Less than half submerged ("ankle deep")
+:'''2''': At least half submerged ("waist deep")
+:'''3''': Entirely submerged (completely underwater)}}
+{{#if:{{{2|}}}||{{!}}-
+{{!}} {{c|APROP_[[DECORATE expressions|WaterDepth]]}} {{!}}{{!}} [[Data_types#Fixed_point|fixed point]] {{!}}{{!}} The exact depth at which the actor is submerged at in a water volume.}}
+|}&lt;/onlyinclude&gt;
+&lt;noinclude&gt;[[Category:ACS guides]]&lt;/noinclude&gt;</text>
+    <sha1>7206i2ru8lwid40ve14ob14givffh6w</sha1>
+  </revision>
+</page>

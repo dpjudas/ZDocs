@@ -1,0 +1,49 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>VelFromAngle</title>
+  <ns>0</ns>
+  <id>9375</id>
+  <revision>
+    <id>51377</id>
+    <parentid>47559</parentid>
+    <timestamp>2024-01-29T13:43:33Z</timestamp>
+    <contributor>
+      <username>Jekyll Grim Payne</username>
+      <id>2175</id>
+    </contributor>
+    <comment>Formatting</comment>
+    <origin>51377</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="987" sha1="gpng8aa1rzjg6wou63dhv6q601nz2km" xml:space="preserve">{{ZScriptNote}}
+
+'''{{class|Actor}}'''
+
+{{c|native void '''VelFromAngle'''(double ''speed'' }}={{c| 1e37, double ''angle'' }}={{c| 1e37)}}
+
+== Usage ==
+Sets the actor's xy velocity based on the provided speed and angle.
+
+=== Parameters ===
+*{{c|double '''speed'''}}
+:The speed of the Actor's new velocity. Default is 1e37 which tells GZDoom to use the Actor's {{property|Speed}} property.
+*{{c|double '''angle'''}}
+:The direction of the Actor's new velocity. Default is 1e37 which tells GZDoom to use the Actor's current angle.
+
+== Examples ==
+&lt;syntaxhighlight lang="csharp"&gt;
+void A_SpawnImpBall()
+{
+   let missile = Spawn("DoomImpBall", pos + (0,0,32));
+   if (missile)
+   {
+       missile.target = self;
+       missile.angle = angle; // Set the missile's angle to the Imp's
+       missile.VelFromAngle(); // Launch the Imp ball in the direction the missile is facing using the missile's speed property
+   }
+}&lt;/syntaxhighlight&gt;
+
+[[Category:ZScript]]
+[[Category:ZScript actor functions]]</text>
+    <sha1>gpng8aa1rzjg6wou63dhv6q601nz2km</sha1>
+  </revision>
+</page>

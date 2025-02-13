@@ -1,0 +1,77 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>Classes:Blood</title>
+  <ns>0</ns>
+  <id>3620</id>
+  <revision>
+    <id>53641</id>
+    <parentid>42481</parentid>
+    <timestamp>2024-11-08T12:17:26Z</timestamp>
+    <contributor>
+      <username>Jekyll Grim Payne</username>
+      <id>2175</id>
+    </contributor>
+    <comment>/* DECORATE definition */</comment>
+    <origin>53641</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="1488" sha1="iapzpk049n7c6kmkent45vimwauqolj" xml:space="preserve">{{Actor|
+| type = Gibs
+| name = Blood splat
+| class = Blood
+| spawnid = 130
+| spawnname = T_BLOOD 
+}}[[Classes]]: &lt;u&gt;Blood&lt;/u&gt;&lt;br&gt;
+The blood splat actor is spawned when an actor is hit and is able to bleed. In [[IWAD]]s other than [[Doom]]'s, the blood sprites are actually named BLOD* and are [[Sprite renaming|renamed at load-time]] by ZDoom.
+
+Blood has special functionality hardcoded into the engine. The blood actor will start at different frames depending on how much damage is done that caused the bleeding.
+* If Damage is less then 9, the actor begins at the third state.
+* If Damage is between 9 to 12 (inclusive), it begins at the second state.
+* If Damage is above 12, it begins at the first state.
+* If the game is [[Strife]], and damage is greater then 13, it shifts to the Spray state (if it exists), otherwise it adds 2 to the damage check for the previous checks.
+    
+=== [[ZScript]] definition ===
+{{ZScriptDefinitionNote|actors/shared/blood.zs}}
+&lt;syntaxhighlight lang="cs"&gt;
+class Blood : Actor
+{
+	Default
+	{
+		Mass 5;
+		+NOBLOCKMAP
+		+NOTELEPORT
+		+ALLOWPARTICLES
+	}
+	States
+	{
+	Spawn:
+		BLUD CBA 8;
+		Stop;
+	Spray:
+		SPRY ABCDEF 3;
+		SPRY G 2;
+		Stop;
+	}
+}
+&lt;/syntaxhighlight&gt;
+=== [[DECORATE]] definition ===
+{{DecorateDefinitionNote}}
+ ACTOR &lt;u&gt;Blood&lt;/u&gt;
+ {
+   {{Property|Mass}} 5
+   +{{Flag|NOBLOCKMAP}}
+   +{{Flag|NOTELEPORT}}
+   +{{Flag|ALLOWPARTICLES}}
+   States
+   {
+   Spawn:
+     BLUD CBA 8
+     Stop
+   Spray:
+     SPRY ABCDEF 3
+     SPRY G 2
+     Stop
+   }
+ }</text>
+    <sha1>iapzpk049n7c6kmkent45vimwauqolj</sha1>
+  </revision>
+</page>

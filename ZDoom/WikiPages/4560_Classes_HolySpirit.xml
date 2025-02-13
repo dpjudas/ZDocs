@@ -1,0 +1,63 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>Classes:HolySpirit</title>
+  <ns>0</ns>
+  <id>4560</id>
+  <revision>
+    <id>34222</id>
+    <parentid>18188</parentid>
+    <timestamp>2012-09-05T12:22:51Z</timestamp>
+    <contributor>
+      <username>Blue Shadow</username>
+      <id>2021</id>
+    </contributor>
+    <comment>/* DECORATE definition */ Updated.</comment>
+    <origin>34222</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="959" sha1="f1tbfknunmw6jx1gfrf0x7hgcxmlgzu" xml:space="preserve">{{Actor|
+| type = Explosive
+| name = Wraithverge spirit
+| class = HolySpirit
+| game = Hexen
+}}[[Classes]]: &lt;u&gt;HolySpirit&lt;/u&gt;&lt;br&gt;
+{{desc}}
+==== [[DECORATE]] definition ====
+ ACTOR &lt;u&gt;HolySpirit&lt;/u&gt; native
+ {
+   {{Property|Health}} 105
+   {{Property|Speed}} 12
+   {{Property|Radius}} 10
+   {{Property|Height}} 6
+   {{Property|Damage}} 3
+   {{Property|Projectile}}
+   +{{Flag|RIPPER}}
+   +{{Flag|SEEKERMISSILE}}
+   +{{Flag|FOILINVUL}}
+   +{{Flag|SKYEXPLODE}}
+   +{{Flag|NOEXPLODEFLOOR}}
+   +{{Flag|CANBLAST}}
+   +{{Flag|EXTREMEDEATH}}
+   {{Property|RenderStyle}} Translucent
+   {{Property|Alpha}} 0.4
+   {{Property|DeathSound}} "SpiritDie"
+   {{Property|Obituary}} "$OB_MPCWEAPWRAITHVERGE"
+ 
+   action native [[A_CHolySeek]]();
+   action native [[A_CHolyCheckScream]]();
+ 
+   States
+   {
+   Spawn:
+     SPIR AAB 2 [[A_CHolySeek]]
+     SPIR B 2 [[A_CHolyCheckScream]]
+     Loop
+   Death:
+     SPIR D 4
+     SPIR E 4 [[A_Scream]]
+     SPIR FGHI 4
+     Stop
+   }
+ }</text>
+    <sha1>f1tbfknunmw6jx1gfrf0x7hgcxmlgzu</sha1>
+  </revision>
+</page>

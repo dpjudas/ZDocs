@@ -1,0 +1,63 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>Classes:MaceFX4</title>
+  <ns>0</ns>
+  <id>4278</id>
+  <revision>
+    <id>39407</id>
+    <parentid>34132</parentid>
+    <timestamp>2015-04-29T18:00:18Z</timestamp>
+    <contributor>
+      <username>Blue Shadow</username>
+      <id>2021</id>
+    </contributor>
+    <minor />
+    <comment>/* DECORATE definition */ Updated</comment>
+    <origin>39407</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="1783" sha1="mfgv7xhglzo4weryi8argcndj3e3bf6" xml:space="preserve">{{Actor|
+| type = Explosive
+| name = Huge firemace sphere
+| class = MaceFX4
+| game = Heretic
+| spawnid = 153
+| spawnname = T_DEATHBALL 
+}}[[Classes]]: &lt;u&gt;MaceFX4&lt;/u&gt;&lt;br&gt;
+
+The slow and enormous projectile from the [[Classes:ArtiTomeOfPower|powered-up]] [[Classes:Mace|firemace]]. On any target that isn't protected by either the BOSS or the {{flag|DONTSQUASH}} flag or by being a teammate, it actually deals 1000000 damage. If a target escapes thanks to the auto-use of a [[Classes:ArtiTeleport|chaos device]] or has the {{flag|INVULNERABLE}} flag, it deals no damage.
+
+This sphere will bounce forever until it hits a wall or a solid target. On [[OpenGL]] [[source port]]s, it is possible to aim straight up, so that it may never stop bouncing. However, the sphere will automatically move towards the first possible target it finds withing 640 map units. (The sphere detects by looking whether it can collide with something in any direction, starting with an angle of 0 degree ("east") and increasing counterclockwise by steps of 22.5 degrees. As long as the target isn't dead, it will continue to home in, seeking a new target if the current one dies before it reached it.
+
+==== [[DECORATE]] definition ====
+ ACTOR &lt;u&gt;MaceFX4&lt;/u&gt; native
+ {
+   {{Property|Radius}} 8
+   {{Property|Height}} 6
+   {{Property|Speed}} 7
+   {{Property|Damage}} 18
+   {{Property|Gravity}} 0.125
+   {{Property|Projectile}}
+   -{{Flag|NOGRAVITY}}
+   +{{Flag|TELESTOMP}}
+   +{{Flag|THRUGHOST}}
+   -{{Flag|NOTELEPORT}}
+   {{Property|BounceType}} "HereticCompat"
+   {{Property|SeeSound}} ""
+   {{Property|Obituary}} "$OB_MPPMACE"
+ 
+   action native [[A_DeathBallImpact]]();
+ 
+   States
+   {
+   Spawn:
+     FX02 E 99
+     Loop
+   Death:
+     FX02 C 4 [[A_DeathBallImpact]]
+     FX02 GHIJ 4 Bright
+     Stop
+   }
+ }</text>
+    <sha1>mfgv7xhglzo4weryi8argcndj3e3bf6</sha1>
+  </revision>
+</page>

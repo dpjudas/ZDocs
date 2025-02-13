@@ -1,0 +1,70 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>GetActorAngle</title>
+  <ns>0</ns>
+  <id>1663</id>
+  <revision>
+    <id>40295</id>
+    <parentid>40293</parentid>
+    <timestamp>2015-08-08T22:56:35Z</timestamp>
+    <contributor>
+      <username>Blue Shadow</username>
+      <id>2021</id>
+    </contributor>
+    <minor />
+    <comment>/* Examples */ Fixed example</comment>
+    <origin>40295</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="1401" sha1="lpzf8wqmcjqagub2na72iof749uaufe" xml:space="preserve">__NOTOC__
+fixed '''GetActorAngle''' (int ''tid'')
+
+== Usage ==
+
+Returns the actor's angle. If ''tid'' is 0, the function uses the activator. 
+
+=== Parameters ===
+
+* ''tid'': [[TID]] of the actor.
+
+=== Return value ===
+
+The actor's angle as a [[Definitions#Fixed point angles|fixed point angle]].
+
+== Examples ==
+
+This script will thrust an actor in the direction the player is facing when executed. This could be used to simulating pushing an actor away from you. The &lt;code&gt;&amp;gt;&amp;gt;&amp;nbsp;8&lt;/code&gt; function is used to convert fixed point angles to byte angles ''(see [[Definitions]] for more information).''
+
+ script 10 {{SType|Enter}}
+ {
+     [[ThrustThing]]([[GetActorAngle]](0) &gt;&gt; 8, 50, 1, 0);
+ }
+
+This script prints reversed actor's angle.
+
+ script 15 (int monsterid)
+ {
+     //this will obtain current actor's angle and convert to byte angle.
+     int angle = [[GetActorAngle]](monsterid) &gt;&gt; 8;
+     
+     /*Looking at Byte Angle table we know that we can't turn an actor
+     180 degrees with negative value*/
+    
+     //This function is easiest way to do it.
+     if (angle &lt; 128)
+     angle = angle + 128;
+     else angle = angle - 128;
+     
+    /*E.g. if actor is facing north, it's byte angle is 64, we want it's reverted angle.
+    So 64 &lt; 128 , 64 + 128 = 192 which is south.*/
+      
+      //prints reversed angle.
+      [[Print]](d:angle);
+ }
+
+
+
+
+[[category:ACS Information functions]]</text>
+    <sha1>lpzf8wqmcjqagub2na72iof749uaufe</sha1>
+  </revision>
+</page>

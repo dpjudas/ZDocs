@@ -1,0 +1,1432 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>GZDoom version history</title>
+  <ns>0</ns>
+  <id>9028</id>
+  <revision>
+    <id>53489</id>
+    <parentid>53431</parentid>
+    <timestamp>2024-11-01T11:48:43Z</timestamp>
+    <contributor>
+      <username>Blue Shadow</username>
+      <id>2021</id>
+    </contributor>
+    <comment>4.13.2 changelog</comment>
+    <origin>53489</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="93595" sha1="ibb03rbp3bdqjl14n00xulz6q5512k6" xml:space="preserve">{{stub}}
+This page tracks the evolution of [[GZDoom]] by listing the main features of each version.
+{| {{prettytable}}
+!By year
+|[[#2017|2017]] &amp;middot; [[#2018|2018]] &amp;middot; [[#2019|2019]] &amp;middot; [[#2020|2020]] &amp;middot; [[#2021|2021]] &amp;middot; [[#2022|2022]] &amp;middot; [[#2023|2023]] &amp;middot; [[#2024|2024]]
+|-
+!By version
+|[[#3.0.0|3.0.0]] &amp;middot; [[#3.0.1|3.0.1]] &amp;middot; [[#3.1.0|3.1.0]] &amp;middot; [[#3.2.0|3.2.0]] &amp;middot; [[#3.2.1|3.2.1]] &amp;middot; [[#3.2.2|3.2.3]] &amp;middot; [[#3.2.0|3.2.3]] &amp;middot; [[#3.2.4|3.2.4]] &amp;middot; [[#3.2.5|3.2.5]] &amp;middot; [[#3.3.0|3.3.0]] &amp;middot; [[#3.3.1|3.3.1]] &amp;middot; [[#3.3.2|3.3.2]] &amp;middot; [[#3.4.0|3.4.0]] &amp;middot; [[#3.4.1|3.4.1]] &amp;middot; [[#3.5.0|3.5.0]] &amp;middot; [[#3.5.1|3.5.1]] &amp;middot; [[#3.6.0|3.6.0]] &amp;middot; [[#3.7.0|3.7.0]] &amp;middot; [[#3.7.1|3.7.1]] &amp;middot; [[#3.7.2|3.7.2]] &amp;middot; [[#4.0.0|4.0.0]] &amp;middot; [[#4.1.0|4.1.0]] &amp;middot; [[#4.1.1|4.1.1]] &amp;middot; [[#4.1.2|4.1.2]] &amp;middot; [[#4.1.3|4.1.3]] &amp;middot; [[#4.2.0|4.2.0]] &amp;middot; [[#4.2.1|4.2.1]] &amp;middot; [[#4.2.3|4.2.3]] &amp;middot; [[#4.2.4|4.2.4]] &amp;middot; [[#4.3.1|4.3.1]] &amp;middot; [[#4.3.2|4.3.2]] &amp;middot; [[#4.3.3|4.3.3]] &amp;middot; [[#4.4.0|4.4.0]] &amp;middot; [[#4.4.1|4.4.1]] &amp;middot; [[#4.4.2|4.4.2]] &amp;middot; [[#4.5.0|4.5.0]] &amp;middot; [[#4.6.0|4.6.0]] &amp;middot; [[#4.6.1|4.6.1]] &amp;middot; [[#4.7.0|4.7.0]] &amp;middot; [[#4.7.1|4.7.1]] &amp;middot; [[#4.8.0|4.8.0]] &amp;middot; [[#4.8.1|4.8.1]] &amp;middot; [[#4.8.2|4.8.2]] &amp;middot; [[#4.9.0|4.9.0]] &amp;middot; [[#4.10.0|4.10.0]] &amp;middot; [[#4.11.0|4.11.0]] &amp;middot; [[#4.11.1|4.11.1]] &amp;middot; [[#4.12.0|4.12.0]] &amp;middot; [[#4.12.1|4.12.1]] &amp;middot; [[#4.12.2|4.12.2]] &amp;middot; [[#4.13.0|4.13.0]] &amp;middot; [[#4.13.1|4.13.1]] &amp;middot; [[#4.13.2|4.13.2]]
+|}
+__NOTOC__
+==2017==
+;{{LE|3.0.0}}{{cs|cc3ae93}} (April 29): {{Forum|t=56132|Release thread}}
+:*Scriptable status bars.
+:*Scriptable level status screens.
+:*Static constant arrays in classes.
+:*Support for Doom64-style lighting in the software renderer, with the exception of gradients.
+:*Optimization of the scripting VM by removing some always active debug support.
+
+;{{LE|3.0.1}}{{cs|bb6015b}} (May 2): {{Forum|t=56219|Release thread}}
+:*Fixed a potential crash when changing the render output in-game and continue playing.
+:*Fixed a crash in the software renderer with camera textures.
+:*For 32 bit Windows, libsndfile.dll is reverted to the old version due to some incompatibility with the newer one.
+:*Cleanup of dynamic light options.
+
+;{{LE|3.1.0}}{{cs|6875e5b}} (May 31): {{Forum|t=56686|Release thread}}
+:*Support of ''Strife Veteran Edition'''s extended single player campaign.
+:*Better handling of stereo sounds.
+:*PlayerThink code has been exported to scripting.
+:*On Windows and macOS, the system's MIDI synth is no longer the default. Instead, FluidSynth and a small soundfont are now included to provide better default playback quality.
+:*Translucency on weapon sprites works properly.
+:*Some layout fixes with [[SBARINFO]] based status bars.
+:*Fixed par time display on level summary screen.
+:*Fixed loop tag checks for Ogg files.
+
+;{{LE|3.2.0}}{{cs|e0d4d9a}} (October 4): {{Forum|t=58078|Release thread}}
+:*zd_extra.pk3 splits off copyright infringing assets, allowing game makers to delete this file and distribute a fully GPL-conforming copy of GZDoom without further changes.
+:*Custom [[IWAD]] support.
+:*Video render scaling (play in 320x200, or any custom resolution).
+:*Custom screen shader support.
+:*[[MENUDEF]] replacements are now merged, allowing GZDoom to easily present new menu features in older mods that include one.
+:*A pelothra of fixes and improvements.
+
+;{{LE|3.2.1}}{{cs|a4d2fb9}} (October 22): {{Forum|t=58248|Release thread}}
+:*Fixed applying of height argument in {{c|[[A_Fire]]()}} function.
+:*Removed all code needed to support macOS earlier than 10.7 Lion.
+:*Fixed crash on attempt to register IDs for undefined class.
+:*Added {{c|vid_cropaspect}}. This [[CVAR]] turns {{c|vid_aspect}} into a letterboxing function that will crop the unused sides of the screen away, instead of stretching it. Requires one of the non-legacy OpenGL framebuffers to work.
+:*Remove {{c|vid_tft}} and {{c|vid_nowidescreen}} and associated menu option. Their functionality was supersceded and extended by {{c|vid_aspect {{=}}{{=}} 3}} (which has the same effect as setting both to true anyhow), and it was mostly just redundant.
+:*Fixed: do not interpolate view movements if a key press did not result in any changes.
+:*If *nix, add default gzdoom.pk3 directory to File.Search paths.
+:*Fixed: inverted color order for post-process textures to BGRA to correctly match the internal texture standard in GZDoom.
+:*Added ability to change slider color using [[MAPINFO]]'s gameinfo.
+:*Added {{c|startuptype}} to [[IWADINFO]], allowing to change the game startup screen with custom [[IWAD]]s.
+:*Fixed applying of compatibility settings for IWADs.
+:*Fixed a few cases when IWAD was checked by hardcoded index.
+:*Fixed {{Class|Archvile|arch-vile}} bleeding when damaging target.
+
+;{{LE|3.2.2}}{{cs|00b60e5}} (December 3): {{Forum|t=58618|Release thread}}
+:*Added a new timer code. GZDoom now appears a lot smoother in interpolated frames.
+:*Improve speed for ARMv7 processors by setting tuning options to the Cortex-a7 CPU (for Raspberry Pi 2).
+:*Several ZScript extensions and fixes.
+:*Improved OpenGL profile selection on Linux.
+:*Rather than giving version info, GZDoom now displays the name of the game you are currently playing in the window title. This can be disabled via {{c|i_friendlywindowtitle}}.
+:*Bug fixes, including some for non-Windows platforms.
+
+;{{LE|3.2.3}}{{cs|8027369}} (December 3): {{Forum|t=58620|Release thread}}
+:*Implemented unicode handling in some functions.
+:*Improved handling of temporary files on timidity++.
+:*Added {{c|latch}} keyword to [[CVARINFO]].
+:*Added new grenade and ice shard sprites, removed non-GPL copyrighted assets.
+
+;{{LE|3.2.4}}{{cs|77a33cc}} (December 17): {{Forum|t=58772|Release thread}}
+:*Added DMG_NO_PAIN for {{c|DamageMobj}} function.
+:*Fixed bright sprites in sectors with Doom 64 lighting.
+:*Added free space margin, a.k.a. safe frame for [[automap]].
+:*Rotating sky and model smoothness fixes.
+:*Implemented {{c|win_borderless}} for fake fullscreen in Windows.
+
+==2018==
+;{{LE|3.2.5}}{{cs|da85d4f}} (Januray 4): {{Forum|t=58991|Release thread}}
+:*Externalise DCanvas::DrawLine to [[ZScript]].
+:*Implemented {{c|{{CVAR|S|i_soundinbackground}}}} to continue playing sounds and music while in background.
+:*OpenGL rendering now continues even when losing focus if not running fullscreen.
+:*Added {{c|playerrespawn}} [[Skill definition|skill flag]] to allow gameplay mods to retroactively enable player respawns in single player on all maps.
+:*Improved [[Advanced sound options|Advanced Sound Options menu]] - added option for [[FluidSynth]] chorus, removed fractional part from FluidSynth voices option.
+:*Fixed applying of Doom 64 lighting to horizon [[portals]].
+:*[[Particles]] are now interpolated.
+
+;{{LE|3.3.0}}{{cs|0a85d65}} (March 25): {{Forum|t=59945|Release thread}}
+:*Added dynamic spot lights, configurable in the [[UDMF]].
+:*Export {{c|GetChecksum}} as part of {{c|FLevelLocals}} in [[ZScript]].
+:*Mod-defined aliases no longer permanently change [[CVAR]]s
+:*Add {{c|{{Property|FriendlySeeBlocks}}}} [[actor properties|actor property]] that allows a modder to expand the maximum radius that a friendly monster can see enemies.
+:*Custom submenus are no longer removed from altered protected menu.
+:*Exported {{c|S_GetMSLength}} to ZScript.
+:*Added {{c|GetRadiusDamage}}, which returns the raw calculated explosion damage falloff by distance only.
+:*Added {{c|Screen.getViewWindow}} function.
+:*Exported {{c|Trace()}} interface to ZScript.
+:*Added {{c|TeleportSpecial}} as an alias for {{c|[[Teleport]]}} in ZScript to deconflict from the {{c|Actor.Teleport}} function.
+:*Added {{c|Distance(2/3)DSquared}} functions.
+:*Fixed {{c|{{Property|Skip_Super|skip_super}}}} application for ZScript.
+:*Split off the interface part of {{c|DHUDMessage}}.
+:*Export sector effect pointers and fix missing pointer assignment on Lighting effect creation.
+:*Made left button down event available to UI [[Events and handlers|event handler]].
+:*Exported {{c|Inventory.AltHUDIcon}} field to ZScript.
+:*Add {{c|WorldLinePreActivated}} to override line activation.
+:*Add {{c|DI_MIRROR}} flag to statusbar image drawing.
+:*Enable string and float {{c|user_}} properties in UDMF things.
+:*Added in-game reverb editor using the menu system.
+:*Improved French translations.
+:*Fixed 'precise' rendering in OpenGL.
+:*New Materials Shader system to allow textures to show new properties such as glossiness and specularity, affected by dynamic lights, or with PBR, reflecting their direct surroundings.
+:*New rocket smoke sprites by ''Talon1024''.
+:*Import [[Timidity++]] into GZDoom directly.
+:*Added light definition for {{Class|megasphere}}.
+:*Fixed midtex nowrap clipping bug when 3d floors are in view (Software Renderer).
+:*Improved {{c|profilethinkers}} in various ways.
+:*Add variables {{c|{{CVAR|A|am_unexploredsecretcolor}}}} and {{c|{{CVAR|A|am_ovunexploredsecretcolor}}}} to mark undiscovered secrets differently in the [[automap]].
+:*Added support for ADLMIDI and OPNMIDI libraries.
+
+;{{LE|3.3.1}}{{cs|2d0e837}} (April 1): {{Forum|t=60067|Release thread}}
+:*Better handling of defaults with some [[ZScript]]/[[DECORATE]] functions.
+:*Many bug fixes since 3.3.0.
+
+;{{LE|3.3.2}}{{cs|dd5a673}} (April 12): {{Forum|t=60221|Release thread}}
+:*Fixed detection of .ipk7 custom [[IWAD]]s.
+:*Restored vanilla behavior of [[lightning]] for original ''[[Hexen]]''.
+:*Added loading of [[ZSDF]] lumps by full paths.
+:*Disabled the survey code.
+:*Export {{c|P_ActivateLine}} to [[ZScript]] (along with constants for activation type).
+:*Increased size of the savegame comment area.
+
+;{{LE|3.4.0}}{{cs|d9b6a8b}} (June 7): {{Forum|t=60833|Release thread}}
+:*Enable {{c|#include}} support in [[MODELDEF]] files.
+:*Removed DirectDraw and Direct3D backends, removed unaccerated SDL framebuffer backend.
+:*Reorganization of 2D and 3D rendering code in preparation for Vulkan in the future, performance improvements on newer hardware.
+:*[[CVAR]] that handles it is now {{c|vid_rendermode}} - {{c|vid_renderer}}, {{c|swtruecolor}}, and {{c|r_polyrender}} have been removed and combined into new CVAR.
+:*Added a {{c|lightsizefactor}} command to [[GLDEFS]].
+:*Allow animated title pics.
+:*Add support for Unreal Engine 1 vertex mesh format.
+:*Added LevelLocals vec2/3Offset(Z) functions for portal-aware offsetting without needing actors.
+:*Add {{c|OnGiveSecret}} [[ZScript virtual functions|virtual function]] on Actor for customizing behavior of secret finding.
+:*{{Flag|BLOCKASPLAYER}} flag: treat non-player actors as blockable by "block players" lines.
+:*Added 'revealed on automap' linedef flag, [[UDMF]] only.
+:*Added forced automap style to linedef, UDMF only.
+:*Added startup song definition for custom [[IWAD]]s.
+:*This release contains a major render optimization for highly detailed maps that may give a +20% performance improvement on Intel and AMD hardware (less on NVidia because the driver has far less overhead that could be optimized away).
+
+;{{LE|3.4.1}}{{cs|504b3d6}} (June 14): {{Forum|t=60928|Release thread}}
+:*Fixed: redirect script access to the compatflags [[CVAR]]s to their internal shadow variables. This is needed so that [[MAPINFO]] settings for these flags don't get ignored.
+:*Fixed: flag CVars in [[ZScript]] referenced wrong addresses.
+:*Fixed: ZScript used the wrong variable for compatflags2.
+:*Fixed: remove ARM specific gl_es definition since it's not even really much different from the main line definition, anyhow.
+:*Fixed generation of brightmaps for sprites. This forgot to take the added empty border for filtering improvement into account.
+:*Fixed ADynamicLight's shadowmap index must be reset when loading a savegame.
+:*Fixed portal restoration on revisiting level in hub.
+:**Added function to FLevelLocals to test if map is being reentered.
+:*Fixed crash with GL 3.x and fixed colormap active.
+
+;{{LE|3.5.0}}{{cs|7dd92fb}} (July 30): {{Forum|t=61482|Release thread}}
+:*[''modern branch only''] Fullscreen is now borderless window (which, technically, it always has been, anyhow). Removed hacks which changed the desktop resolution in order to simulate exclusive fullscreen because they were a constant stability concern.
+:*[''modern branch only''] Fixed a performance regression with the software renderer, introduced by the recent changes to the video backend in 3.4.
+:*Save item statistics - Items are now saved into save games and are displayed on the statfile.
+:*Upgrade libADLMIDI and libOPNMIDI.
+:*Large number of MinGW fixes.
+:*Add tags for all ''[[Doom]]'' and ''[[Heretic]]'' monsters for mods that reveal monster names.
+:*Various compatibility fixes for old maps and mods.
+:*Fixed titlepic animation.
+:*Custom hardware shaders now can use custom texture units.
+:*Fefault to "fullscreen" display.
+:*Fixed a potential exploit with malformed WAD files. Thanks to xanaxdev ( th0razine@ret2p.lt ) for reporting it.
+
+;{{LE|3.5.1}}{{cs|a5296fe}} (August 25): {{Forum|t=61800|Release thread}}
+:*Implemented "resolution mode selector".
+:*Add post processing support to the software renderer and softpoly.
+:*Add {{c|vid_hdr}} [[CVARs|cvar]] that enables higher than 8bpc output for monitors that support it.
+:*Fix: softpoly TEXTURES sprites with scale of 2 are tiled.
+:*Add dithering support to emulate higher BPC displays than your real one. This should allow smoother gradients for light fades and such.
+:*Make various getter and pure-math {{Class|Actor}} methods clearscope.
+
+;{{LE|3.6.0}}{{cs|dd09d8e}} (October 10): {{Forum|t=62231|Release thread}}
+:*Add [[OBJ]] model support.
+:*Added {{c|Screen.DrawThickLine}} for drawing lines with thickness.
+:*Fixed: sound from poly objects through portals will now propegate properly.
+:*Add {{Flag|HITOWNER}} flag, when set, allows a projectile to collide with its shooter.
+:*Allow {{c|[[LineAttack_(ZScript)|LineAttack]]}}'s LAF_NOINTERACT to fill {{c|FTranslatedLineTarget}}'s information.
+:*Added DMG_EXPLOSION flag.
+:*Adds {{c|[[OnDrop]]}} [[ZScript virtual functions|virtual]] to inventory items. Called on the dropped item at the end of {{c|[[DropInventory_(ZScript)|DropInventory]]}}.
+:*Enabled the linear shadowmap filter.
+:*Update xBRZ upscaler to version 1.6.
+:*[modern only] Added 5x and 6x upscaling with xBRZ.
+:*Add 'normalNx' texture scaling (normal2x, 3x, 4x, 5x, and 6x) (5x and 6x only supported in modern).
+:*Upgrade [[libADLMIDI]] and [[libOPNMIDI]].
+:*Export various resurrection-related functions to [[ZScript]].
+:*Fixes for ''Wraith Corporation'' WADs.
+
+;{{LE|3.7.0}}{{cs|475b57f}} (December 27): {{Forum|t=63032|Release thread}}
+:*Completely revamped textures system, allowing for more future extensibility and rework, also fixes a few issues.
+:*Add support for scaled textures in the software renderer.
+:*Untranslated fonts now appear as truecolor.
+:*Improvements to Doom64 colouring.
+:*Add {{Flag|NOFRICTION}} and {{Flag|NOFRICTIONBOUNCE}} flags.
+:*Declared {{Class|Actor}}'s {{c|[[Morph]]}} and {{c|[[UnMorph]]}} functions virtual.
+:*Scale factor is now applied to all scaling modes.
+:*Add ''vanilla'' {{CVAR|R|gl_lightmode|lightmode}} that behaves exactly as Doom's original light did.
+:*Cheat-enforced [[CVAR]]s can now be changed in normal single player games without {{c|{{CVAR|C|sv_cheats}}}}.
+:*Added a JIT compiler for [[DECORATE]] and [[ZScript]] which should allow some maps and mods to perform slightly, if not significantly faster in some cases (64-bit only).
+:*Scriptified the [[Alternate HUD|AltHUD]].
+:*Many bug fixes.
+:*Lights are now referenced by sections rather than surface, to speed up light linking. This should allow a dynamically-lit {{Class|PlasmaBall|plasma bolt}} to pass over a 3D bridge in ''Frozen Time'' without turning the game into a slide show.
+:*Many scriptifications from native code to ZScript.
+:*Add shader cache for Intel GPU's which should result in faster startups (especially on Windows) - first startup will still be slower, though.
+:*Added {{c|[[IsPointInMap]]}}.
+:*Added destructible geometry.
+:*Added a function to get the actor's age in [[tic]]s.
+:*Added a new field to the Actor class which stores the amount of tics passed since the game started on the moment the actor was spawned.
+:*Added a function to the Actor class to get its spawn time relative to the current level.
+:*Added spawn time information to the output of the {{c|{{CCMD|I|info}}}} [[console command]].
+:*Export {{c|AllClasses}} global field.
+:*Update GME up to 0.6.2 version.
+:*Changed the way alpha works on {{c|[[DrawLine]]}} and {{c|[[DrawThickLine]]}} so they're consistent.
+:*GL renderer is now partly multi-threaded, resulting in a 10-20% speedup, depending on a map's complexity.
+:*Add "neutral" gender option and better [[Actor_properties#Obituaries|obituary]] formatting.
+
+==2019==
+;{{LE|3.7.1}}{{cs|74b60ad}} (January 1): {{Forum|t=63098|Release thread}}
+:Fixed various bugs.
+
+;{{LE|3.7.2}}{{cs|caf326a}} (January 20): {{Forum|t=63346|Release thread}}
+:*Resolution selector now sets to auto detected resolution at startup, no longer uses entries from the config file.
+:*Committing a scaling change for fullscreen sets scaling to 1.0 to guarantee the selected number of pixels are actually used.
+:*Add 4k UHD resolution to presets.
+:*Fixed various bugs.
+
+;{{LE|4.0.0}}{{cs|ec0c82d}} (April 7): {{Forum|t=64188|Release thread}}
+:'''General'''
+:*Vulkan released in its alpha stages.
+:*Localization: GZDoom has been translated to several languages.
+:*Scaling has been changed. GZDoom now runs at a minimum of 640x400. An extra mode - 960x600 - has been added to replace the lost 320x200 one.
+:*Internal code restructuring to agnostisize level structures.
+:*Add {{c|cl_blockcheats}} - useful for people who use debugging keys, allows a user to consciously turn off cheats without affecting the server.
+:*Punctuated the input strings in UpperCamelCase format, improving its appearance in the menu for upper/lowercase capable fonts.
+:*{{c|wait}} [[console command]]s no longer execute inside the level, and can run during intermissions and outside the game.
+:*Moved controls to submenus in [[Customize controls]] menu.
+:*Implement page string names for dialog lumps.
+:*Did a bit of cleanup on the option menus by regrouping some settings, especially splitting out of the Hardware Rendering Options menu into submenus.
+:'''[[ZScript]]'''
+:*Fully scriptified the {{c|{{Class|Actor}}}} class hierarchy.
+:*Added Z + camera roll relativity for {{c|[[A_QuakeEx]]}}'s QF_RELATIVE flag.
+:*Added inflictor, source and flag parameters to {{c|[[GetModifiedDamage]]}} on actors and {{c|[[ModifyDamage]]}} on inventory.
+:*Removed extraneous parameter in {{c|[[SpawnPlayerMissile]]}} call in {{c|[[A_FireProjectile]]}}.
+:*Add {{c|LookScale}} variable to weapons. This variable allows a weapon to set a custom look sensitivity multiplier without fiddling with {{c|FOVScale}}/{{c|DesiredFOV}} hacks.
+
+;{{LE|4.1.0}}{{cs|0857320}} (April 28): {{Forum|t=64485|Release thread}}
+:*Workaround buggy preprocessor in old AMD OpenGL drivers.
+:*Fix bloom pass regression.
+:*Fixed scale calculations for option menus.
+:*Implement custom post process shaders for Vulkan backend.
+:*Improve error handling during Vulkan initialization.
+:*Fixed inverted logic for displaying the generic log in ''[[Strife]]''.
+
+;{{LE|4.1.1}}{{cs|d35dec9}} (May 4): {{Forum|t=64582|Release thread}}
+:Bug fixes and Vulkan improvements.
+
+;{{LE|4.1.2}}{{cs|fdd8ee3}} (May 14): {{Forum|t=64701|Release thread}}
+:Bug fixes and Vulkan improvements.
+
+;{{LE|4.1.3}}{{cs|d3e04a9}} (June 7): {{Forum|t=64964|Release thread}}
+:*Bug fixes for both [[ZScript]] and Vulkan (the Vulkan renderer is pretty much complete at this point).
+:*Added native {{c|round}} function.
+:*Added a [[crosshair]] on/off toggle.
+:*{{c|cl_blockcheats 2}} blocks cheats without showing any messages, useful for streamers who happen to be mappers/modders/etc.
+
+;{{LE|4.2.0}}{{cs|388c624}} (August 12): {{Forum|t=65600|Release thread}}
+:*Restored original vanilla behavior of {{Class|LostSoul|Lost Souls}}' charging attack.
+:*Exposed {{c|Append()}} method to [[ZScript]] [[dynamic arrays|dynamic array]].
+:*Fixed handling of the "ouch" face.
+:*Fixed an inconsistency with missiles bouncing off actors.
+:*Added option to print a {{MapProperty|Author|map author's name}} on the [[intermission|summary screen]].
+:*Adds option to use a rotation of quicksaves instead of having one quicksave slot that needs to be manually created.
+:*Allow switching the [[Strife]] conversation screen to the VGA font for all languages by a [[CVAR]].
+:*Added {{c|[[A_SoundPitch]]}} and an optional pitch parameter to {{c|[[A_PlaySound]]}} and {{c|[[S_Sound]]}}.
+:*''[[Hacx]]'' and ''[[Harmony]]'' now support [[internationalization|localization]].
+:*New supported languages: Czech, Finnish, Japanese, Polish and Serbian.
+:*{{c|[[events and handlers#RenderUnderlay|RenderUnderlay]]}} feature.
+:*Attachable dynamic lights with ZScript or [[DECORATE]].
+
+;{{LE|4.2.1}}{{cs|f586196}} (September 10): {{Forum|t=65852|Release thread}}
+:*Dutch [[Internationalization|translation]].
+:*Give {{c|P_ExplodeMissile}} a damage type when being called from {{c|P_DamageMobj}}.
+:*Rename [[sprite]] names with '^' in the hires [[namespace]].
+:*Compatibility option for ''Daedalus'' MAP19 which depends on an old scriptwait implementation.
+:*Added {{c|dlg_vgafont}} and {{c|log_vgafont}} to the [[menu]].
+:*Add empty line in menu after standard options.
+:*Make the build work with [[FluidSynth|fluidsynth]] 2.x.
+:*Level compatibility additions for ''Scythe 2'' and ''Hell Revealed''
+:*Fixed: saving game to read-only file was erroneously reported as success.
+:*Add current, max and average velocity as stat (#912).
+:*Added ability to specify deprecation messages in [[ZScript]].
+:*GME update with bug-fixes.
+:*Vulkan: release any references to command buffer when flushed.
+:*Fixed crash on parsing bad hex number.
+:*Let [[Hexen]] {{Class|ClericPlayer|Cleric}} and {{Class|MagePlayer|Mage}} use unique [[health]] chains.
+:*Allow custom status bars to override notification and centered message display.
+:*Improve [[crosshair]] health color to be more informative.
+:*Converted keyboard turnspeeds into global [[CVAR|CVars]].
+:*Added [[actor properties#Obituaries|obituary]] fallbacks for actors that do not have any defined.
+:*Fixed bad default alpha for 3D floors.
+:*Fixed attached dynamic light setup.
+:*Added check for multiple parsing of the same [[MAPINFO]].
+:*Exposed xBRZ scaler options as CVARs.
+:*Updated xBRZ scaler to version 1.7.
+
+;{{LE|4.2.3}}{{cs|d5ff274}} (October 20): {{Forum|t=66171|Release thread}}
+:*Fixed wrong offset on {{Class|FighterPlayer|Fighter}}'s {{Class|FWeapFist|Fist}}.
+:*Added [[Armor]] to [[Hexen]] fullscreen display.
+:*Export {{c|F3DFloor}} structure and related data.
+:*Fix of checking for valid texture access, rather than checking whether it is null, when drawing fog boundaries in the software renderer.
+:*Fixed crash with mock2.wad in software.
+:*Fix for {{c|[[LineTrace]]}} not setting its starting sector based on its offset.
+:*Fixed: [[sector]] lights could access the sector before it was set.
+:*Fixed ancient [[ZDoom]] [[savegame]] slot selection bug. When creating new autosaves {{c|LastAccessed}} and {{c|LastSaved}} were not updated accordingly.
+:*Fix crash on Vulkan with a large number of texture shaders.
+:*Adapted the PSX XA decoder from EDuke32 as a music format in GZDoom.
+:*Internal restructuring of music system.
+:*Fixed [[inventory]] scroll arrows in [[alternate HUD|alternative HUD]].
+:*Add {{c|m_quickexit}} option for quick exit in game menu.
+:*Fixed a crash in the software renderer that caused wallsprites to crash.
+:*Cleanup of game exit code to be more reliable, as this could cause spurious crashes.
+:*Fixed capped tall [[skies]] not working ([[Heretic]] and Hexen).
+:*Fixed sky stretching for the new freelook limit.
+:*Made GL nodes loader more resilient to broken data.
+:*Fixed {{c|[[CheckBossDeath]]}} not checking for actor replacements.
+:*Fallback to console [[font]] in case of missing small font.
+:*Fixed: pickup flash didn't fade out if player was killed by pickup.
+:*Fixed: the dynamic lights must be initialized before the first frame is ticked.
+:*Fixed SPC music looping after update to GME 0.6.2.
+:*Fixed broken walkthrough of ''Restoring Deimos'' MAP03.
+:*Fixed broken walkthrough of ''Skulldash'' MAP04.
+:*Implicitly clear local [[dynamic arrays]].
+:*Fixed crash with dynamic light manipulation through netevents.
+:*When adding some minmum lateral movement to trigger collision detection, do not just set {{c|Vel.X}} but actually use a vector pointing in the proper facing direction of the actor.
+:*Fixed {{c|[[GetLineX]]}}/{{c|[[GetLineY]]}} [[ACS]] implementation.
+
+;{{LE|4.2.4}}{{cs|03e6c1a}} (November 3): {{Forum|t=66280|Release thread}}
+:*Fixed stretching for 256 and 240 pixels tall skies in software.
+:*Fixed broken walkthrough of ''Restoring Deimos'' MAP07.
+:*Fixed a bug in the flagdef processing code.
+:*Adjusted collision detection for item pickups. Use vanilla condition for a thing with {{c|MF_SPECIAL}} flag to fix inability to grab it when item's top is at the same height as sector's floor from it can be picked up.
+:*Fixed [[internationalization|localization]] support for [[intermission]] texts.
+:*Fixed radius attack that may inflict damage twice.
+:*Sort [[CVAR]] output in [[configuration file|config]] alphabetically instead of randomly dumping them in their internal order.
+:*Fixed [[ZScript]]'s {{c|Screen.DrawLine}} using the wrong color when drawing pure black.
+:*Fixed missing frames for [[Hexen]]'s {{Class|FighterPlayer|fighter}}'s {{Class|FWeapAxe|axe}} attack without mana.
+:*Fixed usage of uninitialized object in {{c|BlockLinesIterator}}.
+:*Removed hardcoded width limit for screenshots.
+:*Fixed [[dynamic arrays]] as function arguments.
+:*Added Visual Studio debugger visualization for several types.
+:*Do not accept read-only variable as out argument.
+:*Fixed variable's stack offset for implicit dynarray clearing.
+:*Fixed Vector2/3 out parameters in the ZScript compiler.
+:*Added explicit clearing of global VM stack. When exceptions are thrown from JITed code, the VM stack isn't cleared during unwinding.
+:*Fixed typo with {{Class|Sorcerer2|D'Sparil}}'s serpent attack in {{c|lights.pk3}}, creating an extremely large light.
+:*Fixed bad application of translucency in the software renderer.
+:*''Scythe'' MAP22 compatibility fix.
+
+==2020==
+;{{LE|4.3.1}}{{cs|25c74c2}} (January 5): {{Forum|t=66882|Release thread}}
+:*New softpoly backend for the hardware renderer.
+:*The software renderer will start again on DX9 compatible hardware that doesn't support OpenGL 3.3.
+:*Advanced texture colorization options.
+:*Scripted map post-processor.
+:*Dictionary class for [[ZScript]].
+:*Reinstate 320x200 with the following caveat: it only functions outside of menus and console, and only when the dialogues and logs use the default font, the game will temporarily switch to 640x400 in these situations.
+:*Add PSPF_PLAYERTRANSLATED flag (makes a PSprite layer translated to the user's color).
+:*Support for [[MIDI]] on Linux via alsa sequencer.
+
+;{{LE|4.3.2}}{{cs|9762509}} (Januray 12): {{Forum|t=66947|Release thread}}
+:This is a mainly a bug-fix release. There are two notable new features, though:
+:*Added ML_NOSKYWALLS and ML_DRAWFULLHEIGHT.
+:*Add support for new Bethesda.Net Unity Edition [[WAD]]s.
+
+;{{LE|4.3.3}}{{cs|a3b0f21}} (Januray 20): {{Forum|t=67036|Release thread}}
+:This is a mainly a bug-fix release for the softpoly renderer and the customizable invulnerability colormap feature.
+
+;{{LE|4.4.0}}{{cs|e98ef83}} (June 7): {{Forum|t=68860|Release thread}}
+:''Release notes are not available yet. See the release thread for details.''
+
+;{{LE|4.4.1}}{{cs|5001f36}} (June 10): {{Forum|t=68918|Release thread}}
+:This is a bug-fix release addressing a few issues that were reported for 4.4.0.
+
+;{{LE|4.4.2}}{{cs|04e53b8}} (June 16): {{Forum|t=69002|Release thread}}
+:This is a bug-fix release addressing a few issues that were reported for 4.4.1, with two notable new features:
+:*Add "restart" button to error pane in Windows.
+:*Made the new Build light mode operational.
+
+;{{LE|4.5.0}}{{cs|3037c08}} (October 31): {{Forum|t=70459|Release thread}}
+:*For all of Doom's fullscreen images there's now widescreen versions provided. The other games are still being worked on and will be added later when they become available. All new images were created by Nash Muhandes - this does not use any of the versions from the Unity port.
+:*A simplified options menu is now available for quick setup of the important settings.
+:*New keybindings presets. Users can now choose between the classic layout and a WASD-based one.
+:*Menu and intermission screen now scale to the original Doom.exe's layout by default.
+:*Major additions to the menu system - animated menu transitions, image slideshows and fixed size menus can now be created.
+:*The [[console]] now uses the border flat as default background instead of the titlepic.
+:*It is now possible to fully quit the fullscreen console and get back to the title loop.
+:*Various enhancements and fixes for [[ZScript]].
+:*Interpolate positions and angles in the [[automap]] for smoother appearance.
+:*Added $PitchSet &lt;logical name&gt; &lt;float&gt; for [[SNDINFO]].
+:*Allow indirections in the string table by prefixing the language string with '$$' the remaining text is interpreted as another string label to resolve.
+:*Optimization of the patch texture checker - do not read in the entire file if checking the initial header is sufficient for rejecting it. This can speed up loading of large mods quite significantly.
+:*MIDS-format MIDI support.
+:*OPUS support, courtesy of an updated libsndfile.
+:*libADL/libOPN update.
+
+==2021==
+;{{LE|4.6.0}}{{cs|c320db6}} (May 22): {{Forum|t=72359|Release thread}}
+:*Widescreen graphics for [[Heretic]] and [[Hexen]].
+:*[[Sprite shadows]] like in the Build engine. Both in software and hardware renderer.
+:*16-bit channel [[PNG]] files can be read.
+:*[[DEHEXTRA]] working properly now.
+:*Various enhancements and fixes for [[ZScript]].
+
+;{{LE|4.6.1}}{{cs|347324e}} (July 25): {{Forum|t=72879|Release thread}}
+:Bug fixes, and widepix updates.
+
+;{{LE|4.7.0}}{{cs|0e809b2}} (September 22): {{Forum|t=73398|Release thread}}
+:'''Highlights'''
+:*Widescreen graphics for Strife
+:*New GLES backend for better performance on OpenGL 3.3 and early 4.x hardware.
+:*MBF21 support (still in beta and not fully tested yet, bug reports are welcome)
+:*DEHEXTRA working properly now
+:*Various enhancements and fixes for ZScript.
+:{| {{prettytable}} class="mw-collapsible mw-collapsed"
+! Full changelog &amp;nbsp;
+|-
+|
+*Fixed vertex generation when splitting walls by planes on old hardware.
+*Menu system update from Raze for better control of animated menus.
+*GLES fixed: The weapon sprite must be rendered with the fullscreen colormap on.
+*Use explicit virtual screen sizes for the scripted intermission backgrounds to better cope with background replacements.
+*Fix compatibility handler for KDiZD's Z1M3.
+*Fixed: "Dialogue" in MAPINFO must clear all "AddDialogues" that came before.
+*Fixed melee attack disance being off after adding MBF21 support.
+*Fixed: Decal things did not spawn their lower decals.
+*Fixed texture clamping for elements that are partially behind a slope.
+*Fixed bad parameter order in MinoraurSlam.
+*Consider 'Program Files' a read only location without actually checking.
+*Fixed: 3D floor model sectors were not added to the sector lists for precise rendering.
+*Removed the redundant gl_render_precise CVAR.
+*Fixed: colors from brightmaps and glowmaps need to be desaturated.
+*Fixed: shaders with NO_LAYERS defined may not apply brightmap and glowmap.
+*Vulkan: Limit texture upload transfer buffers to roughly 64 MB.
+*Marked several invisible controller things to not show on the automap with the scanner powerup.
+*Treat 'vid_adapter 0' as what Windows considers the primary monitor.
+*Fixed: Brightmap application for horizons was undefined.
+*Replaces "BS" and "ED" on the on-screen keyboards with the symbols normally found on the keyboard for these actions.
+*Enable cvar blacklisting for defcvars for certain platform variables.
+*Demote unknown/invalid defcvars to warnings.
+*Split defcvars parser into its own file.
+*Fix options search when menus are defined recursively.
+*Exported STAYONLIFT flag.
+*Added a modified version of MBF's stay-on-lift feature.
+*Fixed crash on getting location description without a level.
+*Block user overrides for the logic module of core fragment shaders.
+*Added missing MBF21 Dehacked keys "blood color" and "dropped item".
+*Implemented MBF's monsters_avoid_hazards feature.
+*Added a map flag to disable MF6_JUMPDOWN.
+*Added a per-level AVOIDMELEE flag.
+*Allow passing a remap table to BestColor.
+*HUD models: add nullptr check for psprites without caller.
+*Removed the unused palette parameter from the V_GetColor family of functions.
+*Add FOV slider to the display options menu.
+*Added a null check to CheckWeaponChange.
+*Replaced the alt HUD's index font with a sheet based variant.
+*Changed FString API to use ptrdiff_t instead of long for signed size arguments.
+*Fixed IsHUDModelForPlayerAvailable limitation.
+*Look up HUD models by referencing the psprite's caller, rather than player's ReadyWeapon.
+*Allow Strife hands psprite to be a model.
+*Fixed: crushing stairs must use HexenCrush mode.
+*Extended 2D buffer lifetime to the end of the frame.
+*Use RefCountedPtr to manage 2D shape buffer infos.
+*Added RefCountedBase without virtual destructor.
+*Made RefCountedPtr follow rule of five.
+*Make RenderCommands able to use Shape2D vertex buffers past the Shape2D's lifetime without crashing.
+*Fixed line color handling in V_BreakLines.
+*Run the dynamic light recreation loop before calling the light ticker.
+*Fixed: instead of checking gl_lights, better check Level-&gt;HasDynamicLights.
+*Do not run the dynamic light ticker when lights are switched off.
+*Ensure that shadowmap indices only get set when shadowmaps are enabled.
+*Fixed file system's zip loader to not strip away a 'filter/' prefix.
+*Do not perform shadowmap updates when dynamic lights are disabled.
+*Moved the CheckForRestart call one level up so that it is within the Windows code and does not need #ifdefs.
+*Delay the restart action from the error pane until after everything has been shut down.
+*Use proper XMove for sheet fonts.
+*Use original menu spacing for skill and episode menus if all elements are patches.
+*Fixed: the software scene drawer must be deleted before calling ST_Endoom.
+*Reorder evaluation for 'if' statements to handle the condition first. Otherwise this won't emit errors if a bad condition is used with an empty conditional part.
+*Fixed exploding barrel animation duration.
+*Fixed two vr_* CVARs not getting archived.
+*Dim depleted inventory items in all games, not just Strife.
+*Fixed: palette index 0 (transparent) was left uninitialized for BMF fonts.
+*Fixed: P_RoughMonsterSearch did not pass the fov parameter to its worker functions.
+*Fixed BlockThingsIterator to not reset its list of processed actors when traversing portals.
+*fixed patch version in compatibility implementation of macOS detection.
+*Destroy stale thinkers after change level failure.
+*Fixed crash after change level failure.
+*SDL2: Properly print white bold text to the screen.
+*Merged gzdoom-gles2 backend.
+*Use proper music check in 'idmus' CCMD.
+*VOC loader fix.
+*Better prefix detection in Zip loader.
+*SDL Vulkan init.
+*Disabling of shadowmap management when the feature is off.
+*Extend the changemap command to allow warping to next or nextsecret.
+*Fixed crash after fatal error in SDL backend.
+*Fixed premature destruction of status bar.
+*Fixed EBlastFlags enum definition.
+*Add 'BF_ONLYVISIBLETHINGS' Flag to A_Blast
+*Fixed typo in Heretic light definition.
+*Fix wrong thiswad check for materials too.
+*Fix /0 error caused by having a completely black font character. this error was triggered by Return of the Triad.
+*MBF21 beta implementation.
+*Corrected the NUL checks in S_FindSkinnedSound.
+*Moved Doom specific font init code out of the backend.
+*Fixed crash calling ChangeSky() with an invalid texture.
+*Added APROP_Soundclass.
+*Added fallback to the parenthesis glyphs for the braces.
+*Font system overhaul.
+*Add some new optional parameters to A_SprayDecal.
+|}
+
+;{{LE|4.7.1}}{{cs|107ff70}} (October 20): {{Forum|t=73631|Release thread}}
+:*Fixed: {{c|SBar_DrawTextureRotated}} was missing the angle parameter.
+:*Treat "materials" as a known folder name for eliminating root folders in Zips.
+:*GLES: Fix texture {{c|MapBuffer}} and {{c|AllocateBuffer}} create client side memory.
+:*Fix "out of memory" errors when the Vulkan backend is asked to create zero byte sized buffers.
+:*Compat patch for misplaced items in [[Hexen]] MAP08.
+:*Fixed some imprecisions in [[font]] luminosity calculation. This was still going through the palette which could result in off-by-one errors.
+:*Widescreen assets for all officially supported games. This version adds [[Hacx]], [[Harmony]] and [[Chex Quest]].
+:*Add [[CVAR|cvars]] to control [[automap]] line alpha and thickness.
+:*{{c|{{Class|ReadThisMenu}}}} / {{c|{{Class|MenuDelegate}}}} overriding.
+
+==2022==
+;{{LE|4.8.0}}{{cs|08e4676}} (June 6): {{Forum|t=75532|Release thread}}
+:'''Highlights'''
+:*added Raze-style HUD scaling. Not exposed in the menu yet, Set hud_oldscale to 0 and use shift with the screen resize keys to scale the status bar.
+:*handle the start/endoom screens with the ingame renderer. They are now present on all platforms and use the full screen size of the game.
+:*Many MBF21 fixes.
+:*added the [[Cutscene|cutscene]] system from [[Raze]]
+:{| {{prettytable}} class="mw-collapsible mw-collapsed"
+! Full changelog &amp;nbsp;
+|-
+|
+*the chat should use the console's scaling, not the one for the messages printed with the small font.
+*fixed auto-scaling for console.
+*removed all vid_fps offsetting. To compensate there is now also a "stat fps" which displays the FPS rate in the lower left corner. This had to go because unconditionally altering positions was causing problems with custom HUDs.
+*added Raze-style HUD scaling. Not exposed in the menu yet, Set hud_oldscale to 0 and use shift with the screen resize keys to scale the status bar.
+*added a few more names to the reserved names for main folder detection.
+*consider "fonts" and "models" reserved folder names.
+*fixed undefined behavior with Dehacked's value parser.
+*Rebuild nodes for 1024.wad MAP02 to fix invisible obstacle near the exit area
+*fixed fast crushers going out of sync if something is being crushed by them.
+*fixed: Vulkan descriptor sets must check the real translation, not just the translation ID.
+*handle the start/endoom screens with the ingame renderer.
+*Create a MainWindow class that manages the main win32 window of the application
+*Added Actor::{{property|LightLevel}}. Setting it to any value &gt; -1 will override the sector's light level.
+*Implement virtual Actor.FallAndSink for scriptable falling and water physics
+*Added Actor.WaterDepth to retrieve how submerged and actor is, in map units
+*added cutscene data parser. This covers: game start, episode start, cluster start/end, level start/end.
+*{{flag|MASTERNOSEE}} flag (#1601) Makes it so that if an actor's master is invisible due to camera/mirror/portal shenanigans, then the actor will also be invisible. Name based off of an Unreal Engine flag that does the exact same thing.
+*Made CanCrossLine opt-in by requiring the {{flag|CROSSLINECHECK}} flag.
+*Added CanCrossLine virtual for actors.Called last after all other line checks occur. Returning false means the actor cannot cross that line.
+*Add WorldOffset field. Adjusts the thing's 3D position on render side. This allows for adjusting a thing's visual position without impacting their hitbox.
+*fix bad MP start spot in 1024.wad, MAP05
+*Enables shortcuts for option menus. Press a key to immediately jump to the next option menu entry which starts with this key. Hold Alt to jump backwards.
+*DontLightOthers: Acts as the inverse of DontLightSelf, where it won't light actors that aren't the owner.
+*DontLightMap: The light doesn't affect the map.
+*Relative Includes for [[ZScript]]
+*remove m_filter and simplify related code
+*exclude keys from ‚artifact‘ cheats
+*fixed MF_SHADOW handling for MBF21. This needs to alter the render style as well.
+*fixed handling of automap sprites with negative scale.
+*fix dynamic light setup. The level’s global flag is unreliable and cannot be used. The operation this was initially supposed to skip cannot be skipped anyway so the impact should be minor.
+*Allow SendNetworkEvent during title level.
+*add sv_ammofactor to change the skill adjustment for ammo
+*extended the read buffer for the 'secret' CCMD. This is merely preparation, the actual loading is still in one uninterrupted piece.
+*Fix that vk_debug doesn't output anything for newer versions of the vulkan sdk
+*added JPEG YCCK decoding.
+*Added MF8_SEEFRIENDLYMONSTERS. Non-friendly monsters with this flag on will be able to attack friendly monsters on sight.
+*fixed mouse coordinate checks for Strife conversations. ypositions needs one entry per response, not one per line.
+*fixed radius of BossBrain actor
+*Added QF_3D flag for quakes. When used, the quake thinker will perform a 3D distance check instead of 2D.
+*removed compat_soundcutoff from the menu. Handling for this was removed 14 years ago when ZDoom transitioned to FModEx 4.x
+*add -compatmode for setting a compatibility mode on startup as a replacement for +compatmode not working as intended.
+*activate Hungarian in the menu
+*Fix off-by-one in Vulkan multisample sample count selection
+*completed Hungarian translation.
+*Fix co-op softlock in Heretic E4M8 due to multiplayer teleporter.
+*added handlers to load Strife’s startup screen images as textures
+*added image source handlers for Hexen’s special startup image types
+*use the hex font for the Heretic/Endoom text screens.
+*fixed setup of files to load on startup.
+*fixed return type of MSTimeF script function.
+*moved -rngseed init to D_InitGame
+*pass ´hashfile´ to filesystem as parameter
+*fix TArray::Append with rvalue parameter. This must clear the source array to obey move rules.
+*fixed Playdemo and Timedemo check. The assumption that D_DoomLoop never returns does not apply anymore. Let it fall through to the end instead where this is properly handled.
+*only check „allowduplicates“ for the final file system init
+*added missing BLOCKF_ flags for ZScript.
+*added ‚repeat‘ option to [[SetLineActivation]] ACS function
+*made friendlyseeblocks writable.
+*removed all remains of the corpsegibs flag and made vileghosts interactive. Ghosts are still off by default, but they will now be enabled when selecting the vanilla (strict) compatibility mode.
+*restrict RealGibs for players only. All non-players will now always act as if the ‚corpsegibs‘ flag was set, regardless of the current setting.
+*added Get/SetAmmoCapacity ZScript functions
+*expose the ‚attenuatelights‘ map flag.
+*added an option to delete a terrain type from a texture.
+*add wipe transition support to the screenjob runner.
+*migrated intermissions and summary screens to screenjobs.
+*timer code fixes.
+*added all the cutscene system from Raze
+*added compat_nombf21 for cchest2.wad, map 19.
+*Fix usage of -1 as OBJ model FrameIndex
+*added zip64 handling
+*added workaround to Dehacked so that „Doom“ only replaces the music name
+*fixed some incorrect array allocation sizes in polyobj code
+*added missing range check for scrolling down an option menu with the mouse wheel.
+*do not clamp warped textures.
+*disabled deletion of previous event handlers when using 'eventhandler' keyword in MAPINFO.
+*fixed: decal things failed to spawn their decals on 3D floors.
+*validate the index argument for GetSavegame and abort if out of range.
+*don't let "give weapons" hand out abstract weapons.
+*lock cvar shader uniforms behind a command line parameter for now
+*fixed setup of PolyBSPs when the software renderer is active.
+*Remain 3, MAP11 also needs compat_nombf21.
+*fixed Dehacked drop items.
+*added nombf21 compat setting for Heroes Tales MAP31
+*fixed: The alt HUD's draw call did not use the virtual interface.
+*fixed: group teleporters must always preserve orientation.
+*don't move bad polyobjects in the savegame loader.
+*cast arguments for fastcos/sinbam
+*copy size info from defaults when starting a list menu block.
+*handle cases of empty state labels in ZScript.
+*GLES: Fix blend flags
+*fixed bad color range check in ACS HudMessage code.
+*fixed Dehacked check for A_ConsumeAmmo. This must use the internal function name.
+*fixed y-offsets of bal7scr* decal images.
+*let A_SpawnParticle respect the float bob offset
+*separate message for disabling noclip2
+*added a nullptr check for StatusBar when drawing „Paused“
+*make menu scale adjustments for ultra-wide aspect ratios.
+*treat PSP layer ID 0 as invalid. No PSprites with this ID may ever be created, as there is no means to find them again.
+*fixed: The skill menu did not remember its last selection.
+*allow artifacts that do not automatically activate to be given by the 'give artifacts' cheat
+*added vertical bullet spread relative to ssg
+*Fixed GUS Emulation with DMXGUS(C) lump conf.
+*changed default value for midi_config to empty string since gus is not working with sf2 file
+*fixed SetupDMXGUS not loading lump correctly, wrong use of CheckNumForFullName
+*midi_config default to empty string, since lzdoom.sf2 doesn't seem supported (distorted sound)
+*added absolute paths to FZipPatReader so we can add custom patches to resource files by using gus_patchdir and/or ULTRADIR variable (some custom maps has custom patches that can be added this way without putting them inside the resource file or in the same folder of the configuration file)
+*set timidity_reverb_level min value to 0 in menudef.txt, set to 9 by mistake?
+*Added the MF8_DONTFOLLOWPLAYERS flag, which allows friendly monsters to not follow their FriendPlayer when they have no target or goal left to head to.
+*fixed Font struct export and removed the duplicate handler.
+*fix detection for misplaced | when creating the small fallback font
+*typo 'Yea' instead of 'Yes'
+*implement proper GC handling for AActor::ViewPos.
+*Add CHF_DONTIDLE for A_Chase
+*fixed exittext definition for Harmony. This wasn't using the string table.
+*add gl_satformula == 2
+*an optional 'more accurate' desaturation
+*fixed order of slope creation so that slope copies are the last thing being done.
+*Discord RPC presence. Adds new IWADINFO and GAMEINFO keys: DiscordAppId, this should point to your AppId for your game. It will use a default GZDoom one if not found.
+*remove default lost soul translucency
+*Added 'ScaleWeaponFOV' flag to MODELDEF. Affects weapon models only; will scale the model along with the user's FOV to reduce distortion.
+*Additionally, a 'cl_scaleweaponfov' CVar has been added to allow users to further fine-tune the weapon model scale with higher FOVs
+*Terrain small splashes and splash bases now set their target to the thing that spawned them, allowing for extra customization.
+*Added GetTerrainDef and Sector variant of GetFloorTerrain.
+*Fix 3d floor-related crash in software renderer
+*add duplication checking to file list, prevent loading the same file twice unless explicitly asked by the user
+*initialize FSwitchDef::QuestPanel when reading a Boom SWITCHES lump.
+*added a 'no MBF21' compatibility flag. Turns out that there's a few old maps that have the extended line flags set but not the guard bit that forces their clearance. Astrostein 1's first map is an example for this.
+*Initialize some variables in FModelVertex::Set
+*Fix wrong normal vector in the FModelVertexBuffer constructor
+*virtualize player landing on thing sound
+*fixed local vector array initialization.
+*Fix func_paletted.fp to use alpha channel for index. This was needed due to GLES renderer change from Raze
+*allow floats for uniform cvar defaults
+*implement direct cvar linking to custom shader uniforms
+*Add per-tier sidedef light levels to UDMF maps
+*Add TexMan.SetCameraTextureAspectRatio. Allows ZScript to change the aspect ratio of a camera texture.
+*Optimized P_TestMobjZ by not running the iterator if actor also has THRUACTORS.
+*make m_quickexit a global CVAR
+*Added A_SetViewPos(Vector3 Offset, int Flags = -1)
+*apply WeaponScaleX/Y to all PSprites on a weapon
+*fix logic error with shader compatibility layer
+*add debug ccmds to manipulate custom postprocess shaders and their uniforms from the console
+*fix mbf21 A_FindTracer fov cone being twice as big as intended
+*add SMF_PRECISE flag to mbf21 A_SeekTracer, for accuracy
+*fix mbf21 A_SeekTracer not working (arg type shenanigans)
+*fix mbf21 A_ConsumeAmmo ignoring explicit amount arg if weapon's ammopershot field set
+*fix mbf21 A_ConsumeAmmo taking 0 ammo instead of 1 if ammopershot field not set (need to amend the spec for this, argh)
+*fix MBF21 A_WeaponMeleeAttack function name typo &amp; args
+*fix MBF21 A_WeaponProjectile spawn position
+*fix MBF21 GetSoundArg off-by-one: sound indices are 1-indexed in args because Killough
+*fixed logic error with depth bias state in hardware renderer.
+*redid postprocessing shader interface to be free of the player dependency.
+*separate i_pauseinbackground and i_soundinbackground, they probably should ultimately be moved out of the sound code
+*Fix GC so collection rate is proportional to alloc rate
+*fixed: the powerup item for respawn invulnerability was never given to the player.
+*fixed MBF21's A_SeekTracer. This cannot directly call A_SeekerMissile because that has more parameters. It now maps to a wrapper that takes care of these.
+*fixed Dehacked parsing issues with weapon properties.
+*added proper range check to the main sound playing function.
+*fixed potential infinite loop in Hexen-style stair builder.
+*create new menu page for simple mouse options menu
+*remove advanced settings like the individual speed fine-tuning
+*Fixed crash with Scroll_Texture_Offsets with non-zero tag
+*Fixed: ActorMover was not changing its tracer's flags.
+*Added NoTrim support for ANIMDEFS, same syntax as TEXTURES outside a definition.
+*Added NoTrim for TEXTURES.
+*Exported the "paused" global variable to ZScript
+*ACS: fixed an old regression in which printing a map char array did not dereference the given array variable
+*Fixed some issues with the scaling feature of DStatusBarCore::DrawString
+*GLES: Load default shader if we try to load user shader to avoid crash
+*D_ProcessEvents(): Delay EV_KeyUp events until any EV_KeyDown events for the corresponding key have been processed. This makes the mouse under SDL a lot better.
+*add SDL hint to not minimize the window on focus loss
+*apply clearscope to ApplyDamageFactor as well
+*apply weaponscale relative to baseline
+*add WeaponScaleX/WeaponScaleY properties for applying global scaling to a weapon's PSprites
+*Fix upload and sampling bug for array textures in the vulkan backend
+*apply clearscope for ApplyDamageFactor https://forum.zdoom.org/viewtopic.php?f=15&amp;t=73830
+*add LoadBrightmaps, LoadLights, and LoadWidescreen directives for IWADINFO, these function exactly the same as their GAMEINFO equivalents.
+*Fix abort with dir command and empty string on Windows.
+*Fix vulkan validation errors for wrong image transitions and buffers used after destroyed
+*Add a render style parameter to Screen.Dim
+*Fix vulkan buffers not using the stream usage for the 2d drawer. Add BufferUsageType enum to clarify what kind of usage is expected by the buffer allocated by SetData
+*fixed: menu delegate class error message referenced the wrong gameinfo property
+*Added 'NoPerPixelLighting' flag to models to force it to not use per-pixel lighting. Main use case is for voxels that have been converted to models.
+*add cvar r_skipmats, speeds up rendering on slower cards for mods that use a lot of specularity/pbr, effective on both the opengl and vulkan backends
+|}
+
+;{{LE|4.8.1}}{{cs|1b6cea0}} (June 26): {{Forum|t=75729|Release thread}}
+:'''Highlights'''
+:*Update of the Vulkan backend.
+:*several bugfixes
+:{| {{prettytable}} class="mw-collapsible mw-collapsed"
+! Full changelog &amp;nbsp;
+|-
+|
+*let the "abort" button on the network pane of the startup screen do a hard exit on Windows.
+*Bugfix for software mode mirrors not working
+*make sure ticdup is initialized.
+*Add +ONLYVISIBLEINMIRRORS and +INVISIBLEINMIRRORS actor flags. The former makes the actor only visible in reflections, while the latter makes the actor not cast reflections in mirrors.
+*Vulkan backend update
+*validate fountaincolor before using it.
+*ZScript: don't allow multiple assignment syntax with only one element.
+*fixed type of third argument of MBF21's MonsterMeleeAttack function.
+*added an override for NOTAUTOAIMED flag when using P_AimLineAttack for informative CCMDs.
+*allow taking screenshots in cutscenes.
+*fixed JIT target function for GetTimeFrac.
+*fixed: For cutscenes the alternative clean scaling factors need to be activated.
+*fixed setup of ready state with Dehacked. This needs to emulate the hard coded chainsaw sound when weapon states get reassigned.
+*Fix the discolored sky bug on Vulkan
+*check point pushers/pullers by inheritance, not absiolute match
+*Implement FVector ZScript for Actor Scale
+*added FailSound property to PuzzleItem
+*add `i_pauseinbackground` to the menu. note: please pull the language file for this
+*set `i_pauseinbackground` to match `!(i_soundinbackground)` for all configs before this commit.
+*fixed division by zero with unvalidated ticdup values.
+*reinstated con_scale.
+*make sure the last notch on the start screen is rendered.
+*fix relative include path when loading folders
+*avoid storing texture pointers in longer lived data
+|}
+
+;{{LE|4.8.2}}{{cs|410a479}} (July 4): {{Forum|t=75814|Release thread}}
+:'''Highlights'''
+:*Fixes a few bugs that were overlooked in 4.8.1.
+:{| {{prettytable}} class="mw-collapsible mw-collapsed"
+! Full changelog &amp;nbsp;
+|-
+|
+*Fixed names for {{c|[[A_PlaySoundEx]]}}.
+*ENDOOM is not Windows only anymore.
+*Fixed background tiling for summary screen.
+*Text update that was missed in 4.8.1.
+*Add a few maps to the rebuildnodes compatibility block.
+*Fix FVector to Vector comparison.
+|}
+
+;{{LE|4.9.0}}{{cs|d993914}} (November 5): {{Forum|t=76741|Release thread}}
+:'''Highlights'''
+:*IQM bone model support
+:*textured particles
+:{| {{prettytable}} class="mw-collapsible mw-collapsed"
+! Full changelog &amp;nbsp;
+|-
+|
+*added target check to A_MaulerTorpedoWave.
+*fixed: P_SpawnMapThing may not call playsim code.
+*added PARAM_NULLCHECK to the block iterator creation functions.
+*added &lt;nowiki&gt;[[noreturn]]&lt;/nowiki&gt; to several functions that always throw exceptions.
+*Particle Rolling
+*Add Textured Particles
+*Add GFF_NOEXTCHANGE to Phasing Zorcher flash. The Plasma Rifle does not light the player's sprite, so we must assume the Phasing Zorcher also should not.
+*Fix HUD models not drawing if MODELDEF has been changed with A_ChangeModel
+*Fix inconsistent distance and hit position on traces that skip everything.
+*Fix canvas textures getting clipped by wrong scissor box
+*Fix vulkan backend clearing the canvas textures to undefined contents
+*made DMover and subclasses non-abstract so they can be inherited from.
+*added option to show hub and episode names on the alt HUD.
+*reworked CVARs to not use a linked list and to be initialized manually.
+*marked a few Printf calls in critical error paths as PRINT_NONOTIFY.
+*fixed: R_LoadVoxelDef did not fully initialize the voxel descriptor it creates.
+*don't crash on null pointers in V_GetFont.
+*zero the velocity of crunched sprites. Since their size is zeroed, they are no longer subject to collision detection and may slide out of the level otherwise.
+*don't crash when destroying incomplete textures. This can happen during TEXTURES parsing in case of an error.
+*try to keep the engine stable for as long as possible if a VM exception occurs in OnDestroy while running a cleanup. This will still crash, but run long enough for the exception message to be visible.
+*fixed F2DDrawer::SetClipRect.
+*added vanilla donut handling to compat_floormove.
+*Fixed: voxel models pitch/roll properties weren't initialized correctly
+*Added QF_SHAKEONLY. The QF_SHAKEONLY flag changes the behavior of earthquakes with a damage radius, so that they only shake actors around, without also harming them.
+*Added QF_AFFECTACTORS. The QF_AFFECTACTORS flag makes the thrusting and harming of damaging earthquakes also affect monsters. Monsters with DONTTHRUST will not be flung around by earthquakes.
+*Added the QF_GROUNDONLY flag. The QF_GROUNDONLY flag makes earthquakes only shake the player while they are standing on the ground.
+*fixed DrawLine commands by giving them a consistent floating point interface.
+*heretic: e2m7 - missing texture
+*fixed direct native interface for Draw(Thick)Line.
+*fixed: The main loop never checked the cutscene flag for disabling wipes.
+*Sync movie video playback to the audio, when possible
+*Fix washed out colors in Vulkan HDR mode
+*normalize the timer with the app start, not the epoch. This ensures smaller values and less wraparounds with integer values in scripts.
+*un-deprecated the integer MSTime variant. Due to undefined downconversion rules from double to int, there is no way to safely downcast the return from MSTimef, meaning the function is completely useless for retrieving integral time stamps.
+*added Harmony ENDOOM screen.
+*added a config getter to the interface.
+*moved language CVAR to backend.
+*handle menu customization via callbacks.
+*move hud scale CVARs to the backend.
+*handle autoload flags in startup through function parameters instead of directly accessing the CVARs.
+*handle Build tiles via explicit callback to the init function.
+*add a system interface for CheckCheatmode and moved some sound code to the backend.
+*Exported GetDisplayTopOffset for font characters to ZScript
+*added missing obituary for Strife's turret.
+*Added support for BLOCKLANDMONSTERS in Line_SetBlocking.
+*Added APROP_FriendlySeeBlocks to Set/GetActorProperty
+*Fix planeval; add direct sector slope manipulation
+*Modify to have one GetVertexZ rather than IsVertexZSet / GetVertexZ
+*Add vertex height manipulation functions to LevelPostProcessor
+*Add sv_noextraammo. When set to true, disables that weird hardcoded behavior from original Doom that gives extra ammo when picking up weapons in deathmatch
+*fixed: all script methods adding an object to a dynamic array must perform a write barrier.
+*add freezetics actor property
+*allow notification of actor goal is reached inside of a SECF_NOATTACK sector
+*GLES2: Fix anistropic filtering
+*disabled discord-rpc debug info for configurations without it
+*fixed sky cap color handling
+*fix arti teleport and arti teleother not respecting useplayerstartz mapflag
+*UE1 models now handle frame index -1 properly.
+*Add support for the GOG releases of the Unity versions of Doom and Doom II.
+*carry over the tiling flag from the finished to the entering screen
+*Prevent Keyconf from adding duplicate playerclass
+*Add detection for the Final Doom WADs that were recently added to the Steam version of Doom II.
+*new method to define obituaries without modifying actors.
+*remove latch flag from sv_cheats
+*add openscreenshots opensaves and openconfig console commands on Windows and Linux and Mac
+*use consistent index types for array function return values.
+*pass clip rect as pointer to F2DDrawer::AddLine.
+*Export FindLumpFullName to ZScript.
+*Add support for nested user types
+*made adjustments for proper int type promotion to allow internal ZScript to compile with it on.
+*ZScript: fixed integer type promotion for shift operator
+*version-restrict int to uint promotion. Some mods depend on this not happening.
+*fixed: The compile context for constant evaluation did not initialize its Version member.
+*Don't throw away unsignedness when passing unsigned constants to the codegen
+*Add signed-&gt;unsigned promotion for binary operators
+*fix menu commands with semicolon separated commands
+*get rid of M_Malloc call in WriteSavePic
+*Fix definition order of ZScript structs. Do a first pass over the Structs array in CompileAllFields() to reorder them such that if a struct uses other structs, those structs will be resolved first.
+*Fix viewpoint buffer not getting cleared when in the menus
+*backported KDE detection from Raze.
+*removed the Softpoly backend.
+*Add a 2d drawer to canvas textures
+*Fix incorrect mapping of texture indices for UE1 models.
+*Added PitchFromMomentum, UseActorPitch and UseActorRoll to VOXELDEF. Behaves exactly like their 3D model counterparts. Hardware renderer only.
+*removed some redundant chaaracters from the Doom SmallFont.
+*Added IQM bone model support
+*Added [[A_ChangeModel]]
+*fixed return values of FTextureAnimator::AddAnim
+*add longsavemessages to simple menu. set longsavemessages default to false.
+*DirectInput cleanup. Removing ancient code that's only useful on pre-XP OSs.
+*also allocate FDoorAnimation's frame table from the texture manager's memory arena.
+*optimized storage for animation definitions.
+*Fixed vulkan crash when multisampling is enabled
+*add a method for filling a shape2d instead of using a texture (#1661)
+*add stencil buffer support for 2d drawing (#1660)
+*add a system for setting all of 2D drawing's transform, not just shapes
+*Expose ConsoleState to scripts
+*rewrote Windows console code for Windows 10's new terminal.
+*fixed and consolidated artifact check in cheat code.
+*removed volatile type punning for clipping against line portals.
+*fixed handling of *dive and *surface sounds.
+*let A_FireProjectile pass through the second return value of SpawnPlayerMissile.
+*fixed PoisonCloud's looping animation count.
+*weapons are not artifacts.
+*rename PrintString to PrintfEx and make it a vararg function
+*Expose Print Flags to ZScript
+*fixed names for A_PlaySoundEx
+*ENDOOM is not Windows only anymore.
+*fixed background tiling for summary screen. Since the background object gets recycled it must clear this flag before loading a new background.
+*let the "abort" button on the network pane of the startup screen do a hard exit on Windows.
+*make sure ticdup is initialized.
+*Add +ONLYVISIBLEINMIRRORS and +INVISIBLEINMIRRORS actor flags. The former makes the actor only visible in reflections, while the latter makes the actor not cast reflections in mirrors.
+*cleanup and refactoring of Vulkan backend
+*Improve vk_debug output a lot by throwing away the useless parts of the message and limit the callstack to the first 5 gzdoom calls
+*validate fountaincolor before using it.
+*added detection of macOS Ventura
+*ZScript: don't allow multiple assignment syntax with only one element.
+*fixed type of third argument of MBF21's MonsterMeleeAttack function. This is a sound, not an int.
+*added an override for NOTAUTOAIMED flag when using P_AimLineAttack for informative CCMDs.
+*allow taking screenshots in cutscenes.
+*fixed JIT target function for GetTimeFrac.
+*fixed: For cutscenes the alternative clean scaling factors need to be activated.
+*fixed setup of ready state with Dehacked. This needs to emulate the hard coded chainsaw sound when weapon states get reassigned.
+*Fix the discolored sky bug
+*check point pushers/pullers ...
+|}
+
+;{{LE|4.10.0}}{{cs|75da94a}} (December 4): {{Forum|t=76913|Release thread}}
+:'''Highlights'''
+:*Map&lt;K, V&gt; types in ZScript
+:*Quaternion support for model rotations
+:*Improved IQM support
+:{| {{prettytable}} class="mw-collapsible mw-collapsed"
+! Full changelog &amp;nbsp;
+|-
+|
+*Italian language translation is now complete.
+*Make the new scaled angle changes at frame rate opt-in behind new flag `SPF_SCALEDNOLERP`.
+*Set up interpolated camera angle changes to occur at framerate when all conditions in `P_NoInterpolation()` are met.
+*Make view angles interpolate on a separate flag to the one that forces interpolation for the entire frame.
+*Map&lt;K,V&gt; and MapIterator&lt;K,V&gt; for ZScript.
+*Structified A_SpawnParticle/Ex.
+*Look up named frames using the Animation ID (if any).
+*Added [[PitchTo]]().
+*Allow Disabling of XY Billboard for Particles.
+*Added Method For Getting Portal Group Count.
+*Allow Getting Portal Group Offsets.
+*Fixed A_Changemodel crash from invalid modeldef names.
+*Fix SNDINFO $rolloff always changing global rolloff.
+*Fix GC ignoring DynArrays inside fixed Arrays.
+*AST debug cleanup.
+*Fixed: The raw texture caching in the texture manager did not work. This erroneously checked for FrontSkyLayer.
+*Allow assigning IQM frames by animation name plus frame offset.
+*Added animation support for OptionMenus.
+*Fix crash if Animation is not explicitly assigned in MODELDEF.
+*Internal cleanup of sound code.
+*Allow SNDINFO to declare sound mappings by using 'sound = soundfle' syntax.
+*Process events every frame as well to ensure that menus can run at any framerate.
+*Fix incorrect pixelratio handling on rotated models.
+*Added Font and TextureID types to Option and Image Scroller items (List items already have these).
+*Added "Class" instruction for Image Scrollers.
+*Added ability for Option items to read in their OptionMenuDescriptor (List and Image Scroller items already have this).
+*Added "ForceList" instruction for Lists so that skill, playerclass, and episode menus don't get overridden.
+*Fix checking of wrong variable in String..Float concatenation.
+*Clearscoped getters for map data.
+*CustomMessageBox
+*Fix colormap remapping when colormap entries may have fullbright entries which should not be considered duplicates.
+*Stop all sound before showing ENDOOM.
+*Disabled shortcutting the intermission code if no summary screen is wanted. This also disabled all cutscenes being attached to the completed map.
+*Added 'foreach' loop to ZScript.
+*Implementation of Quaternion type in ZScript
+*GLES: Added IQM bone support.
+*SendConsoleEvent function for EventHandlers.
+*Future-proof particles by resetting them completely when replaced.
+*Added PlusZ intrinsic to Vector3 and ToVector intrinsic to numeric values. These just mirror features of the internal vector classes.
+*Added LengthSquared and Angle intrinsics for all vector types, also allow calling VectorAngle with a full vector as a single parameter.
+*Add PushSound property and Slide state.
+*Added PS_REPLACE flag for A_SpawnParticle(Ex). When used, new particles that spawn when the limit is reached will replace the oldest particle.
+*Add Vector4 to ZScript.
+*Avoid infinite portal recursion.
+*Fix uncaught exception that rarely occurred with the intermission screen that would vm-abort out from any attempt to enter a level.
+*Exposed LevelLocals' LookupString functionality.
+*Improved Slam functionality.
+*Normalize angle in AngleToACS. Fixes GetActorAngle returning negative or large values with no range limit.
+*Enable ANIMDEFS for particles.
+*Add some more blacklisted cvars to defcvars.
+*Fixed background setup for intermissions to apply tiling only where intended.
+*Removed the unused BaseBlend* variables and the testblend CCMD.
+*Added a compile option to fully disable the software renderer. This is mainly for new games which have been designed for hardware rendering.
+*Add the following command line parameters:
+**-noextras: disable loading of any extras (lights, brightmaps, widescreen).
+**-nolights: disable loading of lights.
+**-nobrightmaps: disable loading of brightmaps.
+**-nowidescreen: disable loading of included widescreen assets.
+*Fixed bad index check in CanWipe. This can be called with index == -1, which should check the first element of the intermission.
+*GC: Have a real finalizer stage for destroying objects instead of mixing them in to the sweep stage.
+*GC: Base GC rate on a running average of the allocation rate instead of basing it on the amount of time taken since the last sweep started.
+*More GC stats for better tweaking.
+*Added characters U-0404 and U-0490 for Ukrainian language support.
+*Reworked all accented characters of Doom's SmallFont. Also adding a few new ones that were easy to do.
+*When converting to a portable install, flag the current session accordingly.
+*Changed CalculateBones to receive the bone component data directly instead of the owning actor.
+*Fixed FileExists check for -loadgame. This was done before the current savegame path was known so it always errored out.
+|}
+
+==2023==
+;{{LE|4.11.0}}{{cs|d07de08}} (September 25): {{Forum|t=78251|Release thread}}
+:'''Highlights'''
+:*Several new languages: Danish, Norwegian, Swedish and Turkish.
+:*Cleanup of Doom's and Chex Quest's small font to use proper character heights for international support.
+:*Extended all fonts to be capable of handling all European languages which are in common use.
+:*{{dw|DSDHacked}} support.
+:*The build system was transitioned to optionally use {{wp|vcpkg}}, which allows building GZDoom on Windows by running a single batch file.
+:*{{wp|WebP}} and {{wp|QOI (image format)|QOI}} support for textures.
+:*Sanitized the light mode selection to make it a first class mapping feature by separating map dependent light mode setup from performance related user preferences for the default setting.
+:*Linux: GTK startup now offers all the options of the Windows variant.
+:*Lots of new [[ZScript]] features.
+:'''Bug fixes'''
+:*Screen size settings are now properly saved.
+:*Fix {{dw|UMAPINFO}} boss action clearing.
+:*{{dw|MBF21}}'s {{Flag|BOSS}} flag now implies {{Flag|NORADIUSDMG}}.
+:*Remove memory leak in {{c|[[A_ChangeModel]]}}.
+:*Fix {{wp|OpenGL ES}} selection on the windows startup dialog.
+:{| {{prettytable}} class="mw-collapsible mw-collapsed"
+! Full changelog &amp;nbsp;
+|-
+|
+*Changed the variable type of Crossed3DWater. Seems like there was some kind of oversight. Crossed3DWater is an F3DFloor pointer, not sector_t.
+*Add ZScript constants used by FallAndSink
+*Switch to miniz from zlib
+*fix for Genesis of Descent E1M2, which is impossible to complete on ITYTD/HNTR. I had to decompile the ACS script to figure out what was going on, basically at one point you get locked into a room and have to kill exactly 3 enemies with TID 215 for the door to unlock. One of these is a Baron tagged for only Medium and Hard, in his place is an Imp #1184 that has all the right script setups but is not set to appear on any difficulty. The fix is to simply have this imp appear on Easy.
+*fixed the overlapping sector handler in hw_fakeflat.cpp. This picked the wrong plane as the proper texture cutoff.
+*fixed: The UDMF loader did not adjust the floor/ceiling overlap state after processing UDMF sector plane properties.
+*fixed: EV_DoDonut checked the wrong compatibility variable and missed all map specified flags.
+*Fix gameinfo load from same directory as file containing gameinfo lump
+*validate partner seg index in LoadGLZSegs before using it
+*added compatibility handler for Phocas Island 2 MAP01.
+*fixed doublebind check with automap. For the automap C_DoKey gets called twice, once with the automap bindings and once with the regular bindings and doubleclicks.
+*clear the Dehacked string table after passing it to GStrings. For some reason std::move does not work here so make sure it won't stick around.
+*stop all [[cutscenes]] before the ENDOOM screen.
+*fixed: Boom's generalized crushers must stop 8 units above the floor. This required changing the special, so a new one was added to avoid altering Generic_Crusher.
+*Fix a very rare crash with complex Polyobjects
+*add support for not localizing some text functions, and modify menu text fields to use this
+*let Dehacked set the implicit missile flags.
+*fix ammo consumption of powered up Phoenix Rod.
+*add unexplored secret color for overlay automap to the menu
+*made all FileReader implementations 64 bit capable.
+*added a nomirrors compatibility handler and applied it to Conf256's CONF55 map. This is for disabling broken plane reflection setups.
+*When compat_floormove is enabled prevent sector floor from lowering if a thing is stuck in the ceiling (vanilla behavior)
+*fixed M_GetSavegamesPath for Linux.
+*Add Inventory::ModifyBob and Inventory::ModifyBob3D
+*Expose OF_Transient to actors as bNoSaveGame
+*add StartGameDirect function
+*fixed: MBF21's BOSS flag implies NORADIUSDMG.
+*fixed: For Dehacked, A_CPosAttack needs to use a hard coded attack sound. This discrepancy is ancient, so the approach used for the shotgunner does not work here and some hacks are needed to remap the function only for Dehacked.
+*implemented the remaining dynamic structures of dsdhacked
+*dsdhacked: Allow dynamic creation of new actors
+*dsdhacked: allow dynamic creation of new states.
+*add float.equal_epsilon and double.equal_epsilon
+*Allow building gzdoom with Vulkan with either X11 or Wayland WSI integration through CMake options
+*use stb-image for JPEG decoding because the old library provides no advantage over it.
+*Allow disabling colors for NameAllKeys
+*avoid high stack usage in anmtexture.cpp
+*added DSDA's passover/nopassover keys to the MAPINFO parser.
+*use a string pool to store all filenames and in the file system. this avoid lots of small allocations for data that will released in bulk later.
+*use the lump cache directly for FileData. This was the final puzzle piece to allow using memory mapped files in the future.
+*use better hash function in the file system. This is djb2 which is supposedly one of the best string hashing functions around.
+*rewrote dir CCMD using ScanDirectory and avoiding I_ChDir entirely.
+*use ScanDirectory in all places where the findfile API was used.
+*[[Image_format|WebP image support]]
+*added safeguards against very early access to console variables in Cocoa backend
+*Add support for [[Image_format|QOI image formats]]
+*block the centerview CCMD if the player has TOTALLYFROZEN. This is deliberately done this way, instead of placing the check inside PlayerPawn::CheckPitch, because there may be other situations where we don't want to block the centering function (APowerFlight::EndEffect being one such case)
+*replaced zstrformat with stb_sprintf.
+*[[A_Chase]] CHF_DONTLOOKALLAROUND
+*Add Weapon::ModifyBobLayer , Weapon::ModifyBobLayer3D and Weapon::ModifyBobPivotLayer3D
+*allow explicit casts between vectors of different underlying types
+*Fixed BlockingLine giving erroneous results
+*add CountSectorTags/CountSectorTags/CountLineIDs/GetLineID
+*Exported reflection functionality. Localized reflection code to a single function. Fixed an error where NOSHIELDREFLECT was being checked on the wrong Actor. Fixed an oversight where MIRRORREFLECT was checking for valid target despite not needing one.
+*Added ShadowAimFactor and ShadowPenaltyFactor. These properties allow to specify how much an actors' aim is degraded when shooting at a shadow actor. And how much the shadow actor itself affects the shooters' aim, respectively.
+*Added MF9_SHADOWAIMVERT. This flag causes the vertical aiming of monsters to also be affected when they aim at shadow actors.
+*Added MF9_SHADOWBLOCK. Actors in the line of fire with this flag trigger the MF_SHADOW aiming penalty. The shooter needs to have MF9_DOSHADOWBLOCK to check for actors with this flag.
+*Added MF9_SHADOWAIM. This flag allows actors with MF6_SEEINVISIBLE to still get an aim penalty by trying to shoot at a shadow actor.
+*Added damage property to earthquakes.
+*Added damage and thrust multipliers to quakes.
+*Added QF_DAMAGEFALLOFF. This flag makes it so that the damage and actor thrusting of earthquakes fades with distance like the screen shake effect does.
+*Added (XF/RADF)_CIRCULAR. This flag makes explosions use a spherical radius, instead of a cubic one. Only took almost 30 years.
+*Added (XF/RADF)_NOALLIES. This flag allows explosions to not harm any actors that are friendly to its' source.
+*Added (XF/RADF)_THRUSTLESS. This flag allows for explosions that do not thrust any of the actors caught in the blast.
+*Allow custom MessageBox menu selector
+*Individual Joystick Enable/Disable Toggles
+*add QualifiedName to VMFunction and allocate these static names from the class data memory arena instead of using FStrings.
+*null pointer type checks in the VM added to avoid crash on bad codegen.
+*Expanded Service's Get&lt;Type&gt; functions to pass in `name` parameter.
+*Added GetName(UI/Data) to Service class.
+*make all legacy light modes except 'Doom' and the software rendering emulation MAPINFO only. A CVAR still exists for testing but its value won't be saved to the config.
+*MAPINFO can not enforce any of the two software light modes, as low end users require the option to change this to the 'performance' setting.
+*changed lightmode menu options: user can only select between "performance', 'software' and 'vanilla'. 'performance' is the old 'Doom' mode which is still needed to speed things up on low end hardware.
+*fix the ammocount parameter in Weapon.CheckAmmo
+*fix UMAPINFO boss action clearing. This did not handle the case where the actions were cleared without adding new ones and also did not clear the MBF21 boss action flags.
+*remove memory leak in `A_ChangeModel`
+*made some changes to vectors.h so that it can be used without the floating point function replacements.
+*Add Voodoo Zombie Compatflag
+*remove `vid_gpuswitch` and all its handling; it is only as of now useful in old versions of Windows 7/8/10 which are no longer supported
+*added `MaxEffectTics` field to `Powerup`
+*adapted font system to properly handle Turkish. Those i's are really messy, especially when dealing with allcaps or pure lowercase fonts.
+*made D_WriteUserInfoStrings memory safe.
+*Fix TArray allocating 0 bytes in constructor
+*Add dynamic lights to software slope drawer
+*use uniform buffers for dynamic lights everywhere. Branching on SSBO content does not work that well on NVidia so it is better disabled. So far only implemented for OpenGL Vulkan needs more work.
+*Fix Software Slope Rendering for non-1.2 pixel ratios
+*add the flags MINVISIBLE and MVISBLOCKED
+*Extend pseudo-generics system used by maps to dynarrays
+*add RedirectCVAR directive for loading alternate maps based on a Bool CVAR setting
+*Fixes bones when using OpenGL 3.3 (UBO bone data)
+*validate the buffer size in HWViewpointBuffer::Set2D.
+*Fixed a bug where calling an invalid virtual function would cause a crash.
+*Add cvars to sprite shadows progressively according to thing &lt;-&gt; floor distance
+*Added OnEngineInitialize() for static event handlers
+*cleanup of the Doom and Chex Quest small fonts' discritical characters
+*Implement antialiasing for automap lines
+*Map::GetIfExists and Map::CheckValue
+*Fixed global TerrainDef array not being exported correctly
+*alt HUD: use `NewSmallFont` for drawing player's coordinates if `ui_generic` is enabled
+*Increase slider precision for mouse sensitivity settings
+*Use a slider to allow specifying max FPS with more precision
+*Check all ACS functions for minimum number of arguments.
+*Fixed SpawnForced not respecting the minimum declared in zspecial.acs. (https://forum.zdoom.org/viewtopic.php?t=77027)
+*Exported LinePortals to ZScript
+*cleaned up the pitch management in the sound backend. This now treats all pitch methods equally instead of the preferential treatment of Doom's original pitch hack. Most importantly, the sound channel now stores the pitch as a floating point value instead of 9.7 fixed point.
+*snd_pitched now also gets checked in the sound engine, not the low level interface.
+*Fix Y position of characters in monospace fonts
+*Added all of the missing player cheats to the SetPlayerProperty special.
+*Added APROP_WaterDepth.
+*Converted A_Quake(Ex) intensity parameters from ints to doubles.
+*Add missing error for mapinfo tonemap
+*Add Tonemap support for Unclamped lighting mode
+*Add Alternate Light Blending Options
+*gldefs: update Freedoom definitions.
+*CCMD listmaps: Colorize maps loaded from pwads in blue text
+*Fix MapIterator&lt;X, String&gt;::GetValue
+*Fixed a bug where static events would fail to halt propagation.
+*Fix diffuse-only material shaders not applying.
+*Add sv_noplayerclip to allow players to walk through and shoot each other (only in coop)
+*optimized sheet font texture generation. Instead of reloading the base image over and over again, let's cache it so that less time is needed for each single character.
+*changed CreatePalettedPixels to allow return of static pixel data without reallocation and copying.
+*fixed buffer size checks for raw textures.
+*Prevent important messages from being accidentally filtered.
+*Updated the WOPN banks collection
+*Added FlyBob Multiplier for Player
+*Added WaterClimbSpeed Property to Players
+*Fixed custom screen height and width not saving.
+*Additional lock-related ZScript functions.
+*Key.IsLockDefined: returns whether a lock number is valid (can be unlocked) or belongs to a "does not work" door.
+*Key.GetMapColorForLock: returns the automap color for a lock number (or -1 if the lock isn't valid).
+*Key.GetMapColorForKey: likewise, but for a specific key.
+*Fix FxMultiAssignDecl type
+*fix OpenGL ES selection on the windows startup dialog
+*Multi-Assign Declarations
+*Fixed the ACS PLAYERINFO_FVIEWBOB to be a bool instead of a double.
+*Add vulkan pipeline cache
+*Update and clean up UE1 model loader.
+*Expose StripLeft and StripLeftRight to ZScript
+*Fix StripLeftRight
+*Error out instead of crashing for vector out variables
+*optimizations for the sound system and texture manager.
+*Added FOV Interpolation
+*Added toggle control for weapon bob while flying
+*add BobWeapon3D
+*Exposed Box and PointOnLineSide
+*Add support for Vector types as properties
+*removed bogus errno check from Dehacked parser.
+*Fixed IsActorPlayingSound's default argument
+*Fix wrong assumptions about actor initialization in Map/MapIterator
+*fixed GC::FullGC not collecting everything anymore.
+*extended all fonts to contain all characters used by European languages
+|}
+
+;{{LE|4.11.1}}{{cs|a6c5ccc}} (October 11): {{Forum|t=78319|Release thread}}
+:'''Highlights'''
+:*Fixes from 4.11.0, ties up loose ends, to have a solid release overall before the transition to the next major release.
+:'''Bug fixes'''
+:*Fixed actor class creation for {{dw|DSDHacked}}.
+:*Fix DSDHacked state creation.
+:*Fixed {{c|DumpCPUInfo()}} definition for non-x64 platforms.
+:*Update [[soundfont]] for all platforms.
+:*Removed several bad casts to {{c|long}}.
+:*Fix inheritance for {{Flag|NOSAVEGAME|bNoSaveGame}}.
+:*Fixed another bad string validation check involving {{c|GetChars}}.
+:*Use {{c|copystring}} instead of {{c|strdup}} when reading environments.
+:'''Details'''
+:*Set default backend to {{wp|Vulkan}}. If Vulkan fails, use {{wp|OpenGL ES|GLES}} instead of {{wp|OpenGL}}.
+:*Disable survey code again.
+:*Make zs {{c|{{Class|Actor}}.[[GetReplacement]]}} and {{c|Actor.[[GetReplacee]]}} [[Object scopes and versions|clearscope]].
+
+==2024==
+;{{LE|4.12.0}}{{cs|f156abc}} (April 21): {{Forum|t=79013|Release thread}}
+:'''Highlights'''
+:*New launcher screen with custom widgets
+:*VisualThinkers
+:*Reworked Morph System
+:*Many DSDA/MBF21 compatibility fixes
+:*Mapinfo and cvarsearch ccmds
+:*Better joystick handling in Linux (particularly for the Steam Deck)
+:*Support for VP9 codec
+:*Lots of bug fixes
+:{| {{prettytable}} class="mw-collapsible mw-collapsed"
+! Full changelog &amp;nbsp;
+|-
+|
+* Fixed actor class creation for DSDHacked
+* Fix DSDHacked state creation.
+* Fixed DumpCPUInfo() definition for non-x64 platforms
+* Update soundfont
+* Added missing hit obituaries to Hexen's Chaos Serpents.
+* Set default backend to Vulkan, if Vulkan fails go GLES not OpenGL
+* Add 'mapinfo' ccmd
+* Add GetChars() accessors to many FString uses where const char* is wanted
+* Removed several bad casts to 'long'.
+* Fix inheritance for bNoSaveGame
+* Make zs Actor.GetReplacement and Actor.GetReplacee clearscope
+* Deduplicate Map/MapIterator Types' Code
+* Improve handling of field names in error messages during Map/MapIterator compilation
+* Make sure maps in return type don't segfault
+* Make Array::Append faster for simple structs
+* Don't try to generate code for abstract functions during JIT dump
+* Allow dumping jit for mod functions only
+* Allow "&amp;" instead of "out" in function parameters
+* Turn Map/Array assignments into Copy
+* Update LZMA SDK to 23.01
+* Fix wrong define for PPMd
+* Add final and sealed as class options
+* Several Backend Updates from Raze
+* Several Language File Updates
+* Converted lots of FString getters to .GetChars()
+* Fixed some signed-ness issues.
+* Fix $PROGDIR expansion being case sensitive
+* Added missing VMFunction struct definition
+* Implement Static Function Pointers
+* Add forcecullbackfaces in modeldef
+* Rewrite of HWWalls to allow grabbing the output from the render item generator
+* Bumped minimum macOS version to 10.13
+* Exposed P_GetMidTexturePosition() to ZScript.
+* Do not print all GL extensions to the log for the GLES renderer.
+* Widen the special field in FBoomArgs.
+* Fix UMAPINFO's intermusic being used at the summary screen.
+* Fixed savegame file name check.
+* Fix map WAD check for savegame validation.
+* Always save the map WAD in a savegame's metadata, even if it is from the IWAD
+* Add Wall Texture Skewing
+* Added Wads.GetLumpLength.
+* Fixed handling of DSDHacked sound replacement in the index range between the regular sounds and the MBF21 extensions.
+* Allow setting the colormap from mapinfo (dsda-doom)
+* Hooked up the per-level colormaps with the hardware renderer.
+* Added all required names for the new DSDA UDMF properties to the list of names.
+* Implemented DSDA's sector scrolling properties.
+* Added UDMF wall scrolling properties from DSDA.
+* Added friction and colormap related properties from DSDA.
+* Added per-sector sky UDMF properties.
+* Added DSDA's thrust properties for UDMF
+* Fixed DEHSUPP multiple load prevention.
+* Fix int assign optimization constants generating broken code because they weren't expected
+* Add master levels to game list for steam
+* Change which config to look for library folders in
+* Added rudimentary support for DSDA's COMPLVL lump.
+* Allow defining zero gravity through MAPINFO
+* Gave translations a dedicated scripted type.
+* Use FTranslationID in all places where strict type checking is needed.
+* Added missing LANGUAGE definition for Mystic Urn's tag
+* Add sv_coopsharekeys - in coop, picking up a key will distribute it to all online players
+* Serialize Name Keys as Strings for maps
+* Fix GL ES switch appearing as 'Unknown' in the menu sometimes
+* Add missing loop
+* Add in VisualThinkers
+* Invert mouse again for movement, so that it cancels out the first inversion
+* Allow comparisons between ints and translation IDs in pre 4.12 ZScript.
+* Decoupled IQM Model Animations
+* Expose coop share keys to the options menu
+* Add Compatibility=Extended for Blasphemer
+* Add flag +BILLBOARDFACECAMERA - renders actor billboard to always face the camera
+* Add actor flag +BILLBOARDNOFACECAMERA which forces sprite aimed at camera heading instead of camera position when gl_billboard_faces_camera is true
+* Fixed console rendering crash on wide consoles
+* Fix vanilla weapon functions passing ammo count to DepleteAmmo
+* Added STL compatible access functions to TArray.
+* Convert many source files to UTF-8
+* Mark gl_maplightmode as a cheat
+* Fixed savepic loading.
+* Add new ccmd cvarsearch allows searching cvar by name, languageid, or description
+* Fix nullptr check for target in HolySpirit.Slam
+* Internal filesystem handling cleanup
+* Virtualized returns for SpecialMissileHit/SpecialBounceHit
+* Fixed incorrect offsetting for SpriteOffset.
+* Allow 100% kills on 2048 Unleashed (pc_cp2.wad) MAP27
+* Allow completion of 2018 Unleashed (pc_cp2.wad) MAP38
+* Fixed comment in level_compatibility.zs regarding pc_cp2.wad MAP38 fix
+* Gldefs: update Freedoom big tech lamp.
+* Maintain the actual on-disk path (FResourceEntry::SystemFilePath) for the directory filesystem, because the FResourceEntry::FileName can be modified by game filter-s
+* Fixed MBF21's instant death sector types.
+* Added compatibility settings for Memento Mori 2 MAP20
+* Export FScanner parser to ZScript as ScriptScanner
+* Music volume.
+* Warnings and debug code cleanup
+* Fixed CF_SCALEDNOLERP having the wrong value.
+* Fixed infinite recursion in vid_preferbackend.
+* Added DI_ITEM_LEFT_CENTER and DI_ITEM_RIGHT_CENTER
+* New launcher with new widget system
+* Add two parameters to GetSpriteTexture: spritenum and framenum, since some states are "####" "#"
+* Iwadinfo.txt: remove double entry of doom2f.wad
+* Iwadinfo.txt: prefer *unity.wads for Unity Editions
+* Iwadinfo.txt: resort Names for a better overview
+* Iwadinfo.txt: resort Order for a better overview in selection box
+* Added CollidedWith
+* Added Z collision detection
+* Disabled player sprites when crossing through portals.
+* Exposed viewactive, allowing checks for overlay automaps.
+* Add new netid system for future use
+* Expose ForceLightning() to ZScript.
+* Added LightningSound MAPINFO property.
+* Use FSoundID for script provided sounds instead of FString.
+* Implement animated particles that aren't tied to the global animation timer
+* Reverse -allowduplicates check
+* Made the damage of polyobjects customizable
+* Exposed PerformShadowChecks() to ZScript.
+* Add CenterText MENUDEF flag
+* Fix .. to root folder in relative include
+* Better Joystick handling in Linux (particularly for the Steam Deck)
+* Fix readonly native structs
+* Support negative fadestep for particles
+* Reworked Morph system
+* Don't show path if longsavemessages is false
+* Fixed: A_LookEx did not account for the +LOOKALLAROUND flag.
+* Ignore vid_maxfps when vsync is enabled.
+* Quake radii and explosion distances are no longer int now doubles
+* Slow down frame updates for the start screen for slower GPU's, since this can increase loading time significantly
+* Libwebp now included in source
+* Fixes for spawn farthest DM option
+* Add crash log file to .gitignore
+* Fixed local items not copying properties properly
+* Am_overlay turns off the overlay when set to zero
+* Fix harmony grenade not working
+* Allow larger denominators for IVF movies
+* Add support for the VP9 codec in the IVF container
+* Skip frames when playing back IVF to prevent desyncs
+* Allow A_SetCrosshair(-1) to hide the crosshair for effects such as custom scopes
+* Add level compatibility fixes for Eternal Doom III
+* Handle dsda namespace like zdoom in udmf
+* Add cvar cl_restartondeath - bypasses autoloading savegame when pressing +use after dying
+|}
+
+;{{LE|4.12.1}}{{cs|10a8a61}} (April 21): {{Forum|t=79017|Release thread}}
+:'''Highlights'''
+:* Patch release to restore Windows 7 support, and a few fixes.
+:{| {{prettytable}} class="mw-collapsible mw-collapsed"
+! Full changelog &amp;nbsp;
+|-
+|
+* Fixed local copies of items not respecting their Amount value
+* Hide the additional parameters for now, this needs to be added in later
+* Added PSpriteTick virtual
+* Exported FTeam getters
+* Added pistol start gameplay option
+* Restored Windows 7 support
+|}
+
+;{{LE|4.12.2}}{{cs|71c4043}} (April 28): {{Forum|t=79053|Release thread}}
+:'''Highlights'''
+:* Linux fixes, network fixes, ZMusic update
+
+;{{LE|4.13.0}}{{cs|1a699c0}} (October 12): {{Forum|t=79658|Release thread}}
+:'''Highlights'''
+:* Added pistol start gameplay option
+:* A few ID24 spec implementations, adds support for new Bethesda DOOM + DOOM II re-release and Legacy of Rust
+:* Several multiplayer network fixes, especially with prediction
+:* some savegame fixes, should now be able to delete them on windows
+:* add Extra Parameters to iwad selection box
+:* iwad selection box now always shows unless one of the following is true: it is disabled, -iwad is used from command line, or you load in a gameinfo that suggests an iwad
+:* add mbf21 and mbf21 (strict) compatibility presets
+:* particles and rollsprites are now square
+:* ZMusic update, allows selecting a new module player
+:* forced-perspective sprite clipping (limited ability for sprites to render under the floor)
+:* support for Orthographic projection
+
+;{{LE|4.13.1}}{{cs|689dc61}} (October 20): {{Forum|t=79689|Release thread}}
+:'''Highlights'''
+:* fixes a couple critical bugs introduced in 4.13.0
+:* a couple of QOL improvements
+:{| {{prettytable}} class="mw-collapsible mw-collapsed"
+! Full changelog &amp;nbsp;
+|-
+|
+* Fix OpenGL shader to work with Apple's buggy GLSL compiler
+* Resolve compiler warning about deconstructor syntax
+* Added (SPF_)STRETCHPIXELS - for actors, makes rollsprites levelstretched, for particles, puts them back to the original stretch math as before, optional opt-in flag
+* enable console subsystem for Windows with runtime detection - compiling GZDoom as a console app now shows printf's in the terminal that launched it like in Linux and Mac OS.
+* allow getting checksum for current map
+* add null check for canvas
+* fov scales ortho
+* sector damage code reverted due to some critical bugs, feature will be in next release
+|}
+
+;{{LE|4.13.2}}{{cs|0c29e3a}} (October 31): {{Forum|t=79740|Release thread}}
+:'''Highlights'''
+:* fixes a couple critical bugs with the ZScript engine
+:* minor step improvements
+:{| {{prettytable}} class="mw-collapsible mw-collapsed"
+! Full changelog &amp;nbsp;
+|-
+|
+* Do a check if a local variable exceeds the available stack space.
+* Check array size for overflow.
+* cap the size of the string copy calls in {{c|LevelStatEntry()}}
+* Reduce number of multiply ops per frame and increase x-axis clipper range for orthographic projection.
+* Allow using {{c|Self}} as the class name in the default block to refer to the current class
+* Fixed {{flag|STRETCHPIXELS}} flag not being exposed.
+|}
+
+[[Category:Nostalgia]][[Category:GZDoom]]</text>
+    <sha1>ibb03rbp3bdqjl14n00xulz6q5512k6</sha1>
+  </revision>
+</page>

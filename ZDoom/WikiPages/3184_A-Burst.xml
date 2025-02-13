@@ -1,0 +1,41 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>A Burst</title>
+  <ns>0</ns>
+  <id>3184</id>
+  <revision>
+    <id>43265</id>
+    <parentid>35732</parentid>
+    <timestamp>2016-10-14T17:33:46Z</timestamp>
+    <contributor>
+      <username>Gez</username>
+      <id>1283</id>
+    </contributor>
+    <minor />
+    <comment>note about boss death</comment>
+    <origin>43265</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="848" sha1="3wxcrho41cpzyoq6hg0sjhwyqv16x75" xml:space="preserve">{{codepointer|Monster AI}}
+'''A_Burst''' (string ''classname'')
+
+Spawns a random numbers of actors of type ''classname'', positions them all around the calling actor, and then destroys the calling actor, removing it instantly from the game.  The amount spawned is relative to the calling actor's size, so a very large actor will spawn many more ''classname''s than a much smaller actor.  An actor with radius 20 and height 64 spawns, on average, around 40 things.
+
+If the calling actor has the {{Flag|BOSSDEATH}} flag, it also calls [[A_BossDeath]].
+
+== Examples ==
+This would make a modified grenade that would split in its death state into an actor called "MiniGrenade"
+
+ Actor ClusterBomb : {{Class|Grenade}}
+ {
+   States
+   {
+   Death:
+     MISL B 8 Bright [[A_Burst]] ("MiniGrenade")
+     MISL C 6 Bright
+     MISL D 4 Bright
+     Stop
+   }
+ }</text>
+    <sha1>3wxcrho41cpzyoq6hg0sjhwyqv16x75</sha1>
+  </revision>
+</page>

@@ -1,0 +1,39 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>A SetInventory</title>
+  <ns>0</ns>
+  <id>8946</id>
+  <revision>
+    <id>45151</id>
+    <parentid>44443</parentid>
+    <timestamp>2017-05-02T14:47:12Z</timestamp>
+    <contributor>
+      <username>Blue Shadow</username>
+      <id>2021</id>
+    </contributor>
+    <minor />
+    <comment>Remove {{new}}</comment>
+    <origin>45151</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="1183" sha1="eoyoiexrvlg8f1ocrcp68pmg41ugi7g" xml:space="preserve">__NOTOC__{{codepointer|Inventory}}
+bool '''A_SetInventory''' (string ''type'', int ''count'' [, pointer ''ptr'' [, bool ''beyondMax'']]])
+
+==Usage==
+Behaves similarly to [[A_GiveInventory]] with a few key exceptions.
+*The amount is specifically set, not added or subtracted. As such, setting it to 0 will remove the item completely.
+*As such, ignores health properties and skill levels. Use [[A_GiveInventory]] for standard giving.
+
+===Parameters===
+*''type'': the item to give. This should be a valid {{Class|Inventory|inventory item}}.
+*''count'': the amount to set.
+*''ptr'': the actor to give the item to. This is an [[actor pointer#Custom scripting|actor pointer selector]]. Default is {{c|{{const|AAPTR_DEFAULT}}}}, which corresponds to the caller of the function.
+*''beyondMax'': Unlike A_GiveInventory, this function respects the {{c|{{Property|Inventory.MaxAmount|MaxAmount}}}} property at all times. Setting this to ''true'' will ignore the maximum value. Default is ''false''.
+
+=== Return value ===
+The function returns ''true'' if the actor has their inventory changed. Thus, if they already have the amount specified, it returns ''false''.
+
+== Examples ==
+{{noexamples}}</text>
+    <sha1>eoyoiexrvlg8f1ocrcp68pmg41ugi7g</sha1>
+  </revision>
+</page>

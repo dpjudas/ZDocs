@@ -1,0 +1,68 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>Weapon slots</title>
+  <ns>0</ns>
+  <id>5296</id>
+  <revision>
+    <id>52479</id>
+    <parentid>52478</parentid>
+    <timestamp>2024-04-18T23:13:35Z</timestamp>
+    <contributor>
+      <username>Jekyll Grim Payne</username>
+      <id>2175</id>
+    </contributor>
+    <minor />
+    <comment>/* In the INI file */</comment>
+    <origin>52479</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="3188" sha1="o9aco27ikavhsqbvglljw33yu9gnc07" xml:space="preserve">'''Weapon slots''' determine which weapons can be selected, what order they can be selected in and which numeric slot each weapon resides in. There are ten slots, numbered 0 through 9. By default, each slot corresponds to a number key on the keyboard and may contain any number of weapons.
+
+In [[ZScript]] the functionality behind weapon slots is controlled by the {{struct|WeaponSlots}} struct.
+
+==Defining weapon slots==
+
+There are several different ways to define which slot a weapon should occupy:
+
+===In the weapon actor===
+
+Weapon slots can also be defined in the [[ZScript]]/[[DECORATE]] definition for the weapon actor. The {{Property|Weapon.SlotNumber}} property sets the default slot for a weapon. This allows modders to add new weapons without completely redoing the player's arsenal. This method is to be favored when creating "weapon resource" mods as they are the easiest to merge in a project.
+
+===In a custom player class===
+
+You can define weapon slots in a custom player class (an actor extending [[Classes:PlayerPawn|PlayerPawn]]) by using the {{Property|Player.WeaponSlot}} property. Weapon slots set in this way will always be overridden by any slots set in KEYCONF, regardless of the order in which the wads are loaded. If you want your mod's weapons to work with older mods with slots set up in KEYCONF, don't use this method.
+
+===In a MAPINFO lump===
+
+Weapon slots can be defined in the '''gameinfo''' section of the [[MAPINFO]] lump. Here is an example of the syntax:
+
+  gameinfo
+  {
+    weaponslot = 1, "Fist", "Chainsaw"
+    weaponslot = 2, "Pistol"
+    // add other slots here...
+  }
+
+===In a KEYCONF lump {{deprecated}}===
+
+This is the original way to set weapon slots, but is now [[deprecation|deprecated]] and should not be used in new projects. Slots defined in the [[KEYCONF]] lump will override any slots set in a custom player class and in GAMEINFO. For more information see [[adding weaponsections]].
+
+===In the INI file===
+
+Weapon slots can be defined on a {{Class|PlayerPawn|PlayerClass}}-basis in the gzdoom-user.ini file under a &lt;tt&gt;[&lt;Class&gt;.Weapons]&lt;/tt&gt; section. A slot declaration is of the form &lt;tt&gt;Slot[&lt;number&gt;]=&lt;WeaponName&gt;&lt;/tt&gt; and unlisted slots are left at their default. The setslot [[CCMDs|console command]] without any parameter prints what can be copied and pasted into the ini so as to keep the current configuration. An example of this syntax follows:
+ &lt;nowiki&gt;[&lt;/nowiki&gt;{{Class|DoomPlayer}}.Weapons]
+ Slot[1]={{Class|Fist}}
+ Slot[3]={{Class|Shotgun}}
+ Slot[8]={{Class|SuperShotgun}}
+ Slot[9]={{Class|Chainsaw}}
+This example gives a unique slot number to each standard Doom weapon, moving the SSG out of slot 3 and into slot 8, and the chainsaw out of slot 1 and into slot 9.
+
+==Weapon slots in ZScript==
+Weapon slots in [[ZScript]] are handled by the [[Structs:WeaponSlots|WeaponSlots]] struct, which contains several methods for interacting with slots (finding slots used by the weapon, modifying them, etc.) An instance of this struct is created for every player and can be accessed with the &lt;code&gt;player.weapons.&lt;/code&gt; pointer.
+
+[[Category:DECORATE guides]]
+[[Category:ZScript]]
+[[Category:Game concepts]]
+[[Category:Glossary]]</text>
+    <sha1>o9aco27ikavhsqbvglljw33yu9gnc07</sha1>
+  </revision>
+</page>

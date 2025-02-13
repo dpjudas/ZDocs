@@ -1,0 +1,81 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>Classes:Demon2</title>
+  <ns>0</ns>
+  <id>3386</id>
+  <revision>
+    <id>39474</id>
+    <parentid>36264</parentid>
+    <timestamp>2015-04-30T21:22:20Z</timestamp>
+    <contributor>
+      <username>Blue Shadow</username>
+      <id>2021</id>
+    </contributor>
+    <minor />
+    <comment>/* DECORATE definition */ Updated</comment>
+    <origin>39474</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="3721" sha1="cj5izgs2p2tmrnt7fap45sv5tnti0xl" xml:space="preserve">{{Actor|
+| type = Monster
+| name = Brown chaos serpent
+| class = Demon2
+| game = Hexen
+| doomednum = 8080
+}}[[Classes]]: [[Classes:Demon1|Demon1]]&amp;rarr;&lt;u&gt;Demon2&lt;/u&gt;&lt;br&gt;
+&amp;ensp;&amp;rarr;[[Classes:Demon2Mash|Demon2Mash]]
+
+The brown chaos serpent is a less common foe in Hexen than his {{Class|Demon1|green cousin}}. They are however very similar to the green serpents. They spit {{Class|Demon2FX1|green fire balls}}, which despite their appearance are not poisonous.
+
+==== [[DECORATE]] definition ====
+ ACTOR &lt;u&gt;Demon2&lt;/u&gt; : {{Class|Demon1}}
+ {
+   {{Property|Obituary}} "$OB_DEMON2"
+   {{Property|Species}} "Demon2"
+   States
+   {
+   Spawn:
+     DEM2 AA 10 [[A_Look]]
+     Loop
+   See:
+     DEM2 ABCD 4 [[A_Chase]]
+     Loop
+   Pain:
+     DEM2 E 4
+     DEM2 E 4 [[A_Pain]]
+     Goto See
+   Melee:
+     DEM2 E 6 [[A_FaceTarget]]
+     DEM2 F 8 [[A_FaceTarget]]
+     DEM2 G 6 [[A_CustomMeleeAttack]]([[DECORATE_expressions#Mathematical_functions|random]][DemonAttack1](1, 8)*2)
+     Goto See
+   Missile:
+     DEM2 E 5 [[A_FaceTarget]]
+     DEM2 F 6 [[A_FaceTarget]]
+     DEM2 G 5 [[A_CustomMissile]]("{{Class|Demon2FX1}}", 62, 0)
+     Goto See
+   Death:
+     DEM2 HI 6
+     DEM2 J 6 [[A_Scream]]
+     DEM2 K 6 [[A_NoBlocking]]
+     DEM2 L 6 [[A_QueueCorpse]]
+     DEM2 MNO 6
+     DEM2 P -1
+     Stop
+   XDeath:
+     DEM2 H 6
+     DEM2 I 0 [[A_SpawnItemEx]]("{{Class|Demon2Chunk1}}", 0, 0, 45, [[DECORATE_expressions#Mathematical_functions|frandom]][DemonChunks](1, 4.984375)*[[DECORATE_expressions#Mathematical_functions|cos]]([[DECORATE_expressions#Variables|angle]]+90),
+                            [[DECORATE_expressions#Mathematical_functions|frandom]][DemonChunks](1, 4.984375)*[[DECORATE_expressions#Mathematical_functions|sin]]([[DECORATE_expressions#Variables|angle]]+90), 8, 90, ChunkFlags)
+     DEM2 I 0 [[A_SpawnItemEx]]("{{Class|Demon2Chunk2}}", 0, 0, 45, [[DECORATE_expressions#Mathematical_functions|frandom]][DemonChunks](1, 4.984375)*[[DECORATE_expressions#Mathematical_functions|cos]]([[DECORATE_expressions#Variables|angle]]-90),
+                            [[DECORATE_expressions#Mathematical_functions|frandom]][DemonChunks](1, 4.984375)*[[DECORATE_expressions#Mathematical_functions|sin]]([[DECORATE_expressions#Variables|angle]]-90), 8, 270, ChunkFlags)
+     DEM2 I 0 [[A_SpawnItemEx]]("{{Class|Demon2Chunk3}}", 0, 0, 45, [[DECORATE_expressions#Mathematical_functions|frandom]][DemonChunks](1, 4.984375)*[[DECORATE_expressions#Mathematical_functions|cos]]([[DECORATE_expressions#Variables|angle]]-90),
+                            [[DECORATE_expressions#Mathematical_functions|frandom]][DemonChunks](1, 4.984375)*[[DECORATE_expressions#Mathematical_functions|sin]]([[DECORATE_expressions#Variables|angle]]-90), 8, 270, ChunkFlags)
+     DEM2 I 0 [[A_SpawnItemEx]]("{{Class|Demon2Chunk4}}", 0, 0, 45, [[DECORATE_expressions#Mathematical_functions|frandom]][DemonChunks](1, 4.984375)*[[DECORATE_expressions#Mathematical_functions|cos]]([[DECORATE_expressions#Variables|angle]]-90),
+                            [[DECORATE_expressions#Mathematical_functions|frandom]][DemonChunks](1, 4.984375)*[[DECORATE_expressions#Mathematical_functions|sin]]([[DECORATE_expressions#Variables|angle]]-90), 8, 270, ChunkFlags)
+     DEM2 I 6 [[A_SpawnItemEx]]("{{Class|Demon2Chunk5}}", 0, 0, 45, [[DECORATE_expressions#Mathematical_functions|frandom]][DemonChunks](1, 4.984375)*[[DECORATE_expressions#Mathematical_functions|cos]]([[DECORATE_expressions#Variables|angle]]-90),
+                            [[DECORATE_expressions#Mathematical_functions|frandom]][DemonChunks](1, 4.984375)*[[DECORATE_expressions#Mathematical_functions|sin]]([[DECORATE_expressions#Variables|angle]]-90), 8, 270, ChunkFlags)
+     Goto Death+2
+   }
+ }</text>
+    <sha1>cj5izgs2p2tmrnt7fap45sv5tnti0xl</sha1>
+  </revision>
+</page>

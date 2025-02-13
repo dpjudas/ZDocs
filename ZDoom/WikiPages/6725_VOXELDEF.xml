@@ -1,0 +1,60 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>VOXELDEF</title>
+  <ns>0</ns>
+  <id>6725</id>
+  <revision>
+    <id>53318</id>
+    <parentid>52776</parentid>
+    <timestamp>2024-10-12T11:01:43Z</timestamp>
+    <contributor>
+      <username>Blue Shadow</username>
+      <id>2021</id>
+    </contributor>
+    <minor />
+    <comment>{{git}} -&gt; {{new}} for 4.13.0</comment>
+    <origin>53318</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="3456" sha1="db3fsbpw8ge2kxqkzs4t5w2vvyfa34v" xml:space="preserve">The '''VOXELDEF''' lump allows to provide additional information when [[voxel]] models are used to replace [[sprite]]s.
+== Performance concerns ==
+In most cases it's not recommended to use voxels directly; instead it's preferable to export them as 3D models (such as .obj) and then use those models in GZDoom (see [[MODELDEF]]).
+
+The reason is that GZDoom doesn't have native voxel support; voxels are actually converted into 3D models at runtime, but this is performed in a very inefficient manner (where each voxel has all of its 6 faces converted, even if most of those faces are invisible), to the point where a textured cube with only 6 vertices as 3D model may end up having thousands of vertices as a voxel.
+== Usage ==
+The general syntax of a VOXELDEF lump uses blocks of this sort:
+ &lt;spritename&gt;[, &lt;spritename2&gt;[, &lt;spritename3&gt;[, ...]]] =  &lt;voxelname&gt;
+ {
+     &lt;Property1&gt; = &lt;value&gt;
+     &lt;Property2&gt; = &lt;value&gt;
+     &lt;Property3&gt; = &lt;value&gt;
+     ...
+ }
+
+By default, a voxel will replace sprites of the same name. For example, the voxel AMMOA will replace sprites AMMOA0, AMMOA1-AMMOA8, or AMMOA1-AMMOAF, depending on the number of rotations. A VOXELDEF block can therefore allow to replace sprites with different names, including several different sprites with a single voxel model.
+
+Omitting the frame character part of the sprite name (e.g., using "AMMO" instead of "AMMOA") will replace all sprites using that name, regardless of frame. This goes for a voxel name as well, the voxel "AMMO" will replace sprites AMMOAr, AMMOBr, AMMOCr, etc.
+
+Existing properties include:
+;{{LE|AngleOffset}}:A floating point value in degrees corresponding to the angle difference between the front of the voxel model and the front of the actor.
+;{{LE|PitchFromMomentum}}:Adjusts the model's pitch to match the momentum of the actor; useful for rocket projectiles.
+;{{LE|UseActorPitch}}:Model's pitch adjusts to match actor's pitch.
+;{{LE|UseActorRoll}}:Model's roll adjusts to match actor's roll.
+;{{LE|Scale}}:A floating point scale factor for the voxel model, allowing hi-res voxels. Note: Voxels are also affected by the {{Property|Scale|Actors Scale}}.
+;{{LE|XOffset, YOffset, ZOffset}}:Offsets the voxel model relative to its' origin in the XYZ axes respectively. Each of these properties are separate. {{new|4.13.0}}
+;{{LE|Spin}}:Since objects without rotations, such as decorations and item pickups, are rarely given an angle in the map editor, they may sometimes be oddly positioned, such as facing a wall, when replaced by voxels or [[model]]s. The simplest workaround is to make them spin in place, which is frequently used for pickups to make them more visible. The value is an integer corresponding to the number of degrees per second.
+;{{LE|DroppedSpin}}:As Spin, but only for items that have been {{Property|DropItem|dropped}} during the game, not placed in a map editor.
+;{{LE|PlacedSpin}}:As Spin, but only for items that have been placed in a [[map editor]], not dropped during the game.
+;{{LE|OverridePalette}}:If present, the voxel's built-in palette will be overridden, and the game's palette will be used for the voxel instead.
+
+== Examples ==
+&lt;pre&gt;BLLTA="BLLTA.KVX" {//NOTE:excluding the file extension can cause missing voxels errors.
+	Spin = 50
+}&lt;/pre&gt;
+If the voxel is not in the main folder
+&lt;pre&gt;PLAYA="voxels/voxpla.kvx" { 
+	Scale = 2.0 //NOTE: Excluding the decimal point may cause data type errors.
+}&lt;/pre&gt;
+[[Category:ZDoom special lumps]]</text>
+    <sha1>db3fsbpw8ge2kxqkzs4t5w2vvyfa34v</sha1>
+  </revision>
+</page>

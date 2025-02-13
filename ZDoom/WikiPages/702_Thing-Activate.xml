@@ -1,0 +1,47 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>Thing Activate</title>
+  <ns>0</ns>
+  <id>702</id>
+  <revision>
+    <id>52150</id>
+    <parentid>51334</parentid>
+    <timestamp>2024-04-01T09:09:13Z</timestamp>
+    <contributor>
+      <username>Jekyll Grim Payne</username>
+      <id>2175</id>
+    </contributor>
+    <origin>52150</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="1589" sha1="0dhhatughyb32qbcpsevdbo7qg1zlq7" xml:space="preserve">{{DISPLAYTITLE:Thing_Activate}}
+{{Special|130|tid|Thing|Activate}}
+* ''tid'': Thing ID of the thing to activate. 0 refers to the activator of the script.
+
+Activates an actor. In the case of a monster, removes the {{Flag|DORMANT}} flag from a monster so that it will be able to take damage and attack the player. Also, makes the actor call its [[Activate]] [[ZScript virtual functions|virtual function]] (which does nothing by default, unless overridden to add custom behavior). This function does not interact with the {{property|Activation}} property. Details can be found on the '''[[Activation]]''' page.
+
+For a monster, which looks away from the player upon activation, there are two distinct reactions:
+
+1.A monster, which  has not heard gunfire or the player has not crossed the monster's line of sight before activation, will not immediately attack the player but remains as if still dormant. It will attack, however, as soon as it hears gunfire or the player crosses the monster's line of sight.
+
+2. A monster, which has heard gunfire or the player has crossed the monster's line of sight before activation, will attack the player immediately upon activation.
+
+See the example map below.
+
+== Examples ==
+This script could be used to start a {{class|MovingCamera|moving camera}} with a [[TID]] of 15.
+ script 13 {{SType|Enter}}
+ {
+     [[Thing_Activate]](15);
+     [[ChangeCamera]](15,0,0);
+ }
+
+== See also ==
+* [[Thing Deactivate]]
+* [[Activation]]
+
+== External links ==
+* {{oldref}}
+*[http://www.mediafire.com/file/qm2ljqo6ohwit49/130_DiH.zip Example map (Doom2 in Hexen format) ]</text>
+    <sha1>0dhhatughyb32qbcpsevdbo7qg1zlq7</sha1>
+  </revision>
+</page>

@@ -1,0 +1,59 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>Classes:ArtiEgg</title>
+  <ns>0</ns>
+  <id>2609</id>
+  <revision>
+    <id>39706</id>
+    <parentid>38866</parentid>
+    <timestamp>2015-05-03T22:15:11Z</timestamp>
+    <contributor>
+      <username>Blue Shadow</username>
+      <id>2021</id>
+    </contributor>
+    <minor />
+    <comment>/* DECORATE definition */ Updated</comment>
+    <origin>39706</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="1408" sha1="rey94yxx6zd6w8vsrlbdni6f7aydq2v" xml:space="preserve">{{Actor|
+| type = Artifact
+| name = Torpol's Morph Ovum
+| class = ArtiEgg
+| game = Heretic
+| doomednum = 30
+| spawnid = 14
+| spawnname = T_ITEMEGG 
+}}[[Classes]]: [[Classes:Inventory|Inventory]]&amp;rarr;[[Classes:CustomInventory|CustomInventory]]&amp;rarr;&lt;u&gt;ArtiEgg&lt;/u&gt;
+
+This artifact, when used, fire five [[Classes:EggFX|projectiles]] that transform the monsters they hit into [[Classes:Chicken|chickens]] and the players they hit into [[Classes:ChickenPlayer|player-controlled chickens]].
+
+==== [[DECORATE]] definition ====
+ ACTOR &lt;u&gt;ArtiEgg&lt;/u&gt; : {{Class|CustomInventory}}
+ {
+   +{{Flag|COUNTITEM}}
+   +{{Flag|FLOATBOB}}
+   +{{Flag|INVENTORY.INVBAR}}
+   +{{Flag|INVENTORY.PICKUPFLASH}}
+   +{{Flag|INVENTORY.FANCYPICKUPSOUND}}
+   {{Property|Inventory.Icon}} "ARTIEGGC"
+   {{Property|Inventory.PickupSound}} "misc/p_pkup"
+   {{Property|Inventory.PickupMessage}} "$TXT_ARTIEGG" // "MORPH OVUM"
+   {{Property|Inventory.DefMaxAmount}}
+   {{Property|Tag}} "$TAG_ARTIEGG"
+   States
+   {
+   Spawn:
+     EGGC ABCB 6
+     Loop
+   Use:
+     TNT1 A 0 [[A_FireCustomMissile]]("{{Class|EggFX}}", -15, 0, 0, 0, 1)
+     TNT1 A 0 [[A_FireCustomMissile]]("{{Class|EggFX}}", -7.5, 0, 0, 0, 1)
+     TNT1 A 0 [[A_FireCustomMissile]]("{{Class|EggFX}}", 0, 0, 0, 0, 1)
+     TNT1 A 0 [[A_FireCustomMissile]]("{{Class|EggFX}}", 7.5, 0, 0, 0, 1)
+     TNT1 A 0 [[A_FireCustomMissile]]("{{Class|EggFX}}", 15, 0, 0, 0, 1)
+     Stop
+   }
+ }</text>
+    <sha1>rey94yxx6zd6w8vsrlbdni6f7aydq2v</sha1>
+  </revision>
+</page>

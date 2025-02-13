@@ -1,0 +1,459 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>ZScript data types</title>
+  <ns>0</ns>
+  <id>8973</id>
+  <revision>
+    <id>54185</id>
+    <parentid>54184</parentid>
+    <timestamp>2025-02-04T12:43:59Z</timestamp>
+    <contributor>
+      <username>Jekyll Grim Payne</username>
+      <id>2175</id>
+    </contributor>
+    <minor />
+    <comment>/* StateLabel */</comment>
+    <origin>54185</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="26595" sha1="io48q1gu3uxbpoc6jigupycno0l87vv" xml:space="preserve">{{ZScriptNote}}
+[[ZScript]] introduces a variety of new variables usable within classes (including actors) and [[structs]]. In actors these must be defined either inside regular/anonymous functions, or outside the '&lt;code&gt;Default {}&lt;/code&gt;' block, which is used for an [[Actor]] class's internal properties only. In other classes they can be defined anywhere in the class.
+
+= Types =
+== Arithmetic ==
+See [https://msdn.microsoft.com/en-us/library/s3f49ktz.aspx this page] for more information on what the types are and their aliases. They are defined as shown below, NOT like in C++ (i.e. no unsigned word or underscore).
+
+Arithmetic data types can be utilized with [[Operators_(ZScript)#Arithmetic_operators|arithmetic operators]].
+* {{c|'''bool'''}}
+: true/false
+* {{c|'''double'''}}
+: Float-point numbers with high precision. Support the following:
+:* &lt;code&gt;~==&lt;/code&gt; — approximately equal check (see [[Operators_(ZScript)#.7E.3D.3D_.28approximately_equal.29|here]]).
+:* &lt;code&gt;double.NaN&lt;/code&gt; — Short for "not a number", used to invalidate a double. Checking for a NaN is done by seeing if a variable is NOT equal to itself, e.g. &lt;code&gt;if (myDouble != myDouble)&lt;/code&gt;.
+* {{c|'''int'''}}
+: Integer number
+* {{c|'''uint'''}}
+: Unsigned integer number (cannot be negative).
+
+=== Methods ===
+*{{c|Vector2 '''ToVector'''(double ''number'')}}
+:Converts a number to a Vector2 that contains {{c|(cos(number), sin(number))}}.
+
+== Vectors ==
+*{{c|'''Vector2'''}}
+:2-component vector. Has &lt;code&gt;x&lt;/code&gt; and &lt;code&gt;y&lt;/code&gt; components.
+*{{c|'''Vector3'''}}
+:3-component vector. Has &lt;code&gt;x&lt;/code&gt;, &lt;code&gt;y&lt;/code&gt; and &lt;code&gt;z&lt;/code&gt; components.
+*{{c|'''Vector4'''}}
+:4-component vector. Has &lt;code&gt;x&lt;/code&gt;, &lt;code&gt;y&lt;/code&gt;, &lt;code&gt;z&lt;/code&gt; and &lt;code&gt;w&lt;/code&gt; components.
+
+=== Methods ===
+'''Note:''' Vectors currently ''cannot'' be used in dynamic arrays.
+* {{c|double '''Length'''()}}
+:Returns the length of the vector as a double. Effectively performs &lt;code&gt;sqrt(x*x + y*y)&lt;/code&gt; for Vector2, &lt;code&gt;sqrt(x*x + y*y + z*z)&lt;/code&gt; for Vector3, &lt;code&gt;sqrt(w*w + x*x + y*y + z*z)&lt;/code&gt; for Vector4.
+* {{c|double '''LengthSquared'''()}}
+:Same as &lt;code&gt;Length()&lt;/code&gt; but does not square root it. More efficient than using a sqrt.
+* {{c|Vector2 '''Unit'''()}}
+: {{c|Vector3 '''Unit'''()}}
+: {{c|Vector4 '''Unit'''()}}
+:Returns a vector with all members multiplied by &lt;code&gt;1 / Length()&lt;/code&gt;, giving a vector with a length of 1.
+:If the length of the base vector is 0, this will return a &lt;code&gt;Vector#&lt;/code&gt; where every value is &lt;code&gt;NaN&lt;/code&gt;.
+* {{c|Vector3 '''PlusZ'''(double ''offset'')}}
+:Returns a Vector3 with the z offset by the given amount. Only available for Vector3.
+
+See [[ZScript special words]] for more functionality related to vectors.
+
+== Quaternion ==
+'''Note:''' Quats currently ''cannot'' be used in dynamic arrays.
+*{{c|'''Quat'''}}
+: See [[Quaternion]].
+
+== Strings ==
+*{{c|'''String'''}}
+:Case-sensitive text strings. Strings should be enclosed with double quotation marks: &lt;code&gt;"MyString"&lt;/code&gt;.
+:Strings support [[Operators_(ZScript)#Relational_operators|relational operators]]. Note that &lt;code&gt;~==&lt;/code&gt; can be used to perform a case-insensitive string comparison.
+:Support string formatting (see the '''[[String]]''' page for more information).
+
+Strings can be directly converted to names and vice versa, for example:
+&lt;syntaxhighlight lang="csharp"&gt;
+String foo = "MyString";
+name bar = foo; //bar = 'mystring'
+&lt;/syntaxhighlight&gt;
+
+== Names ==
+*{{c|'''Name'''}}
+:Case-insensitive text strings. Should be enclosed with single quotation marks: &lt;code&gt;'myname'&lt;/code&gt;.
+:Strings support [[Operators_(ZScript)#Relational_operators|relational operators]].
+:[[String|String formatting]] is not supported, but names can be converted to strings, formatted, then converted back to names.
+
+== Sound ==
+*{{c|'''Sound'''}}
+:A name of a sound as defined in [[SNDINFO]]. GZDoom cannot read audio file names directly; only sounds exposed to SNDINFO can be utilized in audio functions (such as [[A_StartSound]] and others).
+:Sounds are treated similarly to strings, so they can be [[String|formatted]] as well.
+
+== StateLabel ==
+*{{c|'''StateLabel'''}}
+:Contains the name of a [[Actor_states#State_labels|state sequence label]]. Should be enclosed with double quotation marks: &lt;code&gt;"MyStateLabel"&lt;/code&gt;.
+:These are NOT strings. Cannot be converted to strings. Strings, however, can be converted to StateLabel with '''[[FindStateByString]]'''.
+:These are NOT state pointers. A pointer to the first state under the specified state label can be obtained with [[FindState|{{c|FindState("MyStateLabel")}}]] or [[ResolveState|{{c|ResolveState("MyStateLabel")}}]] (depending on the calling context).
+
+A special case should be noted with &lt;code&gt;null&lt;/code&gt; and &lt;code&gt;"Null"&lt;/code&gt;, the key difference being using "" around it or not:
+* &lt;code&gt;null&lt;/code&gt; means "no state" and should be used if an actor should not perform a jump.
+* &lt;code&gt;"Null"&lt;/code&gt; is an actual name of a state label defined in the base [[Actor]] class, and it destroys the calling actor after 1 tic. Should be used if the actor should be destroyed. Do not confuse this with &lt;code&gt;null&lt;/code&gt;. This is safe to use when a jumping function is inside an IF statement — the actor will not be destroyed, since they are treated as booleans instead of actual jumps for testing purposes only.
+
+== Color ==
+*{{c|'''Color'''}}
+:Used to record a a color either defined in the [[X11R6RGB]] lump or a hexadecimal value, or a directly specified ARGB value. 
+:Has 4 components: &lt;code&gt;a&lt;/code&gt; (alpha), &lt;code&gt;r&lt;/code&gt; (red), &lt;code&gt;g&lt;/code&gt; (green), &lt;code&gt;b&lt;/code&gt; (blue) as 0-255 values. Alpha is not used in some cases, for example in functions that utilize alpha as a separate value/property.
+
+Color can be defined as a string, a series of 0-255 values, a hex code, or hex-like code in a string. In all of these cases alpha can be specified or omitted. For example, a pure red color can be defined as follows:
+&lt;syntaxhighlight lang="csharp"&gt;
+color col0 = "red";                  //X11R6RGB lump
+color col1 = color(255, 255, 0, 0);  //ARGB
+color col2 = color(255, 0, 0);       //RGB
+color col3 = 0xFFFF0000;             //ARGB
+color col4 = 0xFF0000;               //RGB
+color col5 = "FF0000";               //RGB (the string gets converted internally)
+&lt;/syntaxhighlight&gt;
+
+'''NOTE:''' Several actor properties can be read '''only after''' the mask has been cleared, such as &lt;code&gt;bloodcolor&lt;/code&gt;.
+&lt;syntaxhighlight lang="csharp"&gt;
+Color bl = (bloodcolor &amp; 0xffffff); //Six 'f's, no more, no less!
+&lt;/syntaxhighlight&gt;
+
+== TextureID ==
+*{{c|'''TextureID'''}}
+: Contains the integer ID of a texture, all graphics have TextureIDs, not just map textures. See {{struct|TextureID}}.
+: Textures can be obtained and otherwise managed with the {{struct|TexMan|TexMan struct methods}}.
+
+== SpriteID ==
+*{{c|'''SpriteID'''}}
+: Contains the integer ID of a [[sprite]]. In contrast to TextureID, SpriteID has a few peculiarities:
+:# Only images that explicitly exist in the sprite namespace will have a SpriteID. For that to happen, the image has to be under the {{c|/sprites/}} subfolder in a [[PK3]], or the {{c|S_START/S_END}} markers in a [[WAD]], and it must follow the [[Sprite#Naming_rules|sprite naming rules]].
+:# In addition, SpriteIDs will only be generated for sprites that are explicitly defined in the States block of an actor class somewhere among the loaded archives. Note, an instance of that actor doesn't need to be ''spawned'' in a running game at all; it simply needs to have states with sprites, so SpriteIDs for those sprites are created.
+:# SpriteID only contains an ID for the "name" part of the sprite (i.e. the first 4 characters, such as HEAD); it does ''not'' contain the frame letter or the rotation. Those are stored separately: for example, {{class|Actor}} and {{class|PSprite}} both have a &lt;code&gt;sprite&lt;/code&gt; field that contains the SpriteID, and a separate &lt;code&gt;frame&lt;/code&gt; field that contains the frame letter as an integer number (0 is A, 1 is B, 2 is C, and so on). As for the angle number, the game handles that automatically.
+:# Due to everything listed above, &lt;u&gt;it's not possible to directly convert a SpriteID to a TextureID&lt;/u&gt; (even if it were, it simply wouldn't contain the full texture, since, as mentioned, it only contains the first 4 characters of the graphic). To obtain the TextureID for a sprite used on a specific actor's state, use '''[[GetSpriteTexture]]'''.
+: A SpriteID can be obtained from a graphic name with '''[[GetSpriteIndex]]''': for example &lt;code&gt;GetSpriteIndex("BAL1")&lt;/code&gt; will obtain the SpriteID for {{class|DoomImpBall|Imp's fireball}}. Note, as mentioned above, the sprite has to be defined in some actor's states for this function to work. This will also ''not'' obtain a frame letter: that can be read off an Actor's or PSprite's &lt;code&gt;frame&lt;/code&gt; field directly.
+
+== Class types ==
+*{{c|'''class&lt;myclass&gt;'''}}
+: Used for holding class names and passing said names into places where a function may be expecting a legitimate class for its functionality. If a class that does not exist is assigned to it, GZDoom will throw an error message. Note that an invalid class is not the same thing as &lt;code&gt;null&lt;/code&gt;.
+
+&lt;syntaxhighlight lang="csharp"&gt;
+class&lt;Actor&gt; proj = 'RocketProjectile';
+if (CountInv('GrenadeAmmo'))
+{
+    proj = 'GrenadeProjectile';
+}
+A_FireProjectile(proj);
+&lt;/syntaxhighlight&gt;
+
+== Function references ==
+As of GZDoom 4.12, references to functions can be made, both static and non-static. Virtual functions are currently not referenceable so for non-static functions they cannot be virtual. They take the following syntax:
+&lt;syntaxhighlight lang="csharp"&gt;
+function&lt;[scope] [return types]([parameter types])&gt; MyFunction;
+&lt;/syntaxhighlight&gt;
+:*&lt;code&gt;[scope]&lt;/code&gt; is the scope of the function. This can be &lt;code&gt;play&lt;/code&gt;, &lt;code&gt;ui&lt;/code&gt;, or &lt;code&gt;clearscope&lt;/code&gt;. Note that this does ''not'' scope cast the function itself, it's merely used to check to make sure the function is valid.
+:*&lt;code&gt;[return types]&lt;/code&gt; are the data types of the return values. They're comma separated should there be more than one. &lt;code&gt;void&lt;/code&gt; is used for functions with no return values.
+:*&lt;code&gt;[parameter types]&lt;/code&gt; are the data types of the parameters, comma separated. If there are no parameters, this can be left empty as &lt;code&gt;()&lt;/code&gt;.
+:There are two ways to assign them:
+:*&lt;code&gt;MyClass.FunctionName&lt;/code&gt;
+::Direct assignment. Note that this can only be done with classes that the ZScript compiler actually knows about at compile time i.e. this can't be used with classes outside of your archive that haven't been parsed yet. The benefit of this method is that it can allow for error checking at compile time instead of needing to null check at run time.
+::&lt;syntaxhighlight lang="csharp"&gt;
+function&lt;play void(Actor)&gt; func = Actor.A_Pain;
+&lt;/syntaxhighlight&gt;
+:*&lt;code&gt;FindFunction("ClassName", "FunctionName")&lt;/code&gt;
+::A more generalized method for grabbing a reference to a function. This returns a &lt;code&gt;function&lt;void&gt;&lt;/code&gt; reference so it must be type casted manually:
+::&lt;syntaxhighlight lang="csharp"&gt;
+let func = (function&lt;play void(Actor)&gt;)(FindFunction("Actor", "A_Pain"));
+&lt;/syntaxhighlight&gt;
+{{Note|For non-static functions, the first parameter of them needs to be the class type of &lt;code&gt;self&lt;/code&gt; since this is also treated as a parameter. This means they will always have at least one parameter. Also important is that the class type must be the exact class the function is defined within. For instance, if a non-static function is defined in &lt;code&gt;MyClass&lt;/code&gt;, the type of &lt;code&gt;self&lt;/code&gt; must also be &lt;code&gt;MyClass&lt;/code&gt; when getting a reference to it.}}
+:&lt;code&gt;function&lt;void&gt;&lt;/code&gt; is a special untyped function reference that can be used to generically pass and store any kind. It must be type casted to the correct kind of function before it can be used (see the above example with &lt;code&gt;FindFunction()&lt;/code&gt;).
+:The function can be invoked via its &lt;code&gt;Call()&lt;/code&gt; method. It accepts the same parameters and returns the same return values as the function it's referencing as though that function were directly invoked.
+:&lt;syntaxhighlight lang="csharp"&gt;
+function&lt;clearscope bool(Actor, int, Sound)&gt; func = Actor.IsActorPlayingSound;
+if (func.Call(myActor, CHAN_BODY, -1))
+{
+    // ...
+}
+&lt;/syntaxhighlight&gt;
+{{Note|Function references have no concept of default values and all parameters must be passed in full when invoking the function.}}
+:Any sort of invalid type casting of a function will set the reference to &lt;code&gt;null&lt;/code&gt;, allowing it to be properly null checked. Properties via the &lt;code&gt;property&lt;/code&gt; keyword can also be used on &lt;code&gt;Actor&lt;/code&gt;s but they must use the &lt;code&gt;MyClass.MyFunction&lt;/code&gt; syntax when defining its value within the &lt;code&gt;default&lt;/code&gt; block.
+
+== Member Variable Only Types ==
+Certain data types in ZScript are valid but will only work when stored as a member variable. If used within a function they are converted to the appropriate data type as listed below. Once they're done being used, the result in them will be converted back to the assigned data type. This can be used to save memory e.g. on any fields in your class. These data types should ''not'' be declared within functions as they're only intended to be used for member variables. These types include:
+* '''int8'''
+:'''int16'''
+: Stores an 8-bit and 16-bit integer respectively
+: Converts to '''int'''
+* '''uint8'''
+:'''uint16'''
+: Stores an 8-bit and 16-bit unsigned integer respectively
+: Converts to '''uint'''
+* '''float'''
+: Stores a 32-bit floating-point value
+: Converts to '''double'''
+* '''FVector2'''
+:'''FVector3'''
+:'''FVector4'''
+: Uses single precision instead of double precision for its members
+: Converts to '''Vector2'''/'''Vector3'''/'''Vector4'''
+:'''Note:''' Currently trying to dot/cross product with a regular Vector2/3/4 will not work.
+* '''FQuat'''
+: Uses single precision instead of double precision for its members
+: Converts to '''Quat'''
+
+&lt;syntaxhighlight lang="csharp"&gt;
+class MyClass
+{
+    float myFloat; // this is a 32-bit float
+
+    double AddFloats(double a, double b) // all floating-point variables in functions should be doubles
+    {
+        myFloat = a + b; // myFloat is converted to a double
+        return myFloat;
+    }
+    // after this function is done, the value in myFloat will be converted back to a 32-bit float
+}
+&lt;/syntaxhighlight&gt;
+
+= Modifiers =
+=== Access Modifiers ===
+Access modifiers determine what fields and functions classes are capable of seeing from another class. If no modifier is specified then it is treated as public: every class has access to that field or function.
+*&lt;code&gt;protected&lt;/code&gt; - Only this class and its child classes have access to this
+*&lt;code&gt;private&lt;/code&gt; - Only this class has access to this
+
+=== Scope Modifiers ===
+Scope modifiers determine which scope to place a class, struct, field, or function in. For fields (including structs) and functions it will automatically inherit the scope of the class/struct it's defined in, but this can be changed by manually specifying a different scope. Anything that inherits from Thinker (e.g. Actor) will be in the play scope. By default classes or structs are placed in the data scope if no modifier is specified.
+*&lt;code&gt;virtualscope&lt;/code&gt; - Any non-static function marked with this will assume the scope of the class or struct it's being called from
+*&lt;code&gt;clearscope&lt;/code&gt; - If a function is in either the play or ui scope, this will set it back to being data scoped
+*&lt;code&gt;play&lt;/code&gt; - Any field, function, class, or struct marked with this will be put in the play scope
+*&lt;code&gt;ui&lt;/code&gt; - Any field, function, class, or struct marked with this will be put in the ui scope
+
+&lt;syntaxhighlight lang="csharp"&gt;
+class MyClass play
+{
+}
+
+// if defined as a field in a play scoped class this will still be ui scoped
+struct MyStruct ui
+{
+}
+// this will become play scoped if defined as a field in a play scoped class
+struct MyStruct2
+{
+}
+
+ui int myField;
+virtualscope void MyFunction() {}
+&lt;/syntaxhighlight&gt;
+=== Class modifiers ===
+Class modifiers allow for altering how the inheritance of ZScript classes can be handled.
+
+*&lt;code&gt;final&lt;/code&gt; - [https://en.cppreference.com/w/cpp/language/final Behaves like its C++ counterpart] (But only for classes). If added to a class, the class can no longer be inherited from.
+
+&lt;syntaxhighlight lang="cpp"&gt;
+class ParentClass
+{
+	int Variable;
+}
+
+class ChildClass : ParentClass final //Final version of this class.
+{
+	int NewVariable;
+}
+
+//This will no longer work, and create a compile error instead.
+class GrandchildClass : ChildClass
+{
+	int NewerVariable;
+}
+&lt;/syntaxhighlight&gt;
+
+*&lt;code&gt;sealed (class1, class2, etc...) &lt;/code&gt; - Limits inheritance of a class to only the specific child classes defined.
+
+&lt;syntaxhighlight lang="cpp"&gt;
+class ExclusiveParent sealed (Child1, Child2)
+{
+	int Variable;
+}
+
+class Child1 : ExclusiveParent
+{
+	int NewVariable;
+}
+
+class Child2 : ExclusiveParent
+{
+	int NewerVariable;
+}
+
+//No other classes can be derived from ExclusiveParent anymore, because they are not part of the sealed (class1, class2, class3...) list.
+class BastardChild : ExclusiveParent
+{
+	int NewererVariable;
+}
+&lt;/syntaxhighlight&gt;
+=== Function modifiers ===
+Functions can be optionally declared with &lt;code&gt;action&lt;/code&gt;, &lt;code&gt;static&lt;/code&gt; and &lt;code&gt;virtual&lt;/code&gt; modifiers. See [[ZScript_functions#Function_types|'''Function types''']].
+
+=== Transient ===
+The &lt;code&gt;transient&lt;/code&gt; keyword can be used to mark a field as non-serializable. Non-serializable fields will not be stored in save files. This can be useful for certain types that cannot be saved such as CVars and SecPlanes. It can also be useful if you want to force data to be cleared every time the game is reopened.
+&lt;syntaxhighlight lang="csharp"&gt;
+transient CVar myCVar; // this allows CVars to be safely stored as a field
+&lt;/syntaxhighlight&gt;
+
+=== Internal ===
+{{note|starting with [[GZDoom version history#4.11.0|4.11.0]], the &lt;code&gt;internal&lt;/code&gt; modifier can be used outside of the engine archive.}}
+If a field is set to &lt;code&gt;readonly&lt;/code&gt; but your ZScript still needs to modify it, &lt;code&gt;internal&lt;/code&gt; can be used to allow this without having to either obscure the field or give full write access. Code outside of the archive the field is in will still only be able to read from it and not write.
+&lt;syntaxhighlight lang="csharp"&gt;
+readonly internal int modSpecificValue;
+&lt;/syntaxhighlight&gt;
+=== Internal Engine Modifiers ===
+These modifiers can't be used by modders but are documented here for game developers using GZDoom who wish to expand the internal pk3 for their games.
+*&lt;code&gt;native&lt;/code&gt;
+:For fields, this is declared and used by the engine itself. For functions, this method is defined within the engine. For classes and structs, these types are defined and used by the engine itself.
+:Note: Native struct variables store a reference to a struct instead of being allocated on the stack directly. As such, they can be returned, assigned, and used in dynamic arrays, but ''cannot'' be created manually from within ZScript. Special care is needed as any internal struct being exported must have its size and alignment defined, otherwise the VM will not know how to properly manage it in memory.
+&lt;syntaxhighlight lang="csharp"&gt;
+class EngineClass native
+{
+}
+
+struct EngineStruct native
+{
+}
+
+native int engineValue;
+native void EngineFunction();
+&lt;/syntaxhighlight&gt;
+*&lt;code&gt;vararg&lt;/code&gt;
+:This specifies that a native function takes a variable amount of arguments. Putting &lt;code&gt;...&lt;/code&gt; as the last parameter marks when the variable arguments start. No other parameters can be defined after this point.
+&lt;syntaxhighlight lang="csharp"&gt;
+native vararg void MyFunction(int arg1, int arg2, ...);
+&lt;/syntaxhighlight&gt;
+*&lt;code&gt;@&lt;/code&gt;
+:Internal engine structs can be defined to either be stored by their value or by their reference (referred to as native) within the VM. In some cases a struct is defined as native but an internal variable or array stores it by its value. &lt;code&gt;@&lt;/code&gt; marks that a native struct in this case should ''not'' be stored by its reference.
+&lt;syntaxhighlight lang="csharp"&gt;
+native Array&lt;@NativeStruct&gt; NativeArray;
+native @NativeStruct NativeField;
+&lt;/syntaxhighlight&gt;
+
+=== Readonly ===
+
+The &lt;code&gt;readonly&lt;/code&gt; keyword can be used to make it so an Actor field cannot be written to. This can be useful for creating pseudo constant values that you might want to change on a per-Actor basis via their properties. It can also be used to pass readonly reference handles to functions. Readonly fields must be set in the &lt;code&gt;Default&lt;/code&gt; block as a property.
+
+&lt;syntaxhighlight lang="csharp"&gt;
+readonly int prop;
+
+// references set as readonly use readonly&lt;T&gt; syntax
+void MyFunction(readonly&lt;Actor&gt; mo) {}
+&lt;/syntaxhighlight&gt;
+For developers using GZDoom to create their games, readonly can also be used as a way to pass information from the engine to the front end without allowing modders to directly modify it. For instance, &lt;code&gt;radius&lt;/code&gt; is set to readonly in ZScript but can still be modified within the engine itself. This allows for easy read access while forcing an API for write access.
+
+=== Meta ===
+The &lt;code&gt;meta&lt;/code&gt; keyword is a special modifier that marks an Actor field as both static and readonly. Static in this case means the field is not stored on each individual Actor but instead shared in a single spot in memory across all of them. If you have values that aren't tied to a particular instance of an Actor, this can be used to save memory. A virtual getter function can be created to allow classes to modify it conditionally. Due to the nature of being readonly, this can only be set via the &lt;code&gt;Default&lt;/code&gt; block as a property.
+
+&lt;syntaxhighlight lang="csharp"&gt;
+meta int GibHealth;
+
+virtual int GetGibHealth()
+{
+	if (GibHealth != int.min)
+	{
+		return -abs(GibHealth);
+	}
+	else
+	{
+		return -int(GetSpawnHealth() * gameinfo.gibfactor);
+	}
+}
+&lt;/syntaxhighlight&gt;
+=== Function Const ===
+Unlike variable consts, the &lt;code&gt;const&lt;/code&gt; keyword for non-static functions denotes that the function does not modify the object's fields in its body. Unlike traditional C++ this does ''not'' actually prevent the function from modifying fields but instead acts like a hint that it won't do so. As a result this should only be used with functions where nothing but local variables are being modified. It's often used for getter functions so that they can be called from any scope.
+&lt;syntaxhighlight lang="csharp"&gt;
+clearscope bool GetValue() const {} // This should be paired with clearscope to denote it won't modify the play or ui scopes
+&lt;/syntaxhighlight&gt;
+
+= Arrays =
+Arrays behave like their C++ counterparts, including multi-dimensional support.
+
+=== [[Dynamic_arrays|Dynamic Arrays]] ===
+Dynamic arrays are similar to local arrays but can be resized at any time. They are similar to vectors in C++.
+&lt;syntaxhighlight lang="csharp"&gt;
+Array&lt;int&gt; myNumbers;
+myNumbers.Push(5);
+myNumbers.Push(10);
+&lt;/syntaxhighlight&gt;
+
+=== Local Arrays ===
+Local arrays can be defined with a set number of index spots, but cannot be initialized until after their declaration. Changing the array's contents must be done inside an anonymous or named function. These can also be declared inside of said functions for temporary existence.
+&lt;syntaxhighlight lang="csharp"&gt;
+int MyArray[2];
+MyArray[0] = 5;
+MyArray[1] = 10;
+&lt;/syntaxhighlight&gt;
+=== Constant Arrays ===
+Constant arrays are different from normal constants.
+* Can be defined in (anonymous) functions
+* Must have all their fields initialized immediately.
+* Must have a type, and the &lt;code&gt;static&lt;/code&gt; word present.
+
+&lt;syntaxhighlight lang="csharp"&gt;
+// static const &lt;type&gt; &lt;name&gt;[] =
+static const Color SecondaryColor[] =
+{
+    "Red",
+    "Yellow",
+    "Green",
+    "Blue" // Unlike enums, the last member must not have a comma.
+};
+&lt;/syntaxhighlight&gt;
+
+= Linked lists =
+Linked lists are a structure somewhat similar to arrays, but new linked lists cannot be created in ZScript. However, some existing linked lists are exposed to ZScript and can be operated on. The common examples of linked lists are:
+* '''Inv''' in {{class|Actor}} — stores the list of {{class|Inventory}} items held by the actor
+* Calling {{function|GetDropItems}} on an actor will obtain that actor's {{property|Dropitem}} list in the form of a linked list
+* '''psprites''' in {{struct|PlayerInfo}} — stores all currently used {{class|PSprite}} instances
+
+In contrast to arrays, elements of a linked list cannot be accessed directly with an index. Instead, the class that has a linked list has a pointer to the first ''element'' of the linked list, and each element of the list has a pointer to the next element.
+
+Linked lists can be iterated over by using a [[Statements#for|'''FOR''' loop]]. The most commonly used linked list is, arguably, Actor's inventory, so iterating over it would look as follows:
+
+&lt;syntaxhighlight lang="csharp"&gt;
+for (let item = &lt;actorpointer&gt;.Inv; item != null; item = item.Inv)
+{
+    // do something with 'item'
+}&lt;/syntaxhighlight&gt;
+
+In this example &lt;code&gt;&lt;actorpointer&gt;&lt;/code&gt; is a pointer to an actor who is holding some items, and &lt;code&gt;&lt;actorpointer&gt;.Inv&lt;/code&gt; is a pointer to the first item in their inventory.
+
+= Containers =
+The following are special types of variables of greater complexity. 
+
+* '''[[Structs]]'''
+:* Similar to their [http://www.cplusplus.com/doc/tutorial/structures/ C++ counterpart], contains data of different types. Can also contain functions.
+* '''[[Classes|ZScript classes]] (Pointers)'''
+:* Other classes can be defined as variables for use with their named type. [http://www.cplusplus.com/doc/tutorial/classes/ Read more about them here]. See also [[ZScript classes]] and [[ZScript special words]] for more information.
+* '''{{struct|State}}'''
+:* An internal struct which can be used to gather information about an actor's state.
+
+= Constants =
+Unlike C++ and [[DECORATE]], ZScript's constant non-arrays do not have a type to be given -- they auto resolve by themselves based on their usage. Only integer, double and string constants are supported.
+&lt;syntaxhighlight lang="csharp"&gt;
+const CON1 = 1; //int
+const CON2 = 2.5; //double
+const CON3 = "Stringify me, cap'n!"; //string (using "")
+&lt;/syntaxhighlight&gt;
+
+A list of globally available ZScript constants that come with GZDoom can be found [[ZScript constants|'''here''']].
+
+= See Also =
+* [[Operators (ZScript)]]
+* [[Statements (ZScript)]]
+* [[ZScript]]
+
+[[Category:ZScript]]
+[[Category:Editing references]]
+[[Category:Editing concepts]]</text>
+    <sha1>io48q1gu3uxbpoc6jigupycno0l87vv</sha1>
+  </revision>
+</page>

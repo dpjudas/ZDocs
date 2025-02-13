@@ -1,0 +1,108 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>GetChar</title>
+  <ns>0</ns>
+  <id>5431</id>
+  <revision>
+    <id>35766</id>
+    <parentid>30868</parentid>
+    <timestamp>2013-02-10T07:46:05Z</timestamp>
+    <contributor>
+      <username>Deded007</username>
+      <id>1392</id>
+    </contributor>
+    <minor />
+    <comment>formatting</comment>
+    <origin>35766</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="2612" sha1="1kiwceuobfju2uade6xqk65wgft1eb8" xml:space="preserve">__NOTOC__
+int '''GetChar''' (str ''string'', int ''index'')
+
+
+Gets the character in a string at index.
+=== Parameters ===
+* ''string'': a string.
+* ''index'': index of the character in the string (starting at 0).
+
+== Examples ==
+Here are some examples of how to use GetChar.
+ [[GetChar]]("abcde", 0);  //this returns 'a'
+ [[GetChar]]("abcde", 2);  //this returns 'c'
+ [[GetChar]]("abcde", 4);  //this returns 'e'
+This example prints a message on screen one character at a time in a randomized pattern.  The text is displayed for one second and then removed in a similar fashion.  Please note the use of the cast [[print|type]] c.
+ #define NUM_CHARS 6   //the length of str text
+ 
+ str text = "zdoom!";  //set NUM_CHARS to length
+ bool pos[NUM_CHARS];
+ 
+ script 1 (void)
+ {
+   int i, j, x;  
+   [[SetHudSize]](640, 480, 1);
+   for (i=0; i&lt;NUM_CHARS; i++)
+   {
+     do { 
+       j = [[random]](0, NUM_CHARS - 1);
+     } while (pos[j]);
+     
+     pos[j] = {{const|TRUE}};
+     x = 320.0 - NUM_CHARS * 10.0 / 2 + j * 10.0;
+     [[HudMessage]](c:[[GetChar]](text, j); {{const|HUDMSG_PLAIN}}, j + 1, {{const|CR_RED}}, x, 240.0, 0);
+     [[delay]](5);
+   }
+   
+   [[delay]](35);
+   for (i=0; i&lt;NUM_CHARS; i++)
+   {
+     do {
+       j = [[random]](0, NUM_CHARS - 1);
+     } while (!pos[j]);
+     
+     pos[j] = {{const|FALSE}};
+     [[HudMessage]](c:' '; 0, j + 1, 0, 0, 0, 0);
+     [[delay]](5);
+   }
+ }
+
+Alternatively, you can define the pos boolean array size high, and use [[StrLen]] to set the number of loop iterations.  This method is more flexible provided you don't exceed the array size.
+
+ str text = "zomg it's zdoom!";  
+ bool pos[255];
+ 
+ script 1 (void)
+ {
+   int i, j, x;  
+   [[SetHudSize]](640, 480, 1);
+   for (i=0; i&lt;[[StrLen]](text); i++)
+   {
+     do { 
+       j = [[random]](0, [[StrLen]](text) - 1);
+     } while (pos[j]);
+    
+     pos[j] = {{const|TRUE}};
+     x = 320.0 - [[StrLen]](text) * 10.0 / 2 + j * 10.0;
+     [[HudMessage]](c:[[GetChar]](text, j); {{const|HUDMSG_PLAIN}}, j + 1, {{const|CR_RED}}, x, 240.0, 0);
+    
+     if ([[GetChar]](text, j) != ' ') //don't delay for blank spaces
+       [[delay]](5);
+   }
+  
+   [[delay]](35 + [[StrLen]](text) * 2); //one second and 2 tics per character
+   
+   for (i=0; i&lt;[[StrLen]](text); i++)
+   {
+     do {
+       j = [[random]](0, [[StrLen]](text) - 1);
+     } while (!pos[j]);
+    
+     pos[j] = {{const|FALSE}};
+     [[HudMessage]](c:' '; 0, j + 1, 0, 0, 0, 0);
+     
+     if ([[GetChar]](text, j) != ' ') //don't delay for blank spaces
+       [[delay]](5);
+   }
+ }
+[[Category:ACS Information functions]] [[category:ACS String operations]]</text>
+    <sha1>1kiwceuobfju2uade6xqk65wgft1eb8</sha1>
+  </revision>
+</page>

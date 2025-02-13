@@ -1,0 +1,193 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>Classes:BackpackItem</title>
+  <ns>0</ns>
+  <id>3377</id>
+  <revision>
+    <id>53419</id>
+    <parentid>52662</parentid>
+    <timestamp>2024-10-22T21:36:14Z</timestamp>
+    <contributor>
+      <username>Jekyll Grim Payne</username>
+      <id>2175</id>
+    </contributor>
+    <origin>53419</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="6422" sha1="r5ba7mnuioc57xx9vd4j3lpj5hx1rjb" xml:space="preserve">{{Actor|
+| type = Internal
+| name = Backpack item
+| class = BackpackItem
+}}[[Classes]]: [[Classes:Inventory|Inventory]]&amp;rarr;&lt;u&gt;BackpackItem&lt;/u&gt;&lt;br&gt;
+&amp;ensp;&amp;rarr;[[Classes:AmmoSatchel|AmmoSatchel]]&lt;br&gt;
+&amp;ensp;&amp;rarr;[[Classes:Backpack|Backpack]]&lt;br&gt;
+&amp;ensp;&amp;rarr;[[Classes:BagOfHolding|BagOfHolding]]&lt;br&gt;
+
+'''BackpackItem''' is the base class for all backpack-like items. This class itself is never used directly. Its only purpose is to be a base class for other items.
+
+Upon pickup, any BackpackItem will iterate over all existing {{class|Ammo|ammo classes}} in the player's inventory and increase their {{property|Inventory.MaxAmount|{{c|MaxAmount}}}} to their {{property|Ammo.BackpackMaxAmount|{{c|backPackMaxAmount}}}}. The backpack will also give the player some ammo—that amount is defined in every ammo class, through the  {{property|Ammo.BackpackAmount}} property. Note, the changes to amount and maxamount are properties of the ''ammo'' classes, NOT the backpack.
+
+Creating multiple types of backpack (for example, one that would double ammo capacity and another that would triple it) is not possible directly. Doing that would require significantly modifying the logic and modifying ammo capacity manually, through the [[SetAmmoCapacity (ZScript)|SetAmmoCapacity]] function. As is, BackpackItem functions like any {{class|Inventory}} item: only the first instance of it you receive is picked up in your inventory; all further instances are intercepted by that first instance (using the [[HandlePickup]] virtual) and are only allowed to give you extra ammo, not modify its maxamount further.
+
+== [[ZScript]] definition ==
+{{ZScriptDefinitionNote|actors/inventory/ammo.zs#L232}}
+&lt;syntaxhighlight lang="csharp"&gt;
+class BackpackItem : Inventory
+{
+	bool bDepleted;
+	
+	//===========================================================================
+	//
+	// ABackpackItem :: CreateCopy
+	//
+	// A backpack is being added to a player who doesn't yet have one. Give them
+	// every kind of ammo, and increase their max amounts.
+	//
+	//===========================================================================
+
+	override Inventory CreateCopy (Actor other)
+	{
+		// Find every unique type of ammoitem. Give it to the player if
+		// he doesn't have it already, and double its maximum capacity.
+		uint end = AllActorClasses.Size();
+		for (uint i = 0; i &lt; end; ++i)
+		{
+			let ammotype = (class&lt;Ammo&gt;)(AllActorClasses[i]);
+
+			if (ammotype &amp;&amp; GetDefaultByType(ammotype).GetParentAmmo() == ammotype)
+			{
+				let ammoitem = Ammo(other.FindInventory(ammotype));
+				int amount = GetDefaultByType(ammotype).BackpackAmount;
+				// extra ammo in baby mode and nightmare mode
+				if (!bIgnoreSkill)
+				{
+					amount = int(amount * (G_SkillPropertyFloat(SKILLP_AmmoFactor) * sv_ammofactor));
+				}
+				if (amount &lt; 0) amount = 0;
+				if (ammoitem == NULL)
+				{ // The player did not have the ammoitem. Add it.
+					ammoitem = Ammo(Spawn(ammotype));
+					ammoitem.Amount = bDepleted ? 0 : amount;
+					if (ammoitem.BackpackMaxAmount &gt; ammoitem.MaxAmount)
+					{
+						ammoitem.MaxAmount = ammoitem.BackpackMaxAmount;
+					}
+					if (ammoitem.Amount &gt; ammoitem.MaxAmount)
+					{
+						ammoitem.Amount = ammoitem.MaxAmount;
+					}
+					ammoitem.AttachToOwner (other);
+				}
+				else
+				{ // The player had the ammoitem. Give some more.
+					if (ammoitem.MaxAmount &lt; ammoitem.BackpackMaxAmount)
+					{
+						ammoitem.MaxAmount = ammoitem.BackpackMaxAmount;
+					}
+					if (!bDepleted &amp;&amp; ammoitem.Amount &lt; ammoitem.MaxAmount)
+					{
+						ammoitem.Amount += amount;
+						if (ammoitem.Amount &gt; ammoitem.MaxAmount)
+						{
+							ammoitem.Amount = ammoitem.MaxAmount;
+						}
+					}
+				}
+			}
+		}
+		return Super.CreateCopy (other);
+	}
+
+	//===========================================================================
+	//
+	// ABackpackItem :: HandlePickup
+	//
+	// When the player picks up another backpack, just give them more ammoitem.
+	//
+	//===========================================================================
+
+	override bool HandlePickup (Inventory item)
+	{
+		// Since you already have a backpack, that means you already have every
+		// kind of ammo in your inventory, so we don't need to look at the
+		// entire PClass list to discover what kinds of ammo exist, and we don't
+		// have to alter the MaxAmount either.
+		if (item is 'BackpackItem')
+		{
+			for (let probe = Owner.Inv; probe != NULL; probe = probe.Inv)
+			{
+				let ammoitem = Ammo(probe);
+
+				if (ammoitem &amp;&amp; ammoitem.GetParentAmmo() == ammoitem.GetClass())
+				{
+					if (ammoitem.Amount &lt; ammoitem.MaxAmount || sv_unlimited_pickup)
+					{
+						int amount = ammoitem.Default.BackpackAmount;
+						// extra ammo in baby mode and nightmare mode
+						if (!bIgnoreSkill)
+						{
+							amount = int(amount * (G_SkillPropertyFloat(SKILLP_AmmoFactor) * sv_ammofactor));
+						}
+						ammoitem.Amount += amount;
+						if (ammoitem.Amount &gt; ammoitem.MaxAmount &amp;&amp; !sv_unlimited_pickup)
+						{
+							ammoitem.Amount = ammoitem.MaxAmount;
+						}
+					}
+				}
+			}
+			// The pickup always succeeds, even if you didn't get anything
+			item.bPickupGood = true;
+			return true;
+		}
+		return false;
+	}
+
+	//===========================================================================
+	//
+	// ABackpackItem :: CreateTossable
+	//
+	// The tossed backpack must not give out any more ammo, otherwise a player
+	// could cheat by dropping their backpack and picking it up for more ammoitem.
+	//
+	//===========================================================================
+
+	override Inventory CreateTossable (int amount)
+	{
+		let pack = BackpackItem(Super.CreateTossable(-1));
+		if (pack != NULL)
+		{
+			pack.bDepleted = true;
+		}
+		return pack;
+	}
+
+	//===========================================================================
+	//
+	// ABackpackItem :: DetachFromOwner
+	//
+	//===========================================================================
+
+	override void DetachFromOwner ()
+	{
+		// When removing a backpack, drop the player's ammo maximums to normal
+
+		for (let item = Owner.Inv; item != NULL; item = item.Inv)
+		{
+			if (item is 'Ammo' &amp;&amp; item.MaxAmount == Ammo(item).BackpackMaxAmount)
+			{
+				item.MaxAmount = item.Default.MaxAmount;
+				if (item.Amount &gt; item.MaxAmount)
+				{
+					item.Amount = item.MaxAmount;
+				}
+			}
+		}
+	}
+}&lt;/syntaxhighlight&gt;
+
+== [[DECORATE]] definition ==
+{{DecorateDefinitionNote}}
+ ACTOR &lt;u&gt;BackpackItem&lt;/u&gt; : {{Class|Inventory}} native {}</text>
+    <sha1>r5ba7mnuioc57xx9vd4j3lpj5hx1rjb</sha1>
+  </revision>
+</page>

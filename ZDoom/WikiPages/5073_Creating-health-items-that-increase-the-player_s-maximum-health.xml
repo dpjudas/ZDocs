@@ -1,0 +1,80 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>Creating health items that increase the player's maximum health</title>
+  <ns>0</ns>
+  <id>5073</id>
+  <revision>
+    <id>26668</id>
+    <parentid>26667</parentid>
+    <timestamp>2010-05-06T03:12:59Z</timestamp>
+    <contributor>
+      <username>Marisa Heit</username>
+      <id>5</id>
+    </contributor>
+    <minor />
+    <comment>Reverted edits by [[Special:Contributions/Paola mybhaby|Paola mybhaby]] ([[User talk:Paola mybhaby|Talk]]) to last revision by [[User:Gez|Gez]]</comment>
+    <origin>26668</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="2036" sha1="awq8ihau9yzm9nd4scgkwmzvxui76co" xml:space="preserve">This article is a detailed tutorial on how to create items that increase a player's maximum health points.
+
+(NOTE: All items herein will also increase the player's health to their new maximum)
+
+==Strife's Stamina Upgrades==
+
+The key element to creating items that increase the player's maximum health is Strife's [[Classes:UpgradeStamina|UpgradeStamina]] item. This is its definition:
+
+==== [[DECORATE]] definition ====
+ ACTOR &lt;u&gt;UpgradeStamina&lt;/u&gt; : [[Classes:DummyStrifeItem|DummyStrifeItem]] native
+ {
+   ConversationID 306, 287, 307
+   Inventory.Amount 10
+   Inventory.MaxAmount 100
+ }
+
+There are only 3 properties because this is an internal actor. You must inherit this actor into another actor in order to gain its effects. There are two properties you need to worry about here:
+
+'''Inventory.Amount:''' This is the amount to boost the player's maximum health.
+
+'''Inventory.MaxAmount:''' This is the maximum amount a player can boost his/her maximum health. For example, if you create an item like this:
+
+==== [[DECORATE]] definition ====
+  ACTOR &lt;u&gt;UpgradeStamina2&lt;/u&gt; : UpgradeStamina
+  {
+    Inventory.MaxAmount 200
+    Inventory.PickupMessage "Max health increased by 10!"
+  }
+
+Then, the absolute maximum regenerable health the player can have is 300. If you make an item like this:
+
+==== [[DECORATE]] definition ====
+  ACTOR &lt;u&gt;UpgradeStamina2&lt;/u&gt; : UpgradeStamina
+  {
+    Inventory.Amount 5
+    Inventory.PickupMessage "Max health increased by 5!"
+  }
+
+Then, the player's max health will be increased by 5.
+
+Using this format, you CAN define states. Like this:
+
+==== [[DECORATE]] definition ====
+  ACTOR &lt;u&gt;UpgradeStamina4&lt;/u&gt; : UpgradeStamina
+  {
+    Inventory.Amount 15
+    Inventory.MaxAmount 150
+    Inventory.PickupMessage "Max health increased by 15!"
+    states
+    {
+    '''Spawn:
+       SOUL ABCD 5
+       loop'''
+    }
+  }
+
+You can place these items in any map you'd like if you give them a DoomEd number. They behave exactly like inventory items, except for their effect on maximum health.
+
+
+[[Category:Guides]]</text>
+    <sha1>awq8ihau9yzm9nd4scgkwmzvxui76co</sha1>
+  </revision>
+</page>

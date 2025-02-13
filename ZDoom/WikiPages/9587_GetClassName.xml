@@ -1,0 +1,47 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>GetClassName</title>
+  <ns>0</ns>
+  <id>9587</id>
+  <revision>
+    <id>49141</id>
+    <timestamp>2022-05-18T17:03:28Z</timestamp>
+    <contributor>
+      <username>Inkoalawetrust</username>
+      <id>2604</id>
+    </contributor>
+    <comment>Created the page.</comment>
+    <origin>49141</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="756" sha1="iwmugdcttsbxql5boem6bg55hiix8d5" xml:space="preserve">Name '''GetClassName''' ()
+
+== Usage ==
+Returns the class name of the calling actor.
+
+=== Return value ===
+Returns the calling actors' class name as a [[ZScript_variables#Types|name data type]].
+
+== Examples ==
+This replacement of the {{Class|Revenant|Revenant's}} missiles will print out the class name of the actor it is locked on to roughly every second.
+
+ Class AnnouncingRevenantTracer : {{Class|RevenantTracer}} Replaces RevenantTracer
+ {
+ 	States
+ 	{
+ 		Spawn:
+ 			FATB ABABABABABABABAB 2 BRIGHT [[A_Tracer]]();
+ 			FATB A 0
+ 			{
+ 				If (Tracer) //Make sure the projectile actually has a valid tracer pointer.
+ 				{
+ 					Console.PrintF ("I spy a %s with my little eye.",Tracer.GetClassName());
+ 				}
+ 			}
+ 			Loop;
+ 	}
+ }
+
+[[Category:ZScript]]</text>
+    <sha1>iwmugdcttsbxql5boem6bg55hiix8d5</sha1>
+  </revision>
+</page>

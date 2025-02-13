@@ -1,0 +1,75 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>Inventory flags</title>
+  <ns>0</ns>
+  <id>5165</id>
+  <revision>
+    <id>51688</id>
+    <parentid>50569</parentid>
+    <timestamp>2024-02-06T17:20:06Z</timestamp>
+    <contributor>
+      <username>Jekyll Grim Payne</username>
+      <id>2175</id>
+    </contributor>
+    <origin>51688</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="5850" sha1="9233hco9gucwyc37wvlosrpyq81n3av" xml:space="preserve">&lt;onlyinclude&gt;* '''{{LE|INVENTORY.QUIET}}'''
+:When this item is picked up, its {{Property|Inventory.PickupSound|pickup sound}} is not played. Additionally, neither its {{Property|Inventory.PickupMessage|pickup message}} nor the pickup [[palette flash]] are displayed.
+* '''{{LE|INVENTORY.AUTOACTIVATE}}'''
+:This item activates automatically when being picked up.
+* '''{{LE|INVENTORY.UNDROPPABLE}}'''
+:This item cannot be dropped once it has been picked up. Note that this also prevents the actor from being removed when [[ClearInventory]] or [[ClearActorInventory]] is called.
+* '''{{LE|INVENTORY.UNCLEARABLE}}'''
+:This item cannot be removed by [[ClearInventory]] or [[ClearActorInventory]], but can be dropped/tossed.
+* '''{{LE|INVENTORY.INVBAR}}'''
+:This item is placed into the visible inventory when picked up.
+* '''{{LE|INVENTORY.HUBPOWER}}'''
+:This item is kept when travelling between levels of the same hub.
+* '''{{LE|INVENTORY.PERSISTENTPOWER}}'''
+:This item is kept when travelling between levels, even outside of a hub.
+* '''{{LE|INVENTORY.INTERHUBSTRIP}}''' {{deprecated}}
+:This item is taken away when traveling between hubs or single levels. Replaced by the more flexible {{c|{{Property|Inventory.InterHubAmount}}}} property.
+* '''{{LE|INVENTORY.PICKUPFLASH}}''' {{deprecated}}
+:When being picked up a {{Class|PickupFlash}} actor is spawned. This is the blue effect you can observe on [[Heretic]] and [[Hexen]]. This flag has been deprecated and it is recommended that you use the {{c|{{Property|Inventory.PickupFlash}}}} property instead.
+* '''{{LE|INVENTORY.ALWAYSPICKUP}}'''
+:This item is always picked up no matter whether the player can use it or not. This only applies to items that activate automatically.
+* '''{{LE|INVENTORY.FANCYPICKUPSOUND}}'''  {{deprecated}}
+:The pickup sound is supposed to be played in surround mode. This flag does not actually have any effect.
+* '''{{LE|INVENTORY.NOATTENPICKUPSOUND}}'''
+:The pickup sound is played with no attenuation, which means it is played at full volume and is heard clearly regardless of distance.
+* '''{{LE|INVENTORY.BIGPOWERUP}}'''
+:Marks this item as a 'powerful' item which is controlled by the 'mega powerups respawn' dmflag option.
+* '''{{LE|INVENTORY.NEVERRESPAWN}}'''
+:An item with this flag will never respawn in any circumstance.
+* '''{{LE|INVENTORY.KEEPDEPLETED}}'''
+:This item will remain in the player's inventory bar even after the last one is used.  If the item also has an inventory icon, it will be drawn darkened when the quantity is 0.
+* '''{{LE|INVENTORY.IGNORESKILL}}'''
+:Normally, the amount of ammo picked up from an inventory item is doubled on the easiest and hardest skill levels. If this flag is set, the item will ignore the skill setting and only give the specified ammo amount.  This flag is typically used on a magazine for reloading weapons so that only one round is inserted into the magazine per round of ammunition depleted from the main ammo pool.
+* '''{{LE|INVENTORY.ADDITIVETIME}}'''
+:If set, when a player picks up a second powerup of this type before the first has worn off, the new powerup's duration will be added to the old, rather than overwriting it.  For example, if a powerup has a duration of 60 seconds, and a player who currently has the powerup with 21 seconds left picks up a second one, normally the new powerup will override the old and the duration will be reset to 60 seconds.  With this flag set, the duration would be extended to 81 seconds instead. This flag can either be set directly on a powerup or its {{Class|PowerupGiver|giver}}.
+* '''{{LE|INVENTORY.UNTOSSABLE}}'''
+:If set, the item cannot be tossed with the {{CCMD|D|drop}} [[console command]].
+* '''{{LE|INVENTORY.RESTRICTABSOLUTELY}}'''
+:If set, the {{c|{{Property|Inventory.ForbiddenTo}}}} and {{c|{{Property|Inventory.RestrictedTo}}}} will prevent player classes not allowed to pick up a {{Class|weapon}} from attempting to pick it up for ammo. This function prevents the item's {{c|[[TryPickupRestricted]]}} virtual from running.
+* '''{{LE|INVENTORY.NOSCREENFLASH}}'''
+:Upon picking up an item with this flag, the associated pickup [[palette flash]] will not be displayed.
+* '''{{LE|INVENTORY.TOSSED}}'''
+:An item with this flag is treated as being dropped.
+* '''{{LE|INVENTORY.ALWAYSRESPAWN}}'''
+:An item with this flag will always respawn, regardless of the dmflag option. Note, this flag is different from the regular ALWAYSRESPAWN flag (without prefix): the latter one is for monsters, while this one is for items. In ZScript, where flag prefixes are not optional, you have to use +INVENTORY.ALWAYSRESPAWN, '''not''' +ALWAYSRESPAWN to make it work for Inventory items. Also, if dealing with a non-Inventory pointer, you will need to cast to Inventory first in order to access this flag.
+* '''{{LE|INVENTORY.TRANSFER}}'''
+:An item with this flag will transfer all items in its inventory to the acquiring actor's own.
+* '''{{LE|INVENTORY.NOTELEPORTFREEZE}}'''
+:Normally, a teleporting player loses the ability to move for about {{Property|Player.TeleportFreezeTime|half a second}} before regaining it; an active power with this flag overrides this behavior.This flag can either be set directly on a powerup or its {{Class|PowerupGiver|giver}}.
+* '''{{LE|INVENTORY.NOSCREENBLINK}}'''
+:Powerups will never show the fade blinking every 1/4 of a second, which serves as an expiration warning. Useful when using scripting to allow special effects to happen without the blinking causing visual interference.
+* '''{{LE|INVENTORY.ISHEALTH}}'''
+:An item with this flag set does not spawn if the {{c|{{CVAR|C|sv_nohealth}}}} console variable is ''true''.
+* '''{{LE|INVENTORY.ISARMOR}}'''
+:An item with this flag set does not spawn if the {{c|{{CVAR|C|sv_noarmor}}}} console variable is ''true''.
+&lt;/onlyinclude&gt;
+[[Category:Editing references]]
+[[Category:Inventory]]</text>
+    <sha1>9233hco9gucwyc37wvlosrpyq81n3av</sha1>
+  </revision>
+</page>

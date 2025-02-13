@@ -1,0 +1,103 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>ZDoom Variables</title>
+  <ns>0</ns>
+  <id>9661</id>
+  <revision>
+    <id>51775</id>
+    <parentid>51739</parentid>
+    <timestamp>2024-02-14T23:58:50Z</timestamp>
+    <contributor>
+      <username>Boondorl</username>
+      <id>2606</id>
+    </contributor>
+    <minor />
+    <comment>/* Data Structures */</comment>
+    <origin>51775</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="6444" sha1="a72poinexix80bxojxpyfm1r2puh7yt" xml:space="preserve">This is a guide on some of the core variable types present in ZDoom when working with the engine. Note that this is ''not'' for ZScript variables, but for the engine itself. If ZScript variables are desired, see [[ZScript_variables|here]]. This outline will focus on standards for primitives, data structures that are preferred, and what types correspond to the external ZScript types. For primitive types in particular these guidelines should be strictly adhered to to prevent any possible technical issues that could occur.
+
+=== Starting Notes ===
+Some types may be prefixed with either an &lt;code&gt;F&lt;/code&gt; or &lt;code&gt;D&lt;/code&gt;. &lt;code&gt;D&lt;/code&gt; generally stands for double while &lt;code&gt;F&lt;/code&gt; (originally for float) is largely used for anything else and is a carryover from Unreal Engine, an inspiration for ZDoom back when it was first being created. Classes and structs that begin with &lt;code&gt;D&lt;/code&gt; or &lt;code&gt;F&lt;/code&gt; are usually not [https://cplusplus.com/doc/oldtutorial/templates/ templated]. While not required, it's considered good convention to use &lt;code&gt;T&lt;/code&gt; for classes and structs that are templated and &lt;code&gt;F&lt;/code&gt; for standard classes and structs (or &lt;code&gt;D&lt;/code&gt; if it's meant to represent doubles).
+
+In general C++'s stock types should be used unless specified otherwise. GZDoom currently targets C++17.
+
+== Pointer Types ==
+C++'s built-in pointer types are preferred (e.g. &lt;code&gt;std::unique_ptr&lt;/code&gt;), but ZDoom comes with its own reimplementation of &lt;code&gt;std::shared_ptr&lt;/code&gt; that offers greater consistency. &lt;code&gt;RefCountedBase&lt;/code&gt; is a class that can be inherited from to define a type that should be shared while &lt;code&gt;RefCountedPtr&lt;T&gt;&lt;/code&gt; is the actual pointer class that manages those types.
+
+ class FMyClass : public RefCountedBase
+ {
+     // ...
+ }
+ 
+ // variable type
+ RefCountedPtr&lt;FMyClass&gt; myVar;
+
+For storing pointer fields to &lt;code&gt;DObject&lt;/code&gt;s, &lt;code&gt;TObjPtr&lt;T*&gt;&lt;/code&gt; should be used. This has built-in safety read barriers which ensure that the object you're trying to access is valid and not about to be garbage collected. Note that this isn't needed if simply passing around the object pointer to other functions i.e. a function does not need a &lt;code&gt;TObjPtr&lt;T*&gt;&lt;/code&gt; parameter but can use &lt;code&gt;T*&lt;/code&gt; directly.
+
+== Data Structures ==
+ZDoom has some of its own data structures present. Some are made for handling specialized tasks while others may have been implemented before standardized versions were widely available. Even if a version exists in the std library these should still be used for consistency reasons.
+*'''TArray&lt;T&gt;'''
+:This is the class that should be used for handling all dynamic arrays. Avoid using manually managed memory as often as possible in order to prevent potential memory leaks that could occur from failing to free the memory properly. This should be used in place of &lt;code&gt;std::vector&lt;/code&gt;.
+*'''TIterator&lt;T&gt;'''
+:A class for iterating through &lt;code&gt;TArray&lt;/code&gt;s. &lt;code&gt;TArray&lt;/code&gt; comes with methods for both standard and immutable versions.
+*'''TMap&lt;K, V&gt;'''
+:This is the class that should be used for maps. It acts similar to &lt;code&gt;std::unordered_map&lt;/code&gt; and should be used over the std variant as &lt;code&gt;TMap&lt;/code&gt; provides a significant performance boost for integer (and by extension &lt;code&gt;FName&lt;/code&gt;) keys.
+*'''TMapIterator&lt;K, V&gt;'''
+:The iterator class for &lt;code&gt;TMap&lt;/code&gt;s. &lt;code&gt;TMapConstIterator&lt;K, V&gt;&lt;/code&gt; is the class for working with immutable &lt;code&gt;TMap&lt;/code&gt;s. It uses the following syntax:
+ TMap&lt;type_a, type_b&gt;::Pair* pair;
+ TMapIterator&lt;type_a, type_b&gt; iteratorName(myTMap);
+ 
+ while (iteratorName.NextPair(pair))
+     // ...
+*'''VSMatrix'''
+:A 4x4 matrix class commonly used within the renderer. As such its values are stored as 32-bit &lt;code&gt;float&lt;/code&gt;s.
+
+== Primitive Types ==
+The following is a guideline on what primitive types to use and when. Caution must be used in particular with &lt;code&gt;int&lt;/code&gt;s as incorrectly narrowing them can cause architectural issues in the future.
+=== Integers ===
+*'''bool'''
+*'''(u)int8_t'''
+:These should be used in place of &lt;code&gt;(unsigned) char&lt;/code&gt; when dealing with numeric values.
+*'''(u)int16_t'''
+:These should be used in place of &lt;code&gt;(unsigned) short&lt;/code&gt;.
+*'''(u)int32_t'''
+:These should only be used in places where a strict 32-bit integer size needs to be expected e.g. as a field in a memory-efficient struct. Otherwise using regular &lt;code&gt;(unsigned) int&lt;/code&gt; is preferred.
+*'''(u)int64_t'''
+:These should be used for all 64-bit integers
+*'''(unsigned) int'''
+:These should be used whenever possible.
+*'''size_t'''
+:When dealing with indices in data structures, this is the preferred type as it can track incredibly large index values.
+
+=== Floating-Point ===
+*'''float'''
+:This should be used when working within the renderer or within structs where memory efficiency is important.
+*'''double'''
+:This should be used when working with ZDoom's playsim code. A &lt;code&gt;float&lt;/code&gt; cannot represent the entire range of Doom's 32-bit fixed point numbers and using it can lead to precision errors.
+
+=== Strings ===
+Both &lt;code&gt;FString&lt;/code&gt; and &lt;code&gt;char*&lt;/code&gt; should be used in place of &lt;code&gt;std::string&lt;/code&gt;, but &lt;code&gt;FString&lt;/code&gt; is strongly preferred. Remember to pass &lt;code&gt;FString&lt;/code&gt;s by reference when possible and avoid returning copies (prefer to pass a reference that the result is put in).
+
+== Special ZScript Types ==
+Below is a list of ZScript's special types as how they're represented internally. Read as internal -&gt; ZScript:
+*'''FString''' -&gt; '''string'''
+*'''FName''' -&gt; '''Name'''
+*'''FSoundID''' -&gt; '''Sound'''
+*'''FTextureID''' -&gt; '''TextureID'''
+*'''PalEntry''' -&gt; '''Color'''
+*'''FBaseCVar''' -&gt; '''CVar'''
+*'''DVector[2/3/4]''' -&gt; '''Vector[2/3/4]'''
+*'''DQuaternion''' -&gt; '''Quat'''
+
+== Special Types ==
+Below is a list of other data types that can and should be used when doing special operations:
+*'''TAngle'''
+:A struct made for storing an angle. This should be used over plain floating-point types for the purposes of clarity, built-in functionality for handling common angle operations, and greater coverage across different angle types (e.g. radians, BAM).
+*'''TRotator'''
+:A struct made for storing a yaw, pitch, and roll, all as &lt;code&gt;TAngle&lt;/code&gt; types. This should be used over &lt;code&gt;TVector3&lt;/code&gt; for the purposes of clarity and enhanced functionality for dealing with its angles.
+
+[[Category:Technical aspects]]</text>
+    <sha1>a72poinexix80bxojxpyfm1r2puh7yt</sha1>
+  </revision>
+</page>

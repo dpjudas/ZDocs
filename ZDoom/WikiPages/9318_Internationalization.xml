@@ -1,0 +1,136 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>Internationalization</title>
+  <ns>0</ns>
+  <id>9318</id>
+  <revision>
+    <id>50205</id>
+    <parentid>50191</parentid>
+    <timestamp>2023-04-15T14:03:26Z</timestamp>
+    <contributor>
+      <username>Gez</username>
+      <id>1283</id>
+    </contributor>
+    <minor />
+    <comment>/* Complete */</comment>
+    <origin>50205</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="10025" sha1="c2v217yga9k0n0bvs8l7cc09p6utjux" xml:space="preserve">[[File:Gzdoom strife ko.png|thumb|The [[Classes:Oracle|Oracle]] from ''Strife'', now speaking in Korean.]]
+'''Internationalization''' in software is extensive support for other languages. Since [[GZDoom version history|version 4.0]], [[GZDoom]] has completely overhauled its internationalization and localization system, allowing to use {{wp|Unicode}} strings. In addition, systems have been added to allow overriding strings hardcoded in game data, such as text printed by [[ACS]] in ''Hexen'', or character dialogue in ''Strife'', so as to make them translatable. [[Raze]] supports internationalization too.
+
+==Character rendering==
+''Doom'' and other games using its engine made use of distinctive bitmap fonts, as did most games from the 1990s. These fonts are an important part of the game's visual identity, and painstaking efforts were used to preserve them whenever possible. This meant drawing additional characters in the same style in the Latin and Cyrillic alphabets, for a dozen different fonts spread across ''Doom'', ''Heretic'', ''Hexen'', ''Strife'', and ''Chex Quest''.
+
+For some writing systems, however, notably the {{wp|CJK characters}}, the prospect of providing hand-drawn glyphs for every character in over a dozen font variations is not realistic. For this reason, when a bitmap font is not available for the language requested, the engine falls back to a "complete" vector font, with an added outline approximating the look of the original bitmap fonts in most supported games.
+
+Note that the engine still only supports left-to-right writing. Right-to-left writing systems, such as those used in Arabic, Hebrew, Persian, or Urdu, are therefore not supported.
+
+==Existing translations==
+===Complete===
+[[File:Gzdoom heretic ru.png|thumb|The [[customize controls]] menu in Russian.]]
+[[File:Gzdoom doom es.png|thumb|Various items being picked up in Spanish.]]
+
+The following languages are considered complete enough for inclusion in the standard GZDoom distribution.
+
+{| {{prettytable}}
+! style="width: 12em;" | Language!!Code!![[File:MiniDoomLogoIcon.png|link=]]||[[File:MiniDoom2LogoIcon.png|link=]]||[[File:MiniHereticLogoIcon.png|link=]]||[[File:MiniHexenLogoIcon.png|link=]]||[[File:MiniStrifeLogoIcon.png|link=]]||[[File:MiniChex3LogoIcon.png|link=]]||[[File:MiniHacxLogoIcon.png|link=]]||[[File:MiniHarmonyLogoIcon.png|link=]]
+|-
+| Czech || cs || {{checkbox|yes}} || {{checkbox|yes}} || {{checkbox|yes}} || {{checkbox|yes}} || {{checkbox|yes}} || {{checkbox|yes}} || {{checkbox|yes}} || {{checkbox|yes}}
+|-
+| Dutch || nl || {{checkbox|yes}} || {{checkbox|yes}} || {{checkbox|yes}} || {{checkbox|yes}} || {{checkbox|yes}} || {{checkbox|yes}} || {{checkbox|yes}} || {{checkbox|yes}}
+|-
+| Esperanto || eo || {{checkbox|yes}} || {{checkbox|yes}} || {{checkbox|yes}} || {{checkbox|yes}} || {{checkbox|no}} || {{checkbox|yes}} || {{checkbox|yes}} || {{checkbox|yes}}
+|-
+| Finnish || fi || {{checkbox|yes}} || {{checkbox|yes}} || {{checkbox|yes}} || {{checkbox|yes}} || {{checkbox|yes}} || {{checkbox|yes}} || {{checkbox|yes}} || {{checkbox|yes}}
+|-
+| French || fr || {{checkbox|yes}} || {{checkbox|yes}} || {{checkbox|yes}} || {{checkbox|yes}} || {{checkbox|yes}} || {{checkbox|yes}} || {{checkbox|yes}} || {{checkbox|yes}}
+|-
+| German || de || {{checkbox|yes}} || {{checkbox|yes}} || {{checkbox|yes}} || {{checkbox|yes}} || {{checkbox|yes}} || {{checkbox|yes}} || {{checkbox|yes}} || {{checkbox|yes}}
+|-
+| Hungarian || hu || {{checkbox|yes}} || {{checkbox|yes}} || {{checkbox|yes}} || {{checkbox|yes}} || {{checkbox|yes}} || {{checkbox|yes}} || {{checkbox|yes}} || {{checkbox|yes}}
+|-
+| Italian || it || {{checkbox|yes}} || {{checkbox|yes}} || {{checkbox|yes}} || {{checkbox|yes}} || {{checkbox|yes}} || {{checkbox|yes}} || {{checkbox|yes}} || {{checkbox|yes}}
+|-
+| Japanese|| ja || {{checkbox|yes}} || {{checkbox|yes}} || {{checkbox|yes}} || {{checkbox|yes}} || {{checkbox|yes}} || {{checkbox|yes}} || {{checkbox|yes}} || {{checkbox|yes}}
+|-
+| Korean || ko || {{checkbox|yes}} || {{checkbox|yes}} || {{checkbox|yes}} || {{checkbox|yes}} || {{checkbox|yes}} || {{checkbox|yes}} || {{checkbox|yes}} || {{checkbox|yes}}
+|-
+| Polish || pl || {{checkbox|yes}} || {{checkbox|yes}} || {{checkbox|yes}} || {{checkbox|yes}} || {{checkbox|no}} || {{checkbox|yes}} || {{checkbox|yes}} || {{checkbox|yes}}
+|-
+| Portuguese (Portugal) || ptg
+| rowspan="2" | {{checkbox|yes}} || rowspan="2" | {{checkbox|yes}} || rowspan="2" | {{checkbox|yes}} || rowspan="2" | {{checkbox|yes}} || rowspan="2" | {{checkbox|yes}} || rowspan="2" | {{checkbox|yes}} || rowspan="2" | {{checkbox|yes}} || rowspan="2" | {{checkbox|yes}}
+|-
+| Portuguese (Brazil) || pt
+|-
+| Romanian || ro  || {{checkbox|yes}} || {{checkbox|yes}} || {{checkbox|yes}} || {{checkbox|yes}} || {{checkbox|yes}} || {{checkbox|yes}} || {{checkbox|yes}} || {{checkbox|yes}}
+|-
+| Russian || ru || {{checkbox|yes}} || {{checkbox|yes}} || {{checkbox|yes}} || {{checkbox|yes}} || {{checkbox|yes}} || {{checkbox|yes}} || {{checkbox|yes}} || {{checkbox|yes}}
+|-
+| Serbian || sr  || {{checkbox|yes}} || {{checkbox|yes}} || {{checkbox|yes}} || {{checkbox|yes}} || {{checkbox|no}} || {{checkbox|no}} || {{checkbox|no}} || {{checkbox|no}}
+|-
+| Spanish (Castilian) || es
+| rowspan="2" | {{checkbox|yes}} || rowspan="2" | {{checkbox|yes}} || rowspan="2" | {{checkbox|yes}} || rowspan="2" | {{checkbox|yes}} || rowspan="2" | {{checkbox|yes}} || rowspan="2" | {{checkbox|yes}} || rowspan="2" | {{checkbox|yes}} || rowspan="2" | {{checkbox|yes}}
+|-
+| Spanish (Latin American) || esm
+|}
+
+The following languages are considered complete enough for inclusion in the standard Raze distribution.
+
+{| {{prettytable}}
+! style="width: 12em;" | Language!!Code!![[File:MiniBloodLogoIcon.png|link=]]||[[File:MiniDuke3DLogoIcon.png|link=]]||[[File:MiniExhumedLogoIcon.png|link=]]||[[File:MiniNAMLogoIcon.png|link=]]||[[File:MiniRRLogoIcon.png|link=]]||[[File:MiniSWLogoIcon.png|link=]]||[[File:MiniWW2GILogoIcon.png|link=]]
+|-
+| Czech || cs || {{checkbox|yes}} || {{checkbox|yes}} || {{checkbox|yes}} || {{checkbox|yes}} || {{checkbox|yes}} || {{checkbox|yes}} || {{checkbox|yes}}
+|-
+| Danish || da || {{checkbox|yes}} || {{checkbox|yes}} || {{checkbox|yes}} || {{checkbox|yes}} || {{checkbox|yes}} || {{checkbox|yes}} || {{checkbox|yes}}
+|-
+| French || fr || {{checkbox|yes}} || {{checkbox|yes}} || {{checkbox|yes}} || {{checkbox|yes}} || {{checkbox|yes}} || {{checkbox|yes}} || {{checkbox|yes}}
+|-
+| German || de || {{checkbox|yes}} || {{checkbox|yes}} || {{checkbox|yes}} || {{checkbox|yes}} || {{checkbox|yes}} || {{checkbox|yes}} || {{checkbox|yes}}
+|-
+| Italian || it || {{checkbox|yes}} || {{checkbox|yes}} || {{checkbox|yes}} || {{checkbox|yes}} || {{checkbox|yes}} || {{checkbox|yes}} || {{checkbox|yes}}
+|-
+| Norwegian || no || {{checkbox|yes}} || {{checkbox|yes}} || {{checkbox|yes}} || {{checkbox|yes}} || {{checkbox|yes}} || {{checkbox|yes}} || {{checkbox|yes}}
+|-
+| Polish || pl || {{checkbox|yes}} || {{checkbox|yes}} || {{checkbox|yes}} || {{checkbox|yes}} || {{checkbox|yes}} || {{checkbox|yes}} || {{checkbox|yes}}
+|-
+| Portuguese (Brazil) || pt || {{checkbox|yes}} || {{checkbox|yes}} || {{checkbox|yes}} || {{checkbox|yes}} || {{checkbox|yes}} || {{checkbox|yes}} || {{checkbox|yes}}
+|-
+| Romanian || ro  || {{checkbox|yes}} || {{checkbox|yes}} || {{checkbox|yes}} || {{checkbox|yes}} || {{checkbox|yes}} || {{checkbox|yes}} || {{checkbox|yes}}
+|-
+| Spanish || es || {{checkbox|yes}} || {{checkbox|yes}} || {{checkbox|yes}} || {{checkbox|yes}} || {{checkbox|yes}} || {{checkbox|yes}} || {{checkbox|yes}}
+|-
+| Turkish || tr || {{checkbox|yes}} || {{checkbox|yes}} || {{checkbox|yes}} || {{checkbox|yes}} || {{checkbox|yes}} || {{checkbox|yes}} || {{checkbox|yes}}
+|}
+
+===In progress===
+The following languages are not considered complete enough to be included in GZDoom distribution yet.
+{| {{prettytable}}
+! style="width: 12em;" | Language!!Code!![[File:MiniDoomLogoIcon.png|link=]]||[[File:MiniDoom2LogoIcon.png|link=]]||[[File:MiniHereticLogoIcon.png|link=]]||[[File:MiniHexenLogoIcon.png|link=]]||[[File:MiniStrifeLogoIcon.png|link=]]||[[File:MiniChex3LogoIcon.png|link=]]||[[File:MiniHacxLogoIcon.png|link=]]||[[File:MiniHarmonyLogoIcon.png|link=]]
+|-
+| Greek || el  || {{checkbox|no}} || {{checkbox|no}} || {{checkbox|no}} || {{checkbox|no}} || {{checkbox|no}} || {{checkbox|no}} || {{checkbox|no}} || {{checkbox|no}}
+|}
+
+The following languages are not considered complete enough to be included in Raze distribution yet.
+{| {{prettytable}}
+! style="width: 12em;" | Language!!Code!![[File:MiniBloodLogoIcon.png|link=]]||[[File:MiniDuke3DLogoIcon.png|link=]]||[[File:MiniExhumedLogoIcon.png|link=]]||[[File:MiniNAMLogoIcon.png|link=]]||[[File:MiniRRLogoIcon.png|link=]]||[[File:MiniSWLogoIcon.png|link=]]||[[File:MiniWW2GILogoIcon.png|link=]]
+|-
+|}
+
+Note that support for CJK characters is not implemented yet in Raze.
+
+==Translating GZDoom or Raze into your language==
+[[File:Gzdoom hexen fr.png|thumb|[[Classes:Korax|Korax]] taunting you in French.]]
+It is worth noting that anyone can contribute to GZDoom's localization project, and fluent speakers who wish to contribute to both complete and incomplete languages are welcome. The following spreadsheet contains all localized text data in GZDoom, as well as in Raze, along with all respective translations (both complete and works in progress):
+#[https://docs.google.com/spreadsheets/d/1pvwXEgytkor9SClCiDn4j5AH7FedyXS-ocCbsuQIXDU/edit?usp=sharing GZDoom &amp; Raze strings]
+
+You can also help by contributing graphics for the missing glyphs in the various fonts. It is possible that your language will require additional characters to be drawn.
+*[https://docs.google.com/spreadsheets/d/1QvRvEcBOtXuJ5lBBThAF-rLjGFHhXiSN1x8wfBpW3rk/edit?usp=sharing Character support overview]
+
+More details can be found in {{forum|t=63737|this forum topic}}, which describes in detail how to contribute to the translation of a new language, or improving an existing one.
+
+==See also==
+* [[LANGUAGE]]
+[[Category:Technical aspects]]</text>
+    <sha1>c2v217yga9k0n0bvs8l7cc09p6utjux</sha1>
+  </revision>
+</page>

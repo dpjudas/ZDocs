@@ -1,0 +1,60 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>Classes:PhoenixFX1</title>
+  <ns>0</ns>
+  <id>4280</id>
+  <revision>
+    <id>39417</id>
+    <parentid>34149</parentid>
+    <timestamp>2015-04-29T18:06:56Z</timestamp>
+    <contributor>
+      <username>Blue Shadow</username>
+      <id>2021</id>
+    </contributor>
+    <minor />
+    <comment>/* DECORATE definition */ Updated</comment>
+    <origin>39417</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="1236" sha1="c0g0gawnsuxc8qcztsljxppze14cz6a" xml:space="preserve">{{Actor|
+| type = Explosive
+| name = Phoenix rod projectile
+| class = PhoenixFX1
+| game = Heretic
+| spawnid = 163
+| spawnname = T_PHOENIXSHOT 
+}}[[Classes]]: &lt;u&gt;PhoenixFX1&lt;/u&gt;&lt;br&gt;
+
+The exploding projectile from the [[Classes:PhoenixRod|phoenix rod]]. On a direct impact, [[Classes:Sorcerer2|D'Sparil]] has a 37.5% chance of avoiding any damage and attempting teleportation; the damage is avoided even if the attempted teleportation fails. The native action [[A_PhoenixPuff]] spawns two [[Classes:PhoenixPuff|PhoenixPuff]] actors and sends them moving to either sides of the projectile.
+
+==== [[DECORATE]] definition ====
+ ACTOR &lt;u&gt;PhoenixFX1&lt;/u&gt; native
+ {
+   {{Property|Radius}} 11
+   {{Property|Height}} 8
+   {{Property|Speed}} 20
+   {{Property|Damage}} 20
+   {{Property|DamageType}} Fire
+   {{Property|Projectile}}
+   +{{Flag|THRUGHOST}}
+   +{{Flag|SPECIALFIREDAMAGE}}
+   {{Property|SeeSound}} "weapons/phoenixshoot"
+   {{Property|DeathSound}} "weapons/phoenixhit"
+   {{Property|Obituary}} "$OB_MPPHOENIXROD"
+ 
+   action native [[A_PhoenixPuff]]();
+ 
+   States
+   {
+   Spawn:
+     FX04 A 4 Bright [[A_PhoenixPuff]]
+     Loop
+   Death:
+     FX08 A 6 Bright [[A_Explode]]
+     FX08 BC 5 Bright
+     FX08 DEFGH 4 Bright
+     Stop
+   }
+ }</text>
+    <sha1>c0g0gawnsuxc8qcztsljxppze14cz6a</sha1>
+  </revision>
+</page>

@@ -1,0 +1,33 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>GetAngle</title>
+  <ns>0</ns>
+  <id>8884</id>
+  <revision>
+    <id>45871</id>
+    <parentid>45870</parentid>
+    <timestamp>2018-02-01T17:19:45Z</timestamp>
+    <contributor>
+      <username>Matt</username>
+      <id>135</id>
+    </contributor>
+    <origin>45871</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="1309" sha1="45f100h2axjbys289dcjerqon1wbs60" xml:space="preserve">__NOTOC__float '''GetAngle''' (int ''flags'' [, int ''ptr_select'']) 
+
+== Usage ==
+Returns the angle of the line going from the caller to the pointer given. The format is in double floatation precision constricted between [-180.0, 180.0], so an actor checking a target north of it will be 90, south -90, east 0, etc.
+
+Note that this function is to be used where an [[DECORATE expressions|expression]] is expected. It is mostly useful when combined with {{c|[[A_JumpIf]]}} or [[Actor_states#Anonymous_Functions|Anonymous Functions]] and can be used in place of such functions like [[A_JumpIfTargetInLOS]].
+
+== Parameters ==
+* ''flags'': Flags can be combined with the | symbol.
+**'''GAF_RELATIVE''': Normally this function returns the absolute angle of the line from the caller to the pointer (i.e., relative to facing due east). This flag has the function return the angle relative to the caller's angle instead.
+**'''GAF_SWITCH''': Checks the line going from the pointer to the angle instead. If used with GAF_RELATIVE, will also be relative to the pointer's angle not the caller's.
+* ''ptr_select'': The pointer to examine. Default is {{c|{{const|AAPTR_TARGET}}}}. Must be a pointer other than {{c|{{const|AAPTR_DEFAULT}}}} or {{c|{{const|AAPTR_NULL}}}}. See [[actor pointers]].
+
+==Examples==
+{{noexamples}}</text>
+    <sha1>45f100h2axjbys289dcjerqon1wbs60</sha1>
+  </revision>
+</page>

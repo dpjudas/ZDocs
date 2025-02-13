@@ -1,0 +1,111 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>Classes:Acolyte</title>
+  <ns>0</ns>
+  <id>4579</id>
+  <revision>
+    <id>37890</id>
+    <parentid>35959</parentid>
+    <timestamp>2014-04-18T08:44:55Z</timestamp>
+    <contributor>
+      <username>Gez</username>
+      <id>1283</id>
+    </contributor>
+    <minor />
+    <comment>/* DECORATE definition */ update to commit 7cb828d</comment>
+    <origin>37890</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="2613" sha1="h9c56kkvijdin040601ofy2kbh64qgn" xml:space="preserve">{{Actor|
+| type = Monster
+| name = Acolyte
+| class = Acolyte
+| game = Strife
+}}[[Classes]]: {{Class}} &amp;rarr; {{Class|StrifeHumanoid}} &amp;rarr; &lt;u&gt;Acolyte&lt;/u&gt;&lt;br&gt;
+&amp;ensp;&amp;rarr;{{Class|AcolyteBlue}}&lt;br&gt;
+&amp;ensp;&amp;rarr;{{Class|AcolyteDGreen}}&lt;br&gt;
+&amp;ensp;&amp;rarr;{{Class|AcolyteGold}}&lt;br&gt;
+&amp;ensp;&amp;rarr;{{Class|AcolyteGray}}&lt;br&gt;
+&amp;ensp;&amp;rarr;{{Class|AcolyteLGreen}}&lt;br&gt;
+&amp;ensp;&amp;rarr;{{Class|AcolyteRed}}&lt;br&gt;
+&amp;ensp;&amp;rarr;{{Class|AcolyteRust}}&lt;br&gt;
+&amp;ensp;&amp;rarr;{{Class|AcolyteShadow}}&lt;br&gt;
+&amp;ensp;&amp;rarr;{{Class|AcolyteTan}}&lt;br&gt;
+&amp;ensp;&amp;rarr;{{Class|AcolyteToBe}}&lt;br&gt;
+The foot soldiers of The Order, Acolytes are "converted" humans armed with {{Class|AssaultGun|Assault Rifles}}, and in some cases {{Class|ShadowArmor|Shadow Armor}}, making them {{Class|AcolyteShadow|Shadow Acolytes}}. They generally only attack you if the alarm has been sounded.
+==== [[DECORATE]] definition ====
+ ACTOR &lt;u&gt;Acolyte&lt;/u&gt; : {{Class|StrifeHumanoid}}
+ {
+   {{Property|Health}} 70
+   {{Property|PainChance}} 150
+   {{Property|Speed}} 7
+   {{Property|Radius}} 24
+   {{Property|Height}} 64
+   {{Property|Mass}} 400
+   {{Property|Monster}}
+   +{{Flag|SEESDAGGERS}}
+   +{{Flag|NOSPLASHALERT}}
+   +{{Flag|FLOORCLIP}}
+   +{{Flag|NEVERRESPAWN}}
+   {{Property|MinMissileChance}} 150
+   {{Property|Tag}} "$TAG_ACOLYTE" // "ACOLYTE"
+   {{Property|SeeSound}} "acolyte/sight"
+   {{Property|PainSound}} "acolyte/pain"
+   {{Property|AttackSound}} "acolyte/rifle"
+   {{Property|DeathSound}} "acolyte/death"
+   {{Property|ActiveSound}} "acolyte/active"
+   {{Property|Obituary}} "$OB_ACOLYTE" // "%o was zealously shot down by an Acolyte."
+ 
+   action native [[A_BeShadowyFoe]]();
+   action native [[A_AcolyteBits]]();
+   action native [[A_AcolyteDie]]();
+ 
+   States
+   {
+   Spawn:
+     AGRD A 5 [[A_Look2]]
+     Wait
+     AGRD B 8 [[A_ClearShadow]]
+     Loop
+     AGRD D 8
+     Loop
+     AGRD ABCDABCD 5 [[A_Wander]]
+     Loop
+   See:
+     AGRD A 6 Fast Slow [[A_AcolyteBits]]
+     AGRD BCD 6 Fast Slow [[A_Chase]]
+     Loop
+   Missile:
+     AGRD E 8 Fast Slow [[A_FaceTarget]]
+     AGRD FE 4 Fast Slow [[A_ShootGun]]
+     AGRD F 6 Fast Slow [[A_ShootGun]]
+     Goto See
+   Pain:
+     AGRD O 8 Fast Slow [[A_Pain]]
+     Goto See
+   Death:
+     AGRD G 4
+     AGRD H 4 [[A_Scream]]
+     AGRD I 4
+     AGRD J 3
+     AGRD K 3 [[A_NoBlocking]]
+     AGRD L 3
+     AGRD M 3 [[A_AcolyteDie]]
+     AGRD N -1
+     Stop
+   XDeath:
+     GIBS A 5 [[A_NoBlocking]]
+     GIBS BC 5 [[A_TossGib]]
+     GIBS D 4 [[A_TossGib]]
+     GIBS E 4 [[A_XScream]]
+     GIBS F 4 [[A_TossGib]]
+     GIBS GH 4
+     GIBS I 5
+     GIBS J 5 [[A_AcolyteDie]]
+     GIBS K 5
+     GIBS L 1400
+     Stop
+   }
+ }</text>
+    <sha1>h9c56kkvijdin040601ofy2kbh64qgn</sha1>
+  </revision>
+</page>

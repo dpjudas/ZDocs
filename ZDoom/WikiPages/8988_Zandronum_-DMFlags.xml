@@ -1,0 +1,743 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>Zandronum: DMFlags</title>
+  <ns>0</ns>
+  <id>8988</id>
+  <revision>
+    <id>43681</id>
+    <parentid>43663</parentid>
+    <timestamp>2017-01-08T21:44:26Z</timestamp>
+    <contributor>
+      <username>Tiger</username>
+      <id>2074</id>
+    </contributor>
+    <comment>I forgot to include the STFeature template.</comment>
+    <origin>43681</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="22668" sha1="7cnlcnnakyjob2npygs16c6bbn6y7ov" xml:space="preserve">{{STFeature}}
+__TOC__
+&lt;!-- Thank you Torr Samaho for providing the source which helped to patch and update this list!  [Tiger] &amp;&amp; [Konar6] --&gt;
+
+&lt;!-- ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ --&gt;
+= DMFlags =
+{|class="wikitable sortable" border="1" width="100%"
+|-
+!  width="15%" | Flag Name 
+!  width="17%" | Console shortcut 
+!  width="8%" | Value 
+!  width="60%" class="unsortable" | Description
+|-
+| colspan="4" |
+|-
+| Disallow health (In Deathmatch) 
+|  SV_NoHealth 
+|  1 
+|  Prevents health from spawning on the map.
+|-
+| Disallow powerups (In Deathmatch) 
+|  SV_NoItems
+|  2 
+|  Prevents powerups from spawning on the map.
+|-
+| Weapons stay (In Deathmatch) 
+|  SV_WeaponStay 
+|  4 
+|  Weapons remain after being picked up by a player.
+|-
+| Falling damage (ZDoom) 
+|  SV_OldFallDamage 
+|  8 
+|  Enables the falling damage used from ZDoom.
+|-
+| Falling damage (Hexen) 
+|  SV_FallDamage
+|  16 
+|  Enables the stronger but less aggressive falling damage used from Hexen.
+|-
+| Falling damage (Strife)
+|  SV_OldFallDamage &amp; SV_FallDamage
+|  8 + 16
+|  Combining both values for ZDoom and Hexen enables the falling damage used from Strife. The minimum amount of damage you take from falling in Strife is 52. Ouch!
+|-
+| 
+|  
+|  32 
+|  (unused)
+|-
+| Stay on the same map (In Deathmatch) 
+|  SV_SameLevel 
+|  64 
+|  Stay on the same map when someone exits.
+|- 
+| Spawn farthest (In Deathmatch) 
+|  SV_SpawnFarthest 
+|  128 
+|  Spawn players as far as possible from other players.
+|- 
+| Force respawn (In Deathmatch) 
+|  SV_ForceRespawn 
+|  256 
+|  Forces the players that were killed to respawn. Requires alwaysapplydmflags to be 'true' to have an effect outside of deathmatch mode.
+|- 
+| Disallow armor (In Deathmatch) 
+|  SV_NoArmor 
+|  512 
+|  Prevents armor from spawning on the map.
+|- 
+| Disallow exit (In Deathmatch) 
+|  SV_NoExit 
+|  1024 
+|  Kill anyone that tries to exit from the map.
+|- 
+| Infinite ammo 
+|  SV_InfiniteAmmo 
+|  2048 
+|  Players have infinite ammo.
+|- 
+| No monsters 
+|  SV_NoMonsters 
+|  4096 
+|  Monsters do not spawn on the map.
+|- 
+| Monsters respawn 
+|  SV_MonsterRespawn 
+|  8192 
+|  Monsters will respawn sometime after their death.
+|- 
+| Items respawn 
+|  SV_ItemRespawn 
+|  16384 
+|  Items respawn after being picked up by a player.  However, mega powerups (i.e: invisibility, invulnerability) will not respawn.
+:Note: Doom's 'RadSuit' and Heretic's 'Wings of Wrath' will always respawn in survival regardless of this CVar's value.
+|- 
+| Fast monsters 
+|  SV_FastMonsters 
+|  32768 
+|  Monsters are more aggressive, and both they and projectiles use their FastSpeed property instead of their speed.
+|- 
+| Disallow jump 
+|  SV_NoJump 
+|  65536 
+|  Prevents players from jumping.
+|-
+| Disallow freelook 
+|  SV_NoFreelook 
+|  131072
+|  Prevents the players from being able to freelook.
+|- 
+| Mega powerups respawn 
+|  SV_RespawnSuper 
+|  262144
+|  Allows mega powerups (i.e: invisibility, invulnerability) to respawn. Requires sv_itemrespawn to be 'true'.
+|- 
+| Disallow FOV 
+|  SV_NoFOV 
+|  524288
+|  Disallows the clients to use a different Field of View value. [Default: 90]
+|-
+| Don't spawn multiplayer weapons (In Cooperative)
+|  SV_NoWeaponSpawn
+|  1048576
+|  Prevents 'multiplayer only' weapons from spawning.
+|- 
+| Disallow crouch 
+|  SV_NoCrouch
+|  2097152
+|  Disallow players ability to crouch.
+|-
+| Lose inventory (In Cooperative) 
+|  SV_Coop_LoseInventory
+|  4194304
+|  Players lose all of their inventory when killed.
+|- 
+| Lose keys (In Cooperative) 
+|  SV_Coop_LoseKeys
+|  8388608
+|  Players will lose all of their keys when killed.
+|- 
+| Lose weapons (In Cooperative) 
+|  SV_Coop_LoseWeapons
+|  16777216
+|  Players will lose all of their weapons when killed.
+|- 
+| Lose armor (In Cooperative) 
+|  SV_Coop_LoseArmor
+|  33554432
+|  Players will lose all of their armor when killed.
+|- 
+| Lose powerups (In Cooperative) 
+|  SV_Coop_LosePowerups
+|  67108864
+|  Players will lose all of their powerups when killed.
+|- 
+| Lose ammo (In Cooperative) 
+|  SV_Coop_LoseAmmo
+|  134217728
+|  Players will lose all their ammo when killed.
+|-
+| Lose half ammo
+|  SV_Coop_HalveAmmo
+|  268435456
+|  Players lose half of their ammo when killed.
+|-
+| Allow jumping 
+|  SV_AllowJump
+|  536870912
+|  Allows the players to jump regardless of the MAPINFO NoJumping argument.
+|-
+| Allow crouch
+|  SV_AllowCrouch
+|  1073741824
+|  Allow players to crouch regardless of the NoCrouch flag on the MAPINFO lump.
+|}
+
+
+&lt;!-- ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ --&gt;
+= DMFlags2 =
+{|class="wikitable sortable" border="1" width="100%"
+|-
+!  width="15%" | Flag Name 
+!  width="17%" | Console shortcut 
+!  width="8%" | Value 
+!  width="60%" class="unsortable" | Description
+|-
+| colspan="4" |
+|-
+| 
+|  
+|  1 
+|  (unused)
+|-
+| Drop weapons 
+|  SV_WeaponDrop 
+|  2 
+|  Players drop their current weapon when killed or fragged.
+|- 
+| Don't spawn runes 
+|  SV_NoRunes 
+|  4 
+|  Prevents runes from spawning on the map.
+|- 
+| Instant flag return (ST/CTF) 
+|  SV_InstantReturn 
+|  8 
+|  Flags are instantly returned when the carriers are fragged.
+|- 
+| No team switching (ST/CTF) 
+|  SV_NoTeamSwitch 
+|  16 
+|  Players cannot change teams after already being on a team.
+|- 
+| Server picks teams (ST/CTF) 
+|  SV_NoTeamSelect 
+|  32 
+|  Players are placed in teams automatically by the server.
+|- 
+| Double ammo 
+|  SV_DoubleAmmo 
+|  64 
+|  Double amount of ammo that items give you like skill 0 and 4 do.
+|- 
+| Degeneration 
+|  SV_Degeneration 
+|  128 
+|  Players slowly lose health when above 100%, like in Quake.
+|- 
+| Allow BFG freeaiming 
+|  SV_BFGFreeAim 
+|  256 
+|  Allows the BFG to be fired vertically.
+|- 
+| Barrels respawn 
+|  SV_BarrelRespawn 
+|  512 
+|  Barrels respawn after being blown up -- only works in non-deathmatch game modes if "alwaysapplydmflags" is true!
+|- 
+| No respawn protection (In Deathmatch) 
+|  SV_NoRespawnInvul 
+|  1024 
+|  Players do not have temporary invulnerability when respawning.
+|- 
+| Start with shotgun (In Cooperative)  
+|  SV_ShotgunStart 
+|  2048 
+|  Players will have a shotgun when they spawn.
+|- 
+| Spawn where died (In Cooperative) 
+|  SV_SameSpawnSpot 
+|  4096 
+|  Players respawn at the same location they were killed at.
+|-
+| Keep teams
+|  SV_KeepTeams
+|  8192
+|  Players that were already in teams before the map change will continue to be on the same team on the next map.
+|-
+| Keep frags
+|  SV_KeepFrags
+|  16384
+|  The clients frags are never reset when advancing to the next map.
+|-
+| No respawning
+|  SV_NoRespawn
+|  32768
+|  Players can not respawn once killed or fragged.
+|-
+| Lose frag when fragged
+|  SV_LoseFrag
+|  65536
+|  When fragged, the player will lose a frag point.
+|-
+| Infinite inventory
+|  SV_InfiniteInventory
+|  131072
+|  When true, using an inventory item will not expend it.
+|-
+| Force GL defaults
+| SV_ForceGLDefaults
+| 262144
+| If this is enabled, some default OpenGL rendering options are enforced, i.e. clients render as if gl_lightmode == 3, gl_light_ambient == 20.0, and gl_fogmode &gt;= 1.  Users can not change the light/brightness (excluding Gamma) in OpenGL once this is enabled. They can toggle between the two fog modes, and gl_fogmode 0 is treated as gl_fogmode 1.
+|-
+| No rocket jumping
+| SV_NoRocketJumping
+| 524288
+| Disallow players from rocket jumping.
+|-
+| Award damage instead of kills
+| SV_AwardDamageInsteadKills
+| 1048576
+| Players will be awarded points from the damage that they do on monsters, besides awarding by kills.
+|-
+| Force alpha
+| SV_ForceAlpha
+| 2097152
+|If this is enabled, clients are enforced to display alpha, i.e. render as if r_drawtrans was enabled.
+|-
+| Kill all monsters (In Cooperative)
+|  SV_KillAllMonsters
+|  4194304
+|  All monsters must be killed before advancing into the next map.
+|-
+| Disallow automap
+|  SV_NoAutomap
+|  8388608
+|  Disallow players to utilize the Automap.
+|-
+| Disallow allies on automap
+|  SV_NoAutomapAllies
+|  16777216
+|  Disallow players to see allies on the Automap.
+|-
+| Disallow spying
+|  SV_DisallowSpying
+|  33554432
+|  Disallow players from spying other players.
+|-
+| Chasecam
+|  SV_Chasecam
+|  67108864
+|  Allow the players to utilize the chasecam feature.
+|-
+| Disallow suicide
+|  SV_DisallowSuicide
+|  134217728
+|  Disallow the players to use the 'kill' CCMD.
+|-
+| Disallow autoaim
+|  SV_NoAutoaim
+|  268435456
+|  Disallow the clients to utilize Autoaim regardless of the players settings.
+&lt;!-- Okay, for the last time, AUTOAIM IS NOT A CHEAT!  GET OVER IT ALREADY! [NG] --&gt;
+|-
+| Only spawn single player actors in coop
+| SV_Coop_SPActorSpawn
+| 536870912
+| If this is true in a cooperative game mode, map actors are spawned as if the game was single player.
+|}
+
+
+&lt;!-- ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ --&gt;
+= ZaDMFlags =
+{|class="wikitable sortable" border="1" width="100%"
+|-
+!  width="15%" | Flag Name 
+!  width="17%" | Console shortcut 
+!  width="8%" | Value 
+!  width="60%" class="unsortable" | Description
+|-
+| colspan="4" |
+|-
+| Never identify players
+|  SV_NoIdentifyTarget
+|  1
+|  If this is true, clients can never identify other players when pointing at them.
+|-
+| Enforce LMS spectator settings
+|  SV_ApplyLMSSpectatorSettings
+|  2
+|  If this is true, lms_spectatorchat will be respected in all game modes.
+|-
+| Don't draw Coop Info
+|  SV_NoCoopInfo
+|  4
+|  If true, this disallows clients to utilize the Coop Info CVar regardless if enabled from the clients CVar.
+|-
+| Disable unlagged
+|  SV_NoUnlagged
+|  8
+|  Disables unlagged support for all clients. (default false)
+|-
+| Disable player collisions
+|  SV_UnblockPlayers
+|  16
+|  Allows players to pass through each other. Great for small or cramped maps on Multiplayer.
+|-
+| No medals
+|  SV_NoMedals
+|  32
+|  When this is set to true, the ''medals'' feature will be disabled and will not be displayed nor upkept within the game.
+|-
+| Share keys
+|  SV_ShareKeys
+|  64
+|  For Cooperative and Survival game modes, when this is set to true, picking up a key gives the key to all players.
+|-
+| Keep teams
+|  SV_KeepTeams
+|  128
+|  Players that were already in teams before the map change will continue to be on the same team on the next map. 
+|-
+| Force GL defaults
+|  SV_ForceGLDefaults
+|  256
+|  If this is enabled, some default OpenGL rendering options are enforced, i.e. clients render as if gl_lightmode == 3, gl_light_ambient == 20.0, and gl_fogmode == 1. Users can not change the light/brightness (excluding Gamma) in OpenGL once this is enabled.
+|-
+| No rocket jumping
+|  SV_NoRocketJumping
+|  512
+|  Disallow players from rocket jumping. 
+|-
+| Award damage instead of kills
+|  SV_AwardDamageInsteadKills
+|  1024
+|  Players will be awarded points from the damage that they do on monsters, besides awarding by kills.
+|-
+| Force alpha
+|  SV_ForceAlpha 
+|  2048
+|  If this is enabled, clients are enforced to display alpha, i.e. render as if r_drawtrans was enabled.
+|-
+| Only spawn single player actors in coop
+|  SV_Coop_SPActorSpawn
+|  4096
+|  If this is true in a cooperative game mode, map actors are spawned as if the game was single player.
+|-
+| Emulate vanilla blood brightness.
+|  sv_maxbloodscalar
+|  8192
+|  Forces blood brightness to max when damaged.
+|-
+| Unblock players on same team
+|  sv_unblockallies
+|  16384
+|  Allows players of the same team to pass through each other only.
+|
+|-
+| Don't allow dropping.
+|  sv_nodrop
+|  32768
+|  Prevents players from dropping items.
+|}
+
+
+&lt;!-- ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ --&gt;
+= CompatFlags =
+{|class="wikitable sortable" border="1" width="100%"
+|-
+!  width="15%" | Flag Name 
+!  width="17%" | Console shortcut 
+!  width="8%" | Value 
+!  width="60%" class="unsortable" | Description
+|-
+| colspan="4" |
+|- 
+| Find shortest textures like Doom 
+|  Compat_ShortTex 
+|  1 
+|  In Doom, AASHITTY in Doom II or AASTINKY in Doom was created to fill in the place of texture index 0, normally treated by the Doom engine as no texture at all. When this is enabled, the "raise platform by lower texture" line special and MAP07 floor raise considers AASHITTY or AASTINKY as a valid texture and uses it's height when raising a platform. If disabled, these textures aren't considered valid and are ignored.
+|- 
+| Use buggier stair building 
+|  Compat_Stairs 
+|  2 
+|  Causes doom to calculate heights of stairs when stairbuilding from the last (topmost) step, instead of the first (bottom-most) step.
+|- 
+| Limit pain elementals to 20 lost souls 
+|  Compat_LimitPain 
+|  4 
+|  Prevents pain elementals from spawning lost souls if there are 20 or more on the map.
+|- 
+| Don't let others hear pickups 
+|  Compat_SilentPickUp 
+|  8 
+|  This prevents players from hearing other players picking up items, weapons, or powerups in netgames.
+|- 
+| Actors are infinitely tall 
+|  Compat_NoPassOver 
+|  16 
+|  This causes all objects to occupy an infinite vertical space from the ceiling to the floor, which prevents monsters or the player from being able to pass over or under other solid objects, regardless of whether they are touching each other on the Z plane or not.
+*WARNING: Enabling this will break ZDoom-style thing bridges and objects that rely on height sensitivity.
+|- 
+| Allow silent BFG trick 
+|  Compat_SoundSlots 
+|  32 
+|  Forces all actors to play all sounds only on one channel, cutting off any previous sounds the actor has made. Only enable this if you can't live without the silent BFG trick, as it will cripple the sound system and prevent actors from playing any more than one sound at a time.
+|- 
+| Enable wallrunning 
+|  Compat_WallRun 
+|  64 
+|  This uses a buggier method of collision detection with walls that allows a player to run double average speed when pressing against a vertically-aligned wall.
+|- 
+| Spawn item drops on the floor 
+|  Compat_NoTossDrops 
+|  128 
+|  Items dropped by monsters appear on the floor below the center of the monster, instead of being tossed from the monster's corpse. May cause items to get stuck in walls or appear at the bottom of pits.
+|- 
+| All special lines can block use lines 
+|  Compat_UseBlocking 
+|  256 
+|  Any lines with line specials prevent the player from triggering a usable line behind it, regardless of whether the frontmost line can be used itself or not.
+|- 
+| Disable Boom door light effect
+|  Compat_NoDoorLight
+|  512
+|  Don't do the BOOM local door light effect
+|-
+| Raven's scrollers use original speed
+|  Compat_RavenScroll
+|  1024
+|  Raven's scrollers use their original carrying speed
+|-
+| Use sector based sound target code
+|  Compat_SoundTarget
+|  2048
+|  Use sector based sound target code.
+|-
+| Limit deh.MaxHealth to health bonus
+|  Compat_DehHealth
+|  4096
+|  Players can not exceed over the 200% health, as you can with just the normal MaxHealth bonuses.
+|-
+| Trace ign. lines w. s. sec on b. sides
+|  Compat_Trace
+|  8192
+|  Trace ignores lines with the same sector on both sides
+|-
+| No monster dropoff move
+|  Compat_Dropoff
+|  16384
+|  Monsters cannot move when hanging over a dropoff
+|-
+| Scrolling sectors are additve
+|  Compat_BoomScroll
+|  32768
+|  Scrolling sectors are additive like in Boom
+|-
+| Monsters see semi-invisible players
+|  Compat_Invisibility
+|  65536
+|  Monsters will be able to see the player even if the player has a partial invisibility sphere.
+|-
+| Limited movement in the air 
+|  Compat_Limited_AirMovement 
+|  131072 
+|  By default, ''Zandronum'' gives players more maneuverability in the air than ''ZDoom''. When this is &lt;code&gt;true&lt;/code&gt;, ''ZDoom''&amp;rsquo;s method is used. See [[Air Control]] for more precise details.
+|- 
+| Plasma bump bug 
+|  Compat_PlasmaBump 
+|  262144 
+|  Allows players to pick up items on the other side of solid walls by running into the wall at a specific angle. This flag should only be used for old vanilla Doom maps that really need it; it can have serious side effects on bridges and scrolling floors!
+|- 
+| Allow instant respawn 
+|  Compat_InstantRespawn 
+|  524288 
+|  Allows players to respawn instantly after being killed by holding down the "use" key when being hit.
+|- 
+| Disable taunts 
+|  Compat_DisableTaunts 
+|  1048576 
+|  Prevents players from using the "taunt" command.
+|- 
+| Original sound curve 
+|  Compat_OriginalSoundCurve 
+|  2097152 
+|  Enabling this uses the original Doom sound curve, which causes sounds to fade away at a shorter distance. When disabled, the Hexen sound curve is used instead, which allows players to hear sounds louder, farther away than usual.
+|- 
+| Use old intermission screens/music 
+|  Compat_OldIntermission 
+|  4194304 
+|  Use doom2.exe's original intermission screens/music.
+|- 
+| Disable stealth monsters 
+|  Compat_DisableStealthMonsters 
+|  8388608 
+|  Disable stealth monsters, since doom2.exe didn't have them.
+|- 
+| old radius damage
+|  Compat_OldRadiusDmg
+|  16777216
+|  If this is enabled, the original Doom radius damage code is used, i.e. explosions have infinite vertical range.
+|- 
+| Disable crosshair 
+|  Compat_NoCrossHair 
+|  33554432 
+|  Players will not be able to use crosshair.
+|- 
+| Old weapon switch 
+|  Compat_OldWeaponSwitch
+|  67108864 
+|  Players will be forced to switch weapons every time they pick up a new weapon.
+|-
+| Silent instant floors
+|  Compat_SilentInstantFloors
+|  134217728
+|  Instantly moving floors are not silent
+|-
+| Sector sounds
+|  Compat_SectorSounds
+|  268435456
+|  Sector sounds use original method for sound origin.
+|-
+| Doom missile clip
+|  Compat_MissileClip
+|  536870912
+|  Use original Doom heights for clipping against projectiles
+|-
+| Monster drop off
+|  Compat_CrossDropoff
+|  1073741824
+|  monsters can't be pushed over dropoffs
+|}
+
+
+&lt;!-- ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ --&gt;
+= ZaCompatFlags =
+{|class="wikitable sortable" border="1" width="100%"
+!  width="15%" | Flag Name 
+!  width="17%" | Console shortcut 
+!  width="8%" | Value 
+!  width="60%" class="unsortable" | Description
+|-
+| colspan="4" |
+|-
+| Client side scripts (NET)
+|  Compat_NetScriptsAreClientSide
+|  1
+|  Uses Skulltag's old behavior when (NET) ACS Scripts are used. This is disabled by default, for compatibility among other ZDoom wads. If the WAD file is designed for Skulltag, and uses NET script advantages, then you would enable this feature.
+|-
+| Clients send full button info
+|  Compat_ClientsSendFullButtonInfo
+|  2
+|  This needs to be enabled to make the ACS function GetPlayerInput work on server side scripts with buttons other than BT_ATTACK, BT_USE, BT_JUMP, BT_CROUCH, BT_TURN180, BT_ALTATTACK, BT_RELOAD and BT_ZOOM. Because it increases net traffic, it should only be activated if needed. 
+|-
+| No land
+|  Compat_NoLand
+|  4
+|  If this is enabled, players are not allowed to use the land CCMD.
+|-
+| Old random generator
+|  Compat_OldRandom
+|  8
+|  If this is enabled, the original Doom random table is used to generate random integers in [0,255], which should make for instance the SSG cause a little more damage.
+|-
+| NOGRAVITY spheres
+|  Compat_NoGravity_Spheres
+|  16
+|  This compatflag gives the specified spheres the NOGRAVITY flag, but only when they are spawned by the map.
+*Invulnerability Sphere
+*Mega Sphere
+*Soul Sphere
+*Blur Sphere
+|-
+| Don't stop player scripts on disconnect
+|  Compat_Dont_Stop_Player_Scripts_On_Disconnect
+|  32
+|  If this is enabled, the ACS scripts with a player as activator are not terminated when this player disconnects.
+|-
+| Old explosion thrust
+|  Compat_ExplosionThrust
+|  64
+|  Enables the original (greater) horizontal explosion thrust.
+|-
+| Old bridge drops 
+|  Compat_BridgeDrops
+|  128
+|  If this is enabled, non-SOLID things (like flags) fall through invisible bridges. 
+|-
+| Old jump physics 
+|  Compat_OldZDoomZMovement
+|  256
+|  Enables the old ZDoom 1.23b33 jump physics.
+|-
+| No weapon switch cancellation
+|  Compat_FullWeaponLower
+|  512
+|  This flag disallows the ability to switch weapons while in the middle of [[A_Raise]]. Once the selected weapon starts its raising sequence, it cannot be cancelled.
+|-
+| West-facing spawns are silent
+|  Compat_SilentWestSpawns
+|  1024
+|  When set to true, players who spawn facing west are silent, as in vanilla Doom.
+|-
+| Limited movement in the air
+|  Compat_Limited_AirMovement
+|  131072
+|  By default, ''Zandronum'' gives players more maneuverability in the air than ''ZDoom''. When this is &lt;code&gt;true&lt;/code&gt;, ''ZDoom''&amp;rsquo;s method is used. See '''Air Control''' for more precise details.
+|-
+| Plasma bump bug
+|  Compat_PlasmaBump
+|  262144
+|  Allows players to pick up items on the other side of solid walls by running into the wall at a specific angle. This flag should only be used for old vanilla Doom maps that really need it; it can have serious side effects on bridges and scrolling floors!
+|-
+| Allow instant respawn
+|  Compat_InstantRespawn
+|  524288
+|  Allows players to respawn instantly after being killed by holding down the "use" key when being hit.
+|-
+| Disable taunts
+|  Compat_DisableTaunts
+|  1048576
+|  Prevents players from using the "taunt" command.
+|-
+| Original sound curve
+|  Compat_OriginalSoundCurve
+|  2097152
+|  Enabling this uses the original Doom sound curve, which causes sounds to fade away at a shorter distance. When disabled, the Hexen sound curve is used instead, which allows players to hear sounds louder, farther away than usual.
+|-
+| Use old intermission screens/music
+|  Compat_OldIntermission
+|  4194304
+|  Use doom2.exe's original intermission screens/music.
+|-
+| Disable stealth monsters
+|  Compat_DisableStealthMonsters
+|  8388608
+|  Disable stealth monsters, since doom2.exe didn't have them.
+|-
+| Old radius damage
+|  Compat_OldRadiusDmg
+|  16777216
+|  If this is enabled, the original Doom radius damage code is used, i.e. explosions have infinite vertical range.
+|-
+| Disable crosshair
+|  Compat_NoCrossHair
+|  33554432
+|  Players will not be able to use crosshair.
+|-
+| Old weapon switch
+|  Compat_OldWeaponSwitch
+|  67108864
+|  Players will be forced to switch weapons every time they pick up a new weapon.
+|}</text>
+    <sha1>7cnlcnnakyjob2npygs16c6bbn6y7ov</sha1>
+  </revision>
+</page>

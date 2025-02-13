@@ -1,0 +1,71 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>Classes:GreenArmor</title>
+  <ns>0</ns>
+  <id>2484</id>
+  <revision>
+    <id>53612</id>
+    <parentid>39194</parentid>
+    <timestamp>2024-11-08T11:45:54Z</timestamp>
+    <contributor>
+      <username>Jekyll Grim Payne</username>
+      <id>2175</id>
+    </contributor>
+    <origin>53612</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="1305" sha1="66w732ouhxmitbr3wlwkxxl8ypw7r8e" xml:space="preserve">{{Actor|
+| type = Armor
+| name = Security armor
+| class = GreenArmor
+| game = Doom
+| doomednum = 2018
+| spawnid = 68
+| spawnname = T_GREENARMOR 
+}}[[Classes]]: [[Classes:Inventory|Inventory]]&amp;rarr;[[Classes:Armor|Armor]]&amp;rarr;[[Classes:BasicArmorPickup|BasicArmorPickup]]&amp;rarr;&lt;u&gt;GreenArmor&lt;/u&gt;
+
+Doom's green armor pickup grants the player 100% of armor that resists 33% of the damage taken.  If the player is already at or above 100% armor, the item will not be picked up.
+
+=== [[ZScript]] definition ===
+{{ZScriptDefinitionNote|actors/doom/doomarmor.zs}}
+&lt;syntaxhighlight lang="cs"&gt;
+class GreenArmor : BasicArmorPickup
+{
+	Default
+	{
+		Radius 20;
+		Height 16;
+		Inventory.Pickupmessage "$GOTARMOR";
+		Inventory.Icon "ARM1A0";
+		Armor.SavePercent 33.335;
+		Armor.SaveAmount 100;
+	}
+	States
+	{
+	Spawn:
+		ARM1 A 6;
+		ARM1 B 7 bright;
+		loop;
+	}
+}
+&lt;/syntaxhighlight&gt;
+=== [[DECORATE]] definition ===
+{{DecorateDefinitionNote}}
+ ACTOR &lt;u&gt;GreenArmor&lt;/u&gt; : {{Class|BasicArmorPickup}}
+ {
+   {{Property|Radius}} 20
+   {{Property|Height}} 16
+   {{Property|Inventory.PickupMessage}} "$GOTARMOR" // "Picked up the armor."
+   {{Property|Inventory.Icon}} "ARM1A0"
+   {{Property|Armor.SavePercent}} 33.335
+   {{Property|Armor.SaveAmount}} 100
+   States
+   {
+   Spawn:
+     ARM1 A 6
+     ARM1 B 7 Bright
+     Loop
+   }
+ }</text>
+    <sha1>66w732ouhxmitbr3wlwkxxl8ypw7r8e</sha1>
+  </revision>
+</page>

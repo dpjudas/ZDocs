@@ -1,0 +1,93 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>MIDI</title>
+  <ns>0</ns>
+  <id>6126</id>
+  <revision>
+    <id>43103</id>
+    <parentid>35379</parentid>
+    <timestamp>2016-09-01T09:35:05Z</timestamp>
+    <contributor>
+      <username>Gez</username>
+      <id>1283</id>
+    </contributor>
+    <minor />
+    <comment>/* Technical details */</comment>
+    <origin>43103</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="6725" sha1="9p6gl3mlnb5n65e5wv35yr1f0m5r3t5" xml:space="preserve">'''MIDI''', acronym of '''{{wp|Musical_Instrument_Digital_Interface|Musical Instrument Digital Interface}}''', is a comprehensive standard for synthesizers and computers. Notably, it defines a file format for storing music tracks that can then be synthesized. In common speech, "MIDI" or "midi" is often used to refer to these files. A number of variants of the standard MIDI file format have been developed for various reasons, sometimes to add extended information to allow more effects, sometimes on the contrary to remove less important parts to make the files even more compact. These variants are usually not recognized by the {{wp|MIDI_Manufacturers_Association|MIDI Manufacturers Association}}; but several of them can be considered valid standards in video game communities. ZDoom can supports four of these variants, the [[MUS]], [[HMI]], [[HMP]] and [[XMI]] formats.
+
+MIDI playback in ZDoom is done through one of the [[software synthesizer]]s available.
+
+==Technical details==
+The standard MIDI file format, developed in 1990, is, like the [[PNG]] [[image format]], based on chunks, inspired by the {{wp|Interchange_File_Format|Interchange File Format}}, developed in 1985 jointly by {{wp|Electronic_Arts|Electronic Arts}} and {{wp|Commodore_International|Commodore}}. A MIDI chunk begins with an 8-byte header, consisting of a four-byte identifier (e.g. "MThd") followed by a 32-bit {{wp|Endianness|big-endian}} unsigned integer giving the size of the data part of the chunk (the header's size is not counted in that total). The standard defines two chunks: '''MThd''', the header chunk, and '''MTrk''', a music track. There can be only one header and it must be at the start of the file; but there may be any number of tracks.
+
+The header chunk has a size of six and contains three 16-bit big-endian signed integers; respectively the MIDI format, the number of tracks, and the division value.
+*MIDI format: the standard defines three formats:
+**Format 0: Contains a single song defined by a single track.
+**Format 1: Contains a single song defined by one or more tracks.
+**Format 2: Contains one or more songs, each defined by a single track.
+*Number of tracks: this should correspond to the total number of MTrk chunks contained in the file.
+*Division value: this allows to compute the length of the time unit used in the rest of the file, notably for the duration of events. The value is expressed on fifteen bits: the first bit corresponds to a flag determining whether to use real-time FPS measurement, or metrical measurement. If it is zero, then the rest of the value corresponds to the number of ticks per quarter-note. If it is one, then the remaining fifteen bits are cut into two values: the first seven bits correspond to the number of frames per second, normally identifying a {{wp|SMPTE_time_code|standard SMPTE frame rate}} (24, 25, 29 or 30). The last eight bits correspond to the number of ticks per frame.
+
+A track chunk is a stream of "events"; there are MIDI events which concern the song itself, system exclusive events (a.k.a. sysex events) which concern the synthesizer, and meta-events, which can be anything else. Each event is preceded by its duration, also called "delta time", which is the number of divisions it should last, expressed as a variable length number. 
+
+A variable length number is big-endian and uses seven bits per byte for the actual value; the most significant bit being used to mark whether the data continues on the next bit (set) or not (unset). So for instance, the value 128 (1000 0000 or 0x80 normally) would be represented as (1)000 0001 (0)000 0000, or 0x8100.
+
+===MIDI events===
+Each MIDI event uses a header of four or more bytes that works like this: first, one byte or more for the variable length number delta time value. Then a byte for the event type. Then two bytes for event parameters, which are usually two single-byte values but may be combined as a single 16-bit value, depending on the event. After the header, again depending on the event, additional data may follow. The most important MIDI events are channel events, where the event type byte is cut in two four-bit values (from 0 to 15). The four most significant bits correspond to the event type, the four least significant bits to the channel number. There are seven MIDI channel events:
+
+{| {{prettytable}}
+!Value!!Event name!!colspan="2"|Parameters
+|-
+|0x8||Note off||Note number||Velocity
+|-
+|0x9||Note on||Note number||Velocity
+|-
+|0xA||Note aftertouch||Note number||Value
+|-
+|0xB||Controller||Control type||Value
+|-
+|0xC||Program change||Program||0
+|-
+|0xD||Channel aftertouch||Value||0
+|-
+|0xE||Pitch bend||colspan=2|pitch value
+|}
+
+Of these, the least straightforward is the controller event. ZDoom supports the standard MIDI controllers as well as the {{wp|Apogee_Software|Apogee}} EMIDI extra events. The following table only details event types that have special handling in ZDoom; for a list of all standard MIDI controllers refer to the specs.
+{| {{prettytable}}
+!Type!!Name!!Notes
+|-
+|007||Main volume||This is ignored in EMIDI songs, but accepted in other MIDI songs.
+|-
+|110||EMIDI track designation||Designated track uses FM synth for instruments 4 to 7; only valid in InitBeat.
+|-
+|111||EMIDI track exclusion||Designate all tracks except excluded one; only valid in InitBeat.
+|-
+|112||EMIDI program change||Ignored unless it also appears in the InitBeat.
+|-
+|113||EMIDI volume change||Ignored unless it also appears in the InitBeat.
+|-
+|116||EMIDI Track loop begin||Value corresponds to number of time it loops, a value of zero means infinite loops.
+|-
+|117||EMIDI Track loop end||Value must be 127.
+|-
+|118||EMIDI Global loop begin||Value corresponds to number of time it loops, a value of zero means infinite loops.
+|-
+|119||EMIDI Global loop end||Value must be 127.
+|}
+Note that some MIDI files, notably those created by {{wp|RPG_Maker|RPG Maker}}, use controller 111 to mark a loop starting point; ZDoom does not support this (it conflicts with an EMIDI controller) and will not play these MIDI songs correctly.
+
+==External links==
+* [http://www.midi.org/techspecs/midispec.php Official MIDI specifications]
+* [http://www.sonicspot.com/guide/midifiles.html Online SMF specifications]
+* [http://www.anvilstudio.com/ Anvil Studio] &amp;mdash; free but limited MIDI sequencer (extensions are commercial)
+* [http://breno.sarmen.to/midi/ BRELS MIDI Editor] &amp;mdash; free and open source MIDI sequencer
+* [http://midieditor.sourceforge.net/ MidiEditor] &amp;mdash; free and open source MIDI sequencer
+* [http://openmidiproject.sourceforge.jp/Sekaiju_en.html Sekaiju] &amp;mdash; free and open source MIDI sequencer
+* {{wp|List of MIDI editors and sequencers}}
+[[Category:Audio formats]]</text>
+    <sha1>9p6gl3mlnb5n65e5wv35yr1f0m5r3t5</sha1>
+  </revision>
+</page>

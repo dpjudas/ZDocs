@@ -1,0 +1,101 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>Classes:ArtiDarkServant</title>
+  <ns>0</ns>
+  <id>4672</id>
+  <revision>
+    <id>53752</id>
+    <parentid>51446</parentid>
+    <timestamp>2024-11-13T23:27:53Z</timestamp>
+    <contributor>
+      <username>Jekyll Grim Payne</username>
+      <id>2175</id>
+    </contributor>
+    <origin>53752</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="2384" sha1="ofqka7c9ithziaiknqpqulpbye1rput" xml:space="preserve">{{Actor|
+| type = Artifact
+| name = Dark servant artifact
+| class = ArtiDarkServant
+| game = Hexen
+| doomednum = 86
+| spawnid = 16
+| spawnname = T_ITEMSUMMON 
+}}[[Classes]]: [[Classes:Inventory|Inventory]]&amp;rarr;&lt;u&gt;ArtiDarkServant&lt;/u&gt;&lt;br&gt;
+
+A small statuette of a {{Class|Minotaur|Maulotaur}}. When used, it throws a {{Class|SummoningDoll}}, set its &lt;tt&gt;target&lt;/tt&gt; and &lt;tt&gt;tracer&lt;/tt&gt; fields to the user, and gives the doll an initial vertical velocity of 5. Since summoning dolls do not have the NOGRAVITY flag, they eventually fall to the floor, if they do not hit a wall or obstacle first, and then will summon a {{Class|MinotaurFriend|dark servant}} if possible, or turn back into an artifact otherwise.
+
+=== [[ZScript]] definition ===
+{{ZScriptDefinitionNote|actors/hexen/summon.zs}}
+&lt;syntaxhighlight lang="csharp"&gt;
+class ArtiDarkServant : Inventory
+{
+	Default
+	{
+		+COUNTITEM
+		+FLOATBOB
+		Inventory.RespawnTics 4230;
+		Inventory.DefMaxAmount;
+		Inventory.PickupFlash "PickupFlash";
+		+INVENTORY.INVBAR 
+		+INVENTORY.FANCYPICKUPSOUND
+		Inventory.Icon "ARTISUMN";
+		Inventory.PickupSound "misc/p_pkup";
+		Inventory.PickupMessage "$TXT_ARTISUMMON";
+		Tag "$TAG_ARTISUMMON";
+	}
+	States
+	{
+	Spawn:
+		SUMN A 350;
+		Loop;
+	}
+	
+	//============================================================================
+	//
+	// Activate the summoning artifact
+	//
+	//============================================================================
+
+	override bool Use (bool pickup)
+	{
+		Actor mo = Owner.SpawnPlayerMissile ("SummoningDoll");
+		if (mo)
+		{
+			mo.target = Owner;
+			mo.tracer = Owner;
+			mo.Vel.Z = 5;
+		}
+		return true;
+	}	
+}&lt;/syntaxhighlight&gt;
+
+=== [[DECORATE]] definition ===
+{{DecorateDefinitionNote}}
+ ACTOR &lt;u&gt;ArtiDarkServant&lt;/u&gt; : {{Class|Inventory}} native
+ {
+   +{{Flag|COUNTITEM}}
+   +{{Flag|FLOATBOB}}
+   {{Property|Inventory.RespawnTics}} 4230
+   {{Property|Inventory.DefMaxAmount}}
+   {{Property|Inventory.PickupFlash}} "{{Class|PickupFlash}}"
+   +{{Flag|INVENTORY.INVBAR|INVBAR}}
+   +{{Flag|INVENTORY.FANCYPICKUPSOUND|FANCYPICKUPSOUND}}
+   {{Property|Inventory.Icon}} "ARTISUMN"
+   {{Property|Inventory.PickupSound}} "misc/p_pkup"
+   {{Property|Inventory.PickupMessage}} "$TXT_ARTISUMMON" // "DARK SERVANT"
+   {{Property|Tag}} "$TAG_ARTISUMMON"
+   States
+   {
+   Spawn:
+     SUMN A 350
+     Loop
+   }
+ }
+
+=== See also ===
+* {{class|MinotaurFriend}}
+* {{class|SummoningDoll}}</text>
+    <sha1>ofqka7c9ithziaiknqpqulpbye1rput</sha1>
+  </revision>
+</page>

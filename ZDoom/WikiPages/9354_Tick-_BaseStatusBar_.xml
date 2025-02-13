@@ -1,0 +1,46 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>Tick (BaseStatusBar)</title>
+  <ns>0</ns>
+  <id>9354</id>
+  <revision>
+    <id>53244</id>
+    <parentid>49224</parentid>
+    <timestamp>2024-10-07T22:01:06Z</timestamp>
+    <contributor>
+      <username>Jekyll Grim Payne</username>
+      <id>2175</id>
+    </contributor>
+    <comment>/* Examples */</comment>
+    <origin>53244</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="835" sha1="91vqbhhpqn5pgfvqhg4mpi31e8w145o" xml:space="preserve">{{ZScriptNote}}
+__NOTOC__
+
+native virtual void '''Tick'''()
+
+== Usage ==
+[[Classes:BaseStatusBar|BaseStatusBar]] utilizes this function in the same way as [[Classes:Actor|Actor]]: it's called every 1/35th of a second. Internally this function handles messages, resetting the crosshair size, and inventory item flash durations. This can be used to handle variables and functionality you want to make sure is called at set intervals instead of tied to the frame rate.
+
+== Examples ==
+A simple example of a custom statusbar with a custom integer field that gets counted down every [[tic]]:
+&lt;syntaxhighlight lang="csharp"&gt;
+class CustomStatusBar : BaseStatusBar
+{
+	int customTimer;
+
+	override void Tick()
+	{
+		Super.Tick();
+		if (customTimer)
+		{
+			customTimer--;
+		}
+	}
+}&lt;/syntaxhighlight&gt;
+
+[[Category:ZScript]]
+[[Category:BaseStatusBar]]</text>
+    <sha1>91vqbhhpqn5pgfvqhg4mpi31e8w145o</sha1>
+  </revision>
+</page>

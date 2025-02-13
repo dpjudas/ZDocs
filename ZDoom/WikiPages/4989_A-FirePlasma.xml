@@ -1,0 +1,61 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>A FirePlasma</title>
+  <ns>0</ns>
+  <id>4989</id>
+  <revision>
+    <id>50517</id>
+    <parentid>49601</parentid>
+    <timestamp>2023-09-04T18:34:46Z</timestamp>
+    <contributor>
+      <username>Jekyll Grim Payne</username>
+      <id>2175</id>
+    </contributor>
+    <comment>added zscript definition</comment>
+    <origin>50517</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="1012" sha1="2vyfmkshklwo3pmchqzoc30gjj613qu" xml:space="preserve">{{codepointer|Weapon attack}}'''A_FirePlasma'''
+{{doomwiki|A_FirePlasma}}
+
+(no parameters)
+
+Fires a [[Classes:PlasmaBall|PlasmaBall]], activates the [[actor states|Flash state sequence]] and sometimes randomly offsets the Flash sequence by 1 frame.
+
+== [[ZScript]] definition ==
+
+{{ZScriptDefinitionNote|actors/doom/weaponplasma.zs#L127C1-L148C3}} 
+
+&lt;syntaxhighlight lang="csharp"&gt;
+	action void A_FirePlasma()
+	{
+		if (player == null)
+		{
+			return;
+		}
+		Weapon weap = player.ReadyWeapon;
+		if (weap != null &amp;&amp; invoker == weap &amp;&amp; stateinfo != null &amp;&amp; stateinfo.mStateType == STATE_Psprite)
+		{
+			if (!weap.DepleteAmmo (weap.bAltFire, true, 1))
+				return;
+			
+			State flash = weap.FindState('Flash');
+			if (flash != null)
+			{
+				player.SetSafeFlash(weap, flash, random[FirePlasma](0, 1));
+			}
+			
+		}
+		
+		SpawnPlayerMissile ("PlasmaBall");
+	}
+&lt;/syntaxhighlight&gt;
+
+== Examples ==
+Fire state from [[Classes:PlasmaRifle|Plasmagun]]:
+  Fire:
+    PLSG A 3 A_FirePlasma
+    PLSG B 20 [[A_ReFire]]
+    Goto Ready</text>
+    <sha1>2vyfmkshklwo3pmchqzoc30gjj613qu</sha1>
+  </revision>
+</page>

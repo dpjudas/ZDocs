@@ -1,0 +1,62 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>Classes:ArtiPoisonBag2</title>
+  <ns>0</ns>
+  <id>4670</id>
+  <revision>
+    <id>53618</id>
+    <parentid>34562</parentid>
+    <timestamp>2024-11-08T11:51:17Z</timestamp>
+    <contributor>
+      <username>Jekyll Grim Payne</username>
+      <id>2175</id>
+    </contributor>
+    <comment>/* DECORATE definition */</comment>
+    <origin>53618</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="1130" sha1="d6picu7783q79rt5stnuffrj4ltd3he" xml:space="preserve">{{Actor|
+| type = Artifact
+| name = Time bomb fléchette
+| class = ArtiPoisonBag2
+| game = Hexen
+}}[[Classes]]: [[Classes:Inventory|Inventory]]&amp;rarr;[[Classes:ArtiPoisonBag|ArtiPoisonBag]]&amp;rarr;&lt;u&gt;ArtiPoisonBag2&lt;/u&gt;&lt;br&gt;
+
+The [[Classes:ArtiPoisonBag|fléchette]] as used by [[Hexen]]'s [[Classes:MagePlayer|Mage]].  When used, it is [[Classes:FireBomb|dropped on the spot]], and explodes very shortly afterwards.
+
+=== [[ZScript]] definition ===
+{{ZScriptDefinitionNote|actors/hexen/flechette.zs#L297}}
+&lt;syntaxhighlight lang="cs"&gt;
+class ArtiPoisonBag2 : ArtiPoisonBag
+{
+	Default
+	{
+		Inventory.Icon "ARTIPSB2";
+		Tag "$TAG_ARTIPOISONBAG2";
+	}
+	
+	override bool Use (bool pickup)
+	{
+		Actor mo = Spawn("FireBomb", Owner.Vec3Offset(
+			16 * cos(Owner.angle),
+			24 * sin(Owner.angle),
+			-Owner.Floorclip + 8), ALLOW_REPLACE);
+		if (mo)
+		{
+			mo.target = Owner;
+			return true;
+		}
+		return false;
+	}
+	
+}
+&lt;/syntaxhighlight&gt;
+=== [[DECORATE]] definition ===
+{{DecorateDefinitionNote}}
+ ACTOR &lt;u&gt;ArtiPoisonBag2&lt;/u&gt; : {{Class|ArtiPoisonBag}} native
+ {
+   {{Property|Inventory.Icon}} "ARTIPSB2"
+   {{Property|Tag}} "$TAG_ARTIPOISONBAG2"
+ }</text>
+    <sha1>d6picu7783q79rt5stnuffrj4ltd3he</sha1>
+  </revision>
+</page>

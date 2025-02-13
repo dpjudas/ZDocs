@@ -1,0 +1,57 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>Startup lumps</title>
+  <ns>0</ns>
+  <id>5818</id>
+  <revision>
+    <id>49222</id>
+    <parentid>45924</parentid>
+    <timestamp>2022-06-07T11:34:51Z</timestamp>
+    <contributor>
+      <username>Thekins</username>
+      <id>987</id>
+    </contributor>
+    <minor />
+    <comment>Added notes about our brave new world resolution wise</comment>
+    <origin>49222</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="3788" sha1="df4cphvt5nl7yckjrbxu27gd1684b5u" xml:space="preserve">On Windows systems, [[ZDoom]] supports three games that had special graphical startups. Contrarily to other graphics, the [[image format]]s used here are hardcoded and cannot be replaced by alternatives.
+
+The &lt;tt&gt;-nostartup &lt;/tt&gt; [[command line parameter]] forces ZDoom to use the text-mode startup log from Doom.
+
+The [[GAMEINFO]] lump can be used to override the game default, provided the needed lumps are successfully used.
+
+== Heretic ==
+[[Image:LOADINGENDOOM.png|thumb|What happens when using Doom's ENDOOM lump as Heretic's LOADING lump]]
+Heretic displays a 80x25 [[ANSI]] text screen called '''LOADING'''. It is altered by the executable as such:
+* The character in position [49,2] is used to represent the minor version of the executable (e.g., "3" for Heretic 1.3). ZDoom always displays a 3 here. Background and foreground colors are not modified.
+* The characters in positions [17,7] to [32,7] are used to display "Loading graphics" in "bright white on cyan background" (3F) characters.
+* The characters in positions [17,8] to [32,8] are used to display "Init game engine" in "bright white on cyan background" (3F) characters.
+* The characters in positions [17,9] to [45,9] are used to display "Checking network game status." in "bright white on cyan background" (3F) characters.
+* The characters in positions [14,14] to [65,14] are used to display the loading bar and are used to display the blocks (█) in "light green on green" characters (AA).
+
+== Hexen ==
+Hexen uses a lump called '''STARTUP''' to show a 4-bit, 16-color, 640&amp;times;480 picture on the startup screen. It is stored in a custom, non-standard format: the first 48 bytes are for the 16 color palette (three bytes per color entry), followed by raw 4-bit planar graphics. The total size is therefore 153648 bytes exactly. The music lump "ORB" is played during loading.
+
+The pixels from [64,441] to [576,464] are used to display the status bar, with hardcoded "notch" graphics. Each time one is drawn, the sound "StartupTick" is played.
+
+The notches can be replaced by raw 4-bit bitmaps. The loading notch is 16&amp;times;23 (184 bytes) and called '''NOTCH''' and the netgame waiting notch is 4&amp;times;16 (32) and called '''NETNOTCH'''. They use the palette defined in STARTUP.
+
+[[SLADE|SLADE3]] and [[HexStartup|HexStartup++]] are the only image editing tools currently available that can convert pictures to these formats and create replacement graphics for them.
+
+'''Note:''' in vanilla Hexen, the net notches are technically 8&amp;times;16, however they are hardcoded in the engine and cannot be redefined.
+
+'''Note 2:''' As of GZDoom v4.8.0, the custom file formats used for the Hexen startup are no longer necessary, and you can use any other GZDoom-supported texture format, such as PNG, so long as it remains the proper resolution.
+
+== Strife ==
+Strife displays part of a raw 320&amp;times;200 picture contained in the lump '''STARTUP0'''. Only rows 57 to 151 are drawn, 0 to 56 and 152 to 199 are instead filled with color index #240 from the [[palette]] (in Strife, it is fully black). To display progress, Strife uses a {{Class|Sentinel}} shooting on a {{Class|Peasant}}.
+* The sentinel is drawn from the STRTBOT lump, a 48&amp;times;48 picture (2304 byte)
+* The peasant is drawn from the STRTPA1, STRTPB1, STRTPC1 and STRTPD1 lumps, each a 32&amp;times;64 picture (2048 bytes)
+* The laser dots that serves as a progress meter are drawn from the STRTLZ1 and STRTLZ2 lumps, each a 16&amp;times;16 picture (256 bytes)
+All these are in raw format and use the [[PLAYPAL]] palette.
+
+'''Note:''' As of GZDoom v4.8.0, the specific file formats used for the Hexen startup are no longer necessary, and you can use any other GZDoom-supported texture format, such as PNG, so long as it remains the proper resolutions.
+[[Category:Lumps]]</text>
+    <sha1>df4cphvt5nl7yckjrbxu27gd1684b5u</sha1>
+  </revision>
+</page>

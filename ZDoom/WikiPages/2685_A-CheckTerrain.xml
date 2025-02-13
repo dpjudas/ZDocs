@@ -1,0 +1,69 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>A CheckTerrain</title>
+  <ns>0</ns>
+  <id>2685</id>
+  <revision>
+    <id>35921</id>
+    <parentid>35076</parentid>
+    <timestamp>2013-02-15T18:35:23Z</timestamp>
+    <contributor>
+      <username>Deded007</username>
+      <id>1392</id>
+    </contributor>
+    <minor />
+    <comment>/* Examples */  link</comment>
+    <origin>35921</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="1373" sha1="i119iskh3kgt1cy3ykscezt0t5ovbtl" xml:space="preserve">{{codepointer|Special action}}'''A_CheckTerrain'''
+
+(no parameters)
+
+Applies the effects of sector types 115 (instant death) and 118 (Strife's water scroller) to the calling actor.
+
+Used in [[Strife]] for the {{Class|TargetPractice|shooting range targets}} and for the {{Class|Zombie|converted peasants}}, to move or remove them according to the sector they are currently in.
+
+== Examples ==
+
+Strife's 'zombie' peasant actor:
+
+ ACTOR {{class|Zombie}} : {{class|StrifeHumanoid}} 169
+ {
+ 	{{property|Game}} [[Strife]]
+ 	{{property|Health}} 31
+ 	{{property|Radius}} 20
+ 	{{property|Height}} 56
+ 	{{property|PainChance}} 0     // is put into Pain state only by a [[Teleport_ZombieChanger]] line
+ 	+{{flag|SOLID}}
+ 	+{{flag|SHOOTABLE}}
+ 	+{{flag|FLOORCLIP}}
+ 	+{{flag|CANPASS}}
+ 	+{{flag|CANPUSHWALLS}}
+ 	+{{flag|ACTIVATEMCROSS}}
+ 	{{property|MinMissileChance}} 150
+ 	{{property|MaxStepHeight}} 16
+ 	{{property|MaxDropOffHeight}} 32
+ 	{{property|Translation}} 0
+ 	{{property|ConversationID}} 28, -1, -1
+ 	{{property|DeathSound}} "zombie/death"
+ 	States
+ 	{
+ 	Spawn:
+ 		PEAS A 5 '''A_CheckTerrain'''       // looks like a Peasant
+ 		Loop
+ 	Pain:
+ 		AGRD A 5 '''A_CheckTerrain'''       // looks like an Acolyte
+ 		Loop
+ 	Death:
+ 		GIBS M 5 [[A_TossGib]]
+ 		GIBS N 5 [[A_XScream]]
+ 		GIBS O 5 [[A_NoBlocking]]
+ 		GIBS PQRST 4 [[A_TossGib]]
+ 		GIBS U 5
+ 		GIBS V 1400
+ 		Stop
+ 	}
+ }</text>
+    <sha1>i119iskh3kgt1cy3ykscezt0t5ovbtl</sha1>
+  </revision>
+</page>

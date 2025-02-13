@@ -1,0 +1,66 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>Classes:BlueCard</title>
+  <ns>0</ns>
+  <id>2552</id>
+  <revision>
+    <id>51437</id>
+    <parentid>39264</parentid>
+    <timestamp>2024-02-01T15:27:10Z</timestamp>
+    <contributor>
+      <username>Jekyll Grim Payne</username>
+      <id>2175</id>
+    </contributor>
+    <comment>/* DECORATE definition */ Added ZScript definition</comment>
+    <origin>51437</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="874" sha1="r1iwbcixtmfthtuai8vgxnb1rneldqa" xml:space="preserve">{{Actor|
+| type = Key
+| name = Blue keycard
+| class = BlueCard
+| game = Doom
+| doomednum = 5
+| spawnid = 85
+| spawnname = T_BLUEKEYCARD 
+}}[[Classes]]: [[Classes:Inventory|Inventory]]&amp;rarr;[[Classes:Key|Key]]&amp;rarr;[[Classes:DoomKey|DoomKey]]&amp;rarr;&lt;u&gt;BlueCard&lt;/u&gt;
+
+
+Blue keycard.
+
+
+=== [[ZScript]] definition ===
+{{ZScriptDefinitionNote|actors/doom/doomkeys.zs#L12}}
+&lt;syntaxhighlight lang="csharp"&gt;
+class BlueCard : DoomKey
+{
+	Default
+	{
+		Inventory.Pickupmessage "$GOTBLUECARD";
+		Inventory.Icon "STKEYS0";
+	}
+	States
+	{
+	Spawn:
+		BKEY A 10;
+		BKEY B 10 bright;
+		loop;
+	}
+}&lt;/syntaxhighlight&gt;
+
+=== [[DECORATE]] definition ===
+{{DecorateDefinitionNote}}
+ ACTOR &lt;u&gt;BlueCard&lt;/u&gt; : {{Class|DoomKey}}
+ {
+   {{Property|Inventory.PickupMessage}} "$GOTBLUECARD"
+   {{Property|Inventory.Icon}} "STKEYS0"
+   States
+   {
+   Spawn:
+     BKEY A 10
+     BKEY B 10 Bright
+     Loop
+   }
+ }</text>
+    <sha1>r1iwbcixtmfthtuai8vgxnb1rneldqa</sha1>
+  </revision>
+</page>

@@ -1,0 +1,44 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>Magic numbers</title>
+  <ns>0</ns>
+  <id>6179</id>
+  <revision>
+    <id>38572</id>
+    <parentid>30061</parentid>
+    <timestamp>2014-12-06T10:24:27Z</timestamp>
+    <contributor>
+      <username>Gez</username>
+      <id>1283</id>
+    </contributor>
+    <minor />
+    <origin>38572</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="5168" sha1="kedurfat3njb8sr3weh88q1yn2rg1sk" xml:space="preserve">The Doom engine games have for reasons of efficiency used numerical values (instead of text strings) to represent a wide variety of things. Although it allows to use less disk space to store the data, and to process it more quickly, it has the disadvantage of not being perfectly clear. This is especially true for [[thing]]s, as different mechanisms use different values to refer to the same things, resulting in a lot of confusion.
+
+This article aims to dispel such confusion.
+
+==Thing numbers==
+* '''[[Editor number]]''' (1-32767): the value which allows to use a thing in a map. For example, when placing an {{Class|DoomImp|imp}} on a map, you place a "thing" which has an editor number value of 3001. It is by this value that the thing is identified as an imp when the map is loaded. Different [[IWAD|games]] use different values, so for example in a Hexen map, 3001 would correspond to a [[polyobject]] start spot instead of an imp. Editor numbers are also called '''DoomEd number''' (after {{dw|DoomEd}}, [[id Software]]'s original [[level editor]]), '''DoomEdNum''' or '''EdNum''' and other similar variants. A thing may have no associated ednum, in that case it simply cannot be placed directly in a map. For example, an {{Class|DoomImpBall|imp fireball}} is created during the game by an imp's attack, but is not placed directly in the map; for this reason it does not have an editor number.
+* '''[[Spawn number]]''' (1-255): a mechanism used by [[Hexen]] to spawn things through [[ACS]] scripts, [[action specials]] or [[Hexen breakable items|special items]]. Also called '''spawn ID''' or '''spawn type'''. In ACS, identifier constants are associated to these values, allowing to use a string such as "T_DEMON" instead of a number such as 8. Historically, only [[Hexen]] had spawn numbers, but ZDoom added the {{Property|SpawnID}} property to [[actor]]s from other games in order to extend usefulness of the relevant Hexen features to the rest of the supported games. Actors without a spawn ID cannot be created with these features, though most spawn functions have an equivalent which uses the class name instead, making spawn numbers a mostly-deprecated feature.
+* '''[[DeHackEd]] number''' (0-unlimited): The original Doom engine used an {{wp|Enumerated_type|enum}} to identify the various thing types (e.g. MT_CYBORG, or 22, refers to the {{Class|Cyberdemon}}). This number is therefore actually simply the thing's index in the mobj_t table. DeHackEd patches refer to things by these values. ZDoom, however, has no use for them and does not allow to define a "dehackednum" property.
+* '''{{Property|ConversationID}}''' (1-unlimited): the value that [[Strife]] uses to identify actors in [[DIALOGUE|conversation scripts]]. Technically, this is the things' index in the mobj_t table, so the same thing as the DeHackEd number; however it is slightly more complex as these numbers have not remained constant through the various versions of Strife. Thanks to the [[ZDoom Strife Dialogue Format]], this value is now deprecated and can be ignored.
+* '''{{Class|PuzzleItem}} number''' (0-unlimited): a value used only by the [[UsePuzzleItem]] special.
+* '''Thing ID''' (-32768-32767): an identifier that an invidual actor (instead of an actor type as for all previous values) can have. This is also known as '''TID''' or '''tag'''.
+* '''Thing special''' (0-255): the [[action special]] run by that thing. By default, it is called when the thing is picked up (for inventory items) or killed (for monsters), but this behavior can be changed with the {{Property|Activation}} property and the {{Flag|USESPECIAL}} and {{Flag|BUMPSPECIAL}} flags.
+* '''Thing number''' (0-unlimited): an identifier telling the index of an individual thing in the list of things placed on the map in the editor. This number is usually not relevant as it is of no consequence in the game logic, but mappers and playtesters may use it for bug reports (e.g. "thing 326 is placed too close to a wall and remains stuck").
+
+==Sector numbers==
+* '''[[Sector special]]''': the effect or effects that a sector can have. Sector flags are included in the value.
+* '''Sector tag''': same as the thing ID, but for a sector.
+* '''Sector number''': same as the thing number, but for a sector. The ZDoom console log may contain warning messages about errors in sectors; if so this value will be used to identify the faulty sectors.
+
+==Line numbers==
+* '''[[Action special]]''': the effect that the linedef has. Also called '''line type'''.
+* '''Line ID''': same as the thing ID, but for a line. This value depends on the [[map format]] used. In the [[Doom format]], it is the same as the line tag. In the [[Hexen format]], it requires [[Line_SetIdentification]]. In [[UDMF]], it is a normal property.
+* '''Line tag''': this value associates the line's special with sectors having the same tag. In the Hexen [[map format]], this is replaced by an array of five arguments.
+* '''Line number''': same as the thing number, but for a line. The ZDoom console log may contain warning messages about errors in lines; if so this value will be used to identify the faulty linedefs.
+[[Category:Technical aspects]]</text>
+    <sha1>kedurfat3njb8sr3weh88q1yn2rg1sk</sha1>
+  </revision>
+</page>

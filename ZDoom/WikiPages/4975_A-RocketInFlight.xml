@@ -1,0 +1,39 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>A RocketInFlight</title>
+  <ns>0</ns>
+  <id>4975</id>
+  <revision>
+    <id>38192</id>
+    <parentid>34458</parentid>
+    <timestamp>2014-08-23T15:10:43Z</timestamp>
+    <contributor>
+      <username>Cpt. Carmack</username>
+      <id>2022</id>
+    </contributor>
+    <origin>38192</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="864" sha1="ir9l4a4s0to26mq8olypsfxosav275f" xml:space="preserve">{{codepointer|Spawn}}'''A_RocketInFlight'''
+
+(no parameters)
+
+
+Plays the sound "misc/missileinflight" and spawns a [[Classes:MiniMissilePuff|MiniMissilePuff]] and a [[Classes:RocketTrail|RocketTrail]].
+
+A close approximation in a more generalized functions is:
+
+  [[A_PlaySound]]("misc/missileinflight", CHAN_VOICE)
+  [[A_SpawnItemEx]]("[[Classes:MiniMissilePuff|MiniMissilePuff]]", -velx, -vely, 0, 0, 0, 1)
+  [[A_SpawnItemEx]]("[[Classes:RocketTrail|RocketTrail]]", 0, 0, 0, 0, 0, 0, 180)
+
+The original definition keeps the MiniMissilePuff from hitting the crash state, but MiniMissilePuff has Goto Crash anyway... Also, the original has some particle-specific parameters passed but again, MiniMissilePuff has -ALLOWPARTICLES.
+
+== Examples ==
+From the definition of [[Classes:MiniMissile|MiniMissile]]:
+
+  Spawn:
+    MICR A 6 Bright [[A_RocketInFlight]]
+    Loop</text>
+    <sha1>ir9l4a4s0to26mq8olypsfxosav275f</sha1>
+  </revision>
+</page>

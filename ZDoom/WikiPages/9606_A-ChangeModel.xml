@@ -1,0 +1,93 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>A ChangeModel</title>
+  <ns>0</ns>
+  <id>9606</id>
+  <revision>
+    <id>54059</id>
+    <parentid>54058</parentid>
+    <timestamp>2024-12-15T21:24:14Z</timestamp>
+    <contributor>
+      <username>Jekyll Grim Payne</username>
+      <id>2175</id>
+    </contributor>
+    <minor />
+    <comment>/* Examples */</comment>
+    <origin>54059</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="4495" sha1="pp4rwd32g7eewsjhtkaikdqpwxh3r1t" xml:space="preserve">{{DISPLAYTITLE:A_ChangeModel}}
+'''{{class|Actor}}'''
+
+action native void '''A_ChangeModel'''(name ''modeldef'', int ''modelindex'' = 0, string ''modelpath'' = "", name ''model'' = "", int ''skinindex'' = 0, string ''skinpath'' = "", name ''skin'' = "", int ''flags'' = 0, int ''generatorindex'' = -1, int ''animationindex'' = 0, string ''animationpath'' = "", name ''animation'' = "");
+
+== Usage ==
+This can change the [[MODELDEF]] definition, model and skins of an actor.
+
+You can add models to an actor to render by using ''generatorindex'' to tell your new model index to copy the behavior of another one. This does not actually generate any MODELDEF data, but does instruct the index to copy the behavior of the index you put for ''generatorindex''. As a result, you may only copy the behavior of a model index already defined in your actor's current modeldef. To remove a model or skin, just pass "" to modeldef/model/skin parameter to revert to the default.
+
+=== Parameters ===
+*{{c|name '''modeldef'''}}
+:This is the [[MODELDEF]] this actor will now load. Use &lt;code&gt;""&lt;/code&gt; to restore the default MODELDEF definition. If it's already using its default MODELDEF definition and you don't want to change it, use &lt;code&gt;""&lt;/code&gt; as well (this can be done if, for example, you only want to swap the model or its texture, without changing the associated MODELDEF definition).
+*{{c|int '''modelindex'''}}
+:This is the model index where the new model should be attached or replaced. Default is 0.
+*{{c|String '''modelpath'''}}
+:This is the path for where to locate the new model. &lt;u&gt;This must be a full path&lt;/u&gt; to the folder containing the model in your [[PK3]] file (for example, &lt;code&gt;"models/marine/shotgun"&lt;/code&gt;), the same way as the {{c|Path}} instruction in [[MODELDEF]].
+*{{c|name '''model'''}}
+:The name of the model file to attach, for example &lt;code&gt;"shotgun.iqm"&lt;/code&gt;. This name is appended to the path, the same as the {{c|Model}} instruction in [[MODELDEF]].
+*{{c|'''skinindex'''}}
+:This index specifies which model index must change it's skin. Default is 0.
+*{{c|'''skinpath'''}}
+:This is the path for where to locate the new skin. Works the same way as ''modelpath''.
+*{{c|name '''skin'''}}
+:The name of the skin file to attach. Works the same way as ''model''.
+*{{c|int '''flags'''}}
+:Allows the alteration of the function's behavior. Multiple flags can be combined with &lt;code&gt;|&lt;/code&gt;. The following flags are available:
+:* '''CMDL_WEAPONTOPLAYER''' — If used on a weapon, this instead change's the model on the player instead.
+:* '''CMDL_HIDEMODEL''' — Hides the specified model index from rendering. Useful to temporary hide part of the model. Can be used with CMDL_WEAPONTOPLAYER.
+:* '''CMDL_USESURFACESKIN''' — ''skinindex'' instead corresponds to the index of a surface to replace its skin.
+*{{c|int '''generatorindex'''}}
+:Instructs the model in ''modelindex'' to copy frame data from this index. Default is -1, which will not copy frame data from any index. Useful for attaching models with similar frames, like a gun to a player model.
+*{{c|int '''animationindex'''}}
+:This index specifies where the new animation should be attached or replaced. Default is 0.
+*{{c|String '''animationpath'''}}
+:This is the path for where to locate the new animation clip. Default is "".
+*{{c|name '''animation'''}}
+:This is the file name of the new animation clip. The extension is required. "" can be used to restore the default animation for this index. Default is "".
+
+== Examples ==
+This actor alternates modeldefs every second. 
+ class SwapModelDef : Actor
+ {
+     Default
+     {
+         {{Property|Height}} 16;
+         {{Property|Radius}} 8;
+     }
+ 
+     States
+     {
+     Spawn:
+         PIST A 35 [[A_ChangeModel]]("SwapModelDef"); {{comment|Since there's no NoDelay, this will only be called on a second loop}}
+         PIST A 35 [[A_ChangeModel]]("SwapModelDefHelper");
+         Loop;
+     }
+ }
+
+Another useful function of {{c|A_ChangeModel}} is the ability to change the player's appearance from the weapon itself. Note that index 0 represents the player model, while index 1 is attaching a gun to the player model.
+ class NewPistol : {{Class|Pistol}} [[Actor replacement|replaces]] Pistol
+ {
+     States
+     {
+     Ready:
+         PISG A 0 [[A_ChangeModel]]("", 1, "Models", "w_blaster.iqm", 1, "Models", "g_blaster.png", CMDL_WEAPONTOPLAYER, 0);
+         PISG A 1 [[A_WeaponReady]];
+         Wait;
+     }
+ }
+
+== See also ==
+* [[MODELDEF]]
+* [[SetAnimation]]</text>
+    <sha1>pp4rwd32g7eewsjhtkaikdqpwxh3r1t</sha1>
+  </revision>
+</page>

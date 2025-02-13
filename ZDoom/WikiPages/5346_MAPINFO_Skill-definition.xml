@@ -1,0 +1,171 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>MAPINFO/Skill definition</title>
+  <ns>0</ns>
+  <id>5346</id>
+  <revision>
+    <id>53320</id>
+    <parentid>53089</parentid>
+    <timestamp>2024-10-12T11:04:07Z</timestamp>
+    <contributor>
+      <username>Blue Shadow</username>
+      <id>2021</id>
+    </contributor>
+    <minor />
+    <comment>{{git}} -&gt; {{new}} for 4.13.0</comment>
+    <origin>53320</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="9679" sha1="t4v5xh2j6v8ctq4i8gdz1vxp7zwijr4" xml:space="preserve">Skill definitions begin with the keyword "skill" followed by the name of the skill and the properties block.
+
+==Skill commands==
+'''clearskills'''
+:Before defining any skills you may use this to clear off any and all skill levels that the game uses.  Use it outside of any other blocks.
+
+'''skill &lt;name&gt;''' { ''properties'' }
+:Creates a new skill level.  &lt;name&gt; is arbitrary so long as no two skill blocks use the same one.  Use one of the ''name'' or ''picname'' properties below to specify what to show in the skill selection menu. Note that the skill menu is a type of ListMenu, which by default is limited in size: if the virtual size of the menu exceeds 320x200 (which fits about 7 difficulty levels), it will fall back to a minimal smallfont version. This limitation can be circumvented by defining a custom SkillMenu in [[MENUDEF]] with the &lt;code&gt;ForceList&lt;/code&gt; instruction that disables the fallback behavior.
+
+==Skill properties==
+The following properties are supported within a skill definition:
+{{list|Property|Description|content=
+{{-|{{LE|AmmoFactor}} {{=}} &lt;value&gt;
+|This affects how much ammo you pick up in the skill level, by multiplying the normal amount by &lt;value&gt;. For example, if the value is set to 2.0, you will receive double the normal ammo, and if it is set to 0.5, you would pick up half ammo.}}
+{{-|{{LE|DropAmmoFactor}} {{=}} &lt;value&gt;
+|This affects how much ammo you pick up from fallen foes in the skill level, by multiplying the normal amount by &lt;value&gt;. For example, if the value is set to 2.0, you will receive double the normal ammo, and if it is set to 0.5, you would pick up half ammo. This value overrides ''AmmoFactor'' for ammo and weapons dropped by monsters. This affects both when an amount is specified in {{Property|DropItem}} and when it's the default amount. For example, with DropAmmoFactor set to 4, a [[Classes:ZombieMan|former human]] will drop clips containing 40 bullets while a [[Classes:Mummy|golem]] will drop wand crystals containing 12 charges.}}
+{{-|{{LE|DoubleAmmoFactor}} {{=}} &lt;value&gt;
+|This affects how much ammo you pick up when the Double Ammo [[DMFlags|DMFlag]] is set.}}
+{{-|{{LE|DamageFactor}} {{=}} &lt;value&gt;
+|This value affects how much damage you take. If the value is set to 0.5 for example, you would only take half damage in that skill level. However, if you set it to 2.0, you take double damage from everything in the game. Note that this includes damage from sector effects, such as lava and slime.}}
+{{-|{{LE|RespawnTime}} {{=}} &lt;value&gt;
+|Sets the amount of time in seconds it takes for monsters to respawn. Any value other than 0 means that monsters will respawn.}}
+{{-|{{LE|RespawnLimit}} {{=}} &lt;value&gt;
+|Specifies how many times monsters respawn before staying permanently dead. Note: 0 means "infinite" &amp;mdash; if you do not want monsters to respawn at all, use "respawntime {{=}} 0" instead.}}
+{{-|{{LE|Aggressiveness}} {{=}} &lt;value&gt;
+|Factor for monster aggressiveness. 0.0 is normal, 1.0 is maximum.}}
+{{-|{{LE|SpawnFilter}} {{=}} &lt;value&gt;
+|Only actors set to appear on the specified skill level will be spawned into the map. &lt;value&gt; can be from 1-16; however only [[UDMF]]-format maps can use skills above 5.  You can also use one of the following keywords in place of a number.  These correspond to the five skill levels present in all of the [[IWAD]]s [[ZDoom]] supports:
+*baby (1)
+*easy (2)
+*normal (3)
+*hard (4)
+*nightmare (5)}}
+{{-|{{LE|SpawnMulti}}
+|Only [[thing]]s which are flagged for cooperative games and those which are flagged for single-player games spawn in single-player games.}}
+{{-|{{LE|SpawnMultiCoopOnly}}
+|{{new|4.13.0}}
+
+Only [[thing]]s which are flagged for cooperative games spawn in single-player games.}}
+{{-|{{LE|ACSReturn}} {{=}} &lt;value&gt;
+|The value returned by the ACS [[GameSkill]] command.}}
+{{-|{{LE|Key}} {{=}} "&lt;key&gt;"
+|Sets the hotkey for the skill level.}}
+{{-|{{LE|MustConfirm}} {{=}} "[text]"
+|The player must confirm they wish to play the skill level, just like when you choose Nightmare.  If [text] is supplied, then it is used in place of the standard "Are you sure? This skill level isn't even remotely fair" when prompting the user.}}
+{{-|{{LE|name}} {{=}} "&lt;name&gt;"
+|The name of the skill level in the menu.}}
+{{-|{{LE|PlayerClassName}} {{=}} "&lt;class&gt;", "&lt;name&gt;"
+|The name of the skill for the specified class. The character class must be indicated by its display name (e.g. "Marine"), not its actor name (e.g. "DoomPlayer").}}
+{{-|{{LE|PicName}} {{=}} "&lt;lump&gt;"
+|Graphic used in menu - this and Name are mutually exclusive}}
+{{-|{{LE|TextColor}} {{=}} "&lt;color&gt;"
+|Color that the skill level's name is displayed in.}}
+{{-|{{LE|EasyBossBrain}}
+|This makes the {{Class|BossEye}} shoot {{Class|SpawnShot}}s at a decreased rate.}}
+{{-|{{LE|EasyKey}}
+|This makes {{Class|key}}s show up on the [[automap]], even without cheats. ''[[Heretic]]'''s lowest difficulty setting uses this.}}
+{{-|{{LE|FastMonsters}}
+|Halves the duration of [[actor states]] with the {{c|Fast}} keyword, and makes monsters and projectiles use their {{Property|FastSpeed}} property, if set, instead of their regular {{Property|Speed}} property.}}
+{{-|{{LE|SlowMonsters}}
+|Doubles the duration of [[actor states]] with the {{c|Slow}} keyword.}}
+{{-|{{LE|InstantReaction}}
+|Allows [[monster]]s to immediately perform their first ranged attack since spawning without having to take a few steps first.}}
+{{-|{{LE|DisableCheats}}
+|Disables using [[cheat]]s in-game unless {{CVAR|C|sv_cheats}} is set to true.}}
+{{-|{{LE|AutoUseHealth}}
+|Enables automatic use of Raven's health items, as well as any [[Classes:HealthPickup|HealthPickup]] with {{Property|HealthPickup.AutoUse}} set to 1 or 2. Is not necessary for automatic use of [[Strife]]'s health items or pickups with AutoUse set to 3.}}
+{{-|{{LE|ReplaceActor}} {{=}} "&lt;original class&gt;", "&lt;replacement class&gt;"
+|Replace actors of type "original class" with actors of type "replacement class". This is applied ''before'' [[DECORATE]] replacements, and only if the actor names are valid class (if the actors are not replaced as you expected, check the console for error messages). If your mod also features DECORATE replacements for standard actors, use the original actor names in the skill definition. Finally, actor replacements done in this manner are not transitive: if a skill replaces actor A by actor B, and actor B by actor C, actor A will ''not'' be replaced by actor C.}}
+{{-|{{LE|MonsterHealth}} {{=}} &lt;value&gt;
+|Specifies a factor to multiply the health of all hostile monsters by.  1.0 means normal health, higher values increase health, lower values decrease it.}}
+{{-|{{LE|FriendlyHealth}} {{=}} &lt;value&gt;
+|Specifies a factor to multiply the health of all friendly monsters by.  1.0 means normal health, higher values increase health, lower values decrease it.}}
+{{-|{{LE|NoPain}}
+|If present, no actors will ever enter their pain states.}}
+{{-|{{LE|DefaultSkill}}
+|This skill will be highlighted by default in the menu. It will also be the skill chosen by default if an episode has the ''noskillmenu'' flag.}}
+{{-|{{LE|ArmorFactor}} {{=}} &lt;value&gt;
+|Much like AmmoFactor. This affects how much armor you pick up in the skill level, by multiplying the normal amount by &lt;value&gt;. This affects BasicArmorBonus and BasicArmorPickup.}}
+{{-|{{LE|NoInfighting}}
+|Monsters will not [[infight]] when playing under this skill. This, however, only has an effect on maps which do not define their own infighting settings.}}
+{{-|{{LE|TotalInfighting}}
+|Monsters will [[infight]] when playing under this skill, even if they are of the same [[species]]. This, however, only has an effect on maps which do not define their own infighting settings.}}
+{{-|{{LE|HealthFactor}} {{=}} &lt;value&gt;
+|This affects how much health you gain when healing in the skill level, by multiplying the base amount by &lt;value&gt;.}}
+{{-|{{LE|KickbackFactor}} {{=}} &lt;value&gt;
+|A multiplier for kickback received from being damaged.}}
+{{-|{{LE|NoMenu}}
+|This skill does not get listed in the [[skill selection menu]].}}
+{{-|{{LE|PlayerRespawn}}
+|This has the same effect as the {{c|{{MapProperty|AllowRespawn}}}} map flag, but only for this skill.}}
+}}
+
+==Examples==
+
+Nightmare difficulty
+
+ skill nightmare
+ {
+    AmmoFactor = 2
+    FastMonsters
+    DisableCheats
+    RespawnTime = 12
+    SpawnFilter = Nightmare
+    PicName = "M_NMARE"
+    MustConfirm
+    Key = "n"
+ }
+
+"I'm Too Young To Die" difficulty
+
+ skill baby
+ {
+    AutoUseHealth
+    AmmoFactor = 2
+    DamageFactor = 0.5
+    EasyBossBrain
+    SpawnFilter = Baby
+    PicName = "M_JKILL"
+    Key = "i"
+ }
+
+A hard difficulty that appears as "hellish" in the menu and replaces various items and monsters in the game with others
+
+ skill hellish
+ {
+   FastMonsters
+   DisableCheats
+   SpawnFilter = Hard
+   Name = "Hellish"
+   ReplaceActor = "{{Class|Medikit}}", "{{Class|Stimpack}}"
+   ReplaceActor = "{{Class|HellKnight}}", "{{Class|BaronOfHell}}"
+   ReplaceActor = "{{Class|ZombieMan}}", "{{Class|ShotgunGuy}}"
+   ReplaceActor = "{{Class|ShotgunGuy}}", "{{Class|ChaingunGuy}}"
+   ReplaceActor = "{{Class|Demon}}", "{{Class|Spectre}}"
+   ReplaceActor = "{{Class|DoomImpBall}}", "{{Class|CacodemonBall}}"
+ }
+
+A ZDoom equivalent to the "Heaven or Hell" difficulty from the Devil May Cry series or the "Instant Kill" difficulty in Way of the Samurai 3. Everyone dies in one hit from anything. As a side effect, any actor that can gib will gib. Including the player, who gets knocked back very far if s/he is hit by an attack.
+
+ skill dante
+ {
+   damagefactor = 255
+   monsterhealth = 0.001
+   spawnfilter = Nightmare
+   name = "Doomguy Must Die"
+   textcolor = blue
+   mustconfirm = "One Hit. One Kill."
+ }
+
+[[Category:MAPINFO|Skill]]</text>
+    <sha1>t4v5xh2j6v8ctq4i8gdz1vxp7zwijr4</sha1>
+  </revision>
+</page>

@@ -1,0 +1,86 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>Classes:Knight</title>
+  <ns>0</ns>
+  <id>3361</id>
+  <revision>
+    <id>39440</id>
+    <parentid>34164</parentid>
+    <timestamp>2015-04-30T21:01:59Z</timestamp>
+    <contributor>
+      <username>Blue Shadow</username>
+      <id>2021</id>
+    </contributor>
+    <minor />
+    <comment>/* DECORATE definition */ Updated</comment>
+    <origin>39440</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="1731" sha1="amwljrt426i6q7p9nsxuugwjf0shzhx" xml:space="preserve">{{Actor|
+| type = Monster
+| name = Undead warrior
+| class = Knight
+| game = Heretic
+| doomednum = 64
+| spawnid = 6
+| spawnname = T_KNIGHT 
+}}[[Classes]]: &lt;u&gt;Knight&lt;/u&gt;&lt;br&gt;
+&amp;ensp;&amp;rarr;[[Classes:KnightGhost|KnightGhost]]&lt;br&gt;
+
+The skeletal undead warrior is a common foe throughout Heretic. It wears a magical axe that can throw [[Classes:KnightAxe|ethereal throwing axes]] and sometimes the more powerful [[Classes:RedAxe|blood-dripping red axes]]. When defeated, it may yield [[Classes:CrossbowAmmo|ethereal arrows]].
+
+==== [[DECORATE]] definition ====
+ ACTOR &lt;u&gt;Knight&lt;/u&gt;
+ {
+   {{Property|Health}} 200
+   {{Property|Radius}} 24
+   {{Property|Height}} 78
+   {{Property|Mass}} 150
+   {{Property|Speed}} 12
+   {{Property|PainChance}} 100
+   {{Property|Monster}}
+   +{{Flag|FLOORCLIP}}
+   {{Property|SeeSound}} "hknight/sight"
+   {{Property|AttackSound}} "hknight/attack"
+   {{Property|PainSound}} "hknight/pain"
+   {{Property|DeathSound}} "hknight/death"
+   {{Property|ActiveSound}} "hknight/active"
+   {{Property|Obituary}} "$OB_BONEKNIGHT"
+   {{Property|HitObituary}} "$OB_BONEKNIGHTHIT"
+   {{Property|DropItem}} "{{Class|CrossbowAmmo}}", 84, 5
+ 
+   action native [[A_KnightAttack]]();
+ 
+   States
+   {
+   Spawn:
+     KNIG AB 10 [[A_Look]]
+     Loop
+   See:
+     KNIG ABCD 4 [[A_Chase]]
+     Loop
+   Melee:
+   Missile:
+     KNIG E 10 [[A_FaceTarget]]
+     KNIG F 8 [[A_FaceTarget]]
+     KNIG G 8 [[A_KnightAttack]]
+     KNIG E 10 [[A_FaceTarget]]
+     KNIG F 8 [[A_FaceTarget]]
+     KNIG G 8 [[A_KnightAttack]]
+     Goto See
+   Pain:
+     KNIG H 3
+     KNIG H 3 [[A_Pain]]
+     Goto See
+   Death:
+     KNIG I 6
+     KNIG J 6 [[A_Scream]]
+     KNIG K 6
+     KNIG L 6 [[A_NoBlocking]]
+     KNIG MN 6
+     KNIG O -1
+     Stop
+   }
+ }</text>
+    <sha1>amwljrt426i6q7p9nsxuugwjf0shzhx</sha1>
+  </revision>
+</page>

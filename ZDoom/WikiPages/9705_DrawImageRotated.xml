@@ -1,0 +1,75 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>DrawImageRotated</title>
+  <ns>0</ns>
+  <id>9705</id>
+  <revision>
+    <id>53249</id>
+    <parentid>51735</parentid>
+    <timestamp>2024-10-07T22:27:01Z</timestamp>
+    <contributor>
+      <username>Jekyll Grim Payne</username>
+      <id>2175</id>
+    </contributor>
+    <comment>/* Example */</comment>
+    <origin>53249</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="3319" sha1="jukf5ia5xrygssydau2shetf2wlo19p" xml:space="preserve">[[Classes:BaseStatusBar|'''BaseStatusBar''']]
+
+void '''DrawImageRotated'''(String ''texid'', Vector2 ''pos'', int ''flags'', double ''angle'', double ''alpha'' = 1, Vector2 ''scale'' = (1, 1), ERenderStyle ''style'' = STYLE_Translucent, Color ''col'' = 0xffffffff, int ''translation'' = 0)
+
+== Usage ==
+Can be used in a [[Classes:BaseStatusBar|HUD]] to draw an image and rotate it. The {{c|texid}} argument takes an image name.
+
+In contrast to '''[[DrawImage (BaseStatusBar)|DrawImage]]''' and '''[[DrawTexture (BaseStatusBar)|DrawTexture]]''' functions, with '''DrawImageRoated()''' the offets built into the graphic are NOT ignored by default; the image will rotate around the (0, 0) point. Thus, the image has to be offset manually if you want to rotate it along a specific point, like its center. As a result, if you want to rotate the image around its center, you will need to offset it so that its center point is at (0, 0). For example, if you have a 64x64 image that you want to rotate around its center, you will need to set its offsets in SLADE to (-32, -32).
+
+===Parameters===
+*{{c|string '''texid'''}}
+:The name of the image. Any type of graphic can be used here (sprites, textures, graphics, [[ANIMDEFS]] definitions, [[TEXTURES]] definitions, etc.). The name must be provided in double quotation marks.
+:If the filename of the image is over 8 characters, a full path (with subfolders and the file extension) must be provided, for example &lt;code&gt;"graphics/hud/helmet_outline.png"&lt;/code&gt;
+:The image is anchored at its top left corner by default (this can be changed with flags). The built-in offsets of the image are also taken into account.
+{{: BaseStatusBar position argument}}
+*{{c|int '''flags'''}}
+{{: BaseStatusBar SCREEN flags}}
+*{{c|double '''angle'''}}
+:The angle of the rotated image. Negative values go clockwise, positive go counter-clockwise.
+:The image's offsets, as set in SLADE, ''are'' taken into account, and the image will rotate around the (0, 0) point.
+*{{c|vector2 '''scale'''}}
+:Determines the scale of the image.
+*{{c|ERenderStyle '''style'''}}
+:The renderstyle of the image. Uses the same values as the {{property|Renderstyle}} property. The default value is {{c|STYLE_Translucent}}.
+*{{c|color '''col'''}}
+:Allows tinting the image to a specific color. The default value is FFFFFF (white), which applies no tint. The darker the color, the more visible the tint will be.
+*{{c|int '''translation'''}}
+:Allows applying a translation to the image. The translation can be picked from an actor pointer with &lt;code&gt;&lt;actorpointer&gt;.translation&lt;/code&gt;, or with &lt;code&gt;Translation.GetID('MyTranslationName')&lt;/code&gt; where 'MyTranslationName' is a definition from the [[TRNSLATE]] lump.
+
+== Example ==
+A very simple HUD that draws the {{class|Zombieman}} sprite at the center of the screen, constantly rotating it 5 degrees per tic (only when the HUD is in fullscreen mode):
+&lt;syntaxhighlight lang="csharp"&gt;
+class CustomStatusBar : BaseStatusBar
+{
+	int imgangle;
+
+	override void Tick()
+	{
+		Super.Tick();
+		imgangle += 5;
+	}
+
+	override void Draw(int state, double TicFrac)
+	{
+		Super.Draw(state, TicFrac);
+
+		if (state == HUD_Fullscreen)
+		{
+			BeginHUD();
+			DrawImageRotated("POSSA1", (0,0), DI_SCREEN_CENTER, imgangle);
+		}
+	}
+}&lt;/syntaxhighlight&gt;
+
+[[Category:ZScript]]
+[[Category:BaseStatusBar]]</text>
+    <sha1>jukf5ia5xrygssydau2shetf2wlo19p</sha1>
+  </revision>
+</page>

@@ -1,0 +1,59 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>Classes:WraithFX1</title>
+  <ns>0</ns>
+  <id>4723</id>
+  <revision>
+    <id>34944</id>
+    <parentid>23935</parentid>
+    <timestamp>2012-11-13T02:11:36Z</timestamp>
+    <contributor>
+      <username>Blue Shadow</username>
+      <id>2021</id>
+    </contributor>
+    <minor />
+    <comment>/* DECORATE definition */</comment>
+    <origin>34944</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="951" sha1="rf78gpy09g3ctyswkb1ejbkkbv4wa3m" xml:space="preserve">{{Actor|
+| type = Explosive
+| name = Reiver fireball
+| class = WraithFX1
+| game = Hexen
+}}[[Classes]]: &lt;u&gt;WraithFX1&lt;/u&gt;&lt;br&gt;
+Fireballs thrown by [[Classes:Wraith|Reivers]]. Their native action spawns [[Classes:WraithFX2|small sparks]] that fall from the main fireball.
+==== [[DECORATE]] definition ====
+ ACTOR &lt;u&gt;WraithFX1&lt;/u&gt;
+ {
+   {{Property|Speed}} 14
+   {{Property|Radius}} 10
+   {{Property|Height}} 6
+   {{Property|Mass}} 5
+   {{Property|Damage}} 5
+   {{Property|DamageType}} "Fire"
+   {{Property|Projectile}}
+   +{{Flag|FLOORCLIP}}
+   {{Property|SeeSound}} "WraithMissileFire"
+   {{Property|DeathSound}} "WraithMissileExplode"
+ 
+   action native [[A_WraithFX2]]();
+ 
+   States
+   {
+   Spawn:
+     WRBL A 3 Bright
+     WRBL B 3 Bright [[A_WraithFX2]]
+     WRBL C 3 Bright
+     Loop
+   Death:
+     WRBL D 4 Bright
+     WRBL E 4 Bright [[A_WraithFX2]]
+     WRBL F 4 Bright
+     WRBL GH 3 Bright [[A_WraithFX2]]
+     WRBL I 3 Bright
+     Stop
+   }
+ }</text>
+    <sha1>rf78gpy09g3ctyswkb1ejbkkbv4wa3m</sha1>
+  </revision>
+</page>

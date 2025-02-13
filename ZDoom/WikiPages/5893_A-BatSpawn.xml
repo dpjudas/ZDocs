@@ -1,0 +1,34 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>A BatSpawn</title>
+  <ns>0</ns>
+  <id>5893</id>
+  <revision>
+    <id>26043</id>
+    <timestamp>2010-02-22T16:10:37Z</timestamp>
+    <contributor>
+      <username>Gez</username>
+      <id>1283</id>
+    </contributor>
+    <comment>Created page with '{{DISPLAYTITLE:A_BatSpawn}} '''A_BatSpawn'''&lt;br /&gt; (no parameters) This is used in order to spawn a {{Class|Bat}} at a regular interval.  This function decreases the calling acto…'</comment>
+    <origin>26043</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="1218" sha1="hqtww7vyftvvczgr4e9sraopxx9jfkg" xml:space="preserve">{{DISPLAYTITLE:A_BatSpawn}}
+'''A_BatSpawn'''&lt;br /&gt;
+(no parameters)
+This is used in order to spawn a {{Class|Bat}} at a regular interval.
+
+This function decreases the calling actor's &lt;tt&gt;special1&lt;/tt&gt; field. If it doesn't become negative, then the function stops without doing anything else, and no bat is spawned.
+
+If special1 is reduced to a negative value, then a bat a spawned and fired roughly in the direction of the calling actor's angle. The calling actor's second parameter (args[1]) is used as a [[definitions|byte angle]] to determine the acceptable spread.
+
+The bat is treated as a projectile: its &lt;tt&gt;target&lt;/tt&gt; field is the calling actor.
+
+The bat's &lt;tt&gt;special2&lt;/tt&gt; field is set to eight times the calling actor's fourth parameter (args[3]). Its first parameter (args[0] is set to a random value between 0 and 63, and its fifth parameter (args[4]) is set to the calling actor's fifth parameter. Those values are used by [[A_BatMove]], which is expected to be called every two tics.
+
+This codepointer is restricted to {{Class|BatSpawner}} and derived classes.
+
+[[Category:Decorate Hexen functions]] [[Category:Decorate Spawn functions]] [[Category:Decorate Restricted functions]]{{DEFAULTSORT:BatSpawn}}</text>
+    <sha1>hqtww7vyftvvczgr4e9sraopxx9jfkg</sha1>
+  </revision>
+</page>

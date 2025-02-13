@@ -1,0 +1,48 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>Vel3DFromAngle</title>
+  <ns>0</ns>
+  <id>9376</id>
+  <revision>
+    <id>47560</id>
+    <parentid>47457</parentid>
+    <timestamp>2020-05-04T16:53:12Z</timestamp>
+    <contributor>
+      <username>Boondorl</username>
+      <id>2606</id>
+    </contributor>
+    <minor />
+    <comment>/* Usage */</comment>
+    <origin>47560</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="989" sha1="7bzhsrbrqjtt9zpzjnrag8gvl316icz" xml:space="preserve">{{ZScriptNote}}
+__NOTOC__
+
+native void '''Vel3DFromAngle'''(double speed, double angle, double pitch)
+
+== Usage ==
+Sets the actor's xyz velocity based on the provided speed, angle, and pitch. Unlike [[VelFromAngle]] this one will properly scale the Actor's velocity on the xyz axes instead of just the xy axes.
+
+=== Parameters ===
+*''speed'' - The speed of the Actor's new velocity
+*''angle'' - The direction on the xy axes of the Actor's new velocity
+*''pitch'' - The direction on the z axis of the Actor's new velocity
+
+== Examples ==
+ void A_Spawn3DImpBall()
+ {
+    let missile = Spawn("DoomImpBall", pos + (0,0,32));
+    if (missile)
+    {
+        missile.target = self;
+        missile.angle = angle; // Set the missile's angle to the Imp's
+ 
+        // Launch the Imp ball in the direction the missile is facing while vertically aiming for any nearby targets
+        missile.Vel3DFromAngle(GetDefaultSpeed("DoomImpBall"), missile.angle, BulletSlope());
+    }
+ }
+
+[[Category:ZScript]]</text>
+    <sha1>7bzhsrbrqjtt9zpzjnrag8gvl316icz</sha1>
+  </revision>
+</page>

@@ -1,0 +1,70 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>A FirePistol</title>
+  <ns>0</ns>
+  <id>4874</id>
+  <revision>
+    <id>53782</id>
+    <parentid>52641</parentid>
+    <timestamp>2024-11-19T10:59:13Z</timestamp>
+    <contributor>
+      <username>Jekyll Grim Payne</username>
+      <id>2175</id>
+    </contributor>
+    <minor />
+    <origin>53782</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="1479" sha1="n2fvq9ljdsxcorq3kowud1xq3y1zlsk" xml:space="preserve">{{BuiltInFunctionNote|A_FireBullets}}
+{{codepointer|Weapon attack}}
+'''{{class|StateProvider}}'''
+
+{{c|action void '''A_FirePistol'''()}}
+{{doomwiki|A_FirePistol}}
+==Usage==
+Performs Doom's {{Class|pistol}} attack, firing one pellet dealing 5 * 1d3 damage. This is a shortcut to calling [[A_FireBullets]], [[A_PlaySound]] and [[A_GunFlash]] with certain predetermined hardcoded parameters.
+
+If [[Player_setup#Vertical_Bullet_Spread|vertical bullet spread for weapons]] is enabled, the function applies vertical spread in addition to the horizontal one.
+
+This code is the equivalent of calling '''A_FirePistol''':
+
+  PISG B 6
+  {
+    [[A_FireBullets]] (5.6, 0, 1, 5, "{{Class|BulletPuff}}");
+    [[A_StartSound]]("weapons/pistol", {{const|CHAN_WEAPON}});
+    [[A_GunFlash]]();
+  }
+
+==[[ZScript]] definition==
+{{ZScriptDefinitionNote|actors/doom/weaponpistol.zs#L79}}
+&lt;syntaxhighlight lang="csharp"&gt;
+action void A_FirePistol()
+{
+	bool accurate;
+
+	if (player != null)
+	{
+		Weapon weap = player.ReadyWeapon;
+		if (weap != null &amp;&amp; invoker == weap &amp;&amp; stateinfo != null &amp;&amp; stateinfo.mStateType == STATE_Psprite)
+		{
+			if (!weap.DepleteAmmo (weap.bAltFire, true))
+				return;
+
+			player.SetPsprite(PSP_FLASH, weap.FindState('Flash'), true);
+		}
+		player.mo.PlayAttacking2 ();
+
+		accurate = !player.refire;
+	}
+	else
+	{
+		accurate = true;
+	}
+
+	A_StartSound ("weapons/pistol", CHAN_WEAPON);
+	GunShot (accurate, "BulletPuff", BulletSlope ());
+}&lt;/syntaxhighlight&gt;
+
+[[Category:StateProvider]]</text>
+    <sha1>n2fvq9ljdsxcorq3kowud1xq3y1zlsk</sha1>
+  </revision>
+</page>

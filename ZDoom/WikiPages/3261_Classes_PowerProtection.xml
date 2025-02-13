@@ -1,0 +1,114 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>Classes:PowerProtection</title>
+  <ns>0</ns>
+  <id>3261</id>
+  <revision>
+    <id>44942</id>
+    <parentid>37232</parentid>
+    <timestamp>2017-04-14T14:26:57Z</timestamp>
+    <contributor>
+      <username>Marrub</username>
+      <id>2058</id>
+    </contributor>
+    <minor />
+    <comment>Verified</comment>
+    <origin>44942</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="3893" sha1="l2e1p5s8c40ncj7errg5gcb9l0em39m" xml:space="preserve">__NOTOC__
+{{actor|
+| type = Power
+| name = Damage protection power
+| class = PowerProtection
+}}[[Classes]]: [[Classes:Inventory|Inventory]]&amp;rarr;[[Classes:Powerup|Powerup]]&amp;rarr;&lt;u&gt;PowerProtection&lt;/u&gt;&lt;br&gt;
+
+&lt;u&gt;PowerProtection&lt;/u&gt; is an internal class. An item of this class is placed in the player's inventory while the Protection powerup is effective. During the time this effect is active, the player will be given a multiplier to their damage resistance done from monsters/players, indicated by the {{c|{{Property|DamageFactor}}}} amount.
+
+Like all other {{Class|powerup}}s, items of this class are never used directly. Instead you have to create a new item that inherits from {{Class|PowerProtection}} specifying the resistance multipliers in here, then creating an item inheriting from {{Class|PowerupGiver}} with the {{c|{{Property|Powerup.Type}}}} property named as the previous item you just created.
+
+====Protection flags====
+If present in the powerup's definition, the following flags are passed to the user of the powerup upon its activation, granting them the benefits that come from having the flags set. The flags are cleared once the powerup's effect wears off:
+
+*'''{{Flag|DONTBLAST}}'''
+*'''{{Flag|DONTMORPH}}'''
+*'''{{Flag|DONTRIP}}'''
+*'''{{Flag|DONTSQUASH}}'''
+*'''{{Flag|NOPAIN}}'''
+*'''{{Flag|NORADIUSDMG}}'''
+*'''{{Flag|NOTELEOTHER}}'''
+
+====Sounds====
+If present in the powerup's definition, the following sounds are played:
+*{{c|{{Property|ActiveSound}}}} — Plays each time damage is received while the powerup is active.
+*{{c|{{Property|DeathSound}}}} — Plays once the powerup's effect wears off.
+*{{c|{{Property|SeeSound}}}} — Plays when the powerup is first activated.
+
+The sounds are played on the ''auto'' [[A_PlaySound#Sound_slots|channel]] ({{c|{{Const|CHAN_AUTO}}}}) with no attenuation (the sound is heard at full volume regardless of distance).
+
+==== [[DECORATE]] definition ====
+ ACTOR &lt;u&gt;PowerProtection&lt;/u&gt; : {{Class|Powerup}} native
+ {
+   {{Property|Powerup.Duration}} -25
+ }
+
+==Examples==
+This defines ZDoom's Protection item and is an example for an item that is put in the inventory:
+
+A half damage item:
+ ACTOR PowerHalfDamage : {{Class|PowerProtection}}
+ {
+   {{Property|DamageFactor}} "Normal", 0.5
+   {{Property|Inventory.Icon}} "MEGAA0"
+ }
+ 
+ ACTOR HalfDamage : {{Class|PowerupGiver}}
+ {
+   {{Property|Inventory.PickupMessage}} "Half Damage!!"
+   {{Property|Powerup.Color}} Grey4 0.25
+   {{Property|Inventory.MaxAmount}} 0
+   {{Property|Inventory.UseSound}} "pickups/slowmo"
+   {{Property|Powerup.Type}} "HalfDamage"
+   {{Property|Powerup.Duration}} 1000
+   {{Property|Translation}} "128:143=96:103"
+   +{{Flag|INVENTORY.AUTOACTIVATE}}
+   +{{Flag|INVENTORY.FANCYPICKUPSOUND}}
+   States
+   {
+   Spawn:
+     MEGA ABCD 4 Bright
+     Loop
+   }
+ }
+
+A quarter damage item that provides the user of the powerup protection against splash damage. When damage is received, the {{c|"imp/active"}} sound is played; upon the powerup's activation, the {{c|"imp/sight"}} sound is played, and once its effect wears off, the {{c|"imp/death"}} sound is played:
+ ACTOR PowerQuarterDamage : {{Class|PowerProtection}}
+ {
+   {{Property|DamageFactor}} "Normal", 0.25
+   {{Property|Inventory.Icon}} "MEGAA0"
+   {{Property|SeeSound}} "imp/sight"
+   {{Property|DeathSound}} "imp/death"
+   {{Property|ActiveSound}} "imp/active"
+   +{{Flag|NORADIUSDMG}}
+ }
+ 
+ ACTOR QuarterDamage : {{Class|PowerupGiver}}
+ {
+   {{Property|Inventory.PickupMessage}} "Quarter Damage!!"
+   {{Property|Powerup.Color}} Grey4 0.25
+   {{Property|Inventory.MaxAmount}} 0
+   {{Property|Inventory.UseSound}} "pickups/slowmo"
+   {{Property|Powerup.Type}} "QuarterDamage"
+   {{Property|Powerup.Duration}} 1000
+   {{Property|Translation}} "128:143=104:111"
+   +{{Flag|INVENTORY.AUTOACTIVATE}}
+   +{{Flag|INVENTORY.FANCYPICKUPSOUND}}
+   States
+   {
+   Spawn:
+     MEGA ABCD 4 Bright
+     Loop
+   }
+ }</text>
+    <sha1>l2e1p5s8c40ncj7errg5gcb9l0em39m</sha1>
+  </revision>
+</page>

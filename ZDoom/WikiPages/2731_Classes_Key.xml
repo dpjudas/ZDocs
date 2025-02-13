@@ -1,0 +1,159 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>Classes:Key</title>
+  <ns>0</ns>
+  <id>2731</id>
+  <revision>
+    <id>53839</id>
+    <parentid>52818</parentid>
+    <timestamp>2024-11-22T16:17:08Z</timestamp>
+    <contributor>
+      <username>Jekyll Grim Payne</username>
+      <id>2175</id>
+    </contributor>
+    <comment>/* Static */</comment>
+    <origin>53839</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="5031" sha1="9wijy62pactbz789w4u6xulsd7cni7t" xml:space="preserve">{{Actor|
+| type = Internal
+| name = Key
+| class = Key
+}}
+[[Classes]]: [[Classes:Inventory|Inventory]]&amp;rarr;&lt;u&gt;Key&lt;/u&gt;&lt;br&gt;
+&amp;ensp;&amp;rarr;[[Classes:DoomKey|DoomKey]]&lt;br&gt;
+&amp;ensp;&amp;rarr;[[Classes:HereticKey|HereticKey]]&lt;br&gt;
+&amp;ensp;&amp;rarr;[[Classes:HexenKey|HexenKey]]&lt;br&gt;
+&amp;ensp;&amp;rarr;[[Classes:StrifeKey|StrifeKey]]&lt;br&gt;
+
+Keys are items that are used to open locked doors. The base class '''Key''' is never used directly; it serves as the base class for predefined items (like Doom's [[Classes:RedCard|Red Keycard]]) or for custom keys items defined in [[ZScript]] or [[DECORATE]].
+
+== Use in [[ZScript]] and [[DECORATE]] ==
+
+Keys use some of the basic [[Classes:Inventory|Inventory properties]] but it is impossible to carry more than one of each key at any time. Therefore the '''amount''' property has no effect.
+
+If the {{Property|Species}} property is set to an existing key, the new key will function as a duplicate for the other key, opening the same locks work locks in the same way as the old one. For example, setting the key's species to {{Class|RedCard}} will allow it to open locks as if it were a red keycard.
+
+The '''Key''' class doesn't define any custom properties outside of those defined in [[Classes:Inventory|Inventory]]. If you want to define entirely new keys, you must use the [[LOCKDEFS]] lump to assign them to locks.
+
+== Methods ==
+=== Non-static ===
+The '''Key''' class uses the same non-static methods as the [[Classes:Inventory|Inventory]] class.
+=== Static ===
+*{{c|static native clearscope bool '''IsLockDefined'''(int ''locknum'')}}
+:Returns true if the specified number matches an existing lock.
+*{{c|static native clearscope Color '''GetMapColorForLock'''(int ''locknum'')}}
+:Returns the color that would be used on the [[automap]] to draw the color for the specified lock number.
+:Could be used to draw some kind of a custom element, for example in a [[Classes:BaseStatusBar|ZScript HUD]].
+*{{c|static native clearscope Color '''GetMapColorForKey'''(Key ''key'')}}
+:Returns the color that would be used on the [[automap]] for the specified key.
+:Could be used to draw some kind of a custom element, for example in a [[Classes:BaseStatusBar|ZScript HUD]].
+*{{c|static native clearscope int '''GetKeyTypeCount'''()}}
+:Returns the total number of valid keys defined for the current game. For example, for vanilla Doom will return 6 (because there are 3 keycars, 3 skull keys).
+*{{c|static native clearscope class&lt;Key&gt; '''GetKeyType'''(int ''index'')}}
+:Returns a pointer to a Key class in an index. The index is a position in an internal list, where the total size of the list can be obtained with &lt;code&gt;GetKeyTypeCount&lt;/code&gt;
+
+== Examples ==
+This defines a new key. Note, it'll only function if a lock is defined for it in [[LOCKDEFS]]:
+&lt;syntaxhighlight lang="csharp"&gt;
+class SilverKey : Key
+{
+	Default
+	{
+		Inventory.PickupMessage "Picked up the silver key.";
+		Inventory.Icon "SLVKA0";
+	}
+	States
+	{
+	Spawn:
+		SLVK A -1;
+		stop;
+	}
+}&lt;/syntaxhighlight&gt;
+
+Defines a new key that functions the same was as {{class|RedCard}}:
+&lt;syntaxhighlight lang="csharp"&gt;
+class GoldKey : Key
+{
+	Default
+	{
+		Inventory.PickupMessage "Picked up the gold key.";
+		Inventory.Icon "GLDKA0";
+		Species "RedCard";
+	}
+	States
+	{
+	Spawn:
+		GLDK A -1;
+		stop;
+	}
+}&lt;/syntaxhighlight&gt;
+
+This is an example of how keys could be draw in a [[Classes:BaseStatusBar|ZScript HUD]] in a vertical line at the top right corner of the screen:
+&lt;syntaxhighlight lang="csharp"&gt;
+void DrawAllKeys()
+{
+	vector2 pos = (0,0);
+	double iconSize = 8;
+	int totalKeys = Key.GetKeyTypeCount();
+	for (int i = 0; i &lt; totalKeys; i++)
+	{
+		Key k = Key(CPlayer.mo.FindInventory(Key.GetKeyType(i)));
+		if (k)
+		{
+			DrawInventoryIcon(k, pos, DI_SCREEN_RIGHT_TOP|DI_ITEM_RIGHT_TOP, boxsize:(iconSize, iconSize));
+			pos.y += iconsize;
+		}
+	}
+}&lt;/syntaxhighlight&gt;
+
+== [[ZScript]] definition ==
+{{ZScriptDefinitionNote|actors/inventory/inv_misc.zs#L31}}
+&lt;syntaxhighlight lang="csharp"&gt;
+class Key : Inventory
+{
+	Default
+	{
+		+DONTGIB;		// Don't disappear due to a crusher
+		Inventory.InterHubAmount 0;
+		Inventory.PickupSound "misc/k_pkup";
+	}
+
+	static native clearscope bool IsLockDefined(int locknum);
+	static native clearscope Color GetMapColorForLock(int locknum);
+	static native clearscope Color GetMapColorForKey(Key key);
+	static native clearscope int GetKeyTypeCount();
+	static native clearscope class&lt;Key&gt; GetKeyType(int index);
+	
+	override bool HandlePickup (Inventory item)
+	{
+		// In single player, you can pick up an infinite number of keys
+		// even though you can only hold one of each.
+		if (multiplayer)
+		{
+			return Super.HandlePickup (item);
+		}
+		if (GetClass() == item.GetClass())
+		{
+			item.bPickupGood = true;
+			return true;
+		}
+		return false;
+	}
+
+	override bool ShouldStay ()
+	{
+		return !!multiplayer;
+	}
+}&lt;/syntaxhighlight&gt;
+
+== [[DECORATE]] definition ==
+{{DecorateDefinitionNote}}
+ ACTOR &lt;u&gt;Key&lt;/u&gt; : {{Class|Inventory}} native
+ {
+   +{{Flag|DONTGIB}}
+   +{{Flag|INVENTORY.INTERHUBSTRIP}}
+   {{Property|Inventory.PickupSound}} "misc/k_pkup"
+ }</text>
+    <sha1>9wijy62pactbz789w4u6xulsd7cni7t</sha1>
+  </revision>
+</page>

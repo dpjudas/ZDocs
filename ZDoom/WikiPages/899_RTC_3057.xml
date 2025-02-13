@@ -1,0 +1,69 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>RTC-3057</title>
+  <ns>0</ns>
+  <id>899</id>
+  <revision>
+    <id>50367</id>
+    <parentid>40416</parentid>
+    <timestamp>2023-07-07T10:21:44Z</timestamp>
+    <contributor>
+      <username>Dynamo</username>
+      <id>2607</id>
+    </contributor>
+    <minor />
+    <origin>50367</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="3530" sha1="9tymmnvguj1wrubgmge2nrm1yldx8qr" xml:space="preserve">{{doomwiki}}[[Image:Screenshot RTC-3057 1.png|right|thumb|230px|One of the decks on the FCE Flagship.]] 
+{{Wad| name = RTC-3057
+| author = Team Future
+| iwad = Doom2
+| type = m
+| status = Released
+| link = {{idgames|RTC-3057 hub 1|id=12747}}
+| top = 2003
+| caco = 11
+}}
+
+'''RTC-3057''' is a mod born from the fusion of two previous ZDoom projects, "The RTC Corporation" and "Doom 3057". Playing this mod requires to use a few custom keys for various functions, by default 'l', 'o', 'p' and 'k'. While originally planned to be much longer, its ''de facto'' final version features only one hub. It is unlikely work on this project will be resumed, and the project's page on Team Future's website is now empty of any relevant information.
+
+== Demo ==
+The demo of this mod consists of only the first map in an early version ("Deck 4: Cell area"). Although it has been removed from idgames, it can still be downloaded from [http://www.fileplanet.com/119157/110000/fileinfo/RTC-3057-Demo FilePlanet] or [http://www.doomworld.com/3ddownloads/misc/3057demo.zip Doomworld]. The aim of the demo is simply to access the lift that leads to the other decks, once this is reached the map restarts.
+
+== Blue Hub 1 ==
+A more recent version of the mod, it is more atmospheric than the earlier demo: enemy opposition is sparser in the beginning, ambient music supplements the ambient sounds, and the log interface system has been improved. Blue Hub 1 contains a total of seven maps, corresponding to five deck on a spaceship. Three of the maps make up Deck 2. The decks are linked together by several lifts, some of which are menu-driven and allow you to select your destination. The player's objective is to reach the escape pods and abandon ship. 
+
+The decks are as follow:
+# "The Bridge"
+# "Personnel", "Labs and Cryo", "Escape Pods"
+# "Hangar"
+# "Cell Area" (Start map)
+# "Cargo and Engine Control"
+
+The introduction sequence has also been improved, notably with the ability to skip it.
+
+== Pistol bug ==
+RTC-3057 uses ZDoom features intensively, though some of them are now outdated (e.g., [[the old DECORATE format]]). In particular, this actor is a source of problems:
+ pickup pistol
+ {
+ //$Category RTC-3057/Weapons
+ DoomEdNum 6001
+ Sprite SPIS
+ Frames "A"
+ Radius 4
+ Height 8
+ PickupMessage "You got the pistol!"
+ PickupSound "DSWPNUP"
+ }
+When RTC-3057 was being developed, ZDoom's [[DECORATE]] parser was case-sensitive, even though the specifications weren't. This allowed the conflict between this actor and the internal {{Class|Pistol}} to go undetected. This actor, combined with a [[DeHackEd]] patch removing all {{Class|Clip}} ammo from the player, allowed to create a scene in which the player starts without a weapon but can then quickly retrieve one from a closet. Now, however, the pickup defined there overrides the internal pistol, and since it isn't a weapon, the normal pistol weapon is entirely removed from the game, making the start of the mod much harder than intended. The pistol override also results in a failure to load the internal [[DEHSUPP]] lump, preventing DeHackEd patches from being processed.
+
+This can be solved by editing the DECORATE lump within 3057hub1.wad (or 3057demo.wad) to rename this actor. It is the very first listed.
+
+==Reception==
+RTC-3057 received both a spot in the [[Top 100 WADs of All Time]] article on [[Doomworld]] for its demo, and a [[Cacoward]] for its first hub. This is the only mod to have received both these distinctions.
+
+== External links ==
+*[http://tfuture.org/ Team Future]</text>
+    <sha1>9tymmnvguj1wrubgmge2nrm1yldx8qr</sha1>
+  </revision>
+</page>

@@ -1,0 +1,129 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>Inventory virtual functions</title>
+  <ns>0</ns>
+  <id>9708</id>
+  <revision>
+    <id>52414</id>
+    <parentid>52111</parentid>
+    <timestamp>2024-04-12T08:51:58Z</timestamp>
+    <contributor>
+      <username>Jekyll Grim Payne</username>
+      <id>2175</id>
+    </contributor>
+    <comment>Added links to all functions, including not-yet-documented ones</comment>
+    <origin>52414</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="6628" sha1="bv25mokmktacevfl0dnj7yy619j72mi" xml:space="preserve">*Inventory '''[[CreateCopy]]'''(Actor other)
+:Called from [[CallTryPickup]]. Used to determine whether the item should be directly picked up (it doesn't respawn) or a copy of it (it does respawn). 
+
+*bool '''[[HandlePickup]]'''(Inventory item)
+:Called by ''all'' Inventory items that are currently in the player's inventory whenever the player is receiving a new item (but before it's actually received).
+
+*protected bool '''[[TryPickup]]'''(in out Actor toucher)
+:Called when an actor is trying to receive this item (whether directly or by walking over it).
+
+*bool '''[[CanPickup]]'''(Actor toucher)
+:Called when trying to see if the actor is capable of picking up the item based on class type. 
+
+*bool '''[[ShouldStay]]'''()
+:Called when checking to see if the item should disappear after being picked up. Returning true tells it to stay.
+
+*bool '''[[TryPickupRestricted]]'''(in out Actor toucher)
+:Called if [[CanPickup]] is false but the item does not have the {{flag|INVENTORY.RESTRICTABSOLUTELY}} flag set.
+
+*void '''[[UseAll]]'''(Actor user)
+:Called when the item's owner uses the "use all inventory items" key.
+::*''user'' - The actor trying to use the item.
+
+*void '''[[DoPickupSpecial]]'''(Actor toucher)
+:Called when an item is picked up by an actor. Activates the item's special if it has one.
+::*''toucher'' - The actor picking the item up.
+
+*void '''[[AttachToOwner]]'''(Actor other)
+:Called when an item is picked up by an actor for the first time. 
+
+*void '''[[DetachFromOwner]]'''()
+:Called when an item is removed from its owner's inventory. Is not responsible for the actual removal.
+
+*Inventory '''[[CreateTossable]]'''(int amt = -1)
+:Called when an item is attempting to be dropped from the owner's inventory. Returns the item that should be tossed.
+::*''amt'' - The amount of the item that should be dropped. This doesn't create duplicates but instead returns one item with its amount set to amt. Negative values will drop 1 by default.
+
+*String '''[[PickupMessage]]'''()
+:Returns the pick up message for the item. By default this simply returns &lt;code&gt;PickupMsg&lt;/code&gt; (a string variable defined in Inventory), but this function can be overridden to extend the behavior.
+
+*void '''[[PlayPickupSound]]'''(Actor toucher)
+:Called when an actor picks up an item and the item doesn't have the QUIET flag set. Plays the item's pick up sound.
+
+*void '''[[DepleteOrDestroy]]'''()
+:Called when an item's amount has reached 0 after use. Determines whether the item should stay in the owner's inventory or be destroyed entirely.
+
+*void '''[[PreTravelled]]'''()
+:Called when an item in somebody's inventory is about to be carried over to another map, in case it needs to do special clean-up.
+
+*void '''[[Travelled]]'''()
+:Called when an item with an owner has entered a different map. This works with both regular maps and hubs.
+
+*void '''[[DoEffect]]'''()
+:Called every tic similar to [[Tick]], but only if the item has an owner. Allows for special effects that only work when attached to an actor (e.g. power ups).
+
+*void '''[[Hide]]'''()
+:Called when an item that respawns is set to hide after being picked up. This is not called if '''ShouldStay''' returns true.
+
+*bool '''[[ShouldRespawn]]'''()
+:Called when determining if the item should stay after being picked up so it can respawn later. Returns true if the item should stay, otherwise the item will be directly picked up and never respawn.
+
+*void '''[[ModifyDamage]]'''(int damage, Name damageType, out int newdamage, bool passive, Actor inflictor = null, Actor source = null, int flags = 0)
+:Allows modification of damage the owner is taking or dealing if the damage flags allow it. Called before '''AbsorbDamage'''. This is typically utilized by powerups like [[Classes:PowerDamage|PowerDamage]] and [[Classes:PowerProtection|PowerProtection]].
+:This function isn't called if the damage is being dealt with the &lt;code&gt;DMG_NO_ENHANCE&lt;/code&gt; flag.
+
+*void '''[[AbsorbDamage]]'''(int damage, Name damageType, out int newdamage, Actor inflictor = null, Actor source = null, int flags = 0)
+:Allows modification of the damage an item's owner is taking if the damage flags allow it. Called after '''ModifyDamage'''. This is typically used by [[Classes:Armor|Armor]] items.
+:This function isn't called if the damage is being dealt with the &lt;code&gt;DMG_NO_PROTECT&lt;/code&gt; flag.
+
+*bool '''[[Use]]'''(bool pickup)
+:Called when an item is attempting to be used. Returns true if the item was successfully used. If the item has +INVENTORY.AUTOACTIVATE flag, this will be called automatically in its &lt;code&gt;TryPickup()&lt;/code&gt; call.
+
+*double '''[[GetSpeedFactor]]'''()
+:Returns the speed modifier the item applies to the owner.
+
+*bool '''[[GetNoTeleportFreeze]]'''()
+:Returns whether or not the owner should be frozen briefly after teleporting. Returning true tells the owner not to freeze.
+
+*ui void '''[[AlterWeaponSprite]]'''(VisStyle vis, in out int changed)
+:Allows direct modification of an owning player's weapon sprites.
+::*''vis'' - The current visual information about the player's weapon sprite. Modifying this directly affects the sprite.
+:*'''vis.RenderStyle''' - The current rendering style of the weapon sprite.
+:*'''vis.alpha''' - The current alpha of the sprite.
+:*'''vis.invert''' - Whether the sprite is currently inverted or not.
+::*''changed'' - Whether or not the style was changed in any '''AlterWeaponSprite''' calls this frame (must be set manually). Does nothing by default.
+
+*void '''[[OwnerDied]]'''()
+:Called when the item's owner dies.
+
+*color '''[[GetBlend]]'''()
+:Returns the color of the screen blend the item applies. Mainly used with power ups.
+
+*bool '''[[SpecialDropAction]]'''(Actor dropper)
+:Called when dropping an item. Allows for special actions to trigger when doing so. Returning true prevents the standard drop behavior from executing.
+::*''dropper'' - The actor dropping the item.
+
+*void '''[[OnDrop]]'''(Actor dropper)
+:Called after an item has been dropped. Allows for custom post-drop behavior.
+::*''dropper'' - The actor that dropped the item.
+
+*void '''[[ModifyDropAmount]]'''(int dropamount)
+:Called when an item is being dropped. Modifies the amount the item has after doing so.
+::*''dropamount'' - The new amount to give the item. If this is 0 or less than the amount is not changed.
+
+*void '''[[SetGiveAmount]]'''(Actor receiver, int amount, bool givecheat)
+:Called when an item is being given. Modifies the amount of the item.
+::*''receiver'' - The actor the item is being given to.
+::*''amount'' - The amount to set the item's amount to.
+::*''givecheat'' - If true, the item was given via cheating.
+
+[[Category:Inventory]]</text>
+    <sha1>bv25mokmktacevfl0dnj7yy619j72mi</sha1>
+  </revision>
+</page>

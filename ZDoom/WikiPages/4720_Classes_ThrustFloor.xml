@@ -1,0 +1,92 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>Classes:ThrustFloor</title>
+  <ns>0</ns>
+  <id>4720</id>
+  <revision>
+    <id>34915</id>
+    <parentid>21640</parentid>
+    <timestamp>2012-11-11T03:04:43Z</timestamp>
+    <contributor>
+      <username>Blue Shadow</username>
+      <id>2021</id>
+    </contributor>
+    <minor />
+    <comment>/* DECORATE definition */</comment>
+    <origin>34915</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="2156" sha1="ssyuujt47je5e8li6lhwyspy9swd0ay" xml:space="preserve">{{Actor|
+| type = Hazard
+| name = Spike
+| class = ThrustFloor
+| game = Hexen
+| spawnname = T_THRUSTSPIKEUP 
+}}[[Classes]]: &lt;u&gt;ThrustFloor&lt;/u&gt;&lt;br&gt;
+&amp;ensp;&amp;rarr;[[Classes:ThrustFloorDown|ThrustFloorDown]]&lt;br&gt;
+&amp;ensp;&amp;rarr;[[Classes:ThrustFloorUp|ThrustFloorUp]]&lt;br&gt;
+ThrustFloor defines the behavior of spikes, and it is its children classes that should be used in a map. The first argument determines whether it starts raised (true) or sunk (false), and the second determines whether it is bloody (true) or not (false). These values are changed during play. [[A_ThrustInitDn]] creates {{Class|DirtClump|dirt clumps}} that are then destroyed by [[A_ThrustRaise]], leaving some short-lived {{Class|Dirt1|dirt}} instead. Many flags are also set and reset by these functions, erasing most other flags that could be added to a custom object.
+==== [[DECORATE]] definition ====
+ ACTOR &lt;u&gt;ThrustFloor&lt;/u&gt; native
+ {
+   {{Property|Radius}} 20
+   {{Property|Height}} 128
+ 
+   action native [[A_ThrustRaise]]();
+   action native [[A_ThrustImpale]]();
+   action native [[A_ThrustLower]]();
+   action native [[A_ThrustInitDn]]();
+   action native [[A_ThrustInitUp]]();
+ 
+   States
+   {
+   ThrustRaising:
+     TSPK A 2 [[A_ThrustRaise]]
+     Loop
+   BloodThrustRaising:
+     TSPK B 2 [[A_ThrustRaise]]
+     Loop
+   ThrustLower:
+     TSPK A 2 [[A_ThrustLower]]
+     Loop
+   BloodThrustLower:
+     TSPK B 2 [[A_ThrustLower]]
+     Loop
+   ThrustInit1:
+     TSPK A 3
+     TSPK A 4 [[A_ThrustInitDn]]
+     TSPK A -1
+     Loop
+   BloodThrustInit1:
+     TSPK B 3
+     TSPK B 4 [[A_ThrustInitDn]]
+     TSPK B -1
+     Loop
+   ThrustInit2:
+     TSPK A 3
+     TSPK A 4 [[A_ThrustInitUp]]
+     TSPK A 10
+     Loop
+   BloodThrustInit2:
+     TSPK B 3
+     TSPK B 4 [[A_ThrustInitUp]]
+     TSPK B 10
+     Loop
+   ThrustRaise:
+     TSPK A 8 [[A_ThrustRaise]]
+     TSPK A 6 [[A_ThrustRaise]]
+     TSPK A 4 [[A_ThrustRaise]]
+     TSPK A 3 [[A_SetSolid]]
+     TSPK A 2 [[A_ThrustImpale]]
+     Loop
+   BloodThrustRaise:
+     TSPK B 8 [[A_ThrustRaise]]
+     TSPK B 6 [[A_ThrustRaise]]
+     TSPK B 4 [[A_ThrustRaise]]
+     TSPK B 3 [[A_SetSolid]]
+     TSPK B 2 [[A_ThrustImpale]]
+     Loop
+   }
+ }</text>
+    <sha1>ssyuujt47je5e8li6lhwyspy9swd0ay</sha1>
+  </revision>
+</page>

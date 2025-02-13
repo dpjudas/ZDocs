@@ -1,0 +1,59 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>Classes:Macil2</title>
+  <ns>0</ns>
+  <id>4756</id>
+  <revision>
+    <id>40524</id>
+    <parentid>39857</parentid>
+    <timestamp>2015-11-27T01:40:26Z</timestamp>
+    <contributor>
+      <username>Blue Shadow</username>
+      <id>2021</id>
+    </contributor>
+    <minor />
+    <comment>/* DECORATE definition */ Change(s) from git commit 01917d9</comment>
+    <origin>40524</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="1357" sha1="fff18txb3cvh3ewffakhvm4sgorkly8" xml:space="preserve">{{Actor|
+| type = Monster
+| name = Macil
+| class = Macil2
+| game = Strife
+| doomednum = 200
+| convid = 50, 49, 50
+}}[[Classes]]: {{Class|Macil1}}&amp;rarr;&lt;u&gt;Macil2&lt;/u&gt;&lt;br&gt;
+Macil is the brave leader of The Front, sworn to fight for freedom and justice... and the [[Classes:AlienSpectre4|creepy alien]] that's taken over his brain! This particular variation on Macil ''can'' be killed &amp;mdash; but not by {{Class|SpectralLightningV1}} or {{Class|SpectralLightningV2}}, so you need at least a second-phase {{Class|Sigil}} to hurt him.
+==== [[DECORATE]] definition ====
+ ACTOR &lt;u&gt;Macil2&lt;/u&gt; : {{Class|Macil1}}
+ {
+   {{Property|PainChance}} 200
+   +{{Flag|COUNTKILL}}
+   +{{Flag|SPECTRAL}}
+   -{{Flag|NODAMAGE}}
+   {{Property|Tag}} "$TAG_MACIL2" // "MACIL"
+   {{Property|DeathSound}} "macil/slop"
+   {{Property|DropItem}} "None"
+   {{Property|DamageFactor}} "SpectralLow", 0
+   States
+   {
+   Missile:
+     LEAD E 4 [[A_FaceTarget]]
+     LEAD F 4 Bright [[A_ShootGun]]
+     LEAD E 2 [[A_SentinelRefire]]
+     Loop
+   Death:
+     LEAD G 5
+     LEAD H 5 [[A_Scream]]
+     LEAD IJ 4
+     LEAD K 3
+     LEAD L 3 [[A_NoBlocking]]
+     LEAD MNOPQRSTUV 3
+     LEAD W 3 [[A_SpawnItemEx]]("{{Class|AlienSpectre4}}", 0, 0, 0, 0, 0, [[DECORATE_expressions#Mathematical_functions|random]][spectrespawn](0, 255)*0.0078125, 0, SXF_NOCHECKPOSITION)
+     LEAD X -1
+     Stop
+   }
+ }</text>
+    <sha1>fff18txb3cvh3ewffakhvm4sgorkly8</sha1>
+  </revision>
+</page>

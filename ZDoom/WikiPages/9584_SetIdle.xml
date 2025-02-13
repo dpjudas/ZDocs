@@ -1,0 +1,51 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>SetIdle</title>
+  <ns>0</ns>
+  <id>9584</id>
+  <revision>
+    <id>50286</id>
+    <parentid>49133</parentid>
+    <timestamp>2023-05-03T19:38:59Z</timestamp>
+    <contributor>
+      <username>Inkoalawetrust</username>
+      <id>2604</id>
+    </contributor>
+    <minor />
+    <origin>50286</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="731" sha1="hp4sncawxt8wghm734qxbooz7bpck83" xml:space="preserve">Void '''SetIdle'''(bool ''nofunction'')
+
+== Usage ==
+Sets the calling actor to its' [[Actor_states#States|Idle state]], if it doesn't have one, then the actor is set to its' Spawn state instead.
+
+=== Parameters ===
+*''nofunction'' - False by default. If true, the actor will not execute the [[action function]] in the frame of the first state it goes to.
+
+== Examples ==
+This [[Cacodemon]] is lazy. And will stop chasing it's target after a few seconds.
+
+ Class LazyCaco : Cacodemon Replaces Cacodemon
+ {
+ 	Int SearchTime;
+ 	States
+ 	{
+ 		See:
+ 			HEAD A 3
+ 			{
+ 				If (SearchTime &gt;= 48)
+ 				{
+ 					[[A_ClearTarget]]();
+ 					SetIdle();
+ 				}
+ 				SearchTime++;
+ 				[[A_Chase]]();
+ 			}
+ 			Loop;
+ 	}
+ }
+
+[[Category:ZScript]]</text>
+    <sha1>hp4sncawxt8wghm734qxbooz7bpck83</sha1>
+  </revision>
+</page>

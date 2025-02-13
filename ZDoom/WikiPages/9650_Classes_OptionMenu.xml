@@ -1,0 +1,241 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>Classes:OptionMenu</title>
+  <ns>0</ns>
+  <id>9650</id>
+  <revision>
+    <id>49853</id>
+    <parentid>49850</parentid>
+    <timestamp>2022-11-21T06:02:06Z</timestamp>
+    <contributor>
+      <username>Boondorl</username>
+      <id>2606</id>
+    </contributor>
+    <minor />
+    <comment>/* Option Menu Settings */</comment>
+    <origin>49853</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="12170" sha1="aob5g5ejt8eqtw68kzf235f7wv9czzs" xml:space="preserve">OptionMenus are a subclass of [[Classes:Menu|Menu]] that are used as a core interface for MENUDEF. They not only present the user with a list of options, but also have the ability to modify those options directly via option values. If simply displaying a list of elements is needed, a [[Classes:ListMenu|list menu]] should be used instead. OptionMenus are commonly used for modifying CVars and are how they should be modified. While CVars can be modified directly through code, that information is lost when closing the game. Changes made via option menus are stored across game sessions.
+
+== Fields ==
+*OptionMenuDescriptor '''mDesc''' - The menu descriptor for this menu. Contains important information such as what options are in it, scrolling information, etc.
+*bool '''CanScrollUp''' - If true, the top of the menu's item list is currently off screen
+*bool '''CanScrollDown''' - If true, the bottom of the menu's item list is currently off screen
+*int '''VisBottom''' - The index of the item that's currently at the visible bottom of the menu
+*OptionMenuItem '''mFocusControl''' - Tracks which option is the current focus of the menu (when being clicked on by the mouse)
+
+== Methods ==
+=== Virtual ===
+*void '''Init'''(Menu ''parent'', OptionMenuDescriptor ''desc'')
+*int '''GetIndent'''()
+*int '''DrawCaption'''(string ''title'', int ''y'', bool ''drawit'')
+
+=== Overrides ===
+*bool '''OnUIEvent'''(UIEvent ''ev'')
+*bool '''MenuEvent'''(int ''mkey'', bool ''fromcontroller'')
+*bool '''MouseEvent'''(int ''type'', int ''x'', int ''y'')
+*void '''Ticker'''()
+*void '''Drawer'''()
+*void '''SetFocus'''(MenuItemBase ''fc'')
+*void '''CheckFocus'''(MenuItemBase ''fc'')
+*void '''ReleaseFocus'''(MenuItemBase ''fc'')
+
+=== Non-static ===
+*OptionMenuItem '''GetItem'''(Name ''name'')
+*int '''FirstSelectable'''()
+
+== Option Values ==
+&lt;code&gt;OptionValues&lt;/code&gt; is a struct that acts as an API for getting option values specified in MENUDEF.
+
+=== Option Value Names ===
+There are a few hardcoded names available that will automatically fill the OptionValue with data. You should use these names if you want this data (or avoid them if not). Within your MENUDEF you do not need to specify any of its contents, only declare it.
+*'''Crosshairs'''
+*'''PlayerTeam'''
+*'''PlayerClass'''
+*'''PlayerColors'''
+*'''PlayerSkin'''
+*'''MidiDevices'''
+*'''AlDevices'''
+*'''AlResamplers'''
+
+=== Static Methods ===
+*int '''GetCount'''(Name ''group'')
+*string '''GetText'''(Name ''group'', int ''index'')
+*double '''GetValue'''(Name ''group'', int ''index'')
+*string '''GetTextValue'''(Name ''group'', int ''index'')
+
+== Option Menu Settings ==
+&lt;code&gt;FOptionMenuSettings&lt;/code&gt; is a struct that stores global information about option menus. This is generated and managed by ZDoom itself. It can be accessed via the '''OptionMenuSettings''' global variable.
+
+=== Fields ===
+*int '''mTitleColor''' - The Font translation to use for drawing the title of the option menu
+*int '''mFontColor''' - The Font translation to use for drawing options that aren't selected
+*int '''mFontColorValue''' - The Font translation to use for drawing option values. The grayed-out color is an overlay automatically applied on top of this translation
+*int '''mFontColorMore''' - The Font translation to use for drawing options that open a sub-menu
+*int '''mFontColorHeader''' - The Font translation to use for drawing static text if one was specified in the MENUDEF file
+*int '''mFontColorHighlight''' - The Font translation to use if a keybind is waiting for an input
+*int '''mFontColorSelection''' - The Font translation to use for drawing options that are currently selected
+*int '''mLinespacing''' - The vertical height of each option in pixels
+
+== Option Menu Descriptors ==
+&lt;code&gt;OptionMenuDescriptor&lt;/code&gt; is a subclass of MenuDescriptor and stores all the information about the items that exist within the option menu as specified by the MENUDEF file.
+
+=== Fields ===
+*Array&lt;OptionMenuItem&gt; '''mItems''' - The list of all items that exist in the options menu, selectable or not.
+*string '''mTitle''' - The title of the options menu
+*int '''mSelectedItem''' - The index of the currently selected item in the menu
+*int '''mDrawTop''' - The top of the menu where items start being drawn (excludes the title if visible). This exists in the '''CleanYFac_1''' space and is used for collision checking with mouse events
+*int '''mScrollTop''' - The number of items that should be kept at the top when scrolling, selectable or not
+*int '''mScrollPos''' - The index of the item that's currently at the visible top of the menu
+*int '''mIndent''' - The current indent to apply to the menu. Based on the largest indent between all of its items
+*int '''mPosition''' - The downward offset of the menu as defined in MENUDEF. Negative values will keep the title visible while positives values will hide it
+*bool '''mDontDim''' - If true, sets the menu not to dim when open. Mainly used in '''Init'''()
+*Font '''mFont''' - The font to use when drawing the title of the menu
+
+=== Non-static Methods ===
+*void '''Reset'''()
+*void '''CalcIndent'''()
+
+== Option Menu Items ==
+&lt;code&gt;OptionMenuItem&lt;/code&gt; is a subclass of MenuItemBase and is the core class for adding items to option menus. If you plan on adding any custom option types to use with MENUDEF, they must inherit from this class.
+
+=== Fields ===
+*string '''mLabel''' - The text to display for the option. This can be a LANGUAGE key
+*bool '''mCentered''' - Whether or not the text is automatically centered instead of using standard indentation
+
+=== Overridden Methods ===
+*bool '''Selectable'''()
+*int '''GetIndent'''()
+*bool '''MouseEvent'''(int ''type'', int ''x'', int ''y'')
+
+=== Non-static Methods ===
+*''protected'' void '''Init'''(string ''label'', string ''command'', bool ''center'' = false)
+*''protected'' void '''DrawText'''(int ''x'', int ''y'', int ''color'', string ''text'', bool ''grayed'' = false)
+*''protected'' int '''DrawLabel'''(int ''indent'', int ''y'', int ''color'', bool ''grayed'' = false)
+*''protected'' void '''DrawValue'''(int ''indent'', int ''y'', int ''color'', string ''text'', bool ''grayed'' = false)
+*int '''CursorSpace'''()
+
+=== Derived Classes ===
+Below is a list of all of the derived classes that use this. All of them are prefixed with '''OptionMenuItem''' as this is how custom items are defined for options.
+*'''Submenu'''
+*'''LabeledSubmenu'''
+*'''Command'''
+*'''SafeCommand'''
+*'''StaticText'''
+*'''StaticTextSwitchable'''
+*'''ColorPicker'''
+:*The &lt;code&gt;ColorPickerMenu&lt;/code&gt; menu is used here to select a color
+
+== Option Base ==
+&lt;code&gt;OptionMenuItemOptionBase&lt;/code&gt; is the OptionMenuItem subclass that acts as a base for all options that have an option value. This should be used if you want something similar to the Option specifier in MENUDEF.
+
+=== Constants ===
+*int '''OP_VALUES''' = 0x11001
+
+=== Fields ===
+*Name '''mValues''' - The name of the OptionValue in MENUDEF to refer to
+*CVar '''mGrayCheck''' - The CVar to check if an option can be grayed out (an option is considered grayed out if this is false)
+*int '''mCenter''' - If the option should be centered or not when drawn
+
+=== Virtual Methods ===
+*int '''GetSelection'''()
+*void '''SetSelection'''(int Selection)
+*bool '''IsGrayed'''()
+
+=== Overridden Methods ===
+*bool '''SetString'''(int ''i'', string ''newtext'')
+*int '''Draw'''(OptionMenuDescriptor ''desc'', int ''y'', int ''indent'', bool ''selected'')
+*bool '''MenuEvent'''(int ''mkey'', bool ''fromcontroller'')
+*bool '''Selectable'''()
+
+=== Non-static Methods ===
+*''protected'' void '''Init'''(string ''label'', Name ''command'', Name ''values'', CVar ''graycheck'', int ''center'')
+
+=== Derived Classes ===
+Below is a list of all of the derived classes that use this. All of them are prefixed with '''OptionMenuItem''' as this is how custom items are defined for options.
+*'''Option'''
+*'''FlagOption'''
+
+== Control Base ==
+&lt;code&gt;OptionMenuItemControlBase&lt;/code&gt; is the OptionMenuItem subclass that acts as a base for all options that modify the controls. This should be used if you want something similar to the Control specifier in MENUDEF. The &lt;code&gt;EnterKey&lt;/code&gt; menu is used here to capture the input when prompted.
+
+=== Fields ===
+*KeyBindings '''mBindings''' - Stores all the bindings for the option
+*int '''mInput''' - The key to pass to the menu when binding one to a command. This is set via '''SendKey'''()
+*bool '''mWaiting''' - The option is currently waiting for an input
+
+=== Overridden Methods ===
+*int '''Draw'''(OptionMenuDescriptor ''desc'', int ''y'', int ''indent'', bool ''selected'')
+*bool '''MenuEvent'''(int ''mkey'', bool ''fromcontroller'')
+*bool '''Activate'''()
+
+=== Non-static Methods ===
+*''protected'' void '''Init'''(string ''label'', Name ''command'', KeyBindings ''bindings'')
+*void '''SendKey'''(int key)
+
+=== Derived Classes ===
+Below is a list of all of the derived classes that use this. All of them are prefixed with '''OptionMenuItem''' as this is how custom items are defined for options.
+*'''Control'''
+*'''MapControl'''
+
+== Slider Base ==
+&lt;code&gt;OptionMenuSliderBase&lt;/code&gt; is the OptionMenuItem subclass that acts as a base for all options that modify via sliders. This should be used if you want something similar to the Slider specifier in MENUDEF.
+
+=== Fields ===
+*double '''mMin''' - The minimum value the slider can be
+*double '''mMax''' - The maximum value the slider can be
+*double '''mStep''' - The amount to increase/decrease by every step
+*int '''mShowValue''' - The number of decimal places to display
+*int '''mDrawX''' - The x position the slider was drawn at. This exists in the '''CleanXFac_1''' space and is used for mouse collision detection
+*int '''mSliderShort''' - If the slider goes off the right side of the screen, this is set to true
+*CVar '''mGrayCheck''' - The CVar to check if an option can be grayed out (an option is considered grayed out if this is false)
+
+=== Virtual Methods ===
+*double '''GetSliderValue'''()
+*void '''SetSliderValue'''(double ''val'')
+*bool '''IsGrayed'''()
+
+=== Overridden Methods ===
+*bool '''Selectable'''()
+*int '''Draw'''(OptionMenuDescriptor ''desc'', int ''y'', int ''indent'', bool ''selected'')
+*bool '''MenuEvent'''(int ''mkey'', bool ''fromcontroller'')
+*bool '''MouseEvent'''(int ''type'', int ''x'', int ''y'')
+
+=== Non-static Methods ===
+*''private'' void '''DrawSliderElement'''(int ''color'', int ''x'', int ''y'', string ''str'', bool ''grayed'' = false)
+*''protected'' void '''Init'''(string ''label'', double ''min'', double ''max'', double ''step'', int ''showval'', Name ''command'' = 'None', CVar ''graycheck'' = null)
+*''protected'' void '''DrawSlider'''(int ''x'', int ''y'', double ''min'', double ''max'', double ''cur'', int ''fracdigits'', int ''indent'', bool ''grayed'' = false)
+
+=== Derived Classes ===
+Below is a list of all of the derived classes that use this. All of them are prefixed with '''OptionMenuItem''' as this is how custom items are defined for options.
+*'''Slider'''
+*'''ScaleSlider'''
+
+== Field Base ==
+&lt;code&gt;OptionMenuFieldBase&lt;/code&gt; is the OptionMenuItem subclass that acts as a base for all options that act as an input field. This should be used if you want something similar to the TextField specifier in MENUDEF.
+
+=== Fields ===
+*CVar '''mCVar''' - The CVar the option modifies
+*CVar '''mGrayCheck''' - The CVar to check if an option can be grayed out (an option is considered grayed out if this is false)
+
+=== Virtual Methods ===
+*string '''Represent'''()
+
+=== Overridden Methods ===
+*int '''Draw'''(OptionMenuDescriptor ''desc'', int ''y'', int ''indent'', bool ''selected'')
+*bool, string '''GetString'''(int ''i'')
+*bool '''SetString'''(int ''i'', string ''s'')
+*bool '''Selectable'''()
+
+=== Non-static Methods ===
+*void '''Init'''(string ''label'', Name ''command'', CVar ''graycheck'' = null)
+*string '''GetCVarString'''()
+
+=== Derived Classes ===
+Below is a list of all of the derived classes that use this. All of them are prefixed with '''OptionMenuItem''' as this is how custom items are defined for options.
+*'''TextField'''
+:*The &lt;code&gt;TextEnterMenu&lt;/code&gt; menu is used here to capture what the user is inputting
+*'''NumberField'''</text>
+    <sha1>aob5g5ejt8eqtw68kzf235f7wv9czzs</sha1>
+  </revision>
+</page>

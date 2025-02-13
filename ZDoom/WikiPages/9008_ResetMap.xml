@@ -1,0 +1,43 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>ResetMap</title>
+  <ns>0</ns>
+  <id>9008</id>
+  <revision>
+    <id>47135</id>
+    <parentid>43697</parentid>
+    <timestamp>2020-02-04T14:10:29Z</timestamp>
+    <contributor>
+      <username>Gez</username>
+      <id>1283</id>
+    </contributor>
+    <minor />
+    <comment>remove syntaxhighlight feature that causes errors</comment>
+    <origin>47135</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="900" sha1="m98th73lbmz73373bot6g582iu5l3yp" xml:space="preserve">{{STFeature}}
+int '''ResetMap ''' (void)
+
+==Usage==
+
+Resets the map like in Survival after a mission start or fail. Everything will be restored as it was when the map first started. The map will be reset after the tic ends, any commands stated immediately after ResetMap will be executed before the map actually is reset.
+
+'''Note:''' In order to use this function, the MapResets flag must be set for the gamemode in question. It is set by default in Survival, (T)LMS, Invasion and Duel. For other modes, including possession which actually does not do map resets, the flag must be set via the GAMEMODE lump. This is because storing original stats for actors requires extra memory and CPU cycles from the server.
+
+Example GAMEMODE lump:
+ Cooperative 
+ {
+     addflag MAPRESETS
+ }
+
+==Examples==
+
+ Script 5 DEATH
+ {
+     PrintBold(s: "You've died! Restarting map.");
+     Delay(90);
+     ResetMap();
+ }</text>
+    <sha1>m98th73lbmz73373bot6g582iu5l3yp</sha1>
+  </revision>
+</page>

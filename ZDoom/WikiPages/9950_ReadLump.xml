@@ -1,0 +1,51 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>ReadLump</title>
+  <ns>0</ns>
+  <id>9950</id>
+  <revision>
+    <id>53148</id>
+    <timestamp>2024-09-30T12:57:10Z</timestamp>
+    <contributor>
+      <username>Jekyll Grim Payne</username>
+      <id>2175</id>
+    </contributor>
+    <comment>Created page with "'''{{struct|Wads}}'''  native static string '''ReadLump'''(int ''lump'')  == Usage == Reads the [[lump]] at the given index and returns its full contents as a text string. The index must be obtained with [[FindLump]].  === Parameters === *{{c|int '''lump'''}} :The index of the lump obtained with '''[[FindLump]]'''.  == Return values == * String — returns the contents of the lump as a string.  == Examples == This example shows how to find all currently loaded TEXTURES..."</comment>
+    <origin>53148</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="1043" sha1="llei6srb7wpplpm51quhqxirl3uiy6r" xml:space="preserve">'''{{struct|Wads}}'''
+
+native static string '''ReadLump'''(int ''lump'')
+
+== Usage ==
+Reads the [[lump]] at the given index and returns its full contents as a text string. The index must be obtained with [[FindLump]].
+
+=== Parameters ===
+*{{c|int '''lump'''}}
+:The index of the lump obtained with '''[[FindLump]]'''.
+
+== Return values ==
+* String — returns the contents of the lump as a string.
+
+== Examples ==
+This example shows how to find all currently loaded [[TEXTURES]] lumps and push their contents into a [[Dynamic arrays|dynamic array]]:
+&lt;syntaxhighlight lang="csharp"&gt;
+array&lt;String&gt; allTexturesContents;
+// Find a lump named TEXTURES:
+int lump = Wads.FindLump("TEXTURES", 0);
+// Keep searching until there are no more
+// lumps with this name to be found:
+while (lump != -1)
+{
+    String lumpContents = Wads.ReadLump(lump);
+    allTexturesContents.Push(lumpContents);
+    // Find the next TEXTURES lump if present:
+    lump = Wads.FindLump("TEXTURES", lump + 1);
+}&lt;/syntaxhighlight&gt;
+
+== See also ==
+* [[Structs:Wads]]
+* [[FindLump]]</text>
+    <sha1>llei6srb7wpplpm51quhqxirl3uiy6r</sha1>
+  </revision>
+</page>

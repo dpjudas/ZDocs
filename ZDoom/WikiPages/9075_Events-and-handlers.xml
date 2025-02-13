@@ -1,0 +1,651 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>Events and handlers</title>
+  <ns>0</ns>
+  <id>9075</id>
+  <revision>
+    <id>54076</id>
+    <parentid>53961</parentid>
+    <timestamp>2024-12-20T09:11:27Z</timestamp>
+    <contributor>
+      <username>Jekyll Grim Payne</username>
+      <id>2175</id>
+    </contributor>
+    <comment>/* Handling events */</comment>
+    <origin>54076</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="36024" sha1="m4afgiprz2lfhi91h93bozc2tppfxzv" xml:space="preserve">{{ZScriptNote}}
+
+'''Event handlers''' are a plugin-like system available since GZDoom 2.4 that allows your ZScript code to receive certain world, client and system events.&lt;br&gt;
+There can be multiple event handlers and in most cases all of them will receive the event (note: exceptions exist).
+
+== General information ==
+An event handler is a class that inherits either '''StaticEventHandler''' or '''EventHandler'''. The differences between them are as follows:
+
+{| class="wikitable" 
+|- style="background-color:#efefef;"
+! Type
+! Initialized
+! Destroyed
+! Serializable?
+|-
+| StaticEventHandler
+| On GZDoom startup
+| When closing GZDoom
+| No
+|-
+| EventHandler
+| At the beginning of every map
+| At the end of every map
+| Yes
+|}
+
+For most of the level scripting you should use an EventHandler; StaticEventHandler is only needed if you need to store some non-playsim data locally.
+
+== Setting up ==
+In order to make the event handler work, you need to declare it in MAPINFO. For this, two variants are supported: &lt;code&gt;EventHandlers&lt;/code&gt; in [[MAPINFO/Map definition#EventHandlers|map definition]] and &lt;code&gt;EventHandlers&lt;/code&gt; or &lt;code&gt;AddEventhandlers&lt;/code&gt; in [[MAPINFO/GameInfo definition#EventHandlers|gameinfo definition]].
+
+&lt;syntaxhighlight language="csharp"&gt;
+GameInfo
+{
+    AddEventHandlers = "MyEventHandler"
+}
+&lt;/syntaxhighlight&gt;
+
+This will add an event handler &lt;code&gt;MyEventHandler&lt;/code&gt; To the game. Multiple event handlers can be added with either a comma, or new &lt;code&gt;AddEventHandlers&lt;/code&gt; definitions.
+
+Note, this is a GameInfo section of the [[MAPINFO]] lump; not to be confused with the [[GAMEINFO]] lump, which is unrelated.
+
+{{warning|It is ''not necessary'' to add multiple separate event handlers to override the same types of events; it is also not recommended, because the more handlers you have, the more they will impact performance.}}
+
+If you want multiple different things to happen within the same event with different conditions, simply add that conditions into that event. For example:
+
+&lt;syntaxhighlight lang="cs"&gt;
+override void WorldThingDied(WorldEvent e)
+{
+  if (e.thing.GetClass() == 'Zombieman')
+  {
+    // this will happen if the killed actor was a Zombieman
+  }
+  else if (e.thing.GetClass() == 'DoomImp')
+  {
+    // if the actor was a DoomImp, this will happen instead
+  }
+  else if (e.thing.GetClass() == 'ChaingunGuy')
+  {
+    // if the actor was a ChaingunGuy, this will happen instead
+  }
+
+  // and if none of the conditions above were met, simply nothing will happen
+}&lt;/syntaxhighlight&gt;
+
+== Functions ==
+All event handler methods are defined as {{c|static}} and {{c|clearscope}}.
+* native '''Find'''(''class&lt;StaticEventHandler&gt;'' type)
+: Retrieves a pointer to the specified event handler.
+: Use &lt;code&gt;StaticEventHandler.Find&lt;/code&gt; to find static event handlers, and &lt;code&gt;EventHandler.Find&lt;/code&gt; for non-static ones.
+=== EventHandler only ===
+* static native void '''SendNetworkEvent'''(''String'' name, ''int'' arg1 = 0, ''int'' arg2 = 0, ''int'' arg3 = 0)
+: Sends a network event, which can be intercepted in the &lt;code&gt;NetworkProcess&lt;/code&gt; virtual override. Allows communication from UI scope to play scope. (See [[#Networking|Networking]].)
+: Only integer arguments are supported. To pass a string, pass it as part of the event's name and use {{c|Split}} to retrieve it. (See [[#Networking|Networking]] for an example.)
+* static native void '''SendInterfaceEvent'''(''int'' playerNum, ''string'' name, ''int'' arg1 = 0, ''int'' arg2 = 0, ''int'' arg3 = 0)
+: Sends an interface event, which can be intercepted in the &lt;code&gt;InterfaceProcess&lt;/code&gt; virtual override. Allows communication from play scope to UI scope. (See [[#Communicating_with_the_UI|Communicating with the UI]].)
+
+== Handling events ==
+Each possible event is done as a virtual method in the StaticEventHandler/EventHandler classes which can be overridden.
+
+{{note|Calling '''{{c|Super.''EventName()''}}''' in these overrides is not necessary, because by default these functions are empty and don't do anything. Authors simply need to add overrides and put their custom code into them.}}
+
+{| class="wikitable"
+|-
+! style="min-width: 320px" | Method !! style="min-width: 320px" | Data available (in the provided event) !! Description
+|-
+| void '''{{LE|OnEngineInitialize}}''' () || — || Called right after the engine starts up (After messages like CPU information print). This can only be used on StaticEventHandlers.
+|-
+| void '''{{LE|OnRegister}}''' () || — || Called when the engine registers your handler (adds it to the list).&lt;br&gt;Event handler [[Events_and_handlers#Event_handler_order|order]] setup can be performed here.
+|-
+| void '''{{LE|OnUnregister}}''' () || — || Called when the engine removes your handler from the list.
+|-
+| void '''{{LE|WorldLoaded}}''' ({{struct|WorldEvent}} ''e'')
+|
+* {{c|bool '''IsSaveGame'''}}
+* {{c|bool '''IsReopen'''}}
+| ''IsSaveGame'' only works for StaticEventHandlers. By using this field you can detect that the current level was loaded from a saved game.&lt;br&gt;''IsReopen'' will be true when the player returns to the same map in a hub, similar to REOPEN ACS script type.
+|-
+| void '''{{LE|WorldUnloaded}}''' ({{struct|WorldEvent}} ''e'') 
+|
+* {{c|bool '''IsSaveGame'''}}
+* {{c|String '''NextMap'''}}
+| ''IsSaveGame'' only works for StaticEventHandlers. By using this field you can detect that the current level is unloaded to load a saved game.&lt;br&gt;''NextMap'' is the name of the map to be entered next, if any.
+|-
+|
+void '''{{LE|[[WorldThingSpawned]]}}''' ({{struct|WorldEvent}} ''e'')&lt;br&gt;
+void '''{{LE|[[WorldThingDied]]}}''' ({{struct|WorldEvent}} ''e'')&lt;br&gt;
+void '''{{LE|[[WorldThingRevived]]}}''' ({{struct|WorldEvent}} ''e'')&lt;br&gt;
+void '''{{LE|[[WorldThingDestroyed]]}}''' ({{struct|WorldEvent}} ''e'')
+|
+* {{c|Actor '''Thing'''}} 
+'''WorldThingDied''' only:
+* {{c|Actor '''Inflictor'''}}
+| These events are received just after the specified ''Thing'' was spawned or revived/raised/resurrected (including the player's use of the resurrect cheat), and just before it dies or gets destroyed.&lt;br&gt;
+Internally, WorldThingSpawned is called just after PostBeginPlay.&lt;br&gt;&lt;br&gt;
+If ''Inflictor'' is not {{c|null}}, it is the actor that caused the damage that killed ''Thing''. While the event does not provide a pointer to the source of the damage (killer), it, if not {{c|null}}, is stored in the {{c|target}} field of ''Thing''.
+|-
+| void '''{{LE|[[WorldThingDamaged]]}}''' ({{struct|WorldEvent}} ''e'')
+| 
+* {{c|Actor '''Thing'''}}
+* {{c|Actor '''Inflictor'''}}
+* {{c|int '''Damage'''}}
+* {{c|Actor '''DamageSource'''}}
+* {{c|Name '''DamageType'''}}
+* {{c|EDmgFlags '''DamageFlags'''}}
+* {{c|double '''DamageAngle'''}}
+| The arguments for this event are the same as the '''[[DamageMobj]]''' arguments.&lt;br&gt;
+''DamageAngle'' can be different from direct angle to ''Inflictor'' if portals are involved — beware.&lt;br&gt;
+''Thing'' is the actor that got damaged.
+|-
+| void '''{{LE|WorldThingGround}}''' ({{struct|WorldEvent}} ''e'')
+|
+* {{c|Actor '''Thing'''}}
+* {{c|State '''CrushedState'''}}
+|Called when ''Thing'' actor's {{Flag|CORPSE|corpse}} is crushed into gibs. ''CrushedState'' is the [[actor states#Crush|crush state]] the actor had entered.
+|-
+|
+void '''{{LE|WorldLineDamaged}}''' ({{struct|WorldEvent}} ''e'')&lt;br&gt;
+void '''{{LE|WorldSectorDamaged}}''' ({{struct|WorldEvent}} ''e'')
+|
+* {{c|Actor '''DamageSource'''}}
+* {{c|int '''Damage'''}}
+* {{c|int '''NewDamage'''}}
+* {{c|Name '''DamageType'''}}
+* {{c|vector3 '''DamagePosition'''}}
+* {{c|bool '''DamageIsRadius'''}}
+'''WorldLineDamaged''' only:
+* {{c|Line '''DamageLine'''}}
+* {{c|int '''DamageLineSide'''}}
+'''WorldSectorDamaged''' only:
+* {{c|Sector '''DamageSector'''}}
+* {{c|SectorPart '''DamageSectorPart'''}}
+| These events are called before dealing damage to a [[Linedef|line]] or [[sector]], which allows the events to manipulate&lt;br&gt;the damage through ''Damage'' (raw damage) and ''NewDamage'' (damage after modification).
+|-
+| bool '''{{LE|[[WorldHitscanPreFired]]}}''' ({{struct|WorldEvent}} ''e'') {{new|4.14.0}}
+|
+*{{c|Actor '''thing'''}}
+*{{c|angle '''AttackAngle'''}}
+*{{c|angle '''AttackPitch'''}}
+*{{c|double '''AttackDistance'''}}
+*{{c|int '''damage'''}}
+*{{c|Name '''damageType'''}}
+*{{c|int '''AttackLineFlags'''}}
+*{{c|class&lt;Actor&gt; '''AttackPuffType'''}}
+*{{c|double '''AttackZ'''}}
+*{{c|double '''AttackOffsetForward'''}}
+*{{c|double '''AttackOffsetSide'''}}
+| This event is called whenever a [[hitscan]] attack function is called by any actor in the game.&lt;br /&gt;This method is non-void: returning &lt;code&gt;true&lt;/code&gt; will block the attack from happening.&lt;br /&gt;The data received by the function can then be used to do something else, such as spawning&lt;br /&gt;projectiles in place of the blocked hitscans.&lt;br /&gt;&lt;br /&gt;Note: this is only called for "bullet" hitscans, not for railguns.
+|-
+| void '''{{LE|[[WorldHitscanFired]]}}''' ({{struct|WorldEvent}} ''e'')  {{new|4.14.0}}
+|
+*{{c|Actor '''thing'''}}
+*{{c|Vector3 '''AttackPos'''}}
+*{{c|Vector3 '''DamagePosition'''}}
+*{{c|Actor '''Inflictor'''}}
+*{{c|int '''AttackLineFlags'''}}
+| This event is called after a [[hitscan]] attack has been performed by any actor in the game.&lt;br /&gt;It can be used to perform some additional actions after the attack has happened.&lt;br /&gt;&lt;br /&gt;Note: this is only called for "bullet" hitscans, not for railguns.
+|-
+| bool '''{{LE|[[WorldRailgunPreFired]]}}''' ({{struct|WorldEvent}} ''e'') {{new|4.14.0}}
+|
+*{{c|Actor '''thing'''}}
+*{{c|angle '''AttackAngle'''}}
+*{{c|angle '''AttackPitch'''}}
+*{{c|double '''AttackDistance'''}}
+*{{c|int '''damage'''}}
+*{{c|Name '''damageType'''}}
+*{{c|class&lt;Actor&gt; '''AttackPuffType'''}}
+*{{c|double '''AttackZ'''}}
+*{{c|double '''AttackOffsetSide'''}}
+*{{c|FRailParams '''RailParams'''}}
+| This event is triggered whenever a railgun attack function is called by any actor in the game.&lt;br /&gt;This method is non-void: returning &lt;code&gt;true&lt;/code&gt; will block the attack from happening.&lt;br /&gt;&lt;br /&gt;Note: this is only called for railgun attacks, not for regular "bullet" hitscans.
+|-
+| void '''{{LE|[[WorldRailgunFired]]}}''' ({{struct|WorldEvent}} ''e'') {{new|4.14.0}}
+|
+*{{c|Actor '''thing'''}}
+*{{c|Vector3 '''AttackPos'''}}
+*{{c|Vector3 '''DamagePosition'''}}
+*{{c|Actor '''Inflictor'''}}
+*{{c|int '''AttackLineFlags'''}}
+| This event is called after a railgun attack has been performed by any actor in the game.&lt;br /&gt;It can be used to perform some additional actions after the attack has happened.&lt;br /&gt;&lt;br /&gt;Note: this is only called for railgun attacks, not for regular "bullet" hitscans.
+|-
+| void '''{{LE|WorldLightning}}''' ({{struct|WorldEvent}} ''e'') || — || Same as LIGHTNING ACS script type.
+|-
+| void '''{{LE|WorldTick}}''' () || — || Calls at the beginning of each tick, 35 times per second.
+|-
+| void '''{{LE|WorldLinePreActivated}}''' ({{struct|WorldEvent}} ''e'')
+|
+* {{c|Actor '''Thing'''}}
+* {{c|Line '''ActivatedLine'''}}
+* {{c|int '''ActivationType'''}}
+* {{c|bool '''ShouldActivate'''}}
+| This event is called upon the activation of a [[Linedef|line]], right before the line's [[Action specials|special]] is executed.&lt;br&gt;
+* {{c|Actor '''Thing'''}} - is the activating actor
+* {{c|Line '''ActivatedLine'''}} - the activated line (this field is readonly)
+* {{c|int '''ActivationType'''}} - the type of activation (this field is readonly). Can be one of the following:
+{{: Line activation types}}
+* {{c|bool '''ShouldActivate'''}} - determines whether or not to continue with the activation process.
+:If this is set to &lt;code&gt;false&lt;/code&gt;, activation is aborted early on, before even the execution of the
+:line's special and the triggering of the {{c|WorldLineActivated}} event, for example.
+|-
+| void '''{{LE|WorldLineActivated}}''' ({{struct|WorldEvent}} ''e'')
+|
+* {{c|Actor '''Thing'''}}
+* {{c|Line '''ActivatedLine'''}}
+* {{c|int '''ActivationType'''}}
+| This event is called upon the activation of a [[Linedef|line]], after the line's [[Action specials|special]] has been successfully executed.&lt;br&gt;
+* {{c|Actor '''Thing'''}} - is the activating actor
+* {{c|Line '''ActivatedLine'''}} - the activated line (this field is readonly)
+* {{c|int '''ActivationType'''}} - the type of activation (this field is readonly).
+:This does not necessarily correlate to how it ''was'' activated. Can be one of the following:
+{{: Line activation types}}
+|-
+|
+void '''{{LE|PlayerEntered}}''' (PlayerEvent ''e'')&lt;br&gt;
+void '''{{LE|PlayerSpawned}}''' (PlayerEvent ''e'')&lt;br&gt;
+void '''{{LE|PlayerRespawned}}''' (PlayerEvent ''e'')&lt;br&gt;
+void '''{{LE|PlayerDied}}''' (PlayerEvent ''e'')&lt;br&gt;
+void '''{{LE|PlayerDisconnected}}''' (PlayerEvent ''e'')
+|
+* {{c|int '''PlayerNumber'''}}
+* {{c|bool '''IsReturn'''}}
+| These are generally the same as their ACS counterparts.&lt;br&gt;PlayerEntered is called when players connect.&lt;br&gt;PlayerSpawned is called when the player spawns in the level, much like an {{SType|enter}} script.&lt;br&gt;PlayerRespawned calls when players respawn (or use the resurrect cheat).&lt;br&gt;PlayerDied calls when players die (along with WorldThingDied)&lt;br&gt;PlayerDisconnected calls at the same point as DISCONNECT scripts (this is generally useless with P2P networking).&lt;br&gt;&lt;br&gt;
+''PlayerNumber'' is the player that was affected. You can receive the actual player object from the global players array like this:
+  PlayerInfo player = players[e.PlayerNumber];
+''IsReturn'' will be true if this player returns to this level in a hub.
+|-
+|
+void '''{{LE|RenderOverlay}}''' (RenderEvent ''e'')&lt;br&gt;
+void '''{{LE|RenderUnderlay}}''' (RenderEvent ''e'')
+|
+* {{c|Vector3 '''ViewPos'''}}
+* {{c|double '''ViewAngle'''}}
+* {{c|double '''ViewPitch'''}}
+* {{c|double '''ViewRoll'''}}
+* {{c|double '''FracTic'''}}
+* {{c|Actor '''Camera'''}}
+| These events can be used to display something on the screen. Elements drawn by these events are drawn underneath the [[console]] and [[menus]]. The difference between the two events, is that elements drawn by {{c|RenderOverlay}} are drawn over the [[HUD]], while elements drawn by {{c|RenderUnderlay}} are drawn underneath it.&lt;br&gt;
+Note that it works locally and in [[Object scopes and versions|ui context]], which means you can't modify actors and have to make sure what player you are drawing it for (using consoleplayer global variable).
+|-
+| bool '''{{LE|UiProcess}}''' (UiEvent ''e'')
+|
+* {{c|EGUIEvent '''Type'''}}
+* {{c|String '''KeyString'''}} (only for key events)
+* {{c|int '''KeyChar'''}} (only for key events)
+* {{c|int '''MouseX'''}} (only for mouse events)
+* {{c|int '''MouseY'''}} (only for mouse events)
+* {{c|bool '''IsShift'''}}
+* {{c|bool '''IsAlt'''}}
+* {{c|bool '''IsCtrl'''}}
+| By using this event you can receive UI input in the event handler. UI input is different from game input in that you can receive absolute screen mouse position instead of mouse deltas, and keyboard events are a bit more suitable for text input.&lt;br&gt;
+This event will only be received if you set your EventHandler in UI mode, e.g. by doing this:
+  self.IsUiProcessor = true;
+Additionally, mouse events will only be received if you also set ''RequireMouse'' to true:
+  self.RequireMouse = true;
+
+* {{c|EGUIEvent '''Type'''}}
+:Allows detecting the type of input. Possible values:
+:*'''UiEvent.Type_None''' - unused {{verification}}
+:*'''UiEvent.Type_KeyDown''' - key is pressed
+:*'''UiEvent.Type_KeyUp''' - key is let go
+:*'''UiEvent.Type_KeyRepeat''' - {{moreinfo}}
+:*'''UiEvent.Type_Char''' - key is a text character; this is necessary to be able to process shifted characters like "!", "?" and the like; used by text input menus
+:*There's also a host of mouse-specific events:
+::Type_MouseMove, Type_LButtonDown, Type_LButtonUp, Type_LButtonClick, Type_MButtonDown, Type_MButtonUp,&lt;br&gt;
+::Type_MButtonClick, Type_RButtonDown, Type_RButtonUp, Type_RButtonClick, Type_WheelUp, Type_WheelDown,&lt;br&gt;
+::Type_WheelRight, Type_WheelLeft, Type_BackButtonDown, Type_BackButtonUp, Type_FwdButtonDown, Type_FwdButtonUp
+
+*{{c|int '''KeyScan'''}}
+:The internal ASCII value of the pressed key.
+
+*{{c|int '''KeyChar'''}}
+:The ASCII value for the key.
+
+*{{c|String '''KeyString'''}}
+:A single-character string that contains '''KeyScan''' provided for convenience. 
+
+*{{c|int '''MouseX'''}}
+*{{c|int '''MouseY'''}}
+:Delta values (offsets from the last mouse position). These are internally used for player aiming.
+:Converting KeyChar to a string is not guaranteed to be the same as KeyString. Note that, while a bit counter-intuitive (for people unfamiliar with the console bind system),
+:mouse buttons are considered ''keys'' for this event. For example, a left mouse click is registered as ''KeyDown''+''InputEvent.Key_Mouse1''.
+
+*{{c|bool '''IsShift'''}}
+*{{c|bool '''IsCtrl'''}}
+*{{c|bool '''IsAlt'''}}
+
+'''Note:''' this is one of the few non-void methods in the event system. By returning ''true'' here you will block any processing of this event by the other event handlers if their Order is lower than the current EventHandler.&lt;br&gt;
+Also, if you need to interact with the world upon receiving an event, you have to use EventHandler.SendNetworkEvent (see: [[#Networking|networking]]).
+|-
+| bool '''{{LE|[[InputProcess]]}}''' (InputEvent ''e'')
+|
+* {{c|EGenericEvent '''Type'''}}
+* {{c|int '''KeyScan'''}}
+* {{c|int '''KeyChar'''}}
+* {{c|String '''KeyString'''}}
+* {{c|int '''MouseX'''}} (only for mouse event)
+* {{c|int '''MouseY'''}} (only for mouse event)
+| This event provides direct interface to the commonly used player input. You don't need any special steps in order to use it.&lt;br&gt;
+For detailed information, see the [[InputProcess|dedicated '''InputProces''' page]].
+
+* {{c|EGenericEvent '''Type'''}}
+:Allows detecting the type of input.
+*{{c|int '''KeyScan'''}}
+:The internal ASCII value of the pressed key.
+*{{c|int '''KeyChar'''}}
+:The real ASCII value of the pressed key. It can be used to detect the name of the pressed key, but checking '''e.KeyString''' is usually more convenient.
+*{{c|String '''KeyString'''}}
+:A single-character string that contains '''KeyScan''' provided for convenience. 
+*{{c|int '''MouseX'''}}
+*{{c|int '''MouseY'''}}
+:Delta values (offsets from the last mouse position). These are internally used for player aiming.
+
+'''Note:''' this is one of the few non-void methods in the event system. By returning &lt;code&gt;true&lt;/code&gt; here you will block any processing of this event by the other event handlers if their Order is lower than the current EventHandler.&lt;br&gt;
+'''In case of InputEvent, returning true will also mean that the generic game input handler will NOT receive the event (player will be locked from moving).'''&lt;br&gt;
+Also, if you need to interact with the world upon receiving an event, you have to use &lt;code&gt;EventHandler.SendNetworkEvent&lt;/code&gt; (see: [[#Networking|networking]]).
+|-
+| void '''{{LE|UiTick}}''' () || — || This is the same as WorldTick, except it also runs outside of the level (only matters for StaticEventHandlers) and runs in the [[Object scopes and versions|ui context]].
+|-
+| void '''{{LE|PostUiTick}}''' () || — || Similar to UiTick except it's ran after all game operations on the given tick.
+|-
+| void '''{{LE|ConsoleProcess}}''' (ConsoleEvent ''e'')
+|
+* {{c|String '''Name'''}}
+* {{c|int '''Args[3]'''}}
+| This event is called when the player uses the "event" console command. It runs in the [[Object scopes and versions|ui context]].&lt;br&gt;
+For example, when the player runs this command:
+  event testevent 1 2 3
+The event handler will receive ''Name'' as "testevent" and ''Args''[0]...''Args''[2] as {1,2,3}.
+|-
+| void '''{{LE|NetworkProcess}}''' (ConsoleEvent ''e'')
+|
+* {{c|int '''Player'''}}
+* {{c|String '''Name'''}}
+* {{c|int '''Args[3]'''}}
+* {{c|bool '''IsManual'''}}
+| This event is called either when the player uses the "netevent" console command, or when EventHandler.SendNetworkEvent is used.&lt;br&gt;
+To distinguish between these two cases, you can use ''IsManual''. This field will be true if the event was produced manually through the console.&lt;br&gt;
+''Player'' is the number of the player that activated the event.&lt;br&gt;
+This is generally similar to using the "puke" command for ACS.
+|-
+| void '''{{LE|InterfaceProcess}}''' (ConsoleEvent ''e'')
+|
+* {{c|String '''Name'''}}
+* {{c|int '''Args[3]'''}}
+* {{c|bool '''IsManual'''}}
+| This event is called either when the player uses the "interfaceevent" console command, or when EventHandler.SendInterfaceEvent is used.&lt;br&gt;
+To distinguish between these two cases, you can use ''IsManual''. This field will be true if the event was produced manually through the console.&lt;br&gt;
+Similar to ConsoleProcess, this is ran in the ui scope and can be used to set information on menus and the HUD from the play scope.
+|-
+| void '''{{LE|CheckReplacement}}''' (ReplaceEvent ''e'')
+|
+* {{c|Class&lt;Actor&gt; '''Replacee'''}}
+* {{c|Class&lt;Actor&gt; '''Replacement'''}}
+* {{c|bool '''IsFinal'''}}
+| This event is called when performing [[Actor replacement|actor class replacements]].&lt;br&gt;
+* ''Replacee'' is the actor class being replaced. It can be used to check for specific actor classes to replace. This field is read-only and cannot be changed.&lt;br&gt;
+* ''Replacement'' is the actor class the ''Replacee'' is to be replaced with.&lt;br&gt;
+* ''IsFinal'' allows different CheckReplacement() overrides to interact: the value serves as a 'marker' of sorts, to tell the other event handlers with a CheckReplacement() override that this replacement should be considered final. Note, this does not allow to actually enforce your replacement; the other event handlers have to manually respect it by checking that ''e.isFinal'' is false before setting their replacement.&lt;br&gt;
+Replacing actor classes through this method has precedence over both the [[Skill definition#ReplaceActor|skill method]] and the {{c|replaces}}-keyword method in [[DECORATE]] and [[ZScript]] (regardless of the value of ''isFinal'').
+|-
+| void '''{{LE|CheckReplacee}}''' (ReplacedEvent ''e'')
+|
+* {{c|Class&lt;Actor&gt; '''Replacee'''}}
+* {{c|Class&lt;Actor&gt; '''Replacement'''}}
+* {{c|bool '''IsFinal'''}}
+| This is called by functions such as [[A_BossDeath]] or any other replacee checkers. When using CheckReplacement instead of the 'replaces' keyword directly for actors, those functions check if there is a replacement for monsters such as the [[Classes:Arachnotron|Arachnotron]] with the Doom 2 MAP07 specials. By indicating the replacee is an Arachnotron for example, this will ensure that all the monsters who call those functions will not trigger the special until all replacees of Arachnotron are dead.
+* ''Replacee'' is the actor class being replaced. It can be used to check for specific actor classes to replace.&lt;br&gt;
+* ''Replacement'' is the actor class the ''Replacee'' is to be replaced with. This field is read-only and cannot be changed.&lt;br&gt;
+* ''IsFinal'' allows different CheckReplacee() overrides to interact: the value serves as a 'marker' of sorts, to tell the other event handlers with a CheckReplacee() override that this replacement should be considered final. Note, this does not allow to actually enforce your setting; the other event handlers have to manually respect it by checking that ''e.isFinal'' is false.&lt;br&gt;
+|-
+| void '''{{LE|NewGame}}''' () || — || This event is called upon starting a new game. It is also called upon entering a [[TITLEMAP|titlemap]], as well as upon being reborn after death without a saved game.
+|}
+
+== Event handler order ==
+Event handler order defines the order in which user interaction-related events are received by the handlers.&lt;br&gt;
+It also defines the order in which RenderOverlay events are received.
+
+For input events, the higher order receives the event first, while for render events the higher order receives the event last (thus drawing on top of everything).
+
+Events that are reverse ordered:
+* PlayerDisconnected
+* RenderOverlay
+* WorldThingDestroyed
+* WorldUnloaded
+
+You can set the order only in OnRegister callback, like this:
+&lt;syntaxhighlight lang="csharp"&gt;
+override void OnRegister()
+{
+	SetOrder(666);
+}
+&lt;/syntaxhighlight&gt;
+The value is arbitrary and it only matters in relation to other event handler order.
+Default order is 0.
+
+== Communicating with the UI ==
+Sometimes sending information from the playsim to the UI is needed, but this can be difficult to set up since the playsim has no access to the UI whatsoever. &lt;code&gt;EventHandler.SendInterfaceEvent&lt;/code&gt; cam be used to pass select information over similar to a network event. It's ran instantly across all machines so the player number is needed to know which one should execute it. If you want an interface event to trigger on everyone's machine, passing '''consoleplayer''' as the first argument will do this. Passing '''net_arbitrator''' can be used to always send information over to the host of a game when playing online for potential admin handling.
+&lt;syntaxhighlight lang="csharp"&gt;
+class SpecialHUDEvents : EventHandler
+{
+	override void WorldThingDied(WorldEvent e)
+	{
+		// Pass information to the status bar that a player killed a monster
+		if (e.thing &amp;&amp; e.thing.bIsMonster &amp;&amp; e.thing.target &amp;&amp; e.thing.target.player)
+		{
+			EventHandler.SendInterfaceEvent(e.thing.target.PlayerNumber(), "KilledMonster");
+		}
+	}
+
+	override void InterfaceProcess(ConsoleEvent e)
+	{
+		if (!e.isManual &amp;&amp; e.name ~== "KilledMonster")
+		{
+			let sb = CustomStatusBar(statusBar); //example name; CustomStatusBar is meant to be a name of your custom BaseStatusBar-based class
+			if (sb)
+			{
+				sb.KilledMonster(); //example name; meant to be a custom function in your custom HUD
+			}
+		}
+	}
+}&lt;/syntaxhighlight&gt;
+
+== Networking ==
+Since GZDoom 2.4, scripts that are allowed to directly interact with the user and scripts that are actively involved in the world processing are separated. World scripts are called "play scope" and user interaction scripts are called "ui scope". Altering the world from ui context is not possible; for details see [[Object scopes and versions|object scopes and versions]].
+
+In order to perform some world action when the user clicks in a menu or presses some key in an InputEvent handler, you need to use the combination of EventHandler.SendNetworkEvent and an event handler that has an override of NetworkProcess.
+
+In your ui, you execute it as follows:
+  EventHandler.SendNetworkEvent("myevent", 666, 23, -1);
+Then any event handlers that handle NetworkProcess will receive an event with ''Name'' equal to "myevent" and ''Args'' equal to {666,23,-1}.
+
+=== Passing strings to network events ===
+Any event handler can handle any name, so if you need to send a string you can simply check for ''Name'' starting with a value, for example ('''space''' does not work for this when typing directly into the console - you need an alias or SendNetworkEvent, or put the thing in quotes):
+  EventHandler.SendNetworkEvent("giveitem:BFG9000");
+where the event handler in question will find the strings on either side of the colon and deal with them accordingly:
+&lt;syntaxhighlight lang="csharp"&gt;
+class ItemGiveEventHandler : EventHandler
+{
+	override void NetworkProcess (ConsoleEvent e)
+	{
+		if (e.IsManual || e.Player &lt; 0 || !PlayerInGame[e.Player] || !(players[e.Player].mo))
+			return;
+
+		let player = players [e.Player].mo;
+		
+		Array&lt;string&gt; command;
+		e.Name.Split (command, ":");
+
+		if(command.Size() == 2 &amp;&amp; (command [0] ~== "giveitem"))
+		{
+			player.GiveInventory (command [1], 1);
+		}
+	}
+}
+&lt;/syntaxhighlight&gt;
+Without the ''IsManual'' check, this event handler as written would let any player type "netevent giveitem:BFG9000" ingame to get a BFG and the engine would not recognize it as a cheat.
+
+=== Passing objects through networks ===
+As of GZDoom 4.12, objects can now be passed around networks for serialization and fetching specific entities using the following functions.
+&lt;syntaxhighlight lang="csharp"&gt;
+native clearscope static Object GetNetworkEntity(uint id);
+native play void EnableNetworking(bool enable);
+native clearscope uint GetNetworkID() const;
+&lt;/syntaxhighlight&gt;
+To do so, &lt;code&gt;EnableNetworking(true);&lt;/code&gt; must be called first and can only be done so from the `play` side. This will enable &lt;code&gt;GetNetworkID()&lt;/code&gt; to return a valid unsigned int that can be plugged into &lt;code&gt;GetNetworkEntity(id)&lt;/code&gt; which retrieves the object.&lt;br&gt;
+﻿&lt;br&gt;
+'''NOTES:'''
+* Actors always have networking enabled, and cannot be disabled.
+* IDs cannot be reserved or overridden. They're first-come-first serve, and whenever a networked object disables networking (such as being destroyed), the freed ID always has higher priority for immediate reassignment.
+* IDs should not be stored or used as substitutes for pointers outside of networking, as they can change at any given moment by becoming invalid or pointing to another object entirely, due to the aforementioned recycling.
+
+== Network Commands and Buffers ==
+As of GZDoom 4.12, a new API for sending custom network events has been added. This is sent via [[NetworkBuffer]]s and received thru [[NetworkCommand]]s. This API allows for much more extensive handling of network messages by allowing the ability to send any basic data type over the network (ints, doubles, and strings) and with a variable amount of them as opposed to the string and three ints of network events. These also can't be sent through the console making them exclusive to its usage within ZScript, offering more basic safety out of the box.
+
+EventHandler.SendNetworkCommand is the simplest way to send a message. This takes a Name for the command followed by an unlimited amount of data pairs. The first argument of the pair describes what type the data is e.g. '''NET_INT''', '''NET_DOUBLE''', etc., and the next value is the actual data being sent.
+  EventHandler.SendNetworkCommand('MyCmd', NET_DOUBLE, 5.2342, NET_INT, 7, NET_STRING, "Hello world!");
+This can even be sent with nothing but a name if you have no data to send, making it much more efficient than using network events.
+
+Processing of these commands is done within a handler's NetworkCommandProcess function. This takes a NetworkCommand that contains the client id who sent it, the command name, and the network message itself. This is safe in that it contains only the message sent by this command and won't error out if reaching the end of the internal buffer. A set of Read* functions allow the buffer to be parsed. If we follow the network command from the above example, we would read it as:
+&lt;syntaxhighlight lang="csharp"&gt;
+class MyEventHandler : EventHandler
+{
+	override void NetworkCommandProcess(NetworkCommand cmd)
+	{
+		if (cmd.Command == 'MyCmd')
+		{
+			double myDouble = cmd.ReadDouble();
+			int myInt = cmd.ReadInt();
+			string myString = cmd.ReadString();
+			
+			// Prints "5.2342, 7, Hello world!"
+			Console.Printf("%.4f, %d, %s", myDouble, myInt, myString);
+		}
+	}
+}
+&lt;/syntaxhighlight&gt;
+A more advanced method of sending data is a NetworkBuffer. This allows data to be built up about a network message if the specifics of it aren't entirely known before sending it. This has similar functions to NetworkCommands except they use Add* instead to specify what type of data should be written to the buffer e.g. AddDouble, AddString, etc. Note: this doesn't write directly to the actual network buffer but is merely a wrapper for sending a full command to it. EventHandler.SendNetworkBuffer is similar to SendNetworkCommand except instead of a variable list of arguments it takes a NetworkBuffer object.
+&lt;syntaxhighlight lang="csharp"&gt;
+NetworkBuffer myBuffer = new("NetworkBuffer");
+myBuffer.AddDouble(5.2342);
+myBuffer.AddInt(7);
+myBuffer.AddString("Hello world!");
+
+EventHandler.SendNetworkBuffer('MyCmd', myBuffer);
+&lt;/syntaxhighlight&gt;
+Data can be sent in smaller chunks e.g. AddInt8/'''NET_INT8''' can be used to send a number over as an 8-bit byte instead of a full 32-bit value. This can be useful for saving on network traffic but should only be used if you absolutely know the value range of something being sent (e.g. anything outside that range is considered invalid). Otherwise if you don't know the full extent of the value it's best to use full-sized data types to prevent any data loss. This can also be used for custom quantizing of values if needed.
+
+=== Serializing structs/objects ===
+Given the above functionality, it's possible to use this to create custom serializing functions for large data types/objects. In particular this is useful with objects because without a custom network id set up, there's no way to handle sending an object over the network without sending over its data and reconstructing it on the other side (these things are tracked as memory references which naturally are going to be different on every client's machine). Serialization functions are a form of unified function that handles both writing and reading data to keep it isolated to one location, preventing possible mistakes. There are multiple ways to set this up, but below is a very basic implementation on objects:
+&lt;syntaxhighlight lang="csharp"&gt;
+class MyObject play
+{
+	int iData;
+	bool bData;
+	Array&lt;double&gt; fData;
+
+	void Serialize(NetworkCommand cmd = null, NetworkBuffer buffer = null)
+	{
+		if (cmd) // Reading.
+		{
+			iData = cmd.ReadInt();
+			bData = cmd.ReadInt8();
+			cmd.ReadDoubleArray(fData);
+		}
+		else if (buffer) // Writing.
+		{
+			buffer.AddInt(iData);
+			buffer.AddInt8(bData);
+			buffer.AddDoubleArray(fData);
+		}
+	}
+}
+
+	// Sending the object.
+	NetworkBuffer buffer = new("NetworkBuffer");
+	myObj.Serialize(buffer: buffer);
+	EventHandler.SendNetworkBuffer('MyObj', buffer);
+
+	// Reading the object back.
+	if (cmd.Command == 'MyObj')
+	{
+		MyObject myObj = new("MyObject");
+		myObj.Serialize(cmd);
+	}
+&lt;/syntaxhighlight&gt;
+
+==Destruction==
+Event handlers inherit from [[Object]], and can be destroyed by calling the Destroy() function. This is useful for one-off events, since the list of functions being called (see above) is large and can potentially slow down the game.
+
+There are a few circumstances to be aware of:
+* Make sure the handler is absolutely unneeded before destroying. Unlike other objects, event handlers require special initialization by the engine and cannot be recreated with 'new' keyword. 
+* Regular event handlers are recreated after each map is loaded and are automatically destroyed when leaving a hub cluster or non-hub map, but static handlers are only created when the game starts up.
+* Avoid calling Destroy() in subfunctions. Processing code can still execute and cause unpredictable behavior or crash the game. An ideal way to destroy a handler is as follows:
+
+&lt;syntaxhighlight lang="csharp"&gt;
+private bool DestroyMe;
+override void WorldTick()
+{
+	if (DestroyMe) // If we no longer need this event handler, get rid of it.
+	{
+		if (!bDESTROYED) // Safety check, a flag found in Object itself.
+			Destroy();
+		return;
+	}
+}
+&lt;/syntaxhighlight&gt;
+
+==Examples==
+Getting an event handler. This ensures that event handlers are properly found, and are the correct type. Put this inside the event handler, and replace 'MyEventHandler' with the name of the handler that's given this function. 
+&lt;syntaxhighlight lang="csharp"&gt;
+// If put outside an event handler, you would add 'MyEventHandler.' behind Find.
+static clearscope MyEventHandler Fetch()
+{
+	return MyEventHandler(Find("MyEventHandler"));
+}
+&lt;/syntaxhighlight&gt;
+
+
+Using '''{{c|CheckReplacement}}''', this example replaces all [[monster]]s with {{Class|Archvile|archviles}}.
+&lt;syntaxhighlight lang="csharp"&gt;
+override void CheckReplacement (ReplaceEvent e)
+{
+	if (GetDefaultByType(e.Replacee).bIsMonster)
+	{
+		e.Replacement = 'Archvile';
+	}
+}
+&lt;/syntaxhighlight&gt;
+
+This event handler prints the class name of any Actor that spawns
+&lt;syntaxhighlight lang="csharp"&gt;
+version "2.4" // Make sure to use version 2.4 or later
+
+class NamePrinter : EventHandler
+{
+	override void WorldThingSpawned(WorldEvent e)
+	{
+		if (e.thing) // Check that the Actor is valid
+			console.printf("%s", e.thing.GetClassName());
+	}
+}
+&lt;/syntaxhighlight&gt;
+
+In the MAPINFO:
+ GameInfo
+ {
+     AddEventHandlers = "NamePrinter"
+ }
+
+See also the [[ZScript Hello World|Hello World]] page, which implements a basic "Hello World!" script using eventhandlers.
+[[Category:ZScript]]
+[[Category:Event handlers]]</text>
+    <sha1>m4afgiprz2lfhi91h93bozc2tppfxzv</sha1>
+  </revision>
+</page>

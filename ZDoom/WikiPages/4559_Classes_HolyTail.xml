@@ -1,0 +1,53 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>Classes:HolyTail</title>
+  <ns>0</ns>
+  <id>4559</id>
+  <revision>
+    <id>38139</id>
+    <parentid>34223</parentid>
+    <timestamp>2014-08-13T10:50:05Z</timestamp>
+    <contributor>
+      <username>Cpt. Carmack</username>
+      <id>2022</id>
+    </contributor>
+    <origin>38139</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="626" sha1="218g0hyzjxll3d0g8my80blf9q3huvv" xml:space="preserve">{{Actor|
+| type = SFX
+| name = Wraithverge spirit tail
+| class = HolyTail
+| game = Hexen
+}}[[Classes]]: &lt;u&gt;HolyTail&lt;/u&gt;&lt;br&gt;
+&amp;ensp;&amp;rarr;[[Classes:HolyTailTrail|HolyTailTrail]]
+
+{{desc}}
+
+==== [[DECORATE]] definition ====
+ ACTOR &lt;u&gt;HolyTail&lt;/u&gt;
+ {
+   {{Property|Radius}} 1
+   {{Property|Height}} 1
+   +{{Flag|NOBLOCKMAP}}
+   +{{Flag|NOGRAVITY}}
+   +{{Flag|DROPOFF}}
+   +{{Flag|NOCLIP}}
+   +{{Flag|NOTELEPORT}}
+   {{Property|RenderStyle}} Translucent
+   {{Property|Alpha}} 0.6
+ 
+   action native [[A_CHolyTail]]();
+ 
+   States
+   {
+   Spawn:
+     SPIR C 1 [[A_CHolyTail]]
+     Loop
+   TailTrail:
+     SPIR D -1
+     Stop
+   }
+ }</text>
+    <sha1>218g0hyzjxll3d0g8my80blf9q3huvv</sha1>
+  </revision>
+</page>

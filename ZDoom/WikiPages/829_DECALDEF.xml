@@ -1,0 +1,244 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>DECALDEF</title>
+  <ns>0</ns>
+  <id>829</id>
+  <revision>
+    <id>54190</id>
+    <parentid>53114</parentid>
+    <timestamp>2025-02-06T23:21:13Z</timestamp>
+    <contributor>
+      <username>Inkoalawetrust</username>
+      <id>2604</id>
+    </contributor>
+    <comment>Documented new "translatable" flag rename.</comment>
+    <origin>54190</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="9332" sha1="gmb39f8monh519ue59r9v9ez6e0b70w" xml:space="preserve">The '''DECALDEF''' lump allows the wad maker to redesign the [[decals]] that are left on walls by monsters or the player. [[Hitscan]] weapons and [[Projectile|projectiles]] can leave decals; {{flag|SHOOTABLE|shootable}} actors (normally, monsters) can also leave blood decals on walls next to them. 
+
+You can also place decals on the map with a [[Classes:Decal|Decal thing]] (9200) or through [[ACS]] with [[SpawnDecal]]. Decals can be spawned in [[ZScript]]/[[DECORATE]] with [[A_SprayDecal]].
+
+DECALDEF has the following definition types:
+* '''Decal''' — definitions of the actual images to be used as decals, their colors, renderstyle, etc.
+* '''Animator''' — animators can stretch, scale, fade out and perform other changes to decals after those have been created. Animators can be attached to decals.
+* '''DecalGroup''' — allows grouping multiple decals together under one name, so a random decal will be picked from the list.
+* '''Generator''' — generator is an instruction that allows attaching decals to an actor (like a [[puff]] or a [[projectile]]). Using this is optional; decals can instead be attached to a puff/projectile using its '''{{property|Decal}}''' property.
+
+
+{{warning|All DECALDEF definitions are '''order-sensitive'''. This means that if one definition is referencing another (such as a DecalGroup referencing a Decal), the referenced definition must be placed ''earlier in the file''. As such, it's recommended to add definitions in the following order:
+# All animators
+# Animator combiners
+# All decals
+# All decal groups
+# Generators (if used)}}
+
+== Decal definition ==
+The information of a decal begins with the decal itself followed by a generator to tell [[GZDoom]] which object will leave this decal. You can also specify a Decal ID in order to place decals directly on the map. The Decal ID must be a number between 1 and 65535 (inclusive). Several options can be used when defining a decal:
+
+*{{c|pic &lt;graphics name&gt;}}
+:This is the graphic ZDoom will paste on the wall.
+*{{c|shade "rr gg bb"}}
+:This allows you to recolor the picture using specific RGB values. The value is specified as a string containing 3 hexadecimal values.
+*{{c|x-scale &amp;lt;scale&amp;gt;}}
+:This scales the graphic on the x axis. 1.00 is default.
+*{{c|y-scale &amp;lt;scale&amp;gt;}}
+:This scales the graphic on the y axis. 1.00 is default.
+*{{c|flipx}}
+:This tells ZDoom to flip the graphic on the x axis when drawing it.
+*{{c|flipy}}
+:This tells ZDoom to flip the graphic on the y axis when drawing it.
+*{{c|randomflipx}}
+:This tells ZDoom to randomly flip the graphic on the x axis when drawing it.
+*{{c|randomflipy}}
+:This tells ZDoom to randomly flip the graphic on the y axis when drawing it.
+*{{c|solid}}
+:draws the decal non-translucent.
+*{{c|opaqueblood}} {{deprecated}}
+:As of {{git|5bcbe17}}, this flag is deprecated, use ''translatable'' instead!
+*{{c|translatable}} {{git|5bcbe17}}
+:Draws the decal non-shaded, i.e. the same way as sprites are drawn with the 'Normal' {{property|Renderstyle}}. This is useful when the decal is supposed to imitate the look of a sprite.
+*{{c|translucent &lt;alpha&gt;}}
+:Draws a translucent decal with the specified translucency. 0.0 means it's invisible, 1.0 means it's opaque
+*{{c|add &amp;lt;alpha&amp;gt;}}
+:Draws the decal with additive translucency. 0 means it's invisible, 1 means it's drawn in full intensity.
+*{{c|fuzzy}}
+:Draws the decal with a [[fuzz]] effect (like the {{class|spectre}} in ''[[Doom]]''.)
+*{{c|fullbright}}
+:Draws the decal full bright regardless of the current lighting in the sector.
+*{{c|lowerdecal decalname}}
+:Draws another decal below this one. The BFG lightning effect uses this for example
+*{{c|colors "rr gg bb" "rr gg bb"}}
+:Creates a translation table. &lt;i&gt;From a look at the implementation it doesn't look useful. If somebody has more information or some experience how to use it please post it here!&lt;/i&gt;
+*{{c|animator}}
+:Sets a [[Decal animator]] for the current decal
+
+Note that not all of these must be used for each decal. However, the following example shows each in use.
+
+&lt;syntaxhighlight lang="csharp"&gt;
+decal MyDecal 4
+{
+    //The name of the graphic used by the decal:
+    pic SCORCH1
+    //The image will be shaded slightly green:
+    shade "00 10 00" 
+    //Scaled to 25% of the image's original size:
+    x-scale 0.25
+    y-scale 0.25
+    //Will be randomly flipped along the X, or Y or both axes:
+    randomflipx
+    randomflipy
+}
+//Attaches this decal to the FrostMissile projectile class:
+generator FrostMissile MyDecal
+&lt;/syntaxhighlight&gt;
+
+In this example, the image "SCORCH1" is read, and shaded slightly green. It is then scaled to 25% its normal size, and randomly flipped on the two axes. To place this decal on a map with the decal thing, use an ID number of 4. The '''generator''' instruction attaches it to the Mage's {{class|FrostMissile}}.
+
+=== Blood decals ===
+The engine is hardcoded to use either the decalgroup '''BloodSplat''' or the decalgroup '''BloodSmear''' for blood splattered on walls. This depends on the damage inflicted:
+*Less than 15: one BloodSplat decal (about 60% chance of no decal at all if damage is less than 11);
+*Less than 25: two BloodSplat decals;
+*25 or more: either three BloodSplat decals (nearly 91% chance) or one BloodSmear decal (about 9% chance).
+These decals are then projected on nearby walls, if possible, according to the direction of the attack, slightly altered by random noise.
+
+[[TraceBleed]] and [[TraceBleedAngle]] are [[ZScript]] functions that can manually place blood decals (without changing their internal names).
+
+== Decal generator ==
+{{note|Using '''generator''' is not required: decals can be attached to projectiles/puffs with the '''{{property|Decal}}''' actor property in [[ZScript]]/[[DECORATE]].}}
+The '''generator''' keyword allows attaching a decal to a [[projectile]] or [[puff]]:
+&lt;syntaxhighlight lang="csharp"&gt;
+generator FrostMissile MyDecal
+&lt;/syntaxhighlight&gt;
+
+Using {{c|None}} instead of an actual decal name, clears the decal that was previously assigned to the generator.
+
+An {{c|optional}} keyword can be added after {{c|generator}} to exempt a generator definition from being error-reported by the engine if the referenced actor or decal definitions do not exist.
+
+== Decal groups ==
+The following example shows a decal which randomly selects between two different decals to paste. The decals are set up as usual, and a "decalgroup" header is added, with the names of the two (or more) decals to use. The generator then references the decalgroup.
+&lt;syntaxhighlight lang="csharp"&gt;
+decal MyDecal1
+{
+	pic PLASMA1
+	shade "08 08 08"
+	randomflipx
+	randomflipy
+}
+decal MyDecal2
+{
+	pic PLASMA2
+	shade "08 08 08"
+	randomflipx
+	randomflipy
+}
+decalgroup MyDecal
+{
+	MyDecal1        1
+	MyDecal2        1
+}&lt;/syntaxhighlight&gt;
+
+== Decal animators ==
+Decal animators describe how a decal is changed after it has been created. Animators are defined as follows:
+
+ animatortype AnimatorName
+ {
+   &lt;properties&gt;
+   ...
+ }
+
+Any decal animator defined this way can be specified in a decal definition by using the &lt;code&gt;Animator&lt;/code&gt; keyword. 
+
+Animator types are listed below.
+
+===Fader===
+Fader is an animator that fades a decal out by reducing its opacity. The syntax is:
+
+ fader FaderName
+ {
+    DecayStart &lt;seconds&gt;
+    DecayTime &lt;seconds&gt;
+ }
+
+*{{c|DecayStart}}
+:The time in seconds the decal remains unchanged until the fading process starts.
+*{{c|DecayTime}}
+:The time in seconds it takes for the decal to completely fade out and disappear.
+
+===Stretcher===
+Stretcher is an animator that stretches the decal to a defined size. The syntax is:
+
+ stretcher StretcherName
+ {
+    GoalX &lt;size&gt;
+    GoalY &lt;size&gt;
+    StretchStart &lt;seconds&gt;
+    StretchTime &lt;seconds&gt;
+ }
+
+*{{c|GoalX}}
+:The final horizontal scaling factor of the decal
+*{{c|GoalY}}
+:The final vertical scaling factor of the decal
+*{{c|StretchStart}}
+:The time in seconds the decal remains unchanged until the stretching process starts 
+*{{c|StretchTime}}
+:The time in seconds how long the stretching process will take.
+
+===Slider===
+Slider is an animator that slides the decal along the wall. The syntax is: 
+
+ slider SliderName
+ {
+    DistX &lt;size&gt;
+    DistY &lt;size&gt;
+    SlideStart &lt;seconds&gt;
+    SlideTime &lt;seconds&gt;
+ }
+
+*{{c|DistX}}
+:The distance the decal moves in X-direction
+*{{c|DistY}}
+:The distance the decal moves in Y-direction
+*{{c|SlideStart}}
+:The time in seconds the decal remains unchanged until the sliding process starts 
+*{{c|SlideTime}}
+:The time in seconds how long the sliding process will take.
+
+===ColorChanger===
+ColorChanger gradually alters the color of a decal. The syntax is: 
+
+ colorchanger ChangerName
+ {
+    Color "rr gg bb"
+    FadeStart &lt;seconds&gt;
+    FadeTime &lt;seconds&gt;
+ }
+
+*{{c|Color}}
+:The color the decal should change into.
+*{{c|FadeStart}}
+:The time in seconds the decal remains unchanged until the changing process starts 
+*{{c|FadeTime}}
+:The time in seconds how long the changing process will take.
+
+===Combiner===
+Combiner is a method to group multiple animators (since decals themselves can't have more than one animator attached). The syntax is:
+
+ Combiner CombinerName
+ {
+    AnimatorName
+    AnimatorName
+    ...
+ }
+
+Each AnimatorName must specify a previously defined animator.
+
+== See also ==
+* [[Puff]]
+* [[Projectile]]
+
+[[category:ZDoom special lumps]]
+[[category:Graphics lumps]]</text>
+    <sha1>gmb39f8monh519ue59r9v9ez6e0b70w</sha1>
+  </revision>
+</page>

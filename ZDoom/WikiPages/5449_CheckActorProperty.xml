@@ -1,0 +1,57 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>CheckActorProperty</title>
+  <ns>0</ns>
+  <id>5449</id>
+  <revision>
+    <id>36602</id>
+    <parentid>35655</parentid>
+    <timestamp>2013-06-01T08:46:37Z</timestamp>
+    <contributor>
+      <username>Blue Shadow</username>
+      <id>2021</id>
+    </contributor>
+    <comment>/* Return value */ String-based properties can be used with GetActorProperty (r4307).</comment>
+    <origin>36602</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="1479" sha1="kl9h55p8exwvo4ktmfnjtf64inm4z7u" xml:space="preserve">__NOTOC__
+bool '''CheckActorProperty''' (int ''tid'', int ''property'', int ''value'')&lt;br&gt;
+bool '''CheckActorProperty''' (int ''tid'', int ''property'', float ''value'')&lt;br&gt;
+bool '''CheckActorProperty''' (int ''tid'', int ''property'', str ''value'')&lt;br&gt;
+
+=== Parameters ===
+
+* ''tid'': TID of the actor.  Use 0 to refer to the activator.
+* ''property'': One of the properties listed below.
+* ''value'': The value to which the property must be compared.
+
+===Actor Properties===
+{{:ACS actor properties}}
+
+===Return value===
+True if the ''value'' given is the same as that used by the actor, false otherwise. This is especially useful for string properties (such as sounds and species) which cannot be obtained by [[GetActorProperty]] (as of {{rev|4307}}, this is not the case, and this function can be used on string-based properties) as [[ACS]] does not handle dynamic strings (this is not the case starting with {{rev|4295}}).
+
+==Examples==
+This example checks the species of the thing with the specified tid and destroys it if it is a {{class|DoomImp}}.
+
+ script 1 (int tid)
+ {
+   if ([[CheckActorProperty]](tid, {{const|APROP_Species}}, "{{class|DoomImp}}"))
+   {
+     if ([[ThingCountName]]("{{class|DoomImp}}", tid) &gt; 1)
+       [[print]](s:"These Imps must die!");
+     else
+       [[print]](s:"This Imp must die!");
+     
+     [[Thing_Destroy]](tid, {{const|TRUE}});
+   }
+ }
+
+==See also==
+*[[GetActorProperty]]
+*[[SetActorProperty]]
+
+[[category:ACS Information functions]]</text>
+    <sha1>kl9h55p8exwvo4ktmfnjtf64inm4z7u</sha1>
+  </revision>
+</page>

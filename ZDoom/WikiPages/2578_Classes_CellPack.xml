@@ -1,0 +1,62 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>Classes:CellPack</title>
+  <ns>0</ns>
+  <id>2578</id>
+  <revision>
+    <id>53603</id>
+    <parentid>53600</parentid>
+    <timestamp>2024-11-08T11:35:55Z</timestamp>
+    <contributor>
+      <username>Jekyll Grim Payne</username>
+      <id>2175</id>
+    </contributor>
+    <comment>/* DECORATE definition */</comment>
+    <origin>53603</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="909" sha1="7ioqxtm0jtimpmraixluf8go142n5cw" xml:space="preserve">{{Actor|
+| type = Ammo
+| name = Cell pack
+| class = CellPack
+| game = Doom
+| doomednum = 17
+| spawnid = 142
+| spawnname = T_BATTERY 
+}}[[Classes]]: [[Classes:Inventory|Inventory]]&amp;rarr;[[Classes:Ammo|Ammo]]&amp;rarr;[[Classes:Cell|Cell]]&amp;rarr;&lt;u&gt;CellPack&lt;/u&gt;
+
+A cell pack gives an amount of energy ammo five times as large as a {{Class|cell}} does.
+
+=== [[ZScript]] definition ===
+{{ZScriptDefinitionNote|actors/doom/doomammo.zs}}
+&lt;syntaxhighlight lang="cs"&gt;
+class CellPack : Cell
+{
+	Default
+	{
+		Inventory.PickupMessage "$GOTCELLBOX";
+		Inventory.Amount 100;
+	}
+	States
+	{
+	Spawn:
+		CELP A -1;
+		Stop;
+	}
+}
+&lt;/syntaxhighlight&gt;
+=== [[DECORATE]] definition ===
+{{DecorateDefinitionNote}}
+ ACTOR &lt;u&gt;CellPack&lt;/u&gt; : {{Class|Cell}}
+ {
+   {{Property|Inventory.PickupMessage}} "$GOTCELLBOX" // "Picked up an energy cell pack."
+   {{Property|Inventory.Amount}} 100
+   States
+   {
+   Spawn:
+     CELP A -1
+     Stop
+   }
+ }</text>
+    <sha1>7ioqxtm0jtimpmraixluf8go142n5cw</sha1>
+  </revision>
+</page>

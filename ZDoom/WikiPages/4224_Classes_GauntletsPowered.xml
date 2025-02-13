@@ -1,0 +1,59 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>Classes:GauntletsPowered</title>
+  <ns>0</ns>
+  <id>4224</id>
+  <revision>
+    <id>39401</id>
+    <parentid>34123</parentid>
+    <timestamp>2015-04-29T17:57:50Z</timestamp>
+    <contributor>
+      <username>Blue Shadow</username>
+      <id>2021</id>
+    </contributor>
+    <minor />
+    <comment>/* DECORATE definition */ Updated</comment>
+    <origin>39401</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="1114" sha1="lso0tyqgeqymmakes8ue2z7dzrsnims" xml:space="preserve">{{Actor|
+| type = Weapon
+| name = Tomed gauntlets of the necromancer
+| class = GauntletsPowered
+| game = Heretic
+}}[[Classes]]: [[Classes:Inventory|Inventory]]&amp;rarr;[[Classes:Weapon|Weapon]]&amp;rarr;[[Classes:Gauntlets|Gauntlets]]&amp;rarr;&lt;u&gt;GauntletsPowered&lt;/u&gt;&lt;br&gt;
+
+
+These are the powered-up version of Heretic's [[Classes:Gauntlets|gauntlet]] weapons.  They emit red lightning that heavily damages enemies within melee range and with every successful hit, you regain some health.
+
+
+==== [[DECORATE]] definition ====
+ ACTOR &lt;u&gt;GauntletsPowered&lt;/u&gt; : {{Class|Gauntlets}}
+ {
+   +{{Flag|POWERED_UP}}
+   {{Property|Tag}} "$TAG_GAUNTLETSP"
+   {{Property|Obituary}} "$OB_MPPGAUNTLETS"
+   {{Property|Weapon.SisterWeapon}} "{{Class|Gauntlets}}"
+   States
+   {
+   Ready:
+     GAUN GHI 4 [[A_WeaponReady]]
+     Loop
+   Deselect:
+     GAUN G 1 [[A_Lower]]
+     Loop
+   Select:
+     GAUN G 1 [[A_Raise]]
+     Loop
+   Fire:
+     GAUN J 4 [[A_PlayWeaponSound]]("weapons/gauntletsuse")
+     GAUN K 4
+   Hold:
+     GAUN LMN 4 Bright [[A_GauntletAttack]](1)
+     GAUN K 4 [[A_ReFire]]
+     GAUN J 4 [[A_Light0]]
+     Goto Ready
+   }
+ }</text>
+    <sha1>lso0tyqgeqymmakes8ue2z7dzrsnims</sha1>
+  </revision>
+</page>

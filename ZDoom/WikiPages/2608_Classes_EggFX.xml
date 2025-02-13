@@ -1,0 +1,52 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>Classes:EggFX</title>
+  <ns>0</ns>
+  <id>2608</id>
+  <revision>
+    <id>39705</id>
+    <parentid>34953</parentid>
+    <timestamp>2015-05-03T22:14:38Z</timestamp>
+    <contributor>
+      <username>Blue Shadow</username>
+      <id>2021</id>
+    </contributor>
+    <minor />
+    <comment>/* DECORATE definition */ Updated</comment>
+    <origin>39705</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="852" sha1="huzq3y0dfsdqoe5sn5gdbp28g8v77ey" xml:space="preserve">{{Actor|
+| type = Explosive
+| name = Morph Ovum shot
+| class = EggFX
+| game = Heretic
+| spawnid = 40
+| spawnname = T_MORPHBLAST 
+}}[[Classes]]: [[Classes:MorphProjectile|MorphProjectile]]&amp;rarr;&lt;u&gt;EggFX&lt;/u&gt;
+
+
+Player or enemy hit by this projectile (or inherited actor) is morphed to [[Classes:ChickenPlayer|ChickenPlayer]] (for players) or to [[Classes:Chicken|Chicken]] (for monsters).
+
+
+==== [[DECORATE]] definition ====
+ ACTOR &lt;u&gt;EggFX&lt;/u&gt; : {{Class|MorphProjectile}}
+ {
+   {{Property|Radius}} 8
+   {{Property|Height}} 8
+   {{Property|Speed}} 18
+   {{Property|MorphProjectile.PlayerClass}} "{{Class|ChickenPlayer}}"
+   {{Property|MorphProjectile.MonsterClass}} "{{Class|Chicken}}"
+   {{Property|MorphProjectile.MorphStyle}} MRF_UNDOBYTOMEOFPOWER
+   States
+   {
+   Spawn:
+     EGGM ABCDE 4
+     Loop
+   Death:
+     FX01 FFGH 3 Bright
+     Stop
+   }
+ }</text>
+    <sha1>huzq3y0dfsdqoe5sn5gdbp28g8v77ey</sha1>
+  </revision>
+</page>

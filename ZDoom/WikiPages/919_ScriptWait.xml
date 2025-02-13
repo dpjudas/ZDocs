@@ -1,0 +1,69 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>ScriptWait</title>
+  <ns>0</ns>
+  <id>919</id>
+  <revision>
+    <id>35861</id>
+    <parentid>33447</parentid>
+    <timestamp>2013-02-11T02:31:03Z</timestamp>
+    <contributor>
+      <username>Deded007</username>
+      <id>1392</id>
+    </contributor>
+    <minor />
+    <comment>formatting</comment>
+    <origin>35861</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="2004" sha1="egwsmblgft26achuact6kxdk2gtaz9c" xml:space="preserve">void '''ScriptWait''' (int ''script'');
+
+== Usage ==
+
+Delays the [[script]] it is contained within until the script specified by ''script'' has completed execution. If the specified script is not running, this command will wait until it has run. For [[named script]]s, use [[NamedScriptWait]].
+
+=== Parameters ===
+
+* ''script'': The script number to wait for.
+
+== Examples ==
+
+The advantage of '''ScriptWait''' is that it can hold a once-only script. Say there was a script which is to be run only once to open a door (for example it activates when the player destroys a control panel which can only be done once), but the map requires the door to be unlocked previously to this. In the event that the door is still locked, '''ScriptWait''' can be used to hold the once-only script until the script that unlocks the door has started and finished.
+
+An example implementation of this code follows. It is rather lengthy, but fairly straightforward.
+
+ bool locked = {{const|TRUE}};
+ script 1 (int sector)
+ {
+     if (locked)
+     {
+         [[Print]] (s:"Security access required!");
+         [[ScriptWait]] (2);
+     }
+ 
+     [[Door_Open]] (sector, 20);
+ }
+  
+ script 2 (int count)
+ {
+     while (count &gt; 0)
+     {
+         [[HudMessage]] (i:count--; {{const|HUDMSG_PLAIN}}, 1,
+             {{const|CR_RED}}, 0.05, 0.95, 1.0);
+         [[Delay]] (1);
+     }
+ 
+     [[HudMessage]] (s:"Verified!"; {{const|HUDMSG_PLAIN}}, 1,
+         {{const|CR_GOLD}}, 0.05, 0.95, 1.0);
+ 	
+     locked = {{const|FALSE}};
+ }
+
+The first script is the once-only script. If the door is locked, it tells the user and waits for the unlock script to run and finish. After that, or if the door was already unlocked, the door opens.
+
+The second script takes a parameter, which is the amount of frames to count before unlocking. Note that count is displayed as &lt;code&gt;count--&lt;/code&gt;, where the two minus signs are the decrement operator. After the count is up, the door is unlocked.
+
+{{script functions}}
+[[category:ACS Wait functions]]</text>
+    <sha1>egwsmblgft26achuact6kxdk2gtaz9c</sha1>
+  </revision>
+</page>

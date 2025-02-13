@@ -1,0 +1,36 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>UnMorphActor</title>
+  <ns>0</ns>
+  <id>3755</id>
+  <revision>
+    <id>22750</id>
+    <parentid>21868</parentid>
+    <timestamp>2009-06-17T01:40:30Z</timestamp>
+    <contributor>
+      <username>Marisa Heit</username>
+      <id>5</id>
+    </contributor>
+    <minor />
+    <comment>Remove &lt;code&gt; tags</comment>
+    <origin>22750</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="1200" sha1="ljqkwaf432j5o2xptda7vrsxu4mex9g" xml:space="preserve">int ''' UnMorphActor ''' (int ''tid''[, bool ''force''])
+== Usage ==
+This function and its complement [[MorphActor]] give the ACS coder direct access to the engine's morph subsystem, instead of having to strategically place DECORATE items and suchlike.
+
+=== Parameters ===
+
+*''tid'': The actor(s) to unmorph. The activator is used if this parameter is zero.
+*''force'': Forces the unmorph to succeed. This parameter exposes an internal engine code that bypasses the “do not unmorph in a wall” thing spawn check; it should be used with caution. For full details and additional notes, please refer to the [[Classes:MorphProjectile|MorphProjectile]] class.
+
+=== Notes ===
+
+This function does honor the '''MRF_WHENINVULNERABLE''' flag when used on a player in the original morphing, provided that player is also the activator of the function. In other words, you cannot force a player to be unmorphed if you are not them; otherwise, it could be used as an exploit if the morphing was originally given by a powerup.
+
+The return value is the number of actors successfully unmorphed. This also means that for TID = 0, it is also a “boolean” (0=failed, 1=succeeded).
+
+[[category:ACS Actor functions]]</text>
+    <sha1>ljqkwaf432j5o2xptda7vrsxu4mex9g</sha1>
+  </revision>
+</page>

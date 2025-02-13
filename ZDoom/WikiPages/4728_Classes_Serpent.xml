@@ -1,0 +1,131 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>Classes:Serpent</title>
+  <ns>0</ns>
+  <id>4728</id>
+  <revision>
+    <id>39687</id>
+    <parentid>34901</parentid>
+    <timestamp>2015-05-02T21:40:11Z</timestamp>
+    <contributor>
+      <username>Blue Shadow</username>
+      <id>2021</id>
+    </contributor>
+    <minor />
+    <comment>/* DECORATE definition */ Updated</comment>
+    <origin>39687</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="3058" sha1="86oyf5ebfm5lrlgvqej17umniqajszx" xml:space="preserve">{{Actor|
+| type = Monster
+| name = Stalker
+| class = Serpent
+| game = Hexen
+| doomednum = 121
+| spawnid = 6
+| spawnname = T_WATERLURKER 
+}}[[Classes]]: &lt;u&gt;Serpent&lt;/u&gt;&lt;br&gt;
+&amp;ensp;&amp;rarr;[[Classes:SerpentLeader|SerpentLeader]]&lt;br&gt;
+Stalkers are 'underwater' serpents in Hexen. They are often seen in slimy areas. If they get close, they attempt to claw you. Their [[Classes:SerpentLeader|leaders]] also have a ranged attack.
+==== [[DECORATE]] definition ====
+ ACTOR &lt;u&gt;Serpent&lt;/u&gt;
+ {
+   {{Property|Health}} 90
+   {{Property|PainChance}} 96
+   {{Property|Speed}} 12
+   {{Property|Radius}} 32
+   {{Property|Height}} 70
+   {{Property|Mass}} 0x7fffffff
+   {{Property|Monster}}
+   -{{Flag|SHOOTABLE}}
+   +{{Flag|NOBLOOD}}
+   +{{Flag|CANTLEAVEFLOORPIC}}
+   +{{Flag|NONSHOOTABLE}}
+   +{{Flag|STAYMORPHED}}
+   +{{Flag|DONTBLAST}}
+   +{{Flag|NOTELEOTHER}}
+   +{{Flag|INVISIBLE}}
+   {{Property|SeeSound}} "SerpentSight"
+   {{Property|AttackSound}} "SerpentAttack"
+   {{Property|PainSound}} "SerpentPain"
+   {{Property|DeathSound}} "SerpentDeath"
+   {{Property|HitObituary}} "$OB_SERPENTHIT" // "%o was mauled by a Stalker."
+ 
+   action native [[A_SerpentHumpDecide]]();
+   action native [[A_SerpentHide]]();
+   action native [[A_SerpentCheckForAttack]]();
+   action native [[A_SerpentSpawnGibs]]();
+   action native [[A_SerpentUnHide]]();
+   action native [[A_SerpentRaiseHump]]();
+   action native [[A_SerpentLowerHump]]();
+   action native [[A_SerpentChooseAttack]]();
+   action native [[A_SerpentMeleeAttack]]();
+ 
+   States
+   {
+   Spawn:
+     SSPT H 10 [[A_Look]]
+     Loop
+   See:
+     SSPT HH 1 [[A_Chase]]("Melee", "None", CHF_NIGHTMAREFAST|CHF_NOPLAYACTIVE)
+     SSPT H 2 [[A_SerpentHumpDecide]]
+     Loop
+   Pain:
+     SSPT L 5
+     SSPT L 5 [[A_Pain]]
+   Dive:
+     SSDV ABC 4
+     SSDV D 4 [[A_UnSetShootable]]
+     SSDV E 3 [[A_PlaySoundEx]]("SerpentActive", "Body")
+     SSDV F 3
+     SSDV GH 4
+     SSDV I 3
+     SSDV J 3 [[A_SerpentHide]]
+     Goto See
+   Melee:
+     SSPT A 1 [[A_UnHideThing]]
+     SSPT A 1 [[A_PlaySoundEx]]("SerpentBirth", "Voice")
+     SSPT B 3 [[A_SetShootable]]
+     SSPT C 3
+     SSPT D 4 [[A_SerpentCheckForAttack]]
+     Goto Dive
+   Death:
+     SSPT O 4
+     SSPT P 4 [[A_Scream]]
+     SSPT Q 4 [[A_NoBlocking]]
+     SSPT RSTUVWXYZ 4
+     Stop
+   XDeath:
+     SSXD A 4
+     SSXD B 4 [[A_SpawnItemEx]]("{{Class|SerpentHead}}", 0, 0, 45)
+     SSXD C 4 [[A_NoBlocking]]
+     SSXD DE 4
+     SSXD FG 3
+     SSXD H 3 [[A_SerpentSpawnGibs]]
+     Stop
+   Ice:
+     SSPT [ 5 [[A_FreezeDeath]]
+     SSPT [ 1 [[A_FreezeDeathChunks]]
+     Wait
+   Walk:
+     SSPT IJI 5 [[A_Chase]]("Attack", "None", CHF_NIGHTMAREFAST)
+     SSPT J 5 [[A_SerpentCheckForAttack]]
+     Goto Dive
+   Hump:
+     SSPT H 3 [[A_SerpentUnHide]]
+     SSPT EFGEF 3 [[A_SerpentRaiseHump]]
+     SSPT GEF 3
+     SSPT GEFGE 3 [[A_SerpentLowerHump]]
+     SSPT F 3 [[A_SerpentHide]]
+     Goto See
+   Attack:
+     SSPT K 6 [[A_FaceTarget]]
+     SSPT L 5 [[A_SerpentChooseAttack]]
+     Goto MeleeAttack
+   MeleeAttack:
+     SSPT N 5 [[A_SerpentMeleeAttack]]
+     Goto Dive
+   }
+ }</text>
+    <sha1>86oyf5ebfm5lrlgvqej17umniqajszx</sha1>
+  </revision>
+</page>

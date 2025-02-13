@@ -1,0 +1,54 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>Teleport Line</title>
+  <ns>0</ns>
+  <id>669</id>
+  <revision>
+    <id>44653</id>
+    <parentid>26882</parentid>
+    <timestamp>2017-04-03T16:47:14Z</timestamp>
+    <contributor>
+      <username>Gez</username>
+      <id>1283</id>
+    </contributor>
+    <comment>xlat</comment>
+    <origin>44653</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="2046" sha1="lvaaqspbgcq13l0wfha26ereyl502u7" xml:space="preserve">{{DISPLAYTITLE:Teleport_Line}}
+{{Special|215|thisid, destid, flip|Teleport|Line|use=line}}
+{{warning|text=This special is not fully supported by the [[UDMF]] map format.  Certain parameters, noted below, have been made obsolete by the ability to directly specify properties within the linedef structure.  These parameters should be set to 0 when using the UDMF format.}}
+
+* ''thisid'': Line ID of this line. ''Obsolete in UDMF.''
+* ''destid'': Line ID of destination line 
+* ''flip'': Set this to 1 to flip the teleported thing 180 degrees 
+
+Silently teleports a thing between two lines. A pair of lines with this special can share the same ''id'' (''thisid'' and ''destid'' are the same) because a line will never teleport to itself. This special also behaves like [[Line_SetIdentification]] by setting the line ID of the any lines it is used on.
+Note: Cannot be used directly in ACS scripts but can be set to lines with [[SetLineSpecial]].
+
+== Examples ==
+{{noexamples}}
+
+== Conversions from linedef types ==
+The following Doom map format types can be converted as Teleport_Line:
+{| {{prettytable}}
+!Type!!Conversion!!Trigger
+|-
+|{{icon|Boom}} 243:W1 Teleport Line || Teleport_Line (tag, tag, 0) || Player Cross, Monsters Activate
+|-
+|{{icon|Boom}} 244:WR Teleport Line || Teleport_Line (tag, tag, 0) || Player Cross, Repeatable, Monsters Activate
+|-
+|{{icon|Boom}} 262:W1 Teleport Line (Reversed) || Teleport_Line (tag, tag, 1) || Player Cross, Monsters Activate
+|-
+|{{icon|Boom}} 263:WR Teleport Line (Reversed) || Teleport_Line (tag, tag, 1) || Player Cross, Repeatable, Monsters Activate
+|-
+|{{icon|Boom}} 264:W1 Teleport Line Monsters Only (Reversed) || Teleport_Line (tag, tag, 1) || Monster Cross
+|-
+|{{icon|Boom}} 265:WR Teleport Line Monsters Only (Reversed) || Teleport_Line (tag, tag, 1) || Monster Cross, Repeatable
+|-
+|{{icon|Boom}} 266:W1 Teleport Line Monsters Only || Teleport_Line (tag, tag, 0) || Monster Cross
+|-
+|{{icon|Boom}} 267:WR Teleport Line Monsters Only || Teleport_Line (tag, tag, 0) || Monster Cross, Repeatable
+|}</text>
+    <sha1>lvaaqspbgcq13l0wfha26ereyl502u7</sha1>
+  </revision>
+</page>

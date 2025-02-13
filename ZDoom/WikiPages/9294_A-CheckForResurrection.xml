@@ -1,0 +1,61 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>A CheckForResurrection</title>
+  <ns>0</ns>
+  <id>9294</id>
+  <revision>
+    <id>48957</id>
+    <parentid>48740</parentid>
+    <timestamp>2022-01-30T10:23:44Z</timestamp>
+    <contributor>
+      <username>Blue Shadow</username>
+      <id>2021</id>
+    </contributor>
+    <minor />
+    <comment>removed 4.7.0 tag</comment>
+    <origin>48957</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="1884" sha1="ez6gix3m7tk5p28u5pc35e5fvdq0bfy" xml:space="preserve">__NOTOC__{{codepointer|Monster AI}}bool '''A_CheckForResurrection''' [(State ''state'' [, Sound ''snd''])]
+
+
+{{note|starting with GZDoom [[GZDoom_version_history#4.7.0|4.7.0]], this function is no longer fully supported by [[DECORATE]]. If used from DECORATE, it is to be called without passing any parameters to it. Consider switching to [[ZScript]] to fully utilize this function.}}
+==Usage==
+Checks for a revivable corpse. If the calling actor comes into contact with one, it resurrects the actor in question, provided the actor being revived [[CanRaise|can actually be resurrected]]. The outcome of {{c|[[CanResurrect]]}} is another determining factor in the success or failure of an actor's resurrection.
+
+===Parameters===
+*''state'': a pointer to the state to enter. Passing {{c|null}} defaults to the Heal state. If the Heal state does not exist, no state is entered. Default is {{c|null}}.
+*''snd'': the sound to play. The sound is played by the resurrected actor on the ''body'' ({{const|CHAN_BODY}}) channel with ''idle'' ({{const|ATTN_IDLE}}) attenuation. Passing 0 or an invalid sound name defaults to {{c|"vile/raise"}} as the sound to play. Default is 0.
+
+===Return value===
+The function returns ''true'' if the actor is resurrected successfully, otherwise it returns ''false''.
+
+==Examples==
+This mysterious {{Class|ExplosiveBarrel|barrel}} wanders around. If it stumbles upon a corpse, it revives it, then it explodes.
+ class SentientBarrel : {{Class|ExplosiveBarrel}}
+ {
+     Default
+     {
+         {{Property|Speed}} 6;
+     }
+ 
+     States
+     {
+     Spawn:
+         BAR1 AB 6
+         {
+             if (![[A_CheckForResurrection]]([[FindState]]("Rise"), "grunt/pain"))
+             {
+                 [[A_Wander]]();
+             }
+         }
+         Loop;
+ 
+     Rise:
+         BAR1 ABABABABABABABABAB 2;
+         BAR1 A -1 [[A_Die]];
+         Stop;
+     }
+ }</text>
+    <sha1>ez6gix3m7tk5p28u5pc35e5fvdq0bfy</sha1>
+  </revision>
+</page>

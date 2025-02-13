@@ -1,0 +1,54 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>Classes:SorcFX2</title>
+  <ns>0</ns>
+  <id>4749</id>
+  <revision>
+    <id>34592</id>
+    <parentid>18671</parentid>
+    <timestamp>2012-10-21T09:09:17Z</timestamp>
+    <contributor>
+      <username>Blue Shadow</username>
+      <id>2021</id>
+    </contributor>
+    <minor />
+    <comment>/* DECORATE definition */</comment>
+    <origin>34592</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="718" sha1="4rcospwhmrjsijspq9k0tq3mw3zhqua" xml:space="preserve">{{Actor|
+| type = SFX
+| name = Heresiarch shield
+| class = SorcFX2
+| game = Hexen
+}}[[Classes]]: &lt;u&gt;SorcFX2&lt;/u&gt;&lt;br&gt;
+The visual cue that the [[Classes:Heresiarch|Heresiarch]]'s invulnerability shield is active.
+==== [[DECORATE]] definition ====
+ ACTOR &lt;u&gt;SorcFX2&lt;/u&gt;
+ {
+   {{Property|Speed}} 15
+   {{Property|Radius}} 5
+   {{Property|Height}} 5
+   +{{Flag|NOBLOCKMAP}}
+   +{{Flag|NOGRAVITY}}
+   +{{Flag|NOTELEPORT}}
+ 
+   action native [[A_SorcFX2Split]]();
+   action native [[A_SorcFX2Orbit]]();
+ 
+   States
+   {
+   Spawn:
+     SBS2 A 3 Bright [[A_SorcFX2Split]]
+     Loop
+   Orbit:
+     SBS2 A 2 Bright
+     SBS2 BCDEFGHIJKLMNOPA 2 Bright [[A_SorcFX2Orbit]]
+     Goto Orbit+1
+   Death:
+     SBS2 A 10
+     Stop
+   }
+ }</text>
+    <sha1>4rcospwhmrjsijspq9k0tq3mw3zhqua</sha1>
+  </revision>
+</page>

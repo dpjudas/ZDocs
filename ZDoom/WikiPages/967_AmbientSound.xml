@@ -1,0 +1,44 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>AmbientSound</title>
+  <ns>0</ns>
+  <id>967</id>
+  <revision>
+    <id>35962</id>
+    <parentid>35632</parentid>
+    <timestamp>2013-03-01T01:50:34Z</timestamp>
+    <contributor>
+      <username>Deded007</username>
+      <id>1392</id>
+    </contributor>
+    <minor />
+    <comment>links</comment>
+    <origin>35962</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="861" sha1="3jrtqadonwjo2oa7eaxzv1hyw0s3csq" xml:space="preserve">:''This page is for the [[ACS]] function. You might be looking for {{Class|AmbientSound|the actor}} instead.''
+
+void '''AmbientSound'''(str ''sound'', int ''volume'');
+
+== Usage ==
+
+Plays a world sound (all players can hear it at the same volume, regardless of how close to the activator they are). Volume is an integer range from 0 to 127, with 127 being full volume and 0 being muted.
+
+== Examples ==
+This script waits for all monsters tagged with ''tid'' 1 to die, and the plays a victory fanfare sound which is audible to all players, regardless of where they are.
+
+ script 1 (void)
+ {
+    // Wait for all tid 1 monsters to die
+    while( [[ThingCount]]({{const|T_NONE}}, 1) &gt; 0 )
+    {
+       [[delay]](4);
+    }
+  
+    // Play a victory noise for all players at full volume
+    [[AmbientSound]]("handel/messiah", 127);
+ }
+
+[[category:ACS Sound functions]]</text>
+    <sha1>3jrtqadonwjo2oa7eaxzv1hyw0s3csq</sha1>
+  </revision>
+</page>

@@ -1,0 +1,58 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>GetInvasionState</title>
+  <ns>0</ns>
+  <id>4048</id>
+  <revision>
+    <id>43693</id>
+    <parentid>16935</parentid>
+    <timestamp>2017-01-08T22:43:31Z</timestamp>
+    <contributor>
+      <username>Tiger</username>
+      <id>2074</id>
+    </contributor>
+    <comment>Updated article; added IS_MISSIONFAILED and a note regarding the value of -1 IIF invasion is 0.</comment>
+    <origin>43693</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="1437" sha1="iiosbgzqpug1gleui6pz6c21w0cs94v" xml:space="preserve">{{STFeature}}
+int '''GetInvasionState''' (void)
+
+== Usage ==
+
+Returns the state of the current invasion game. This can be used to execute special scripts when an invasion game meets a certain condition.
+
+=== Return value ===
+
+The current state of the invasion. For readability there are definitions defined in Skulltag's zdefs.acs as follows:
+
+{{Warning|text=The following information is based on assumption and may not be correct! If you can confirm that the following is correct, please remove this warning from the article.}}
+
+
+*'''IS_WAITINGFORPLAYERS''' = 0
+:The invasion has not started and it is waiting for players to join the game.
+*'''IS_FIRSTCOUNTDOWN''' = 1
+:The countdown is in progress for the first wave.
+*'''IS_INPROGRESS''' = 2
+:The invasion is in progress (any wave).
+*'''IS_BOSSFIGHT''' = 3
+:The invasion is on a boss fight.
+*'''IS_WAVECOMPLETE''' = 4
+:The wave has just finished.
+*'''IS_COUNTDOWN''' = 5
+:The countdown for the next wave is in progress.
+*'''IS_MISSIONFAILED''' = 6
+:The mission failed or all players died.
+
+'''NOTE:''' If and only if Invasion is not enabled, then a value of &lt;code&gt;-1&lt;/code&gt; will return instead.
+
+==Examples==
+This script checks when the first invasion wave has finished and then prints a message.
+ script 1 open
+ {
+ while (( [[GetInvasionWave]]() != 1 ) || ( GetInvasionState( ) != IS_COUNTDOWN ))
+ delay(1);
+ [[PrintBold]](s:"Well done! The next wave is even harder. Good luck!");
+ }</text>
+    <sha1>iiosbgzqpug1gleui6pz6c21w0cs94v</sha1>
+  </revision>
+</page>

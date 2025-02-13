@@ -1,0 +1,52 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>CheckFlag</title>
+  <ns>0</ns>
+  <id>7627</id>
+  <revision>
+    <id>44244</id>
+    <parentid>44085</parentid>
+    <timestamp>2017-03-20T13:10:46Z</timestamp>
+    <contributor>
+      <username>Gez</username>
+      <id>1283</id>
+    </contributor>
+    <minor />
+    <comment>removing "new" for GZDoom 2.4.0 release</comment>
+    <origin>44244</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="944" sha1="tvfiza3gv06l1g087avcct8f4xk84kr" xml:space="preserve">__NOTOC__
+bool '''CheckFlag''' (int ''tid'', str ''flag'');
+
+==Usage==
+Checks to see if the actor with the matching {{c|[[TID|tid]]}} has the specified [[Actor flags|actor flag]] set. If ''tid'' is 0, the check is performed on the activator of the script.
+
+===Parameters===
+*''tid'': The {{c|tid}} of the actor on which to perform the flag check.
+*''flag'': The actor flag to check. This should be a valid flag.
+
+=== Return value ===
+The function returns {{c|true}} if the actor has the specified flag set, otherwise it returns {{c|false}}.
+
+== Examples ==
+Checks if the actor with a tid of 1 has the {{Flag|FLOAT}} flag.
+
+ script 1 (void)
+ {
+    if([[CheckFlag]](1, "{{Flag|FLOAT}}") == {{const|true}})
+    {
+        [[Print]](s:"This enemy can fly!");
+    }
+    else
+    {
+        [[Print]](s:"This enemy is bound by the force of gravity.");
+    }
+ }
+
+== See also ==
+* [[A_CheckFlag]]
+* [[SetActorFlag]]
+[[category:ACS Information functions]]</text>
+    <sha1>tvfiza3gv06l1g087avcct8f4xk84kr</sha1>
+  </revision>
+</page>

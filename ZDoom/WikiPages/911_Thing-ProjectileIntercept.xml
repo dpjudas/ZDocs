@@ -1,0 +1,43 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>Thing ProjectileIntercept</title>
+  <ns>0</ns>
+  <id>911</id>
+  <revision>
+    <id>40831</id>
+    <parentid>36668</parentid>
+    <timestamp>2016-02-06T05:43:20Z</timestamp>
+    <contributor>
+      <username>Jpalomo</username>
+      <id>1715</id>
+    </contributor>
+    <origin>40831</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="1912" sha1="9332z0kqutasvs0orx2vhh8quse5pls" xml:space="preserve">{{DISPLAYTITLE:Thing_ProjectileIntercept}}
+{{Special|175|tid, type, speed, target, newtid|Thing|ProjectileIntercept}}
+
+* ''tid'': Thing ID of the map spot to spawn the projectile at
+* ''type'': Type of projectile to spawn
+* ''speed'': Speed of the projectile in units per 8 tics
+* ''target'': Thing ID of the thing you want the projectile fired at
+* ''newtid'': TID you want assigned to the spawned projectile (optional)
+
+Spawns a projectile, much like [[Thing_ProjectileAimed]], but tries to intercept the target. Basically, it tries to predict where its target will be based on the target's current speed and direction. If the target changes speed/direction after the projectile is spawned, chances are the projectile will not hit. The main way it is used is to make a hassle for the player. By giving a player a TID (see [[Thing_ChangeTID]]), you can use this special to send the fireballs their way.
+
+The higher the projectile's speed, the harder it is to dodge it, since there is less of a window of opportunity to change your speed/direction and get out of its way before it hits home.
+
+== Usage ==
+
+* ''tid'' is a number that makes a thing unique, the default is zero, and therefore a TID is usually set to something else, like 1. In Doom Builder you have to right click on a thing, select the Effects tab and change the Thing Tag to something besides 0.
+
+* The ''type'' is actually from the list of [[Spawn_numbers]]. You can either use the number or the defined name ('''T_SOMETHING''') for clarity.
+: When using this special on a [[linedef]] or a [[thing]] in [[UDMF]], you can use the {{c|arg1str}} property to define a class name instead of the {{c|arg1}} property to define a spawn number.
+
+* ''speed'' is a number between 0&amp;ndash;255.
+
+* ''target'' same TID idea as mentioned above.
+
+* ''newtid'' is just a way to make the spawned thing unique if you need to refer to it later. It is just a number.</text>
+    <sha1>9332z0kqutasvs0orx2vhh8quse5pls</sha1>
+  </revision>
+</page>

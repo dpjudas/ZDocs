@@ -1,0 +1,48 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>Classes:EnvironmentalSuit</title>
+  <ns>0</ns>
+  <id>4816</id>
+  <revision>
+    <id>39975</id>
+    <parentid>35397</parentid>
+    <timestamp>2015-05-17T15:19:06Z</timestamp>
+    <contributor>
+      <username>Blue Shadow</username>
+      <id>2021</id>
+    </contributor>
+    <minor />
+    <comment>/* DECORATE definition */ Updated</comment>
+    <origin>39975</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="948" sha1="429v2q6d761c1o6w0j32dbdisyffy9z" xml:space="preserve">{{Actor|
+| type = Artifact
+| name = Environmental suit
+| class = EnvironmentalSuit
+| game = Strife
+| doomednum = 2025
+| convid = 161, 157, 160
+}}[[Classes]]: [[Classes:Inventory|Inventory]]&amp;rarr;[[Classes:PowerupGiver|PowerupGiver]]&amp;rarr;&lt;u&gt;EnvironmentalSuit&lt;/u&gt;&lt;br&gt;
+This item gives you temporary protection against poison, radiation, and flamethrower attacks.
+==== [[DECORATE]] definition ====
+ ACTOR &lt;u&gt;EnvironmentalSuit&lt;/u&gt; : {{Class|PowerupGiver}}
+ {
+   +{{Flag|FLOORCLIP}}
+   +{{Flag|INVENTORY.INVBAR}}
+   -{{Flag|INVENTORY.FANCYPICKUPSOUND}}
+   {{Property|Inventory.MaxAmount}} 5
+   {{Property|Powerup.Type}} "{{Class|PowerMask|Mask}}"
+   {{Property|Tag}} "$TAG_ENVSUIT" // "Environmental Suit"
+   {{Property|Inventory.Icon}} "I_MASK"
+   {{Property|Inventory.PickupSound}} "misc/i_pkup"
+   {{Property|Inventory.PickupMessage}} "$TXT_ENVSUIT" // "You picked up the Environmental Suit."
+   States
+   {
+   Spawn:
+     MASK A -1
+     Stop
+   }
+ }</text>
+    <sha1>429v2q6d761c1o6w0j32dbdisyffy9z</sha1>
+  </revision>
+</page>

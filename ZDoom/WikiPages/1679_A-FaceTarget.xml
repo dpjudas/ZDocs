@@ -1,0 +1,73 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>A FaceTarget</title>
+  <ns>0</ns>
+  <id>1679</id>
+  <revision>
+    <id>54149</id>
+    <parentid>53581</parentid>
+    <timestamp>2025-01-22T17:06:37Z</timestamp>
+    <contributor>
+      <username>Jekyll Grim Payne</username>
+      <id>2175</id>
+    </contributor>
+    <comment>Formatting</comment>
+    <origin>54149</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="3356" sha1="lkpj9yj1k4uol0pzg43warnw59nnm34" xml:space="preserve">{{codepointer|Monster AI}} __NOTOC__
+{{doomwiki|A_FaceTarget}}
+
+'''{{class|Actor}}'''
+
+{{c|void '''A_FaceTarget''' (double ''max_turn'' {{=}} 0, double ''max_pitch'' {{=}} 270, double ''ang_offset'' {{=}} 0, double ''pitch_offset'' {{=}} 0, int ''flags'' {{=}} 0, double ''z_ofs'' {{=}} 0)}}&lt;br&gt;
+{{c|void '''A_FaceTracer''' (double ''max_turn'' {{=}} 0, double ''max_pitch'' {{=}} 270, double ''ang_offset'' {{=}} 0, double ''pitch_offset'' {{=}} 0, int ''flags'' {{=}} 0, double ''z_ofs'' {{=}} 0)}}&lt;br&gt;
+{{c|void '''A_FaceMaster''' (double ''max_turn'' {{=}} 0, double ''max_pitch'' {{=}} 270, double ''ang_offset'' {{=}} 0, double ''pitch_offset'' {{=}} 0, int ''flags'' {{=}} 0, double ''z_ofs'' {{=}} 0)}}
+
+==Usage==
+Change the calling actor's angle to face their {{c|target}} ({{c|A_FaceTarget}}), {{c|tracer}} ({{c|A_FaceTracer}}) or {{c|master}} ({{c|A_FaceMaster}}) [[Actor pointers|pointer]].
+
+===Parameters===
+*{{c|double '''max_turn'''}}
+:The maximum turn angle; the calling actor cannot turn by more than said angle, however the {{Flag|SHADOW}} flag has no effect in such case. A value of 0 is interpreted as unlimited angle. Default is 0.
+*{{c|double '''max_pitch'''}}
+:If specified to a value no greater than 180, then the calling actor's pitch is adjusted up to said value to face the actor. A value of 0 is interpreted as unlimited angle; and technically a pitch change will never be greater than 180 degrees. It will also aim at the actor's feet when set to 0. Default is 270, which means its disabled.
+*{{c|double '''ang_offset'''}}
+:Specifies the amount of degrees to offset the actor's angle by. Positive values turn it left, while negative values turn it right. This is factored in after ''max_turn'' is performed. Due to limitations, distance is not factored in. Default is 0.
+*{{c|double '''pitch_offset'''}}
+:Adjusts the pitch by this many degrees after ''max_pitch'' has been taken into account. Default is 0.
+*{{c|int '''flags'''}}
+:Customizes the behavior of the function. Multiple flags can be combined with &lt;code&gt;|&lt;/code&gt;:
+:*'''FAF_BOTTOM''' — Aim for the bottom of the actor, otherwise known as the raw Z position. Whenever ''max_pitch'' is taken into account, it will aim towards the actor's feet + 32 units above. This flag disables adding that 32 units.
+:*'''FAF_MIDDLE''' — Aim for the middle of the actor ({{c|z position + height / 2}}).
+:*'''FAF_TOP''' —  Aim for the top of the actor ({{c|z position + height}}).
+:Note that all of these flags are taken into account first before anything else.
+:Default is 0.
+*{{c|double '''z_ofs'''}}
+:Offsets the z position distance of the actor to face by this amount. Unlike ''pitch_offset'', this takes into account how far away the actor is at all times. Default is 0.
+
+==Examples==
+Almost every [[monster]] uses {{c|A_FaceTarget}} before it shoots at its target.
+ Missile:
+     TROO EF 8 [[A_FaceTarget]];
+     TROO G 6 [[A_TroopAttack]]; {{comment|See {{class|DoomImpBall}}}}
+     Goto See;
+
+
+This {{Class|LostSoul|lost soul}} homes in on its target by calling {{c|A_FaceTarget}} and {{c|[[A_SkullAttack]]}} repeatedly.
+ class HomingLostSoul : {{class|LostSoul}}
+ {
+     States
+     {
+     Missile:
+         SKUL C 10 Bright [[A_FaceTarget]];
+         SKUL D 4 Bright [[A_SkullAttack]];
+         SKUL CD 4 Bright;
+         Goto Missile;
+     }
+ }
+
+==See also==
+*[[A_Face]]</text>
+    <sha1>lkpj9yj1k4uol0pzg43warnw59nnm34</sha1>
+  </revision>
+</page>

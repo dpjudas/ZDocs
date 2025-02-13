@@ -1,0 +1,144 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>Function pointers</title>
+  <ns>0</ns>
+  <id>9729</id>
+  <revision>
+    <id>53279</id>
+    <parentid>52965</parentid>
+    <timestamp>2024-10-12T09:03:30Z</timestamp>
+    <contributor>
+      <username>Blue Shadow</username>
+      <id>2021</id>
+    </contributor>
+    <minor />
+    <comment>remove {{new}}</comment>
+    <origin>53279</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="4395" sha1="687n1s4r3tsr5w90m56id1ah42gh97f" xml:space="preserve">{{ZScriptNote}}
+'''Function pointers''' are useful for several things:
+* Detecting if certain objects have functions defined, allowing implementation of cross-mod support (similar to [[Service]]) without creating dependencies
+* Enable Callbacks - functions with the same name but different parameters.
+
+Of note, these are '''pointers''' to standard ZScript functions that are already defined. 
+
+The only supported types of functions are '''static''' and '''normal''' functions. They cannot be '''action''', '''virtual''', or '''variadic''' functions (variadic meaning Console.Printf, Screen.DrawText, etc. Anything with an ellipsis ('...') that allows for expanding the function). 
+
+== Definitions ==
+Functions can be defined as such:
+ Function&lt;void&gt; myFunc;
+ Function&lt;'''scope''' RetTypes('''ArgTypes''') myFunc;
+
+* '''scope''' - Can be ''play'', ''ui'', or ''clearscope''. See [[Object scopes and versions]] for more details.
+* '''RetTypes''' - The return types to expect.
+
+Functions can also be used in properties with the format &lt;code&gt;ClassName::FunctionName&lt;/code&gt; as a string.
+
+== Function casting ==
+Casting is done similar to casting for classes (i.e. Class&lt;&gt;). This needs two sets of () such as:
+ (Function&lt;...&gt;)(value)
+
+Functions can have their returns widened with casts:
+ Function&lt;play Actor()&gt; someFn = ...; // insert code for function here
+ Function&lt;play Object()&gt; someFn2 = (Function&lt;play Object()&gt;)(someFn); // widens the return from an Actor to an Object
+
+And functions can have their argument types narrowed with casts:
+ Function&lt;play void(Object)&gt; someFn = ...;
+ Function&lt;play void(Actor)&gt; someFn2 = (Function&lt;play void(Actor)&gt;)(someFn);
+
+A simpler way to think about it is basically performing casting like this.
+ Actor getActor() // assuming this is within an Actor class
+ {
+     return self;
+ }
+ Object getObject()
+ {
+     return getActor(); // Normally one would need to perform &lt;Classname&gt;() but not in this case.
+ }
+
+== Function finding ==
+Functions can be found with this static function:
+ ''native static'' Function&lt;void&gt; '''FindFunction'''(Class&lt;Object&gt; ''cls'', Name ''fn'');
+
+Or they can be referenced directly if the class is known.
+ let someFn = someObject.someFunction;
+ let someFn = someFunction; // Coming from the same class
+
+== Examples ==
+ version "4.12"
+ class TestHandler : StaticEventHandler
+ {
+ 	int c;
+ 	clearscope double AddDouble(double a, double b) {return a+b+c;}
+ 	clearscope int AddInt(int a, int b) {return a+b+c;}
+ 	
+ 	override void OnRegister()
+ 	{
+ 		c = 25;
+ 		
+ 		let test_function_double = TestHandler.AddDouble;
+ 		
+ 		if(test_function_double.call(self, 10.5, 20) != (30.5 + c))
+ 		{
+ 			ThrowAbortException("Failed to call AddDouble");
+ 		}
+ 		
+ 		let test_function_int = TestHandler.AddInt;
+ 		
+ 		if(test_function_int.call(self, 10, 20) != (30 + c))
+ 		{
+ 			ThrowAbortException("Failed to call AddInt");
+ 		}
+ 	}
+ }
+ 
+ class TestPlayer : DoomPlayer
+ {
+ 	Function&lt;play double(TestHandler,double,double)&gt; test_function_double;
+ 	Function&lt;play double(TestHandler,double,double)&gt; test_function_double2;
+ 	Function&lt;play int(TestHandler,int,int)&gt; test_function_int;
+ 	
+ 	property test_function_double2 : test_function_double2;
+ 	
+ 	Default
+ 	{
+ 		TestPlayer.test_function_double2 "TestHandler::AddDouble";
+ 	}
+ 	
+ 	
+ 	Function&lt;play double(TestHandler,double,double)&gt;, Function&lt;play int(TestHandler,int,int)&gt; getFns()
+ 	{
+ 		return TestHandler.AddDouble, TestHandler.AddInt;
+ 	}
+ 	
+ 	Function&lt;play double(TestHandler,double,double)&gt;, Function&lt;play int(TestHandler,int,int)&gt; getPtrs()
+ 	{
+ 		Function&lt;play Function&lt;play double(TestHandler,double,double)&gt;, Function&lt;play int(TestHandler,int,int)&gt;(TestPlayer)&gt; testfnptr = getFns;
+ 		
+ 		let [a, b] = testfnptr.call(self);
+ 		
+ 		return a, b;
+ 		// doing return testfnptr.call(self); directly doesn't work, bug #2210 
+ 	}
+ 	
+ 	override void PostBeginPlay()
+ 	{
+ 		super.PostBeginPlay();
+ 		
+ 		[test_function_double, test_function_int] = getPtrs();
+ 	}
+ 	
+ 	override void Tick()
+ 	{
+ 		super.Tick();
+ 		
+ 		let handler = TestHandler(StaticEventHandler.Find("TestHandler"));
+ 		
+ 		console.printf("test_function_double.call(10.5, 20) = "..test_function_double.call(handler,10.5, 20));
+ 		console.printf("test_function_double2.call(10.5, 20) = "..test_function_double2.call(handler,10.5, 20));
+ 		console.printf("test_function_int.call(10, 20) = "..test_function_int.call(handler,10, 20));
+ 	}
+ }</text>
+    <sha1>687n1s4r3tsr5w90m56id1ah42gh97f</sha1>
+  </revision>
+</page>

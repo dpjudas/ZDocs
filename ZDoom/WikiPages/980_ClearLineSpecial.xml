@@ -1,0 +1,47 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>ClearLineSpecial</title>
+  <ns>0</ns>
+  <id>980</id>
+  <revision>
+    <id>35845</id>
+    <parentid>22928</parentid>
+    <timestamp>2013-02-11T01:26:09Z</timestamp>
+    <contributor>
+      <username>Deded007</username>
+      <id>1392</id>
+    </contributor>
+    <minor />
+    <comment>formatting, see also</comment>
+    <origin>35845</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="1028" sha1="11p443lcusf5dacf0u7kdcrdc8bslq6" xml:space="preserve">void '''ClearLineSpecial'''(void);
+
+== Usage ==
+
+Clears the special of the line that activated the script. This is most useful for scripts that may require the player to have something and may be triggered more than once, but once they are fully executed (i.e. the player now has the required item), you no longer want it to be executed.
+
+== Examples ==
+
+This script can be triggered an infinite number of times without the blue skull key, but once the player activates it and has that key the line will be cleared of the special and it can no longer be activated.
+
+ script 1 (void)
+ {
+    if([[CheckInventory]]("{{class|BlueSkull}}"))
+    {
+       [[ClearLineSpecial]]();
+       //do other things here
+    }
+    else
+       [[Print]](s:"You need a blue skull key to activate this");
+ }
+
+This only works for the activating line, if you want to clear a different line that is not the one that triggers the script you should use [[SetLineSpecial]].
+
+== See also ==
+* [[SetLineSpecial]]
+
+[[category:ACS Level alteration functions]]</text>
+    <sha1>11p443lcusf5dacf0u7kdcrdc8bslq6</sha1>
+  </revision>
+</page>

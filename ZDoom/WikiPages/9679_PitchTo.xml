@@ -1,0 +1,84 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>PitchTo</title>
+  <ns>0</ns>
+  <id>9679</id>
+  <revision>
+    <id>53853</id>
+    <parentid>53852</parentid>
+    <timestamp>2024-11-23T15:18:05Z</timestamp>
+    <contributor>
+      <username>Jekyll Grim Payne</username>
+      <id>2175</id>
+    </contributor>
+    <comment>/* Example */</comment>
+    <origin>53853</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="2301" sha1="sovdxzh3btek4xosyvfh5ek2nnapmvs" xml:space="preserve">{{ZScriptNote}}
+
+'''{{class|Actor}}'''
+
+{{c|clearscope double '''PitchTo'''(Actor ''target'', double ''zOfs'' {{=}} 0, double ''targZOfs'' {{=}} 0, bool ''absolute'' {{=}} false) const}}
+__NOTOC__
+== Usage ==
+Returns the absolute pitch from the caller to the ''target'' actor.
+
+=== Parameters ===
+*{{c|Actor '''target'''}}
+: The actor to calculate the pitch to.
+*{{c|double '''zOfs'''}}
+: The vertical offset to the callers' position to use for the check. By default, the pitch calculation will be done from the feet of the caller. So you can pass the callers' {{property|Height}} to get the top of their hitbox. Or their height divided by 2 to get the middle.
+*{{c|double '''targZOfs'''}}
+: Ditto, but for the ''target'' actor instead.
+*{{c|bool '''absolute'''}}
+: If true, the function will not account for static portals, default is false.
+
+=== Return value ===
+*double — The absolute pitch between the caller and ''target'' actor.
+
+== Example ==
+This simple function can be used to make a monster ONLY shoot if it will hit its' target. It uses ''[[AngleTo]]()'' and ''PitchTo()'' to give an angle and pitch to [[LineTrace]] that fires the raycast at the targets' direction.
+
+Notice that the pitch in the ''PitchTo()'' call is calculated from the middle of the callers' and targets' hitboxes. Instead of their feet, which is where the origins of actors are located at.
+&lt;syntaxhighlight lang = "csharp"&gt;
+	bool A_OnlyHitTarget()
+	{
+		if (!Target) return false;
+		FLineTraceData LOF;
+		
+		double AimPitch = PitchTo (Target,Height/2,Target.Height/2);
+		
+		LineTrace (AngleTo (Target),INT.MAX,AimPitch,TRF_SOLIDACTORS,Height/2,data:LOF);
+		
+		if (LOF.HitActor == Target)
+			return true;
+		
+		return false;
+	}
+&lt;/syntaxhighlight&gt;
+
+== [[ZScript]] definition ==
+{{ZScriptDefinitionNote|actors/actor.zs}}
+&lt;syntaxhighlight lang = "csharp"&gt;
+	clearscope double PitchTo(Actor target, double zOfs = 0, double targZOfs = 0, bool absolute = false) const
+	{
+		Vector3 origin = (pos.xy, pos.z - floorClip + zOfs);
+		Vector3 dest = (target.pos.xy, target.pos.z - target.floorClip + targZOfs);
+
+		Vector3 diff;
+		if (!absolute)
+			diff = level.Vec3Diff(origin, dest);
+		else
+			diff = dest - origin;
+
+		return -atan2(diff.z, diff.xy.Length());
+	}
+&lt;/syntaxhighlight&gt;
+
+== See also ==
+* [[AngleTo]]
+
+[[Category:ZScript]]</text>
+    <sha1>sovdxzh3btek4xosyvfh5ek2nnapmvs</sha1>
+  </revision>
+</page>

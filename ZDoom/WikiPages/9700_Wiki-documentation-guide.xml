@@ -1,0 +1,434 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>Wiki documentation guide</title>
+  <ns>0</ns>
+  <id>9700</id>
+  <revision>
+    <id>53968</id>
+    <parentid>53967</parentid>
+    <timestamp>2024-11-30T09:50:56Z</timestamp>
+    <contributor>
+      <username>Jekyll Grim Payne</username>
+      <id>2175</id>
+    </contributor>
+    <comment>/* Highlighting */</comment>
+    <origin>53968</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="19635" sha1="8mk9q33vi3bhq6k48fjigbx5styj3j1" xml:space="preserve">This page describes the structure and formatting standards that should be used when adding or editing wiki pages.
+
+= Page naming =
+Page names must follow specific established conventions:
+* Class pages: &lt;code&gt;Classes:Classname&lt;/code&gt;. For example, [[Classes:Actor]]. This is important not only to keep order, but also for the [[Template:Class]] template (such as &lt;code&gt;&lt;nowiki&gt;{{class|Actor}}&lt;/nowiki&gt;&lt;/code&gt;) to function properly.
+::If you spot a class page that does not have "Classes:" in its name for some reason, feel free to move it and add the name (leave a redirect behind! this option is checked by default).
+* Struct pages: &lt;code&gt;Structs:Structname&lt;/code&gt; For example, [[Structs:PlayerInfo]]. Note, these pages are also tied to a template: [[Template:Struct]] (such as &lt;code&gt;&lt;nowiki&gt;{{struct|PlayerInfo}}&lt;/nowiki&gt;&lt;/code&gt;).
+* Function pages: just the name of the function directly. For example, [[DamageMobj]].
+::If the same function exists in [[ACS]] and [[ZScript]], for example, append &lt;code&gt;(ZScript)&lt;/code&gt; or &lt;code&gt;(ACS)&lt;/code&gt; to the name of the page. Make sure to add a note to the top of each of the pages. [[Template:SameNameNote]] is often a good choice.
+::Appending (ZScript) or (ACS) to both pages is not always necessary. Oftentimes one page already exists, so only the newer page will need this clarification.
+
+= Page structure =
+==In-page links==
+Please use links as much as you can. All key words and key terms must ideally have inter-wiki links in them.
+
+Remember to use helpful templates. For example:
+*[[Template:Class]] — a shorthand for linking class pages. For example, &lt;code&gt;&lt;nowiki&gt;{{class|Actor}}&lt;/nowiki&gt;&lt;/code&gt; equals {{class|Actor}}.
+*[[Template:Struct]] — a shorthand for linking struct pages. For example, &lt;code&gt;&lt;nowiki&gt;{{struct|TexMan}}&lt;/nowiki&gt;&lt;/code&gt; equals {{struct|TexMan}}.
+*[[Template:Property]] — a shorthand for linking [[Actor properties]]. For example, &lt;code&gt;&lt;nowiki&gt;{{property|Health}}&lt;/nowiki&gt;&lt;/code&gt; equals {{property|Health}}.
+*[[Template:flag]] — a shorthand for linking [[Actor flags]]. For example, &lt;code&gt;&lt;nowiki&gt;{{flag|Inventory.UNDROPPABLE}}&lt;/nowiki&gt;&lt;/code&gt; equals {{property|Inventory.UNDROPPABLE}}.
+:&lt;u&gt;Always add the class prefix — these are not optional in [[ZScript]]!&lt;/u&gt; Class prefix should ideally be written in PascalCase. The template works without issues for this.
+*Please don't dismiss adding a '''See also''' section at the end of the page and linking all pages that seem relevant or thematically related to the current one.
+*Avoid copy-pasting large sections of the text in multiple pages; when there's a need for that, better create an include template. We have a bunch of include templates [https://zdoom.org/wiki/Category:Include_templates '''here'''] to check out.
+
+== Class and struct pages ==
+Class and struct pages names should begin with the words "Classes:" and "Structs:" respectively, such as [[Classes:Actor]] or [[Structs:StringTable]].
+
+The general page structure for any of the two should look something like this:
+
+ General description of the class/struct and its purpose.
+ 
+ == Fields ==
+ ''A list of fields in this class in the form of a bulleted-list, with descriptions''
+ 
+ == Methods ==
+ === Virtual ===
+ ''A bulleted list of virtual functions defined in this class/struct''
+ === Static ===
+ ''A bulleted list of static functions defined in this class/struct''
+ === Non-static ===
+ ''A bulleted list of non-static (dynamic) functions defined in this class/struct''
+ 
+ == &lt;nowiki&gt;[[ZScript]]&lt;/nowiki&gt; definition ==
+ &lt;nowiki&gt;{{ZScriptDefinitionNote|&lt;path to Github code&gt;}}&lt;/nowiki&gt;
+ ''This template inserts a warning that this code is for reference only and adds a link to where this code is contained on Github. Note, you don't need a full link; instead your link must begin with whatever comes after &lt;code&gt;zscript/&lt;/code&gt; in the link, and everything before it (specifically, &lt;code&gt;https://github.com/ZDoom/gzdoom/blob/master/wadsrc/static/zscript&lt;/code&gt; must be dropped).''
+ 
+ &lt;nowiki&gt;&lt;syntaxhighlight lang="csharp"&gt;&lt;/nowiki&gt;
+ ''Copy-paste the definition of the class from GZDoom Github, unless it's way too long. This is especially relevant for various in-game actors that come with their own peculiar behaviors. Always use the &lt;nowiki&gt;&lt;syntaxhighlight lang="csharp"&gt;&lt;/nowiki&gt; block for this.''
+ &lt;nowiki&gt;&lt;/syntaxhighlight&gt;&lt;/nowiki&gt;
+ 
+ == &lt;nowiki&gt;[[DECORATE]]&lt;/nowiki&gt; definition ==
+ &lt;nowiki&gt;{{DecorateDefinitionNote}}&lt;/nowiki&gt;
+ ''DECORATE definition goes here ONLY if it was already added to the page previously. Since DECORATE is no longer used, new definitions in DECORATE should not be added.''
+ 
+ == Examples ==
+ ''An example bit of code demonstrating how this class/struct can be used. If you can't add an example right now, put '''&lt;nowiki&gt;{{noexamples}}&lt;/nowiki&gt;''' here.''
+ 
+ == See also ==
+ ''A bulleted list of links to other pages that are relevant/connected to this one, if any.''
+ 
+ ''A list of relevant categories at the end:''
+ &lt;nowiki&gt;[[Category:ZScript]]&lt;/nowiki&gt;
+
+Example pages:
+* [[Classes:PSprite]]
+* [[Structs:TexMan]]
+
+Useful templates:
+* [[Template:ZScriptDefinitionNote]]
+* [[Template:DecorateDefinitionNote]]
+
+== Function pages ==
+The general structure of a function page looks like this:
+ &lt;nowiki&gt;'''{{class|ParentClassName}}'''&lt;/nowiki&gt;
+ 
+ &lt;nowiki&gt;keyword type '''FunctionName'''(argtype ''argname'' = defvalue)&lt;/nowiki&gt;
+ 
+ == Usage ==
+ ''General description of how this function is used.''
+ === Parameters ===
+ ''A bulleted list of the arguments used by the function, if any. Example:''
+ &lt;nowiki&gt;*{{c|argtype '''argname'''}}&lt;/nowiki&gt;
+ &lt;nowiki&gt;:Argument description.&lt;/nowiki&gt;
+ === Return values ===
+ ''Description of the return values of the function. If more than one, used a bulleted list.''
+ 
+ == Examples ==
+ ''An example bit of code demonstrating how this class/struct can be used. If you can't add an example right now, put '''&lt;nowiki&gt;{{noexamples}}&lt;/nowiki&gt;''' here.''
+ 
+ == &lt;nowiki&gt;[[ZScript]]&lt;/nowiki&gt; definition ==
+ &lt;nowiki&gt;{{ZScriptDefinitionNote|&lt;path to Github code&gt;}}&lt;/nowiki&gt;
+ ''This template inserts a warning that this code is for reference only and adds a link to where this code is contained on Github. Note, you don't need a full link; instead your link must begin with whatever comes after &lt;code&gt;zscript/&lt;/code&gt; in the link, and everything before it (specifically, &lt;code&gt;https://github.com/ZDoom/gzdoom/blob/master/wadsrc/static/zscript&lt;/code&gt; must be dropped).''
+ 
+ &lt;nowiki&gt;&lt;syntaxhighlight lang="csharp"&gt;&lt;/nowiki&gt;
+ ''Copy-paste the definition of the class from GZDoom Github, unless it's way too long. This is especially relevant for various in-game actors that come with their own peculiar behaviors. Always use the &lt;nowiki&gt;&lt;syntaxhighlight lang="csharp"&gt;&lt;/nowiki&gt; block for this.''
+ &lt;nowiki&gt;&lt;/syntaxhighlight&gt;&lt;/nowiki&gt;
+ 
+ == See also ==
+ ''A bulleted list of links to other pages that are relevant/connected to this one, if any.''
+ 
+ ''A list of relevant categories at the end:''
+ &lt;nowiki&gt;[[Category:ZScript]]&lt;/nowiki&gt;
+
+
+Example pages:
+* [[Use]]
+* [[Tick]]
+
+Useful templates:
+* [[Template:ZScriptDefinitionNote]]
+
+== Formatting of functions ==
+=== At the top of the page ===
+Return values and access modifiers, such as private, protected, native, don't need formatting.
+
+The name of the function must be in bold. Names of the arguments should be in italics.
+
+'''Default values for arguments must always be provided!'''
+
+Example:
+
+ &lt;nowiki&gt;virtual void '''SomeMissileFunction'''(Actor ''missile'', double ''angle'' = 0)&lt;/nowiki&gt;
+
+Result:
+
+ virtual void '''SomeMissileFunction'''(Actor ''missile'', double ''angle'' = 0)
+
+Note: Using monospaced &lt;code&gt;&lt;nowiki&gt;{{c| }}&lt;/nowiki&gt;&lt;/code&gt; formatting for the whole function is preferable, but it seems to fail on functions that have the equal sign (&lt;code&gt;=&lt;/code&gt;) in them. To resolve this, use the &lt;code&gt;&lt;nowiki&gt;{{=}}&lt;/nowiki&gt;&lt;/code&gt; template in place of the equal signs.
+
+If the function is defined in a specific class, the name of the class must be provided on top of the function in bold, with a link to the parent class. For example:
+
+ '''[[Classes:Actor|Actor]]'''
+ 
+ virtual int '''DamageMobj'''(Actor ''inflictor'', Actor ''source'', int ''damage'', Name ''mod'', int flags = 0, double angle = 0)
+
+=== In the text ===
+Using the '''code''' instruction is recommended to highlight functions, operators, access modifiers and keywords  in the text: &lt;nowiki&gt;&lt;code&gt;MyFunction()&lt;/code&gt;&lt;/nowiki&gt;, &lt;nowiki&gt;&lt;code&gt;if&lt;/code&gt;&lt;/nowiki&gt;, &lt;nowiki&gt;&lt;code&gt;private&lt;/code&gt;&lt;/nowiki&gt;
+
+Result: &lt;code&gt;MyFunction()&lt;/code&gt;, &lt;code&gt;if&lt;/code&gt;, &lt;code&gt;private&lt;/code&gt;
+
+However, if you want to add a link to the function, using bold might be preferable, because code formatting makes the link practically invisible. Compare these two clickable options:
+* [[DrawString (BaseStatusBar)|&lt;code&gt;DrawString()&lt;/code&gt;]] (clickable but not obvious)
+* [[DrawString (BaseStatusBar)|'''DrawString()''']] (obviously clickable)
+
+Fields can be highlighted in bold: &lt;nowiki&gt;'''health'''&lt;/nowiki&gt;
+
+Result: '''health'''.
+
+== Function arguments ==
+When describing function arguments, the recommended formatting rules are:
+* Use a bulletted list, with a new element for each function (bulleted lists begin with &lt;code&gt;*&lt;/code&gt;)
+* Both the argument type and the argument name should be provided. The name should be in bold.
+* The whole argument (both the type and the name) should be enclosed in monospace formatting &lt;nowiki&gt;{{c| }}&lt;/nowiki&gt;
+* The description of the argument, most of the time, should be on a separate line beginning with &lt;code&gt;:&lt;/code&gt;
+
+Example:
+ &lt;nowiki&gt;*{{c|Actor '''missile'''}}&lt;/nowiki&gt;
+ &lt;nowiki&gt;:The actor type to be used as the projectile.&lt;/nowiki&gt;
+ &lt;nowiki&gt;*{{c|double '''angle'''}}&lt;/nowiki&gt;
+ &lt;nowiki&gt;:The offset relative to the shooter's angle to fire the projectile at.&lt;/nowiki&gt;
+
+Result:
+*{{c|Actor '''missile'''}}
+:The actor type to be used as the projectile.
+*{{c|double '''angle'''}}
+:The offset relative to the shooter's angle to fire the projectile at.
+
+= Bulleted lists =
+Bulletted lists can be created with &lt;code&gt;*&lt;/code&gt;. Descriptions should be placed on a separate line, starting with &lt;code&gt;:&lt;/code&gt;.
+
+ &lt;nowiki&gt;*Bullet point&lt;/nowiki&gt;
+ &lt;nowiki&gt;:Bullet point description.&lt;/nowiki&gt;
+
+Result:
+
+*Bullet point
+:Bullet point description.
+
+
+When using bulleted lists to describe arguments of a function, it's preferable that the whole string uses &lt;code&gt;&lt;nowiki&gt;{{c| }}&lt;/nowiki&gt;&lt;/code&gt; for monospaced font, and the field name is highlighted in bold, like so:
+
+ &lt;nowiki&gt;*{{c|datatype '''fieldname'''}}&lt;/nowiki&gt;
+ &lt;nowiki&gt;:Description of a field.&lt;/nowiki&gt;
+
+For example:
+*{{c|Vector2 '''position'''}}
+:Determines the position of the element.
+
+= Code Formatting =
+This section will cover how code used in examples should be formatted. It may not be fully extensive and sometimes personal judgment is needed, but it will attempt to cover as many topics as possible. These guidelines should be strictly adhered to as much as possible to create the best sense of consistency. Since ZScript's formatting is strongly rooted in C/C++, it will borrow many of its conventions from the languages, but not all of them. C# is a close equivalent to ZScript since it similarly is a memory managed language based around the C/C++ syntax.
+
+== Highlighting ==
+Use the &lt;code&gt;&lt;nowiki&gt;&lt;syntaxhighlight lang="csharp"&gt;&lt;/nowiki&gt;&lt;/code&gt; to begin a code block, and &lt;code&gt;&lt;nowiki&gt;&lt;/syntaxhighlight&gt;&lt;/nowiki&gt;&lt;/code&gt; to close it. '''Please avoid using the old-style code formatting with spaces at the start of the string.''' While the old-style formatting allows combining code with links and color highlights, it's generally much less convenient. If the code utilizes references to other classes and functions that the user may not understand, it's preferable to add a note with a bulletted list of relevant links.
+
+ &lt;nowiki&gt;&lt;syntaxhighlight lang="csharp"&gt;&lt;/nowiki&gt;
+ Code here.
+ &lt;nowiki&gt;&lt;/syntaxhighlight&gt;&lt;/nowiki&gt;
+
+Example:
+&lt;syntaxhighlight lang="csharp"&gt;
+// This is some test code.
+void DoThing()
+{
+    int x = 5;
+    double y = 2.0;
+}
+&lt;/syntaxhighlight&gt;
+
+Note that this syntax formatting does ''not'' support {{c|&lt;nowiki&gt;[[]]&lt;/nowiki&gt;}}-style wiki links.
+
+If for any reason you ''need'' to use old-style code (for example, you're editing an old page that has a lot of it, or you want to create code that ''does'' have inter-wiki links), please mind the existence of the following templates:
+*[[Template:Comment]] — makes the string dark-green, italicized and adds &lt;code&gt;// &lt;/code&gt; before it.
+:Example: &lt;code&gt;&lt;nowiki&gt;{{comment|This is a comment}}&lt;/nowiki&gt;&lt;/code&gt; will turn into {{comment|This is a comment}}.
+*[[Template:LanguageCodeNote]] — this should be used in practically any place where a player-facing string is written out in the code explicitly.
+:It's considered bad practice to write player-facing strings, such as those for {{property|Inventory.PickupMessage}}, directly in the code; instead authors should mostly rely on storing strings in the [[LANGUAGE]] lump. However, it's considered ''fine'' to write out strings explicitly as an example. So, this note should be added to such examples.
+:Usage: &lt;code&gt;&lt;nowiki&gt;{{LanguageCodeNote}}&lt;/nowiki&gt;&lt;/code&gt; turns into {{LanguageCodeNote}}.
+
+== Syntax ==
+{{note|This section concerns the syntax for example code snippets. GZDoom source code excerpts should be pasted as-is and kept the way they appear on GZDoom GitHub.}}
+=== Formatting ===
+*Use 4 spaces to denote an indent.
+*Use Allman syntax for braces:
+&lt;syntaxhighlight lang="csharp"&gt;
+if (expr)
+{
+    // Code.
+}
+&lt;/syntaxhighlight&gt;
+*Always include braces:
+&lt;syntaxhighlight lang="csharp"&gt;
+// Wrong:
+if (expr) DoThing();
+
+// Wrong:
+if (expr)
+    DoThing();
+
+// Correct:
+if (expr)
+{
+    DoThing();
+}
+&lt;/syntaxhighlight&gt;
+*Keywords such as &lt;code&gt;if&lt;/code&gt;, &lt;code&gt;while&lt;/code&gt;, &lt;code&gt;is&lt;/code&gt;, etc. should always be lowercase.
+*Use proper grammar in comments, including punctuation.
+*Comments should always have a space after the start and, if a block, before the end:
+&lt;syntaxhighlight lang="csharp"&gt;
+// Proper line comment.
+/* Proper block comment. */
+&lt;/syntaxhighlight&gt;
+*Don't include a comment unless it clarifies a particularly confusing aspect of the example (and in this case, choosing a better example may be the best choice). Comments are meant to explain why something is the way it is, not what should be self-evident in the code itself when using proper naming conventions and formatting.
+*Loop formatting:
+&lt;syntaxhighlight lang="csharp"&gt;
+for (int i = 0; i &lt; cap; i++)
+{
+
+}
+
+while (expr)
+{
+
+}
+
+do
+{
+
+} while (expr);
+&lt;/syntaxhighlight&gt;
+*Branch formatting:
+&lt;syntaxhighlight lang="csharp"&gt;
+if (expr)
+{
+
+}
+else if (otherExpr)
+{
+
+}
+else
+{
+
+}
+&lt;/syntaxhighlight&gt;
+*Switches should always have a &lt;code&gt;break&lt;/code&gt; at the end of each case unless a fall-through is expected:
+&lt;syntaxhighlight lang="csharp"&gt;
+switch (val)
+{
+    case 0:
+        DoThing();
+        break;
+
+    default:
+        DoDefaultThing();
+        break;
+}
+&lt;/syntaxhighlight&gt;
+
+=== Fields And Variables ===
+*Variable and field names should be brief, descriptive, and accurately describe what they're representing.
+*Local variables and non-Actor properties should always use camel casing (e.g. &lt;code&gt;myVar&lt;/code&gt;).
+*Actor properties should always use Pascal casing (e.g. &lt;code&gt;MyProperty&lt;/code&gt;).
+*Constants and enum values should always use snake casing in all uppercase letters (e.g. &lt;code&gt;MY_CONSTANT&lt;/code&gt;).
+*Enum values should be denoted with a prefix to mark what enum they belong to (e.g. &lt;code&gt;PREF_ENUM_VALUE&lt;/code&gt;).
+*If a variable or field refers to a specific enum, the name of the enum should be used if possible instead of a specific datatype:
+&lt;syntaxhighlight lang="csharp"&gt;
+enum EMyFlags
+{
+    // ...
+}
+
+int flags; // Don't do this.
+EMyFlags flags; // Do this instead.
+&lt;/syntaxhighlight&gt;
+*When setting a variable or field to a value, use correct data types:
+&lt;syntaxhighlight lang="csharp"&gt;
+uint w = 5u;
+int x = 5;
+double y = 5.0;
+bool z = true;
+String s = "This is a string.";
+Name n = 'This is a name.';
+&lt;/syntaxhighlight&gt;
+
+=== Constants and Enums ===
+*Constants should always be given the correct data type when declaring them to prevent confusion with math:
+&lt;syntaxhighlight lang="csharp"&gt;
+const HEALTH_THRESHOLD = 50; // This is an int because health is tracked as such.
+const DAMAGE_RANGE = 256.0; // This is a float since ranges are tracked with double precision floats.
+&lt;/syntaxhighlight&gt;
+*For enums, whether a semi-colon is used or if the last value has a comma is left up to the code writer:
+&lt;syntaxhighlight lang="csharp"&gt;
+enum EMyEnum
+{
+    ME_VALUE1,
+    ME_VALUE2,
+    ME_VALUE3, // Optional comma.
+}; // Optional semi-colon.
+&lt;/syntaxhighlight&gt;
+*If a specific data type is being used with the enum, make sure it's properly spaced:
+&lt;syntaxhighlight lang="csharp"&gt;
+enum EMyEnum : uint
+&lt;/syntaxhighlight&gt;
+*Only specify a value for enum values if it won't automatically be captured by default enumeration behavior.
+*For flag enums, always include a default 0 value and use bitshifting over raw powers of 2. For these, it's ok to explicitly define every value:
+&lt;syntaxhighlight lang="csharp"&gt;
+enum EMyFlags
+{
+    MF_NONE = 0,
+    MF_FLAG1 = 1,
+    MF_FLAG2 = 1&lt;&lt;1,
+    MF_FLAG3 = 1&lt;&lt;2
+}
+&lt;/syntaxhighlight&gt;
+
+=== Functions ===
+*Function names should be brief, descriptive, and accurately describe what they're doing. Always use Pascal casing.
+*It is highly preferable that &lt;code&gt;action&lt;/code&gt; functions have an &lt;code&gt;A_&lt;/code&gt; prefix.:
+&lt;syntaxhighlight lang="csharp"&gt;
+action void A_MyFunction() {}
+&lt;/syntaxhighlight&gt;
+*Functions that check certain criteria should appropriately ask a question:
+&lt;syntaxhighlight lang="csharp"&gt;
+bool IsOpen() { /* ... */ }
+bool CanUse() { /* ... */ }
+&lt;/syntaxhighlight&gt;
+*Functions that perform tasks should contain a verb describing the action:
+&lt;syntaxhighlight lang="csharp"&gt;
+void OpenDoor() { }
+void UseItem() { }
+&lt;/syntaxhighlight&gt;
+*Anonymous functions should be declared like so:
+&lt;syntaxhighlight lang="csharp"&gt;
+SPRT A 5
+{
+    // Code.
+}
+&lt;/syntaxhighlight&gt;
+:The exception to this is single line anonymous functions:
+&lt;syntaxhighlight lang="csharp"&gt;
+SPRT A 5 { /* Single statement. */ }
+&lt;/syntaxhighlight&gt;
+
+=== Field And Function Modifiers ===
+*Accessors (&lt;code&gt;protected&lt;/code&gt;, &lt;code&gt;private&lt;/code&gt;) should always come first when declaring fields and defining functions:
+&lt;syntaxhighlight lang="csharp"&gt;
+protected int myField;
+private void MyFunction() {}
+&lt;/syntaxhighlight&gt;
+*Scopes should always come second after accessors:
+&lt;syntaxhighlight lang="csharp"&gt;
+protected ui int myUIField;
+private clearscope void MyDataFunction() {}
+&lt;/syntaxhighlight&gt;
+*For functions, whether or not it's static should always come third:
+&lt;syntaxhighlight lang="csharp"&gt;
+protected ui static void MyUIFunction() {}
+&lt;/syntaxhighlight&gt;
+*For fields, other modifiers e.g. &lt;code&gt;readonly&lt;/code&gt; and &lt;code&gt;transient&lt;/code&gt; should come third and can be specified in any order:
+&lt;syntaxhighlight lang="csharp"&gt;
+private ui transient int myUIField;
+&lt;/syntaxhighlight&gt;
+
+=== Classes and Data Types ===
+*Primitive data types should always use all lowercase e.g. &lt;code&gt;int&lt;/code&gt;, &lt;code&gt;double&lt;/code&gt;, etc. Non-primitive types like &lt;code&gt;Name&lt;/code&gt;, &lt;code&gt;String&lt;/code&gt;, &lt;code&gt;Sound&lt;/code&gt;, etc. should use Pascal casing.
+*Classes, structs, and enums should always use Pascal casing and should not have numbers in their names e.g. &lt;code&gt;MyClassName&lt;/code&gt;, &lt;code&gt;FMyStruct&lt;/code&gt;, &lt;code&gt;EMyEnum&lt;/code&gt;. Structs can optionally start with an &lt;code&gt;F&lt;/code&gt; prefix and enums should always start with an &lt;code&gt;E&lt;/code&gt; prefix.
+*Use proper spacing when declaring classes:
+&lt;syntaxhighlight lang="csharp"&gt;
+class MyClass : MyBaseClass replaces DoomImp
+{
+
+}
+&lt;/syntaxhighlight&gt;
+ 
+
+[[Category:Wiki guides]]</text>
+    <sha1>8mk9q33vi3bhq6k48fjigbx5styj3j1</sha1>
+  </revision>
+</page>

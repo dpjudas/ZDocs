@@ -1,0 +1,53 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>InitEffect</title>
+  <ns>0</ns>
+  <id>9806</id>
+  <revision>
+    <id>51601</id>
+    <parentid>51513</parentid>
+    <timestamp>2024-02-03T22:17:46Z</timestamp>
+    <contributor>
+      <username>Jekyll Grim Payne</username>
+      <id>2175</id>
+    </contributor>
+    <minor />
+    <comment>/* Usage */</comment>
+    <origin>51601</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="1410" sha1="3terpsl4qn5dw5hmij0ualny2d7p0fe" xml:space="preserve">'''{{class|Powerup}}'''
+
+{{c|virtual void '''InitEffect''' ()}}
+
+== Usage ==
+A [[ZScript virtual functions|virtual function]] called by {{class|Powerup|powerups}} when they become active to initialize whatever needs to be done at that stage. The base Powerup class uses it to set up screen blend/colors.
+
+Powerups with the {{flag|INVENTORY.AUTOACTIVATE}} flag will call it automatically (since they're activated automatically). Otherwise, it will be called only once the powerup is used from the inventory bar.
+
+{{Warning|When overriding this function, always remember to call &lt;code&gt;Super.InitEffect()&lt;/code&gt;, otherwise the colormap won't be set up properly, which can lead to unintended consequences, such as the player's screen receiving {{class|InvulnerabilitySphere}}'s inverse colormap.}}
+
+== [[ZScript]] definition ==
+{{ZScriptDefinitionNote|actors/inventory/powerups.zs#L196C1-L200C3}}
+The base {{class|Powerup}} class defines it as follows:
+&lt;syntaxhighlight lang="csharp"&gt;
+	virtual void InitEffect() 
+	{
+		// initialize this only once instead of recalculating repeatedly.
+		Colormap = ((BlendColor &amp; 0xFFFF0000) == SPECIALCOLORMAP_MASK)? BlendColor &amp; 0xffff : PlayerInfo.NOFIXEDCOLORMAP;
+	}
+&lt;/syntaxhighlight&gt;
+
+== Examples ==
+{{noexamples}}
+
+== See also ==
+* [[Classes:Powerup]]
+* [[DoEffect]]
+* [[EndEffect]]
+* [[Powerup virtual functions]]
+
+[[Category:ZScript]]
+[[Category:ZScript virtual functions]]</text>
+    <sha1>3terpsl4qn5dw5hmij0ualny2d7p0fe</sha1>
+  </revision>
+</page>

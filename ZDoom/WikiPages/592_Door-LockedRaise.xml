@@ -1,0 +1,159 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>Door LockedRaise</title>
+  <ns>0</ns>
+  <id>592</id>
+  <revision>
+    <id>43892</id>
+    <parentid>22980</parentid>
+    <timestamp>2017-02-26T22:07:00Z</timestamp>
+    <contributor>
+      <username>Gez</username>
+      <id>1283</id>
+    </contributor>
+    <comment>conversions</comment>
+    <origin>43892</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="8633" sha1="snlkz95eejhdwqh1rj97jqkob4rkqev" xml:space="preserve">{{DISPLAYTITLE:Door_LockedRaise}}
+{{Special|13|tag, speed, delay, lock, lighttag|Door|Raise, Locked}}
+
+* ''tag'': Tag of affected sector 
+* ''speed'': How quickly the door moves 
+* ''delay'': Tics until door closes (0 if never) 
+* ''lock'': Required key (See [[Key types]])
+* ''lighttag'': Tag of sector to perform a gradual lighting effect in
+
+Raises the ceiling of all affected sectors to four units below the lowest surrounding ceiling if the player has the proper key. After the door is opened, it will be closed again after delay tics. If ''tag'' is 0, then the sector on the line's back side is used.
+
+If ''lighttag'' is non-zero a gradual lighting effect is done in the tagged sectors. The light is gradually changed between the darkest neighboring sector when the door is fully closed and the brightest neighboring sector when the door is fully open.
+
+== Conversions from linedef types ==
+The following Doom map format types can be converted as Door_Raise:
+{| {{prettytable}}
+!Type!!Conversion!!Trigger
+|-
+|{{icon|Doom}} 26:DR Door Blue Key||Door_LockedRaise (0, {{xlat|D_SLOW}}, {{xlat|VDOORWAIT}}, 130, tag)||Player Use, Repeatable
+|-
+|{{icon|Heretic}} 26:DR Door Blue Key||Door_LockedRaise (0, {{xlat|D_SLOW}}, {{xlat|VDOORWAIT}}, 130, tag)||Player Use, Repeatable
+|-
+|{{icon|Strife}} 26:DR Door ID Badge||Door_LockedRaise (0, {{xlat|D_SLOW}}, {{xlat|VDOORWAIT}}, 4, tag)||Player Use, Repeatable
+|-
+|{{icon|Doom}} 27:DR Door Yellow Key||Door_LockedRaise (0, {{xlat|D_SLOW}}, {{xlat|VDOORWAIT}}, 131, tag)||Player Use, Repeatable
+|-
+|{{icon|Heretic}} 27:DR Door Yellow Key||Door_LockedRaise (0, {{xlat|D_SLOW}}, {{xlat|VDOORWAIT}}, 131, tag)||Player Use, Repeatable
+|-
+|{{icon|Strife}} 27:DR Door Passcard||Door_LockedRaise (0, {{xlat|D_SLOW}}, {{xlat|VDOORWAIT}}, 3, tag)||Player Use, Repeatable
+|-
+|{{icon|Doom}} 28:DR Door Red Key||Door_LockedRaise (0, {{xlat|D_SLOW}}, {{xlat|VDOORWAIT}}, 129, tag)||Player Use, Repeatable
+|-
+|{{icon|Heretic}} 28:DR Door Green Key||Door_LockedRaise (0, {{xlat|D_SLOW}}, {{xlat|VDOORWAIT}}, 129, tag)||Player Use, Repeatable
+|-
+|{{icon|Doom}} 28:DR Door ID Card||Door_LockedRaise (0, {{xlat|D_SLOW}}, {{xlat|VDOORWAIT}}, 10, tag)||Player Use, Repeatable
+|-
+|{{icon|Doom}} 32:D1 Door Stay Open Blue Key||Door_LockedRaise (0, {{xlat|D_SLOW}}, 0, 130, tag)||Player Use, Monsters Activate
+|-
+|{{icon|Heretic}} 32:D1 Door Stay Open Blue Key||Door_LockedRaise (0, {{xlat|D_SLOW}}, 0, 130, tag)||Player Use, Monsters Activate
+|-
+|{{icon|Strife}} 32:D1 Door Stay Open ID Badge||Door_LockedRaise (0, {{xlat|D_SLOW}}, 0, 4, tag)||Player Use
+|-
+|{{icon|Doom}} 33:D1 Door Stay Open Red Key||Door_LockedRaise (0, {{xlat|D_SLOW}}, 0, 129, tag)||Player Use, Monsters Activate
+|-
+|{{icon|Heretic}} 33:D1 Door Stay Open Green Key||Door_LockedRaise (0, {{xlat|D_SLOW}}, 0, 129, tag)||Player Use, Monsters Activate
+|-
+|{{icon|Strife}} 33:D1 Door Stay Open ID Card||Door_LockedRaise (0, {{xlat|D_SLOW}}, 0, 10, tag)||Player Use
+|-
+|{{icon|Doom}} 34:D1 Door Stay Open Yellow Key||Door_LockedRaise (0, {{xlat|D_SLOW}}, 0, 131, tag)||Player Use, Monsters Activate
+|-
+|{{icon|Heretic}} 34:D1 Door Stay Open Yellow Key||Door_LockedRaise (0, {{xlat|D_SLOW}}, 0, 131, tag)||Player Use, Monsters Activate
+|-
+|{{icon|Strife}} 34:D1 Door Stay Open Passcard||Door_LockedRaise (0, {{xlat|D_SLOW}}, 0, 3, tag)||Player Use
+|-
+|{{icon|Doom}} 99:SR Door Stay Open Blue Key Fast||Door_LockedRaise (tag, {{xlat|D_FAST}}, 0, 130)||Player Use, Repeatable
+|-
+|{{icon|Strife}} 99:SR Door ID Badge Fast||Door_LockedRaise (tag, {{xlat|D_FAST}}, {{xlat|VDOORWAIT}}, 4)||Player Use, Repeatable
+|-
+|{{icon|Doom}} 133:S1 Door Stay Open Blue Key Fast||Door_LockedRaise (tag, {{xlat|D_FAST}}, 0, 130)||Player Use
+|-
+|{{icon|Strife}} 133:S1 Door Stay Open ID Badge Fast||Door_LockedRaise (tag, {{xlat|D_FAST}}, 0, 4)||Player Use
+|-
+|{{icon|Doom}} 134:SR Door Stay Open Red Key Fast||Door_LockedRaise (tag, {{xlat|D_FAST}}, 0, 129)||Player Use, Repeatable
+|-
+|{{icon|Strife}} 134:SR Door ID Card Fast||Door_LockedRaise (tag, {{xlat|D_FAST}}, {{xlat|VDOORWAIT}}, 11)||Player Use, Repeatable
+|-
+|{{icon|Doom}} 135:S1 Door Stay Open Red Key Fast||Door_LockedRaise (tag, {{xlat|D_FAST}}, 0, 129)||Player Use
+|-
+|{{icon|Strife}} 135:S1 Door Stay Open ID Card Fast||Door_LockedRaise (tag, {{xlat|D_FAST}}, 0, 11)||Player Use
+|-
+|{{icon|Doom}} 136:SR Door Stay Open Yellow Key Fast||Door_LockedRaise (tag, {{xlat|D_FAST}}, 0, 131)||Player Use, Repeatable
+|-
+|{{icon|Strife}} 136:SR Door Passcard Fast||Door_LockedRaise (tag, {{xlat|D_FAST}}, {{xlat|VDOORWAIT}}, 3)||Player Use, Repeatable
+|-
+|{{icon|Doom}} 137:S1 Door Stay Open Yellow Key Fast||Door_LockedRaise (tag, {{xlat|D_FAST}}, 0, 131)||Player Use
+|-
+|{{icon|Strife}} 137:S1 Door Stay Open Passcard Fast||Door_LockedRaise (tag, {{xlat|D_FAST}}, 0, 3)||Player Use
+|-
+|{{icon|Strife}} 151:SR Door Gold Key Fast||Door_LockedRaise (tag, {{xlat|D_FAST}}, {{xlat|VDOORWAIT}}, 10)||Player Use, Repeatable
+|-
+|{{icon|Strife}} 152:SR Door Brass Key Fast||Door_LockedRaise (tag, {{xlat|D_FAST}}, {{xlat|VDOORWAIT}}, 17)||Player Use, Repeatable
+|-
+|{{icon|Strife}} 153:SR Door Silver Key Fast||Door_LockedRaise (tag, {{xlat|D_FAST}}, {{xlat|VDOORWAIT}}, 12)||Player Use, Repeatable
+|-
+|{{icon|Strife}} 156:D1 Door Stay Open Brass Key||Door_LockedRaise (0, {{xlat|D_SLOW}}, 0, 17, tag)||Player Use
+|-
+|{{icon|Strife}} 157:D1 Door Stay Open Silver Key||Door_LockedRaise (0, {{xlat|D_SLOW}}, 0, 12, tag)||Player Use
+|-
+|{{icon|Strife}} 158:D1 Door Stay Open Gold Key||Door_LockedRaise (0, {{xlat|D_SLOW}}, 0, 10, tag)||Player Use
+|-
+|{{icon|Strife}} 159:DR Door Gold Key||Door_LockedRaise (0, {{xlat|D_SLOW}}, {{xlat|VDOORWAIT}}, 10, tag)||Player Use, Repeatable
+|-
+|{{icon|Strife}} 160:DR Door Silver Key||Door_LockedRaise (0, {{xlat|D_SLOW}}, {{xlat|VDOORWAIT}}, 12, tag)||Player Use, Repeatable
+|-
+|{{icon|Strife}} 161:DR Door Brass Key||Door_LockedRaise (0, {{xlat|D_SLOW}}, {{xlat|VDOORWAIT}}, 17, tag)||Player Use, Repeatable
+|-
+|{{icon|Strife}} 162:S1 Door Brass Key Fast||Door_LockedRaise (tag, {{xlat|D_FAST}}, 0, 17)||Player Use
+|-
+|{{icon|Strife}} 163:S1 Door Silver Key Fast||Door_LockedRaise (tag, {{xlat|D_FAST}}, 0, 12)||Player Use
+|-
+|{{icon|Strife}} 164:S1 Door Gold Key Fast||Door_LockedRaise (tag, {{xlat|D_FAST}}, 0, 10)||Player Use
+|-
+|{{icon|Strife}} 165:SR Fake Door 'Doesn't Seem To Work'||Door_LockedRaise (0, 0, 0, 102)||Player Use
+|-
+|{{icon|Strife}} 166:DR Door Severed Hand||Door_LockedRaise (0, {{xlat|D_SLOW}}, {{xlat|VDOORWAIT}}, 6, tag)||Player Use, Repeatable
+|-
+|{{icon|Strife}} 167:S1 Door Severed Hand Fast||Door_LockedRaise (tag, {{xlat|D_FAST}}, 0, 6)||Player Use
+|-
+|{{icon|Strife}} 168:SR Door Severed Hand Fast||Door_LockedRaise (tag, {{xlat|D_FAST}}, {{xlat|VDOORWAIT}}, 6)||Player Use, Repeatable
+|-
+|{{icon|Strife}} 169:DR Door Base Key||Door_LockedRaise (0, {{xlat|D_SLOW}}, {{xlat|VDOORWAIT}}, 1, tag)||Player Use, Repeatable
+|-
+|{{icon|Strife}} 170:DR Door Govs Key||Door_LockedRaise (0, {{xlat|D_SLOW}}, {{xlat|VDOORWAIT}}, 2, tag)||Player Use, Repeatable
+|-
+|{{icon|Strife}} 171:S1 Door Prison Key Fast||Door_LockedRaise (tag, {{xlat|D_SLOW}}, 0, 5)||Player Use
+|-
+|{{icon|Strife}} 172:SR Door Power 1 Key||Door_LockedRaise (tag, {{xlat|D_SLOW}}, {{xlat|VDOORWAIT}}, 7)||Player Use, Repeatable
+|-
+|{{icon|Strife}} 173:SR Door Power 2 Key||Door_LockedRaise (tag, {{xlat|D_SLOW}}, {{xlat|VDOORWAIT}}, 8)||Player Use, Repeatable
+|-
+|{{icon|Strife}} 176:SR Door Power 3 Key||Door_LockedRaise (tag, {{xlat|D_SLOW}}, {{xlat|VDOORWAIT}}, 9)||Player Use, Repeatable
+|-
+|{{icon|Strife}} 190:DR Door Order Key||Door_LockedRaise (0, {{xlat|D_SLOW}}, {{xlat|VDOORWAIT}}, 15, tag)||Player Use, Repeatable
+|-
+|{{icon|Strife}} 191:SR Door Military ID||Door_LockedRaise (tag, {{xlat|D_SLOW}}, {{xlat|VDOORWAIT}}, 14)||Player Use, Repeatable
+|-
+|{{icon|Strife}} 192:SR Door Warehouse Key||Door_LockedRaise (tag, {{xlat|D_SLOW}}, {{xlat|VDOORWAIT}}, 16)||Player Use, Repeatable
+|-
+|{{icon|Strife}} 205:SR Fake Door 'Only Available In Retail'||Door_LockedRaise (0, {{xlat|D_SLOW}}, 0, 103)||Player Use, Repeatable
+|-
+|{{icon|Strife}} 217:DR Door Core Key||Door_LockedRaise (0, {{xlat|D_SLOW}}, 0, 23, tag)||Player Use
+|-
+|{{icon|Strife}} 221:DR Door Mauler Key||Door_LockedRaise (0, {{xlat|D_SLOW}}, 0, 24, tag)||Player Use
+|-
+|{{icon|Strife}} 223:SR Door Mine Key||Door_LockedRaise (tag, {{xlat|D_SLOW}}, {{xlat|VDOORWAIT}}, 26)||Player Use, Repeatable
+|-
+|{{icon|Strife}} 224:DR Door Chapel Key||Door_LockedRaise (0, {{xlat|D_SLOW}}, 0, 20, tag)||Player Use
+|-
+|{{icon|Strife}} 225:DR Door Catacomb Key||Door_LockedRaise (0, {{xlat|D_SLOW}}, 0, 21, tag)||Player Use
+|}</text>
+    <sha1>snlkz95eejhdwqh1rj97jqkob4rkqev</sha1>
+  </revision>
+</page>

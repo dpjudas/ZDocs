@@ -1,0 +1,34 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>Classes:WeaponGiver</title>
+  <ns>0</ns>
+  <id>4705</id>
+  <revision>
+    <id>48417</id>
+    <parentid>36562</parentid>
+    <timestamp>2021-03-29T03:13:53Z</timestamp>
+    <contributor>
+      <username>Zhs2</username>
+      <id>1656</id>
+    </contributor>
+    <minor />
+    <comment>WeaponGiver actually does inherit from Weapon. Also got rid of the ugly space in the inheritance list</comment>
+    <origin>48417</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="1078" sha1="hxvyo20x4qpml8rc4cr2wv46b4pf0ge" xml:space="preserve">{{Actor|
+| type = Internal
+| name = Weapon giver
+| class = WeaponGiver
+}}[[Classes]]: [[Classes:Inventory|Inventory]]&amp;rarr;[[Classes:Weapon|Weapon]]&amp;rarr;&lt;u&gt;WeaponGiver&lt;/u&gt;&amp;rarr;[[Classes:AssaultGunStanding|AssaultGunStanding]]&lt;br&gt;
+A class that is used to define alternate pickups for [[Classes:Weapon|weapons]]. A weapon giver is affected by game modes like a weapon (for respawning, staying, and so on) but isn't, itself, a weapon. Instead, it gives the last weapon defined in its DropItem list. For this reason, a weapon giver should have only one entry in its DropItem list.
+
+Like a [[Classes:Weapon|weapon]], a WeaponGiver can be specified a certain amount of ammo. By default (for the -1 value), it will give the same amount as the weapon it gives; but a value of 0 or more is given it overrides the weapon's normal ammo quantity. This can be used to create fully-loaded or fully-depleted variant of weapons.
+==== [[DECORATE]] definition ====
+ ACTOR &lt;u&gt;WeaponGiver&lt;/u&gt; : {{Class|Weapon}} native
+ {
+   {{Property|Weapon.AmmoGive1}} -1
+   {{Property|Weapon.AmmoGive2}} -1
+ }</text>
+    <sha1>hxvyo20x4qpml8rc4cr2wv46b4pf0ge</sha1>
+  </revision>
+</page>

@@ -1,0 +1,103 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>LineAttack (ZScript)</title>
+  <ns>0</ns>
+  <id>9280</id>
+  <revision>
+    <id>54106</id>
+    <parentid>54100</parentid>
+    <timestamp>2025-01-01T13:33:58Z</timestamp>
+    <contributor>
+      <username>Jekyll Grim Payne</username>
+      <id>2175</id>
+    </contributor>
+    <minor />
+    <comment>/* Return value */</comment>
+    <origin>54106</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="3899" sha1="hspegt1vsl4td4fe6k80pucxbgdcvj3" xml:space="preserve">'''{{class|Actor}}'''
+
+{{c|native Actor, int '''LineAttack'''(double ''angle'', double ''distance'', double ''pitch'', int ''damage'', Name ''damageType'', class&lt;Actor&gt; ''pufftype'', int ''flags'' }}={{c| 0, out FTranslatedLineTarget ''victim'' }}={{c| null, double ''offsetz'' }}={{c| 0., double ''offsetforward'' }}={{c| 0., double ''offsetside'' }}={{c| 0.)}}
+
+==Usage==
+Fires a [[hitscan]] attack, originating from the calling actor. This the most generalized hitscan function in ZScript; most other functions (such as [[A_FireBullets]], [[A_CustomBulletAttack]], [[A_Saw]] and others) usually function as wrappers for it.
+
+In contrast to more specific functions, like [[A_FireBullets]], this doesn't imply ammo consumptions or randomized offsets, and comes with its own set of behaviors.
+
+===Parameters===
+*{{c|double '''angle'''}}
+:The absolute angle of the attack.
+*{{c|double '''distance'''}}
+:The maximum distance at which the attack successfully hits. 
+:For reference, normally player hitscan attacks would use {{const|PLAYERMISSILERANGE}} which is equal to 8192, while monster attacks would use {{const|MISSILERANGE}}, which is 2048. However, any value is valid. Very short distances can be used to make a melee attack.
+*{{c|'''pitch'''}}
+:The absolute pitch of the attack.
+*{{c|int '''damage'''}}
+:The damage to be dealt by the attack. If randomization is desired, it has to be added manually.
+*{{c|Name '''damageType'''}}
+:The [[Damage types|damage type]] of the attack.
+:For reference hitscans usually use 'Hitscan', other attacks normally use 'Normal'. Any value can be passed here, however.
+*{{c|class&lt;Actor&gt; '''pufftype'''}}
+:The [[Puff|puff actor class]] to spawn. If this is {{c|null}} it defaults to {{c|{{Class|BulletPuff}}}}.
+*{{c|int '''flags'''}}
+:Multiple flags can be combined with &lt;code&gt;|&lt;/code&gt;. The following flags are available:
+{{: LAF flags}}
+*{{c|FTranslatedLineTarget '''victim'''}}
+:Allows outputting the data from the function to a previously declared {{struct|FTranslatedLineTarget}} struct.
+*{{c|double '''offsetz'''}}
+:Shifts the spawn point of the attack upwards and downwards. Positive values shift it upwards, while negative values shift it downwards.
+*{{c|double '''offsetforward'''}}
+:Shifts the spawn point of the attack forwards and backwards. Positive values shift it forwards, while negative values shift it backwards.
+*{{c|double '''offsetside'''}}
+:Shifts the spawn point of the attack to either sides. Positive values shift it to the right side, while negative values shift it to the left side.
+
+===Return value===
+The function has 2 return values:
+*Actor - a pointer to the spawned puff
+*int - the amount of inflicted damage the hit actor may had sustained
+
+If a '''{{struct|FTranslatedLineTarget}}''' struct was passed to the ''victim'' argument, additional data can be read from it.
+
+==Examples==
+This {{Class|fist}} uses a stripped-down version of {{c|[[A_Punch]]}} to highlight the function's use.
+ class NewFist : {{Class|Fist}}
+ {
+     Default
+     {
+         {{Property|Weapon.SlotNumber}} 1;
+     }
+ 
+     States
+     {
+     Fire:
+         PUNG B 4;
+         PUNG C 4
+         {
+             FTranslatedLineTarget t;
+             double ang = angle + [[DECORATE expressions#Random_number_functions|Random2]]() * (5.625 / 256);
+             double pitch = [[AimLineAttack]](ang, 64, null, 0., {{const|ALF_CHECK3D}});
+             '''LineAttack'''(ang, 64, pitch, 100, '{{DamageType|Melee}}', "{{Class|BulletPuff}}", {{const|LAF_ISMELEEATTACK}}, t);
+ 
+             // Turn to face the hit actor.
+             if (t.linetarget)
+             {
+                 angle = t.angleFromSource;
+             }
+         }
+         PUNG D 5;
+         PUNG C 4;
+         PUNG B 5 [[A_ReFire]];
+         Goto Ready;
+     }
+ }
+
+== See Also ==
+* [[AimLineAttack]]
+* {{Struct|FTranslatedLineTarget}}
+* [[LineTrace]]
+* [[A_FireBullets]]
+
+[[Category:ZScript]]</text>
+    <sha1>hspegt1vsl4td4fe6k80pucxbgdcvj3</sha1>
+  </revision>
+</page>

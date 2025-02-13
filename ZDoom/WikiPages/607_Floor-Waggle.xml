@@ -1,0 +1,56 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>Floor Waggle</title>
+  <ns>0</ns>
+  <id>607</id>
+  <revision>
+    <id>44605</id>
+    <parentid>40379</parentid>
+    <timestamp>2017-04-02T18:00:13Z</timestamp>
+    <contributor>
+      <username>Gez</username>
+      <id>1283</id>
+    </contributor>
+    <comment>xlat</comment>
+    <origin>44605</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="1372" sha1="qr0cmj6p2j25vz6vdsyztcz0f6sjz7l" xml:space="preserve">{{DISPLAYTITLE:Floor_Waggle}}
+{{Special|138|tag, amp, freq, offset, time|Floor|Waggle}}
+* ''tag'': Tag of affected sector.
+* ''amp'': Amplitude of the waggle (in 1/8 of a unit).
+* ''freq'': Speed of the waggle.
+* ''offset'': Phase offset of the waggle (0 through 63).
+* ''time'': How many seconds the waggle lasts (0 means it will waggle forever).
+__NOTOC__
+==Usage==
+
+“Waggles” the floor of the affected sectors in a sine wave. The floor starts moving upwards and downwards smoothly until it is in phase with the specified parameters. After the time the “waggle” dies down smoothly and the floor returns to its original height.
+
+Effective when used as part of a group, each with slightly different offsets. It can be used in conjuction with [[Ceiling_Waggle]].
+
+== Examples ==
+
+ script 1 OPEN
+ { // at start...
+   // make floor of sector(s) tagged 333 slowly and slightly waggling
+   Floor_Waggle (333, 8, 16, 0, 0);
+   // make floor of sector(s) tagged 334 waggling vigorously
+   Floor_Waggle (334, 32, 256, 0, 0);
+ }
+
+== Conversions from linedef types ==
+The following Doom map format types can be converted as Floor_Waggle:
+{| {{prettytable}}
+!Type!!Conversion!!Trigger
+|-
+|{{icon|ZDoom}} 338 || Floor_Waggle (tag, 24, 32, 0, 0) || Player Cross
+|-
+|{{icon|ZDoom}} 339 || Floor_Waggle (tag, 12, 32, 0, 0) || Player Cross
+|}
+
+== See also ==
+
+* [[Ceiling_Waggle]]</text>
+    <sha1>qr0cmj6p2j25vz6vdsyztcz0f6sjz7l</sha1>
+  </revision>
+</page>

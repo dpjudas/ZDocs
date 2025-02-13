@@ -1,0 +1,38 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>A ChangeCountFlags</title>
+  <ns>0</ns>
+  <id>9204</id>
+  <revision>
+    <id>52154</id>
+    <parentid>47863</parentid>
+    <timestamp>2024-04-01T09:47:31Z</timestamp>
+    <contributor>
+      <username>Jekyll Grim Payne</username>
+      <id>2175</id>
+    </contributor>
+    <comment>formatting mostly</comment>
+    <origin>52154</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="1337" sha1="f8w8uz6vhhibmbimwxjjoeg4w5y7da0" xml:space="preserve">{{codepointer|Status change}}
+{{c|void '''A_ChangeCountFlags''' (int ''kill'', int ''item'' }}={{c| FLAG_NO_CHANGE, int ''secret'' }}={{c| FLAG_NO_CHANGE)}}
+
+==Usage==
+Sets whether or not the calling actor should count towards the map's statistics of kills, items and secrets. If any of these parameters is set to 0, the actor is not counted towards the statistic represented by the parameter. If set to {{c|FLAG_NO_CHANGE}} or -1, no change takes place. If set to any other value, the actor is counted.
+
+This function not only modifies the {{flag|COUNTKILL}}/{{flag|COUNTITEM}}/{{flag|COUNTSECRET}} flags, but also the {{c|Total_Items}}, {{c|Total_Monsters}} and {{c|Total_Secrets}} fields of the {{struct|LevelLocals}} struct.
+
+===Parameters===
+For any of the parameters below, set to &lt;code&gt;true&lt;/code&gt; to count the actor towards the specified statistic, or &lt;code&gt;false&lt;/code&gt; to not count. &lt;code&gt;FLAG_NO_CHANGE&lt;/code&gt; will keep the flag unmodified:
+*{{c|int '''kill'''}}
+:Whether or not the actor should count towards the map's kills.The actor needs to be non-{{Flag|FRIENDLY|friendly}} and alive for any changes to take effect.
+*{{c|int '''item'''}}
+:Whether or not the actor should count towards the map's items.
+*{{c|int '''secret'''}}
+: whether or not the actor should count towards the map's secrets.
+
+==Examples==
+{{noexamples}}</text>
+    <sha1>f8w8uz6vhhibmbimwxjjoeg4w5y7da0</sha1>
+  </revision>
+</page>

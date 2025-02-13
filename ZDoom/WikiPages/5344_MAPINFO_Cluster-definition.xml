@@ -1,0 +1,105 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>MAPINFO/Cluster definition</title>
+  <ns>0</ns>
+  <id>5344</id>
+  <revision>
+    <id>49574</id>
+    <parentid>49363</parentid>
+    <timestamp>2022-09-30T22:08:39Z</timestamp>
+    <contributor>
+      <username>Blue Shadow</username>
+      <id>2021</id>
+    </contributor>
+    <minor />
+    <comment>remove {{new}} tags for 4.8.0</comment>
+    <origin>49574</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="4602" sha1="ot68aww99jp2iqyf73t9gwb81qaa7ep" xml:space="preserve">A cluster definition begins with the keyword "cluster". For purposes of ZDoom, clusters are used to displays messages when moving between maps, at the beginning or end of [[MAPINFO/Episode definition|episodes]] and to optionally group different levels into a [[hub]].
+
+==Cluster commands==
+'''cluster &lt;value&gt;''' { ''properties'' }
+:&lt;value&gt; is the cluster number that this definition defines. A cluster of 0 is used internally to mean "no cluster" and should be avoided. 
+
+==Cluster properties==
+The following properties are supported within a cluster definition:
+{{list|Property|Description|content=
+
+{{-|{{LE|EnterText}} {{=}} "&lt;message&gt;"
+
+EnterText {{=}} lookup, "&lt;keyword&gt;"
+|&lt;message&gt; is a message to be displayed when the player has just finished a level in another cluster and is entering a level in this cluster. To create multi-line messages, quote each line separately and separate them with commas.
+Alternatively, you can use the lookup keyword as above to instruct ZDoom to locate a string defined in the [[LANGUAGE]] lump by the specified keyword.}}
+
+{{-|{{LE|ExitText}} {{=}} "&lt;message&gt;"
+
+ExitText {{=}} lookup, "&lt;keyword&gt;"
+|&lt;message&gt; is a message to be displayed when the player has just finished a level in a different cluster from the next one. If the next level's cluster has an enter text defined, then it will be shown instead of this cluster's exit text. To create multi-line messages, quote each line separately and separate them with commas.
+Alternatively, you can use the lookup keyword as above to instruct ZDoom to locate a string defined in the [[LANGUAGE]] lump by the specified keyword.}}
+
+{{-|{{LE|ExitTextIsLump}}
+|Uses the message defined by the {{c|ExitText}} property as a lump name rather than printing its text directly. This is used within ZDoom's MAPINFO for ''[[Strife]]'' to print the text lumps present within that game rather than defining them within the MAPINFO directly.}}
+
+{{-|{{LE|Music}} {{=}} "&lt;musiclump&gt;"
+|This is the music to play while either the enter or exit text of this cluster is displayed. For ''[[Doom]]'', this is normally D_VICTOR, and for ''[[Doom II]]'', this is normally D_READ_M.}}
+
+{{-|{{LE|Flat}} {{=}} "&lt;flatlump&gt;"
+|This is the name of the flat to use as a background while this cluster's enter or exit text is displayed.}}
+
+{{-|{{LE|Pic}} {{=}} "&lt;piclump&gt;"
+|This is the pic to use as a background while this cluster's enter or exit text is displayed.}}
+
+{{-|{{LE|Hub}}
+|Indicates that this cluster is a [[hub]]. When leaving a hub, the game will remember the contents of the level when the player left it and restore the level to that state when the player returns to it. Moving to a different cluster will cause the game to forget the state of the levels in this hub in order to save memory. Each level a player visits in a hub uses memory (about 20k for a typical level), so it is probably a good idea not to have too many levels in a single hub. Just how many is "too many" is arbitrary. Unless you use very large levels, you could probably use 50 levels in a hub, and only about 1 meg would be required to keep track of the state of each level.}}
+
+{{-|{{LE|AllowIntermission}}
+|Enables intermission for a hub cluster. Note that {{c|{{MapProperty|Intermission}}}} and {{c|{{MapProperty|NoIntermission}}}} flags still apply per-level. This command does nothing for non-hub clusters.}}
+
+{{-|{{LE|Intro}} { ... }
+
+{{LE|Outro}} { ... }
+
+{{LE|GameOver}} { ... }
+|Specifies an intro, outro and gameover [[cutscene]] to play at the beginning, end and upon the player's death in this cluster, respectively. The following properties can be used within the {{c|Intro}}, {{c|Outro}} and {{c|GameOver}} blocks:
+{{:Cutscene MAPINFO properties}}}}
+}}
+
+==Examples==
+This example references the E1TEXT section of the [[LANGUAGE]] lump
+
+ cluster 1
+ {
+    flat = "FLOOR4_8"
+    music = "$MUSIC_VICTOR"
+    exittext = lookup, "E1TEXT"
+ }
+
+This example, from Eviternity, has the text directly written into the MAPINFO lump
+
+ cluster 5 
+ {
+ 	flat = OGRATB02
+ 	music = D_READ_M
+  	exittext = 
+  	"In the farthest reaches, a Light",
+ 	"awoke, and cast his luminous rays",
+ 	"on all around him.",
+ 	" ",
+ 	"He fashioned a world unto his image,",
+ 	"created beasts of his will, and declared",
+ 	"himself eternal, ruler of his domain.",
+ 	" ",
+ 	"But his hubris cast a sickness, and",
+ 	"from distant worlds called forth ",
+ 	"the agent of retribution, drawn ",
+ 	"through the cosmos by his pride.  ",
+ 	" ",
+ 	"It cast down his beasts, it rejected ",
+ 	"his rule, and through lands eternal ",
+ 	"it brought forth his doom."
+ }
+
+[[Category:MAPINFO|Cluster]]</text>
+    <sha1>ot68aww99jp2iqyf73t9gwb81qaa7ep</sha1>
+  </revision>
+</page>

@@ -1,0 +1,119 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>ACS NamedExecuteWithResult</title>
+  <ns>0</ns>
+  <id>7122</id>
+  <revision>
+    <id>46388</id>
+    <parentid>46102</parentid>
+    <timestamp>2019-01-12T22:01:58Z</timestamp>
+    <contributor>
+      <username>Blue Shadow</username>
+      <id>2021</id>
+    </contributor>
+    <minor />
+    <comment>/* Examples */ checking on 'mobj' alone isn't enough (see: https://forum.zdoom.org/viewtopic.php?f=7&amp;t=62610)</comment>
+    <origin>46388</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="4079" sha1="e5sikxroxfp2coani604xrkmbn2humo" xml:space="preserve">{{DISPLAYTITLE:ACS_NamedExecuteWithResult}}__NOTOC__
+int '''ACS_NamedExecuteWithResult''' (string ''script'', int ''s_arg1'', int ''s_arg2'', int ''s_arg3'', int ''s_arg4'')
+
+== Usage ==
+Variant of [[ACS_ExecuteWithResult]] for [[named script]]s.
+
+There is both an [[ACS]] and a [[DECORATE]] version of this function. Both behave identically. The DECORATE version can also be called by the shorter alias '''CallACS''' in [[DECORATE expressions]]. Another alias for this function is '''ACS_ScriptCall''', which introduces the ability for the function to be called by arbitrary actor objects as well as {{c|self}} object (see the second example below). This alias is exclusive to DECORATE and [[ZScript]].
+
+ACS_(Named)ExecuteWithResult has one small difference aside returning a value. They execute immediately once called, while the other types will usually wait a tic before acting.
+
+However, it is not available as an [[action special]]: to call named scripts from a a line or thing [[special]], you have to use the non-named variant ([[ACS_ExecuteWithResult]]) in [[UDMF]], with the &lt;tt&gt;arg0str&lt;/tt&gt; custom argument set to the name of the script &amp;mdash; this will override the first parameter.
+
+=== Parameters ===
+* ''script'': Name of the script to execute 
+* ''s_arg1'': First argument passed to the script 
+* ''s_arg2'': Second argument passed to the script 
+* ''s_arg3'': Third argument passed to the script 
+* ''s_arg4'': Fourth argument passed to the script 
+
+=== Return value ===
+Returns the return value of the executed script. See [[SetResultValue]].
+
+==Examples==
+This example shows an item similar to ''[[Hexen]]'s'' {{Class|ArtiHealingRadius|Mystic Ambit}} item: Checks which player class uses an item and having a different effect.
+
+Decorate Item:
+ Actor ClassBoost : CustomInventory
+ {
+   {{Property|Inventory.MaxAmount}} 25
+   {{Property|Inventory.InterHubAmount}} 25
+   +{{flag|INVENTORY.INVBAR}}
+   {{Property|Inventory.Icon}} "ARTIHRAD"
+   States
+   {
+   Spawn:
+     HRAD ABCDEFGHIJKLMNOP 4 Bright
+     [[Loop]]
+   Use:
+     TNT1 A 0 [[A_JumpIf]]([[ACS_NamedExecuteWithResult|CallACS]]("CheckPlayerClass", 0, 0, 0) == 0, "NormalPlayer")
+     TNT1 A 0 [[A_JumpIf]]([[ACS_NamedExecuteWithResult|CallACS]]("CheckPlayerClass", 0, 0, 0) == 1, "AlternatePlayer")
+     [[Fail]]
+   NormalPlayer:
+     TNT1 A 0 [[A_RadiusGive]]("{{Class|Health}}", 256, {{const|RGF_PLAYERS}} | {{const|RGF_GIVESELF}}, random(50, 90))
+     [[Stop]]
+   AlternatePlayer:
+     TNT1 A 0 [[A_RadiusGive]]("PowerImproveDamage", 256, {{const|RGF_PLAYERS}} | {{const|RGF_GIVESELF}}, 1)
+     [[Stop]]
+   }
+ }
+ACS Script:
+ script "CheckPlayerClass" (void)
+ {
+   if([[CheckActorClass]](0, "DoomPlayer"))
+   {
+     [[SetResultValue]](0);
+     [[terminate]];
+   }
+   else if([[CheckActorClass]](0, "AlternateDoomPlayer"))
+   {
+     [[SetResultValue]](1);
+     [[terminate]];
+   }
+ }
+
+
+This example item demonstrates the use of ACS_ScriptCall. Upon pickup, its spawns a {{Class|BaronOfHell|baron of hell}} and makes two ACS script calls: one which is done by the baron of hell itself, and another which is done by the actor which picked up the item.
+ class BaronSummoner : [[CustomInventory]]
+ {
+     States
+     {
+     Spawn:
+         SOUL ABCD 6 Bright;
+         Loop;
+ 
+     Pickup:
+         TNT1 A 0
+         {
+             bool res;
+             Actor mobj;
+             [res, mobj] = [[A_SpawnItemEx]]("{{Class|BaronOfHell}}", 100);
+ 
+             if (res &amp;&amp; mobj)
+             {
+                 // Caller is the baron of hell object.
+                 // Using '''ACS_NamedExecuteWithResult''', instead, is unacceptable here.
+                 mobj.'''ACS_ScriptCall'''("SomeScript");
+ 
+                 // Caller is the ''self'' object (the actor which picked the item up).
+                 // Using '''ACS_NamedExecuteWithResult''', instead, is okay here.
+                 '''ACS_ScriptCall'''("SomeOtherScript");
+             }
+         }
+         Stop;
+     }
+ }
+
+{{DEFAULTSORT:ExecuteWithResult}}[[Category:ACS Script functions]][[Category:Decorate Script functions]]
+
+{{script functions}}</text>
+    <sha1>e5sikxroxfp2coani604xrkmbn2humo</sha1>
+  </revision>
+</page>

@@ -1,0 +1,89 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>OpenGL options</title>
+  <ns>0</ns>
+  <id>6639</id>
+  <revision>
+    <id>48861</id>
+    <parentid>45263</parentid>
+    <timestamp>2021-12-12T23:39:52Z</timestamp>
+    <contributor>
+      <username>Eevee</username>
+      <id>44</id>
+    </contributor>
+    <comment>update sector light modes with a full list and some descriptions of the visual differences</comment>
+    <origin>48861</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="7899" sha1="a2gqignqfs7l44ov67cf78cl2ute8y5" xml:space="preserve">{{menutrail|Main menu|Options menu|Display options}}
+[[File:OpenGLOptions.png|thumb|The display options menu in [[Stronghold]].]]
+{{OpenGL}}
+The '''OpenGL options''' menu allows to access the various submenus that control how the game is displayed when using the [[OpenGL]] renderer. Its [[MENUDEF]] name is {{c|OpenGLOptions}}.
+
+*'''{{LE|Texture options}}'''
+:Opens the [[Texture options]] menu.
+
+*'''{{LE|Sector light mode|gl_lightmode}}''' (Standard/Bright/Doom/Dark/Doom Legacy/Build/Software/Vanilla)
+:{{c|{{CVAR|R|gl_lightmode}}}}
+:Chooses which method to use for managing light diminishing of ambient light levels in sectors. Note that the choice made here can be overridden by the {{c|lightmode}} property in a [[MAPINFO]] [[map definition]].
+:*Standard: GZDoom's original behavior.  Uses a standard OpenGL formula.  Fairly close to original Doom for bright areas, but dark areas are much brighter overall, and the full gamut of light levels is considerably smaller.
+:*Bright: Like "Standard", but with very weak fog dropoff, keeping distant sectors relatively bright.
+:*Doom: An early approximation of Doom's diminishing light effect.  Closer, but still not as dark as original Doom.
+:*Dark: Identical to "Doom", but without the brighter halo effect around the player.
+:*Doom Legacy: Emulates [[Doom Legacy]] 1.42's OpenGL lighting.  Visually about halfway between "Standard" and "Bright".  Fog is very faint at close distances.
+:*Build: {{wp|GLSL}}-based emulation of, presumably, the Build engine.  Lighting is similar to original Doom's near the player, but drops off sharply to total darkness after a modest distance.  Textures in foggy areas are completely obscured unless extremely close to the player.
+:*Software: GLSL-based emulation of the ZDoom software renderer's lighting.  Virtually identical to original Doom.
+:*Vanilla: GLSL-based emulation of original Doom's lighting, in theory, but in practice appears a step darker overall.
+:If shaders are unavailable, the GLSL-based modes fall back to "Doom" mode.
+*'''{{LE|Fog mode|gl_fogmode}}''' (Off/Standard/Radial)
+:{{c|{{CVAR|R|gl_fogmode}}}}
+:Selects the fog mode.
+:Note that all sector light modes except "Software" and "Vanilla" implement standard Doom diminishing light as black fog, so if the fog mode is set to "Off", everything will appear as its normal light level regardless of distance.
+*'''{{LE|Fog forces fullbright|gl_brightfog}}''' (Yes/No)
+:{{c|{{CVAR|R|gl_brightfog}}}}
+:If this option is turned on, foggy sectors use full brightness and treat the light level as fog density. This is recommended for white fogs but should not be used for black fogs.
+*'''{{LE|Weapon light strength|gl_weaponlight}}''' (0&amp;mdash;32, by 2 increments)
+:{{c|{{CVAR|R|gl_weaponlight}}}}
+:How effective the weapon brightens the player's view when shooting. It specifically affects [[A_Light]] and its variants.
+*'''{{LE|Environment map on mirrors|gl_mirror_envmap}}''' (On/Off)
+:{{c|{{CVAR|R|gl_mirror_envmap}}}}
+:Enables or disables the use of the mirror.png texture (contained in gzdoom.pk3) as an {{wp|Reflection_mapping|environment map}} on mirrors.
+*'''{{LE|Enhanced night vision mode|gl_enhanced_nightvision}}''' (On/Off)
+:{{c|{{CVAR|R|gl_enhanced_nightvision}}}}
+:Enables or disables the enhanced nightvision effect which changes how the {{Class|PowerLightAmp}} and {{Class|PowerTorch}} effects work. If "off", they behave like the software renderer and merely give full brightness to everything. If on, however, the light amplification visor shows the world geometry in green and the sprites of monsters and items are in inverted colors; while everything illuminated by the torch lies in a flickering golden light.
+*'''{{LE|ENV shows stealth monsters|gl_enhanced_nv_stealth}}''' (Never/Infrared only/Infrared and torch/Any fixed colormap)
+:{{c|{{CVAR|R|gl_enhanced_nv_stealth}}}}
+:If enhanced night vision is on, monsters with the {{Flag|STEALTH}} flag can be seen while an effect altering vision with a fixed colormap is active. This option allows to fine-tune this effect to restrict it to light powerups (both infrared and torch) or just the infrared, and it can as well disable the sight of stealth monsters altogether.
+*'''{{LE|Force brightness in fog|gl_spritebrightfog}}''' (On/Off)
+:{{c|{{CVAR|R|gl_spritebrightfog}}}}
+:The software renderer is unable to handle full brightness in foggy or faded areas, and by default the OpenGL renderer emulates this. This option allows to let fullbright or brightmapped sprites retain their brightness.
+*'''{{LE|Adjust sprite clipping|gl_spriteclip}}''' (Never/Smart/Always/Smarter)
+:{{c|{{CVAR|R|gl_spriteclip}}}}
+:The OpenGL renderer clips off [[sprite]]s when they go "within" a floor or ceiling; whereas the software renderer overdraws them, a fact which has been willfully exploited to fake certain perspective effects. The result is that many sprites are abruptly cut off when they shouldn't be. The adjustment cheats by adjusting their offset so that they are less cut off.
+:*Never: Offsets are not adjusted at all.
+:*Smart: Offsets are only adjusted if they meet certain criteria.
+:*Always: Offsets are always adjusted if they make the sprite sink in the ground.
+:*Smarter: Offsets are adjusted in a wider range of cases than with "smart", including if they sink in the ceiling. The amount by which they are adjusted is scaled according to the overall height of the sprite. Very small sprites (such as {{Class|SmallBloodPool|POB2A0}}) are visible, contrarily to "smart", even if they are offset in the ceiling (such as {{Class|WaterDrip|CDRP[ABCD]0}}); and tall sprites (such as {{Class|GreenTorch|TGRNA0}}) do not seem to hover above the floor, contrarily to "always".
+*'''{{LE|Smooth sprite edges|gl_sprite_blend}}''' (On/Off)
+:{{c|{{CVAR|R|gl_sprite_blend}}}}
+:Enables or disables blending the edges of the sprites into the background. Turning it on also sometimes solves graphical glitches that may seem unrelated.
+[[File:BillboardAxes.png|thumb|Billboard axes illustrated.]]
+*'''{{LE|Fuzz Style|gl_fuzztype}}''' (Shadow/Pixel fuzz/Smooth fuzz/Swirly fuzz/Translucent fuzz/Noise/Smooth Noise)
+:{{c|{{CVAR|R|gl_fuzztype}}}}
+:Selects how the [[fuzz]] effect is rendered in OpenGL mode. All options except "Shadow" require pixel shaders to be available.
+*'''{{LE|Sprite billboard|gl_billboard_mode}}''' (Y Axis/X/Y Axis)
+:{{c|{{CVAR|R|gl_billboard_mode}}}}
+:Chooses whether sprites, by default, are billboarded on the Y axis (and remain vertical, appearing paper-thin if viewed at an extreme angle) or on the X/Y axis (and remain always fully visible, but oddly rotated if viewed at an extreme angle). The {{Flag|FORCEYBILLBOARD}} and {{Flag|FORCEXYBILLBOARD}} flags allow to override the default. Note that X/Y billboarding suffers from a few minor glitches, especially when transparent [[3D floor]]s are involved.
+*'''{{LE|Particle style|gl_particles_style}}''' (Square/Round/Smooth)
+:{{c|{{CVAR|R|gl_particles_style}}}}
+:Selects how [[particle]]s are rendered. The "smooth" option uses a texture with gradually increasing alpha toward its edges, whereas "square" and "round" use solid primitives and are therefore much faster to render.
+*'''{{LE|Rendering quality|gl_render_precise}}''' (Speed/Quality)
+:{{c|{{CVAR|R|gl_render_precise}}}}
+:If set on "speed", the renderer will sacrifice precision for performances and graphical artifacts (typically, tiny white dots at the edges of polygons in level geometry) may appear. If set on quality, the rendering should be free of such artifacts, but performances may suffer.
+*'''{{LE|Use vertex buffer|gl_usevbo}}''' (Off/Static/Dynamic)
+:{{c|{{CVAR|R|gl_usevbo}}}}
+:Selects if and how {{wp|Vertex_Buffer_Object|vertex buffer objects}} are used by the renderer. Benchmarks have shown that this provides a small performance boost on Nvidia hardware. However, on ATI hardware, setting this on may cause glitches.
+
+[[Category:Menus]]</text>
+    <sha1>a2gqignqfs7l44ov67cf78cl2ute8y5</sha1>
+  </revision>
+</page>

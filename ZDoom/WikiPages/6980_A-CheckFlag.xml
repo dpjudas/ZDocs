@@ -1,0 +1,47 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>A CheckFlag</title>
+  <ns>0</ns>
+  <id>6980</id>
+  <revision>
+    <id>48870</id>
+    <parentid>47742</parentid>
+    <timestamp>2021-12-18T07:13:31Z</timestamp>
+    <contributor>
+      <username>Blue Shadow</username>
+      <id>2021</id>
+    </contributor>
+    <minor />
+    <comment>switch {{WarnDeprecated}} to {{DecorateNote}}</comment>
+    <origin>48870</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="1270" sha1="3q7beks6roxx3lbw0brc5r0bhjbgkwu" xml:space="preserve">{{Codepointer|Jump}}
+state '''A_CheckFlag''' (string ''flagname'', statelabel ''label'' [, int ''check_pointer''])
+{{JumpNotice}}{{DecorateNote|a combination of [[Converting DECORATE code to ZScript#Actor flags|direct access to flags]] and {{c|[[SetStateLabel]]}} function (or {{c|[[ResolveState]]}} function depending on the use case)}}
+==Usage==
+Checks if the [[actor]] designated by the given [[actor pointer]] has the [[actor flags|flag]] of this name, and if it is valid. If the pointer does not have the flag, no jump is performed.
+
+===Parameters===
+*''flagname'': the name of the flag check for.
+*''label'': the state to jump to if the specified flag is set for the pointed to actor.
+*''check_pointer'': the actor to perform the flag check on. This is an [[actor pointer]]. Default is {{c|{{const|AAPTR_DEFAULT}}}}, which corresponds to the calling actor.
+
+==Examples==
+If this {{Class|DoomImp|Imp}}'s ''master'' is frightened, this imp will be frightened too.
+
+ ACTOR CowardImp : {{Class|DoomImp}}
+ {
+   States
+   {
+   See:
+     TROO A 0 [[A_CheckFlag]]("{{flag|FRIGHTENED}}", "RunAway", {{const|AAPTR_MASTER}})
+     TROO AABBCCDD 3 [[A_Chase]]
+     Loop
+   RunAway:
+     TROO A 0 [[A_ChangeFlag]]("{{flag|FRIGHTENED}}", {{const|TRUE}})
+     Goto See+2
+   }  
+ }</text>
+    <sha1>3q7beks6roxx3lbw0brc5r0bhjbgkwu</sha1>
+  </revision>
+</page>

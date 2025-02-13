@@ -1,0 +1,71 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>SetStencil</title>
+  <ns>0</ns>
+  <id>9645</id>
+  <revision>
+    <id>51204</id>
+    <parentid>49835</parentid>
+    <timestamp>2024-01-14T16:13:22Z</timestamp>
+    <contributor>
+      <username>Jekyll Grim Payne</username>
+      <id>2175</id>
+    </contributor>
+    <minor />
+    <comment>/* Examples */ added syntaxhighlight</comment>
+    <origin>51204</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="2857" sha1="17n01csggm5riv5h195k3v1w3gxj2qm" xml:space="preserve">{{ZScriptNote}}
+
+'''[[Structs:Screen|Screen]]'''
+
+native static void '''SetStencil'''(int offs, int op, int flags = -1)
+
+== Usage ==
+Sets the current state of the stencil buffer when drawing. This must be enabled first before it can be used and can be disabled at any time. Setting the stencil buffer's state sets up the value to compare to in the mask and what should happen to the mask when a texture is drawn in it. The color buffer can also be disabled here if using a texture purely as a mask is desired.
+
+'''Warning:''' This can only be called from within functions that are specifically designed to draw HUD elements (e.g. BaseStatusBar's [[Draw]] or EventHandler's RenderOverlay).
+
+=== Parameters ===
+*''offs'' - The reference value in the stencil buffer's mask to compare to. Textures drawn to the screen will only be drawn in areas that have this value in the stencil buffer
+*''op'' - The type of action to take when drawing a texture in a valid area of the mask
+:*'''SOP_Keep''' - Don't modify the stencil buffer's mask
+:*'''SOP_Increment''' - Increment the bits in the stencil buffer's mask by 1
+:*'''SOP_Decrement''' - Decrement the bits in the stencil buffer's mask by 1
+*''flags'' - Allows buffers to be disabled. Default is -1 which keeps the current state of the buffers. Note that if a buffer is turned off it'll have to be re-enabled via the '''SF_AllOn''' flag
+:*'''SF_AllOn''' - Turn both the color and depth buffers on
+:*'''SF_ColorMaskOff''' - Turns off the color buffer. If set, any textures drawn won't show up on the screen but can still serve as a mask in the stencil buffer
+:*'''SF_DepthMaskOff''' - Turns off the depth buffer. Currently does nothing
+
+== Examples ==
+&lt;syntaxhighlight lang="csharp"&gt;
+override void RenderOverlay(RenderEvent e)
+{
+    // Make sure to turn it on first
+    Screen.EnableStencil(true);
+
+    // First we set up our mask via the myMaskTex texture. The stencil buffer's mask is currently
+    // all 0s so anything will be freely drawn here when we use 0 as a reference value. Everywhere
+    // it's drawn that has a 0, it's incremented to 1 since we have SOP_Increment set. Lastly we
+    // turn the color buff off because, in this example, we're using our texture purely as a mask
+    Screen.SetStencil(0, SOP_Increment, SF_ColorMaskOff);
+
+    Screen.DrawTexture(myMaskTex, false, x, y);
+
+    // Now we compare against 1 which will be where myMaskTex was drawn. SOP_Keep means the value
+    // in the mask won't be modified, keeping those areas at 1. SF_AllOn turns the color buffer
+    // back on so our texture will show up
+    Screen.SetStencil(1, SOP_Keep, SF_AllOn);
+
+    Screen.DrawTexture(myTex, true, x, y);
+
+    // Make sure to turn it back off and clear it when we're done
+    Screen.EnableStencil(false);
+    Screen.ClearStencil();
+}&lt;/syntaxhighlight&gt;
+
+[[Category:ZScript]]
+[[Category:Screen]]</text>
+    <sha1>17n01csggm5riv5h195k3v1w3gxj2qm</sha1>
+  </revision>
+</page>

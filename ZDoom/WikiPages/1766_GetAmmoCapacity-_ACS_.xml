@@ -1,0 +1,78 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>GetAmmoCapacity (ACS)</title>
+  <ns>0</ns>
+  <id>1766</id>
+  <revision>
+    <id>49110</id>
+    <parentid>49099</parentid>
+    <timestamp>2022-04-30T20:27:46Z</timestamp>
+    <contributor>
+      <username>Blue Shadow</username>
+      <id>2021</id>
+    </contributor>
+    <minor />
+    <comment>/* Examples */</comment>
+    <origin>49110</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="3437" sha1="pddiokzsbk9lovuc2j5i05rkn9y6q4o" xml:space="preserve">int '''GetAmmoCapacity''' (str ''classname'')
+
+==Usage==
+
+Returns the maximum amount of the specified [[Classes:Ammo|ammo type]] one can carry. The return value is Inventory.MaxAmount or, if the player has picked up a {{Class|BackpackItem|backpack}}, Ammo.BackpackMaxAmount. All types derived from {{Class|Inventory}} but not from {{Class|Ammo}} will return 0.
+
+Default values for standard ammo with and without backpack:
+* 16/32: {{Class|PhosphorusGrenadeRounds}}
+* 20/40: {{Class|PhoenixRodAmmo}}
+* 25/50: {{Class|PoisonBolts}}
+* 30/60: {{Class|HEGrenadeRounds}}
+* 50/100: {{Class|CrossbowAmmo}}, {{Class|ElectricBolts}}, {{Class|RocketAmmo}}, {{Class|Shell}}
+* 100/200: {{Class|GoldWandAmmo}}, {{Class|MiniMissiles}}
+* 150/300: {{Class|MaceAmmo}}
+* 200/400: {{Class|BlasterAmmo}}, {{Class|Clip}}, {{Class|SkullRodAmmo}}
+* 250/500: {{Class|ClipOfBullets}}
+* 300/600: {{Class|Cell}}
+* 400/800: {{Class|EnergyPod}}
+* 200/200: {{Class|Mana1}}, {{Class|Mana2}}
+
+==Examples==
+
+An example of backpacks that can be ''stacked'', as in, each backpack increases the max ammo a little:
+
+ bool playerbackpack[8] = {&lt;b&gt;&lt;/b&gt;{{const|FALSE}}&lt;b&gt;&lt;/b&gt;};
+ 
+ script 1 (void)
+ {
+ 	if (playerbackpack[&lt;b&gt;&lt;/b&gt;[[PlayerNumber]]()])
+ 	{
+ 		if ([[GetAmmoCapacity_(ACS)|GetAmmoCapacity]]("{{Class|Clip}}") &lt; 800)
+ 		{
+ 			[[SetAmmoCapacity_(ACS)|SetAmmoCapacity]]("{{Class|Clip}}", [[GetAmmoCapacity_(ACS)|GetAmmoCapacity]]("{{Class|Clip}}") + 100);
+ 			SetAmmoCapacity("{{Class|Shell}}", [[GetAmmoCapacity_(ACS)|GetAmmoCapacity]]("{{Class|Shell}}") + 25);
+ 			SetAmmoCapacity("{{Class|RocketAmmo}}", [[GetAmmoCapacity_(ACS)|GetAmmoCapacity]]("{{Class|RocketAmmo}}") + 25);
+ 			SetAmmoCapacity("{{Class|Cell}}", [[GetAmmoCapacity_(ACS)|GetAmmoCapacity]]("{{Class|Cell}}") + 75);
+ 		}
+ 	}
+ 	else
+ 		playerbackpack[&lt;b&gt;&lt;/b&gt;[[PlayerNumber]]()] = {{const|TRUE}};
+ }
+ 
+ script 998 {{SType|Enter}}
+ {
+ 	if ([[GetAmmoCapacity_(ACS)|GetAmmoCapacity]]("{{Class|Clip}}") &gt; 200)
+ 		playerbackpack[&lt;b&gt;&lt;/b&gt;[[PlayerNumber]]()] = {{const|TRUE}};
+ }
+ 
+ script 999 {{SType|Respawn}}
+ {
+ 	playerbackpack[&lt;b&gt;&lt;/b&gt;[[PlayerNumber]]()] = {{const|FALSE}};
+ }
+
+As the backpack will force a change in the amount of ammo the player has the first time it is picked up, this script records the whether each player has picked up a backpack already. There are eight potential players and by default each has their variable set to FALSE. There are two exceptions, which are handled by scripts 998 and 999. 998 checks if the player has a backpack when entering the level by testing their capacity for bullets. 999 resets the player's variable should they die and therefore lose the backpack.
+
+The actual stacking script is number 1, and should be set as the thing special of every backpack. That is, the backpack should have special number 80 ([[ACS_Execute]]) with parameters (1, 0, 0, 0, 0). The script checks if the player has already picked up a backpack previously to this, and if so, starts incrementing each type of ammo a little. It does this by first checking if the ammos have reached the absolute maximum amount. If not, it adds a little bit on to each. Note that it only checks if “Clip” has reached the maximum amount, but as each value is incremented at the same time, they will all hit their limits at the same time as the “Clip” type. If the player has not picked up a backpack before, they have now, so their variable is set to TRUE.
+
+[[category:ACS Information functions]]</text>
+    <sha1>pddiokzsbk9lovuc2j5i05rkn9y6q4o</sha1>
+  </revision>
+</page>

@@ -1,0 +1,60 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>Structs:Screen</title>
+  <ns>0</ns>
+  <id>9356</id>
+  <revision>
+    <id>50873</id>
+    <parentid>49869</parentid>
+    <timestamp>2023-10-17T12:42:51Z</timestamp>
+    <contributor>
+      <username>Jekyll Grim Payne</username>
+      <id>2175</id>
+    </contributor>
+    <minor />
+    <comment>/* Static */ Added bold to functions</comment>
+    <origin>50873</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="2573" sha1="az2k4edtaj5eq4hi8hr5dseetfs9ft7" xml:space="preserve">{{ZScriptNote}}
+
+The Screen struct holds the API for rendering text, images, and more on the screen. Internally this is what the status bar uses to handle drawing to the screen (alongside anything else that needs to do the same). Unlike the status bar, however, the Screen API offers no scaling with all of it needing to be done manually. It is recommended you use the status bar [[ZScript_global_variables|global variable]] to handle screen drawing and only use the API directly for screen information or if no other option is available.
+
+== Methods ==
+=== Static ===
+*Color '''[[PaletteColor]]'''(int index)
+*int '''[[GetWidth]]'''()
+*int '''[[GetHeight]]'''()
+*Vector2 '''[[GetTextScreenSize]]'''()
+*void '''[[Clear]]'''(int left, int top, int right, int bottom, Color color, int palcolor = -1)
+*void '''[[Dim]]'''(Color col, double amount, int x, int y, int w, int h, ERenderStyle style = STYLE_Translucent)
+*vararg void '''[[DrawTexture]]'''(TextureID tex, bool animate, double x, double y, ...)
+*vararg void '''[[DrawShape]]'''(TextureID tex, bool animate, Shape2D s, ...)
+*vararg void '''[[DrawShapeFill]]'''(Color col, double amount, Shape2D s, ...)
+*vararg void '''[[DrawChar]]'''(Font font, int normalcolor, double x, double y, int character, ...)
+*vararg void '''[[DrawText]]'''(Font font, int normalcolor, double x, double y, String text, ...)
+*void '''[[DrawLine]]'''(int x0, int y0, int x1, int y1, Color color, int alpha = 255)
+*void '''[[DrawLineFrame]]'''(Color color, int x0, int y0, int w, int h, int thickness = 1)
+*void '''[[DrawThickLine]]'''(int x0, int y0, int x1, int y1, double thickness, Color color, int alpha = 255)
+*Vector2, Vector2 '''[[VirtualToRealCoords]]'''(Vector2 pos, Vector2 size, Vector2 vsize, bool vbottom = false, bool handleaspect = true)
+*double '''[[GetAspectRatio]]'''()
+*void '''[[SetClipRect]]'''(int x, int y, int w, int h)
+*void '''[[ClearClipRect]]'''()
+*int, int, int, int '''[[GetClipRect]]'''()
+*int, int, int, int '''[[GetViewWindow]]'''()
+*double, double, double, double '''[[GetFullscreenRect]]'''(double vwidth, double vheight, int fsmode)
+*Vector2 '''[[SetOffset]]'''(double x, double y)
+*void '''[[ClearScreen]]'''(Color col = 0)
+*void '''[[SetScreenFade]]'''(double factor)
+*void '''[[EnableStencil]]'''(bool on)
+*void '''[[SetStencil]]'''(int offs, int op, int flags = -1)
+*void '''[[ClearStencil]]'''()
+*void '''[[SetTransform]]'''(Shape2DTransform transform)
+*void '''[[ClearTransform]]'''()
+*void '''[[DrawFrame]]'''(int x, int y, int w, int h)
+
+[[Category:ZScript]]
+[[Category:Structs]]
+[[Category:Screen]]</text>
+    <sha1>az2k4edtaj5eq4hi8hr5dseetfs9ft7</sha1>
+  </revision>
+</page>

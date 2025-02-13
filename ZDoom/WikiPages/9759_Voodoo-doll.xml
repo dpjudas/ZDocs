@@ -1,0 +1,45 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>Voodoo doll</title>
+  <ns>0</ns>
+  <id>9759</id>
+  <revision>
+    <id>52420</id>
+    <parentid>51896</parentid>
+    <timestamp>2024-04-12T12:29:08Z</timestamp>
+    <contributor>
+      <username>Jekyll Grim Payne</username>
+      <id>2175</id>
+    </contributor>
+    <comment>/* Scripting concerns */</comment>
+    <origin>52420</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="2251" sha1="315tolvity0rkegxzyx5ofywwsjuzbm" xml:space="preserve">A voodool doll is a vanilla Doom effect that is supported by source ports, including [[ZDoom]]. The effect occurs when multiple [[Player start|player starts]] for the same players are placed in the map editor. When this is done, multiple {{class|PlayerPawn}} actors are created bound to the same [[Structs:PlayerInfo|PlayerInfo struct]]. The player can only directly control the first PlayerPawn spawned for them, while the other PlayerPawn actors will be the voodoo dolls.
+
+Damage and health are transferred between the voodoo dolls and the original PlayerPawn actor. When a voodoo doll receives an {{class|Inventory|inventory item}}, that item is given to the original PlayerPawn instead.
+
+Voodoo dolls have been commonly used in older map formats (including vanilla) to create various effects. They're described in more detail on the {{dw|Voodoo_doll|Doom Wiki}}.
+
+=== Scripting concerns ===
+Voodoo dolls pose certain concerns in [[ZScript]]. When performing operations on PlayerPawn actors, voodoo dolls will be included in the list of those actors and can cause certain scripts to not function correctly, if not accounted for. For example:
+
+* '''[[Events_and_handlers#PlayerSpawned|PlayerSpawned()]]''' [[Events and handlers|event]] is triggered for all PlayerPawn actors, including voodoo dolls.
+* [[PostBeginPlay|'''PostBeginplay()''']] of a PlayerPawn will be called for each voodoo doll present on the map for the same player. For example, if this override is used to give the PlayerPawn some items, they'll be given multiple times for each of the PlayerPawns.
+
+=== Checking for voodoo dolls ===
+ZScript can check if a specific PlayerPawn is a voodoo doll by accessing its [[Structs:PlayerInfo|PlayerInfo struct]], and then checking if the &lt;code&gt;mo&lt;/code&gt; pointer of that struct is pointing to the specified PlayerPawn. As such, it's possible to use a simple static function to run the check:
+
+&lt;syntaxhighlight lang="csharp"&gt;
+static bool IsVoodooDoll(PlayerPawn mo) 
+{
+	return !mo.player || !mo.player.mo || mo.player.mo != mo;
+}&lt;/syntaxhighlight&gt;
+
+This will return &lt;code&gt;true&lt;/code&gt; if the PlayerPawn instance provided in the function's first argument is a voodoo doll.
+
+[[Category:ZScript]]
+[[Category:Editing concepts]]
+[[Category:Player]]</text>
+    <sha1>315tolvity0rkegxzyx5ofywwsjuzbm</sha1>
+  </revision>
+</page>

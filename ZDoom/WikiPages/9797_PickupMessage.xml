@@ -1,0 +1,51 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>PickupMessage</title>
+  <ns>0</ns>
+  <id>9797</id>
+  <revision>
+    <id>53576</id>
+    <parentid>53575</parentid>
+    <timestamp>2024-11-07T11:37:34Z</timestamp>
+    <contributor>
+      <username>Jekyll Grim Payne</username>
+      <id>2175</id>
+    </contributor>
+    <comment>/* Usage */</comment>
+    <origin>53576</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="1675" sha1="4p7pnui7bl0rdcqmro6zb0wh3xi1tpw" xml:space="preserve">{{note|This page is about a [[ZScript]] virtual function. For the Actor property of the same name, see '''{{property|Inventory.PickupMessage}}'''.}}
+
+'''{{class|Inventory}}'''
+
+{{c|virtual String '''PickupMessage''' ()}}
+
+== Usage ==
+Called by {{class|Inventory}} items to obtain the [[String|text string]] that the item should print when the player picks up the item. By default, simply returns &lt;code&gt;pickupMsg&lt;/code&gt;, which is a String variable whose value is determined by the item's {{property|Inventory.PickupMessage}} property. Can be overridden to modify the string.
+
+Notes:
+# If a [[LANGUAGE]] reference is used anywhere in this process, it will not be automatically localized. First, {{struct|StringTable|{{c|StringTable.Localize()}}}} must be called on the string.
+# This function does nothing if called directly, it should only be used as an override. To actually force an item to print its pickupmessage, call [[PrintPickupMessage]], and ''that'' function will call this one to obtain the string.
+
+== Example ==
+This override, when inserted into an Inventory item, will print a formatted string, consisting of the item's regular {{property|PickupMessage}}, followed by an amount picked up in parentheses. For example, in case of a {{class|Clip}}, this would print: "Picked up a Clip (+10)".
+
+&lt;syntaxhighlight lang="csharp"&gt;
+override string PickupMessage()
+{
+	return String.Format("%s (+%d)", StringTable.Localize(pickupMsg), amount);
+}&lt;/syntaxhighlight&gt;
+
+== See also ==
+* [[PrintPickupMessage]]
+* [[Touch]]
+* [[Inventory virtual functions]]
+* [[String]]
+* [[Structs:StringTable]]
+
+[[Category:ZScript]]
+[[Category:Inventory]]
+[[Category:ZScript virtual functions]]</text>
+    <sha1>4p7pnui7bl0rdcqmro6zb0wh3xi1tpw</sha1>
+  </revision>
+</page>

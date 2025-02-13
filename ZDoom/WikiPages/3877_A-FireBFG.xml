@@ -1,0 +1,66 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>A FireBFG</title>
+  <ns>0</ns>
+  <id>3877</id>
+  <revision>
+    <id>53784</id>
+    <parentid>53764</parentid>
+    <timestamp>2024-11-19T10:59:25Z</timestamp>
+    <contributor>
+      <username>Jekyll Grim Payne</username>
+      <id>2175</id>
+    </contributor>
+    <minor />
+    <origin>53784</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="1181" sha1="ctcidh47j8zz8ss4xe2fidwexlu8lmy" xml:space="preserve">{{BuiltInFunctionNote|A_FireProjectile}}
+{{codepointer|Weapon attack}}
+
+'''{{class|StateProvider}}'''
+
+{{c|action void '''A_FireBFG'''()}}
+==Usage==
+Fires a {{Class|BFGBall}} from the current weapon.
+
+Autoaim is disabled by default through the "Allow BFG aiming" [[Dmflags|DMFlag]]. This can be circumvented by spawning it manually:
+    [[A_FireProjectile]]("BFGBall", 0, 1);
+
+== Examples ==
+This is taken directly from the {{Class|BFG9000}}.
+&lt;syntaxhighlight lang="csharp"&gt;
+	Fire:
+		BFGG A 20 A_BFGsound;
+		BFGG B 10 A_GunFlash;
+		BFGG B 10 A_FireBFG;
+		BFGG B 20 A_ReFire;
+		Goto Ready;
+&lt;/syntaxhighlight&gt;
+
+==[[ZScript]] definition==
+{{ZScriptDefinitionNote|actors/doom/weaponbfg.zs}} 
+&lt;syntaxhighlight lang="csharp"&gt;
+	action void A_FireBFG()
+	{
+		if (player == null)
+		{
+			return;
+		}
+		Weapon weap = player.ReadyWeapon;
+		if (weap != null &amp;&amp; invoker == weap &amp;&amp; stateinfo != null &amp;&amp; stateinfo.mStateType == STATE_Psprite)
+		{
+			if (!weap.DepleteAmmo (weap.bAltFire, true, deh.BFGCells))
+				return;
+		}
+
+		SpawnPlayerMissile("BFGBall", angle, nofreeaim:sv_nobfgaim);
+	}&lt;/syntaxhighlight&gt;
+
+=== See also ===
+* [[SpawnPlayerMissile]]
+* [[DepleteAmmo]]
+
+[[Category:StateProvider]]</text>
+    <sha1>ctcidh47j8zz8ss4xe2fidwexlu8lmy</sha1>
+  </revision>
+</page>

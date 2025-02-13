@@ -1,0 +1,113 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>Classes:Pistol</title>
+  <ns>0</ns>
+  <id>2581</id>
+  <revision>
+    <id>51919</id>
+    <parentid>49975</parentid>
+    <timestamp>2024-03-10T17:49:15Z</timestamp>
+    <contributor>
+      <username>Jekyll Grim Payne</username>
+      <id>2175</id>
+    </contributor>
+    <comment>/* ZScript definition */ missing semicolons</comment>
+    <origin>51919</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="2120" sha1="9eo31urbqz60japogwixmaqicsni6y1" xml:space="preserve">{{Actor|
+| type = Weapon
+| name = Pistol
+| class = Pistol
+| game = Doom
+| doomednum = 5010
+}}
+[[Classes]]: [[Classes:Inventory|Inventory]]&amp;rarr;[[Classes:Weapon|Weapon]]&amp;rarr;[[Classes:DoomWeapon|DoomWeapon]]&amp;rarr;&lt;u&gt;Pistol&lt;/u&gt;
+
+
+The pistol. The weapon you start off with and the weakest long-ranged weapon in [[Doom]]. Uses [[Classes:Clip|clips]] for ammo.
+
+==== [[ZScript]] definition ====
+{{ZScriptDefinitionNote|actors/doom/weaponpistol.zs}} 
+ class Pistol : DoomWeapon
+ {
+  	Default
+ 	{
+ 		{{Property|Weapon.SelectionOrder}} 1900;
+ 		{{Property|Weapon.AmmoUse}} 1;
+ 		{{Property|Weapon.AmmoGive}} 20;
+ 		{{Property|Weapon.AmmoType}} "{{Class|Clip}}";
+ 		{{Property|Obituary}} "$OB_MPPISTOL";
+ 		+{{Flag|WEAPON.WIMPY_WEAPON}}
+ 		{{Property|Inventory.Pickupmessage}} "$PICKUP_PISTOL_DROPPED";
+ 		{{Property|Tag}} "$TAG_PISTOL";
+ 	}
+ 	States
+ 	{
+ 	Ready:
+ 		PISG A 1 [[A_WeaponReady]];
+ 		Loop;
+ 	Deselect:
+ 		PISG A 1 [[A_Lower]];
+ 		Loop;
+ 	Select:
+ 		PISG A 1 [[A_Raise]];
+ 		Loop;
+ 	Fire:
+ 		PISG A 4;
+ 		PISG B 6 [[A_FirePistol]];
+ 		PISG C 4;
+ 		PISG B 5 [[A_ReFire]];
+ 		Goto Ready;
+ 	Flash:
+ 		PISF A 7 Bright [[A_Light1]];
+ 		Goto LightDone;
+ 		PISF A 7 Bright [[A_Light1]];
+ 		Goto LightDone;
+  	Spawn:
+ 		PIST A -1;
+ 		Stop;
+ 	}
+ }
+
+==== [[DECORATE]] definition ====
+{{DecorateDefinitionNote}}
+ ACTOR &lt;u&gt;Pistol&lt;/u&gt; : {{Class|DoomWeapon}}
+ {
+   {{Property|Weapon.SelectionOrder}} 1900
+   {{Property|Weapon.AmmoUse}} 1
+   {{Property|Weapon.AmmoGive}} 20
+   {{Property|Weapon.AmmoType}} "{{Class|Clip}}"
+   {{Property|Obituary}} "$OB_MPPISTOL"
+   +{{Flag|WEAPON.WIMPY_WEAPON}}
+   {{Property|Inventory.Pickupmessage}} "$PICKUP_PISTOL_DROPPED"
+   {{Property|Tag}} "$TAG_PISTOL"
+   States
+   {
+   Ready:
+     PISG A 1 [[A_WeaponReady]]
+     Loop
+   Deselect:
+     PISG A 1 [[A_Lower]]
+     Loop
+   Select:
+     PISG A 1 [[A_Raise]]
+     Loop
+   Fire:
+     PISG A 4
+     PISG B 6 [[A_FirePistol]]
+     PISG C 4
+     PISG B 5 [[A_ReFire]]
+     Goto Ready
+   Flash:
+     PISF A 7 Bright [[A_Light1]]
+     Goto LightDone
+     PISF A 7 Bright [[A_Light1]]
+     Goto LightDone
+   Spawn:
+     PIST A -1
+     Stop
+   }
+ }</text>
+    <sha1>9eo31urbqz60japogwixmaqicsni6y1</sha1>
+  </revision>
+</page>

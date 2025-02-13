@@ -1,0 +1,124 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>Alternative HUD</title>
+  <ns>0</ns>
+  <id>5078</id>
+  <revision>
+    <id>45056</id>
+    <parentid>44379</parentid>
+    <timestamp>2017-05-02T13:35:51Z</timestamp>
+    <contributor>
+      <username>Blue Shadow</username>
+      <id>2021</id>
+    </contributor>
+    <minor />
+    <comment>Remove {{new}}</comment>
+    <origin>45056</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="8149" sha1="6569rjrnikj88yr7207hgeb4ldjkm4v" xml:space="preserve">{{menutrail|Main menu|Options menu|HUD options}}
+[[File:AltHUDOptions.png|thumb|The alternative HUD menu in [[Valhalla]].]]
+The '''Alternative HUD''' menu regroups all options related to the [[alternate HUD]]. Its [[MENUDEF]] name is {{c|AltHUDOptions}}.
+
+* '''{{LE|Enable alternative HUD|hud_althud}}''' (On/Off)
+:{{c|{{CVAR|R|hud_althud}}}}
+:Controls whether the [[alternate HUD]] is used in full-screen HUD mode ([[#screenblocks|screenblocks]] 11).
+* '''{{LE|Stretch alternative HUD|hud_althudscale}}''' (Off/Scale to 640&amp;times;400/Pixel double/Pixel quadruple)
+:{{c|{{CVAR|R|hud_althudscale}}}}
+:Scale of the [[alternate HUD]].
+* '''{{LE|Show secret count|hud_showsecrets}}''' (On/Off)
+:{{c|{{CVAR|R|hud_showsecrets}}}}
+:Toggles whether the player's tally of found [[secret]]s is displayed.
+* '''{{LE|Show monster count|hud_showmonsters}}''' (On/Off)
+:{{c|{{CVAR|R|hud_showmonsters}}}}
+:Toggles whether the player's tally of killed [[monster]]s is displayed.
+* '''{{LE|Show item count|hud_showitems}}''' (On/Off)
+:{{c|{{CVAR|R|hud_showitems}}}}
+:Toggles whether the player's tally of found [[item]]s is displayed.
+* '''{{LE|Show stamina and accuracy|hud_showstats}}''' (On/Off)
+:{{c|{{CVAR|R|hud_showstats}}}}
+:Toggles whether the player's [[accuracy]] and [[stamina]] are displayed.
+* '''{{LE|Show berserk|hud_berserk_health}}''' (On/Off)
+:{{c|{{CVAR|R|hud_berserk_health}}}}
+:Toggles whether the {{Class|berserk}} icon is shown instead of the health icon when the player has a {{Class|PowerStrength}} active. This requires a berserk icon to be defined and valid ({{c|PSTRA0}} by default in Doom games).
+* '''{{LE|Show ammo for|hud_showammo}}''' (Current weapon/Available weapons/All weapons)
+:{{c|{{CVAR|R|hud_showammo}}}}
+:Manages the display of ammo. It can be set to show ammo for the currently equipped weapon, weapons that are stored in the player's inventory, or all weapons in the game regardless of whether they are in the inventory or not (this is the default setting).
+* '''{{LE|Show time|hud_showtime}}''' (Off/Level, milliseconds/Level, seconds/Level/Hub, seconds/Hub/Total, seconds/Total/System, seconds/System)
+:{{c|{{CVAR|R|hud_showtime}}}}
+:Allows to enable display of a timer in the upper-right corner of the screen. The time displayed can be level time (time spent during the current visit of the level), [[hub]] time (equivalent to level time in non-hub maps), total time (time spent throughout all levels of the current game), or system time (as a clock would). Hours and minutes are the minimal level of precision, while seconds and, when using level time, milliseconds, can also be optionally displayed.
+* '''{{LE|Show weapons|hud_showweapons}}''' (On/Off)
+:{{c|{{CVAR|R|hud_showweapons}}}}
+:Toggles whether the weapons in the player's inventory are displayed.
+* '''{{LE|Time color|hud_timecolor}}''' (''see [[#Alternative automap HUD|color table]] below'')
+:{{c|{{CVAR|R|hud_timecolor}}}}
+:The color used to display the optional timer.
+* '''{{LE|Ammo display order|hud_ammo_order}}''' (Image and Text/Text and Image)
+:{{c|{{CVAR|R|hud_ammo_order}}}}
+:Sets the order in which the ammo counters and their associated icons are drawn.
+* '''{{LE|Red ammo display below %|hud_ammo_red}}''' (0&amp;mdash;100 by 1 increments)
+:{{c|{{CVAR|R|hud_ammo_red}}}}
+:The percent value of the maximum below which the current ammo count will be displayed in red ({{color|#FF5566}}).
+* '''{{LE|Yellow ammo display below %|hud_ammo_yellow}}''' (0&amp;mdash;100 by 1 increments)
+:{{c|{{CVAR|R|hud_ammo_yellow}}}}
+:The percent value below which the current armor rating will be displayed in yellow ({{color|#FFCC00}}). Greater values are displayed in green ({{color|#00CC00}}).
+* '''{{LE|Red health display below|hud_health_red}}''' (0&amp;mdash;100 by 1 increments)
+:{{c|{{CVAR|R|hud_health_red}}}}
+:The value below which the current health total will be displayed in red ({{color|#FF5566}}).
+* '''{{LE|Yellow health display below|hud_health_yellow}}''' (0&amp;mdash;100 by 1 increments)
+:{{c|{{CVAR|R|hud_health_yellow}}}}
+:The value below which the current health total will be displayed in yellow ({{color|#FFCC00}}).
+* '''{{LE|Green health display below|hud_health_green}}''' (0&amp;mdash;100 by 1 increments)
+:{{c|{{CVAR|R|hud_health_green}}}}
+:The value below which the current health total will be displayed in green ({{color|#00CC00}}). Greater values are displayed in blue ({{color|#9999FF}}).
+* '''{{LE|Red armor display below|hud_armor_red}}''' (0&amp;mdash;100 by 1 increments)
+:{{c|{{CVAR|R|hud_armor_red}}}}
+:The value below which the current armor rating will be displayed in red ({{color|#FF5566}}).
+* '''{{LE|Yellow armor display below|hud_armor_yellow}}''' (0&amp;mdash;100 by 1 increments)
+:{{c|{{CVAR|R|hud_armor_yellow}}}}
+:The value below which the current armor rating will be displayed in yellow ({{color|#FFCC00}}).
+* '''{{LE|Green armor display below|hud_armor_green}}''' (0&amp;mdash;100 by 1 increments)
+:{{c|{{CVAR|R|hud_armor_green}}}}
+:The percent value of the maximum below which the current ammo count will be displayed in green ({{color|#00CC00}}). Greater values are displayed in blue ({{color|#9999FF}}).
+
+
+==Alternative automap HUD==
+Color options all use the [[TEXTCOLO]] color values.
+{| {{prettytable}}
+!code!!colspan="2"|color!!code!!colspan="2"|color!!code!!colspan="2"|color!!code!!colspan="2"|color!!code!!colspan="2"|color!!code!!colspan="2"|color!!code!!colspan="2"|color
+|-
+|0||reddish brick||{{color|#CC3333}}||1||tan||{{color|#D2B48C}}||2||gray||{{color|#CCCCCC}}||3||green||{{color|#00CC00}}||4||brown||{{color|#996633}}||5||gold||{{color|#FFCC00}}||6||red||{{color|#FF5566}}
+|-
+|7||blue||{{color|#9999FF}}||8||orange||{{color|#FFAA00}}||9||white||{{color|#DFDFDF}}||10||yellow||{{color|#EEEE33}}||12||black||{{color|#000000}}||13||light blue||{{color|#33EEFF}}||14||cream||{{color|#FFCC99}}
+|-
+|15||olive||{{color|#D1D8A8}}||16||dark green||{{color|#008C00}}||17||dark red||{{color|#800000}}||18||dark brown||{{color|#663333}}||19||purple||{{color|#9966CC}}||20||dark gray||{{color|#808080}}||21||cyan||{{color|#00DDDD}}
+|}
+* '''{{LE|Map title color|hudcolor_titl}}''' (''see color table above'')
+:{{c|{{CVAR|R|hudcolor_titl}}}}
+:The color used to display on the [[automap]] the level name.
+* '''{{LE|Map time color|hudcolor_ltim}}''' (''see color table above'')
+:{{c|{{CVAR|R|hudcolor_ltim}}}}
+:The color used to display on the [[automap]] the time spent in the current level.
+* '''{{LE|Hub time color|hudcolor_time}}''' (''see color table above'')
+:{{c|{{CVAR|R|hudcolor_time}}}}
+:The color used to display on the [[automap]] the time spent in the current [[hub]].
+* '''{{LE|Total time color|hudcolor_ttim}}''' (''see color table above'')
+:{{c|{{CVAR|R|hudcolor_ttim}}}}
+:The color used to display on the [[automap]] the total time spent in the current game.
+* '''{{LE|Coordinate color|hudcolor_xyco}}''' (''see color table above'')
+:{{c|{{CVAR|R|hudcolor_xyco}}}}
+:The color used to display on the [[automap]] the player coordinates.
+* '''{{LE|Coordinate mode|map_point_coordinates}}''' (Player/Map)
+:{{c|{{CVAR|R|map_point_coordinates}}}}
+:While the [[automap]] is active, the coordinates displayed correspond to the position of the cursor at the center of the map. If set to "Player", the coordinates remain set to the player's position.
+:When follow mode is on, the coordinates of the cursor and of the player should be the same except potentially for the Z coordinate. The cursor's Z position will always be that of the sector floor at this point; whereas a player might be flying, jumping, walking on things, or present above a [[3D floor]] or [[3D middle texture]].
+* '''{{LE|Statistics name color|hudcolor_statnames}}''' (''see color table above'')
+:{{c|{{CVAR|R|hudcolor_statnames}}}}
+:The color used to display the labels for the various statistics optionally shown as determined by the {{CVAR|R|HUD Statistics|hud_show*}} variables.
+* '''{{LE|Statistics color|hudcolor_stats}}''' (''see color table above'')
+:{{c|{{CVAR|R|hudcolor_stats}}}}
+:The color used to display the values for the various statistics optionally shown as determined by the {{CVAR|R|HUD Statistics|hud_show*}} variables.
+
+[[Category:Menus]]</text>
+    <sha1>6569rjrnikj88yr7207hgeb4ldjkm4v</sha1>
+  </revision>
+</page>

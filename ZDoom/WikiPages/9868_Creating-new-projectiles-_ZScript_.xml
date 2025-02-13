@@ -1,0 +1,167 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>Creating new projectiles (ZScript)</title>
+  <ns>0</ns>
+  <id>9868</id>
+  <revision>
+    <id>52239</id>
+    <parentid>52220</parentid>
+    <timestamp>2024-04-03T22:42:45Z</timestamp>
+    <contributor>
+      <username>Jekyll Grim Payne</username>
+      <id>2175</id>
+    </contributor>
+    <comment>/* Properties, states and sounds */</comment>
+    <origin>52239</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="5731" sha1="kgx2a0ux5l8c9oyoe8edbvqcik0mpd0" xml:space="preserve">Projectiles are {{class|Actor|actors}} that can be fired by the {{class|Weapon|player weapons}} with [[A_FireProjectile]], or by monsters with [[A_SpawnProjectile]] or [[A_CustomComboAttack]]. Projectiles have speed and can move at constant velocity until they hit another actor, after which they'll deal damage to it.
+
+== Properties, states and sounds ==
+
+There's only a few things to observe:
+* Use the {{property|Projectile|'''Projectile'''}} [[Actor properties|property]] to set all the necessary [[Actor flags|flags]] to make an actor into a projectile.
+* Projectiles need their '''{{property|Speed}}''' property defined, otherwise they won't be able to move.
+* Projectiles also need '''{{property|Damage}}''' (or, for more compelx functionality, '''{{property|Damage Function}}''') in order to be able to deal damage.
+* Set proper '''{{property|Height}}''' and '''{{property|Radius}}'''.
+* Define a looping '''Spawn''' [[Actor states|state]] sequence and a terminating '''Death''' sequence. The '''Spawn''' sequence is shown while the projectile is moving and the '''Death''' sequence is the explosion animation.
+
+Projectiles can also use different death states depending on what they hit:
+
+* If the projectile hits an actor that is {{flag|SHOOTABLE|shootable}} but cannot bleed (which can be caused by the actor having {{flag|NOBLOOD}}, {{flag|NODAMAGE}} or {{flag|INVULNERABLE}} flags), it will use its '''Crash''' state, if present.  If there is no '''Crash''' state, it'll go to '''Death''' as usual.
+* If the projectile hits an actor that ''can'' bleed, it will use the '''XDeath''' state.  If there is no '''XDeath''' state, the normal '''Death''' state will be used.
+* If the projectile hits a wall, floor, or a non-SHOOTABLE actor, the '''Death''' state will be used as normal.
+
+Normally, projectiles define two sounds:
+* The {{property|SeeSound}} is the sound the projectile plays when its fired. It's not obligatory, since you can prefer to play the sound from the {{class|Weapon}} instead.
+* The {{property|DeathSound}} will be played when the projectile explodes.
+
+== Examples ==
+
+This shows a simple projectile:
+ class BlueShot02 : Actor
+ {
+   Default
+   {
+     {{property|Projectile}};
+     {{property|Height}} 8;
+     {{property|Radius}} 6;
+     {{property|Damage}} 5;
+     {{property|Speed}} 10;
+     {{property|RenderStyle}} 'Add';
+     {{property|SeeSound}} "misc/shot";
+     {{property|DeathSound}} "misc/shotx";
+   }
+   States
+   {
+   Spawn:
+     WS16 AB 4 bright;
+     loop;
+   Death:
+     WS16 CDE 6 bright;
+     stop;
+   }
+ }
+
+
+To create a homing missile you have to add the '''{{flag|SEEKERMISSILE}}''' [[Actor flags|flag]] and call one of the [[Action functions#Missile movement|seeking functions]] in the '''Spawn''' sequence:
+ actor BlueShotSeeking : Actor
+ {
+   Default
+   {
+     {{property|Projectile}};
+     +{{flag|SEEKERMISSILE}}
+     {{property|Height}} 8;
+     {{property|Radius}} 6;
+     {{property|Damage}} 5;
+     {{property|Speed}} 10;
+     {{property|RenderStyle}} 'Add';
+     {{property|SeeSound}} "misc/shot";
+     {{property|DeathSound}} "misc/shotx";
+   }
+   States
+   {
+   Spawn:
+     WS16 A 4 bright [[A_Tracer2]];
+     loop;
+   Death:
+     WS16 CDE 6 bright;
+     stop;
+   }
+ }
+
+You can also do more complex things with [[Action functions]], for example spawning a trail behind the projectile or doing some special effect while exploding. This is a projectile that is doing some BFG-like effect with a different sprite. This projectile also has a limited life span. It automatically explodes after a few seconds because the '''Spawn''' [[Actor states|state]] is not looped:
+ class DevastatorBall : Actor
+ {
+   Default
+   {
+     {{property|Projectile}};
+     {{property|Radius 13}};
+     {{property|Height 8}};
+     {{property|Speed 25}};
+     {{property|Damage 200}};
+     {{property|RenderStyle 'Add'}};
+     {{property|Alpha 0.8}};
+     {{property|DeathSound "weapons/bfgx"}};
+   }
+   States
+   {
+   Spawn:
+     DVS1 A 100 bright;
+     TNT1 A 0 [[ExplodeMissile]];
+   Death:
+     DVE1 AB 8 bright;
+     DVE1 C 8 bright [[A_BFGSpray]] ("DevastatorExtra");
+     DVE1 DEF 8 bright;
+     stop;
+   }
+ }
+
+Projectiles can also be subjected to gravity. To do this, you will need to ''remove'' the {{flag|NOGRAVITY}} flag, which is automatically set by the {{property|Projectile}} property. After that you can also make your projectile bouncing by using [[Actor_flags#Bouncing|bouncing flags]] or the {{property|BounceType}} property (but not both).
+
+This is an example of a simple bouncing projectile that looks like {{class|DoomImpBall|Imp's fireball}} but explodes and uses sounds from a {{class|Rocket}}:
+
+ class SimpleGrenade : Actor
+ {
+   Default
+   {
+     {{Property|Radius}} 11;
+     {{Property|Height}} 8;
+     {{Property|Speed}} 25;
+     {{Property|Damage}} 20;
+     {{Property|Projectile}};
+     -{{flag|NOGRAVITY}}
+     {{Property|SeeSound}} "weapons/rocklf";
+     {{Property|DeathSound}} "weapons/rocklx";
+     {{Property|Obituary}} "$OB_MPROCKET";
+     +{{flag|ROCKETTRAIL}}
+     +{{flag|BOUNCEONWALLS}}
+     +{{flag|BOUNCEONFLOORS}}
+     +{{flag|BOUNCEONCEILINGS}}
+     +{{flag|BOUNCEAUTOOFF}}
+     {{Property|Gravity}} 0.5;
+     {{Property|WallBounceFactor}} 0.5;
+     {{Property|BounceFactor}} 0.75;
+   }
+   States
+   {
+   Spawn:
+     BAL1 A 1 bright;
+     loop;
+   Death:
+     MISL B 8 Bright [[A_Explode]];
+     MISL C 6 Bright;
+     MISL D 4 Bright;
+     Stop;
+   }
+ }
+
+== Virtual functions ==
+There are several [[ZScript virtual functions|virtual functions]] that are relevant for projectiles and can be used to add custom behavior to them. Check the following pages:
+* [[DoSpecialDamage]]
+* [[SpecialMissileHit]]
+* [[SpecialBounceHit]]
+
+[[Category:ZScript guides]]</text>
+    <sha1>kgx2a0ux5l8c9oyoe8edbvqcik0mpd0</sha1>
+  </revision>
+</page>

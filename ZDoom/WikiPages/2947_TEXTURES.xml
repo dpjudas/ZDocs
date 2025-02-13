@@ -1,0 +1,278 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>TEXTURES</title>
+  <ns>0</ns>
+  <id>2947</id>
+  <revision>
+    <id>54177</id>
+    <parentid>54150</parentid>
+    <timestamp>2025-02-01T23:43:34Z</timestamp>
+    <contributor>
+      <username>Marisa Heit</username>
+      <id>5</id>
+    </contributor>
+    <minor />
+    <origin>54177</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="21360" sha1="397tcn4w0ovi8spc992hisrvw2aslzm" xml:space="preserve">'''TEXTURES''' is a text [[lump]] used to define composite and/or scaled images in ZDoom. Despite the name, it can be used to define not only level textures, but all types of images, including sprites. It is a text-based replacement format for the original [[TEXTUREx|'''TEXTURE1''' and '''TEXTURE2''']] lumps.
+
+This lump was previously named '''HIRESTEX''', but its name was changed to reflect its meaning. '''HIRESTEX''' lumps are still read but that name is deprecated as of now.
+
+The primary purpose of TEXTURES is to be able to create new images out of existing images, without having to physically create new graphics in a graphics software.  For example, if you use several variations of the same texture that are only different in scale, TEXTURES allows you, using a single image file, to define multiple "virtual" textures that all reference the same file but are displayed at different scales. 
+
+Another common example is composite textures (i.e. textures that consist of several images), such as a wall texture and a switch texture that need to be combined to create a texture of a switch on a wall: with TEXTURES you can define a virtual texture that combines the two images into one; once you do that, you'll be able to use both the separate textures and the composite texture in your project.
+
+The advantages of this approach are:
+* You can reduce the file size of your project by creating virtual textures instead of having to create multiple files of similar-looking images.
+* If you decide to update one of the base textures (such as a wall texture), all composite virtual textures using it as a patch (such as a switch on a wall) will be updated automatically, and you won't have to edit/recreate multiple images.
+
+{{note|TEXTURES is an ''optional'' lump. While in vanilla Doom ''all'' textures had to be added as patches to TEXTURE1/TEXTURE2 lump to be usable in the map, in ZDoom this is only necessary for composite or scaled textures. If you have an image that is going to be used as a texture ''directly'', without scaling or combining it with other images, simply put it in the '''/textures/''' folder in your [[PK3|PK3 archive]], and as long as its name is 8 characters or less, it'll be directly available in the map editor.}}
+
+==Structure and terminology==
+
+First, it's important to have a clear understanding of how TEXTURES works:
+* A '''TEXTURES definition''' is a virtual image that can be of one of several types (Texture, Walltexture, Flat, Sprite, Graphic), which defines the namespace it'll be available in. It also has its own size in pixels and scale properties.
+* In order to actually display something, the definition needs a '''patch''' attached to it. A patch a physical image (i.e. the image file, such as a PNG file) that is normally placed under the '''patches/''' folder in your PK3; however, TEXTURES can use any graphic as a patch. You can automatically create a TEXTURES definition for a patch in SLADE by right-clicking the image file and choosing ''Graphic &gt; Add to TEXTUREx''. Since the primary purpose of TEXTURES is to create composite images consisting of several source images, naturally, multiple patches can be attached to one TEXTURES definition.
+
+There are various ways to create a TEXTURES definition.
+
+Using SLADE:
+* Find an image in your project's [[Using_ZIPs_as_WAD_replacement|PK3 archive or folder]], right-click it and choose ''Graphic &gt; Add to TEXTUREx''. If there's no TEXTURES lump in your project at that point, a prompt will appear suggesting to create a TEXTURE1, TEXTURE2 or TEXTURES lump. Choose the latter (since TEXTURE1/TEXTURE2 are not particularly useful in ZDoom) and click OK to create the lump. ''Dont forget to save changes (Ctrl-S)'' for the lump to be actually created. If the TEXTURES lump is already there, a definition will be created for this patch. This definition will automatically have the size of the patch you've chosen, and the chosen image will be added to it as a patch.
+** Note, you can do this for multiple images, by selecting several images (holding Shift or Ctrl) and and choosing Add to TEXTUREx. Doing this will create multiple ''separate'' TEXTURES definition for every selected patch. You can't use this method to add multiple patches to the ''same'' definition.
+* Once you have some definitions, you can either select your TEXTURES lump to edit it in text format, or you can double-click it to open the visual editor. You can use it to set the virtual image's scale and offsets (useful if it's meant to be used as a sprite), add more patches and drag them around manually, change their display order and even renderstyle.
+
+Manual editing:
+* You can add a definition to TEXTURES by just editing it as a text lump. While this is cumbersome and isn't particularly recommended for adding the first patch (which in case of a composite texture would be the biggest image that is meant to be in the background, like a wall behind a switch), this is still relevant for some cases:
+** If you want to use a full path to a patch: if your patch has a name over 8 characters long, you will have to supply a full path to the patch, such as '''Patch "graphics/hud/monstercompass.png"'''. This can only be done manually, the ''Add to TEXTUREx'' won't add a full path to the patch.
+** Manual editing may be useful if you want to apply similar modifications to a large set of images. For example, if you have a whole lot of images that need the same scale to be applied, it may be easier to apply the initial scale through the visual editor, and then copy-paste the scale values to other definitions using a text editor.
+** You may also need to use manual editing if you want to add a patch from another project. For example, if you want to create a virtual image that uses images from doom2.wad, you will have to create a TEXTURES definition first, then add a patch to it using the correct name. The only two ways to do that are either to write in the image name in the text editor, or open both your project and doom2.wad in SLADE, open your TEXTURES definition in the visual editor, click + to add a new patch, and then you'll be able to select patches from all open archives, including doom2.wad.
+
+===Patches location and naming===
+
+TEXTURES can use any image as a patch, regardless of its location in your archive/folder. Choosing where to place it follows this logic:
+# If the image itself is ''not'' going to be used directly anywhere and only meant to be used as a patch for a virtual TEXURES image, it's best to place the image file(s) under '''patches/'''. Files in this folder can't be used anywhere and are only visible to TEXTURES.
+# If both the real image and the virtual TEXTURES image are meant to be used, place the image in the relevant folder (such as '''sprites/''', '''graphics/''', '''textures/''', etc.). For example, if you have a large texture that you're going to use both directly and in a scaled-down version, you should use this method.
+
+In the 2nd case it's best to make sure that the image file and the TEXTURES definition ''use different names''. Otherwise, whenever you refer to the graphic's name in your code, you won't know if GZDoom will pick the image directly or the TEXTURES definition with the same name.
+
+===SLADE visual editor for TEXTURES===
+
+[[File:Textures visual editor.png|thumb]]
+
+Left colum: contains a list of the added definitions.
+
+Top:
+* '''Apply scale''': If the image is scaled, this checkbox will make sure it's displayed as scaled. Disabled by default.
+* '''Aspect Ratio Correction''': Displays the image the way it would normally be displayed in Doom, with vertical pixel stretching (see [[Aspect ratio correction]] for details). This helps to see the image the way it'll be actually rendered.
+* '''Show outside''': If some of the patches are moved beyond the edges of the virtual image, ticking this checkbox will make sure they're still displayed (they'll be displayed in red). Otherwise the parts outside the virtual image boundaries will be hidden.
+
+Bottom — this area contains settings for the virtual image:
+* '''Offset Type''' displays an offset grid for in-world sprites (Sprite), or on-screen sprites (Weapons/CustomInventory), or nothing (for HUDs or menus, which don't use image offsets).
+* '''Name''': the name of the virtual image.
+* '''Size''': the resolution of the virtual image.
+* '''Scale''': scaling applied to the virtual image. Note, TEXTURES uses inverse scale (2 = 50% of the original size, 0.5 = 200% of the original size, etc.). 
+* '''Type''': defines the namespace of the virtual image (Texture, Sprite, Graphic, WallTexture, Flat). If you want to use the image as a sprite, you have to set this to Sprite. In other cases it's not that critical, since modern map editors can place any graphic on a wall, and ZScript HUDs can also draw any image, but it's still recommended to set the type properly. WallTexture and Flat are arguably redundant nowadays.
+* '''Offsets''': the offsets of the virtual image. Note, you can also set them manually by clicking ''outside of the image's border'' and dragging it around. Note, if you click inside the border, you'll instead be dragging the patch you clicked on without changing the position of the virtual image, so it can end up outside its borders and parts of it won't be visible.
+* '''Truecolor preview''': located at the bottom right, this checkbox makes sure no game-specific palette is applied to the preview window. Should be used if you're using truecolor PNG patches.
+
+Flag checkboxes (below the Offsets field):
+*''Optional''
+:Will suppress warning messages from the game if one of the patches it requires is missing. The virtual image simply won't be created.
+*''WorldPanning''
+:Specifies that texture offsets should be applied in world units, rather than by pixels in the texture. This allows scaled textures to be offset properly when replacing lower resolution textures in an existing map.
+*''NoDecals''
+:Do not allow [[decal|decals]] on this texture.
+*''NullTexture''
+:The image will never actually be drawn. This duplicates the behavior of AASHITTY and other special textures.
+*''NoTrim'' (This flag can only be specified manually, by writing it in the text editor.)
+:*By default, GZDoom trims empty space in images, which may cause issues when rotating or scaling sprites (e.g. the anchor point used by [[A_OverlayRotate]], [[A_OverlayScale]] and actor's roll is defined by the image's size, but since the empty space is trimmed, it can be hard to predict its placement). Specifying this disables the trimming for the graphic. 
+:*Alternatively this can be set in [[ANIMDEFS#Other|ANIMDEFS]] using different syntax.
+
+Right — this area contains patch settings:
+* '''Patches''': this area contains a list of patches. 
+** '''+''' button opens a selection window to add a new patch from the archives currently opened in SLADE
+** '''-''' button removes a selected patch from the virtual image
+** The arrow buttons change the order of the patches (what is on top, what is in the background, etc.)
+** The sideways button adds a new patch to replace the currently selected one
+** The duplicate button adds the currently selected patch again
+
+Patch properties:
+* '''X position''' and '''Y position''' define the position of the patch within the boundaries of the virtual image
+* '''Use Source GFX offsets''': use the offsets embedded in the original image (e.g. if it's a sprite that was offset earlier using SLADE)
+* '''Flip X''' and '''Flip Y''' flip the patch horizontally or vertically
+* '''Rotation''': allows to rotate the patch in 90-degree increments. If you want to use smaller increments, you have to use the ''roll'' Actor property or [[A_OverlayRotate]] function (for on-screen sprites).
+* '''Alpha''': translucency of the patch
+* '''Alpha style''': a dropdown list of possible renderstyles for the patch
+* '''Patch Colour''': Normal, Blend or Tint. The latter two allow adding color blend or tint to the patch.
+* '''Translation''': lets you specify a [[translation]] string for the patch, much like Actor translation.
+
+===Text editor===
+To define a new virtual image, use the one of the key words (such as ''texture'', ''sprite'', etc.). The format is the same:
+
+ texture [optional] ''Name'', ''Width'', ''Height'' (generic textures)
+ sprite [optional] ''Name'', ''Width'', ''Height'' (sprites)
+ graphic [optional] ''Name'', ''Width'', ''Height'' (menu graphics)
+ walltexture [optional] ''Name'', ''Width'', ''Height'' (wall textures)
+ flat [optional] ''Name'', ''Width'', ''Height'' (floors and ceilings)
+
+''Name'' is the name of the new composite texture/sprite. ''Width'' and ''Height'' are integers that define the width and height of the “canvas” for the composite image. Note that this is not the scaled size&amp;nbsp;&amp;mdash; those are defined by the X/YScale parameters within the texture/sprite parameter block. (See below)
+
+Following this line is an optional parameter block enclosed in curly-braces ('''{}''') where different options and the patches that make up the composite image will be listed.
+
+The following flags are available:
+
+*''XScale'' &lt;value&gt;
+*''YScale'' &lt;value&gt;
+*''Offset'' &lt;horz&gt;, &lt;vert&gt;
+*''WorldPanning''
+*''NoDecals''
+*''NullTexture''
+*''NoTrim''
+
+===NoTrim===
+In addition for specifying within definitions, NoTrim can be specified without needing to create a definition with a single line. See the flag above for what it does. Requires an existing graphic to have any effect.
+ NoTrim &lt;graphic name&gt;
+
+===Patch===
+In addition to texture-level options, the ''Patch'' keyword and block is used to add new patches to the composite image. A texture requires at least one patch to work. The formatting is as follows:
+
+ Patch ''Name'', ''X-Origin'', ''Y-Origin''
+ Graphic ''Name'', ''X-Origin'', ''Y-Origin''
+ Sprite ''Name'', ''X-Origin'', ''Y-Origin''
+
+Name is the name of the patch to add. X/Y-Origin define where in the “canvas” to place the patch, starting at the top-left pixel of the patch and drawing right and downward.
+
+Instead of "patch", the "graphic" or "sprite" keyword can be used. The only practical difference is in [[namespace]] prioritizing, which is only relevant for [[PK3]] archives since, in a [[WAD]] file, both patches and graphics are in the global namespace. In the absolute majority of cases you can simply use Patch and forget about the rest.
+
+Similar to the texture construct, the ''Patch'' option can optionally have its own parameter block, also enclosed in curly-braces. These options are available within this block:
+
+{{warning|There are three important things to keep in mind:
+#These options apply only to the patch itself during composition. The final texture composited from these patches is merely a collection of pixels which will not "remember" that they have been blended, translated or rotated.
+#''Alpha'', ''Blend'', and ''Style'' are only relevant for composite images. They have no effect on how the composited virtual image is rendered in-game. In particular, if there is no pixel information from another patch behind a blended or translucent patch, it will be blended with black. This '''cannot''' be used to create images with varying amounts of translucency or multiple render styles!
+#''Blend'' and ''Translation'' are mutually incompatible and cannot be both used on the same patch.}}
+
+*''FlipX''
+:Flips the patch right-to-left within the image.
+*''FlipY''
+:Flips the patch upside down.
+*''UseOffsets''
+:The patch's built-in offsets are subtracted from the X and Y origins, instead of being ignored as normal.
+*''Rotate'' &lt;value&gt;
+:Rotates the patch Clockwise within the image. Value is defined in degrees. Currently only multiples of 90 are valid (0/90/180/270). (Note: the origins of the patch do not change when rotated e.g. the patch is rotated in place around the center)
+*''Translation'' &lt;string&gt;
+:Applies a translation to this patch before inserting it in the composite image. &lt;string&gt; can be either one of the built in translations or a custom translation string consisting of the colors to remap from and to. [[#Translations|See below]].
+*''Blend'' &lt;string color&gt;[,&lt;float alpha&gt;]
+*''Blend'' &lt;int r&gt;,&lt;int g&gt;,&lt;int b&gt;[,&lt;float alpha&gt;]
+:This statement has two different effects depending on how it is used:&lt;br&gt;Specifying a color string and omitting the alpha parameter creates a custom colormap to translate the image to. This has the same effect as using [[Sector_SetColor]], but applies the coloring directly to this patch.&lt;br&gt;If an alpha is supplied with the color, this blends a solid color into the patch, akin to screen tinting.&lt;br&gt;When using the second syntax, color values must be in the range from 0 to 255.
+*''Alpha'' &lt;value&gt;
+:Specifies the patch's translucency (0.0&amp;ndash;1.0) when adding it to the image. Default is 1.0 (fully opaque). Use the ''Style'' property to control how the translucency is applied.
+*''Style'' &lt;type&gt;
+:Defines the render style for a translucent patch. [[#Translucency|See below]].
+
+There may be as many Patch statements and blocks present as needed to create the final composite image.
+
+====Translations====
+
+The colors of each patch can be translated independently as they are applied to the composite image.
+
+To use one of the built in translation types, following the ''Translation'' property with one of:
+
+*Desaturate, &lt;amount&gt;
+*Blue
+*Gold
+*Green
+*Ice
+*Inverse
+*Red
+
+When using Desaturate, an additional integer between 1 and 31 is used to determine how much to desaturate the texture. 1 leaves the patch nearly unchanged, while 31 fully desaturates the patch into shades of grey.
+
+In addition to these translation types, a [[translation|custom translation]] can be defined using the same syntax as the [[DECORATE]] {{Property|Translation}} property.
+
+====Translucency====
+
+Patches can be applied to the composite image using translucency. To do this, use the ''Alpha'' property to control how opaque the patch will be, and the ''Style'' property to control the type of translucency. Available values for Style are:
+
+*Add
+:Causes the patch to be drawn with additive translucency, resulting in brightening effect.
+*Copy
+:Renders the patch as normal and solid. This is the default if no Style is specified.
+*CopyAlpha
+:This is the same as Copy, but does additional processing to respect a PNG's alpha channel.
+*CopyNewAlpha
+:This works just like Copy except it multiplies each pixel's alpha channel by the specified Alpha property.
+*Modulate
+:This has an extreme darkening effect, similar to Photoshop's "burn" style.
+*Overlay
+:This is the same as CopyAlpha, except it only copies the patch's alpha channel where it has a higher alpha than what's underneath.
+*ReverseSubtract
+:Same as subtract, but re-inverts the patch so it appears normal when being applied.
+*Subtract
+:Subtracts the patch from patches below, resulting in a darkening effect. This implies inverting.
+*Translucent
+:Applies regular translucency to the patch.
+
+==Examples==
+This creates a composite ladder texture by applying several copies of the same patch and rotating them 90 degrees. Bear in mind, in this example, that the X- and YScale properties are not necessary. They don't need to be defined unless you're up- or down-scaling an image.
+
+ texture ALADDER2, 72, 256
+ {
+    XScale 1.0
+    YScale 1.0
+    Patch RW45_1, 0, 0
+    {
+       rotate 90
+    }
+    Patch RW45_1, 0, 64
+    {
+       rotate 90
+    }
+    Patch RW45_1, 0, 128
+    {
+       rotate 90
+    }
+    Patch RW45_1, 0, 172
+    {
+       rotate 90
+    }
+ }
+
+
+This example shows the CopyAlpha translucency effect being used in a 512x512 texture that's scaled to fit as if it were 128x128:
+ Texture SWEXPLUP, 512, 512
+ {
+    // Switch Example
+    // Up position
+    XScale 4
+    YScale 4
+    Patch AG_512_2, 0, 0
+    Patch MSW1_UP, 64, 288 { Style CopyAlpha }
+ }
+
+==Multiple TEXTURES lumps==
+
+GZDoom supports #include syntax for TEXTURES lumps as of version 3.4.0. If you want your mod to support older versions of the ZDoom codebase (such as Zandronum), you can have multiple TEXTURES lumps in your [[PK3]]. Simply give them different extensions besides .txt, or whatever your typical text extension is. For example, TEXTURES.tech, TEXTURES.wood, TEXTURES.hell, and so on. Organizing and categorizing your definitions like so makes it much easier to locate and modify entries.
+
+==Editor support==
+* [[Doom Builder 2]] reads TEXTURES definitions and displays them in visual mode. Currently however, things such as flips, rotations, translations, blends, and images using long path names are not reflected.
+* [[SLADE 3]] also reads them and offers a visual texture editor.
+
+=={{LE|Hi-res textures|HIRESTEX}} (&lt;span style="color: red;"&gt;'''Deprecated'''&lt;/span&gt;)==
+
+{{Warning|text=Please consider using the more robust composite texture definition feature instead. These old HIRESTEX commands are considered deprecated and won't get updated anymore in the future.}}
+
+
+To replace an original texture, sprite or graphic use:
+
+ remap texturename hireslumpname
+
+And to define a new Hi-Res texture use: 
+
+ define lumpname scaledwidth scaledheight
+
+Using the HIRESTEX method is not needed for hires replacements. Simply putting graphics between HI_START/HI_END (WAD) or in a /Hires/ folder (PK3) will automatically scale them to the size of the graphics with the same name that they replace, and no text lump is required.
+
+[[Category:Graphics lumps]][[Category:ZDoom special lumps]]</text>
+    <sha1>397tcn4w0ovi8spc992hisrvw2aslzm</sha1>
+  </revision>
+</page>

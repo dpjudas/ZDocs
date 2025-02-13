@@ -1,0 +1,59 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>TryPickupRestricted</title>
+  <ns>0</ns>
+  <id>9829</id>
+  <revision>
+    <id>52113</id>
+    <parentid>51691</parentid>
+    <timestamp>2024-03-27T12:37:15Z</timestamp>
+    <contributor>
+      <username>Jekyll Grim Payne</username>
+      <id>2175</id>
+    </contributor>
+    <minor />
+    <comment>/* Parameters */</comment>
+    <origin>52113</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="1674" sha1="oai7b7zu7osx05u84inwn3jpsaouy1p" xml:space="preserve">'''{{class|Inventory}}'''
+
+{{c|virtual bool '''TryPickupRestricted'''(in out Actor ''toucher'')}}
+
+==Usage==
+A [[ZScript virtual functions|virtual function]] called by {{class|Inventory}} items when they're received (either by being picked up from the world, or by being given directly). This is called in [[CallTryPickup]], right after [[TryPickup]] has been called, but only if [[CanPickup]] returns false AND the item ''doesn't'' have the {{flag|INVENTORY.RESTRICTABSOLUTELY}} flag.
+
+Just like [[TryPickup]], this function should not be called directly, but can be overridden to add extra behavior. If you want to add behavior when an item has already been received, consider using [[AttachToOwner]] or [[Use]] instead.
+
+=== Parameters ===
+*{{c|Actor '''toucher'''}}
+:The actor who is attempting to receive this item.
+
+=== Return values ===
+Returns true if the item was successfully received. Note, this doesn't guarantee that the item itself keep existing. Many classes, such as {{class|Health}}, perform their function (such as healing the toucher) and then disappear. TryPickup still returns true in this case, because technically the item was sucecssfully received.
+
+== [[ZScript]] definition ==
+{{ZScriptDefinitionNote|actors/inventory/inventory.zs#L719C1-L722C3}}
+The base {{class|Inventory}} class defines it as follows:
+
+&lt;syntaxhighlight lang="csharp"&gt;
+	virtual bool TryPickupRestricted (in out Actor toucher)
+	{
+		return false;
+	}
+&lt;/syntaxhighlight&gt;
+
+== Examples ==
+{{noexamples}}
+
+== See also ==
+* [[CallTryPickup]]
+* [[TryPickup]]
+* [[Touch]]
+* [[Inventory virtual functions]]
+
+[[Category:ZScript]]
+[[Category:Inventory]]
+[[Category:ZScript virtual functions]]</text>
+    <sha1>oai7b7zu7osx05u84inwn3jpsaouy1p</sha1>
+  </revision>
+</page>

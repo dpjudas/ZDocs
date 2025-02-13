@@ -1,0 +1,46 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>A ThrowGrenade</title>
+  <ns>0</ns>
+  <id>2682</id>
+  <revision>
+    <id>50579</id>
+    <parentid>43416</parentid>
+    <timestamp>2023-09-24T09:48:54Z</timestamp>
+    <contributor>
+      <username>Inkoalawetrust</username>
+      <id>2604</id>
+    </contributor>
+    <comment>Added info about the returns of this function.</comment>
+    <origin>50579</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="1224" sha1="nln6dxyvcswihj3lev59kn4mv76tgab" xml:space="preserve">{{codepointer|Generic Attack}}bool, Actor '''A_ThrowGrenade''' (string ''spawntype'' [float ''zheight'' [, float ''xyvel'' [, float ''zvel'' [, bool ''useammo'']]]])
+
+Spawns a [[projectile]] and throws it like a grenade. This function can be used for [[monster]]s, [[Item|inventory items]] and [[weapon]]s. ''useammo'' only has an effect when used with a weapon.
+
+The parameters are:
+* ''spawntype'': Type of the projectile to be spawned.
+* ''zheight'': Height at which the projectile is spawned. The function adds 35 to this, so that passing 0 means at the center of the throwing actor.
+* ''xyvel'', ''zvel'': Speed with which the object is thrown.
+
+== Return value {{Zscriptfeaturesmall}} ==
+This function returns two values, in this order. Whether or not the projectile spawned, and a pointer to the projectile.
+
+== Examples ==
+This is a grenade-throwing zombie. The attack sound was changed so that it would not use the default {{Class|pistol}} firing sound for throwing a grenade.
+
+ ACTOR GrenadierZombie : {{Class|ZombieMan}}
+ {
+   {{Property|AttackSound}} ""
+   States
+   {
+   Missile:
+     POSS E 10 [[A_FaceTarget]]
+     POSS F 8 [[A_ThrowGrenade]]("{{Class|Grenade}}", 20, 8, 4)
+     POSS E 8
+     Goto See
+   }
+ }</text>
+    <sha1>nln6dxyvcswihj3lev59kn4mv76tgab</sha1>
+  </revision>
+</page>

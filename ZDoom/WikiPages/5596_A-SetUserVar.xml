@@ -1,0 +1,63 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>A SetUserVar</title>
+  <ns>0</ns>
+  <id>5596</id>
+  <revision>
+    <id>46793</id>
+    <parentid>42562</parentid>
+    <timestamp>2019-07-16T05:57:05Z</timestamp>
+    <contributor>
+      <username>Quaker540</username>
+      <id>2135</id>
+    </contributor>
+    <minor />
+    <comment>Replaced the deprecated action function</comment>
+    <origin>46793</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="1830" sha1="kdi1io8ndrs48rsp45i8jnbfgzjw00l" xml:space="preserve">{{DISPLAYTITLE:A_SetUserVar}}
+'''A_SetUserVar''' (string ''name'', int ''value'')
+
+Sets the calling actor's [[user variable]] of type '''int''' named ''name'' to ''value''. The name must begin with &lt;tt&gt;user_&lt;/tt&gt;.
+
+User variables are not used by anything internally, contrarily to the args array and the special1 and special2 fields. 
+
+== Notes ==
+*User variables on weapons will not work unless they are defined on the player actor itself.
+*CustomInventory items can modify a monster's variables, but it must be defined in both the monster, and the CustomInventory actors. Until the CustomInventory enters its Use state legitimately (NOT through state jumps, but actual internal triggering), it will only modify its own user variables. If the inventory item needs modifying for only itself once grabbed, do so in the Pickup state.
+
+== Examples ==
+This code creates an imp which attacks with a 360 degree "shockwave" attack composed of 360 individual fireballs. Old mods achieved this effect by reproducing a [[A_CustomMissile]] call many times. This cuts down on the amount of lines needed and is much cleaner to implement. 
+
+ actor ShockWaveDoomImp : {{class|DoomImp}} replaces {{class|DoomImp}}
+ {
+   var int user_theta;
+   states
+   {
+   Missile:
+     TROO EF 8 [[A_FaceTarget]]
+     TROO G 0 [[A_SetUserVar]]("user_theta",0)
+   Shock:
+     TROO G 0 [[A_SpawnProjectile]]("{{class|DoomImpBall}}",32,0,user_theta)
+     TROO G 0 [[A_SetUserVar]]("user_theta",user_theta+1)
+     TROO G 0 [[A_JumpIf]](user_theta==360,"EndShock")
+     Loop
+   EndShock:
+     TROO G 6
+     Goto See
+   }
+ }
+
+== See also ==
+* [[A_SetUserArray]]
+* [[A_SetUserArrayFloat]]
+* [[A_SetUserVarFloat]]
+* [[GetUserArray]]
+* [[GetUserVariable]]
+* [[SetUserArray]]
+* [[SetUserVariable]]
+
+{{DEFAULTSORT:SetUserVar}}[[category:Decorate Status change functions]]</text>
+    <sha1>kdi1io8ndrs48rsp45i8jnbfgzjw00l</sha1>
+  </revision>
+</page>

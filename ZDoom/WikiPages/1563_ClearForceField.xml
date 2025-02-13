@@ -1,0 +1,48 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>ClearForceField</title>
+  <ns>0</ns>
+  <id>1563</id>
+  <revision>
+    <id>44579</id>
+    <parentid>44565</parentid>
+    <timestamp>2017-04-02T16:36:32Z</timestamp>
+    <contributor>
+      <username>Gez</username>
+      <id>1283</id>
+    </contributor>
+    <minor />
+    <comment>/* Conversions from linedef types */</comment>
+    <origin>44579</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="860" sha1="qz0ija7wvptcmy7g0omzfb6mhkqrbjm" xml:space="preserve">{{Special|34|tag|Miscellaneous}}
+
+* ''tag'': sector to clear forcefields from.
+
+==Usage==
+
+Clears all force fields from lines connected to the tagged sector. It will also clear the force field's middle texture.
+
+==Examples==
+
+If forcefields are set up in a way such that the player cannot pass (this can be done with two in a row at angles), then you can create an effective power off sequence with a script like this:
+
+ script 1 (int sector)
+ {
+ 	[[Print]](s:"Power off...");
+ 	ClearForceField(sector);
+ 	[[Light_Fade]](sector, 64, 70);
+ }
+
+Just tie it to a power switch and it will deactivate lights and forcefields.
+
+== Conversions from linedef types ==
+The following Doom map format types can be converted as ClearForceField:
+{| {{prettytable}}
+!Type!!Conversion!!Trigger
+|-
+|{{icon|Strife}} 147:S1 Clear Forcefield || ClearForceField(tag) || Player Use
+|}</text>
+    <sha1>qz0ija7wvptcmy7g0omzfb6mhkqrbjm</sha1>
+  </revision>
+</page>

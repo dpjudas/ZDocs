@@ -1,0 +1,49 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>CheckNoDelay</title>
+  <ns>0</ns>
+  <id>9449</id>
+  <revision>
+    <id>50188</id>
+    <parentid>47950</parentid>
+    <timestamp>2023-04-03T20:58:24Z</timestamp>
+    <contributor>
+      <username>Boondorl</username>
+      <id>2606</id>
+    </contributor>
+    <minor />
+    <comment>/* Examples */</comment>
+    <origin>50188</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="820" sha1="k5ugml909jvk3hti9142ejj0ahcafpw" xml:space="preserve">{{ZScriptNote}}
+__NOTOC__
+
+bool '''CheckNoDelay'''()
+
+== Usage ==
+Checks to see if the action function set in the Actor's first state should be called on spawn. If so, calls the function. This will not call the function again if it was already handled previously.
+
+=== Return value ===
+Returns false if the Actor removed itself from the game during the process.
+
+== Examples ==
+This check is best done right before changing the tick duration when managing an Actor's state since this is how ZDoom does it internally:
+ // Previous thinking logic
+ 
+ // Check if we should run the first function (or if the Actor is set not to tick its state)
+ if (!CheckNoDelay() || tics == -1)
+ {
+     return;
+ }
+ 
+ // Decrement the Actor's current ticks
+ --tics;
+ if (!tics)
+ {
+     SetState(curState.nextState);
+ }
+
+[[Category:ZScript]]</text>
+    <sha1>k5ugml909jvk3hti9142ejj0ahcafpw</sha1>
+  </revision>
+</page>

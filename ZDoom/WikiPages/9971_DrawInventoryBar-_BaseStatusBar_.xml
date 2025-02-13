@@ -1,0 +1,182 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>DrawInventoryBar (BaseStatusBar)</title>
+  <ns>0</ns>
+  <id>9971</id>
+  <revision>
+    <id>53598</id>
+    <parentid>53560</parentid>
+    <timestamp>2024-11-08T11:31:27Z</timestamp>
+    <contributor>
+      <username>Jekyll Grim Payne</username>
+      <id>2175</id>
+    </contributor>
+    <comment>/* Parameters */</comment>
+    <origin>53598</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="5874" sha1="blooulngn2cdu0f7i7bordwxan5bzg2" xml:space="preserve">'''{{class|BaseStatusBar}}'''
+
+void '''DrawInventoryBar'''(InventoryBarState ''parms'', Vector2 ''position'', int ''numfields'', int ''flags'' = 0, double ''bgalpha'' = 1.)
+
+== Usage ==
+A '''{{class|BaseStatusBar}}''' function designed to draw the inventory bar in your HUD. It draws a series of item icons with a background, and item amounts. Note, this function does not handle the inner workings of the bar itself (such as the player's ability to cycle items and use them), only the visual representation of it.
+
+Since there's a lot of information to keep track of when drawing an inventory bar, most of that data is stored in a dedicated class, '''{{class|InventoryBarState}}''', which is normally initialized in the HUD's [[Classes:BaseStatusBar#Virtual|{{c|Init()}}]] function.
+
+Note, using this function to draw the inventory bar is not actually a requirement. It can be replaced with a completely custom method of representing it.
+
+=== Parameters ===
+*{{c|InventoryBarState '''parms'''}}
+:A pointer to an instance of {{class|InventoryBarState}} class that contains relevant information about the inventory bar.
+*{{c|Vector2 '''position'''}}
+:The position to draw the bar at.
+*{{c|int '''numfields'''}}
+:How many items to show in the bar at the same time. If the total number of items is higher than this value, the player will have to scroll to them manually.
+*{{c|int '''flags'''}}
+{{: BaseStatusBar SCREEN flags}}
+:In addition to the above, this function also supports unique flags:
+:*{{c|DI_DRAWCURSORFIRST}} - draws the selection cursor below the item's icon
+:*{{c|DI_ALWAYSSHOWCOUNT}} - always show the item count on top of the icon, even if the item's current amount is 0
+:*{{c|DI_ARTIFLASH}} - {{moreinfo}}
+*{{c|double '''bgalpha'''}}
+:Translucency of the bar's background.
+
+== [[ZScript]] definition ==
+{{ZScriptDefinitionNote|static/zscript/ui/statusbar/statusbar.zs#L948}}
+The inner workings of this function are fully handled in ZScript:
+&lt;syntaxhighlight lang="csharp"&gt;
+	// Except for the placement information this gets all info from the struct that gets passed in.
+	void DrawInventoryBar(InventoryBarState parms, Vector2 position, int numfields, int flags = 0, double bgalpha = 1.)
+	{
+		double width = parms.boxsize.X * numfields;
+		[position, flags] = AdjustPosition(position, flags, width, parms.boxsize.Y);
+		
+		CPlayer.mo.InvFirst = ValidateInvFirst(numfields);
+		if (CPlayer.mo.InvFirst == null) return;	// Player has no listed inventory items.
+		
+		Vector2 boxsize = parms.boxsize;
+		// First draw all the boxes
+		for(int i = 0; i &lt; numfields; i++)
+		{
+			DrawTexture(parms.box, position + (boxsize.X * i, 0), flags | DI_ITEM_LEFT_TOP, bgalpha);
+		}
+		
+		// now the items and the rest
+		
+		Vector2 itempos = position + boxsize / 2;
+		Vector2 textpos = position + boxsize - (1, 1 + parms.amountfont.mFont.GetHeight());
+
+		int i = 0;
+		Inventory item;
+		for(item = CPlayer.mo.InvFirst; item != NULL &amp;&amp; i &lt; numfields; item = item.NextInv())
+		{
+			for(int j = 0; j &lt; 2; j++)
+			{
+				if (j ^ !!(flags &amp; DI_DRAWCURSORFIRST))
+				{
+					if (item == CPlayer.mo.InvSel)
+					{
+						double flashAlpha = bgalpha;
+						if (flags &amp; DI_ARTIFLASH) flashAlpha *= itemflashFade;
+						DrawTexture(parms.selector, position + parms.selectofs + (boxsize.X * i, 0), flags | DI_ITEM_LEFT_TOP, flashAlpha);
+					}
+				}
+				else
+				{
+					DrawInventoryIcon(item, itempos + (boxsize.X * i, 0), flags | DI_ITEM_CENTER | DI_DIMDEPLETED );
+				}
+			}
+			
+			if (parms.amountfont != null &amp;&amp; (item.Amount &gt; 1 || (flags &amp; DI_ALWAYSSHOWCOUNTERS)))
+			{
+				DrawString(parms.amountfont, FormatNumber(item.Amount, 0, 5), textpos + (boxsize.X * i, 0), flags | DI_TEXT_ALIGN_RIGHT, parms.cr, parms.itemalpha);
+			}
+			i++;
+		}
+		// Is there something to the left?
+		if (CPlayer.mo.FirstInv() != CPlayer.mo.InvFirst)
+		{
+			DrawTexture(parms.left, position + (-parms.arrowoffset.X, parms.arrowoffset.Y), flags | DI_ITEM_RIGHT|DI_ITEM_VCENTER);
+		}
+		// Is there something to the right?
+		if (item != NULL)
+		{
+			DrawTexture(parms.right, position + parms.arrowoffset + (width, 0), flags | DI_ITEM_LEFT|DI_ITEM_VCENTER);
+		}
+	}
+&lt;/syntaxhighlight&gt;
+
+== Examples ==
+This example shows how the default Doom HUD uses this function. Note, most of the code was omitted for brevity, and comments were added. You can see the full hud code [https://github.com/ZDoom/gzdoom/blob/master/wadsrc/static/zscript/ui/statusbar/doom_sbar.zs on GZDoom Github].
+&lt;syntaxhighlight lang="cs"&gt;
+// This HUD is included with GZDoom.
+
+class DoomStatusBar : BaseStatusBar
+{
+	// The HUD needs to have a pointer to an instance
+	// of InventoryBarState, so it must be declared
+	// as a class field:
+	InventoryBarState diparms;
+
+	override void Init()
+	{
+		Super.Init();
+		[...]
+
+		// InventoryBarState is instantiated:
+		diparms = InventoryBarState.Create();
+	}
+
+	override void Draw (int state, double TicFrac)
+	{
+		Super.Draw (state, TicFrac);
+
+		// Draws Doom statusbar in statusbar mode:
+		if (state == HUD_StatusBar)
+		{
+			BeginStatusBar();
+			DrawMainBar (TicFrac);
+		}
+		// Otherwise draws fullscreen HUD:
+		else if (state == HUD_Fullscreen)
+		{
+			BeginHUD();
+			DrawFullScreenStuff ();
+		}
+	}
+
+	// Statusbar mode:
+	protected void DrawMainBar (double TicFrac)
+	{
+		[...] // omitted for brevity
+
+		if (isInventoryBarVisible())
+		{
+			// Draws the inventory bar on top of the statusbar:
+			DrawInventoryBar(diparms, (48, 169), 7, DI_ITEM_LEFT_TOP);
+		}
+	}
+
+	// Fullscreen HUD mode:
+	protected void DrawFullScreenStuff ()
+	{
+		[...] // omitted for brevity
+		
+		if (isInventoryBarVisible())
+		{
+			// Draws the inventory bar at the bottom center of the screen:
+			DrawInventoryBar(diparms, (0, 0), 7, DI_SCREEN_CENTER_BOTTOM, HX_SHADOW);
+		}
+	}
+}&lt;/syntaxhighlight&gt;
+
+== See also ==
+* {{class|BaseStatusBar}}
+* {{class|Inventory}}
+* {{class|InventoryBarState}}
+
+[[Category:ZScript]]
+[[Category:BaseStatusBar]]</text>
+    <sha1>blooulngn2cdu0f7i7bordwxan5bzg2</sha1>
+  </revision>
+</page>

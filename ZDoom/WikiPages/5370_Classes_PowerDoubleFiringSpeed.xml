@@ -1,0 +1,46 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>Classes:PowerDoubleFiringSpeed</title>
+  <ns>0</ns>
+  <id>5370</id>
+  <revision>
+    <id>53723</id>
+    <parentid>36557</parentid>
+    <timestamp>2024-11-13T12:05:04Z</timestamp>
+    <contributor>
+      <username>Jekyll Grim Payne</username>
+      <id>2175</id>
+    </contributor>
+    <origin>53723</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="1107" sha1="ahqmsvt7snbc5ws44o6uhtgjlled441" xml:space="preserve">{{actor|
+| type = Power
+| name = Double firing speed power
+| class = PowerDoubleFiringSpeed
+}}[[Classes]]: [[Classes:Inventory|Inventory]]&amp;rarr;[[Classes:Powerup|Powerup]]&amp;rarr;&lt;u&gt;PowerDoubleFiringSpeed&lt;/u&gt;&lt;br&gt;
+
+{{: Powerup definition}}
+
+'''PowerDoubleFiringSpeed''' halves the [[tic]] duration of each {{struct|State|state}} of its owner's {{class|Weapon|weapons}} when firing, increasing firerate. Note, it will have no effect on states with a duration of 1, since fractional tics are not possible.
+
+'''Note:''' The actual effects of this powerup are NOT handled in the powerup itself. Instead, they're a part of the '''{{class|PSprite}}''' class code. This happens in its [[Tick]] override, as can be seen [[Classes:PSprite#ZScript_definition|'''here''']].
+
+=== [[ZScript]] definition ===
+{{ZScriptDefinitionNote|actors/inventory/powerups.zs}}
+&lt;syntaxhighlight lang="csharp"&gt;
+class PowerDoubleFiringSpeed : Powerup
+{
+	Default
+	{
+		Powerup.Duration -40;
+	}
+}
+
+&lt;/syntaxhighlight&gt;
+
+=== [[DECORATE]] definition ===
+{{DecorateDefinitionNote}}
+ ACTOR &lt;u&gt;PowerDoubleFiringSpeed&lt;/u&gt; : {{Class|Powerup}} native {}</text>
+    <sha1>ahqmsvt7snbc5ws44o6uhtgjlled441</sha1>
+  </revision>
+</page>

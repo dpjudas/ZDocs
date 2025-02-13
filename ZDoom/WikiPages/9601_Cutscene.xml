@@ -1,0 +1,83 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>Cutscene</title>
+  <ns>0</ns>
+  <id>9601</id>
+  <revision>
+    <id>54201</id>
+    <parentid>54200</parentid>
+    <timestamp>2025-02-08T18:42:53Z</timestamp>
+    <contributor>
+      <username>Inkoalawetrust</username>
+      <id>2604</id>
+    </contributor>
+    <minor />
+    <origin>54201</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="2897" sha1="868evupgue3xmesr0qr9w2ddbqy68xg" xml:space="preserve">{{Stub}}
+
+'''Cutscenes''' are a feature backported from [[Raze]]. They allow for mappers and modders to play {{wp|Full-motion video}}s using [[MAPINFO]] [[MAPINFO/Map_definition|map]], [[MAPINFO/Episode_definition| episode]], [[MAPINFO/Cluster_definition|cluster]], and [[MAPINFO/GameInfo_definition| gameinfo]] definitions, or by using the {{Class|ScreenJob|screen job}} [[ZScript]] API. By default, cutscenes can be skipped by pressing any key besides the menu button while they are playing.
+{{note|video assignment in MAPINFO requires the [[Using ZIPs as WAD replacement|use of directory-structured archives]], as looking up the video requires its full name (path, name and extension). [[WAD|WAD archives]] are not supported.}}
+==Types==
+There are three types of cutscenes: '''intro''', '''outro''' and '''game over'''. The following table lists which MAPINFO sections support which types, as well as when the cutscenes play:
+{| {{prettytable}}
+!Section!!Intro!!Outro!!Game over!!When to play
+|-
+|Cluster||{{checkbox|yes}}||{{checkbox|yes}}||{{checkbox|yes}}||
+At the beginning of the cluster (intro).&lt;br&gt;
+At the end of the cluster (outro).&lt;br&gt;
+Upon the player's death in the cluster (game over).
+|-
+|Episode||{{checkbox|yes}}||{{checkbox|no}}||{{checkbox|no}}||Upon starting the episode.
+|-
+|GameInfo||{{checkbox|yes}}||{{checkbox|no}}||{{checkbox|no}}||At the beginning of the game, before the titlescreen.
+|-
+|Map||{{checkbox|yes}}||{{checkbox|yes}}||{{checkbox|no}}||
+Upon entering the map from another map (intro).&lt;br&gt;
+Upon leaving the map (outro).
+|}
+
+==Mid-game cutscenes==
+As of {{git|206c229}}, cutscenes can be played in the middle of a level using [[Structs:LevelLocals#Dynamic|Level.StartIntermission()]] to play an [[MAPINFO/Intermission_definition|Intermission block]] that only has a [[MAPINFO/Intermission_definition#Cutscene_properties|cutscene subblock]], like this:
+
+ Level.StartIntermission ("EpicCutscene", FSTATE_INLEVEL);
+
+Where the specified intermission to play mid-game looks like this:
+
+ Intermission EpicCutscene
+ {
+ 	Cutscene
+ 	{
+ 		Video = "Graphics/Videos/EpicVideo.ivf"
+ 	}
+ }
+
+To play a cutscene through an ACS script with [[ScriptCall]], you will need to first make a ZScript class that calls ''StartIntermission'' in a static method, like this:
+
+ Class CoolCutscenePlayer
+ {
+ 	//Play whatever intermission from ACS.
+ 	Static Void PlayAnIntermission (String Intermission)
+ 	{
+ 		Level.StartIntermission (Intermission,FSTATE_INLEVEL);
+ 	}
+ }
+
+Then you can call it from an ACS script like this:
+
+ Script "PlayCutscene" (Void)
+ {
+ 	ScriptCall ("CoolCutscenePlayer","PlayAnIntermission","EpicCutscene");
+ }
+
+== See also ==
+* [[Cutscene MAPINFO properties]]
+* [[Video format]]s
+* [https://www.youtube.com/watch?v=OKbnQesyabQ A YouTube video showing a simple example of how cutscenes work.]
+
+[[Category:Technical_aspects]]
+[[Category:Features]]
+[[Category:Glossary]]</text>
+    <sha1>868evupgue3xmesr0qr9w2ddbqy68xg</sha1>
+  </revision>
+</page>

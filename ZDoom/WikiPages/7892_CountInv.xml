@@ -1,0 +1,74 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>CountInv</title>
+  <ns>0</ns>
+  <id>7892</id>
+  <revision>
+    <id>54062</id>
+    <parentid>49044</parentid>
+    <timestamp>2024-12-16T13:59:19Z</timestamp>
+    <contributor>
+      <username>Jekyll Grim Payne</username>
+      <id>2175</id>
+    </contributor>
+    <origin>54062</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="2610" sha1="oaq54xvt8rtl6y92jvn2f7xsnlg8zts" xml:space="preserve">'''{{class|Actor}}'''
+
+{{c|clearscope int '''CountInv'''(class&lt;Inventory&gt; ''itemtype'', int ''ptr_select'' {{=}} AAPTR_DEFAULT)}}
+
+== Usage ==
+Returns the amount of the specified {{class|Inventory}} item the calling actor has. 
+
+=== Parameters ===
+*{{c|class&lt;Inventory&gt; '''itemtype'''}}
+:The {{class|Inventory}} item class to check for. Note, this has to be a valid existing class based on Inventory.
+*{{c|int '''ptr_select'''}}
+:The [[Actor_pointer#DECORATE_&amp;_ACS|DECORATE actor pointer]]. Points to the actor whose inventory list should be checked. The default value is {{const|AAPTR_DEFAULT}} which is the calling actor.
+:In [[ZScript]] this argument is generally moot, since instead you can directly call this function on a [[Actor_pointer#ZScript|ZScript actor pointer]].
+
+=== Return value ===
+*''int'' — returns the exact count of ''itemtype'' the actor has. 
+
+==Examples==
+===[[ZScript]]===
+This will print out the number of {{class|Shell|shells}} the calling actor has:
+&lt;syntaxhighlight lang="csharp"&gt;
+Console.Printf("You have %d shells", self.CountInv('Shell'));
+&lt;/syntaxhighlight&gt;
+
+This shows an example of how a custom version of {{c|[[A_WeaponReady]]}} could be created, so it allows calling the User1 [[Classes:Weapon#Weapon_states|Weapon state]] if the calling player has enough GrenadeAmmo (this is an example name, not an existing GZDoom class):
+&lt;syntaxhighlight lang="csharp"&gt;
+// This assumes that the weapon has a User1 state sequence
+// that throws a grenade.
+action void A_CustomWeaponReady(int flags = WRF_ALLOWUSER1) //the allow flag is passed by default
+{
+	if (CountInv('GrenadeAmmo') == 0)
+	{
+		flags &amp;= ~WRF_ALLOWUSER1; //if not enough grenades, the flag is removed
+	}
+	A_WeaponReady(flags);
+}
+&lt;/syntaxhighlight&gt;
+
+===[[DECORATE]] {{deprecated}}===
+This monster strafes randomly left or right.
+
+  &lt;...&gt;
+  Strafe:
+    TNT1 A 0 [[A_Jump]]( 128, "See" )                    // Chance to fail.
+    TNT1 A 0 [[A_TakeInventory]]( "NmAngle", 0 )
+    TNT1 A 0 [[A_TakeInventory]]( "NmForce", 0 )
+    TNT1 A 0 [[A_GiveInventory]]( "NmAngle", [[DECORATE_expressions|RandomPick]]( 
+                    80, 90, 100, 110, 120, 135,      // Left (in degrees).
+                    225, 240, 250, 260, 270, 280     // Right (in degrees).
+                    ) )
+    NGHT A 8 [[A_GiveInventory]]( "NmForce", Random( 5, 10 ) )
+    NGHT A 0 [[ThrustThing]]( ( [[DECORATE_expressions|Angle]] + '''CountInv'''( "NmAngle" ) ) * 256/360, '''CountInv'''( "NmForce" ) )
+    NGHT A 0 [[ThrustThingZ]]( 0, [[DECORATE_expressions|Random]]( 40, 80 ), 0, 0 )
+    Goto See
+
+[[Category:ZScript]] [[Category:DECORATE]]</text>
+    <sha1>oaq54xvt8rtl6y92jvn2f7xsnlg8zts</sha1>
+  </revision>
+</page>

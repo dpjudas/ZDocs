@@ -1,0 +1,57 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>A RaiseChildren</title>
+  <ns>0</ns>
+  <id>5458</id>
+  <revision>
+    <id>53237</id>
+    <parentid>46791</parentid>
+    <timestamp>2024-10-06T11:37:20Z</timestamp>
+    <contributor>
+      <username>Jekyll Grim Payne</username>
+      <id>2175</id>
+    </contributor>
+    <origin>53237</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="1555" sha1="oyp0m0f631j2sv3xemkkf3patb5dvtg" xml:space="preserve">{{codepointer|Monster AI}}
+'''A_RaiseChildren''' [(int ''flags'')]
+
+==Usage==
+Resurrects the calling actor's children. Currently the only function that sets the necessary information is [[A_SpawnItemEx]].
+
+===Parameters===
+*''flags'': The following flags can be combined using the bit-wise OR operator (|):
+**'''RF_TRANSFERFRIENDLINESS''' — the resurrected actors will change their affiliation to match that of the calling actor.
+**'''RF_NOCHECKPOSITION''' — resurrect the actor without checking for room.
+
+Monsters spawned with [[A_SpawnProjectile]] are not affected by this. [[A_SpawnProjectile]] was never designed to spawn monsters.
+
+== Examples ==
+The following is a variant of the {{Class|DoomImp|doom imp}}, a monster that spawns clones of itself. Its missile state uses [[A_Jump]] to decide on using one of two different attacks. Either spawning a clone, or triggering [[A_RaiseChildren]], reviving all clones that were already spawned and had died.
+ ACTOR VoodooLeaderImp : {{Class|DoomImp}}
+ {
+   {{Property|Game}} Doom
+   {{Property|SpawnID}} 5
+   {{Property|Health}} 100
+   {{Property|Mass}} 1000
+   {{Property|PainChance}} 255
+   States
+   {
+   Missile:
+     TROO G 0 [[A_Jump]](256, "Missile1", "Missile2")
+   Missile1:
+     TROO EF 8 [[A_FaceTarget]]
+     TROO G 6 [[A_SpawnItemEx]]("SoldierImp", 50, 50, 60, 0, 0, 0, 0, {{Const|SXF_SETMASTER}})
+     Goto See
+   Missile2:
+     TROO EF 8 [[A_FaceTarget]]
+     TROO G 6 [[A_RaiseChildren]]
+     Goto See
+   }
+ }
+--------
+{{Planned Parenthood}}
+[[Category:Monster resurrection functions]]</text>
+    <sha1>oyp0m0f631j2sv3xemkkf3patb5dvtg</sha1>
+  </revision>
+</page>

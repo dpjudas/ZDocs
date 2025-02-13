@@ -1,0 +1,90 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>Model flags</title>
+  <ns>0</ns>
+  <id>10023</id>
+  <revision>
+    <id>53969</id>
+    <timestamp>2024-11-30T10:07:54Z</timestamp>
+    <contributor>
+      <username>Jekyll Grim Payne</username>
+      <id>2175</id>
+    </contributor>
+    <comment>Created page with "{| class="wikitable"  |- style="text-align:center;" ! [[MODELDEF]] flag name ! Related [[ZScript]] constant ! Description |- | {{c|PITCHFROMMOMENTUM}} | {{c|MDL_PITCHFROMMOMENTUM}} | Adjusts the model's pitch to match the momentum of the actor. Useful for projectiles&lt;br /&gt;that ''don't'' call [[A_FaceMovementDirection]] to adjust their actual pitch in flight. |- | {{c|IGNORETRANSLATION}} | {{c|MDL_IGNORETRANSLATION}} | Ignores the actor's [[Translation|color translation]]..."</comment>
+    <origin>53969</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="3341" sha1="5g5r0bsmcd76rikfz9gzdhsw7gx5h6g" xml:space="preserve">{| class="wikitable" 
+|- style="text-align:center;"
+! [[MODELDEF]] flag name
+! Related [[ZScript]] constant
+! Description
+|-
+| {{c|PITCHFROMMOMENTUM}}
+| {{c|MDL_PITCHFROMMOMENTUM}}
+| Adjusts the model's pitch to match the momentum of the actor. Useful for projectiles&lt;br /&gt;that ''don't'' call [[A_FaceMovementDirection]] to adjust their actual pitch in flight.
+|-
+| {{c|IGNORETRANSLATION}}
+| {{c|MDL_IGNORETRANSLATION}}
+| Ignores the actor's [[Translation|color translation]].
+|-
+| {{c|INTERPOLATEDOUBLEDFRAMES}}
+| {{c|MDL_INTERPOLATEDOUBLEDFRAMES}}
+| Smoothes model interpolation for actors that use the same frame twice in a row&lt;br /&gt;(for example, most of the standard Doom monsters do this in their see state).
+|-
+| {{c|ROTATING}}
+| {{c|MDL_ROTATING}}
+| Makes the model rotate continuously. Useful for pickup models a la Quake.&lt;br /&gt;Related properties must be defined AFTER this flag in [[MODELDEF]].
+|-
+| {{c|NOINTERPOLATION}}
+| {{c|MDL_NOINTERPOLATION}}
+| Forces uninterpolated animation.
+|-
+| {{c|USEACTORPITCH}}
+| {{c|MDL_USEACTORPITCH}}
+| Model's pitch adjusts to match actor's pitch.
+|-
+| {{c|USEACTORROLL}}
+| {{c|MDL_USEACTORROLL}}
+| Model's roll adjusts to match actor's roll.
+|-
+| {{c|INHERITACTORPITCH}} {{deprecated}}
+| ''none''
+| Model's pitch adjusts to match the actor's pitch, deprecated because of the unintended pitch inversion and bad name choice
+|-
+| {{c|INHERITACTORROLL}} {{deprecated}}
+| ''none''
+| Model's roll, adjusts to match actor's roll. Same as {{c|USEACTORPITCH}}, deprecated because of bad name choice.
+|-
+| {{c|DONTCULLBACKFACES}}
+| {{c|MDL_DONTCULLBACKFACES}}
+| Forcefully disables backface culling.
+|-
+| {{c|FORCECULLBACKFACES}}
+| {{c|MDL_FORCECULLBACKFACES}}
+| Forcefully enables backface culling.
+|-
+| {{c|USEROTATIONCENTER}}
+| {{c|MDL_USEROTATIONCENTER}}
+| Makes {{c|Rotation-Center}} affect actor angles (the property must be set AFTER this flag to work).&lt;br /&gt;Useless unless any of the actor rotation flags are also used.
+|-
+| {{c|NOPERPIXELLIGHTING}}
+| {{c|MDL_NOPERPIXELLIGHTING}}
+| Disables per-pixel lighting on the model.
+|-
+| {{c|SCALEWEAPONFOV}}
+| {{c|MDL_SCALEWEAPONFOV}}
+| Scales the weapon's model along with the user's [[FOV]] to reduce distortion.
+|-
+| {{c|MODELSAREATTACHMENTS}}
+| {{c|MDL_MODELSAREATTACHMENTS}}
+| If the actor uses an [[IQM]] model, another model can be attached to it, provided the other model&lt;br /&gt;uses the same armature. For example, this can be used to hot-swap the weapon model in a&lt;br /&gt;character's hands. Model and index 0 is considered the base model.&lt;br /&gt;Attached models cannot have separate animations; they will be animated alongside the armature&lt;br /&gt;of the base model. Each model needs to have the same exact armature or unwanted behavior may occur.&lt;br /&gt;Having this flag defined takes priority over the Animation property.
+|-
+| {{c|CORRECTPIXELSTRETCH}}
+| {{c|MDL_CORRECTPIXELSTRETCH}}
+| By default, models stretch when their pitch or roll changes, in a way that matches [[aspect ratio correction]].&lt;br /&gt;This flag disables that behavior so the model always retains the same size without any distortion.&lt;br /&gt;Note: Although technically a bug, the stretching can nevertheless be useful, for example, to ensure that a&lt;br /&gt;beam-shaped model retains the same length in map units regardless of orientation.&lt;br /&gt;
+|}&lt;noinclude&gt;
+
+[[Category:Include templates]]</text>
+    <sha1>5g5r0bsmcd76rikfz9gzdhsw7gx5h6g</sha1>
+  </revision>
+</page>

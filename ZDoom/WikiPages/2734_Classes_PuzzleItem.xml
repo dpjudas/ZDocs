@@ -1,0 +1,139 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>Classes:PuzzleItem</title>
+  <ns>0</ns>
+  <id>2734</id>
+  <revision>
+    <id>52307</id>
+    <parentid>49282</parentid>
+    <timestamp>2024-04-08T15:22:05Z</timestamp>
+    <contributor>
+      <username>Jekyll Grim Payne</username>
+      <id>2175</id>
+    </contributor>
+    <comment>Added zscript definition and some links</comment>
+    <origin>52307</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="3824" sha1="0i5081szzeae5id94yo3f1sm25murgv" xml:space="preserve">{{Actor|
+| type = Internal
+| name = Puzzle item
+| class = PuzzleItem
+}}[[Classes]]: [[Classes:Inventory|Inventory]]&amp;rarr;&lt;u&gt;PuzzleItem&lt;/u&gt;&lt;br&gt;
+&amp;ensp;&amp;rarr;[[Classes:PuzzBook1|PuzzBook1]]&lt;br&gt;
+&amp;ensp;&amp;rarr;[[Classes:PuzzBook2|PuzzBook2]]&lt;br&gt;
+&amp;ensp;&amp;rarr;[[Classes:PuzzCWeapon|PuzzCWeapon]]&lt;br&gt;
+&amp;ensp;&amp;rarr;[[Classes:PuzzFlameMask|PuzzFlameMask]]&lt;br&gt;
+&amp;ensp;&amp;rarr;[[Classes:PuzzFWeapon|PuzzFWeapon]]&lt;br&gt;
+&amp;ensp;&amp;rarr;[[Classes:PuzzGear1|PuzzGear1]]&lt;br&gt;
+&amp;ensp;&amp;rarr;[[Classes:PuzzGear2|PuzzGear2]]&lt;br&gt;
+&amp;ensp;&amp;rarr;[[Classes:PuzzGear3|PuzzGear3]]&lt;br&gt;
+&amp;ensp;&amp;rarr;[[Classes:PuzzGear4|PuzzGear4]]&lt;br&gt;
+&amp;ensp;&amp;rarr;[[Classes:PuzzGemBig|PuzzGemBig]]&lt;br&gt;
+&amp;ensp;&amp;rarr;[[Classes:PuzzGemBlue1|PuzzGemBlue1]]&lt;br&gt;
+&amp;ensp;&amp;rarr;[[Classes:PuzzGemBlue2|PuzzGemBlue2]]&lt;br&gt;
+&amp;ensp;&amp;rarr;[[Classes:PuzzGemGreen1|PuzzGemGreen1]]&lt;br&gt;
+&amp;ensp;&amp;rarr;[[Classes:PuzzGemGreen2|PuzzGemGreen2]]&lt;br&gt;
+&amp;ensp;&amp;rarr;[[Classes:PuzzGemRed|PuzzGemRed]]&lt;br&gt;
+&amp;ensp;&amp;rarr;[[Classes:PuzzMWeapon|PuzzMWeapon]]&lt;br&gt;
+&amp;ensp;&amp;rarr;[[Classes:PuzzSkull|PuzzSkull]]&lt;br&gt;
+
+&lt;u&gt;PuzzleItem&lt;/u&gt; is a subclass of {{class|Inventory}}. Puzzle items don't have any functions themselves, but they can be combined with [[UsePuzzleItem]] map special to create "puzzle" locks that require multiple puzzle items to open. In principle, they act very similar to {{class|Key}} class items, but they are visible in the player's inventory bar rather than a dedicated key section, and and they have to be used from it manually, by pressing the "use item" keybind. Also, in contrast to keys, puzzle items are removed after use.
+
+== Using in [[ZScript]] and [[DECORATE]] ==
+&lt;u&gt;PuzzleItem&lt;/u&gt;s uses the basic [[Actor_properties#Inventory|Inventory properties]], plus a few properties unique to this class:
+{{:PuzzleItem properties}}
+
+=== Examples ===
+This is an example of a custom PuzzleItem:
+ class PigHead : &lt;u&gt;PuzzleItem&lt;/u&gt;
+ {
+   Default
+   {
+     {{property|PuzzleItem.Number}} 17;
+     {{property|Inventory.PickupMessage}} "{{color|red|A Pig's head}}"; {{LanguageCodeNote}}
+     {{property|Inventory.DefMaxAmount}};
+     {{property|Inventory.Icon}} "{{color|red|PIGHEAD}}";
+   }
+   [[Actor states|States]]
+   {
+   Spawn: 
+     PHED A -1;
+     stop;
+   }
+ }
+
+== [[ZScript]] definition ==
+{{ZScriptDefinitionNote|actors/inventory/inv_misc.zs#L95}}
+&lt;syntaxhighlight lang="csharp"&gt;
+class PuzzleItem : Inventory
+{
+	meta int PuzzleItemNumber;
+	meta String PuzzFailMessage;
+	meta Sound PuzzFailSound;
+	
+	property Number: PuzzleItemNumber;
+	property FailMessage: PuzzFailMessage;
+	property FailSound: PuzzFailSound;
+
+	Default
+	{
+		+NOGRAVITY
+		+INVENTORY.INVBAR
+		+INVENTORY.ISKEYITEM
+		Inventory.DefMaxAmount;
+		Inventory.UseSound "PuzzleSuccess";
+		Inventory.PickupSound "misc/i_pkup";
+		PuzzleItem.FailMessage("$TXT_USEPUZZLEFAILED");
+		PuzzleItem.FailSound "*puzzfail";
+	}
+	
+	override bool HandlePickup (Inventory item)
+	{
+		// Can't carry more than 1 of each puzzle item in coop netplay
+		if (multiplayer &amp;&amp; !deathmatch &amp;&amp; item.GetClass() == GetClass())
+		{
+			return true;
+		}
+		return Super.HandlePickup (item);
+	}
+
+	override bool Use (bool pickup)
+	{
+		if (Owner == NULL) return false;
+		if (Owner.UsePuzzleItem (PuzzleItemNumber))
+		{
+			return true;
+		}
+		// [RH] Always play the sound if the use fails.
+		Owner.A_StartSound (PuzzFailSound, CHAN_VOICE);
+		if (Owner.CheckLocalView())
+		{
+			Console.MidPrint (null, PuzzFailMessage, true);
+		}
+		return false;
+	}
+
+	override void UseAll(Actor user)
+	{
+	}
+	
+	override bool ShouldStay ()
+	{
+		return !!multiplayer;
+	}
+
+}&lt;/syntaxhighlight&gt;
+
+== [[DECORATE]] definition ==
+{{DecorateDefinitionNote}}
+ ACTOR &lt;u&gt;PuzzleItem&lt;/u&gt; : {{Class|Inventory}} native 
+ {
+   +{{Flag|NOGRAVITY}}
+   +{{Flag|INVENTORY.INVBAR}}
+   {{Property|Inventory.DefMaxAmount}}
+   {{Property|Inventory.UseSound}} "PuzzleSuccess"
+   {{Property|Inventory.PickupSound}} "misc/i_pkup"
+ }</text>
+    <sha1>0i5081szzeae5id94yo3f1sm25murgv</sha1>
+  </revision>
+</page>

@@ -1,0 +1,72 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>Blockmap</title>
+  <ns>0</ns>
+  <id>1108</id>
+  <revision>
+    <id>37384</id>
+    <parentid>30096</parentid>
+    <timestamp>2013-11-24T00:15:20Z</timestamp>
+    <contributor>
+      <username>Watermelon</username>
+      <id>2028</id>
+    </contributor>
+    <comment>/* Offsets */</comment>
+    <origin>37384</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="3605" sha1="jjfdf94bhbowxv25dab14tg6ccjchhl" xml:space="preserve">{{doomwiki}}
+The '''blockmap''''s purpose is for collision detection.  That is, the blockmap is used for calculating when a moving thing hits a wall or when two things (one or both moving) collide.  The blockmap is simply a grid of 'blocks' each 128x128 units (or double the size of the floor grid).  If you want to see the blockmap just look at the automap and enable the grid.
+
+Similar to how [[NODES]] are used for calculating when a line should or should not be drawn, the BLOCKMAP lump is used for calculating a thing/wall collision.  Every block contains zero or more linedefs, though normally not too many (and certainly not as many as the entire map) and so in detecting collisions between a moving thing it only needs to run calculations on every linedef in the same block as the moving thing (rather than the entire map).
+
+Internally the blockmap is used for thing/thing collisions with each block maintaining a dynamic list of all things contained within it.  Using the same principle as thing/wall collisions, the engine needs only to check for possible collisions with every thing sharing the same block as the moving thing.
+
+Interestingly enough, removing the blockmap from a level (though this is all but impossible with most modern ports, which will build a blockmap in memory if one is absent) will keep the behavior of everything the same (display of the map, enemy line of sight and so on), but everything can pass through impassible lines and nothing will be able to hit anything else.
+
+It's also worth note that because of the way the original engine did calculations, if a thing's center was on the very edge of a block and another's center was on the edge of an adjacent block it would be abstained from collision detection since both things were actually in different blocks.  This bug, which no doubt many of you are familiar with, is a result of the original exe (and no doubt many current ports) only using the center of a thing to determine if it was in a block and not taking its entire radius into account.  You should note that this bug was fixed in ZDoom.  There is an ''excellent'' article written by Colin Phipps which you can find [http://doom2.net/doom2/research/things.html here on doom2.net].
+
+==BLOCKMAP Structure==
+
+Blockmaps are composed of three parts, the header, offsets and the blocklist.
+
+===Header===
+ &lt;tt&gt;bytes:&lt;br&gt;
+ 2: x-coordinate of grid origin&lt;br&gt;
+ 2: y-coordinate of grid origin&lt;br&gt;
+ 2: number of columns&lt;br&gt;
+ 2: number of rows&lt;br&gt;
+&lt;/tt&gt;
+
+===Offsets===
+ &lt;tt&gt;bytes:&lt;br&gt;
+ 2: offset to block 0&lt;br&gt;
+ 2: offset to block 1&lt;br&gt;
+        .
+        .
+        .
+ 
+ 2: offset to block (N - 1)&lt;br&gt;
+&lt;/tt&gt;
+
+Note that there are N blocks, which is equal to columns * rows (from the header).  All offsets are relative to the start of the BLOCKMAP lump.  These offsets are also unsigned, meaning they can go up to 65536 instead of 32767 (like most other WAD structures).
+
+'''Note:''' These offsets in the Doom Source code used shorts for iterating through the list rather than bytes. Therefore the actual offset if you are reading byte by byte is 2 * offset.
+
+===Blocklists===
+ &lt;tt&gt;bytes:&lt;br&gt;
+ 2: 0x0000&lt;br&gt;
+ 2: linedef 0 within the block&lt;br&gt;
+ 2: linedef 1 within the block&lt;br&gt;
+        .
+        .
+        .
+ 
+ 2: 0xFFFF&lt;br&gt;
+&lt;/tt&gt;
+
+The blocklist always begins with 0 and ends with -1.  In between is a listing of all linedefs which have any portion within the block.  Any linedef on the border of two blocks will be placed in only the block on the right side of the line for vertical lines and the block on the top of the line for horizontal lines.
+
+[[Category:Glossary]]</text>
+    <sha1>jjfdf94bhbowxv25dab14tg6ccjchhl</sha1>
+  </revision>
+</page>

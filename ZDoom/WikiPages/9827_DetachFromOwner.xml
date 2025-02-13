@@ -1,0 +1,53 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>DetachFromOwner</title>
+  <ns>0</ns>
+  <id>9827</id>
+  <revision>
+    <id>51681</id>
+    <timestamp>2024-02-06T10:26:03Z</timestamp>
+    <contributor>
+      <username>Jekyll Grim Payne</username>
+      <id>2175</id>
+    </contributor>
+    <comment>Created page with "'''{{class|Inventory}}'''  {{c|virtual void '''DetachFromOwner'''()}}  ==Usage== A [[ZScript virtual functions|virtual function]] called by {{class|Inventory}} items when they..."</comment>
+    <origin>51681</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="1236" sha1="tqarzqremdtstemxh2466keb01lsv33" xml:space="preserve">'''{{class|Inventory}}'''
+
+{{c|virtual void '''DetachFromOwner'''()}}
+
+==Usage==
+A [[ZScript virtual functions|virtual function]] called by {{class|Inventory}} items when they're being removed from their owner's inventory. Normally, this happens when the items {{property|Amount|amount}} reaches 0, but items with the {{flag|INVENTORY.KEEPDEPLETED}} flag don't do that, so they don't call this function.
+
+In the base {{class|Inventory}} class this function is empty, i.e. no special behavior is executed.
+
+'''Note:''' This function is ''not'' responsible for actually removing the item; that usually happens in [[GoAwayAndDie]]. Trying to call {{c|DetachFromOwner}} on an item directly does not remove it from their owner's inventory.
+
+== Examples ==
+This item will [[DamageMobj|kill]] its owner if it's removed from their inventory:
+&lt;syntaxhighlight lang="csharp"&gt;
+class DontDropMe : Inventory
+{
+  overide void DetachFromOwner()
+  {
+    if (owner)
+    {
+      owner.DamageMobj(self, self, owner.health, 'Normal');
+    }
+  }
+}&lt;/syntaxhighlight&gt;
+
+== See also ==
+* [[AttachToOwner]]
+* [[TryPickup]]
+* [[Touch]]
+* [[Use]]
+* [[Inventory virtual functions]]
+
+[[Category:ZScript]]
+[[Category:Inventory]]
+[[Category:ZScript virtual functions]]</text>
+    <sha1>tqarzqremdtstemxh2466keb01lsv33</sha1>
+  </revision>
+</page>

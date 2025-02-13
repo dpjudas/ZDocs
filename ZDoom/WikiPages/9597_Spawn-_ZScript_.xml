@@ -1,0 +1,159 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>Spawn (ZScript)</title>
+  <ns>0</ns>
+  <id>9597</id>
+  <revision>
+    <id>51702</id>
+    <parentid>51701</parentid>
+    <timestamp>2024-02-06T22:49:59Z</timestamp>
+    <contributor>
+      <username>Jekyll Grim Payne</username>
+      <id>2175</id>
+    </contributor>
+    <comment>/* Usage */</comment>
+    <origin>51702</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="7748" sha1="tpto5tvwefazyaehp81q2jy5wac3f7c" xml:space="preserve">__NOTOC__
+{{note|This function is for [[ZScript]] only. For the ACS function of the same name, see [[Spawn]]. For [[DECORATE]], see [[A_SpawnItemEx]]}}
+
+'''[[Classes:Actor|Actor]]'''
+
+native static Actor '''Spawn'''(class&lt;Actor&gt; ''type'', vector3 ''pos'' = (0,0,0), int ''replace'' = NO_REPLACE)
+
+== Usage ==
+
+Spawns an actor class at the specified absolute coordinates. Unlike other spawn functions like [[A_SpawnItem]] or [[A_SpawnItemEx]], this function is completely barebones, and does nothing else. Allowing you to write any sort of custom spawning behavior you want. This also means that it is incredibly lightweight, which is good for performance critical code that doesn't need the additional functionality of the other actor spawn functions.
+
+{{note|Remember that, when calling this function from a class that isn't based on {{class|Actor}} (such as from an {{class|EventHandler}}), it must be called as &lt;code&gt;Actor.Spawn()&lt;/code&gt;.}}
+
+=== Parameters ===
+
+*{{c|class&lt;Actor&gt; '''type'''}}
+:The class name of the actor to spawn.
+*{{c|Vector3 '''pos'''}}
+:The absolute [[ZScript_variables|Vector3]] coordinates to spawn the actor at. To use non-absolute coordinates to offset where the actor spawns, you can use [[Vec3Offset]]. For relative offsets (taking another actor's position and facing angle into account), [[A_SpawnItemEx]] may be preferable.
+*{{c|int '''replace'''}}
+:The value determines if the spawned actor can be replaced by another actor (if a replacement is provided through the &lt;code&gt;replaces&lt;/code&gt; keyword or the &lt;code&gt;CheckReplacement()&lt;/code&gt; [[Events and handlers|event]]). Possible values:
+:*{{c|NO_REPLACE}} - Only the exact specified actor should be spawned, and replacements are ignored. This is the default.
+:*{{c|ALLOW_REPLACE}} - [[GetReplacement|Spawn this actor, or whichever actor replaces it]]. This is the default that [[A_SpawnItem]] and [[A_SpawnItemEx]] use to spawn in actors.
+
+=== Return value ===
+
+Returns a pointer to the actor that was spawned, allowing for post-spawn modifications and the like.
+
+== Examples ==
+This is a spawner powerup that uses '''Spawn()''' to spawn 5 friendly replacements of the {{class|Demon}} to assist the player when they select and use the item, and then stores the pointer that the function returns to perform the required status changes and checks to each of the spawned demons.
+
+ {{color|green|''//The custom Pinky replacement that we will make Spawn() create.''}}
+ class HyperDemon : Demon Replaces Demon
+ {
+ 	Default
+ 	{
+ 		Speed 16;
+ 		PainChance 150;
+ 		HitObituary "{{color|brown|%o was too slow to avoid a Hyper Demons' jaws!}}";
+ 		+AlwaysFast
+ 		+QuickToRetaliate
+ 		+JumpDown
+ 	}
+ 	States
+ 	{
+ 	See:
+ 		SARG AABBCCDD 2 A_Chase (flags:CHF_FASTCHASE|CHF_NORANDOMTURN);
+ 		Loop;
+ 	}
+ }
+ 
+ class SummonerPower : CustomInventory
+ {
+ 	[[ZScript_variables#Constants|Const]] NUMPINKIES = 5; {{color|green|''//How many friendly fast pinkies to spawn.''}}
+ 	Actor Spawnee; {{color|green|''//A pointer to each of the pinkies we'll spawn. To make the needed status changed to them.''}}
+ 	Vector3 SpawnPos; {{color|green|''//Stores the coordinates that each pinky will be spawned at.''}}
+ 	
+ 	Default
+ 	{
+ 		{{property|Inventory.Amount}} 1;
+ 		{{property|Inventory.MaxAmount}} 5;
+ 		{{property|Scale}} 0.5;
+ 		{{property|Radius}} 20;
+ 		{{property|Height}} 45;
+ 		{{property|RenderStyle}} "Add";
+ 		{{property|FloatBobStrength}} 0.5;
+ 		{{property|Inventory.PickupSound}} "{{color|brown|misc/p_pkup}}";
+ 		{{property|Inventory.PickupMessage}} "{{color|brown|Picked up the Summon Powerup!}}";
+ 		+{{flag|Inventory.InvBar}}
+ 		+{{flag|Inventory.BigPowerup}}
+ 		+{{flag|Floatbob}}
+ 		+{{flag|NoGravity}}
+ 	}
+ 
+ 	[[Actor_states|States]]
+ 	{
+ 	Spawn:
+ 		TNT1 A 0 NoDelay [[A_AttachLight]] ('PowerupLight',DynamicLight.PulseLight,"FFAC35",48,46,DynamicLight.LF_Attenuate,param:0.2);
+ 		SARG A 1 Bright [[A_SetAngle]] (angle+5);
+ 		SARG A 0 Bright [[A_SpawnParticle]] ("FFAC35",SPF_FULLBRIGHT|SPF_RELATIVE,size:2,xoff:FRandom(Radius,-Radius),FRandom(Radius,-Radius),FRandom(Height,-Height),velz:FRandom(0.2,2.0));
+ 		SARG A 0 Bright [[A_SpawnParticle]] ("FFAC35",SPF_FULLBRIGHT|SPF_RELATIVE,size:2,xoff:FRandom(Radius,-Radius),FRandom(Radius,-Radius),FRandom(Height,-Height),velz:FRandom(0.2,2.0));
+ 		SARG A 0 Bright [[A_SpawnParticle]] ("FFAC35",SPF_FULLBRIGHT|SPF_RELATIVE,size:2,xoff:FRandom(Radius,-Radius),FRandom(Radius,-Radius),FRandom(Height,-Height),velz:FRandom(0.2,2.0));
+ 		Goto Spawn+1;
+ 	Use:
+ 		TNT1 A 0
+ 		{
+ 			[[A_RemoveLight]] ('{{color|brown|PowerupLight}}');
+ 			
+ 			{{color|green|''//Spawn demons until "i" reaches the value specified in NUMPINKIES.''}}
+ 			for (int i = 0; I &lt; [[ZScript_special_words|invoker]].NUMPINKIES; i++)
+ 			{
+ 				{{color|green|''//While '''Spawn()''' uses absolute coordinates. You can use [[Vec3Offset]] to make it spawn actors relative to whatever caller calls the function.''}}
+ 				invoker.SpawnPos = Vec3Offset (FRandom(256,-256),FRandom(256,-256),0);
+ 				
+ 				{{color|green|''/*
+ 				This line will spawn a demon at the specified random coordinates relative to the player. Which were calculated above.
+ 				And the replace parameter is also set to ALLOW_REPLACE, so that instead of spawning the vanilla demon, the function
+ 				will spawn whatever actor replaces the demon, which in this case is the HyperDemon actor.
+ 				And then the pointer to the demon that was spawned will be added to the Spawnee variable, so that we can performn
+ 				checks and status changes to the newly spawned demon.
+ 				*/''}}
+ 				invoker.Spawnee = Spawn ('{{color|brown|Demon}}',invoker.SpawnPos,ALLOW_REPLACE);
+ 				Spawn ("{{class|TeleportFog}}",invoker.SpawnPos); {{color|green|''//We will also spawn a teleport effect at the demons' position, no need to care about it not obeying any custom replacements or about storing a pointer to it.''}}
+ 				Level.Total_Monsters--; {{color|green|''//Subtract the demons from the monster count, as they are allies to the player.''}}
+ 				
+ 				{{color|green|''//if the demon was spawned in the void or stuck in anything, then remove it.''}}
+ 				if (![[Structs:LevelLocals#Static|Level.IsPointInLevel]](invoker.Spawnee.Pos) || !invoker.Spawnee.[[TestMobjLocation]]())
+ 				{
+ 					invoker.Spawnee.[[Object#Functions|Destroy()]];
+ 				}
+ 				{{color|green|''//Otherwise''}}
+ 				else
+ 				{
+ 					invoker.Spawnee.angle = angle; {{color|green|''//Face the same direction as the player.''}}
+ 					
+ 					invoker.Spawnee.bFriendly = true; {{color|green|''//Make the demon friendly.''}}
+ 					invoker.Spawnee.[[SetFriendPlayer]](Player); {{color|green|''//And make it work for the player that activated the powerup.''}}
+ 					
+ 					{{color|green|''//And at last, if the player had an actor that last attacked them.''}}
+ 					if ([[Structs:PlayerInfo|Player.Attacker]])
+ 					{
+ 						{{color|green|''//Then make the demons attack the players' attacker immediately if it isn't a friendly monster at all,
+ 						//or if we are in a deathmatch game, and the attacker is a friendly monster that works for an enemy player.''}}
+ 						if (!(Player.Attacker.{{flag|FRIENDLY|bFriendly}}) ||
+ 						Deathmatch &amp;&amp; invoker.Spawnee.FriendPlayer != 0 &amp;&amp; Player.Attacker.FriendPlayer != invoker.Spawnee.FriendPlayer)
+ 						{
+ 							invoker.Spawnee.LastHeard = invoker.Spawnee.Target = Player.Attacker;
+ 						}
+ 					}
+ 				}
+ 			}
+ 		}
+ 		Stop;
+ 	}
+ }
+
+Do note that this code is only meant to be used as an example of how '''Spawn()''' can be used, and otherwise has several flaws to it, such as the powerups' dynamic light sometimes not being removed, or the extended spawning code making no attempts to try and spawn a pinky that failed to spawn again.
+
+[[Category:ZScript]]
+[[Category:Actor static functions]]</text>
+    <sha1>tpto5tvwefazyaehp81q2jy5wac3f7c</sha1>
+  </revision>
+</page>

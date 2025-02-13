@@ -1,0 +1,255 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>Classes:PowerInvisibility</title>
+  <ns>0</ns>
+  <id>2834</id>
+  <revision>
+    <id>53733</id>
+    <parentid>52297</parentid>
+    <timestamp>2024-11-13T12:36:05Z</timestamp>
+    <contributor>
+      <username>Jekyll Grim Payne</username>
+      <id>2175</id>
+    </contributor>
+    <origin>53733</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="6818" sha1="kz4ttngsk46ycron46dn7ib2cwii4sg" xml:space="preserve">{{actor|
+| type = Power
+| name = Invisibility power
+| class = PowerInvisibility
+}}[[Classes]]: [[Classes:Inventory|Inventory]]&amp;rarr;[[Classes:Powerup|Powerup]]&amp;rarr;&lt;u&gt;PowerInvisibility&lt;/u&gt;&lt;br&gt;
+&amp;ensp;&amp;rarr;[[Classes:PowerGhost|PowerGhost]]&lt;br&gt;
+&amp;ensp;&amp;rarr;[[Classes:PowerShadow|PowerShadow]]&lt;br&gt;
+&amp;ensp;&amp;ensp; [[Hierarchical class list|(more)]]
+
+{{: Powerup definition}}
+
+'''PowerInvisibility''' makes it harder for enemies to see its owner by giving its owner the {{flag|SHADOW}} flag. Note, all behavior related to the actual "partial invisibility" results from this flag, and is not at all tied to {{class|PowerInvisibility}} itself.
+
+{{class|PowerInvisibility}} will also modify its owner's {{property|RenderStyle}} to the value set through its {{property|Powerup.Mode}} property (''not'' its RenderStyle property!); this will affect both the {{class|PlayerPawn}}'s sprites, and their on-screen weapon sprites. By default it'll use the [[Renderstyle|Fuzzy]] renderstyle (like the Doom's {{class|Spectre}}).
+
+If {{class|PowerInvisibility}} has the {{flag|GHOST}} or {{flag|CANTSEEK}} flags, they will be transferred to the player pawn when received, alongside the {{flag|SHADOW}} flag.
+
+== [[ZScript]] definition ==
+{{ZScriptDefinitionNote|actors/inventory/powerups.zs}}
+&lt;syntaxhighlight lang="csharp"&gt;
+class PowerInvisibility : Powerup
+{
+	Default
+	{
+		+SHADOW;
+		Powerup.Duration -60;
+		Powerup.Strength 80;
+		Powerup.Mode "Fuzzy";
+	}
+	
+	//===========================================================================
+	//
+	// APowerInvisibility :: InitEffect
+	//
+	//===========================================================================
+
+	override void InitEffect ()
+	{
+		Super.InitEffect();
+
+		let Owner = self.Owner;
+		if (Owner != NULL)
+		{
+			let savedShadow = Owner.bShadow;
+			let savedGhost = Owner.bGhost;
+			let savedCantSeek = Owner.bCantSeek;
+			Owner.bShadow = bShadow;
+			Owner.bGhost = bGhost;
+			Owner.bCantSeek = bCantSeek;
+			bShadow = savedShadow;
+			bGhost = savedGhost;
+			bCantSeek = savedCantSeek;
+			DoEffect();
+		}
+	}
+
+	//===========================================================================
+	//
+	// APowerInvisibility :: DoEffect
+	//
+	//===========================================================================
+	
+	override void DoEffect ()
+	{
+		Super.DoEffect();
+		// Due to potential interference with other PowerInvisibility items
+		// the effect has to be refreshed each tic.
+		double ts = (Strength / 100.) * (special1 + 1);
+		
+		if (ts &gt; 1.) ts = 1.;
+		let newAlpha = clamp((1. - ts), 0., 1.);
+		int newStyle;
+		switch (Mode)
+		{
+		case 'Fuzzy':
+			newStyle = STYLE_OptFuzzy;
+			break;
+		case 'Opaque':
+			newStyle = STYLE_Normal;
+			break;
+		case 'Additive':
+			newStyle = STYLE_Add;
+			break;
+		case 'Stencil':
+			newStyle = STYLE_Stencil;
+			break;
+		case 'AddStencil' :
+			newStyle = STYLE_AddStencil;
+			break;
+		case 'TranslucentStencil':
+			newStyle = STYLE_TranslucentStencil;
+			break;
+		case 'None' :
+		case 'Cumulative':
+		case 'Translucent':
+			newStyle = STYLE_Translucent;
+			break;
+		default: // Something's wrong
+			newStyle = STYLE_Normal;
+			newAlpha = 1.;
+			break;
+		}
+		Owner.A_SetRenderStyle(newAlpha, newStyle);
+	}
+
+	//===========================================================================
+	//
+	// APowerInvisibility :: EndEffect
+	//
+	//===========================================================================
+
+	override void EndEffect ()
+	{
+		Super.EndEffect();
+		if (Owner != NULL)
+		{
+			Owner.bShadow = bShadow;
+			Owner.bGhost = bGhost;
+			Owner.bCantSeek = bCantSeek;
+
+			Owner.A_SetRenderStyle(1, STYLE_Normal);
+
+			// Check whether there are other invisibility items and refresh their effect.
+			// If this isn't done there will be one incorrectly drawn frame when this
+			// item expires.
+			for(let item = Owner.Inv; item != null; item = item.Inv)
+			{
+				if (item != self &amp;&amp; item is 'PowerInvisibility')
+				{
+					item.DoEffect();
+				}
+			}
+		}
+	}
+
+	//===========================================================================
+	//
+	// APowerInvisibility :: AlterWeaponSprite
+	//
+	//===========================================================================
+
+	override void AlterWeaponSprite (VisStyle vis, in out int changed)
+	{
+		// Blink if the powerup is wearing off
+		if (changed == 0 &amp;&amp; EffectTics &lt; 4*32 &amp;&amp; !(EffectTics &amp; 8))
+		{
+			vis.RenderStyle = STYLE_Normal;
+			vis.Alpha = 1.f;
+			changed = 1;
+			return;
+		}
+		else if (changed == 1)
+		{
+			// something else set the weapon sprite back to opaque but this item is still active.
+			float ts = float((Strength / 100) * (special1 + 1));
+			vis.Alpha = clamp((1. - ts), 0., 1.);
+			switch (Mode)
+			{
+			case 'Fuzzy':
+				vis.RenderStyle = STYLE_OptFuzzy;
+				break;
+			case 'Opaque':
+				vis.RenderStyle = STYLE_Normal;
+				break;
+			case 'Additive':
+				vis.RenderStyle = STYLE_Add;
+				break;
+			case 'Stencil':
+				vis.RenderStyle = STYLE_Stencil;
+				break;
+			case 'TranslucentStencil':
+				vis.RenderStyle = STYLE_TranslucentStencil;
+				break;
+			case 'AddStencil':
+				vis.RenderStyle = STYLE_AddStencil;
+				break;
+			case 'None':
+			case 'Cumulative':
+			case 'Translucent':
+			default:
+				vis.RenderStyle = STYLE_Translucent;
+				break;
+			}
+		}
+		// Handling of Strife-like cumulative invisibility powerups, the weapon itself shouldn't become invisible
+		if ((vis.Alpha &lt; 0.25f &amp;&amp; special1 &gt; 0) || (vis.Alpha == 0))
+		{
+			vis.Alpha = clamp((1. - Strength/100.), 0., 1.);
+			vis.invert = true;
+		}
+		changed = -1;	// This item is valid so another one shouldn't reset the translucency
+	}
+
+	//===========================================================================
+	//
+	// APowerInvisibility :: HandlePickup
+	//
+	// If the player already has the first stage of a cumulative powerup, getting 
+	// it again increases the player's alpha. (But shouldn't this be in Use()?)
+	//
+	//===========================================================================
+
+	override bool HandlePickup (Inventory item)
+	{
+		if (Mode == 'Cumulative' &amp;&amp; ((Strength * special1) &lt; 1.) &amp;&amp; item.GetClass() == GetClass())
+		{
+			let power = Powerup(item);
+			if (power.EffectTics == 0)
+			{
+				power.bPickupGood = true;
+				return true;
+			}
+			// Only increase the EffectTics, not decrease it.
+			// Color also gets transferred only when the new item has an effect.
+			if (power.EffectTics &gt; EffectTics)
+			{
+				EffectTics = power.EffectTics;
+				BlendColor = power.BlendColor;
+			}
+			special1++;	// increases power
+			power.bPickupGood = true;
+			return true;
+		}
+		return Super.HandlePickup (item);
+	}
+}&lt;/syntaxhighlight&gt;
+
+== [[DECORATE]] definition ==
+{{DecorateDefinitionNote}}
+
+ ACTOR &lt;u&gt;PowerInvisibility&lt;/u&gt; : {{Class|Powerup}} native
+ {
+   +{{Flag|SHADOW}}
+   {{Property|Powerup.Duration}} -60
+   {{Property|Powerup.Strength}} 80
+   {{Property|Powerup.Mode}} "Fuzzy"
+ }</text>
+    <sha1>kz4ttngsk46ycron46dn7ib2cwii4sg</sha1>
+  </revision>
+</page>

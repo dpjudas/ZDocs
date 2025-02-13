@@ -1,0 +1,69 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>Fake contrast</title>
+  <ns>0</ns>
+  <id>6631</id>
+  <revision>
+    <id>44968</id>
+    <parentid>44967</parentid>
+    <timestamp>2017-04-18T10:45:32Z</timestamp>
+    <contributor>
+      <username>Gez</username>
+      <id>1283</id>
+    </contributor>
+    <origin>44968</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="3984" sha1="qzr0lbk03b62oakakadxmjjnoguk2ys" xml:space="preserve">{{doomwiki}}[[File:FakeContrast.png|thumb|Top: smooth lighting&lt;br&gt;Middle: fake contrast&lt;br&gt;Bottom: even lighting]]
+'''Fake contrast''' is a feature of the original [[vanilla Doom]] engine, which consists in making walls oriented parallel to the East-West axis darker, while walls parallel to the North-South axis are brighter. The aim of fake contrast is to help accentuate the angles in the map's geometry, because with the simple lighting system of the Doom engine (ambient omnidirectional light, no shadows) and the low-resolution paletted textures, the angles could seem flat in rooms.
+
+The system, however, is not perfect. It only works for orthogonal geometry, even though getting free of the orthogonality constraint present in older raycaster engines (such as Wolfenstein 3D) was one of the main points of the Doom engine. The relatively steep difference detracts from it as well, and has even been perceived as a bug.
+
+[[ZDoom]] provides two alternatives to vanilla fake contrast: '''even lighting''' and '''smooth lighting'''. The choice between the three options is determined by the value of the {{CVAR|R|r_fakecontrast}} console variable, and can also be set through the [[display options]] menu.
+
+==Features==
+===Even lighting===
+Even lighting applies the front sector light to all walls, regardless of angle. This avoids the stark discrepancy that can detract from a map's look; but at the same time can lead to the apparent flatness that fake contrast was meant to cure.
+
+===Smooth lighting===
+Smooth lighting takes advantage of ZDoom's finer granularity in light levels to compute the adjustment linearly from the wall angle, rather than by simply looking whether it is horizontal or vertical. The effect researched by fake contrast is therefore fully achieved.
+
+===MAPINFO===
+While ZDoom offers a global setting, it is also possible to set in [[MAPINFO]] which fake contrast mode a map should use by default, with the [[map definition]] keywords {{c|evenlighting}} and {{c|smoothlighting}}. Furthermore, the amplitude of the light adjustment can be modified with the {{c|horizwallshade}} and {{c|vertwallshade}} properties.
+
+===UDMF===
+It is possible in [[UDMF]] to mark walls as using even lighting with the {{c|nofakecontrast}} flag or smooth lighting with the {{c|smoothlighting}} flag; and it is also possible to directly provide a lighting value (regardless of wall angle and lighting mode) with the {{c|lightabsolute}} flag and the {{c|light}} property.
+
+== Technical details ==
+
+In vanilla, it corresponds to a part of the functions {{c|R_RenderMaskedSegRange()}} and {{c|R_StoreWallRange()}} in r_segs.c, specifically code segments like this:
+&lt;pre&gt;    // Calculate light table.
+    // Use different light tables
+    //   for horizontal / vertical / diagonal. Diagonal?
+    // OPTIMIZE: get rid of LIGHTSEGSHIFT globally
+    curline = ds-&gt;curline;
+    frontsector = curline-&gt;frontsector;
+    backsector = curline-&gt;backsector;
+    texnum = texturetranslation[curline-&gt;sidedef-&gt;midtexture];
+	
+    lightnum = (frontsector-&gt;lightlevel &gt;&gt; LIGHTSEGSHIFT)+extralight;
+
+    if (curline-&gt;v1-&gt;y == curline-&gt;v2-&gt;y)
+	lightnum--;
+    else if (curline-&gt;v1-&gt;x == curline-&gt;v2-&gt;x)
+	lightnum++;
+
+    if (lightnum &lt; 0)		
+	walllights = scalelight[0];
+    else if (lightnum &gt;= LIGHTLEVELS)
+	walllights = scalelight[LIGHTLEVELS-1];
+    else
+	walllights = scalelight[lightnum];
+&lt;/pre&gt;
+The vanilla engine has 16 light levels corresponding to the 256 light values, so increasing or decreasing lightnum as done here corresponds to increasing or decreasing the effective sector light for the wall by 16. A perfectly "vertical" wall is brightened, while a perfectly "horizontal" one is darkened; every other wall uses the light level of the front sector.
+
+In ZDoom, these two code segments are factorized into a single function, {{c|side_t::GetLightLevel()}}, present in p_sectors.cpp. The function handles all three lighting options as well as wall and map flags.
+
+[[Category:Glossary]]</text>
+    <sha1>qzr0lbk03b62oakakadxmjjnoguk2ys</sha1>
+  </revision>
+</page>

@@ -1,0 +1,48 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>GUS</title>
+  <ns>0</ns>
+  <id>6160</id>
+  <revision>
+    <id>43877</id>
+    <parentid>33609</parentid>
+    <timestamp>2017-02-26T13:51:32Z</timestamp>
+    <contributor>
+      <username>Gez</username>
+      <id>1283</id>
+    </contributor>
+    <minor />
+    <comment>recat</comment>
+    <origin>43877</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="2313" sha1="j3exxt75a1h9j213b1nevcqddb7kkyl" xml:space="preserve">'''GUS''' is a {{wp|Gravis_Ultrasound|Gravis Ultrasound}} emulator available as one of the [[software synthesizer]]s offered by [[ZDoom]]. It is based on a trimmed-down {{wp|TiMidity}}, but is internal to ZDoom (no need to set up an external program) and modified using the  UltraMID driver source code as reference to make it sound closer to the original sound card.
+
+==Setting up GUS==
+To use ZDoom's GUS emulator, the {{CVAR|S|midi_config}} console variable needs to point to a valid TiMidity configuration file. This is used as a fallback option if no [[DMXGUS]] lump is found, or if {{CVAR|S|midi_dmxgus}} is off.
+
+A directory full of [[sound fonts|GUS patches]] should exist and be pointed by the {{CVAR|S|gus_patchdir}} and/or be in the /midi subdirectory of the directory indicated by the %ULTRADIR% {{wp|environment variable}}.
+
+Other options affecting the GUS emulator can be modified from the [[advanced sound options]] menu.
+
+'''Note about memory:'''
+By default, the GUS emulator uses unlimited memory to load patches. The original hardware loaded patches in the GUS card's own memory, which was limited. Models were available with multiples of 256 kilobytes of RAM, up to one megabyte. Crashes could happen when trying to load more patches than could fit in the card's memory.
+
+To provide configurations compatible with all cards, several levels of remapping were created. On lower-end hardware, instruments were replaced by other instruments deemed close enough, so as to reduce the number of discrete patches that had to be loaded.
+
+ZDoom's internal TiMidity player uses normal system memory to load patches, which is not so harshly limited. However, if you want, you can use the {{CVAR|S|gus_memsize}} console variable to use patch remapping nonetheless.
+
+Historically, all DMXGUS lumps known only feature custom values for the 1024K remap level, the other cards still using the driver defaults. Therefore, unlimited sounds best, followed by 1024K, but the other values will generally not sound adequate.
+
+==Advantages and drawbacks==
+* Easier to set up than [[TiMidity++]], though with less features.
+
+==See also==
+* [[Sound options]]
+* [[Sound fonts]]
+
+==External links==
+* [http://toogam.com/software/archive/drivers/soundcrd/gussound/gussound.htm GUS emulation page]
+[[Category:Audio systems]]</text>
+    <sha1>j3exxt75a1h9j213b1nevcqddb7kkyl</sha1>
+  </revision>
+</page>

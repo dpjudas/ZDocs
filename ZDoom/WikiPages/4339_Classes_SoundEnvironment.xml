@@ -1,0 +1,80 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>Classes:SoundEnvironment</title>
+  <ns>0</ns>
+  <id>4339</id>
+  <revision>
+    <id>52330</id>
+    <parentid>39797</parentid>
+    <timestamp>2024-04-09T19:21:33Z</timestamp>
+    <contributor>
+      <username>Jekyll Grim Payne</username>
+      <id>2175</id>
+    </contributor>
+    <comment>/* DECORATE definition */ Added ZScript definition</comment>
+    <origin>52330</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="2064" sha1="rb5krx7d9micj4lrgxu3ipn8cvyvr2s" xml:space="preserve">{{Actor|
+| type = Map spot
+| name = Sound environment
+| class = SoundEnvironment
+| doomednum = 9048
+}}[[Classes]]: &lt;u&gt;SoundEnvironment&lt;/u&gt;&lt;br&gt;
+
+A sound environment changes the reverberation qualities of an area in the map. This is not limited to a sector, boundaries must be drawn with [[Line_SetIdentification]] (in [[Hexen format]]) or the {{c|zoneboundary}} flag set to true (in [[UDMF]]). Only one reverb can be active in an area at a time.
+
+The thing takes two arguments, which define which type of environment to use. See the [[REVERBS]] lump for a list of environments. For example, with a first argument of 30 and a second argument of 0, the "Castle Alcove" environment (30-0) is used.
+
+A sound environment thing given the {{flag|DORMANT}} flag in the map editor does not take effect until [[Thing_Activate|activated]], but an active environment cannot be simply deactivated to disable the effect; instead another environment must be activated in the same area. The environment 0-0 can be used in this way to disable reverberation effects.
+
+== [[ZScript]] definition ==
+{{ZScriptDefinitionNote|actors/shared/soundenvironment.zs#L6}}
+&lt;syntaxhighlight lang="csharp"&gt;
+class SoundEnvironment : Actor
+{
+	default
+	{
+		+NOSECTOR
+		+NOBLOCKMAP
+		+NOGRAVITY
+		+DONTSPLASH
+		+NOTONAUTOMAP
+	}
+	
+	override void PostBeginPlay ()
+	{
+		Super.PostBeginPlay ();
+		if (!bDormant)
+		{
+			Activate (self);
+		}
+	}
+
+	override void Activate (Actor activator)
+	{
+		CurSector.SetEnvironmentID((args[0]&lt;&lt;8) | (args[1]));
+	}
+
+	// Deactivate just exists so that you can flag the thing as dormant in an editor
+	// and not have it take effect. This is so you can use multiple environments in
+	// a single zone, with only one set not-dormant, so you know which one will take
+	// effect at the start.
+	override void Deactivate (Actor deactivator)
+	{
+		bDormant = true;
+	}
+	
+}&lt;/syntaxhighlight&gt;
+
+== [[DECORATE]] definition ==
+{{DecorateDefinitionNote}}
+ ACTOR &lt;u&gt;SoundEnvironment&lt;/u&gt; native
+ {
+   +{{flag|NOSECTOR}}
+   +{{flag|NOBLOCKMAP}}
+   +{{flag|NOGRAVITY}}
+   +{{flag|DONTSPLASH}}
+ }</text>
+    <sha1>rb5krx7d9micj4lrgxu3ipn8cvyvr2s</sha1>
+  </revision>
+</page>

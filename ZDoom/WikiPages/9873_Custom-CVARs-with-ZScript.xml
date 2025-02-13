@@ -1,0 +1,199 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>Custom CVARs with ZScript</title>
+  <ns>0</ns>
+  <id>9873</id>
+  <revision>
+    <id>52270</id>
+    <parentid>52269</parentid>
+    <timestamp>2024-04-04T13:03:39Z</timestamp>
+    <contributor>
+      <username>Jekyll Grim Payne</username>
+      <id>2175</id>
+    </contributor>
+    <comment>/* Creating options for your CVars */</comment>
+    <origin>52270</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="7161" sha1="1x1wsf1jsh8qeun3xshkjg325u621np" xml:space="preserve">This will show you how to control behaviour of actors in [[ZScript]] using custom [[CVARs]]. This way you can easily add options to your level or mod. 
+
+= Server CVars =
+Server CVars are console variables defined with the '''server''' keyword. They're globally available and readable, and their value is the same for all players in a [[multiplayer]] game. &lt;u&gt;Any CVar that affects gameplay MUST be a server cvar.&lt;/u&gt;
+
+For this example, we'll make it so that Zombiemen explode when they become active, but only if a custom CVAR is set to &lt;code&gt;true&lt;/code&gt;.
+
+== Custom variable ==
+The first thing that is needed is a [[CVARINFO]] lump that defines the CVARs that we're going to use. With only one CVAR, the file will only be one line:
+&lt;syntaxhighlight lang="csharp"&gt;
+server bool explodey_zombies = true;
+&lt;/syntaxhighlight&gt;
+
+== Actor code ==
+{{note|&lt;u&gt;'''Server''' CVars can be read in [[ZScript]] directly.&lt;/u&gt; They do NOT require any special methods or functions; they're always available by their name, like global variables.}}
+
+There are many ways to implement exploding Zombiemen. Here is one possibility.
+
+ class ZombiemanBoom : {{Class|Zombieman}} replaces Zombieman
+ {
+     States
+     {
+     See:
+         [[TNT1]] A 0 [[A_JumpIf]](explodey_zombies == true, "Explode");
+         goto Super::See;
+     Pain:
+         [[TNT1]] A 0 [[A_JumpIf]](explodey_zombies == true, "Explode");
+         goto Super::Pain;
+     Death:
+         [[TNT1]] A 0 [[A_JumpIf]](explodey_zombies == true, "Super::Explode");
+         goto Super::Death;
+     Explode:
+         TNT1 A 0 
+         {
+             [[A_Die]];
+             [[A_Explode]];
+         }
+         MISL BCD 5 bright; {{color|darkgreen|// Uses the {{class|Rocket}} sprites}}
+         stop;
+     }
+ }
+
+In the replacement Zombieman, we preempt the '''See''' and '''Pain''' states to check if our custom CVar is &lt;code&gt;true&lt;/code&gt;. If the CVAR is &lt;code&gt;false&lt;/code&gt;, the Zombieman will behave as normal.
+
+Now Zombiemen will explode on sight when you start up a map, but you can stop this by typing '''explodey_zombies 0''' in the console. To set this value to the default, you must type '''archive explodey_zombies''' after setting the CVAR to 0.
+
+= User and nosave CVars =
+While server CVars are global and have the same value for all players, '''user''' and '''nosave''' CVars are local and each player can have their own value for this CVar. These two types can be used for some purely visual features, such as modifying the player's UI or anything else that does NOT affect playsim. This like modifying gameplay and actors, spawning things, must NOT rely on these types of CVars.
+
+The difference between '''user''' and '''nosave''' is explained on the [[CVARINFO]] page, but primarily the idea is that user CVars can still be shared between players (so, for example, a player's nickname is a user CVar), while nosave CVars are not shared (so options like what type of [[HUD]] you're using would be a nosave CVar).
+
+In the example below we'll use a '''nosave''' CVar to allow the player to alter the [[Sprite|sprites]] of their weapon. We're using nosave here because we assume this data is not relevant to other players, and this is a visual-only option.
+
+The weapon assumes to have 3 different sprite sets, all with the same number of frames in the same order, for example:
+* Set 1: WEA1 ABCDEF
+* Set 2: WEA2 ABCDEF
+* Set 3: WEA3 ABCDEF
+
+To declare a nosave CVar, define it with the '''nosave''' keyword:
+&lt;syntaxhighlight lang="csharp"&gt;
+nosave int weaponstyle = 0
+&lt;/syntaxhighlight&gt;
+
+User and nosave CVars cannot be read directly, in contrast to server CVars. For user CVars we need [[Structs:CVar#GetCVar|{{c|CVar.GetCVar}}]]. For nosave CVars you can use [[Structs:CVar#FindCVar|{{c|CVar.FindCVar}}]]:
+
+&lt;syntaxhighlight lang="csharp"&gt;
+class MyWeapon : Weapon
+{
+	action void A_SetWeaponStyle()
+	{
+		// Get a pointer to the desired CVar:
+		CVar c = CVar.FindCVar('weaponstyle');
+		// If for some reason we couldn't get the pointer,
+		// do nothing else:
+		if (!c)
+		{
+			return;
+		}
+		// Get a pointer to the sprite layer where
+		// this function was called:
+		PSprite psp = player.FindPSprite(OverlayID());
+		// Null-check it for safety (although it should
+		// never be null in this case):
+		if (!psp)
+		{
+			return;
+		}
+		// Modify the sprite of the calling sprite
+		// layer based on the value of the CVar.
+		// Notice that we're not modifying the frame
+		// letter, only the sprite name:
+		switch (c.GetInt())
+		{
+		default:
+			psp.sprite = 'WEA1';
+			break;
+		case 1:
+			psp.sprite = 'WEA2';
+			break;
+		case 2:
+			psp.sprite = 'WEA3';
+			break;
+		}
+	}
+
+    States
+    {
+    Select:
+        WEA1 A 0 A_SetWeaponStyle(); // set the sprite
+        #### A 1 A_Raise; // use #### for all subsequent sprites so we don't override it
+        wait; // use wait so we don't 
+    Ready:
+        WEA1 A 0 A_SetWeaponStyle(); // set the sprite
+        #### A 1 A_WeaponReady; // use #### for all subsequent sprites so we don't override it
+        wait;
+    Fire:
+        WEA1 A 0 A_SetWeaponStyle(); // set the sprite
+        #### B 5
+        {
+            A_FireBullets(5, 3.5, 1, 5);
+            A_GunFlash();
+            A_StartSound("mygun/fire", CHAN_WEAPON);
+        }
+        #### CDE 4;
+        #### F 5 A_ReFire;
+        goto Ready;
+
+        ... // The rest of the code omitted to keep this example short
+    }
+}&lt;/syntaxhighlight&gt;
+See also:
+* [[A_FireBullets]]
+* [[Statements#switch|Switch statement]]
+* [[Sprite#Image_names|The #### sprite name]]
+* [[Classes:PSprite]]
+
+= Creating options for your CVars =
+Having done anything of the above, you will add a CVar but it will only be modifiable through the [[Console|console]]. To add options visible through the menu, you'd normally create a custom menu for your project, and options to it through '''[[MENUDEF]]'''. For example:
+
+{{note|This code is an example. In practice authors are strongly encouraged to NOT add player-facing text strings into code directly, and instead use the '''[[LANGUAGE]]''' lump.}}
+&lt;syntaxhighlight lang="csharp"&gt;
+// This creates a new custom options menu:
+OptionMenu "MyModOptions"
+{
+  // Add an option for the explodey_zombies CVar:
+  Option "Exploding Zombiemen", "explodey_zombies", "OnOff" //OnOff is an existing optionvalue, you don't need to define it
+  // Add n option for the weaponstyle CVar:
+  Option "Weapon style", "weaponstyle", "WeaponStyleOptions" //WeaponStyleOptions will be a custom option value
+}
+
+// A custom option value that attaches unique names
+// to the possible CVar values:
+OptionValue "WeaponStyleOptions"
+{
+  0, "Classic"
+  1, "Enhanced"
+  2, "Special"
+}
+
+// This will make your menu appear in the default
+// GZDoom options menu, right before the CustomizeControls
+// section:
+AddOptionMenu "OptionsMenu" before "CustomizeControls"
+{
+  Submenu "My mod options", "MyModOptions"
+}
+
+// This does the same but also will make it visible
+// if the player has Simple Options Menu enabled:
+AddOptionMenu "OptionsMenuSimple" before "CustomizeControls"
+{
+  Submenu "My mod options", "MyModOptions"
+}&lt;/syntaxhighlight&gt;
+
+= See also =
+* [[CVARINFO]]
+* [[Structs:CVar]]
+* [[MENUDEF]]
+
+[[Category:ZScript guides]]</text>
+    <sha1>1x1wsf1jsh8qeun3xshkjg325u621np</sha1>
+  </revision>
+</page>

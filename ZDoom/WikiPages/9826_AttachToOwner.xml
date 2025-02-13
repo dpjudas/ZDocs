@@ -1,0 +1,63 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>AttachToOwner</title>
+  <ns>0</ns>
+  <id>9826</id>
+  <revision>
+    <id>51685</id>
+    <parentid>51682</parentid>
+    <timestamp>2024-02-06T10:31:40Z</timestamp>
+    <contributor>
+      <username>Jekyll Grim Payne</username>
+      <id>2175</id>
+    </contributor>
+    <comment>/* ZScript definition */</comment>
+    <origin>51685</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="2069" sha1="3q989ok5l8rbc1nfphrp7qobmdqd5g2" xml:space="preserve">'''{{class|Inventory}}'''
+
+{{c|virtual void '''AttachToOwner'''(Actor ''other'')}}
+
+==Usage==
+A [[ZScript virtual functions|virtual function]] called by {{class|Inventory}} items when they've been received ([[TryPickup]] has run successfully) and the item now has to be attached to the recipient's inventory. The item in this case can be either the original item, or a copy created via [[CreateCopy]] (for example, in multiplayer, [[class|Key|keys]] copy themselves rather than being picked up directly, so that the original key can stay behind to be picked up by other players).
+
+Can be overridden to add custom behavior executed by items once they've become a part of an actor's inventory.
+
+'''Important notes:'''
+* This function is only executed when an item is received for the first time (ther &lt;code&gt;other&lt;/code&gt; actor doesn't have an instance of this item in ther inventory). When items of the same type are received again, this function isn't called; instead they find this instance in the other's inventory and increase its amount and destroy themselves (this happens in [[TryPickup]]). If you want something to happen whenever an item is received, even if it's a duplicate, override [[Use]] instead.
+* This isn't called at all on items that don't actually get placed in the inventory, like {{class|Health}}, {{class|PowerupGiver}}, {{class|BasicArmorPickup}} and others.
+
+=== Parameters ===
+*{{c|Actor ''other''}}
+:The actor that is receiving the item.
+
+== [[ZScript]] definition ==
+{{ZScriptDefinitionNote|actors/inventory/inventory.zs#L730}}
+Various items may override this function, but the base {{class|Inventory}} class defines it as follows:
+
+&lt;syntaxhighlight lang="csharp"&gt;
+	virtual void AttachToOwner (Actor other)
+	{
+		BecomeItem ();
+		other.AddInventory (self);
+	}
+&lt;/syntaxhighlight&gt;
+
+See [[BecomeItem]] and [[AddInventory]].
+
+== Examples ==
+{{noexamples}}
+
+== See also ==
+* [[DetachFromOwner]]
+* [[TryPickup]]
+* [[Touch]]
+* [[Use]]
+* [[Inventory virtual functions]]
+
+[[Category:ZScript]]
+[[Category:Inventory]]
+[[Category:ZScript virtual functions]]</text>
+    <sha1>3q989ok5l8rbc1nfphrp7qobmdqd5g2</sha1>
+  </revision>
+</page>

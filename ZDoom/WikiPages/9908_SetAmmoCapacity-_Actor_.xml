@@ -1,0 +1,64 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>SetAmmoCapacity (Actor)</title>
+  <ns>0</ns>
+  <id>9908</id>
+  <revision>
+    <id>52911</id>
+    <parentid>52660</parentid>
+    <timestamp>2024-08-17T12:20:19Z</timestamp>
+    <contributor>
+      <username>Jekyll Grim Payne</username>
+      <id>2175</id>
+    </contributor>
+    <comment>added zscript definition</comment>
+    <origin>52911</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="1113" sha1="1bimtcx2jummolzeae0xx4janl56jq8" xml:space="preserve">'''{{class|Actor}}'''
+
+__NOTOC__void '''SetAmmoCapacity''' (class&lt;Ammo&gt; ''type'', int ''amount'')
+
+==Usage==
+Sets the {{Property|Inventory.MaxAmount|max amount}} of the specified {{Class|Ammo|ammo type}} in the calling actor's inventory. If the ammo type does not exist in the inventory, then it is added to it, while having its max amount set to the desired value.
+
+===Parameters===
+*{{c|class&lt;Ammo&gt; '''type'''}}
+:The class name of the ammo type.
+*{{c|int '''amount'''}}
+:The amount to which the max amount is set.
+
+==Examples==
+{{noexamples}}
+
+== [[ZScript]] definition ==
+{{ZScriptDefinitionNote|actors/inventory_util.zs#L837}}
+&lt;syntaxhighlight lang="csharp"&gt;
+	void SetAmmoCapacity(class&lt;Ammo&gt; type, int amount)
+	{
+		if (type != NULL)
+		{
+			let item = FindInventory(type);
+			if (item != NULL)
+			{
+				item.MaxAmount = amount;
+			}
+			else
+			{
+				item = GiveInventoryType(type);
+				if (item != NULL)
+				{
+					item.MaxAmount = amount;
+					item.Amount = 0;
+				}
+			}
+		}
+	}&lt;/syntaxhighlight&gt;
+
+==See also==
+*[[GetAmmoCapacity_(Actor_function)|GetAmmoCapacity]]
+
+[[Category:ZScript]]
+[[Category:DECORATE]]</text>
+    <sha1>1bimtcx2jummolzeae0xx4janl56jq8</sha1>
+  </revision>
+</page>

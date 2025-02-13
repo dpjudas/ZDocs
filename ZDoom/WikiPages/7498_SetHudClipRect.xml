@@ -1,0 +1,61 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>SetHudClipRect</title>
+  <ns>0</ns>
+  <id>7498</id>
+  <revision>
+    <id>44238</id>
+    <parentid>42597</parentid>
+    <timestamp>2017-03-20T13:09:16Z</timestamp>
+    <contributor>
+      <username>Gez</username>
+      <id>1283</id>
+    </contributor>
+    <minor />
+    <comment>removing "new" for GZDoom 2.4.0 release</comment>
+    <origin>44238</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="1593" sha1="d08bp1fqonyfqnxsfeao71wbmilua84" xml:space="preserve">void '''SetHUDClipRect''' (int ''x'', int ''y'', int ''width'', int ''height'' [, int ''wrapwidth'' [, bool ''aspectratio'']]);
+
+==Usage==
+Set the clipping rectangle for future [[HudMessage|HUD messages]]. If you do not specify ''wrapwidth'', the HUD message will be laid out as normal, but pixels outside the rectangle will not be drawn. If you specify ''wrapwidth'', then the message will be wrapped to that width. Use {{c|SetHUDClipRect(0, 0, 0, 0, 0)}} to reset everything back to normal.
+Coordinates for consecutive HUD messages are treated the same.
+
+===Parameters===
+* ''x'' 
+: The X coordinate at which the clipping rectangle starts.
+
+* ''y''
+: The Y coordinate at which the clipping rectangle starts.
+
+* ''width''
+: The width of the clipping rectangle.
+
+* ''height''
+: The height of the clipping rectangle.
+
+* ''wrapwidth''
+: Wraps text to this amount of pixels, starting at {{c|x}}. If set to 0, the default wrapping method will take place instead.
+: Default is 0.
+
+* ''aspectratio''
+: If set to {{c|true}}, it forces the clipping rectangle to assume a 4:3 aspect ratio if the user's current aspect ratio is 16:9 or 16:10. If set to {{c|false}}, however, the user's current aspect ratio is used, instead.
+: Default is {{c|true}}.
+
+==Examples==
+
+ script 1 ENTER
+ {
+    while(true)
+    {
+       [[SetHudClipRect]](100, 100, 100, 100, 100);
+       [[HudMessage]](s:"cool hud message text goes here, and will be wrapped."; {{const|HUDMSG_PLAIN}}, 10, {{const|CR_WHITE}}, 100, 100, 0.1);
+       [[SetHudClipRect]](0, 0, 0, 0);
+       [[Delay]](1);
+    }
+ }
+
+[[category:ACS HUD functions]]</text>
+    <sha1>d08bp1fqonyfqnxsfeao71wbmilua84</sha1>
+  </revision>
+</page>

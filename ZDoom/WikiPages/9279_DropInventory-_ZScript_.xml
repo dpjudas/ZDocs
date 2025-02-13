@@ -1,0 +1,55 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>DropInventory (ZScript)</title>
+  <ns>0</ns>
+  <id>9279</id>
+  <revision>
+    <id>46160</id>
+    <timestamp>2018-08-16T17:21:00Z</timestamp>
+    <contributor>
+      <username>Blue Shadow</username>
+      <id>2021</id>
+    </contributor>
+    <comment>Create page</comment>
+    <origin>46160</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="1779" sha1="91mxj8ijy9druo3qn8lglhmjqoof6fy" xml:space="preserve">__NOTOC__Inventory '''DropInventory''' (Inventory ''item'' [, int ''amt''])
+
+==Usage==
+Drops an item to the ground by the calling actor.
+
+To be dropped, the item needs to have an owner. This owner does not necessarily need to be the calling actor itself. Items which have the {{Flag|INVENTORY.UNDROPPABLE}} or {{Flag|INVENTORY.UNTOSSABLE}} flags set cannot be dropped, as well as items which lack the Spawn [[Actor states|state]]. The number of samples the dropped item could contain cannot be more than what the owner has in their inventory of the item.
+{{note|what is explained above is the default behavior, a behavior which can be altered through the [[ZScript virtual functions|virtual function]] {{c|[[CreateTossable]]}}.}}
+A dropped item will have its {{Flag|NOGRAVITY}} flag explicitly cleared, and will no longer count towards the map's statistics.
+
+===Parameters===
+*''item'': the item to drop. This is a pointer to the item.
+*''amt'': the number of samples the dropped item contains. Default is -1, which is considered as one sample.
+
+===Return value===
+The function returns a pointer to the item if it was dropped successfully, otherwise it returns {{c|null}}.
+
+==Examples==
+The killer of this {{Class|archvile}} drops an {{Class|Cell|energy cell}} that is worth 20 ammo from their inventory.
+ class ExArchvile : {{Class|Archvile}}
+ {
+     override void [[Die]] (Actor source, Actor inflictor, int dmgflags, Name MeansOfDeath)
+     {
+         Super.Die(source, inflictor, dmgflags, MeansOfDeath);
+ 
+         if (source)
+         {
+             {{Class|Inventory}} drop = source.[[FindInventory]]("{{Class|Cell}}");
+ 
+             if (drop)
+             {
+                 source.'''DropInventory'''(drop, 20);
+             }
+         }
+     }
+ }
+
+[[Category:ZScript]]</text>
+    <sha1>91mxj8ijy9druo3qn8lglhmjqoof6fy</sha1>
+  </revision>
+</page>

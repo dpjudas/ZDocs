@@ -1,0 +1,58 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>HasReceived</title>
+  <ns>0</ns>
+  <id>9847</id>
+  <revision>
+    <id>54075</id>
+    <parentid>53577</parentid>
+    <timestamp>2024-12-20T09:10:11Z</timestamp>
+    <contributor>
+      <username>Jekyll Grim Payne</username>
+      <id>2175</id>
+    </contributor>
+    <comment>/* Examples */</comment>
+    <origin>54075</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="2057" sha1="aebkfk62ahntqt0eznfhss3dz7jrr6t" xml:space="preserve">'''{{class|Actor}}'''
+
+{{c|virtual void '''HasReceived'''(Inventory ''item'')}}
+
+{{c|virtual void '''HasReceived'''(Inventory ''item'', class&lt;Inventory&gt; ''itemcls'' {{=}} null)}} {{new|4.13.0}}
+
+==Usage==
+An {{class|Actor}} virtual function that is called after an {{class|Inventory}} item has been received by the calling actor. It gets called automatically at the end of the item's [[CallTryPickup]] chain. In the base {{class|Actor}} class this function is empty and does nothing, but it can be overridden to add custom behavior.
+
+{{warning|Be wary of the following:&lt;br&gt;&lt;br&gt;1. The ''item'' can be null by the time this function is called, so it's important to null-check the pointer.&lt;br&gt;&lt;br&gt;2.This function is intended for the purposes of obtaining data only. The ''item'' should not be destroyed or detached from the recipient because it can cause a VM abort. If you want to manually deteremine whether the actor should be allowed to receive the item, see '''[[CanReceive]]''' instead.}}
+
+===Parameters===
+*{{c|Inventory '''item'''}}
+:A pointer to the item that has been received by the calling actor.
+*{{c|class&lt;Inventory&gt; '''itemcls'''}} {{new|4.13.0}}
+:The class type of the received item. This field always gets filled with the name of the received item, even when the ''item'' pointer ends up null due to the item being consumed on pickup (such as health items).
+
+==Examples==
+This custom {{class|DoomPlayer}} will print the text "Received a Doom weapon!" folllowed by the [[GetTag|player-facing name]] of the weapon in parentheses whenever they receive an item based on the {{class|DoomWeapon}} class:
+&lt;syntaxhighlight lang="csharp"&gt;
+class CustomDoomPlayer : DoomPlayer
+{
+  override void HasReceived(Inventory item, class&lt;Inventory&gt; itemcls)
+  {
+    if (item &amp;&amp; item is 'DoomWeapon')
+    {
+      Console.Printf("Received a Doom weapon! (%s)", item.GetTag();
+    }
+  }
+}&lt;/syntaxhighlight&gt;
+
+==See also==
+*[[CanReceive]]
+*[[CallTryPickup]]
+*[[Actor virtual functions]]
+
+[[Category:ZScript]]
+[[Category:Actor virtual functions]]
+[[Category:Inventory]]</text>
+    <sha1>aebkfk62ahntqt0eznfhss3dz7jrr6t</sha1>
+  </revision>
+</page>

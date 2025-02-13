@@ -1,0 +1,61 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>Classes:ArtiTeleport</title>
+  <ns>0</ns>
+  <id>2610</id>
+  <revision>
+    <id>39709</id>
+    <parentid>38865</parentid>
+    <timestamp>2015-05-03T22:16:55Z</timestamp>
+    <contributor>
+      <username>Blue Shadow</username>
+      <id>2021</id>
+    </contributor>
+    <minor />
+    <comment>/* DECORATE definition */ Updated</comment>
+    <origin>39709</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="1377" sha1="5dz1ig3p8m4m23wmen70ibgnbugujzh" xml:space="preserve">{{Actor|
+| type = Artifact
+| name = Darchala's Chaos Device
+| class = ArtiTeleport
+| game = Raven
+| doomednum = 36
+| spawnid = 18
+| spawnname = T_ITEMTELEPORT 
+}}[[Classes]]: [[Classes:Inventory|Inventory]]&amp;rarr;&lt;u&gt;ArtiTeleport&lt;/u&gt;
+
+
+The &lt;u&gt;Chaos Device&lt;/u&gt; is a magic artifact that enters the player's inventory when picked up and, when activated, gives the player an "emergency escape" from dangerous situations and unmorphs them if they are currently morphed.
+
+
+==== Using in [[DECORATE]] ====
+When this (or inherited) actor is used it teleports the activator to one of the player starts. It also cancels player morph and plays the sound "*evillaugh" (if defined).
+
+
+==== [[DECORATE]] definition ====
+ ACTOR &lt;u&gt;ArtiTeleport&lt;/u&gt; : {{Class|Inventory}} native
+ {
+   +{{Flag|COUNTITEM}}
+   +{{Flag|FLOATBOB}}
+   +{{Flag|INVENTORY.INVBAR}}
+   +{{Flag|INVENTORY.PICKUPFLASH}}
+   +{{Flag|INVENTORY.FANCYPICKUPSOUND}}
+   {{Property|Inventory.DefMaxAmount}}
+   {{Property|Inventory.Icon}} "ARTIATLP"
+   {{Property|Inventory.PickupSound}} "misc/p_pkup"
+   {{Property|Inventory.PickupMessage}} "$TXT_ARTITELEPORT" // "CHAOS DEVICE"
+   {{Property|Tag}} "$TAG_ARTITELEPORT"
+   States
+   {
+   Spawn:
+     ATLP ABCB 4
+     Loop
+   }
+ }
+
+==== Notes ====
+As of 2.3.0, the "*evillaugh" sound is recognised in any game; previously it could be defined, but was only fully recognised by Heretic.</text>
+    <sha1>5dz1ig3p8m4m23wmen70ibgnbugujzh</sha1>
+  </revision>
+</page>

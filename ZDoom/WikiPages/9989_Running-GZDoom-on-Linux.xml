@@ -1,0 +1,47 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>Running GZDoom on Linux</title>
+  <ns>0</ns>
+  <id>9989</id>
+  <revision>
+    <id>53748</id>
+    <parentid>53746</parentid>
+    <timestamp>2024-11-13T18:41:46Z</timestamp>
+    <contributor>
+      <username>Rachael</username>
+      <id>81</id>
+    </contributor>
+    <origin>53748</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="3660" sha1="dnja4pg7e5u44z3bh8d770r1bln9cbe" xml:space="preserve">== Running GZDoom on Linux ==
+
+Right now, the best and easiest way to run GZDoom on Linux is to add the DRDTeam Apt Repository on Debian/Ubuntu/Mint/etc: https://debian.drdteam.org/ ⬅️ Instructions are here. You will then be able to install GZDoom using apt in the terminal. '''Don't do this if your distro uses a different package manager!'''
+
+== If you cannot do that, there are several alternatives: ==
+
+* If you are on Steam OS, the method that offers by far the least resistance is to use Proton and simply download and run the Windows builds. Overall performance is not heavily impacted other than startup and loading times, Wine runs the Windows code directly on your processor so most operations that do not involve the OS directly will run at native speed (including rendering, gameplay, etc).
+
+* Similarly, ''all'' x86-based Linux distros have Wine available to them in some form - some of them may require you to compile it from scratch, but most have already done that for you. If you have the binfmt extension installed also, this allows you to actually simply double-click the .exe icon directly on your desktop and the game will ''just run''. Check your package manager for this. &lt;https://winehq.org/&gt;
+
+* GZDoom is also on the Discover store - this is maintained by a third-party. It is posted on Flathub and this build is run by by a third party. While he is not directly part of the GZDoom team, his efforts are nevertheless invaluable, and if this is an option for you, you definitely should try this.
+
+* If you are on Arch or Manjaro, GZDoom is on the AUR (again, maintained by a third-party). Follow your distro's instructions on using the AUR if you want to go this route - it generally works and makes things very easy for you.
+
+* Other distros might "just" have GZDoom available on their package manager. Feel free to check - you might get lucky. \:)
+
+* For more advanced users - if you are not on a Debian-based distro, you can also install Distrobox and follow the Apt instructions above. ('apt' and 'dpkg' is ''NOT'' recommended outside of a sandbox or chroot jail if you are not using Debian/Ubuntu/Mint! Please heed your distro warnings!) More info can be found here: &lt;https://distrobox.it/&gt;
+
+* If you are comfortable enough doing it, you can also compile GZDoom directly from source. Efforts have been made to try and make this as easy as possible. Please note that the auto-build scripts are currently broken on Linux and we don't have an ETA on a fix, they might be removed entirely because they use vcpkg.
+
+If you wish to go this route: Install the following packages (whatever your distro equivalents are): cmake, git, build-essential, g++, make, libsdl2-dev, libopenal-dev
+
+== Important note ==
+
+Fedora is ''not'' recommended - if you are going to use this distro, expect to be on your own, especially when things break. The distro is in a perpetual beta state, and with the rapid changing of the Linux system Fedora is often at the forefront and the bleeding edge of these changes. This means that GZDoom cannot be counted on to compile reliably on Fedora. You are strongly urged to use one of the sandboxing methods above if you wish to go this route.
+
+Furthermore, it is literally impossible for us to test every single Linux distro and every single Linux configuration - there's simply too many! So all we can suggest is find what works for you, whatever works best, and stick with it.
+
+Also - the "portable" Linux builds are currently shelved and the plan is to revive them at some point, but extensive work is still needed to refine the process to create them in order to ensure compatibility with all Linux distros.</text>
+    <sha1>dnja4pg7e5u44z3bh8d770r1bln9cbe</sha1>
+  </revision>
+</page>

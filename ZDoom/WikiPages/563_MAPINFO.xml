@@ -1,0 +1,116 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>MAPINFO</title>
+  <ns>0</ns>
+  <id>563</id>
+  <revision>
+    <id>52570</id>
+    <parentid>49266</parentid>
+    <timestamp>2024-04-26T20:34:03Z</timestamp>
+    <contributor>
+      <username>Jekyll Grim Payne</username>
+      <id>2175</id>
+    </contributor>
+    <comment>/* MAPINFO and ZMAPINFO */</comment>
+    <origin>52570</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="6515" sha1="otwedkekwyci2g7qkn9wthog6lzcjxn" xml:space="preserve">{{doomwiki}}ZDoom supports a special '''MAPINFO''' lump that can be used to define special characteristics for the different maps in a [[WAD]]/[[PK3]], in addition to defining custom skill levels, [[intermission]]s, and game settings.
+
+==MAPINFO and ZMAPINFO==
+If you create a mod compatible with other source ports, but wish to use some ZDoom-specific MAPINFO options when played in ZDoom, it is advised to create a ZMAPINFO lump for ZDoom, and a different MAPINFO lump for other ports. The ZMAPINFO lump has to use the new format; while the MAPINFO can use the [[MAPINFO (old format)|old syntax]] or the Hexen one, if the mod is for Hexen.
+
+{{warning|If a ZMAPINFO is present, MAPINFO will not be parsed at all. Using both only makes sense if a project is made to be compatible with multiple source ports, and some specific options must be applied in GZDoom only (since it will ignore MAPINFO in this case). In all other cases, only one lump should be used.}}
+
+==Format==
+
+'''MAPINFO''' contains eleven types of entries: game information, episode definitions, map definitions, cluster definitions, skill definitions, intermission definitions, automap definitions, editor number definitions, spawn number definitions, conversation number definitions and damage type definitions, which are indicated by the keywords “''gameinfo''”, “''episode''”, “''map''”, “''cluster''”,  “''skill''”, “''intermission''”, “''automap''”, “''doomednums''”, “''spawnnums''”, “''conversationids''” and “''damagetype''”, respectively.
+
+After the above keyword, the name or number of the defined element is specified (e.g. ''map E2M4'') followed by a block of properties enclosed in curly-braces which affect the newly-created element. Properties may take zero or more parameters and are specified in the following format:
+
+ property = value1, value2, value3...
+
+Within this article, parameters that are required are enclosed in &lt;angle brackets&gt;, while optional parameters are enclosed in [square brackets]. A parameter that is enclosed in neither type of bracket is a literal value that must be typed exactly as shown in order to work.
+
+If a property is specified with no parameters, only the property name (no equals sign) is needed. In addition, all string parameters must be enclosed within quotation marks (as shown).
+
+MAPINFO/ZMAPINFO lumps can include others with the {{c|include}} keyword. For example:
+ include mapinfo/gameconfig.txt
+ include mapinfo/skills.txt
+ include mapinfo/episode1.txt
+
+Only the most important notions are described on this page, for examples and complete listing of all commands and properties, refer to each definition's subpage.
+
+==[[MAPINFO/Cluster definition|Cluster definition]]==
+
+A [[cluster]] definition begins with the keyword “''cluster''”. For purposes of ZDoom, clusters are used to displays messages when moving between maps and to optionally group different levels into a [[hub]].
+
+See [[MAPINFO/Cluster definition|cluster definition]] for full list of properties and examples.
+
+==[[MAPINFO/Episode definition|Episode definition]]==
+
+An [[episode]] definition begins with the keyword “''episode''”.
+
+See [[MAPINFO/Episode definition|episode definition]] for full list of properties and examples.
+
+==[[MAPINFO/Map definition|Map definition]]==
+
+A map definition begins with the keyword “''map''”. You can also specify standard characteristics for later map definitions by using the keyword “''defaultmap''” or “''adddefaultmap''” instead: 
+
+See [[MAPINFO/Map definition|map definition]] for full list of properties and examples.
+
+==[[MAPINFO/Skill definition|Skill definition]]==
+Skill definitions begin with the keyword “''skill''” followed by the name of the skill and the properties block.
+
+See [[MAPINFO/Skill definition|skill definition]] for full list of properties and examples.
+
+==[[MAPINFO/GameInfo definition|GameInfo definition]]==
+GameInfo definitions begin with the keyword "''gameinfo''" followed by a list of properties.  This sets some miscellaneous data about the game such as what lump to use for the title picture.
+
+See [[MAPINFO/GameInfo definition|GameInfo definition]] for full list of properties and examples.
+
+==[[MAPINFO/Intermission definition|Intermission definition]]==
+
+Custom intermission definitions begin with the keyword "''intermission''" followed by a name, and then a list of properties. This define an intermission sequence, such as Doom II's cast call or Hexen's chess game.
+
+See [[MAPINFO/Intermission definition|Intermission definition]] for full list of properties and examples.
+
+==[[MAPINFO/Automap definition|Automap definition]]==
+
+Custom automap definitions begin with the keyword "''automap''" followed by a list of properties. These colors and settings will apply to the player's automap if the {{c|{{CVAR|A|am_customcolors}}}} [[CVARs|console variable]] is enabled. 
+
+See [[MAPINFO/Automap definition|Automap definition]] for full list of properties and examples.
+
+==[[MAPINFO/Editor number definition|Editor number definition]]==
+
+An [[editor number]] definition begins with the keyword “''DoomEdNums''”, followed by a list of actor names and their assigned editor numbers.
+
+See [[MAPINFO/Editor number definition|editor number definition]] for more information.
+
+==[[MAPINFO/Spawn number definition|Spawn number definition]]==
+
+A [[spawn number]] definition begins with the keyword “''SpawnNums''”, followed by a list of actor names and their assigned spawn numbers.
+
+See [[MAPINFO/Spawn number definition|spawn number definition]] for more information.
+
+==[[MAPINFO/Conversation number definition|Conversation number definition]]==
+
+A conversation number definition begins with the keyword “''ConversationIDs''”, followed by a list of actor names and their assigned conversation numbers.
+
+See [[MAPINFO/Conversation number definition|conversation number definition]] for more information.
+
+==[[MAPINFO/Damage type definition|Damage type definition]]==
+
+A [[damage type]] definition begins with the keyword “''DamageType''”, followed by a list of properties to create [[custom damage types]].
+
+See [[MAPINFO/Damage type definition|damage type definition]] for more information.
+
+==Options for ZDoom's child ports== 
+
+The MAPINFO syntax allows properties to be specified for ZDoom-derivitave engines that support them. All others will skip over these lines.
+
+[[MAPINFO options for GZDoom's GL renderer]] {{OpenGLsmall}}&lt;br&gt;
+
+[[Category:ZDoom special lumps]]</text>
+    <sha1>otwedkekwyci2g7qkn9wthog6lzcjxn</sha1>
+  </revision>
+</page>

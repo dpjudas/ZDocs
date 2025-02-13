@@ -1,0 +1,49 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>Classes:BlasterPowered</title>
+  <ns>0</ns>
+  <id>4295</id>
+  <revision>
+    <id>42616</id>
+    <parentid>39410</parentid>
+    <timestamp>2016-04-19T07:49:33Z</timestamp>
+    <contributor>
+      <username>Blue Shadow</username>
+      <id>2021</id>
+    </contributor>
+    <minor />
+    <comment>/* DECORATE definition */ Tag property from git commit 30a530b</comment>
+    <origin>42616</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="978" sha1="8yy9k0nh9886j4h482y8qiv53xjadps" xml:space="preserve">{{Actor|
+| type = Weapon
+| name = Tomed dragon claw
+| class = BlasterPowered
+| game = Heretic
+}}[[Classes]]: [[Classes:Inventory|Inventory]]&amp;rarr;[[Classes:Weapon|Weapon]]&amp;rarr;[[Classes:HereticWeapon|HereticWeapon]]&amp;rarr;[[Classes:Blaster|Blaster]]&amp;rarr;&lt;u&gt;BlasterPowered&lt;/u&gt;
+
+When the [[Classes:ArtiTomeOfPower|tome of power]] is activated, the [[Classes:Blaster|dragon claw]] fires an [[Classes:BlasterFX1|extremely fast shot]], that upon contact with a surface explodes into eight [[Classes:Ripper|ripper]] projectiles. 
+
+
+==== [[DECORATE]] definition ====
+ ACTOR &lt;u&gt;BlasterPowered&lt;/u&gt; : {{Class|Blaster}}
+ {
+   +{{Flag|WEAPON.POWERED_UP}}
+   {{Property|Weapon.AmmoUse}} 5
+   {{Property|Weapon.AmmoGive}} 0
+   {{Property|Weapon.SisterWeapon}} "{{Class|Blaster}}"
+   {{Property|Tag}} "$TAG_BLASTERP"
+   States
+   {
+   Fire:
+     BLSR BC 0
+   Hold:
+     BLSR D 3 [[A_FireCustomMissile]]("{{Class|BlasterFX1}}")
+     BLSR CB 4
+     BLSR A 0 [[A_ReFire]]
+     Goto Ready
+   }
+ }</text>
+    <sha1>8yy9k0nh9886j4h482y8qiv53xjadps</sha1>
+  </revision>
+</page>

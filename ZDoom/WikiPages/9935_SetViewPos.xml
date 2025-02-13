@@ -1,0 +1,51 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>SetViewPos</title>
+  <ns>0</ns>
+  <id>9935</id>
+  <revision>
+    <id>54142</id>
+    <parentid>53304</parentid>
+    <timestamp>2025-01-20T04:53:48Z</timestamp>
+    <contributor>
+      <username>Dileepvr</username>
+      <id>2636</id>
+    </contributor>
+    <minor />
+    <comment>FOV was made to affect the view scale in orthographic mode</comment>
+    <origin>54142</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="2864" sha1="bz8uzggoywqm4b534v7y20fs23gxaxw" xml:space="preserve">{{ZScriptNote}}
+
+'''[[Classes:Actor|Actor]]'''
+
+native void '''SetViewPos''' (Vector3 ''offset'', int ''flags'' = -1)
+
+== Usage ==
+Used to set the {{c|offset}} and {{c|flags}} fields within the {{c|native readonly ViewPosition ViewPos}} field in the {{class|Actor}} class. Typically used to offset the viewpoint of the {{class|PlayerPawn}} or camera actor.
+
+===Parameters===
+*{{c|vector3 '''offset'''}}
+:The vector for the viewpoint's offset.
+*{{c|int '''flags'''}}
+:Any combination of the {{c|VPSF}} flags for the {{class|ViewPosition}} class.
+:The flags that can be set are:
+:*'''VPSF_ABSOLUTEOFFSET''' — Don't include angles.
+::Does not take the actor's {{c|angle}} and {{c|pitch}} into account when applying the offset. When this flag is not set, the offset is computed in the actor's local frame where the actor is always facing the positive x-direction. When the flag is set, the global level axes are used.
+:*'''VPSF_ABSOLUTEPOS''' — Use absolute position.
+::Uses the offset as the absolute position in the global level's coordinates, instead of relative to actor's position.
+:*'''VPSF_ALLOWOUTOFBOUNDS''' {{new|4.13.0}} — Allow viewpoint to go out of bounds (hardware renderer only).
+::Allows the viewpoint (but not the actor) to be out of bounds of the level. Backface culling will let you see into the level from behind single-sided walls. Rendering of all skies are disabled when this is set for the viewpoint camera/actor. Intra-frustum horizontal clipping is disabled when this flag is set. A vertical clipper has been added to compensate, but expect a drop in framerate at shallow view pitches.
+:*'''VPSF_ORTHOGRAPHIC''' {{new|4.13.0}} — Use orthographic projection (hardware renderer only).
+::Switches the viewpoint's projection matrix from perspective to orthographic. All geometry is rendered the same size irrespective of distance from viewpoint. [[FOV]] setting (up to 175 degrees) and the length of the {{c|Vector3 '''Offset'''}} field will determine the scale of things, with the latter required to be greater than zero. This is useful for isometric mode cameras (See [[Isometric Mode]] tutorial). Typically set along with {{c|VPSF_ALLOWOUTOFBOUNDS}}. This flag disables visual rendering for all portals, though playsim is unaffected. In addition, depending on the sign of the camera/actor's pitch, either all floors (pitching upward) or all ceilings (pitching downward) are not rendered. Reflections in flats will not work correctly. The renderer does not traverse the [[Node|BSP]] tree but does a simple bounding-box check for all subsectors if either the CVar {{c|{{CVAR|R|r_radarclipper}}}} is false, or the {{c|{{MapProperty|NoFogOfWar}}}} property is set for the map in the [[MAPINFO]] lump, resulting in a slightly increased framerate.
+
+== Example ==
+{{noexamples}}
+
+== See also ==
+* {{class|ViewPosition}}
+
+[[Category:ZScript]]</text>
+    <sha1>bz8uzggoywqm4b534v7y20fs23gxaxw</sha1>
+  </revision>
+</page>

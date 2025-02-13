@@ -1,0 +1,239 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>Classes:Thinker</title>
+  <ns>0</ns>
+  <id>9183</id>
+  <revision>
+    <id>52972</id>
+    <parentid>52506</parentid>
+    <timestamp>2024-08-22T10:22:33Z</timestamp>
+    <contributor>
+      <username>Blue Shadow</username>
+      <id>2021</id>
+    </contributor>
+    <minor />
+    <origin>52972</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="7514" sha1="fd6go1vokc0fr1y3zto993e2fiik2d8" xml:space="preserve">{{ZScriptNote}}
+
+A Thinker class is derived from [[Object]], and is used as the base for an [[Actor]] and more. Unlike actors, thinkers are not physically present in the game at all.
+
+Thinkers are generally used to 'run the game' -- movement, shooting, performing functions, etc.
+
+Thinkers do not possess the many properties and functions an actor has, drastically cutting down on the amount of overhead generated from creating an actor. As such, these make excellent candidates for replacing dummy actors used to monitor and modify primary actors.
+
+Thinkers are not actors, so they can't be spawned; instead they're created with the '''[[New]]''' function.
+
+== Stats ==
+The engine utilizes stat numbers on thinkers to organize thinkers and whether to call their [[Tick|Tick()]] functions or not. 
+
+Some have special use cases such as the {{c|STAT_CORPSEPOINTER}}, invoked by [[A_QueueCorpse]], which creates a thinker for the calling actor, utilizing internal code to eliminate corpses as the queue when filled.
+
+Because of the aforementioned internal handling, take caution when changing a stat number. The engine may manipulate them at any time and cause issues. Thinkers also can only belong to one stat category at any time.
+
+The safest ranges to use are anywhere under 127, and the unmentioned numbers not defined in the list below (i.e. 99, 98, etc -- so long as they are not defined internally).
+
+'''NOTE:''' Not all thinkers will actually use their [[Tick|Tick()]] virtuals based on their stat numbers (see the comment ''Thinkers that don't actually think'' in the [[#ZScript definition|ZScript definition below]]). It's possible to have another thinker manually call the non-ticking thinker's Tick function inside its own.
+
+== Methods ==
+=== Static ===
+*static clearscope int '''Tics2Seconds'''(int tics)
+:Returns the given number of [[tic|game tics]] in seconds (as an integer number).
+=== Virtual ===
+{{: Thinker virtual functions}}
+
+== [[ZScript]] definition ==
+{{ZScriptDefinitionNote|doombase.zs#L144}}
+&lt;syntaxhighlight lang="csharp"&gt;
+class Thinker : Object native play
+{
+    enum EStatnums
+    {
+        // Thinkers that don't actually think
+        STAT_INFO,							// An info queue
+        STAT_DECAL,							// A decal
+        STAT_AUTODECAL,						        // A decal that can be automatically deleted
+        STAT_CORPSEPOINTER,						// An entry in Hexen's corpse queue
+        STAT_TRAVELLING,						// An actor temporarily travelling to a new map
+        STAT_STATIC,							// persistent across maps.
+
+        // Thinkers that do think
+        STAT_FIRST_THINKING=32,
+        STAT_SCROLLER=STAT_FIRST_THINKING,		                // A DScroller thinker
+        STAT_PLAYER,					                // A player actor
+        STAT_BOSSTARGET,				                // A boss brain target
+        STAT_LIGHTNING,				                        // The lightning thinker
+        STAT_DECALTHINKER,				                // An object that thinks for a decal
+        STAT_INVENTORY,				                        // An inventory item
+        STAT_LIGHT,							// A sector light effect
+        STAT_LIGHTTRANSFER,						// A sector light transfer. These must be ticked after the light effects.
+        STAT_EARTHQUAKE,						// Earthquake actors
+        STAT_MAPMARKER,						        // Map marker actors
+        STAT_DLIGHT,							// Dynamic lights
+
+        STAT_USER = 70,
+        STAT_USER_MAX = 90,
+        STAT_DEFAULT = 100,						// Thinkers go here unless specified otherwise.
+        STAT_SECTOREFFECT,						// All sector effects that cause floor and ceiling movement
+        STAT_ACTORMOVER,						// actor movers
+        STAT_SCRIPTS,							// The ACS thinker. This is to ensure that it can't tick before all actors called PostBeginPlay
+        STAT_BOT,							// Bot thinker
+        STAT_SPRITE,							// ZSprite Thinker [See footnote 1 below]
+        MAX_STATNUM = 127
+    }
+
+    const TICRATE = 35;
+
+    native LevelLocals Level;
+
+    virtual native void Tick();
+    virtual native void PostBeginPlay();
+    native void ChangeStatNum(int stat);
+
+    static clearscope int Tics2Seconds(int tics)
+    {
+        return int(tics / TICRATE);
+    }
+}&lt;/syntaxhighlight&gt;
+* [1]: Mutually exclusive to [[ZSprite]]-derived classes. ChangeStatNum will not work for &lt;code&gt;STAT_SPRITE&lt;/code&gt;.
+[[Category:ZScript]]
+
+== Examples ==
+This is an example of a {{class|Thinker}} that can be attached to a killed monster to make them fade out gradually. The Thinker is created with [[New]]:
+
+&lt;syntaxhighlight lang="csharp"&gt;
+class CorpseFader : Thinker
+{
+	Actor victim; //pointer to monster
+
+	// This is the create method, with an argument
+	// to pass a pointer to the monster:
+	static CorpseFader Create(Actor victim)
+	{
+		// Create and null-check the thinker:
+		let c = New('CorpseFader');
+		if (c)
+		{
+			// Pass the victim pointer to the thinker:
+			c.victim = victim;
+		}
+		// Always return a pointer to the created object:
+		return c;
+	}
+
+	override void Tick()
+	{
+		// If the victim no longer exists, destroy this thinker:
+		if (!victim)
+		{
+			Destroy();
+			return;
+		}
+		// If the victim is alive, do nothing:
+		if (victim.health &gt; 0)
+		{
+			return;
+		}
+		// Otherwise fade it out gradually:
+		victim.A_FadeOut(0.02);
+	}
+}
+
+// Example implementation:
+class CorpseHandler : EventHandler
+{
+	override void WorldThingDied(worldEvent e)
+	{
+		if (e.thing &amp;&amp; e.thing.bIsMonster)
+		{
+			CorpseFader.Create(e.thing);
+		}
+	}
+}&lt;/syntaxhighlight&gt;
+
+This Thinker is designed to track the velocity of the actor it's attached to over the past 10 tics, using a [[ZScript_variables#Local_Arrays|local array]]. It's also instantiated with [[New]]:
+&lt;syntaxhighlight lang="csharp"&gt;
+class OldVelCache : Thinker
+{
+	Actor toTrack;
+	protected vector3 velData[10];
+
+	// This creates the thinker and attaches it to an actor:
+	static OldVelCache Create(Actor whoToTrack)
+	{
+		if (!whoToTrack)
+		{
+			return null;
+		}
+		let a = New('OldVelCache');
+		if (a)
+		{
+			a.toTrack = whoToTrack;
+		}
+		return a;
+	}
+
+	// This is a dedicated function that returns the velocity from
+	// the specified tic:
+	vector3 GetOldVel(uint ticsAgo = 1)
+	{
+		// If the value is too large (beyond the 10 tics we're 
+		// tracking), it returns velocity from the the oldest
+		// (10th) tic:
+		ticsAgo = min(ticsAgo, veldata.Size() - 1);
+		int p = veldata.Size() - 1 - ticsAgo;
+		return veldata[p];
+	}
+
+	override void Tick()
+	{
+		if (!toTrack)
+		{
+			Destroy();
+			return;
+		}
+		int size = veldata.Size();
+		for (int i = 0; i &lt; size; ++i)
+		{
+			int newer = i+1;
+			if (newer &gt;= size)
+			{
+				break;
+			}
+			veldata[i] = veldata[newer];
+		}
+		veldata[size-1] = toTrack.vel;
+	}
+}
+
+// Example of how it can be attached to a player pawn actor using an {{class|EventHandler}}:
+class OldVelHandler : EventHandler
+{
+	override void PlayerSpawned(playerEvent e)
+	{
+		PlayerInfo player = players[e.PlayerNumber];
+		if (!player)
+		{
+			return;
+		}
+		let pmo = player.mo;
+		// Check this isn't a voodoo doll:
+		if (!pmo.player || !pmo.player.mo || pmo.player.mo != pmo)
+		{
+			return;
+		}
+		OldVelCache.Create(pmo);
+	}
+}&lt;/syntaxhighlight&gt;
+To read the values, you will need to obtain a pointer to the instance of OldVelCache and call &lt;code&gt;GetOldVel(&lt;tics&gt;)&lt;/code&gt; on it, where &lt;tics&gt; is how many tics ago you want to get the velocity from.
+
+'''Note:''' Remember that event handlers must be added via [[MAPINFO/GameInfo_definition|the GameInfo block in MAPINFO]], using the &lt;code&gt;AddEventHandlers&lt;/code&gt; instruction.
+
+== See also ==
+* [[New]]
+* [[Classes:ThinkerIterator]]
+
+[[Category:ZScript]]</text>
+    <sha1>fd6go1vokc0fr1y3zto993e2fiik2d8</sha1>
+  </revision>
+</page>

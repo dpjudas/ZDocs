@@ -1,0 +1,44 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>PolyWait</title>
+  <ns>0</ns>
+  <id>918</id>
+  <revision>
+    <id>35807</id>
+    <parentid>22842</parentid>
+    <timestamp>2013-02-10T21:03:03Z</timestamp>
+    <contributor>
+      <username>Deded007</username>
+      <id>1392</id>
+    </contributor>
+    <minor />
+    <comment>formatting</comment>
+    <origin>35807</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="1072" sha1="6zwdrawvmtmuytappwzu9m3bpis0tmx" xml:space="preserve">void '''PolyWait''' (int ''polyid'');
+
+== Usage ==
+
+'''PolyWait''' delays the script it is in until the [[polyobject]] with an id number specified (''polyid'') has finished its movement. For instance, if a polyobject door is specified, then the script will delay until it has been reset to its original location. This function is useful if you want something to happen exactly after a polyobject stops moving (or similar).
+
+=== Parameters ===
+
+* ''polyid'': The [[polyobject]] id to wait for.
+
+== Examples ==
+
+The most straightforward use of this command would be after [[Polyobj_Move]].
+
+ script 1 (void)
+ {
+     [[Polyobj_Move]] (0, 10, 128, 64);
+     [[PolyWait]] (0);
+     [[Print]] (s:"Entryway is open.");
+ }
+
+This script can be used in an adaptation of the [http://zdoom.org/wiki/upload/polyexample.zip example wad (729 bytes)] at the [[polyobject]] page. Instead of using a line special on the doors, this script could be accessed via a switch or a thing special. It opens the door and reports to the player that this has happened.
+
+[[category:ACS Wait functions]]</text>
+    <sha1>6zwdrawvmtmuytappwzu9m3bpis0tmx</sha1>
+  </revision>
+</page>

@@ -1,0 +1,47 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>HudMessageBold</title>
+  <ns>0</ns>
+  <id>951</id>
+  <revision>
+    <id>41033</id>
+    <parentid>40834</parentid>
+    <timestamp>2016-02-14T10:05:05Z</timestamp>
+    <contributor>
+      <username>Blue Shadow</username>
+      <id>2021</id>
+    </contributor>
+    <minor />
+    <comment>Remove old syntax</comment>
+    <origin>41033</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="1702" sha1="2rsdj9huxmpno33ddmi8jhs7wzeut7b" xml:space="preserve">void '''HudMessageBold''' (''text''; int ''type'', int ''id'', int ''color'', fixed ''x'', fixed ''y'', fixed ''holdTime'' [, fixed ''alpha'']); &lt;br&gt;
+void '''HudMessageBold''' (''text''; '''HUDMSG_FADEOUT''', int ''id'', int ''color'', fixed ''x'', fixed ''y'', fixed ''holdTime'', '''fixed ''fadetime''''' [, fixed ''alpha'']); &lt;br&gt;
+void '''HudMessageBold''' (''text''; '''HUDMSG_TYPEON''', int ''id'', int ''color'', fixed ''x'', fixed ''y'', fixed ''holdTime'', '''fixed ''typetime'', fixed ''fadetime''''' [, fixed ''alpha'']); &lt;br&gt;
+void '''HudMessageBold''' (''text''; '''HUDMSG_FADEINOUT''', int ''id'', int ''color'', fixed ''x'', fixed ''y'', fixed ''holdTime'', '''fixed ''inTime'', fixed ''outTime''''' [, fixed ''alpha'']); &lt;br&gt;
+
+==Usage==
+
+HudMessageBold is to [[HudMessage]] as [[PrintBold]] is to [[Print]]. It prints a message in the same manner as [[HudMessage]] but for all players. See the [[HudMessage]] page for the usage of this function.
+
+==Examples==
+
+This command has a number of uses. One example would be printing a message to the player when a monster activates a script. Another is in multiplayer deathmatch or more specifically cooperative games. This following script reports to the player who has opened a door, and tells everyone in the game a similar message.
+
+ script 44 (int door)
+ {
+ 	[[Door_Open]](door, 10);
+ 	
+ 	[[HudMessage]](s:"You opened the hangar door!";
+ 		HUDMSG_PLAIN, 0, CR_RED, 0.5, 0.8, 5.0);
+ 	[[HudMessageBold]](s:"Player ", d:[[PlayerNumber]]() + 1,
+ 		s:" opened the hangar door!";
+ 		HUDMSG_PLAIN, 0, CR_RED, 0.5, 0.9, 5.0);
+ }
+
+The one issue with this script is that the player opening the door gets both messages.
+
+[[category:ACS HUD functions]]</text>
+    <sha1>2rsdj9huxmpno33ddmi8jhs7wzeut7b</sha1>
+  </revision>
+</page>

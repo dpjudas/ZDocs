@@ -1,0 +1,179 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>A Blast</title>
+  <ns>0</ns>
+  <id>5628</id>
+  <revision>
+    <id>52654</id>
+    <parentid>51445</parentid>
+    <timestamp>2024-05-14T21:05:50Z</timestamp>
+    <contributor>
+      <username>Jekyll Grim Payne</username>
+      <id>2175</id>
+    </contributor>
+    <comment>added SpecialBlastHandling link for future purposes</comment>
+    <origin>52654</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="5608" sha1="qu7idg0dkz3locf15zq5pnr9xocs46h" xml:space="preserve">{{DISPLAYTITLE:A_Blast}}
+'''{{class|Actor}}'''
+
+void '''A_Blast'''(EBlastFlags ''blastflags'' = 0, double ''strength'' = 255, double ''radius'' = 255, double ''speed'' = 20, class&lt;Actor&gt; ''blasteffect'' = "BlastEffect", sound ''blastsound'' = "BlastRadius")
+
+==Usage==
+Blasts actors away as a {{Class|ArtiBlastRadius|disc of repulsion}} does.
+
+===Parameters===
+* {{c|EBlastFlags '''flags'''}}
+:The following flags can be used alone, combined as needed by listing their keywords (separated by the '&lt;code&gt;|&lt;/code&gt;' character):
+:* {{c|'''BF_USEAMMO'''}}&amp;nbsp;&amp;mdash; If this flag is set and the codepointer is used by a player, ammunition is used. By default, it is not. '''Do not''' set this flag in an inventory item or player class!
+:* {{c|'''BF_DONTWARN'''}}&amp;nbsp;&amp;mdash; If this flag is set, monsters will not be woken up by the sound of the blast. By default, they are.
+:* {{c|'''BF_AFFECTBOSSES'''}}&amp;nbsp;&amp;mdash; If this flag is set, monsters with the {{flag|BOSS}} flag are affected. By default, they are immune to this effect.
+:* {{c|'''BF_NOIMPACTDAMAGE'''}}&amp;nbsp;&amp;mdash; If this flag is set, affected monsters will not cause melee damage on impact. By default, they do.
+:* {{c|'''BF_ONLYVISIBLETHINGS'''}}&amp;nbsp;&amp;mdash; If this flag is set, only visible monsters will be blasted away.
+* {{c|double '''strength'''}}
+:Not actually used by default. [[ZScript]]-based actors can take it into account by overriding the '''[[SpecialBlastHandling]]''' [[ZScript virtual functions|virtual function]]. (Default: 255.)
+* {{c|double '''radius'''}}
+:The maximum distance at which actors are affected. (Default: 255)
+* {{c|double '''speed'''}}
+:The speed at which blasted actors are sent away. (Default: 20.0)
+* {{c|class&lt;Actor&gt; '''blasteffect'''}}
+:The actor spawned on each blasted actor to show the effect taking place. (Default: {{Class|BlastEffect}})
+* {{c|sound '''blastsound'''}}
+:The sound to play when blasting. (Default: "BlastRadius")
+
+== [[ZScript]] definition ==
+{{ZScriptDefinitionNote|actors/hexen/blastradius.zs#L26}}
+The original definition of this function:
+
+&lt;syntaxhighlight lang="csharp"&gt;
+	//==========================================================================
+	//
+	// AArtiBlastRadius :: BlastActor
+	//
+	//==========================================================================
+
+	private void BlastActor (Actor victim, double strength, double speed, Class&lt;Actor&gt; blasteffect, bool dontdamage)
+	{
+		if (!victim.SpecialBlastHandling (self, strength))
+		{
+			return;
+		}
+
+		double ang = AngleTo(victim);
+		Vector2 move = AngleToVector(ang, speed);
+		victim.Vel.XY = move;
+
+		// Spawn blast puff
+		ang -= 180.;
+		Vector3 spawnpos = victim.Vec3Offset(
+			(victim.radius + 1) * cos(ang),
+			(victim.radius + 1) * sin(ang),
+			(victim.Height / 2) - victim.Floorclip);
+		Actor mo = blasteffect? Spawn (blasteffect, spawnpos, ALLOW_REPLACE) : null;
+		if (mo)
+		{
+			mo.Vel.XY = victim.Vel.XY;
+		}
+		if (victim.bMissile)
+		{
+			// [RH] Floor and ceiling huggers should not be blasted vertically.
+			if (!victim.bFloorHugger &amp;&amp; !victim.bCeilingHugger)
+			{
+				victim.Vel.Z = 8;
+				if (mo != null) mo.Vel.Z = 8;
+			}
+		}
+		else
+		{
+			victim.Vel.Z = 1000. / victim.Mass;
+		}
+		if (victim.player)
+		{
+			// Players handled automatically
+		}
+		else if (!dontdamage)
+		{
+			victim.bBlasted = true;
+		}
+		if (victim.bTouchy)
+		{ // Touchy objects die when blasted
+			victim.bArmed = false; // Disarm
+			victim.DamageMobj(self, self, victim.health, 'Melee', DMG_FORCED|DMG_EXPLOSION);
+		}
+	}
+	
+	//==========================================================================
+	//
+	// AArtiBlastRadius :: Activate
+	//
+	// Blast all actors away
+	//
+	//==========================================================================
+
+	action void A_Blast(int blastflags = 0, double strength = 255, double radius = 255, double speed = 20, class&lt;Actor&gt; blasteffect = "BlastEffect", sound blastsound = "BlastRadius")
+	{
+
+		if (player &amp;&amp; (blastflags &amp; BF_USEAMMO) &amp;&amp; invoker == player.ReadyWeapon &amp;&amp; stateinfo != null &amp;&amp; stateinfo.mStateType == STATE_Psprite)
+		{
+			Weapon weapon = player.ReadyWeapon;
+			if (weapon != null &amp;&amp; !weapon.DepleteAmmo(weapon.bAltFire))
+			{
+				return;
+			}
+		}
+
+		A_StartSound (blastsound, CHAN_AUTO);
+
+		if (!(blastflags &amp; BF_DONTWARN))
+		{
+			SoundAlert (self);
+		}
+		ThinkerIterator it = ThinkerIterator.Create("Actor");
+		Actor mo;
+		while ( (mo = Actor(it.Next ())) )
+		{
+			if (mo == self || (mo.bBoss &amp;&amp; !(blastflags &amp; BF_AFFECTBOSSES)) || mo.bDormant || mo.bDontBlast)
+			{ // Not a valid monster: originator, boss, dormant, or otherwise protected
+				continue;
+			}
+			if (mo.bIceCorpse || mo.bCanBlast)
+			{
+				// Let these special cases go
+			}
+			else if (mo.bIsMonster &amp;&amp; mo.health &lt;= 0)
+			{
+				continue;
+			}
+			else if (!mo.player &amp;&amp; !mo.bMissile &amp;&amp; !mo.bIsMonster &amp;&amp; !mo.bCanBlast &amp;&amp; !mo.bTouchy &amp;&amp; !mo.bVulnerable)
+			{	// Must be monster, player, missile, touchy or vulnerable
+				continue;
+			}
+			if (Distance2D(mo) &gt; radius)
+			{ // Out of range
+				continue;
+			}
+			if (mo.CurSector.PortalGroup != CurSector.PortalGroup &amp;&amp; !CheckSight(mo))
+			{
+				// in another region and cannot be seen.
+				continue;
+			}
+			if ((blastflags &amp; BF_ONLYVISIBLETHINGS) &amp;&amp; !isVisible(mo, true)) 
+			{
+				//only blast if target can bee seen by calling actor
+				continue;
+			}
+			BlastActor (mo, strength, speed, blasteffect, !!(blastflags &amp; BF_NOIMPACTDAMAGE));
+		}
+	}
+&lt;/syntaxhighlight&gt;
+
+== Examples ==
+{{noexamples}}
+
+== See also==
+* {{class|ArtiBlastRadius}}
+
+[[category:Decorate Generic Attack functions]][[category:Decorate Weapon attack functions]]{{DEFAULTSORT:Blast}}</text>
+    <sha1>qu7idg0dkz3locf15zq5pnr9xocs46h</sha1>
+  </revision>
+</page>

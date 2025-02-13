@@ -1,0 +1,61 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>Classes:Whirlwind</title>
+  <ns>0</ns>
+  <id>4160</id>
+  <revision>
+    <id>40985</id>
+    <parentid>39439</parentid>
+    <timestamp>2016-02-12T08:07:35Z</timestamp>
+    <contributor>
+      <username>Blue Shadow</username>
+      <id>2021</id>
+    </contributor>
+    <minor />
+    <comment>/* DECORATE definition */ Updated</comment>
+    <origin>40985</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="975" sha1="pf242okxmdhw9v14pjdm7yiadwzb1yq" xml:space="preserve">{{Actor|
+| type = Explosive
+| name = Whirlwind
+| class = Whirlwind
+| game = Heretic
+| spawnid = 165
+| spawnname = T_WHIRLWIND
+}}[[Classes]]: &lt;u&gt;Whirlwind&lt;/u&gt;&lt;br&gt;
+The tornado summoned by one of the [[Classes:Ironlich|iron lich]]'s [[A_LichAttack|attacks]]. Its native action [[A_WhirlwindSeek]] gives it a limited homing capacity.
+
+==== [[DECORATE]] definition ====
+ ACTOR &lt;u&gt;Whirlwind&lt;/u&gt; native
+ {
+   {{Property|Radius}} 16
+   {{Property|Height}} 74
+   {{Property|Speed}} 10
+   {{Property|Damage}} 1
+   {{Property|Projectile}}
+   -{{Flag|ACTIVATEIMPACT}}
+   -{{Flag|ACTIVATEMCROSS}}
+   +{{Flag|SEEKERMISSILE}}
+   +{{Flag|EXPLOCOUNT}}
+   +{{Flag|STEPMISSILE}}
+   {{Property|RenderStyle}} Translucent
+   {{Property|DefThreshold}} 60
+   {{Property|Threshold}} 50
+   {{Property|Alpha}} 0.4
+   
+   action native [[A_WhirlwindSeek]]();
+   
+   States
+   {
+   Spawn:
+     FX07 DEFG 3
+     FX07 ABC 3 [[A_WhirlwindSeek]]
+     Goto Spawn+4
+   Death:
+     FX07 GFED 4
+     Stop
+   }
+ }</text>
+    <sha1>pf242okxmdhw9v14pjdm7yiadwzb1yq</sha1>
+  </revision>
+</page>

@@ -1,0 +1,55 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>Classes:SkullRodPowered</title>
+  <ns>0</ns>
+  <id>4300</id>
+  <revision>
+    <id>39413</id>
+    <parentid>34141</parentid>
+    <timestamp>2015-04-29T18:04:07Z</timestamp>
+    <contributor>
+      <username>Blue Shadow</username>
+      <id>2021</id>
+    </contributor>
+    <minor />
+    <comment>/* DECORATE definition */ Updated</comment>
+    <origin>39413</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="1193" sha1="2ftoh76xe86ckbfp7u5y32qjwvs64dl" xml:space="preserve">{{Actor|
+| type = Weapon
+| name = Tomed hellstaff
+| class = SkullRodPowered
+| game = Heretic
+}}[[Classes]]: [[Classes:Inventory|Inventory]]&amp;rarr;[[Classes:Weapon|Weapon]]&amp;rarr;[[Classes:HereticWeapon|HereticWeapon]]&amp;rarr;[[Classes:SkullRod|SkullRod]]&amp;rarr;&lt;u&gt;SkullRodPowered&lt;/u&gt;
+
+Used with the [[Classes:ArtiTomeOfPower|tome of power]], the [[Classes:SkullRod|hellstaff]] throws a single, large [[Classes:HornRodFX2|projectiles]] which creates a rain of [[Classes:RainPillar|blood-red energy]] in a small area around its impact point. A given player can only maintain two such rains, upon firing a third the oldest of the two pre-existing ones disappears.
+
+==== [[DECORATE]] definition ====
+ ACTOR &lt;u&gt;SkullRodPowered&lt;/u&gt; : {{Class|SkullRod}}
+ {
+   +{{Flag|WEAPON.POWERED_UP}}
+   {{Property|Weapon.AmmoUse1}} 5
+   {{Property|Weapon.AmmoGive1}} 0
+   {{Property|Weapon.SisterWeapon}} "{{Class|SkullRod}}"
+   {{Property|Tag}} "$TAG_SKULLRODP"
+ 
+   action native [[A_FireSkullRodPL2]]();
+ 
+   States
+   {
+   Fire:
+     HROD C 2
+     HROD D 3
+     HROD E 2
+     HROD F 3
+     HROD G 4 [[A_FireSkullRodPL2]]
+     HROD F 2
+     HROD E 3
+     HROD D 2
+     HROD C 2 [[A_ReFire]]
+     Goto Ready
+   }
+ }</text>
+    <sha1>2ftoh76xe86ckbfp7u5y32qjwvs64dl</sha1>
+  </revision>
+</page>

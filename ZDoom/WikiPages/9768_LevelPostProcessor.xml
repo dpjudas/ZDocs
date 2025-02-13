@@ -1,0 +1,127 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>LevelPostProcessor</title>
+  <ns>0</ns>
+  <id>9768</id>
+  <revision>
+    <id>52675</id>
+    <parentid>52674</parentid>
+    <timestamp>2024-05-17T15:09:46Z</timestamp>
+    <contributor>
+      <username>Jekyll Grim Payne</username>
+      <id>2175</id>
+    </contributor>
+    <comment>/* Methods */</comment>
+    <origin>52675</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="6101" sha1="3pnqjbypupa42d65ngek4607y76pt9c" xml:space="preserve">{{ZScriptNote}}
+
+{{Class|
+| type = Internal
+| name = LevelPostProcessor
+| class = LevelPostProcessor
+}}
+[[Classes]]: &lt;u&gt;LevelPostProcessor&lt;/u&gt;
+
+This ZScript class is run on map initialization and allows for some broader changes in terms of thing placement, flags, sector and line textures, etc.  Adding one to your zscript is enough for it to be run automatically, it does not need to be linked elsewhere.
+
+The postprocessor runs on the freshly loaded level data. No actors have been spawned yet, no static linedef and sector actions have been performed and no thing based initialization has been done. So you can alter things like [https://zdoom.org/wiki/Static_Init static_init] linedefs, [https://zdoom.org/wiki/Sector_specials sector specials], or thing types that do not result in a spawned actor (e.g. a slope marker, polyobj spots, SecAct things), or move vertices around.
+
+Upon running, it calls its internal function Apply, which you can override to perform any of the below listed actions.
+
+Internally, this class is mostly used to apply compatibility and fixes to a list of known map issues, a full list of which can be seen [https://github.com/ZDoom/gzdoom/blob/e27cbe5bd938093eed11ddd345fc1425a41f7477/wadsrc/static/zscript/level_compatibility.zs here]
+
+== Constants ==
+ const SKILLS_ALL = 31
+ const MODES_ALL = MTF_SINGLE | MTF_COOPERATIVE | MTF_DEATHMATCH
+
+== Methods ==
+*{{c|protected void '''Apply'''(Name ''checksum'', String ''mapname'')}}
+:This action is run automatically on level load. It receives the checksum hash and the lump mapname (ie MAP01)
+:'''Note:''' this method is executed automatically on startup but it's NOT virtual, so it must be defined as &lt;code&gt;protected void&lt;/code&gt;, NOT &lt;code&gt;virtual void&lt;/code&gt;.
+
+=== Non-static ===
+*{{c|native void '''ClearSectorTags'''(int ''sector'')}}
+*{{c|native void '''AddSectorTag'''(int ''sector'', int ''tag'')}}
+*{{c|native void '''ClearLineIDs'''(int ''line'')}}
+*{{c|native void '''AddLineID'''(int ''line'', int ''tag'')}}
+*{{c|native void '''OffsetSectorPlane'''(int ''sector'', int ''plane'', double ''offset'')}}
+*{{c|native void '''SetSectorPlane'''(int ''sector'', int ''plane'', vector3 normal, double ''d'')}}
+*{{c|native uint '''GetThingCount'''()}}
+*{{c|native uint '''AddThing'''(int ''ednum'', Vector3 pos, int ''angle'' }}={{c| 0, uint ''skills'' }}={{c| SKILLS_ALL, uint ''flags'' }}={{c| MODES_ALL)}}
+	
+*{{c|native int '''GetThingEdNum'''(uint ''thing'')}}
+*{{c|native void '''SetThingEdNum'''(uint ''thing'', int ''ednum'')}}
+	
+*{{c|native vector3 '''GetThingPos'''(uint ''thing'')}}
+*{{c|native void '''SetThingXY'''(uint ''thing'', double ''x'', double ''y'')}}
+*{{c|native void '''SetThingZ'''(uint ''thing'', double ''z'')}}
+*{{c|native int '''GetThingAngle'''(uint ''thing'')}}
+*{{c|native void '''SetThingAngle'''(uint ''thing'', int ''angle'')}}
+
+*{{c|native uint '''GetThingSkills'''(uint ''thing'')}}
+*{{c|native void '''SetThingSkills'''(uint ''thing'', uint ''skills'')}}
+*{{c|native uint '''GetThingFlags'''(uint ''thing'')}}
+*{{c|native void '''SetThingFlags'''(uint ''thing'', uint ''flags'')}}
+*{{c|native int '''GetThingID'''(uint ''thing'')}}
+*{{c|native void '''SetThingID'''(uint ''thing'', int ''id'')}}
+*{{c|native int '''GetThingSpecial'''(uint ''thing'')}}
+*{{c|native void '''SetThingSpecial'''(uint ''thing'', int ''special'')}}
+
+*{{c|native int '''GetThingArgument'''(uint ''thing'', uint ''index'')}}
+*{{c|native Name '''GetThingStringArgument'''(uint ''thing'')}}
+*{{c|native void '''SetThingArgument'''(uint ''thing'', uint ''index'', int ''value'')}}
+*{{c|native void '''SetThingStringArgument'''(uint ''thing'', Name value)}}
+
+*{{c|native void '''SetVertex'''(uint ''vertex'', double ''x'', double ''y'')}}
+*{{c|native double, bool '''GetVertexZ'''(uint ''vertex'', int ''plane'')}}
+*{{c|native void '''SetVertexZ'''(uint ''vertex'', int ''plane'', double ''z'')}}
+*{{c|native void '''RemoveVertexZ'''(uint ''vertex'', int ''plane'')}}
+*{{c|native void '''SetLineVertexes'''(uint ''Line'', uint ''v1'', uint ''v2'')}}
+*{{c|native void '''FlipLineSideRefs'''(uint ''Line'')}}
+*{{c|native void '''SetLineSectorRef'''(uint ''line'', uint ''side'', uint ''sector'')}}
+*{{c|native Actor '''GetDefaultActor'''(Name actorclass)}}
+
+*{{c|void '''FlipLineVertexes'''(uint ''Line'')}}
+*{{c|void '''FlipLineCompletely'''(uint ''Line'')}}
+*{{c|void '''SetWallTexture'''(int ''line'', int ''side'', int ''texpart'', String ''texture'')}}
+*{{c|void '''SetWallTextureID'''(int ''line'', int ''side'', int ''texpart'', TextureID texture)}}
+*{{c|void '''SetLineFlags'''(int ''line'', int ''setflags'', int ''clearflags'' }}={{c| 0)}}
+*{{c|void '''SetLineActivation'''(int ''line'', int ''acttype'')}}
+
+*{{c|void '''ClearLineSpecial'''(int ''line'')}}
+*{{c|void '''SetLineSpecial'''(int ''line'', int ''special'', int ''arg1'' }}={{c| 0, int ''arg2'' }}={{c| 0, int ''arg3'' }}={{c| 0, int ''arg4'' }}={{c| 0, int ''arg5'' }}={{c| 0)}}
+*{{c|void '''SetSectorSpecial'''(int ''sectornum'', int ''special'')}}
+*{{c|void '''SetSectorTextureID'''(int ''sectornum'', int ''plane'', TextureID texture)}}
+*{{c|void '''SetSectorTexture'''(int ''sectornum'', int ''plane'', String ''texture'')}}
+*{{c|void '''SetSectorLight'''(int ''sectornum'', int ''newval'')}}
+*{{c|void '''SetWallYScale'''(int ''line'', int ''side'', int ''texpart'', double ''scale'')}}
+
+== Examples ==
+The following example will search for things with the ednum 2048 (AmmoBox) and replace them with ednum 2007 (clips)
+
+&lt;syntaxhighlight lang="csharp"&gt; 
+class MyLevelPostProcessor : LevelPostProcessor 
+{
+    protected void Apply(Name checksum, String mapname)
+    {
+        for (int i = 0; i &lt; GetThingCount(); i++)
+        {
+            int ednum = GetThingEdNum(i);
+            if(ednum == 2048) // ammo box
+            {
+                SetThingEdNum(i, 2007); 
+            }
+        }
+    }
+}&lt;/syntaxhighlight&gt;
+
+== See also ==
+* [https://github.com/ZDoom/gzdoom/blob/master/wadsrc/static/zscript/level_postprocessor.zs Source zscript definition on Github]
+* {{struct|LevelLocals}}
+
+[[Category: ZScript]]
+[[Category: ZScript map data]]</text>
+    <sha1>3pnqjbypupa42d65ngek4607y76pt9c</sha1>
+  </revision>
+</page>

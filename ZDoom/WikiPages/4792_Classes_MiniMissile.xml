@@ -1,0 +1,56 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>Classes:MiniMissile</title>
+  <ns>0</ns>
+  <id>4792</id>
+  <revision>
+    <id>40139</id>
+    <parentid>38715</parentid>
+    <timestamp>2015-05-22T06:58:19Z</timestamp>
+    <contributor>
+      <username>Blue Shadow</username>
+      <id>2021</id>
+    </contributor>
+    <minor />
+    <comment>/* DECORATE definition */ Updated</comment>
+    <origin>40139</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="1026" sha1="ejszw93ijr4d4vu2i11mrwt04h7kz85" xml:space="preserve">{{Actor|
+| type = Explosive
+| name = Mini-missile
+| class = MiniMissile
+| game = Strife
+| convid = 99
+}}[[Classes]]: &lt;u&gt;MiniMissile&lt;/u&gt;&lt;br&gt;
+{{desc}}In Strife1.wad, the sprites are actually named MISL* and are [[Sprite renaming|renamed at load-time]] by ZDoom.
+==== [[DECORATE]] definition ====
+ ACTOR &lt;u&gt;MiniMissile&lt;/u&gt;
+ {
+   {{Property|Speed}} 20
+   {{Property|Radius}} 10
+   {{Property|Height}} 14
+   {{Property|Damage}} 10
+   {{Property|Projectile}}
+   +{{Flag|STRIFEDAMAGE}}
+   {{Property|MaxStepHeight}} 4
+   {{Property|SeeSound}} "weapons/minimissile"
+   {{Property|DeathSound}} "weapons/minimissilehit"
+   {{Property|Obituary}} "$OB_MPMINIMISSILELAUNCHER" // "%o gulped down %k's missile."
+   States
+   {
+   Spawn:
+     MICR A 6 Bright [[A_RocketInFlight]]
+     Loop
+   Death:
+     SMIS A 0 Bright [[A_SetTranslucent]](1, 1)
+     SMIS A 0 Bright // State left for savegame compatibility
+     SMIS A 5 Bright [[A_Explode]](64, 64, 1, 1)
+     SMIS B 5 Bright
+     SMIS C 4 Bright
+     SMIS DEFG 2 Bright
+     Stop
+   }
+ }</text>
+    <sha1>ejszw93ijr4d4vu2i11mrwt04h7kz85</sha1>
+  </revision>
+</page>

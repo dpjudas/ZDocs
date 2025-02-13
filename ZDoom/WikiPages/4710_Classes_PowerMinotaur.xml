@@ -1,0 +1,46 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>Classes:PowerMinotaur</title>
+  <ns>0</ns>
+  <id>4710</id>
+  <revision>
+    <id>53751</id>
+    <parentid>40482</parentid>
+    <timestamp>2024-11-13T23:26:22Z</timestamp>
+    <contributor>
+      <username>Jekyll Grim Payne</username>
+      <id>2175</id>
+    </contributor>
+    <origin>53751</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="988" sha1="l7x1opl9h3s3uphwe28ejfa99k06mty" xml:space="preserve">{{actor|
+| type = Power
+| name = Dark servant summoning power
+| class = PowerMinotaur
+}}[[Classes]]: [[Classes:Inventory|Inventory]]&amp;rarr;[[Classes:Powerup|Powerup]]&amp;rarr;&lt;u&gt;PowerMinotaur&lt;/u&gt;&lt;br&gt;
+
+'''PowerMinotaur''' doesn't actually provide any "powers." It's used by the {{Class|ArtiDarkServant|Dark Servant Artifact}} to simply keep track of who summoned a {{Class|MinotaurFriend|friendly Maulotaur}} and of its lifespan. The powerup takes the Maulotaur's &lt;code&gt;StartTime&lt;/code&gt; field, and then kills the monster when the timer reaches 25 seconds.
+
+=== [[ZScript]] definition ===
+{{ZScriptDefinitionNote|actors/inventory/powerups.zs}}
+&lt;syntaxhighlight lang="csharp"&gt;
+class PowerMinotaur : Powerup
+{
+	Default
+	{
+		Powerup.Duration -25;
+		Inventory.Icon "SPMINO0";
+	}
+}
+&lt;/syntaxhighlight&gt;
+
+=== [[DECORATE]] definition ===
+{{DecorateDefinitionNote}}
+ ACTOR &lt;u&gt;PowerMinotaur&lt;/u&gt; : {{Class|Powerup}} native
+ {
+   {{Property|Powerup.Duration}} -25
+   {{Property|Inventory.Icon}} "SPMINO0"
+ }</text>
+    <sha1>l7x1opl9h3s3uphwe28ejfa99k06mty</sha1>
+  </revision>
+</page>

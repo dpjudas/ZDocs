@@ -1,0 +1,74 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>SetState</title>
+  <ns>0</ns>
+  <id>9813</id>
+  <revision>
+    <id>52789</id>
+    <parentid>52262</parentid>
+    <timestamp>2024-06-28T12:02:39Z</timestamp>
+    <contributor>
+      <username>Jekyll Grim Payne</username>
+      <id>2175</id>
+    </contributor>
+    <comment>/* Parameters */</comment>
+    <origin>52789</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="2009" sha1="e6ywoggs4m01p4s62dwe2uspejttoj8" xml:space="preserve">'''{{class|Actor}}'''
+
+{{c|native bool '''SetState'''(state ''st'', bool ''nofunction'' }}={{c| false)}}
+
+== Usage ==
+Forcefully sets the calling actor's {{struct|State}} to the specified state sequence. Same as [[SetStateLabel]], except the first argument is a {{struct|State}} pointer, which must first be obtained with [[FindState]] or [[ResolveState]].
+
+'''Note:''' This is NOT a state jump function, and it should not be called from inside a state/[[Anonymous functions|anonymous function]]. It's meant to be called from outside of states. For state jumps, use [[FindState|{{c|return FindState("&lt;State label&gt;")}}]] in actors, or [[ResolveState|{{c|return ResolveState("&lt;State label&gt;")}}]] in weapons.
+
+=== Parameters ===
+*{{c|state '''st'''}}
+:A {{struct|State}} pointer obtained with [[FindState]] or [[ResolveState]].
+*{{c|bool '''nofunction'''}}
+:If &lt;code&gt;true&lt;/code&gt; and the state has a function attached to it, that function will not be called.
+
+=== Return values ===
+Returns true if the state was successfully modified.
+
+== Examples ==
+This version of {{class|DoomImpBall|Doom Imp's fireball}} after existing for 10 tics will move from Spawn state sequence to the Plasma state sequence, which makes it look like the {{class|PlasmaBall}}:
+&lt;syntaxhighlight lang="csharp"&gt;
+class FakePlasmaBall : DoomImpBall
+{
+	override void Tick()
+	{
+		super.Tick();
+		// Check if age is above 10 tics and the actor is currently
+		// in its spawn state sequence:
+		if (GetAge() &gt; 10 &amp;&amp; InStateSequence(curstate, spawnstate))
+		{
+			SetState(FindState("Plasma"));
+		}
+	}
+
+	States 
+	{
+	Plasma:
+		PLSS AB 5 bright;
+		loop;
+	}
+}&lt;/syntaxhighlight&gt;
+Used in the example:
+* [[GetAge]]
+* [[InStateSequence]]
+* [[FindState]]
+
+Note: &lt;code&gt;spawnstate&lt;/code&gt; is an Actor field that contains a pointer to the first {{struct|State|state}} in their Spawn state sequence. It's the same as &lt;code&gt;FindState("Spawn")&lt;/code&gt;.
+
+== See also ==
+* [[Structs:State]]
+* [[SetStateLabel]]
+* [[ResolveState]]
+* [[FindState]]
+
+[[Category:ZScript]]</text>
+    <sha1>e6ywoggs4m01p4s62dwe2uspejttoj8</sha1>
+  </revision>
+</page>

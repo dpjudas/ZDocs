@@ -1,0 +1,53 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>Classes:Ripper</title>
+  <ns>0</ns>
+  <id>3647</id>
+  <revision>
+    <id>39411</id>
+    <parentid>34138</parentid>
+    <timestamp>2015-04-29T18:03:09Z</timestamp>
+    <contributor>
+      <username>Blue Shadow</username>
+      <id>2021</id>
+    </contributor>
+    <minor />
+    <comment>/* DECORATE definition */ Updated</comment>
+    <origin>39411</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="909" sha1="d1zu8mvfnwymlu8v8hb81m4m0m2ocio" xml:space="preserve">{{Actor|
+| type = Explosive
+| name = Tomed dragon claw ripper
+| class = Ripper
+| game = Heretic
+| spawnid = 157
+| spawnname = T_RIPPER 
+}}[[Classes]]: &lt;u&gt;Ripper&lt;/u&gt;&lt;br&gt;
+
+The spiked balls spawned when a [[Classes:ArtiTomeOfPower|powered-up]] [[Classes:BlasterPowered|Dragon Claw]] [[Classes:BlasterFX1|shot]] impacts a surface. These projectiles travel through enemies. They deal less damage to [[Classes:Ironlich|Iron liches]] than to any other enemy (likely 0-1 per rip instead of 1-8).
+
+==== [[DECORATE]] definition ====
+ ACTOR &lt;u&gt;Ripper&lt;/u&gt; native
+ {
+   {{Property|Radius}} 8
+   {{Property|Height}} 6
+   {{Property|Speed}} 14
+   {{Property|Damage}} 1
+   {{Property|Projectile}}
+   +{{Flag|RIPPER}}
+   {{Property|DeathSound}} "weapons/blasterpowhit"
+   {{Property|Obituary}} "$OB_MPPBLASTER"
+   States
+   {
+   Spawn:
+     FX18 M 4
+     FX18 N 5
+     Loop
+   Death:
+     FX18 OPQRS 4 Bright
+     Stop
+   }
+ }</text>
+    <sha1>d1zu8mvfnwymlu8v8hb81m4m0m2ocio</sha1>
+  </revision>
+</page>

@@ -1,0 +1,42 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>A M Saw</title>
+  <ns>0</ns>
+  <id>2670</id>
+  <revision>
+    <id>34227</id>
+    <parentid>27312</parentid>
+    <timestamp>2012-09-06T09:54:54Z</timestamp>
+    <contributor>
+      <username>Gez</username>
+      <id>1283</id>
+    </contributor>
+    <minor />
+    <comment>codepointer template</comment>
+    <origin>34227</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="1061" sha1="rnmds3xwh25jfr15oum3g559oeb5t07" xml:space="preserve">{{codepointer|Classic attack}}'''A_M_Saw''' [(string ''fullsound'' [, string ''hitsound'' [, int ''damage'' [, string ''pufftype'']]])]&lt;br&gt;
+
+
+A [[Classes:Chainsaw|chainsaw]] attack available to monsters. For weapons, use [[A_Saw]].
+
+==Parameters==
+* ''fullsound'': The sound that plays if the attack doesn't hit anything. Defaults to "weapons/sawfull".
+* ''hitsound'': The sound that plays if the weapon hits a target.  Defaults to "weapons/sawhit".
+* damage: The amount of damage to deal, with the following calculation:
+ if (damage == 0) damage = 2;
+ damage *= (random() % 10 + 1);
+:For example, if damage is 5, the damage dealt will be between 5 and 50. Note that it is not possible to have this function deal 0 damage, since 0 means "use the default value" which is 2.
+* pufftype: The puff to spawn if the attack hits a wall or invulnerable actor.  Defaults to "BulletPuff".
+
+== Examples ==
+This example uses a Marine that uses his chainsaw up close.
+
+  Melee:
+    PLAY E 4 
+    PLAY E 4 [[A_M_Saw]]
+    PLAY E 0 [[A_JumpIfCloser]](40, "Melee")
+    goto See</text>
+    <sha1>rnmds3xwh25jfr15oum3g559oeb5t07</sha1>
+  </revision>
+</page>

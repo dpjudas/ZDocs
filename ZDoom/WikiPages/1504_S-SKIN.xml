@@ -1,0 +1,78 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>S SKIN</title>
+  <ns>0</ns>
+  <id>1504</id>
+  <revision>
+    <id>38676</id>
+    <parentid>28631</parentid>
+    <timestamp>2015-01-07T06:09:37Z</timestamp>
+    <contributor>
+      <username>Edward850</username>
+      <id>1492</id>
+    </contributor>
+    <comment>SNDINFO is not used to define skin sounds, seeing as the lump isn't even loaded from the skin namespace. The tags are supposed to be defined in the S_SKIN lump.</comment>
+    <origin>38676</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="3635" sha1="cxskpz0bjmh6ne0utdijytepx3wzn7d" xml:space="preserve">{{DISPLAYTITLE:S_SKIN}}
+The S_SKIN lump is used to tell ZDoom what is being included in the skin. Here's what you must include in the lump.
+
+'''IMPORTANT: S_SKIN lumps MUST be in a standalone wad with ONLY the resources needed to make the skin work; everything else is ignored.'''
+
+:*'''name'''
+::This is the name of the skin which will be displayed at the player options screen. Skin names may be up to 16 characters long.  Skin names can include spaces and ''must'' be quoted with double-quote symbols if they do; for example, '''"My Skin Name"'''.
+:*'''sprite'''
+::The sprite of the skin. This is the four letter name before the sprite's rotations. Such as, if the first frame of the sprite was BUGRA1 you would use sprite = BUGR. You must include ALL the frames needed or else zdoom will not accept it and give you an error.
+:*'''crouchsprite''' (optional)
+::Defines the sprites for when your skin is crouching. If you don't define them your sprite will shrink half its vertical size to show it is crouching. For the crouch sprites you have to define all frames apart from the dying and gib frames.
+:*'''face''' (optional)
+::The status bar face. If you decide you want to include a status bar face you must put the 3 first letters of the sprite for the face here. For example, if one of the animations was BUGST00 you would put face = BUG.
+:*'''gender''' (optional)
+::Specifies the skin's gender. Can be '''female''' for female, '''other''' or '''cyborg''' for neutral or anything else for male.
+:*'''scale''' (optional)
+::Scales the sprite. This can be used to scale down big sprites to make them look alot nicer.
+:*'''game''' (optional)
+::Specifies the game this skin is meant for. Can be '''heretic''' for Heretic, '''strife''' for Strife or anything else for Doom. The skin will be accessible for all player classes which inherit from the game's base player class, use the same sprite and color range. If you want to specify per player class skins, use '''class''' option.
+:*'''class''' (optional)
+::Specifies the player class this skin is meant for. Note that this is the player class's '''displayname''' (see [[Classes:PlayerPawn|PlayerPawn]]), not its classname. Display names can include spaces and ''must'' be quoted with double-quote symbols if they do; for example, '''"My Display Name"'''. The same accessibility rules as for '''game''' applies here.
+:*'''&lt;i&gt;sounds&lt;/i&gt;''' (optional)
+::The sounds that will be played by this skin. The possible sounds are:
+::*'''dsplpain''' - Pain sound
+::*'''dsoof''' - The sound when a player hits wall/floor
+::*'''dspldeth''' - Normal death sound
+::*'''dspdiehi''' - Extreme death sound
+::*'''dsnoway''' - The sound when a player uses a wall
+::*'''dsslop''' - Gibbing sound
+::*'''dspunch''' - Fist sound
+::*'''dsjump''' - Jump sound
+::ZDoom also supports more precise sound replacements for each of the [[Player Sounds|player sounds]]. This is done by using the listed sound tags (the same ones used by [[SNDINFO]]) directly in the S_SKIN lump, for example:
+
+    *death = DSMDIE1
+    *xdeath = DSMXDIE1
+    *pain100 = dsmpain1
+    *pain75 = dsmpain2
+    *pain50 = dsmpain3
+    *pain25 = dsmpain4
+
+Here's an example of a skin.
+
+    name=Cutman
+    sprite=CUTM
+    scale=0.5
+    crouchsprite=CUTC
+    face=Cut
+    dsplpain=dscupain
+    dspldeth=dscudeth
+    dsouch=dscuow
+    dsjump=dscujump
+    dsoof=dscuoof
+    dsnoway=dscutlo
+    dspdiehi=dscudett
+    dspunch=dscupun
+
+You can include more than one skin in a wad. However, you'll have to rename each S_SKIN lump you make to S_SKINxx. xx indicates any two letters of your choice. Example, S_SKINCU.
+
+[[category:ZDoom special lumps]]</text>
+    <sha1>cxskpz0bjmh6ne0utdijytepx3wzn7d</sha1>
+  </revision>
+</page>

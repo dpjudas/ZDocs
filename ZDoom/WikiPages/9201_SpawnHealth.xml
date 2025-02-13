@@ -1,0 +1,39 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>SpawnHealth</title>
+  <ns>0</ns>
+  <id>9201</id>
+  <revision>
+    <id>53554</id>
+    <parentid>52238</parentid>
+    <timestamp>2024-11-04T13:55:02Z</timestamp>
+    <contributor>
+      <username>Blue Shadow</username>
+      <id>2021</id>
+    </contributor>
+    <comment>moved GetSpawnHealth here, as both it and SpawnHealth function the same</comment>
+    <origin>53554</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="935" sha1="dn5k60gjol941rkx1o1bqgvsfp21aql" xml:space="preserve">'''{{class|Actor}}'''
+
+{{c|native clearscope int '''SpawnHealth''' () const}}&lt;br&gt;
+{{c|native clearscope int '''GetSpawnHealth''' () const}}
+
+==Usage==
+Returns the health value the calling actor spawned with, taking into account the following health modifiers:
+*{{c|Health}} [[Thing#UDMF_properties|UDMF thing property]] if the actor is map-spawned.
+*{{c|FriendlyHealth}} [[Skill_definition|skill property]] if the actor is a friendly [[monster]].
+*{{c|MonsterHealth}} skill property if the actor is a hostile monster.
+
+It is generally preferable to use the [[GetMaxHealth (Actor)|{{c|GetMaxHealth}}]] function instead of this one, since it has an added benefit of also properly checking {{c|{{class|PlayerPawn}}}} health, while returning the same data as {{c|SpawnHealth}} on regular actors.
+
+{{c|GetSpawnHealth}} functions exactly the same as {{c|SpawnHealth}}.
+
+==Examples==
+{{noexamples}}
+
+[[Category:DECORATE]]
+[[Category:ZScript]]</text>
+    <sha1>dn5k60gjol941rkx1o1bqgvsfp21aql</sha1>
+  </revision>
+</page>

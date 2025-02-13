@@ -1,0 +1,140 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>Classes:Fist</title>
+  <ns>0</ns>
+  <id>2580</id>
+  <revision>
+    <id>50641</id>
+    <parentid>39274</parentid>
+    <timestamp>2023-09-28T10:34:02Z</timestamp>
+    <contributor>
+      <username>Jekyll Grim Payne</username>
+      <id>2175</id>
+    </contributor>
+    <comment>added zscript definition</comment>
+    <origin>50641</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="2607" sha1="8uw3pxnus2wj92anj1dgulgptevsfbt" xml:space="preserve">{{Actor|
+| type = Weapon
+| name = Fist
+| class = Fist
+| game = Doom
+}}
+[[Classes]]: [[Classes:Inventory|Inventory]]&amp;rarr;[[Classes:Weapon|Weapon]]&amp;rarr;&lt;u&gt;Fist&lt;/u&gt;
+
+
+Your (hairy), brass-knuckled fist. Used as a melee weapon. Automatically selected as a last resort if you run out of ammo and do not have the [[Classes:Chainsaw|chainsaw]]. Picking up the [[Classes:Berserk|berserk pack]] also switches to this weapon.
+
+=== [[ZScript]] definition ===
+{{ZScriptDefinitionNote|actors/doom/weaponfist.zs}}
+&lt;syntaxhighlight lang="csharp"&gt;
+class Fist : Weapon
+{
+	Default
+	{
+		Weapon.SelectionOrder 3700;
+		Weapon.Kickback 100;
+		Obituary "$OB_MPFIST";
+		Tag "$TAG_FIST";
+		+WEAPON.WIMPY_WEAPON
+		+WEAPON.MELEEWEAPON
+		+WEAPON.NOAUTOSWITCHTO
+	}
+	States
+	{
+	Ready:
+		PUNG A 1 A_WeaponReady;
+		Loop;
+	Deselect:
+		PUNG A 1 A_Lower;
+		Loop;
+	Select:
+		PUNG A 1 A_Raise;
+		Loop;
+	Fire:
+		PUNG B 4;
+		PUNG C 4 A_Punch;
+		PUNG D 5;
+		PUNG C 4;
+		PUNG B 5 A_ReFire;
+		Goto Ready;
+	}
+}
+
+
+//===========================================================================
+//
+// Code (must be attached to Actor)
+//
+//===========================================================================
+
+extend class Actor
+{	
+	action void A_Punch()
+	{
+		FTranslatedLineTarget t;
+
+		if (player != null)
+		{
+			Weapon weap = player.ReadyWeapon;
+			if (weap != null &amp;&amp; !weap.bDehAmmo &amp;&amp; invoker == weap &amp;&amp; stateinfo != null &amp;&amp; stateinfo.mStateType == STATE_Psprite)
+			{
+				if (!weap.DepleteAmmo (weap.bAltFire))
+					return;
+			}
+		}
+
+		int damage = random[Punch](1, 10) &lt;&lt; 1;
+
+		if (FindInventory("PowerStrength"))
+			damage *= 10;
+
+		double ang = angle + Random2[Punch]() * (5.625 / 256);
+		double range = MeleeRange + MELEEDELTA;
+		double pitch = AimLineAttack (ang, range, null, 0., ALF_CHECK3D);
+
+		LineAttack (ang, range, pitch, damage, 'Melee', "BulletPuff", LAF_ISMELEEATTACK, t);
+
+		// turn to face target
+		if (t.linetarget)
+		{
+			A_StartSound ("*fist", CHAN_WEAPON);
+			angle = t.angleFromSource;
+		}
+	}
+
+}&lt;/syntaxhighlight&gt;
+
+=== [[DECORATE]] definition ===
+{{DecorateDefinitionNote}}
+ ACTOR &lt;u&gt;Fist&lt;/u&gt; : {{Class|Weapon}}
+ {
+   {{Property|Weapon.SelectionOrder}} 3700
+   {{Property|Weapon.Kickback}} 100
+   {{Property|Obituary}} "$OB_MPFIST"
+   {{Property|Tag}} "$TAG_FIST"
+   +{{Flag|WEAPON.WIMPY_WEAPON}}
+   +{{Flag|WEAPON.MELEEWEAPON}}
+   States
+   {
+   Ready:
+     PUNG A 1 [[A_WeaponReady]]
+     Loop
+   Deselect:
+     PUNG A 1 [[A_Lower]]
+     Loop
+   Select:
+     PUNG A 1 [[A_Raise]]
+     Loop
+   Fire:
+     PUNG B 4
+     PUNG C 4 [[A_Punch]]
+     PUNG D 5
+     PUNG C 4
+     PUNG B 5 [[A_ReFire]]
+     Goto Ready
+   }
+ }</text>
+    <sha1>8uw3pxnus2wj92anj1dgulgptevsfbt</sha1>
+  </revision>
+</page>

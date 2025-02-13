@@ -1,0 +1,61 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>Classes:Piston</title>
+  <ns>0</ns>
+  <id>4883</id>
+  <revision>
+    <id>40148</id>
+    <parentid>36474</parentid>
+    <timestamp>2015-05-22T07:03:23Z</timestamp>
+    <contributor>
+      <username>Blue Shadow</username>
+      <id>2021</id>
+    </contributor>
+    <minor />
+    <comment>/* DECORATE definition */ Updated</comment>
+    <origin>40148</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="872" sha1="p3y664ctuqiszw0hwywnor5txu8izgz" xml:space="preserve">{{Actor|
+| type = Breakable
+| name = Piston
+| class = Piston
+| game = Strife
+| doomednum = 45
+| convid = 123
+}}[[Classes]]: &lt;u&gt;Piston&lt;/u&gt;&lt;br&gt;
+{{desc}}
+==== [[DECORATE]] definition ====
+ ACTOR &lt;u&gt;Piston&lt;/u&gt;
+ {
+   {{Property|Health}} 100
+   {{Property|Speed}} 16
+   {{Property|Radius}} 20
+   {{Property|Height}} 76
+   {{Property|Mass}} 10000000
+   +{{Flag|SOLID}}
+   +{{Flag|SHOOTABLE}}
+   +{{Flag|NOBLOOD}}
+   +{{Flag|FLOORCLIP}}
+   +{{Flag|INCOMBAT}}
+   {{Property|DeathSound}} "misc/explosion"
+   States
+   {
+   Spawn:
+     PSTN AB 8
+     Loop
+   Death:
+     PSTN A 4 Bright [[A_Scream]]
+     PSTN B 4 Bright [[A_NoBlocking]]
+     PSTN C 4 Bright [[A_GiveQuestItem]]({{Class|QuestItem16|16}})
+     PSTN D 4 Bright [[A_Bang4Cloud]]
+     PSTN E 4 Bright [[A_TossGib]]
+     PSTN F 4 Bright
+     PSTN G 4 Bright [[A_Bang4Cloud]]
+     PSTN H 4
+     PSTN I -1
+     Stop
+   }
+ }</text>
+    <sha1>p3y664ctuqiszw0hwywnor5txu8izgz</sha1>
+  </revision>
+</page>

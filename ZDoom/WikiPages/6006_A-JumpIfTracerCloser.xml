@@ -1,0 +1,36 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>A JumpIfTracerCloser</title>
+  <ns>0</ns>
+  <id>6006</id>
+  <revision>
+    <id>44216</id>
+    <parentid>42380</parentid>
+    <timestamp>2017-03-20T12:56:54Z</timestamp>
+    <contributor>
+      <username>Gez</username>
+      <id>1283</id>
+    </contributor>
+    <minor />
+    <comment>removing "new" for GZDoom 2.4.0 release</comment>
+    <origin>44216</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="1215" sha1="deaf0smvxkw7619zovph3z3yz5lwhht" xml:space="preserve">{{codepointer|Jump}}
+state '''A_JumpIfTracerCloser''' (float ''distance'', int ''offset'' [, bool ''noz''])&lt;br&gt;
+state '''A_JumpIfTracerCloser''' (float ''distance'', str "''state''" [, bool ''noz''])&lt;br&gt;
+{{JumpNotice}}
+==Usage==
+Jumps ''offset'' amount of states forward, or to the state label ''state'', if the distance to the tracer is lower than the given value.
+
+'''Note:''' This function does not take into account the radius of either actor, so it's possible that either one wide actor or both being wide can prevent the jump from ever occurring. It's important that a blocking actor takes their own radius into account through means such as '''A_JumpIfTracerCloser(radius +''' ''distance,'' '''"label")''' to help avoid such occurrences.
+
+=== Parameters ===
+* ''distance'' - The distance an actor's tracer must be in order to jump. Distance is in units, similar to to the radius of [[A_Explode]].
+* ''offset/state'' - The offset number of frames to jump forward, or the state label to jump to.
+* ''noz'' - If true, the function disables vertical distance checking. The default is false, which includes comparing the distance between how high the calling actor is to the tracer.
+
+== Examples ==
+{{noexamples}}</text>
+    <sha1>deaf0smvxkw7619zovph3z3yz5lwhht</sha1>
+  </revision>
+</page>

@@ -1,0 +1,64 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>Creating simple inventory items</title>
+  <ns>0</ns>
+  <id>830</id>
+  <revision>
+    <id>21702</id>
+    <parentid>21053</parentid>
+    <timestamp>2009-05-17T20:41:41Z</timestamp>
+    <contributor>
+      <username>Gez</username>
+      <id>1283</id>
+    </contributor>
+    <minor />
+    <comment>msg</comment>
+    <origin>21702</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="2570" sha1="j062ev4fj59ao4jq9fvcfg6xoe9kbau" xml:space="preserve">{{WarnDeprecated|the modern [[DECORATE]] format}}
+
+[[The old DECORATE format]] is also capable of creating "fake" pickup items by adding the word pickup before the decoration's name. These behave just like normal [[Creating simple decorations|decoration items]], except they just disappear when you touch them. 
+The assumption is that you'll use the item's special to do something when a player picks it up. You can use a few more properties with pickups than you can with static decorations: 
+
+* PickupMessage "text" - The message to print when the player picks it up. If you don't specify this, "You got a pickup!" is used. Using an empty string ("") will prevent the message from being displayed entirely.
+* PickupSound "sound" - The sound to play when the player picks it up. If you don't specify this, "misc/i_pkup" is played. 
+* Respawns - This item can respawn after it's taken if the dmflags are set accordingly.  Unlike regular items, DECORATE items respawn with their specials and args intact.
+
+NOTE: Unlike what the title of this page says, and some other things it describes, it is possible to make real working power-ups using this. When you place it in a map, set it's special to do what you want the power-up to do, such as activating a script.
+
+NOTE 2: Power-ups made from [[DECORATE]] must have a special or you won't even be able to pick it up! If you don't want it to do anything except the ability to pick it up, give it the [[HealThing]] special with a 0 as the parameter!
+
+An example follows.
+
+{{Warning|text=The following example is in the old Decorate format, which has been deprecated, and is presented here only for simplicity's sake. Authors should avoid using this type of Decorate for new WADs. For a version that does the same thing in the new Decorate format, use the second example at the bottom of this page.}}
+
+    pickup SuperBlueKey
+    {
+        DoomEdNum 20001
+        Sprite BKEY
+        Frames "2:AB*"
+        PickupMessage "You got that funky key-like thing."
+        PickupSound "*xdeath"
+    }
+
+Note that if you want the pickup to grant the player ammo, armor, health, weapons etc, you can make use of the [[GiveInventory]] ACS command.
+
+This example is the same actor but in the new Decorate format:
+
+    actor SuperBlueKey : FakeInventory 20001
+    {
+        Inventory.PickupMessage "You got that funky key-like thing."
+        Inventory.PickupSound "*xdeath"
+ 
+        States {
+            Spawn:
+                BKEY A 2
+                BKEY B 2 bright
+                loop
+        }
+    }
+
+[[category:Old Decorate format]]</text>
+    <sha1>j062ev4fj59ao4jq9fvcfg6xoe9kbau</sha1>
+  </revision>
+</page>

@@ -1,0 +1,41 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>SetActorState</title>
+  <ns>0</ns>
+  <id>3272</id>
+  <revision>
+    <id>36009</id>
+    <parentid>30918</parentid>
+    <timestamp>2013-03-01T04:02:24Z</timestamp>
+    <contributor>
+      <username>Deded007</username>
+      <id>1392</id>
+    </contributor>
+    <minor />
+    <comment>links, templates, clean up</comment>
+    <origin>36009</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="994" sha1="ijqpkgz1bn0karvuoabxnvr42uj4usw" xml:space="preserve">int '''SetActorState'''(int ''tid'', str ''statename''[, bool ''exact'']);
+
+==Usage==
+
+Forces the actor(s) with the matching tid into the specified state, as defined in [[Decorate]]. If ''tid'' is 0, the activator is affected.
+
+The final parameter ''exact'' specifies whether or not partial state name matches are accepted. If you do not specify it or set it to false, if you try to do something like:
+
+ [[SetActorState]] (0, "Foo.Bar");
+
+and the actor has a “Foo” state but no “Foo.Bar” state, it will enter the “Foo” state. If you set exact to true:
+
+ [[SetActorState]] (0, "Foo.Bar", {{const|TRUE}});
+
+then the actor must have a “Foo.Bar” state, or it will not change state at all, even if it has a “Foo” state.
+
+The return value for this function is the number of actors that successfully changed state.
+
+Note that you should refrain from using this function for any actors that use the monster AI, or unpredictable results could occur.
+
+[[category:ACS Actor functions]]</text>
+    <sha1>ijqpkgz1bn0karvuoabxnvr42uj4usw</sha1>
+  </revision>
+</page>

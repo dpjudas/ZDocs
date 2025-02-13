@@ -1,0 +1,93 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>Classes:Rocket</title>
+  <ns>0</ns>
+  <id>2587</id>
+  <revision>
+    <id>48911</id>
+    <parentid>48496</parentid>
+    <timestamp>2021-12-27T11:14:04Z</timestamp>
+    <contributor>
+      <username>Jekyll Grim Payne</username>
+      <id>2175</id>
+    </contributor>
+    <comment>updated in accordance with updated ZScriptDefinitionNote template</comment>
+    <origin>48911</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="1633" sha1="7jdi7j7z21fotb13q0wqqsvqurl7pd9" xml:space="preserve">{{Actor|
+| type = Explosive
+| name = Rocket
+| class = Rocket
+| game = Doom
+| spawnid = 127
+| spawnname = T_ROCKET 
+}}[[Classes]]: &lt;u&gt;Rocket&lt;/u&gt;
+
+The projectile fired from a player's [[Classes:RocketLauncher|rocket launcher]] or a {{Class|cyberdemon}}. The second-most powerful projectile in ''[[Doom]]''.
+
+==== [[ZScript]] definition ====
+{{ZScriptDefinitionNote|actors/doom/weaponrlaunch.zs#L46}}
+ class Rocket : Actor
+ {
+ 	Default
+ 	{
+ 		{{Property|Radius}} 11;
+ 		{{Property|Height}} 8;
+ 		{{Property|Speed}} 20;
+ 		{{Property|Damage}} 20;
+ 		{{Property|Projectile;}}
+ 		+{{Flag|RANDOMIZE}}
+ 		+{{Flag|DEHEXPLOSION}}
+ 		+{{Flag|ROCKETTRAIL}}
+ 		+{{Flag|ZDOOMTRANS}}
+ 		{{Property|SeeSound}} "weapons/rocklf";
+ 		{{Property|DeathSound}} "weapons/rocklx";
+ 		{{Property|Obituary}} "$OB_MPROCKET";
+ 	}
+ 	States
+ 	{
+ 	Spawn:
+ 		MISL A 1 Bright;
+ 		Loop;
+ 	Death:
+ 		MISL B 8 Bright [[A_Explode]];
+ 		MISL C 6 Bright;
+ 		MISL D 4 Bright;
+ 		Stop;
+ 	BrainExplode:
+ 		MISL BC 10 Bright;
+ 		MISL D 10 [[A_BrainExplode]];
+ 		Stop;
+ 	}
+ }
+
+==== [[DECORATE]] definition ====
+{{DecorateDefinitionNote}}
+ ACTOR &lt;u&gt;Rocket&lt;/u&gt;
+ {
+   {{Property|Radius}} 11
+   {{Property|Height}} 8
+   {{Property|Speed}} 20
+   {{Property|Damage}} 20
+   {{Property|Projectile}}
+   +{{Flag|RANDOMIZE}}
+   +{{Flag|DEHEXPLOSION}}
+   +{{Flag|ROCKETTRAIL}}
+   {{Property|SeeSound}} "weapons/rocklf"
+   {{Property|DeathSound}} "weapons/rocklx"
+   {{Property|Obituary}} "$OB_MPROCKET" // "%o rode %k's rocket."
+   States
+   {
+   Spawn:
+     MISL A 1 Bright
+     Loop
+   Death:
+     MISL B 8 Bright [[A_Explode]]
+     MISL C 6 Bright
+     MISL D 4 Bright
+     Stop
+   }
+ }</text>
+    <sha1>7jdi7j7z21fotb13q0wqqsvqurl7pd9</sha1>
+  </revision>
+</page>

@@ -1,0 +1,107 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>Dictionary</title>
+  <ns>0</ns>
+  <id>9499</id>
+  <revision>
+    <id>50049</id>
+    <parentid>48329</parentid>
+    <timestamp>2023-01-08T01:54:48Z</timestamp>
+    <contributor>
+      <username>Blue Shadow</username>
+      <id>2021</id>
+    </contributor>
+    <minor />
+    <comment>I don't know if associative maps/arrays completely obsolete this or not. So for now, just put a link.</comment>
+    <origin>50049</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="4609" sha1="09gw5pev3pci2lplx7kzct3c7875pp2" xml:space="preserve">'''Dictionary''' is a [[ZScript]] class that provides key-value storage. Both keys and values are [[String|strings]]. One way to think of this is that this is a dynamic array of strings, but the indices (keys) are also strings.
+
+Only one value is allowed for a given key.
+
+== Methods ==
+=== Static ===
+* {{c|Dictionary '''{{LE|Create}}''' ()}}
+:Creates an empty dictionary.
+
+* {{c|Dictionary '''{{LE|FromString}}''' (String ''s'')}}
+:Deserializes a dictionary from string ''s'', which must be either empty or in the form '''{"key1" : "value1", "key2" : "value2", etc.}''' (remember to escape the quotes!). For example,
+  Dictionary dict = Dictionary.FromString( "{\"key1\" : \"value1\", \"key2\" : \"value2\"}" );
+will create a dictionary with keys '''"key1"''' and '''"key2"''', with associated values '''"value1"''' and '''"value2"''', respectively.
+
+=== Non-static ===
+* {{c|void '''{{LE|Insert}}''' (String ''key'', String ''value'')}}
+:Inserts a new key-value pair into the dictionary.
+
+* {{c|void '''{{LE|Remove}}''' (String ''key'')}}
+:Removes a key-value pair from the dictionary.
+
+* {{c|String '''{{LE|At}}''' (String ''key'') const}}
+:Returns the value for the specified ''key''.
+
+* {{c|String '''{{LE|ToString}}''' () const}}
+:Serializes a dictionary to a string, in the form '''{"key1":"value1", "key2":"value2", etc.}'''. The string returned has the correct form to be used for [[#FromString|FromString]]. Note that an empty dictionary will return '''"{}"'''.
+
+== Iterating over Dictionaries ==
+
+To iterate over a dictionary, use '''{{LE|DictionaryIterator}}''' class. The order in which the key-value pairs are accessed is not specified.
+
+DictionaryIterator is not serializable to save files. To make DictionaryIterator a class member, use {{c|transient}} keyword.
+
+=== DictionaryIterator Methods ===
+* {{c|static DictionaryIterator '''Create''' (Dictionary ''dict'')}}
+:Creates an iterator object for dictionary ''dict''.
+* {{c|bool '''{{LE|Next}}''' ()}}
+:Returns false if there are no more entries in the dictionary. Otherwise, returns true. While it returns true, get key and value for the current entry with [[#Key|Key]] and [[#Value|Value]]() functions.
+* {{c|String '''{{LE|Key}}''' () const}}
+:Returns the key for the current dictionary entry. Do not call this function before calling [[#Next|Next]].
+* {{c|String '''{{LE|Value}}''' () const}}
+:Returns the value for the current dictionary entry. Do not call this function before calling [[#Next|Next]].
+
+== Examples ==
+
+=== Basic usage ===
+  Dictionary descriptions = Dictionary.Create();
+  descriptions.Insert("Cyberdemon", "Towering, hellish marriage of demon flesh and technology.");
+  String cyberdemonDescription = descriptions.At("Cyberdemon")); //equal to "Towering, hellish marriage of demon flesh and technology."
+
+=== String Conversions ===
+Dictionary to String
+  Dictionary descriptions = Dictionary.Create();
+  descriptions.Insert("Cyberdemon", "Towering, hellish marriage of demon flesh and technology.");
+  descriptions.Insert("Arch-Vile", "A fast, deadly sorcerer, able to resurrect the dead.");
+  
+  String serializedDescriptions = descriptions.ToString(); // Creates the same string as the code below (up to spaces between strings, which do not matter).
+
+String to Dictionary
+  String serializedDescriptions = "{
+      \"Cyberdemon\" : \"Towering, hellish marriage of demon flesh and technology.\",
+      \"Arch-Vile\"  : \"A fast, deadly sorcerer, able to resurrect the dead.\"
+  }"; // Spaces between strings are for formatting the code; it does not matter for ToString/FromString.
+  Dictionary descriptions = Dictionary.FromString(serializedDescriptions); // Creates the same dictionary as the code above
+
+=== Iterating ===
+  Dictionary descriptions = Dictionary.Create();
+  descriptions.Insert("DoomImp", "Human-sized, humanoid, fireball-flinging monster.");
+  descriptions.Insert("Zombieman", "A space marine which has been turned into a zombie.");
+  descriptions.Insert("Cacodemon", "Bumpy red monsters with large spherical bodies.");
+  descriptions.Insert("Cyberdemon", "Towering, hellish marriage of demon flesh and technology.");
+  
+  DictionaryIterator i = DictionaryIterator.Create(descriptions);
+  while (i.Next())
+  {
+    Console.Printf("%s: %s", i.Key(), i.Value());
+  }
+
+Console output:
+  Zombieman: A space marine which has been turned into a zombie.
+  Cacodemon: Bumpy red monsters with large spherical bodies.
+  Cyberdemon: Towering, hellish marriage of demon flesh and technology.
+  DoomImp: Human-sized, humanoid, fireball-flinging monster.
+
+== See also ==
+*[[Associative maps]]
+[[Category:ZScript]]</text>
+    <sha1>09gw5pev3pci2lplx7kzct3c7875pp2</sha1>
+  </revision>
+</page>

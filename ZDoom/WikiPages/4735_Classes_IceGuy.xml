@@ -1,0 +1,79 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>Classes:IceGuy</title>
+  <ns>0</ns>
+  <id>4735</id>
+  <revision>
+    <id>39649</id>
+    <parentid>34761</parentid>
+    <timestamp>2015-05-02T21:18:59Z</timestamp>
+    <contributor>
+      <username>Blue Shadow</username>
+      <id>2021</id>
+    </contributor>
+    <minor />
+    <comment>/* DECORATE definition */ Updated</comment>
+    <origin>39649</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="1557" sha1="8lshl91g6m68o2gikbkaz476tfnun44" xml:space="preserve">{{Actor|
+| type = Monster
+| name = Wendigo
+| class = IceGuy
+| game = Hexen
+| doomednum = 8020
+| spawnid = 20
+| spawnname = T_ICEGOLEM 
+}}[[Classes]]: &lt;u&gt;IceGuy&lt;/u&gt;&lt;br&gt;
+The wendigo, or ice golem, is a creature made of solid ice that is able to throw [[Classes:IceGuyFX|ice projectiles]] that upon impact explode into a volley of [[Classes:IceGuyFX|shards]]. When slain, a wendigo bursts into {{Class|IceChunk|ice fragments}} like frozen corpses do.
+==== [[DECORATE]] definition ====
+ ACTOR &lt;u&gt;IceGuy&lt;/u&gt;
+ {
+   {{Property|Health}} 120
+   {{Property|PainChance}} 144
+   {{Property|Speed}} 14
+   {{Property|Radius}} 22
+   {{Property|Height}} 75
+   {{Property|Mass}} 150
+   {{Property|DamageType}} "Ice"
+   {{Property|Monster}}
+   +{{Flag|NOBLOOD}}
+   +{{Flag|TELESTOMP}}
+   +{{Flag|NOICEDEATH}}
+   {{Property|SeeSound}} "IceGuySight"
+   {{Property|AttackSound}} "IceGuyAttack"
+   {{Property|ActiveSound}} "IceGuyActive"
+   {{Property|Obituary}} "$OB_ICEGUY" // "%o was frozen solid by a Wendigo."
+ 
+   action native [[A_IceGuyLook]]();
+   action native [[A_IceGuyChase]]();
+   action native [[A_IceGuyAttack]]();
+ 
+   States
+   {
+   Spawn:
+     ICEY A 10 [[A_IceGuyLook]]
+     Loop
+   See:
+     ICEY A 4 [[A_Chase]]
+     ICEY B 4 [[A_IceGuyChase]]
+     ICEY CD 4 [[A_Chase]]
+     Loop
+   Pain:
+     ICEY A 1 [[A_Pain]]
+     Goto See
+   Missile:
+     ICEY EF 3 [[A_FaceTarget]]
+     ICEY G 8 Bright [[A_IceGuyAttack]]
+     ICEY F 4 [[A_FaceTarget]]
+     Goto See
+   Death:
+     ICEY A 1 [[A_IceGuyDie]]
+     Stop
+   Inactive:
+     ICEY A -1
+     Goto See
+   }
+ }</text>
+    <sha1>8lshl91g6m68o2gikbkaz476tfnun44</sha1>
+  </revision>
+</page>

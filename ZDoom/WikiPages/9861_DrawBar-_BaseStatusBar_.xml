@@ -1,0 +1,57 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>DrawBar (BaseStatusBar)</title>
+  <ns>0</ns>
+  <id>9861</id>
+  <revision>
+    <id>52137</id>
+    <parentid>52136</parentid>
+    <timestamp>2024-03-30T04:09:16Z</timestamp>
+    <contributor>
+      <username>DavidN</username>
+      <id>2628</id>
+    </contributor>
+    <minor />
+    <comment>Got the vertical bar the wrong way around</comment>
+    <origin>52137</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="2270" sha1="00un9h647qvrrezuqpmhti7p5vz8eau" xml:space="preserve">{{ZScriptNote}}
+
+[[Classes:BaseStatusBar|'''BaseStatusBar''']]
+
+void '''DrawBar'''(String ''ongfx'', String ''offgfx'', double ''curval'', double ''maxval'', Vector2 ''position'', int ''border'', int ''vertical'', int ''flags'' = 0, double ''Alpha'' = 1.0)
+
+==Usage==
+Can be used in a [[Classes:BaseStatusBar|ZScript HUD]] to draw a horizontal or vertical bar, drawing a portion of the {{c|ongfx}} image on top of the {{c|offgfx}} image. Both arguments take image lump names.
+
+===Parameters===
+*{{c|string '''ongfx'''}}
+*{{c|string '''offgfx'''}}
+:The names of the foreground (on) and background (off) images that make up the bar. Any type of graphic can be used here (sprites, textures, graphics, [[ANIMDEFS]] definitions, [[TEXTURES]] definitions, etc.). The name must be provided in double quotation marks.
+:If the filename of the image is over 8 characters, a full path (with subfolders and the file extension) must be provided, for example &lt;code&gt;"graphics/hud/health_bar.png"&lt;/code&gt;
+:The images are anchored at their centre by default (this can be changed with flags). The built-in offsets of the images are ignored, unless the {{c|DI_ITEM_OFFSETS}} flag is passed.
+*{{c|double '''curval'''}}
+*{{c|double '''maxval'''}}
+:The current and maximum values for the bar. The ratio between the current and maximum values determine how much of the foreground image will be drawn.
+{{: BaseStatusBar position argument}}
+*{{c|int '''border'''}}
+:If this is above 0, the edges of the foreground image will be cut off by '''border''' pixels on all sides, letting the edges of the background image show through.
+*{{c|int '''vertical'''}}
+:A set of flags that alter the direction the bar is drawn:
+:*{{c|SHADER_HORZ}} - Draw the bar horizontally, increasing from left to right (this is the default)
+:*{{c|SHADER_VERT}} - Draw the bar vertically, increasing from top to bottom
+:*{{c|SHADER_REVERSE}} - Reverse the direction the bar increases in (vertical bar will count bottom to top, horizontal bar will count right to left)
+*{{c|int '''flags'''}}
+{{: BaseStatusBar SCREEN flags}}
+{{: BaseStatusBar ITEM flags}}
+*{{c|double '''alpha'''}}
+:Determines the translucency of the image in the 0.0-1.0 range.
+
+== Example ==
+{{noexamples}}
+
+[[Category:ZScript]]
+[[Category:BaseStatusBar]]</text>
+    <sha1>00un9h647qvrrezuqpmhti7p5vz8eau</sha1>
+  </revision>
+</page>

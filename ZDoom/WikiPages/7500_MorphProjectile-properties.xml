@@ -1,0 +1,47 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>MorphProjectile properties</title>
+  <ns>0</ns>
+  <id>7500</id>
+  <revision>
+    <id>45091</id>
+    <parentid>44316</parentid>
+    <timestamp>2017-05-02T14:07:12Z</timestamp>
+    <contributor>
+      <username>Blue Shadow</username>
+      <id>2021</id>
+    </contributor>
+    <minor />
+    <comment>Remove {{new}}</comment>
+    <origin>45091</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="3601" sha1="nuripyrrzp8tx5qq9ey03lgzb2krv5p" xml:space="preserve">&lt;onlyinclude&gt;* '''{{LE|MorphProjectile.PlayerClass}}''' ''classname''
+:Defines what class to morph players into.
+* '''{{LE|MorphProjectile.MonsterClass}}''' ''classname''
+:Defines what class to morph monsters into.
+* '''{{LE|MorphProjectile.Duration}}''' ''tics''
+:Defines the time that the victim stays morphed.
+* '''{{LE|MorphProjectile.MorphStyle}}''' ''flags''
+:Defines the behaviour of the morphing effects. Use | to use multiple flags at once. Omitting this property or specifying it as zero causes the default [[Heretic]]/[[Hexen]] behaviour to be applied; see the notes below for more information. These flags only affect morphed players (not morphed monsters) except where explicitly stated in a flag's description.
+:* '''MRF_ADDSTAMINA''' — The current [[stamina]] is added to the maximum health that is effect (see MRF_FULLHEALTH) whenever the player receives [[health]] via normal means. This is normal under-the-hood behaviour that is by default suppressed when morphed. You would normally leave it off for a morph curse and turn it on for a {{Class|PowerMorph|morph powerup}}. Note that by default, only [[Strife]] games define a stamina mechanism.
+:* '''MRF_FULLHEALTH''' — The morphed player's maximum health is the {{Property|Player.MaxHealth|MaxHealth}} of the morphed player class (instead of hardcoded to 30).
+:* '''MRF_UNDOBYTOMEOFPOWER''' — A morphed player unmorphs when they activate a {{Class|ArtiTomeOfPower|Tome of Power}}.
+:* '''MRF_UNDOBYCHAOSDEVICE''' — A morphed player unmorphs when they activate a {{Class|ArtiTeleport|Chaos Device}}.
+:* '''MRF_FAILNOTELEFRAG''' — A morphed player stays morphed if unmorph by Tome of Power fails, instead of being telefragged.
+:* '''MRF_FAILNOLAUGH''' — A morphed player doesn't laugh if unmorph by Chaos Device fails.
+:* '''MRF_WHENINVULNERABLE''' — A player can morph when invulnerable but ONLY if morphing themselves via a {{Class|PowerMorph|morph powerup}}.
+:* '''MRF_LOSEACTUALWEAPON''' — When the player unmorphs, the actual weapon given by the {{Property|Player.MorphWeapon}} property is taken away.
+:* '''MRF_NEWTIDBEHAVIOUR''' — A morphed actor's [[TID]] is by default transferred from the old actor to the new actor. (''Applies to players and monsters'')
+:* '''MRF_UNDOBYDEATH''' — A morphed actor unmorphs when killed and (unless MORPH_UNDOBYDEATHSAVES is also used) stays dead. (''Applies to players and monsters'')
+:* '''MRF_UNDOBYDEATHFORCED''' — A morphed actor having the MRF_UNDOBYDEATH style flag, is guaranteed to unmorph when killed. (''Applies to players and monsters'')
+:* '''MRF_UNDOBYDEATHSAVES''' — A morphed actor having the MRF_UNDOBYDEATH style flag unmorphs normally when killed, instead of dying. (''Applies to players and monsters'')
+:* '''MRF_UNDOALWAYS''' — Certain conditions would prevent an unmorph from occurring when the morph powerup expires, such as not having enough room, so it would continue to attempt unmorphing every second. This disables these conditions entirely and forces them to unmorph no matter what.
+:* '''MRF_TRANSFERTRANSLATION''' — Transfers the actor's [[translation]] to the morphed actor. (''Applies to players and monsters'')
+* '''{{LE|MorphProjectile.MorphFlash}}''' ''classname''
+:Defines the effect flash actor to spawn when the victim morphs. If omitted, the game's default {{Class|TeleportFog|teleport fog}} is used.
+* '''{{LE|MorphProjectile.UnMorphFlash}}''' ''classname''
+:Defines the effect flash actor to spawn when the victim unmorphs. If omitted, the game's default teleport fog is used.&lt;/onlyinclude&gt;
+[[Category:Editing references]]</text>
+    <sha1>nuripyrrzp8tx5qq9ey03lgzb2krv5p</sha1>
+  </revision>
+</page>

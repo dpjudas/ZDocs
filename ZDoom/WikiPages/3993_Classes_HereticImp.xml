@@ -1,0 +1,104 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>Classes:HereticImp</title>
+  <ns>0</ns>
+  <id>3993</id>
+  <revision>
+    <id>39373</id>
+    <parentid>34076</parentid>
+    <timestamp>2015-04-29T17:39:48Z</timestamp>
+    <contributor>
+      <username>Blue Shadow</username>
+      <id>2021</id>
+    </contributor>
+    <minor />
+    <comment>/* DECORATE definition */ Updated</comment>
+    <origin>39373</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="1995" sha1="13emxlcbp1obd05l1xq8xrggfkrz4ki" xml:space="preserve">{{Actor|
+| type = Monster
+| name = Gargoyle
+| class = HereticImp
+| game = Heretic
+| doomednum = 66
+| spawnid = 5
+| spawnname = T_IMP
+}}[[Classes]]: &lt;u&gt;HereticImp&lt;/u&gt;&lt;br&gt;
+&amp;ensp;&amp;rarr;[[Classes:HereticImpLeader|HereticImpLeader]]&lt;br&gt;
+The weakest and first encountered monster in Heretic, these pests are barely more than a nuisance in most circumstances.
+
+==== [[DECORATE]] definition ====
+ ACTOR &lt;u&gt;HereticImp&lt;/u&gt;
+ {
+   {{Property|Health}} 40
+   {{Property|Radius}} 16
+   {{Property|Height}} 36
+   {{Property|Mass}} 50
+   {{Property|Speed}} 10
+   {{Property|PainChance}} 200
+   {{Property|Monster}}
+   +{{Flag|FLOAT}}
+   +{{Flag|NOGRAVITY}}
+   +{{Flag|SPAWNFLOAT}}
+   +{{Flag|DONTOVERLAP}}
+   +{{Flag|MISSILEMORE}}
+   {{Property|SeeSound}} "himp/sight"
+   {{Property|AttackSound}} "himp/attack"
+   {{Property|PainSound}} "himp/pain"
+   {{Property|DeathSound}} "himp/death"
+   {{Property|ActiveSound}} "himp/active"
+   {{Property|Obituary}} "$OB_HERETICIMP"
+   {{Property|HitObituary}} "$OB_HERETICIMPHIT"
+ 
+   action native [[A_ImpMsAttack]]();
+   action native [[A_ImpDeath]]();
+   action native [[A_ImpXDeath1]]();
+   action native [[A_ImpExplode]]();
+ 
+   States
+   {
+   Spawn:
+     IMPX ABCB 10 [[A_Look]]
+     Loop
+   See:
+     IMPX AABBCCBB 3 [[A_Chase]]
+     Loop
+   Melee:
+     IMPX DE 6 [[A_FaceTarget]]
+     IMPX F 6 [[A_CustomMeleeAttack]]([[DECORATE_expressions#Mathematical_functions|random]][ImpMeAttack](5,12), "himp/attack", "himp/attack")
+     Goto See
+   Missile:
+     IMPX A 10 [[A_FaceTarget]]
+     IMPX B 6 [[A_ImpMsAttack]]
+     IMPX CBAB 6
+     Goto Missile+2
+   Pain:
+     IMPX G 3
+     IMPX G 3 [[A_Pain]]
+     Goto See
+   Death:
+     IMPX G 4 [[A_ImpDeath]]
+     IMPX H 5
+     Wait
+   XDeath:
+     IMPX S 5 [[A_ImpXDeath1]]
+     IMPX TU 5
+     IMPX V 5 [[A_Gravity]]
+     IMPX W 5 
+     Wait
+   Crash:
+     IMPX I 7 [[A_ImpExplode]]
+     IMPX J 7 [[A_Scream]]
+     IMPX K 7
+     IMPX L -1
+     Stop
+   XCrash:
+     IMPX X 7
+     IMPX Y 7
+     IMPX Z -1
+     Stop
+   }
+ }</text>
+    <sha1>13emxlcbp1obd05l1xq8xrggfkrz4ki</sha1>
+  </revision>
+</page>

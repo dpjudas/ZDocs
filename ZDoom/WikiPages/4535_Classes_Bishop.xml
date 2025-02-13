@@ -1,0 +1,106 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>Classes:Bishop</title>
+  <ns>0</ns>
+  <id>4535</id>
+  <revision>
+    <id>39455</id>
+    <parentid>34190</parentid>
+    <timestamp>2015-04-30T21:09:37Z</timestamp>
+    <contributor>
+      <username>Blue Shadow</username>
+      <id>2021</id>
+    </contributor>
+    <minor />
+    <comment>/* DECORATE definition */ Updated</comment>
+    <origin>39455</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="2399" sha1="mznxo820xyc47ctfud32bef69gcyi1q" xml:space="preserve">{{Actor|
+| type = Monster
+| name = Bishop
+| class = Bishop
+| game = Hexen
+| doomednum = 114
+| spawnid = 19
+| spawnname = T_BISHOP 
+}}[[Classes]]: &lt;u&gt;Bishop&lt;/u&gt;&lt;br&gt;
+The dark bishops worshiping [[Classes:Korax|Korax]], filling a similar role to the [[Classes:Wizard|Disciples]] of [[Classes:Sorcerer2|D'Sparil]]. They explode when they die, and can injure nearby monsters with their death throes, even other dark bishops.
+==== [[DECORATE]] definition ====
+ ACTOR &lt;u&gt;Bishop&lt;/u&gt;
+ {
+   {{Property|Health}} 130
+   {{Property|Radius}} 22
+   {{Property|Height}} 65
+   {{Property|Speed}} 10
+   {{Property|PainChance}} 110
+   {{Property|Monster}}
+   +{{Flag|FLOAT}}
+   +{{Flag|NOGRAVITY}}
+   +{{Flag|NOBLOOD}}
+   +{{Flag|TELESTOMP}}
+   +{{Flag|DONTOVERLAP}}
+   +{{Flag|NOTARGETSWITCH}}
+   {{Property|SeeSound}} "BishopSight"
+   {{Property|AttackSound}} "BishopAttack"
+   {{Property|PainSound}} "BishopPain"
+   {{Property|DeathSound}} "BishopDeath"
+   {{Property|ActiveSound}} "BishopActiveSounds"
+   {{Property|Obituary}} "$OB_BISHOP"
+ 
+   action native [[A_BishopChase]]();
+   action native [[A_BishopDecide]]();
+   action native [[A_BishopDoBlur]]();
+   action native [[A_BishopSpawnBlur]]();
+   action native [[A_BishopPainBlur]]();
+   action native [[A_BishopAttack]]();
+   action native [[A_BishopAttack2]]();
+ 
+   States
+   {
+   Spawn:
+     BISH A 10 [[A_Look]]
+     Loop
+   See:
+     BISH A 2 [[A_Chase]]
+     BISH A 2 [[A_BishopChase]]
+     BISH A 2
+     BISH B 2 [[A_BishopChase]]
+     BISH B 2 [[A_Chase]]
+     BISH B 2 [[A_BishopChase]]
+     BISH A 1 [[A_BishopDecide]]
+     Loop
+   Blur:
+     BISH A 2 [[A_BishopDoBlur]]
+     BISH A 4 [[A_BishopSpawnBlur]]
+     Wait
+   Pain:
+     BISH C 6 [[A_Pain]]
+     BISH CCC 6 [[A_BishopPainBlur]]
+     BISH C 0
+     Goto See
+   Missile:
+     BISH A 3 [[A_FaceTarget]]
+     BISH DE 3 [[A_FaceTarget]]
+     BISH F 3 [[A_BishopAttack]]
+     BISH F 5 [[A_BishopAttack2]]
+     Wait
+   Death:
+     BISH G 6
+     BISH H 6 Bright [[A_Scream]]
+     BISH I 5 Bright [[A_NoBlocking]]
+     BISH J 5 Bright [[A_Explode]]([[DECORATE_expressions#Mathematical_functions|random]][BishopBoom](25, 40))
+     BISH K 5 Bright
+     BISH LM 4 Bright
+     BISH N 4 [[A_SpawnItemEx]]("{{Class|BishopPuff}}", 0, 0, 40, 0, 0, 0.5)
+     BISH O 4 [[A_QueueCorpse]]
+     BISH P -1
+     Stop
+   Ice:
+     BISH X 5 [[A_FreezeDeath]]
+     BISH X 1 [[A_FreezeDeathChunks]]
+     Wait
+   }
+ }</text>
+    <sha1>mznxo820xyc47ctfud32bef69gcyi1q</sha1>
+  </revision>
+</page>

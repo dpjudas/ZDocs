@@ -1,0 +1,51 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>Classes:ArtiFly</title>
+  <ns>0</ns>
+  <id>2616</id>
+  <revision>
+    <id>39716</id>
+    <parentid>38861</parentid>
+    <timestamp>2015-05-03T22:20:53Z</timestamp>
+    <contributor>
+      <username>Blue Shadow</username>
+      <id>2021</id>
+    </contributor>
+    <minor />
+    <comment>/* DECORATE definition */ Updated</comment>
+    <origin>39716</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="1226" sha1="ngdis4w65fn32dtpgwjcxrz52uk5whb" xml:space="preserve">{{Actor|
+| type = Artifact
+| name = Inhilicon's Wings of Wrath
+| class = ArtiTomeOfPower
+| game = Raven
+| doomednum = 83
+| spawnid = 15
+| spawnname = T_ITEMFLIGHT 
+}}[[Classes]]: {{Class}} &amp;rarr; {{Class|Inventory}} &amp;rarr; {{Class|PowerupGiver}} &amp;rarr; &lt;u&gt;ArtiFly&lt;/u&gt;
+
+This artifact allows the user to fly. Depending on the level options (in {{MapProperty|InfiniteFlightPowerup|MAPINFO}}), the power will either last only for a short time or be available until level exit (or hub exit, if in a hub). The default behavior is to last for a limited time in Heretic but until leaving the hub in Hexen. It is not possible normally to hoard this artifact for later levels as they are lost upon leaving the level or hub.
+
+==== [[DECORATE]] definition ====
+ ACTOR &lt;u&gt;ArtiFly&lt;/u&gt; : {{Class|PowerupGiver}}
+ {
+   +{{Flag|COUNTITEM}}
+   +{{Flag|FLOATBOB}}
+   +{{Flag|INVENTORY.PICKUPFLASH}}
+   +{{Flag|INVENTORY.INTERHUBSTRIP}}
+   {{Property|Inventory.RespawnTics}} 4230
+   {{Property|Inventory.Icon}} ARTISOAR
+   {{Property|Inventory.PickupMessage}} "$TXT_ARTIFLY" // "WINGS OF WRATH"
+   {{Property|Tag}} "$TAG_ARTIFLY"
+   {{Property|Powerup.Type}} {{Class|PowerFlight|Flight}}
+   States
+   {
+   Spawn:
+     SOAR ABCB 5
+     Loop
+   }
+ }</text>
+    <sha1>ngdis4w65fn32dtpgwjcxrz52uk5whb</sha1>
+  </revision>
+</page>

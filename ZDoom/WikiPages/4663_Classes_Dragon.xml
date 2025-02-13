@@ -1,0 +1,108 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>Classes:Dragon</title>
+  <ns>0</ns>
+  <id>4663</id>
+  <revision>
+    <id>39476</id>
+    <parentid>37480</parentid>
+    <timestamp>2015-04-30T21:23:19Z</timestamp>
+    <contributor>
+      <username>Blue Shadow</username>
+      <id>2021</id>
+    </contributor>
+    <minor />
+    <comment>/* DECORATE definition */ Updated</comment>
+    <origin>39476</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="4229" sha1="f9hwci6t7onzyz5g3sj9u1vjf8arlsx" xml:space="preserve">{{Actor|
+| type = Monster
+| name = Death wyvern
+| class = Dragon
+| game = Hexen
+| doomednum = 254
+}}[[Classes]]: &lt;u&gt;Dragon&lt;/u&gt;&lt;br&gt;
+The death wyvern is an undead dragon with powerful attacks, encountered in the Hypostyle in [[Hexen]] and in Brackenwood in the [[Deathkings of the Dark Citadel|expansion]]. Its flight pattern is more convincing than that of most winged creatures (even in modern games), as it doesn't just levitate like an [[Classes:FireDemon|afrit]], [[Classes:HereticImp|gargoyle]] or [[Classes:Cacodemon|cacodemon]], but actually always move. However, this effect is achieved through special coding and using a death wyvern in a map is not as simple as just placing it there.
+
+==== Using a death wyvern on a map ====
+The first thing to do is give a [[TID]] to the death wyvern. Its native action [[A_DragonInitFlight]] will seek for the first thing with the same TID for this and store as the wyvern's [[actor pointer|tracer]]. (The tracer is the pointer typically used by homing projectiles to keep track of their target.) For example, in the {{dw|Hub 2: Hypostyle|Hypostyle}} map, an [[Classes:Ettin|ettin]] is used as this first target.
+
+The second thing is to place some actors in the area where the wyvern must fly. They will be used as its path nodes for flying. The first can be a [[monster]] (such as the hapless ettin in the Hypostyle), and needs to share the wyvern's TID as explained above; but the next must have unique TIDs and should better be persistent, invisible and non-solid (typically, you'll want to use [[Classes:MapSpot|map spots]] for this). Their TIDs will be used as the arguments for the first, and conversely each will have for arguments the TIDs for the rest of the series. 
+
+[[A_DragonFlight]] causes the wyvern to attack its current tracer (25% chance) if it is shootable, and then select another tracer based on the TIDs given in the current tracer's arguments.
+
+For example:
+[[Image:DragonPathNodes.png|left|thumb|160px|A simple circular path grid.]]
+*A death wyvern with a TID of 250.
+*A map spot with a TID of 250 which has for arguments 251 and 252.
+*A map spot with a TID of 251 which has for arguments 250 and 253.
+*A map spot with a TID of 252 which has for arguments 250 and 254.
+*A map spot with a TID of 253 which has for arguments 251 and 255.
+*A map spot with a TID of 254 which has for arguments 252 and 255.
+*A map spot with a TID of 255 which has for arguments 253 and 254.
+This results in a circular pathnode network where the death wyvern can fly in either direction. It is possible to make more elaborate patterns, and to have connections between two of the path nodes as one-way only.
+
+In any case, the wyvern should have at least three stable path nodes so that it can move around correctly. If the wyvern has no path nodes at all (its TID is left to 0), then it will simply not move.
+
+==== [[DECORATE]] definition ====
+ ACTOR &lt;u&gt;Dragon&lt;/u&gt;
+ {
+   {{Property|Health}} 640
+   {{Property|PainChance}} 128
+   {{Property|Speed}} 10
+   {{Property|Height}} 65
+   {{Property|Mass}} 0x7fffffff
+   {{Property|Monster}}
+   +{{Flag|NOGRAVITY}}
+   +{{Flag|FLOAT}}
+   +{{Flag|NOBLOOD}}
+   +{{Flag|BOSS}}
+   +{{Flag|DONTMORPH}}
+   +{{Flag|NOTARGET}}
+   +{{Flag|NOICEDEATH}}
+   {{Property|SeeSound}} "DragonSight"
+   {{Property|AttackSound}} "DragonAttack"
+   {{Property|PainSound}} "DragonPain"
+   {{Property|DeathSound}} "DragonDeath"
+   {{Property|ActiveSound}} "DragonActive"
+   {{Property|Obituary}} "$OB_DRAGON"
+ 
+   action native [[A_DragonInitFlight]]();
+   action native [[A_DragonFlap]]();
+   action native [[A_DragonFlight]]();
+   action native [[A_DragonPain]]();
+   action native [[A_DragonAttack]]();
+   action native [[A_DragonCheckCrash]]();
+ 
+   States
+   {
+   Spawn:
+     DRAG D 10 [[A_Look]]
+     Loop
+   See:
+     DRAG CB 5
+     DRAG A 5 [[A_DragonInitFlight]]
+     DRAG B 3 [[A_DragonFlap]]
+     DRAG BCCDDCCBBAA 3 [[A_DragonFlight]]
+     Goto See+3
+   Pain:
+     DRAG F 10 [[A_DragonPain]]
+     Goto See+3
+   Missile:
+     DRAG E 8 [[A_DragonAttack]]
+     Goto See+3
+   Death:
+     DRAG G 5 [[A_Scream]]
+     DRAG H 4 [[A_NoBlocking]]
+     DRAG I 4
+     DRAG J 4 [[A_DragonCheckCrash]]
+     Wait
+   Crash:
+     DRAG KL 5
+     DRAG M -1
+     Stop
+   }
+ }</text>
+    <sha1>f9hwci6t7onzyz5g3sj9u1vjf8arlsx</sha1>
+  </revision>
+</page>

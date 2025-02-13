@@ -1,0 +1,33 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>SpawnParticle ZScript flags</title>
+  <ns>0</ns>
+  <id>9934</id>
+  <revision>
+    <id>53399</id>
+    <parentid>53365</parentid>
+    <timestamp>2024-10-21T07:43:13Z</timestamp>
+    <contributor>
+      <username>Blue Shadow</username>
+      <id>2021</id>
+    </contributor>
+    <minor />
+    <comment>{{git}} -&gt; {{new}} for 4.13.1</comment>
+    <origin>53399</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="2391" sha1="613j7ij9dvtqown31sfkrxb2f1jptx8" xml:space="preserve">&lt;noinclude&gt;
+{{note|This page is meant to be included into other pages that describe ZScript {{struct|FSpawnParticleParams}}-related functions (at the moment it's only [[SpawnParticle (ZScript)]]. For non-struct-using versions like [[A_SpawnParticleEx]] use the [[SpawnParticle flags]] template instead (this page is included into that one). They're separated because [[SpawnParticle flags]] also includes SPF_REL* flags which are not supported by FSpawnParticleParams. (This note will not be included.)}}
+&lt;/noinclude&gt;:*'''SPF_FULLBRIGHT''' — Makes the particle full bright.
+:*'''SPF_NOTIMEFREEZE''' — The spawned particle is not affected by the {{Class|PowerTimeFreezer|time freeze powerup}} or {{CCMD|D|freeze|cheat}}.
+:*'''SPF_ROLL''' - The particle is allowed to use its' ''startroll'', ''rollvel'', and ''rollacc'' parameters.
+:*'''SPF_ROLLCENTER''' — Rolls the particle around the center of the graphic regardless of offsets, like the {{flag|ROLLCENTER}} actor flag. {{new|4.13.0}}
+:*'''SPF_REPLACE''' — If the [[CVARs:Display#r_maxparticles|the particle limit]] is reached, the oldest particles will be removed to make room for particles with SPF_REPLACE.
+:*'''SPF_NO_XY_BILLBOARD''' - The particle does not have any sort of billboarding, causing it to render similarly to normal actor sprites, instead of facing the players' view at all times.
+:*'''SPF_LOCAL_ANIM''' — Spawns an animated particle whose animation runs independently of the games' timer. This means the graphics can be animated at different times, and that pausing the game also stops them from running.
+:*'''SPF_NEGATIVE_FADESTEP''' — Forces negative fadestep to be interpreted literally, causing the particle to fade in (for example, with this flag a fadestep of -0.1 will cause the particle's alpha to increase by 0.1 every tic). Without this flag, any negative fadestep value will cause the particle to gradually fade out over its lifetime. {{new|4.13.0}}
+:*'''SPF_FACECAMERA''' — Makes the particle graphic face the camera. Like the {{flag|BILLBOARDFACECAMERA}} actor flag. {{new|4.13.0}}
+:*'''SPF_NOFACECAMERA''' — Makes the particle graphic face the opposite direction the camera. Like the {{flag|BILLBOARDNOFACECAMERA}} actor flag. {{new|4.13.0}}
+:*'''SPF_STRETCHPIXELS''' — Rolling particle graphics will not ignore [[aspect ratio correction]] and continue to appear stretched. {{new|4.13.1}}</text>
+    <sha1>613j7ij9dvtqown31sfkrxb2f1jptx8</sha1>
+  </revision>
+</page>

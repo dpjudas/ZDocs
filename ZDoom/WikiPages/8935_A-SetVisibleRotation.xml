@@ -1,0 +1,41 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>A SetVisibleRotation</title>
+  <ns>0</ns>
+  <id>8935</id>
+  <revision>
+    <id>46740</id>
+    <parentid>45144</parentid>
+    <timestamp>2019-06-07T12:57:57Z</timestamp>
+    <contributor>
+      <username>JSO x</username>
+      <id>2479</id>
+    </contributor>
+    <minor />
+    <comment>/* Usage */ Doomer VoidWeaver finds an inaccuracy in the description of A_SetVisibleRotation (or this is a bug in the engine?); I transmiss his message.</comment>
+    <origin>46740</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="1321" sha1="h3sxl9zqvcgkddwv4zgg4ji4292c14q" xml:space="preserve">'''A_SetVisibleRotation'''(float ''anglestart''[, float ''angleend''[, float ''pitchstart''[, float ''pitchend''[, int ''flags''[, int ''ptr'']]]]]])
+
+== Usage ==
+Sets the visibility of the sprite based on what angle and pitch the actor is viewed from. Note that setting the angle parameters without explicitly specifying the pitch range does not work either (the actor will be completely invisible) (bug?).
+
+== Parameters ==
+*''anglestart'' - The start of the angle range to see. Positive values turn it to the right, negative to the left.
+*''angleend'' - The end of the angle range.
+*''pitchstart'' - The start of the pitch range to see. Positive values means viewing it from lower to see it, negative means higher.
+*''pitchend'' - The end of the pitch range.
+*''flags'' - Can be combined with | symbol:
+**'''VRF_NOANGLESTART''' - The starting angle range will not be modified regardless of number input.
+**'''VRF_NOANGLEEND''' - The ending angle range will not be modified.
+**'''VRF_NOPITCHSTART''' - The starting pitch range will not be modified.
+**'''VRF_NOPITCHEND''' - The ending pitch range will not be modified.
+**'''VRF_NOANGLE''' - Implies VRF_NOANGLESTART|VRF_NOANGLEEND.
+**'''VRF_NOPITCH''' - Implies VRF_NOPITCHSTART|VRF_NOPITCHEND.
+*''ptr'' - The [[Actor pointer]] to modify.
+
+== Examples ==
+{{noexamples}}</text>
+    <sha1>h3sxl9zqvcgkddwv4zgg4ji4292c14q</sha1>
+  </revision>
+</page>

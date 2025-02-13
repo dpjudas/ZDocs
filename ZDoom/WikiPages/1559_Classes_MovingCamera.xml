@@ -1,0 +1,50 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>Classes:MovingCamera</title>
+  <ns>0</ns>
+  <id>1559</id>
+  <revision>
+    <id>42841</id>
+    <parentid>39766</parentid>
+    <timestamp>2016-07-06T15:42:23Z</timestamp>
+    <contributor>
+      <username>Blue Shadow</username>
+      <id>2021</id>
+    </contributor>
+    <minor />
+    <comment>/* DECORATE definition */ Updated</comment>
+    <origin>42841</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="1940" sha1="sre99p1gcjlc3f29tars16yebbt7e56" xml:space="preserve">{{Actor|
+| type = Script thing
+| name = Moving camera
+| class = MovingCamera
+| doomednum = 9072
+}}[[Classes]]: {{Class|PathFollower}}&amp;rarr;&lt;u&gt;MovingCamera&lt;/u&gt;&lt;br&gt;
+
+==Usage==
+The '''MovingCamera''' is, as the name implies, a camera that moves along a predetermined path. The movement is quite smooth and is perfect for creating those cut scenes found in most games today.
+
+To start a moving camera use [[Thing_Activate]].  To stop a moving camera use [[Thing_Deactivate]].  The camera will automatically start at the beginning of the path when using [[Thing_Activate]].  The camera will not respond to activation again until it has finished moving along the path.  If you wish to restart the camera while it is still following the path, you must call [[Thing_Deactivate]] first.  You can use the [[ChangeCamera]] (237) special or [[SetCameraToTexture]] in [[ACS]] to view the camera.
+
+===Arguments===
+The moving camera takes four arguments:
+
+{{TArgs|0}} low byte of tid of first {{Class|InterpolationPoint}} in path.
+{{TArgs|1}} high byte of tid of first {{Class|InterpolationPoint}} in path.
+{{TArgs|2}} options: (Add any of the following values; i.e. for options 2 and 4, this parameter would be 6):
+::* 1: path is linear instead of curved.
+::* 2: camera will adjust its angle to match those of the points it passes.
+::* 4: camera will adjust its pitch to match those of the points it passes.
+::* 8: when used with 2 and/or 4, the camera faces in the direction of movement instead of the direction the interpolation points are facing.
+::* 128: all players will see the camera's view, and not just the player who activates it.
+{{TArgs|3}} [[TID|tid]] of thing to look at (or 0). If specified, settings 2 and 8 in {{c|args['''2''']}} are ignored. Setting 4 will adjust pitch to center the thing being aimed at.
+
+==== [[DECORATE]] definition ====
+ ACTOR &lt;u&gt;MovingCamera&lt;/u&gt; : {{Class|PathFollower}} native
+ {
+   {{Property|CameraHeight}} 0
+ }</text>
+    <sha1>sre99p1gcjlc3f29tars16yebbt7e56</sha1>
+  </revision>
+</page>

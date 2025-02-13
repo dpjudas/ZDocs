@@ -1,0 +1,70 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>ScriptCall</title>
+  <ns>0</ns>
+  <id>9062</id>
+  <revision>
+    <id>52663</id>
+    <parentid>51915</parentid>
+    <timestamp>2024-05-17T08:26:19Z</timestamp>
+    <contributor>
+      <username>Jekyll Grim Payne</username>
+      <id>2175</id>
+    </contributor>
+    <origin>52663</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="2284" sha1="epp64hca3r4b8q1cgsoqx2pdtuenyxx" xml:space="preserve">__NOTOC__
+'''ScriptCall''' (str ''classname'', str ''funcname'', ''args'')
+
+==Usage==
+Executes a [[ZScript|script-defined]] function. If the first argument of the function to execute is of type {{c|Actor}}, the activator of the script is passed and is stored in that argument. This allows the activator to be accessed by said function.
+
+===Parameters===
+*''classname'': the name of the actor class in which the function is defined.
+*''funcname'': the name of the function to execute. Only '''[[ZScript_functions#Static|static]]''' functions are executable.
+*''args'': the arguments, if any, to pass to the specified function. The types of arguments the function could have are ''int'', ''bool'', ''double'', ''string'', ''name'', ''color'' and ''sound''. ''double'' is passed as a fixed-point value, ''color'' as an integer value, and ''name'' and ''sound'' as strings.
+
+===Return value===
+The value the executed function returns. The value's type is the same as the passed arguments' types, in addition to ''void''.
+
+==Examples==
+This script gives the player a unique [[TID]]. This is achieved by executing {{c|[[FindUniqueTid]]}}, which is defined in {{c|{{Class|Actor}}}}.
+ script "SetPlayerTID" {{SType|Enter}}
+ {
+     // Only if the player does not already have a TID.
+     if([[ActivatorTID]]() == 0)
+     {
+         int ptid = [[ScriptCall]]("Actor", "FindUniqueTid", 0, 0);
+         [[Thing_ChangeTID]](0, ptid);
+         [[Log]](s:"TID changed to ", d:ptid); // Print a message.
+     }
+ }
+
+Note that ACS already has [[UniqueTID|a function which can get a unique TID]]. The above example is for educational purposes.
+
+
+If executed, this {{c|GivePresent}} function gives the activator of the script an item and logs a message. The item is specified by the ''present'' argument.
+ // In [[ZScript]]:
+ class ExampleClass
+ {
+     static void GivePresent (Actor activator, string present)
+     {
+         // Only players get the item.
+         if(activator &amp;&amp; activator.player)
+         {
+             activator.[[A_GiveInventory]](present);
+             activator.[[A_Log]]("You received a wonderful present!", true);
+         }
+     }
+ }
+ 
+ // In [[ACS]]:
+ script "GetGift" (void)
+ {
+     [[ScriptCall]]("ExampleClass", "GivePresent", "{{Class|Soulsphere}}");
+ }
+
+[[Category:ACS]]</text>
+    <sha1>epp64hca3r4b8q1cgsoqx2pdtuenyxx</sha1>
+  </revision>
+</page>

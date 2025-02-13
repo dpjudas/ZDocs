@@ -1,0 +1,48 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>Coding language differences</title>
+  <ns>0</ns>
+  <id>9187</id>
+  <revision>
+    <id>52746</id>
+    <parentid>52745</parentid>
+    <timestamp>2024-06-08T06:43:47Z</timestamp>
+    <contributor>
+      <username>Gez</username>
+      <id>1283</id>
+    </contributor>
+    <minor />
+    <comment>the note is kind of out of place; this page is not really about a feature that people might mistakenly try to use in DECORATE or ACS...</comment>
+    <origin>52746</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="2662" sha1="0fb66c9xkwoarfg6n6zvwzj58j98jv8" xml:space="preserve">When programming [[ZScript]], it is often recommended practicing a different coding language to become familiar with how things work. However, every language has its own quirks that make it different from the next one. Here is a list of identified coding languages that possess many similarities to ZScript and their differences, including (but not limited to) syntax.
+
+== From C(++) ==
+*No dereference or address variable pointers (* and &amp; respectively) -- only by pointers (i.e. &lt;code&gt;target.health&lt;/code&gt;)
+*'new' syntax is &lt;code&gt;&lt;ClassName&gt; thing = new('&lt;ClassName&gt;');&lt;/code&gt;
+:'''NOTE:''' Actor classes and all inheriting from it cannot be created with the &lt;code&gt;new&lt;/code&gt; keyword, only the [[Spawn (ZScript)|Spawn]] function or related.
+*'auto' is known as '[[ZScript_special_words|{{c|let}}]]'
+*'this' is known as &lt;code&gt;self&lt;/code&gt;
+*&lt;code&gt;readonly&lt;/code&gt; keyword available
+
+== From Java ==
+*'boolean' is known as &lt;code&gt;bool&lt;/code&gt;
+*No 'public' keyword. Everything is public by default, unless otherwise specified with &lt;code&gt;private&lt;/code&gt; or &lt;code&gt;protected&lt;/code&gt;.
+
+== From Lua ==
+ZScript has multi-return and named arguments from Lua, with the following differences:
+*Multi-return values must be encased in square brackets: &lt;code&gt;[val1, val2] = A_MyFunctionWithTwoReturns();&lt;/code&gt;
+*Named arguments must be used after the required parameters, and must be in order according to the function's specifications.
+
+== From [[DECORATE]] ==
+* ZScript uses &lt;code&gt;;&lt;/code&gt; like in C-style languages.
+* Default [[Actor properties]] and [[Actor flags]] must be enclosed in the &lt;code&gt;Default { }&lt;/code&gt; block.
+* ZScript has more strict checking for how values are specified. For example, in DECORATE you can define an actor's {{property|DamageType}} as &lt;code&gt;DamageType Fire&lt;/code&gt;, but ZScript doesn't allow that, it has to be &lt;code&gt;DamageType 'Fire';&lt;/code&gt; or &lt;code&gt;DamageType "Fire";&lt;/code&gt;. The reason is, &lt;code&gt;damageType&lt;/code&gt; internally is a [[ZScript_variables#Names|{{c|name}}]], and names must be specified in quotation marks.
+:* '''All''' Actor properties that take a string, name or a class name, must be enclosed in quotation marks.
+* [[Editor_number|DoomEdNums aka editor numbers]] cannot be added in ZScript directly. They must be specified through [[MAPINFO/Editor_number_definition|MAPINFO]], in the &lt;code&gt;DoomEdNums&lt;/code&gt; block. (This method is recommended for DECORATE as well, however, since it's generally more convenient.)
+* Names of ZScript classes cannot begin with a number. For example, &lt;code&gt;12Gauge&lt;/code&gt; would not be a valid class name in ZScript. Use something like &lt;code&gt;ShotgunAmmo_12Gauge&lt;/code&gt; for example.
+
+[[Category:ZScript]]</text>
+    <sha1>0fb66c9xkwoarfg6n6zvwzj58j98jv8</sha1>
+  </revision>
+</page>

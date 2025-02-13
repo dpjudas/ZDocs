@@ -1,0 +1,65 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>Weapon flags</title>
+  <ns>0</ns>
+  <id>5166</id>
+  <revision>
+    <id>50418</id>
+    <parentid>48964</parentid>
+    <timestamp>2023-08-03T12:02:14Z</timestamp>
+    <contributor>
+      <username>Jekyll Grim Payne</username>
+      <id>2175</id>
+    </contributor>
+    <comment>Added a note to NOAUTOFIRE</comment>
+    <origin>50418</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="4006" sha1="c3ex11iq2ovx7ozmmk4t5g4wnix0ol4" xml:space="preserve">&lt;onlyinclude&gt;* '''{{LE|WEAPON.NOAUTOFIRE}}'''
+:Does not fire when selected automatically and the fire button is still pressed. Used to prevent dangerous weapons from firing accidentally.
+:In addition to the main effect, if a weapon uses  this flag and does ''not'' call [[A_ReFire]] anywhere, it won't be able to fire continuously if the player just keeps holding the attack button; instead, the player will be required to press it every time they want the weapon to fire.
+* '''{{LE|WEAPON.READYSNDHALF}}'''
+:The ready sound is played only with 50% probability.
+* '''{{LE|WEAPON.DONTBOB}}'''
+:The weapon sprite does not bob.
+* '''{{LE|WEAPON.AXEBLOOD}}'''
+:This weapon spawns the special AxeBlood type when hitting something that bleeds. This only has an effect for hitscan and melee weapons.
+* '''{{LE|WEAPON.NOALERT}}'''
+:Does not alert nearby monsters when being fired.
+* '''{{LE|WEAPON.AMMO_OPTIONAL}}'''
+:Tells the engine that this weapon doesn't require ammo to work. 
+* '''{{LE|WEAPON.ALT_AMMO_OPTIONAL}}'''
+:The same for the alternate attack.
+* '''{{LE|WEAPON.AMMO_CHECKBOTH}}'''
+:The weapon can be selected if either the primary or the alternate fire have enough ammo. Both [[weapon properties]] Weapon.AmmoUse1 and Weapon.AmmoUse2 must have a positive value for this flag to work correctly.
+* '''{{LE|WEAPON.PRIMARY_USES_BOTH}}'''
+:The primary attack uses both ammo types.
+* '''{{LE|WEAPON.ALT_USES_BOTH}}'''
+:Like WEAPON.PRIMARY_USES_BOTH, makes the AltFire (secondary) attack use both ammo types.
+* '''{{LE|WEAPON.WIMPY_WEAPON}}'''
+:A small weapon with limited capabilities. If ammo for something better gets picked up the game will automatically switch weapons unless the weapon to switch to has the {{Flag|WEAPON.NOAUTOSWITCHTO|NOAUTOSWITCHTO}} flag set.
+* '''{{LE|WEAPON.POWERED_UP}}'''
+:This is a powered up weapon. Powered up weapons cannot exist by themselves. They always are linked to a normal weapon via the '''weapon.sisterweapon''' property and are only activated by using Heretic's [[Classes:ArtiTomeOfPower|Tome of Power]] or another artifact based on [[Classes:PowerWeaponLevel2|PowerWeaponLevel2]].
+* '''{{LE|WEAPON.STAFF2_KICKBACK}}'''
+:Uses the special kickback formula of Heretic's powered up staff. Unlike normal kickback this is a fixed thrust value.
+* '''{{LE|WEAPON.EXPLOSIVE}}'''
+:Signifies to [[bots]] that the weapon fires explosive projectiles.
+* '''{{LE|WEAPON.MELEEWEAPON}}'''
+:Signifies to [[bots]], and to monsters with the '''{{Flag|AVOIDMELEE}}''' flag, that the weapon is a melee weapon.
+* '''{{LE|WEAPON.BFG}}'''
+:Signifies to [[bots]] that the weapon causes a lot of damage.
+* '''{{LE|WEAPON.CHEATNOTWEAPON}}'''
+:Weapon is not given by the 'give weapons' cheat.
+* '''{{LE|WEAPON.NO_AUTO_SWITCH}}'''
+:When the player picks this weapon up, they will never automatically switch to it.
+* '''{{LE|WEAPON.NOAUTOSWITCHTO}}'''
+:A weapon with this flag set cannot be switched to automatically upon obtaining ammo for it. Typically, if the player had run out of ammo for a weapon, and the weapon that was automatically switched to as a result is a {{Flag|WEAPON.WIMPY_WEAPON|weak weapon}}, obtaining ammo for the other weapon automatically switches away from the weak weapon and back to it, provided the player had not manually switched weapons in the interim, and the other weapon has a higher {{Property|Weapon.SelectionOrder|selection priority}} than the weak one.
+* '''{{LE|WEAPON.NOAUTOAIM}}'''
+:A weapon with that flag will not adjust the aim of an attack, no matter the player's autoaim settings. This is intended to be used only for projectiles affected by gravity, such as grenades, where the player will usually want to aim higher than in a straight line, though it does also affect hitscan and railgun attacks.
+* '''{{LE|WEAPON.NODEATHDESELECT}}'''
+:The weapon will not jump to the deselect state when the player dies.
+* '''{{LE|WEAPON.NODEATHINPUT}}'''
+:The weapon cannot act on any input if the player is dead.&lt;/onlyinclude&gt;
+[[Category:Editing references]]</text>
+    <sha1>c3ex11iq2ovx7ozmmk4t5g4wnix0ol4</sha1>
+  </revision>
+</page>

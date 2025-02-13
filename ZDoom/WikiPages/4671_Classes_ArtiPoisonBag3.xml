@@ -1,0 +1,86 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>Classes:ArtiPoisonBag3</title>
+  <ns>0</ns>
+  <id>4671</id>
+  <revision>
+    <id>53619</id>
+    <parentid>34563</parentid>
+    <timestamp>2024-11-08T11:51:44Z</timestamp>
+    <contributor>
+      <username>Jekyll Grim Payne</username>
+      <id>2175</id>
+    </contributor>
+    <comment>/* DECORATE definition */</comment>
+    <origin>53619</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="2167" sha1="gvz8jo4zivuxe5pjtvqfto6x8c2w369" xml:space="preserve">{{Actor|
+| type = Artifact
+| name = Thrown grenade fléchette
+| class = ArtiPoisonBag3
+| game = Hexen
+}}[[Classes]]: [[Classes:Inventory|Inventory]]&amp;rarr;[[Classes:ArtiPoisonBag|ArtiPoisonBag]]&amp;rarr;&lt;u&gt;ArtiPoisonBag3&lt;/u&gt;&lt;br&gt;
+
+The [[Classes:ArtiPoisonBag|fléchette]] as used by [[Hexen]]'s [[Classes:FighterPlayer|Fighter]].  When used, it is [[Classes:ThrowingBomb|thrown like a grenade]].
+
+=== [[ZScript]] definition ===
+{{ZScriptDefinitionNote|actors/hexen/flechette.zs#L323}}
+&lt;syntaxhighlight lang="cs"&gt;
+class ArtiPoisonBag3 : ArtiPoisonBag
+{
+	Default
+	{
+		Inventory.Icon "ARTIPSB3";
+		Tag "$TAG_ARTIPOISONBAG3";
+	}
+	
+	override bool Use (bool pickup)
+	{
+		Actor mo = Spawn("ThrowingBomb", Owner.Pos + (0,0,35. - Owner.Floorclip + (Owner.player? Owner.player.crouchoffset : 0)), ALLOW_REPLACE);
+		if (mo)
+		{
+			mo.angle = Owner.angle + (random[PoisonBag](-4, 3) * (360./256.));
+
+			/* Original flight code from Hexen
+			 * mo.momz = 4*F.RACUNIT+((player.lookdir)&lt;&lt;(F.RACBITS-4));
+			 * mo.z += player.lookdir&lt;&lt;(F.RACBITS-4);
+			 * P_ThrustMobj(mo, mo.ang, mo.info.speed);
+			 * mo.momx += player.mo.momx&gt;&gt;1;
+			 * mo.momy += player.mo.momy&gt;&gt;1;
+			 */
+
+			// When looking straight ahead, it uses a z velocity of 4 while the xy velocity
+			// is as set by the projectile. To accommodate self with a proper trajectory, we
+			// aim the projectile ~20 degrees higher than we're looking at and increase the
+			// speed we fire at accordingly.
+			double modpitch = clamp(-Owner.Pitch + 20, -89., 89.);
+			double ang = mo.angle;
+			double speed = (mo.Speed, 4.).Length();
+			double xyscale = speed * cos(modpitch);
+
+			mo.Vel.Z = speed * sin(modpitch);
+			mo.Vel.X = xyscale * cos(ang) + Owner.Vel.X / 2;
+			mo.Vel.Y = xyscale * sin(ang) + Owner.Vel.Y / 2;
+			mo.AddZ(mo.Speed * sin(modpitch));
+
+			mo.target = Owner;
+			mo.tics -= random[PoisonBag](0, 3);
+			mo.CheckMissileSpawn(Owner.radius);
+			return true;
+		}
+		return false;
+	}
+	
+	
+}
+&lt;/syntaxhighlight&gt;
+=== [[DECORATE]] definition ===
+{{DecorateDefinitionNote}}
+ ACTOR &lt;u&gt;ArtiPoisonBag3&lt;/u&gt; : {{Class|ArtiPoisonBag}} native
+ {
+   {{Property|Inventory.Icon}} "ARTIPSB3"
+   {{Property|Tag}} "$TAG_ARTIPOISONBAG3"
+ }</text>
+    <sha1>gvz8jo4zivuxe5pjtvqfto6x8c2w369</sha1>
+  </revision>
+</page>

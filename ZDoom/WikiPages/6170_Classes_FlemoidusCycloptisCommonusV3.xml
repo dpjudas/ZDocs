@@ -1,0 +1,84 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>Classes:FlemoidusCycloptisCommonusV3</title>
+  <ns>0</ns>
+  <id>6170</id>
+  <revision>
+    <id>27886</id>
+    <parentid>27853</parentid>
+    <timestamp>2010-10-13T10:17:40Z</timestamp>
+    <contributor>
+      <username>Gez</username>
+      <id>1283</id>
+    </contributor>
+    <minor />
+    <origin>27886</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="1679" sha1="8d7rtkvxwvtp1jt5t5usl8xmbbjfexn" xml:space="preserve">{{Actor|
+| type = Monster
+| name = Flemoidus Cycloptis Commonus
+| doomednum = 58
+| spawnid = 9
+| class = FlemoidusCycloptisCommonusV3
+| game = Chex3
+}}[[Classes|Classes:]]{{Class|Actor}}&amp;rarr;{{Class|FlemoidusStridicus}}&amp;rarr;&lt;u&gt;FlemoidusCycloptisCommonusV3&lt;/u&gt;&lt;br /&gt;
+
+Chex Quest 3's update of the {{Class|FlemoidusCycloptisCommonus|Cycloptis}}.
+
+==== [[DECORATE]] definition ====
+ ACTOR &lt;u&gt;FlemoidusCycloptisCommonusV3&lt;/u&gt; : {{Class|FlemoidusStridicus}} 58
+ {
+   {{Property|Game}} Chex
+   {{Property|SpawnID}} 9
+   {{Property|Health}} 150
+   {{Property|PainChance}} 180
+   {{Property|Speed}} 10
+   {{Property|Radius}} 30
+   {{Property|Height}} 56
+   {{Property|Mass}} 400
+   {{Property|DamageFactor}} "Flem", 0.0
+   {{Property|DamageFactor}} "Slime", 0.0  //in chex3.exe the slam now has slime damagetype
+   {{Property|Monster}}
+   +{{Flag|FLOORCLIP}}
+   +{{Flag|FASTER}}
+   +{{Flag|FASTMELEE}}
+   +{{Flag|DONTGIB}}
+   {{Property|SeeSound}} "spectre/sight"
+   {{Property|AttackSound}} "spectre/melee"
+   {{Property|PainSound}} "spectre/pain"
+   {{Property|DeathSound}} "spectre/death"
+   {{Property|ActiveSound}} "spectre/active"
+   {{Property|Obituary}} "$OB_CYCLOPTIS"
+   States
+   {
+   Spawn:
+     CYCL AB 10 A_Look
+     Loop
+   See:
+     CYCL AABBCCDD 2 [[A_Chase]]
+     Loop
+   Melee:
+     CYCL EF 8 [[A_FaceTarget]]
+     CYCL G 8 [[A_CustomMeleeAttack]](random[sargattack](1,10)*4, "", "", "Flem")
+     Goto See
+   Pain:
+     CYCL H 2
+     CYCL H 2 [[A_Pain]]
+     Goto See
+   Death:
+     CYCL I 8
+     CYCL J 8 [[A_Scream]]
+     CYCL K 4
+     CYCL L 4 [[A_NoBlocking]]
+     CYCL M 4
+     CYCL N -1
+     Stop
+   Raise:
+     CYCL N 5
+     CYCL MLKJI 5
+     Goto See
+   }
+ }</text>
+    <sha1>8d7rtkvxwvtp1jt5t5usl8xmbbjfexn</sha1>
+  </revision>
+</page>

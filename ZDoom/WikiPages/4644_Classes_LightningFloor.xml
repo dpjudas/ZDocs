@@ -1,0 +1,55 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>Classes:LightningFloor</title>
+  <ns>0</ns>
+  <id>4644</id>
+  <revision>
+    <id>34785</id>
+    <parentid>18416</parentid>
+    <timestamp>2012-10-27T13:36:35Z</timestamp>
+    <contributor>
+      <username>Blue Shadow</username>
+      <id>2021</id>
+    </contributor>
+    <minor />
+    <comment>/* DECORATE definition */</comment>
+    <origin>34785</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="848" sha1="qrq3hlvhf9fp24fv6gbecwwct2ithc8" xml:space="preserve">{{Actor|
+| type = Explosive
+| name = Lightning
+| class = LightningFloor
+| game = Hexen
+}}[[Classes]]: [[Classes:Lightning|Lightning]]&amp;rarr;[[Classes:LightningCeiling|LightningCeiling]]&amp;rarr;&lt;u&gt;LightningFloor&lt;/u&gt;&lt;br&gt;
+{{desc}}
+==== [[DECORATE]] definition ====
+ ACTOR &lt;u&gt;LightningFloor&lt;/u&gt; : {{Class|LightningCeiling}}
+ {
+   -{{Flag|CEILINGHUGGER}}
+   +{{Flag|FLOORHUGGER}}
+   {{Property|RenderStyle}} Add
+ 
+   action native [[A_LastZap]]();
+ 
+   States
+   {
+   Spawn:
+     MLFX E 2 Bright [[A_LightningZap]]
+     MLFX FGH 2 Bright [[A_LightningClip]]
+     Loop
+   Death:
+     MLF2 F 2 Bright [[A_LightningRemove]]
+     MLF2 GHIJKLM 3 Bright
+     ACLO E 20
+     MLF2 NO 3 Bright
+     MLF2 P 4 Bright
+     MLF2 QP 3 Bright
+     MLF2 Q 4 Bright [[A_LastZap]]
+     MLF2 POP 3 Bright
+     MLF2 P 1 Bright [[A_HideThing]]
+     Goto Super::Death+19
+   }
+ }</text>
+    <sha1>qrq3hlvhf9fp24fv6gbecwwct2ithc8</sha1>
+  </revision>
+</page>

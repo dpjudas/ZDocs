@@ -1,0 +1,40 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>PrintBold</title>
+  <ns>0</ns>
+  <id>976</id>
+  <revision>
+    <id>47031</id>
+    <parentid>47029</parentid>
+    <timestamp>2019-11-25T00:18:27Z</timestamp>
+    <contributor>
+      <username>Blue Shadow</username>
+      <id>2021</id>
+    </contributor>
+    <minor />
+    <origin>47031</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="1550" sha1="eiec2ln5fvar096wsdp4h6j9mjv5cg1" xml:space="preserve">{{note|due to an oversight, the engine executes {{c|[[Print]]}} when this function is called. The function still prints to all player screens, but its default color is different. To rectify that, the {{c|CorrectPrintBold}} [[GameInfo definition|MAPINFO property]] must be set to ''true''.}}
+
+void '''PrintBold'''(''item(s)'');
+
+==Usage==
+
+This is exactly the same as [[Print]], except all players will see the printed text on the screen instead of just the activator of the script. It also uses a different default color. For a detailed description of the syntax, refer to [[Print]].
+
+==Examples==
+
+This command is useful if you want a monster triggered script to print something to the screen. One way a monster can trigger a script is by setting it to their {{c|[[Action special|special]]}} field, so that when they die (or are otherwise [[activation|activated]]), the script is run. Another possibility is to have [[ACS_Execute]] (or one of its variants) in one of the state in a custom actor's [[DECORATE]] code. This script takes one parameter, which is the [[TID]] of the monster which has this script.
+
+ script 99 (int monsterid)
+ {
+ 	[[Thing_SpawnNoFog]](monsterid, {{const|T_REDSKULLKEY}}, 0, 0);
+ 	[[PrintBold]](s:"The boss has been defeated!");
+ }
+
+To clarify: set the monster TID to something unique, and the special to 80 ([[ACS_Execute]]). Set the parameters to (99, 0, monster's TID, 0, 0). When the monster is killed, a message will be reported to all players and the monster will drop a red skull key.
+
+[[category:ACS HUD functions]]</text>
+    <sha1>eiec2ln5fvar096wsdp4h6j9mjv5cg1</sha1>
+  </revision>
+</page>

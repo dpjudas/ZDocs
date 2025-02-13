@@ -1,0 +1,86 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>Generic Floor</title>
+  <ns>0</ns>
+  <id>729</id>
+  <revision>
+    <id>40643</id>
+    <parentid>40640</parentid>
+    <timestamp>2016-01-03T01:33:48Z</timestamp>
+    <contributor>
+      <username>Eevee</username>
+      <id>44</id>
+    </contributor>
+    <comment>add some examples, in the form of equivalences with other specials</comment>
+    <origin>40643</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="3021" sha1="dc1u7kt7539207pvd5024nq35c2u6l3" xml:space="preserve">{{DISPLAYTITLE:Generic_Floor}}
+{{Special|200|tag, speed, height, target, flags|General BOOM linetype|Floor|type2=Floor}}
+* ''tag'': Tag of affected sectors, or 0 to use the line's back sector.
+* ''speed'': Floor's [[Definitions#Sector_movement_speed|movement speed]].  Doom's standard floors move at 8, and fast floors move at 32.
+* ''height'': Distance to move (when ''target'' is 0).
+* ''target'': How to determine the floor's destination height.
+* ''flags'': Various flags; see below.
+
+This special encapsulates BOOM's generalized floors.
+
+== Parameters ==
+
+=== Target ===
+''target'' can be one of the following:
+
+* 0: Move by ''height'' units
+* 1: Move to highest neighboring floor
+* 2: Move to lowest neighboring floor
+* 3: Move to nearest neighboring floor
+* 4: Move to lowest neighboring ceiling
+* 5: Move to the sector's own ceiling
+* 6: Move by the height of the shortest lower texture on the sector
+
+=== Flags ===
+A moving floor may optionally copy its floor texture and [[Sector specials|special]] from a "model" sector.  There are two ways to choose a model sector.  The ''trigger model'' uses the sector on the front side of the line that caused the move.  The ''numeric model'' looks for neighboring sectors whose floors are at the destination height, and uses the one with the lowest-numbered shared linedef.  If no model sector can be found, nothing is copied.
+
+''flags'' is composed of:
+
+* 0: Don't copy anything
+* 1: Copy floor texture, and remove special (Tx0)
+* 2: Copy floor texture only (Tx)
+* 3: Copy both floor texture and special (TxTy)
+* +4: Use the numeric model (default is trigger model)
+* +8: Raise floor (default is to lower)
+* +16: Inflict crushing damage
+
+== Examples ==
+
+Many other floor specials can be expressed in terms of Generic_Floor:
+
+{| {{prettytable}}
+! Special !! Equivalent Generic_Floor
+|-
+| [[Floor_LowerByValue]](''tag'', ''speed'', ''height'') || Generic_Floor(''tag'', ''speed'', ''height'', 0, 0)
+|-
+| [[Floor_LowerToLowest]](''tag'', ''speed'') || Generic_Floor(''tag'', ''speed'', 0, 2, 0)
+|-
+| [[Floor_LowerToLowestTxTy]](''tag'', ''speed'') || Generic_Floor(''tag'', ''speed'', 0, 2, 3)
+|-
+| [[Floor_LowerToNearest]](''tag'', ''speed'') || Generic_Floor(''tag'', ''speed'', 0, 3, 0)
+|-
+| [[Floor_RaiseByTexture]](''tag'', ''speed'') || Generic_Floor(''tag'', ''speed'', 0, 6, 8)
+|-
+| [[Floor_RaiseByValue]](''tag'', ''speed'', ''height'') || Generic_Floor(''tag'', ''speed'', ''height'', 0, 8)
+|-
+| [[Floor_RaiseByValueTxTy]](''tag'', ''speed'', ''height'') || Generic_Floor(''tag'', ''speed'', ''height'', 0, 11)
+|-
+| [[Floor_RaiseToHighest]](''tag'', ''speed'') || Generic_Floor(''tag'', ''speed'', 0, 1, 8)
+|-
+| [[Floor_RaiseToLowestCeiling]](''tag'', ''speed'') || Generic_Floor(''tag'', ''speed'', 0, 4, 8)
+|-
+| [[Floor_RaiseToNearest]](''tag'', ''speed'') || Generic_Floor(''tag'', ''speed'', 0, 3, 8)
+|-
+| [[Floor_TransferNumeric]](''tag'') || Generic_Floor(''tag'', 0, 0, 0, 7)
+|-
+| [[Floor_TransferTrigger]](''tag'') || Generic_Floor(''tag'', 0, 0, 0, 3)
+|}</text>
+    <sha1>dc1u7kt7539207pvd5024nq35c2u6l3</sha1>
+  </revision>
+</page>

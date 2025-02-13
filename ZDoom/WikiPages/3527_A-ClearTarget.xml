@@ -1,0 +1,52 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>A ClearTarget</title>
+  <ns>0</ns>
+  <id>3527</id>
+  <revision>
+    <id>35772</id>
+    <parentid>35066</parentid>
+    <timestamp>2013-02-10T08:11:14Z</timestamp>
+    <contributor>
+      <username>Deded007</username>
+      <id>1392</id>
+    </contributor>
+    <minor />
+    <comment>formatting</comment>
+    <origin>35772</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="1228" sha1="4s4fr7b32z5fga4gak1ao39k9a6err4" xml:space="preserve">{{codepointer|Monster AI}}'''A_ClearTarget'''
+
+(no parameters)
+
+==Usage==
+
+Makes the calling actor forget about its target, sound target, and last target. You can call this before jumping back to a monster's idle states to make a monster "give up" trying to chase after its target after a while (for ex. if it's too far away), after which it will resume searching for targets or doing whatever else is specified in its spawn state.
+
+== Examples ==
+This is a working example of an imp after a while completely forgets what he was doing and goes back to dancing on the spot.
+
+ Actor ForgetfulImp : {{Class|DoomImp}}
+ {
+   States
+   {
+   See:
+     TROO AABBCCDD 3 [[A_Chase]]
+     TROO A 0 [[A_GiveInventory]]("Forgettimer", 1) // A dummy inventory for tracking how long the imp has been searching.
+     TROO A 0 [[A_JumpIfInventory]]("Forgettimer", 20, "Forget") // Jump to the Forget state when the timer reaches 20 
+     Loop
+   Melee:
+   Missile:
+      TROO E 0 [[A_TakeInventory]]("Forgettimer", 20) // Reset the timer.
+      TROO EF 8 [[A_FaceTarget]]
+      TROO G 6 [[A_TroopAttack]]
+      Goto See
+   Forget: 
+      TROO A 0 [[A_TakeInventory]]("Forgettimer", 20)
+      TROO A 3 '''A_ClearTarget'''
+      Goto Spawn
+   }
+ }</text>
+    <sha1>4s4fr7b32z5fga4gak1ao39k9a6err4</sha1>
+  </revision>
+</page>

@@ -1,0 +1,89 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>A FireOldBFG</title>
+  <ns>0</ns>
+  <id>5584</id>
+  <revision>
+    <id>53765</id>
+    <parentid>33893</parentid>
+    <timestamp>2024-11-19T09:04:07Z</timestamp>
+    <contributor>
+      <username>Jekyll Grim Payne</username>
+      <id>2175</id>
+    </contributor>
+    <origin>53765</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="2223" sha1="jj0a7ccajnrpzipkb3ya1727lejhhp2" xml:space="preserve">{{DISPLAYTITLE:A_FireOldBFG}}
+{{BuiltInFunctionNote|A_FireProjectile}}
+'''{{class|StateProvider}}'''
+
+{{c|action void '''A_FireOldBFG'''()}}
+
+== Usage ==
+Performs the {{Class|BFG9000}}'s attack from the Doom press-release beta version. Each call of the function fires two plasma projectiles, one is {{Class|PlasmaBall1|green}} and the other is {{Class|PlasmaBall2|red}}, with a slight random spread. The BFG calls this function 40 times costing 40 points of ammunition with 1-[[tic]] interval between each call.
+
+== Examples ==
+The beta BFG9000 firing sequence is defined within the {{class|BFG9000}} class itself:
+&lt;syntaxhighlight lang="csharp"&gt;
+	OldFire:
+		BFGG A 10 A_BFGsound;
+		BFGG BBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBB 1 A_FireOldBFG;
+		BFGG B 0 A_Light0;
+		BFGG B 20 A_ReFire;
+		Goto Ready;
+&lt;/syntaxhighlight&gt;
+
+== [[ZScript]] definition ==
+{{ZScriptDefinitionNote|actors/doom/weaponbfg.zs}}
+&lt;syntaxhighlight lang="csharp"&gt;
+	//
+	// A_FireOldBFG
+	//
+	// This function emulates Doom's Pre-Beta BFG
+	// By Lee Killough 6/6/98, 7/11/98, 7/19/98, 8/20/98
+	//
+	// This code may not be used in other mods without appropriate credit given.
+	// Code leeches will be telefragged.
+
+	action void A_FireOldBFG()
+	{
+		bool doesautoaim = false;
+
+		if (player == null)
+		{
+			return;
+		}
+		Weapon weap = player.ReadyWeapon;
+
+		if (invoker != weap || stateinfo == null || stateinfo.mStateType != STATE_Psprite) weap = null;
+		if (weap != null)
+		{
+			if (!weap.DepleteAmmo (weap.bAltFire, true, 1))
+				return;
+
+			doesautoaim = weap.bNoAutoaim;
+			weap.bNoAutoaim = true;
+		}
+		player.extralight = 2;
+
+		// Save values temporarily
+		double SavedPlayerAngle = angle;
+		double SavedPlayerPitch = pitch;
+		for (int i = 0; i &lt; 2; i++) // Spawn two plasma balls in sequence
+		{
+			angle += random[OldBFG](-64, 63) * (90./768);
+			pitch += random[OldBFG](-64, 63) * (90./640);
+			SpawnPlayerMissile (i == 0? (class&lt;Actor&gt;)("PlasmaBall1") : (class&lt;Actor&gt;)("PlasmaBall2"));
+			// Restore saved values
+			angle = SavedPlayerAngle;
+			pitch = SavedPlayerPitch;
+		}
+		// Restore autoaim setting
+		if (weap != null) weap.bNoAutoaim = doesautoaim;
+	}
+&lt;/syntaxhighlight&gt;
+
+[[category:Decorate Weapon attack functions]]{{DEFAULTSORT:FireOldBFG}}</text>
+    <sha1>jj0a7ccajnrpzipkb3ya1727lejhhp2</sha1>
+  </revision>
+</page>

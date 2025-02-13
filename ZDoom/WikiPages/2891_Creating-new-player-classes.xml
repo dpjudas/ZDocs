@@ -1,0 +1,70 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>Creating new player classes</title>
+  <ns>0</ns>
+  <id>2891</id>
+  <revision>
+    <id>52200</id>
+    <parentid>51711</parentid>
+    <timestamp>2024-04-02T14:56:32Z</timestamp>
+    <contributor>
+      <username>Jekyll Grim Payne</username>
+      <id>2175</id>
+    </contributor>
+    <origin>52200</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="2249" sha1="dbaadn9whmggmocvudurfp5xcb8iyj6" xml:space="preserve">== Choosing player classes in-game ==
+Choosing a player class through the game's GUI can occur in two instances:
+* When starting a new game (a class menu will popup inbetween choosing 'new game' and 'skill level')
+* When changing the (Multi-)Player Setup in the Options menu
+
+== Defining player classes for your project ==
+=== Adding player class code ===
+First thing you have to do is to create new actor in [[ZScript]] or [[DECORATE]] {{deprecated}} inheriting from [[Classes:PlayerPawn|PlayerPawn]] or any of its subclasses (such as {{class|DoomPlayer}}). It is recommended to inherit from the subclass the closest to what you want to do, for example a replacement of the Doom marine should inherit from the Doom player.
+
+ZScript:
+ class MyPlayer : {{Class|DoomPlayer}}
+ {
+   ...
+ }
+
+DECORATE {{deprecated}}:
+ actor MyPlayer : {{Class|DoomPlayer}}
+ {
+   ...
+ }
+
+=== Making player class available in the menu ===
+Contrarily to simple actor replacement, you cannot use the {{c|replaces}} keyword here, because player pawns are not spawned like other actors. Instead, you must define access to this class in [[MAPINFO]], with a [[MAPINFO/GameInfo_definition|GameInfo section]]:
+
+ GameInfo
+ {
+    PlayerClasses = "MyPlayer"
+ }
+
+''Note: This definition goes into the Gameinfo block of the MAPINFO lump, NOT in the [[GAMEINFO]] lump.''
+
+If you have several classes, you can list them all, separated by commas. You can also keep the original classes as well. If there are at least two classes, the player will have a class selection screen when starting a new game.
+
+ GameInfo
+ {
+    PlayerClasses = "MyPlayer", "DoomPlayer" {{color|darkgreen|// Defines 2 classes for the player to choose from}}
+ }
+
+With older versions of ZDoom, the GameInfo method is not available. Instead, [[KEYCONF]] can be used: {{deprecated}}
+
+ {{color|darkgreen|// This command clears the player classes' list.}}
+ clearplayerclasses
+ 
+ {{color|darkgreen|// Add your player class to the list}}
+ addplayerclass MyPlayer
+ 
+ {{color|darkgreen|// Add standard Doom player to the list, but make it accessible only via player setup menu (i.e. hide from 'New Game' choice)}}
+ addplayerclass DoomPlayer nomenu
+
+[[Category:Guides]]
+[[Category:ZScript guides]]
+[[Category:DECORATE guides]]</text>
+    <sha1>dbaadn9whmggmocvudurfp5xcb8iyj6</sha1>
+  </revision>
+</page>

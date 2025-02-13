@@ -1,0 +1,43 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>Classes:PowerSpeed</title>
+  <ns>0</ns>
+  <id>4715</id>
+  <revision>
+    <id>46965</id>
+    <parentid>40873</parentid>
+    <timestamp>2019-10-14T08:58:51Z</timestamp>
+    <contributor>
+      <username>Blue Shadow</username>
+      <id>2021</id>
+    </contributor>
+    <comment>Added NoTrail property (yes, this is the same as the flag) + a bit more infor + misc changes</comment>
+    <origin>46965</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="1171" sha1="40rhg0khd8569d499xmdrurlrd6i806" xml:space="preserve">{{actor|
+| type = Power
+| name = Super speed power
+| class = PowerSpeed
+}}[[Classes]]: {{Class|Inventory}}&amp;rarr;{{Class|Powerup}}&amp;rarr;&lt;u&gt;PowerSpeed&lt;/u&gt;&lt;br&gt;
+&lt;u&gt;PowerSpeed&lt;/u&gt; is an internal class. An item of this class is placed in the player's inventory while the Speed powerup is effective. During the time this effect is active, the player will be given a multiplier to their movement rate, by a factor of the {{c|{{Property|Speed}}}} property. This powerup affects players only.
+
+While moving, with a velocity higher than 12, a {{Class|PlayerSpeedTrail|speed trail effect}} is created at the player's position. This effect is not visible while in first-person view.
+
+Like all other powerups, items of this class are never used directly. Instead you have to create a new item that inherits from {{Class|PowerupGiver}} to give it to the player.
+
+{{:PowerSpeed properties}}
+
+It also defines the following flags:
+{{:PowerSpeed flags}}
+
+==== [[DECORATE]] definition ====
+ ACTOR &lt;u&gt;PowerSpeed&lt;/u&gt; : {{Class|Powerup}} native
+ {
+   {{Property|Powerup.Duration}} -45
+   {{Property|Speed}} 1.5
+   {{Property|Inventory.Icon}} "SPBOOT0"
+   +{{Flag|INVENTORY.NOTELEPORTFREEZE}}
+ }</text>
+    <sha1>40rhg0khd8569d499xmdrurlrd6i806</sha1>
+  </revision>
+</page>

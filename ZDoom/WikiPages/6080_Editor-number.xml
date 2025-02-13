@@ -1,0 +1,49 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>Editor number</title>
+  <ns>0</ns>
+  <id>6080</id>
+  <revision>
+    <id>53812</id>
+    <parentid>52584</parentid>
+    <timestamp>2024-11-21T11:13:53Z</timestamp>
+    <contributor>
+      <username>Jekyll Grim Payne</username>
+      <id>2175</id>
+    </contributor>
+    <comment>/* How to give your custom actor a DoomEdNum */</comment>
+    <origin>53812</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="2267" sha1="i3l0wx0pipopumacmp0gi3v9axexenc" xml:space="preserve">The '''editor number''' aka '''DoomEdNum''' is a value between 1 and 32767 that is used by [[level editor]]s to identify things placed in a map. Editor numbers should not be confused with '''{{property|SpawnID}}'''. SpawnIDs are largely unnecessary for custom actors.
+
+== When a DoomEdNum is needed ==
+The only purpose of an editor number is to allow an {{class|Actor|actor}} to be visible in the level editor, so that the author could place it on their map. &lt;u&gt;All actors that should be directly placeable on the map need a unique editor number&lt;/u&gt;. 
+
+However, actors that are only supposed to be ''dynamically'' spawnable (with functions like {{c|[[Spawn]]}} or similar in ACS or [[Spawn (ZScript)|{{c|Spawn}}]]/{{c|[[A_SpawnItemEx]]}} and similar in [[ZScript]]/[[Decorate]]) do not need editor numbers since they're not placed on the map directly.
+
+== How to give your custom actor a DoomEdNum ==
+Actors should be given editor numbers in the [[editor number definition|'''DoomEdNums''' block in MAPINFO]] as follows:
+&lt;syntaxhighlight lang="cs"&gt;
+DoomEdNums
+{
+  20110 = "MyCustomMonster1"
+  20111 = "MyCustomMonster2"
+  20112 = "MyCustomWeapon"
+  // and so on
+}&lt;/syntaxhighlight&gt;
+
+In [[DECORATE]] they can also be given directly in the code, at the end of an actor's declaration, but the MAPINFO method is highly recommended due to better visibility.
+
+[[ZScript]] ''only'' allows giving editor numbers via MAPINFO. Internally, a value of -1 for the editor number means that the actor cannot be placed in a map.
+
+In DECORATE, the editor number is, along with the {{Property|SpawnID}}, filtered through the {{Property|Game}} property to avoid conflicts.
+
+== How to pick a right DoomEdNum ==
+DoomEdNums can only be given in the 1-32767 range. A large number of DoomEdNums is already used in GZDoom; they can be seen in the '''[[standard editor numbers]]''' list.
+
+When giving a custom DoomEdNum to an actor, you must make sure that it does NOT use any of the existing DoomEdNums, unless you want to explicitly replace that original actor. (See '''[[Actor replacement]]''' for details on what replacement is and when it's needed). Most of the time you don't want that, so you need custom DoomEdNums that are not occupied by other actors.
+
+[[Category:Technical aspects]]</text>
+    <sha1>i3l0wx0pipopumacmp0gi3v9axexenc</sha1>
+  </revision>
+</page>

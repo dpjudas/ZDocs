@@ -1,0 +1,114 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>Classes:BossEye</title>
+  <ns>0</ns>
+  <id>2470</id>
+  <revision>
+    <id>52438</id>
+    <parentid>39165</parentid>
+    <timestamp>2024-04-13T21:38:54Z</timestamp>
+    <contributor>
+      <username>Jekyll Grim Payne</username>
+      <id>2175</id>
+    </contributor>
+    <origin>52438</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="2559" sha1="5zxb2w1fx2hpqkby1wbx4lwgo2dyoro" xml:space="preserve">{{Actor|
+| type = Monster
+| name = Boss cube shooter
+| class = BossEye
+| game = Doom2
+| doomednum = 89
+}}[[Classes]]: &lt;u&gt;BossEye&lt;/u&gt;
+
+
+This is an invisible actor that periodically fires the [[Classes:SpawnShot|SpawnShot]] actor, more commonly known as the "Boss Cube," as part of the boss on Doom 2's MAP30.  Each cube will fly to a random location on the map (determined by a series of [[Classes:BossTarget|BossTarget]] actors placed in the map) and spawn an enemy at random.
+
+== [[ZScript]] definition ==
+{{ZScriptDefinitionNote|actors/doom/bossbrain.zs#L45}}
+&lt;syntaxhighlight lang="csharp"&gt;
+class BossEye : Actor
+{
+	Default
+	{
+		Height 32;
+		+NOBLOCKMAP
+		+NOSECTOR
+	}
+	States
+	{
+	Spawn:
+		SSWV A 10 A_Look;
+		Loop;
+	See:
+		SSWV A 181 A_BrainAwake;
+		SSWV A 150 A_BrainSpit;
+		Wait;
+	}
+}&lt;/syntaxhighlight&gt;
+
+== [[DECORATE]] definition ==
+{{DecorateDefinitionNote}}
+ ACTOR &lt;u&gt;BossEye&lt;/u&gt;
+ {
+   {{Property|Height}} 32
+   +{{Flag|NOBLOCKMAP}}
+   +{{Flag|NOSECTOR}}
+   States
+   {
+   Spawn:
+     SSWV A 10 [[A_Look]]
+     Loop
+   See:
+     SSWV A 181 [[A_BrainAwake]]
+     SSWV A 150 [[A_BrainSpit]]  // See {{Class|SpawnShot}}
+     Wait
+   }
+ }
+
+== Customization ==
+You can customize which actors are spawned by inheriting from the BossEye actor and providing a list of actors using the {{Property|DropItem}} property.  For example, this code will create a new shooter that will spawn one of five custom monsters:
+&lt;syntaxhighlight lang="csharp"&gt;
+class CustomEye : BossEye
+{
+  Default
+  {
+    DropItem "UberZombie";
+    DropItem "NaziCommando";
+    DropItem "Trite";
+    DropItem "D3Imp";
+    DropItem "Chicken";
+  }
+}&lt;/syntaxhighlight&gt;
+
+Like for {{Class|RandomSpawner}}, the second optional parameter of DropItem can be used to weigh the list, however the first optional parameter has no effect. The following example accurately replicates the odds of the normal BossEye:
+
+&lt;syntaxhighlight lang="csharp"&gt;
+class ICantBelieveItsNotBossEye : BossEye
+{
+  Default
+  {
+    DropItem "DoomImp",         255, 50;
+    DropItem "Demon",	        255, 40;
+    DropItem "Spectre",	        255, 30;
+    DropItem "PainElemental",   255, 10;
+    DropItem "Cacodemon",       255, 30;
+    DropItem "Archvile",        255,  2;
+    DropItem "Revenant",        255, 10;
+    DropItem "Arachnotron",     255, 20;
+    DropItem "Fatso",           255, 30;
+    DropItem "HellKnight",      255, 24;
+    DropItem "BaronOfHell",     255, 10;
+  }
+}&lt;/syntaxhighlight&gt;
+
+== See also ==
+* [[Classes:BossBrain]]
+* [[Classes:SpawnShot]]
+* [[A_BrainSpit]]
+* [[A_SpawnFly]]
+
+[[Category:Icon of Sin]]</text>
+    <sha1>5zxb2w1fx2hpqkby1wbx4lwgo2dyoro</sha1>
+  </revision>
+</page>

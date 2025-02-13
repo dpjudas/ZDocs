@@ -1,0 +1,94 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>Classes:Templar</title>
+  <ns>0</ns>
+  <id>4620</id>
+  <revision>
+    <id>40147</id>
+    <parentid>36472</parentid>
+    <timestamp>2015-05-22T07:02:33Z</timestamp>
+    <contributor>
+      <username>Blue Shadow</username>
+      <id>2021</id>
+    </contributor>
+    <minor />
+    <comment>/* DECORATE definition */ Updated</comment>
+    <origin>40147</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="2174" sha1="t4abv0r39a8ahfpbiint65y5673ajs4" xml:space="preserve">{{actor|
+| type = Monster
+| name = Templar
+| class = Templar
+| game = Strife
+| doomednum = 3003
+| convid = 62, 61, 62
+}}[[Classes]]: {{Class}} &amp;rarr; &lt;u&gt;Templar&lt;/u&gt;&lt;br&gt;
+Templars are Strife enemies. Like {{Class|Acolyte|Acolytes}}, they do not attack unless the alarm is active, and you can talk to them while they are idle. They attack by firing a Mauler blast, however this is weaker than the player's weapon. Despite their Mauler being most effective at close ranges, they have a mêlée attack.
+==== [[DECORATE]] definition ====
+ ACTOR &lt;u&gt;Templar&lt;/u&gt;
+ {
+   {{Property|Health}} 300
+   {{Property|PainChance}} 100
+   {{Property|Speed}} 8
+   {{Property|Radius}} 20
+   {{Property|Height}} 60
+   {{Property|Mass}} 500
+   {{Property|Monster}}
+   +{{Flag|NOBLOOD}}
+   +{{Flag|SEESDAGGERS}}
+   +{{Flag|NOSPLASHALERT}}
+   {{Property|MaxDropOffHeight}} 32
+   {{Property|MinMissileChance}} 200
+   {{Property|SeeSound}} "templar/sight"
+   {{Property|PainSound}} "templar/pain"
+   {{Property|DeathSound}} "templar/death"
+   {{Property|ActiveSound}} "templar/active"
+   {{Property|CrushPainSound}} "misc/pcrush"
+   {{Property|Tag}} "$TAG_TEMPLAR" // "TEMPLAR"
+   {{Property|HitObituary}} "$OB_TEMPLARHIT" // "%o was clawed by a Templar."
+   {{Property|Obituary}} "$OB_TEMPLAR" // "%o was vaporized by a Templar."
+   {{Property|DropItem}} "{{Class|EnergyPod}}"
+ 
+   action native [[A_TemplarAttack]]();
+ 
+   States
+   {
+   Spawn:
+     PGRD A 5 [[A_Look2]]
+     Loop
+     PGRD B 10
+     Loop
+     PGRD C 10
+     Loop
+     PGRD B 10 [[A_Wander]]
+     Loop
+   See:
+     PGRD AABBCCDD 3 [[A_Chase]]
+     Loop
+   Melee:
+     PGRD E 8 [[A_FaceTarget]]
+     PGRD F 8 [[A_CustomMeleeAttack]]([[DECORATE_expressions#Mathematical_functions|random]][ReaverMelee](1, 8)*3, "reaver/blade")
+     Goto See
+   Missile:
+     PGRD G 8 Bright [[A_FaceTarget]]
+     PGRD H 8 Bright [[A_TemplarAttack]]
+     Goto See
+   Pain:
+     PGRD A 2
+     PGRD A 2 [[A_Pain]]
+     Goto See
+   Death:
+     PGRD I 4 [[A_TossGib]]
+     PGRD J 4 [[A_Scream]]
+     PGRD K 4 [[A_TossGib]]
+     PGRD L 4 [[A_NoBlocking]]
+     PGRD MN 4
+     PGRD O 4 [[A_TossGib]]
+     PGRD "PQRSTUVWXYZ[" 4
+     PGRD "\" -1
+     Stop
+   }
+ }</text>
+    <sha1>t4abv0r39a8ahfpbiint65y5673ajs4</sha1>
+  </revision>
+</page>

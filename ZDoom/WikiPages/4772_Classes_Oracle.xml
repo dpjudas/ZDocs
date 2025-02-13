@@ -1,0 +1,62 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>Classes:Oracle</title>
+  <ns>0</ns>
+  <id>4772</id>
+  <revision>
+    <id>39862</id>
+    <parentid>35227</parentid>
+    <timestamp>2015-05-04T22:18:54Z</timestamp>
+    <contributor>
+      <username>Blue Shadow</username>
+      <id>2021</id>
+    </contributor>
+    <minor />
+    <comment>/* DECORATE definition */ Updated</comment>
+    <origin>39862</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="1326" sha1="gsqtt8jodd1zev6tmmge1dt81c3c9eq" xml:space="preserve">{{Actor|
+| type = Monster
+| name = The Oracle
+| class = Oracle
+| game = Strife
+| doomednum = 199
+| convid = 65, 62, 63
+}}[[Classes]]: &lt;u&gt;Oracle&lt;/u&gt;&lt;br&gt;
+The Oracle is a character from Strife. He doesn't attack or move and has minimal health. He plays an important role in the game nonetheless. You can either trust him over Macil or do the opposite; the first option showing you the not-so-good ending when you complete the game, the latter showing the best ending. After the Oracle is killed, his [[Classes:AlienSpectre3|Spectre]] (which has been floating in the ceiling) will awake and teleport to fight you.
+==== [[DECORATE]] definition ====
+ ACTOR &lt;u&gt;Oracle&lt;/u&gt;
+ {
+   {{Property|Health}} 1
+   {{Property|Radius}} 15
+   {{Property|Height}} 56
+   {{Property|Monster}}
+   +{{Flag|NOTDMATCH}}
+   +{{Flag|NOBLOOD}}
+   +{{Flag|NEVERRESPAWN}}
+   {{Property|DamageFactor}} "{{DamageType|Fire}}", 0.5
+   {{Property|DamageFactor}} "SpectralLow", 0
+   {{Property|MaxDropoffHeight}} 32
+   {{Property|Tag}} "$TAG_ORACLE" // "Oracle"
+   {{Property|DropItem}} "{{Class|Meat}}"
+ 
+   action native [[A_WakeOracleSpectre]]();
+ 
+   States
+   {
+   Spawn:
+     ORCL A -1
+     Stop
+   Death:
+     ORCL BCDEFGHIJK 5
+     ORCL L 5 [[A_NoBlocking]]
+     ORCL M 5
+     ORCL N 5 [[A_WakeOracleSpectre]]
+     ORCL OP 5
+     ORCL Q -1
+     Stop
+   }
+ }</text>
+    <sha1>gsqtt8jodd1zev6tmmge1dt81c3c9eq</sha1>
+  </revision>
+</page>

@@ -1,0 +1,42 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>Structs:Console</title>
+  <ns>0</ns>
+  <id>9685</id>
+  <revision>
+    <id>53308</id>
+    <parentid>53164</parentid>
+    <timestamp>2024-10-12T10:50:39Z</timestamp>
+    <contributor>
+      <username>Blue Shadow</username>
+      <id>2021</id>
+    </contributor>
+    <minor />
+    <comment>{{git}} -&gt; {{new}} for 4.13.0</comment>
+    <origin>53308</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="1563" sha1="4a5zgedep6cpnl8ody6af4qeao5tc29" xml:space="preserve">{{ZScriptNote}}
+
+The Console struct holds functions that mostly deal with printing text strings on the screen and to the [[console]].
+
+== Methods ==
+All of these methods are static and can be called by prefixing them with &lt;code&gt;Console.&lt;/code&gt;:
+
+*void '''HideConsole'''()
+:Hides the console.
+*vararg void '''Printf'''(string ''fmt'', ...)
+:Prints text on the screen and in the console, similarly to [[A_Log]]. Has string formatting built in, like [[String#Static|String.Format]], so values can be passed after the first argument.
+*vararg void '''PrintfEx'''(int ''printlevel'', string ''fmt'', ...)
+:Extended version of &lt;code&gt;Printf&lt;/code&gt; that can modify the visibility of the message with the {{c|printlevel}} argument. Possible values for this argument are:
+{{: EPrintLevel}}
+*vararg void '''DebugPrintf'''(int ''debuglevel'', string ''fmt'', ...) {{new|4.13.0}}
+:Extended version of &lt;code&gt;Printf&lt;/code&gt; used for printing developer messages. The {{c|debuglevel}} argument can be used to set at what developer level the message prints. Possible values for this argument are:
+{{: EDebugLevel}}
+*void '''MidPrint'''(Font ''fontname'', string ''textlabel'', bool ''bold'' = false)
+:Prints text to the console and in the middle of the screen, as opposed to the top left corner. Allows specifying a font, and optionally process the message as bold. In contrast to &lt;code&gt;Printf&lt;/code&gt; and &lt;code&gt;PrintfEx&lt;/code&gt;, does not have string formatting built in, so &lt;code&gt;String.Format&lt;/code&gt; is required to print a formatted string.
+
+[[Category:ZScript]]
+[[Category:Structs]]</text>
+    <sha1>4a5zgedep6cpnl8ody6af4qeao5tc29</sha1>
+  </revision>
+</page>

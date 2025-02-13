@@ -1,0 +1,107 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>Classes:AlienSpectre1</title>
+  <ns>0</ns>
+  <id>4757</id>
+  <revision>
+    <id>39827</id>
+    <parentid>36946</parentid>
+    <timestamp>2015-05-04T22:00:11Z</timestamp>
+    <contributor>
+      <username>Blue Shadow</username>
+      <id>2021</id>
+    </contributor>
+    <minor />
+    <comment>/* DECORATE definition */ Updated</comment>
+    <origin>39827</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="3113" sha1="rlqjzwv1umlme83gne1t0o1f2supcj5" xml:space="preserve">{{Actor|
+| type = Monster
+| name = The Programmer's spectre
+| class = AlienSpectre1
+| game = Strife
+| doomednum = 129
+| convid = 67
+}}[[Classes]]: [[Classes:SpectralMonster|SpectralMonster]]&amp;rarr;&lt;u&gt;AlienSpectre1&lt;/u&gt;&lt;br&gt;
+&amp;ensp;&amp;rarr;[[Classes:AlienSpectre2|AlienSpectre2]]&lt;br&gt;
+&amp;ensp;&amp;rarr;[[Classes:AlienSpectre3|AlienSpectre3]]&lt;br&gt;
+&amp;ensp;&amp;rarr;[[Classes:AlienSpectre4|AlienSpectre4]]&lt;br&gt;
+&amp;ensp;&amp;rarr;[[Classes:AlienSpectre5|AlienSpectre5]]&lt;br&gt;
+A mysterious alien creature that possesses people, bending them to their will, and turning them into dangerous maniacs obsessed with collecting the pieces of the Sigil. They can only be damaged by the Sigil. The [[Classes:Programmer|Programmer]]'s spectre doesn't accompany the Programmer himself, making him vulnerable to normal weapons and allowing the [[Classes:StrifePlayer|player]] to get the [[Classes:Sigil1|first piece]] of the [[Classes:Sigil|Sigil]]. Instead, this spectre is met later in the game, in the ruins of a temple.
+==== [[DECORATE]] definition ====
+ ACTOR &lt;u&gt;AlienSpectre1&lt;/u&gt; : {{Class|SpectralMonster}}
+ {
+   {{Property|Health}} 1000
+   {{Property|PainChance}} 250
+   {{Property|Speed}} 12
+   {{Property|Radius}} 64
+   {{Property|Height}} 64
+   {{Property|FloatSpeed}} 5
+   {{Property|Mass}} 1000
+   {{Property|MinMissileChance}} 150
+   {{Property|RenderStyle}} Translucent
+   {{Property|Alpha}} 0.666
+   {{Property|SeeSound}} "alienspectre/sight"
+   {{Property|AttackSound}} "alienspectre/blade"
+   {{Property|PainSound}} "alienspectre/pain"
+   {{Property|DeathSound}} "alienspectre/death"
+   {{Property|ActiveSound}} "alienspectre/active"
+   {{Property|Obituary}} "$OB_ALIENSPECTRE" // "%o was struck down by the Spectre."
+   +{{Flag|NOGRAVITY}}
+   +{{Flag|FLOAT}}
+   +{{Flag|SHADOW}}
+   +{{Flag|NOTDMATCH}}
+   +{{Flag|DONTMORPH}}
+   +{{Flag|NOBLOCKMONST}}
+   +{{Flag|INCOMBAT}}
+   +{{Flag|LOOKALLAROUND}}
+   +{{Flag|NOICEDEATH}}
+ 
+   action native [[A_AlienSpectreDeath]]();
+ 
+   States
+   {
+   Spawn:
+     ALN1 A 10 [[A_Look]]
+     ALN1 B 10 [[A_SentinelBob]]
+     Loop
+   See:
+     ALN1 AB 4 Bright [[A_Chase]]
+     ALN1 C 4 Bright [[A_SentinelBob]]
+     ALN1 DEF 4 Bright [[A_Chase]]
+     ALN1 G 4 Bright [[A_SentinelBob]]
+     ALN1 HIJ 4 Bright [[A_Chase]]
+     ALN1 K 4 Bright [[A_SentinelBob]]
+     Loop
+   Melee:
+     ALN1 J 4 Bright [[A_FaceTarget]]
+     ALN1 I 4 Bright [[A_CustomMeleeAttack]](([[DECORATE_expressions#Mathematical_functions|random]][SpectreMelee](0, 255)&amp;9)*5)
+     ALN1 H 4 Bright
+     Goto See
+   Missile:
+     ALN1 J 4 Bright [[A_FaceTarget]]
+     ALN1 I 4 Bright [[A_SpotLightning]]
+     ALN1 H 4 Bright
+     Goto See+10
+   Pain:
+     ALN1 J 2 [[A_Pain]]
+     Goto See+6
+   Death:
+     AL1P A 6 Bright [[A_SpectreChunkSmall]]
+     AL1P B 6 Bright [[A_Scream]]
+     AL1P C 6 Bright [[A_SpectreChunkSmall]]
+     AL1P DE 6 Bright
+     AL1P F 6 Bright [[A_SpectreChunkSmall]]
+     AL1P G 6 Bright
+     AL1P H 6 Bright [[A_SpectreChunkSmall]]
+     AL1P IJK 6 Bright
+     AL1P LM 5 Bright
+     AL1P N 5 Bright [[A_SpectreChunkLarge]]
+     AL1P OPQ 5 Bright
+     AL1P R 5 Bright [[A_AlienSpectreDeath]]
+     Stop
+   }
+ }</text>
+    <sha1>rlqjzwv1umlme83gne1t0o1f2supcj5</sha1>
+  </revision>
+</page>

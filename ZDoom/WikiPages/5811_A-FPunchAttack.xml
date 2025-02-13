@@ -1,0 +1,62 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>A FPunchAttack</title>
+  <ns>0</ns>
+  <id>5811</id>
+  <revision>
+    <id>49018</id>
+    <parentid>25320</parentid>
+    <timestamp>2022-02-16T18:25:34Z</timestamp>
+    <contributor>
+      <username>Jekyll Grim Payne</username>
+      <id>2175</id>
+    </contributor>
+    <origin>49018</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="2224" sha1="4zw9f68gladw9ths8p91ddtt2i24zw9" xml:space="preserve">{{DISPLAYTITLE:A_FPunchAttack}}
+'''A_FPunchAttack'''&lt;br&gt;
+(''no parameter'')&lt;br&gt;
+
+Search for a possible target in a 90° cone in front of the calling player, starting right ahead and scanning rightwards up to 45°, then going back center and scanning leftwards up to -45°. The range for this attack is of 128 units, twice the default range for most melee attacks. If a target is found, the &lt;tt&gt;special1&lt;/tt&gt; counter is increased by one. The exact effects of the attack depend on the value of that counter.
+* A value of less than three: the victim is dealt between 40 and 55 points of damage, is pushed back with a strength of two, and a {{Class|PunchPuff}} is used by the attack.
+* A value of three: the victim is dealt between 80 and 110 points of damage, is pushed back with a strength of six, and a {{Class|HammerPuff}} is used by the attack. The counter is reset to 0, the weapon goes to its "Fire2" state, and the player plays the sound "*fistgrunt on the VOICE channel.
+
+If the attack does not strike a creature or other attackable object, the counter is also reset to 0. A PunchPuff is spawned if it strikes a wall within 64 units (half the attack range of this function).
+
+This codepointer is restricted to {{Class|FWeapFist}} and derived classes.
+
+[[Category:Decorate Hexen functions]] [[Category:Decorate Weapon attack functions]] [[Category:Decorate Restricted functions]]{{DEFAULTSORT:FPunchAttack}}
+
+==== [[ZScript]] definition ====
+{{ZScriptDefinitionNote|actors/hexen/fighterfist.zs#L95}} 
+ action void A_FPunchAttack()
+ {
+ 	if (player == null)
+ 	{
+ 		return;
+ 	}
+ 
+ 	int damage = random[FighterAtk](40, 55);
+ 	for (int i = 0; i &lt; 16; i++)
+ 	{
+ 		if (TryPunch(angle + i*(45./16), damage, 2) ||
+ 			TryPunch(angle - i*(45./16), damage, 2))
+ 		{ // hit something
+ 			if (weaponspecial &gt;= 3)
+ 			{
+ 				weaponspecial = 0;
+ 				player.SetPsprite(PSP_WEAPON, player.ReadyWeapon.FindState("Fire2"));
+ 				A_StartSound ("*fistgrunt", CHAN_VOICE);
+ 			}
+ 			return;
+ 		}
+ 	}
+ 	// didn't find any creatures, so try to strike any walls
+ 	weaponspecial = 0;
+ 
+ 	double slope = AimLineAttack (angle, DEFMELEERANGE, null, 0., ALF_CHECK3D);
+ 	LineAttack (angle, DEFMELEERANGE, slope, damage, 'Melee', "PunchPuff", true);
+ }</text>
+    <sha1>4zw9f68gladw9ths8p91ddtt2i24zw9</sha1>
+  </revision>
+</page>

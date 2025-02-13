@@ -1,0 +1,76 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>Classes:MWeapLightning</title>
+  <ns>0</ns>
+  <id>4641</id>
+  <revision>
+    <id>39654</id>
+    <parentid>34782</parentid>
+    <timestamp>2015-05-02T21:22:29Z</timestamp>
+    <contributor>
+      <username>Blue Shadow</username>
+      <id>2021</id>
+    </contributor>
+    <minor />
+    <comment>/* DECORATE definition */ Updated</comment>
+    <origin>39654</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="1874" sha1="l82tfwp26wimkzlyccoeryky5pye641" xml:space="preserve">{{Actor|
+| type = Weapon
+| name = Arc of death spell
+| class = MWeapLightning
+| game = Hexen
+| doomednum = 8040
+}}[[Classes]]: [[Classes:Inventory|Inventory]]&amp;rarr;[[Classes:Weapon|Weapon]]&amp;rarr;[[Classes:MageWeapon|MageWeapon]]&amp;rarr;&lt;u&gt;MWeapLightning&lt;/u&gt;&lt;br&gt;
+The [[Classes:MagePlayer|Mage]]'s third weapon, the Arc of Death spell uses 5 green mana to summon a vertical lightning bolt that will stick on enemies and keep dealing damage.
+==== [[DECORATE]] definition ====
+ ACTOR &lt;u&gt;MWeapLightning&lt;/u&gt; : {{Class|MageWeapon}}
+ {
+   +{{Flag|NOGRAVITY}}
+   {{Property|Weapon.SelectionOrder}} 1100
+   {{Property|Weapon.AmmoUse1}} 5
+   {{Property|Weapon.AmmoGive1}} 25
+   {{Property|Weapon.KickBack}} 0
+   {{Property|Weapon.YAdjust}} 20
+   {{Property|Weapon.AmmoType1}} "{{Class|Mana2}}"
+   {{Property|Inventory.PickupMessage}} "$TXT_WEAPON_M3" // "ARC OF DEATH"
+   {{Property|Tag}} "$TAG_MWEAPLIGHTNING"
+ 
+   action native [[A_LightningReady]]();
+   action native [[A_MLightningAttack]](class&lt;Actor&gt; floor = "{{Class|LightningFloor}}", class&lt;Actor&gt; ceiling = "{{Class|LightningCeiling}}");
+ 
+   States
+   {
+   Spawn:
+     WMLG ABCDEFGH 4 Bright
+     Loop
+   Select:
+     MLNG A 1 Bright [[A_Raise]]
+     Loop
+   Deselect:
+     MLNG A 1 Bright [[A_Lower]]
+     Loop
+   Ready:
+     MLNG AAAAA 1 Bright [[A_WeaponReady]]
+     MLNG A 1 Bright [[A_LightningReady]]
+     MLNG BBBBBB 1 Bright [[A_WeaponReady]]
+     MLNG CCCCC 1 Bright [[A_WeaponReady]]
+     MLNG C 1 Bright [[A_LightningReady]]
+     MLNG BBBBBB 1 Bright [[A_WeaponReady]]
+     Loop
+   Fire:
+     MLNG DE 3 Bright
+     MLNG F 4 Bright [[A_MLightningAttack]]
+     MLNG G 4 Bright
+     MLNG HI 3 Bright
+     MLNG I 6 Bright [[Offset]](0, 199)
+     MLNG C 2 Bright [[Offset]](0, 55)
+     MLNG B 2 Bright [[Offset]](0, 50)
+     MLNG B 2 Bright [[Offset]](0, 45)
+     MLNG B 2 Bright [[Offset]](0, 40)
+     Goto Ready
+   }
+ }</text>
+    <sha1>l82tfwp26wimkzlyccoeryky5pye641</sha1>
+  </revision>
+</page>

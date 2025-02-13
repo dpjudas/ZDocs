@@ -1,0 +1,80 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>CheckProximity</title>
+  <ns>0</ns>
+  <id>8932</id>
+  <revision>
+    <id>47980</id>
+    <parentid>46760</parentid>
+    <timestamp>2020-10-09T19:13:09Z</timestamp>
+    <contributor>
+      <username>Boondorl</username>
+      <id>2606</id>
+    </contributor>
+    <minor />
+    <origin>47980</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="4078" sha1="hm0tpj39jve0ffz92bh4gn4ieo1uiw0" xml:space="preserve">bool '''CheckProximity''' (int ''tid'', str ''classname'', float ''distance'' [, int ''count'' [, int ''flags'' [, int ''ptr'']]]) - '''ACS'''&lt;br /&gt;
+bool '''CheckProximity''' (class&lt;Actor&gt; ''classname'', double ''distance''[, int ''count''[, int ''flags''[, int ''ptr'']]]) - '''ZScript'''
+
+==Usage==
+Performs a check to see if an actor of type ''classname'' is within ''distance'' of the actor specified by ''tid'' (ACS), or from the caller (ZScript), and checks to see the population within distance is greater or equal to ''count''. These conditions can be modified with ''flags'' and will count any actor, as long as it is the same ''classname''. Can be performed based upon the actor's pointer as well. This function is the ACS and ZScript version of [[A_CheckProximity]] and works in a similar manner.
+
+===Parameters===
+*''tid'': The tid of the actor around which to do the distance check. Use 0 to refer to the activator. Only used in ACS.
+*''classname'': The name of the actor to check for.
+*''distance'': Determines how far this function should search for the actors. Must be greater than 0. It's a point value, so if you want to check within 48, you need to specify 48.0.
+*''count'': The minimum number of actors the function must find within ''distance'' in order to succeed. Default is 1.
+*''flags'': Can be combined using the '|' separator. Default is 0.
+**'''CPXF_ANCESTOR''': Also matches ''classname'' against any base classes the actor has inherited.
+**'''CPXF_NOZ''': Disables Z height checking -- the function will only care about the actor being in range for X and Y coordinates, regardless of how high or low an actor is.
+:*'''CPXF_CHECKSIGHT''': Restricts actor counting to only those which can be seen.
+:*'''CPXF_SETTARGET''': Sets the first actor matching ''classname'' as the calling actor's target.
+:*'''CPXF_SETMASTER''': Sets the first actor matching ''classname'' as the calling actor's master.
+:*'''CPXF_SETTRACER''': Sets the first actor matching ''classname'' as the calling actor's tracer.
+
+Only one of the two following may be used due to mutual exclusion:
+:*'''CPXF_COUNTDEAD''': By default, the function only counts living actors. This causes the function to also accept dead ones. This only makes sense for monsters.
+:*'''CPXF_DEADONLY''': Inverses the function to only count dead monsters instead of living ones.
+
+Only one of the two following may be used due to mutual exclusion:
+:*'''CPXF_LESSOREQUAL''': The function will succeed if it finds the number of actors equivalent to ''count'' or less, instead of greater than or equal to.
+:*'''CPXF_EXACT''': The function will only succeed if the exact number is found defined by ''count''.
+
+The following flags rely on using one of the SET* flags above:
+:*'''CPXF_FARTHEST''': The actor gets the furthest ''classname'' actor within ''distance'' from the pointer's location.
+:*'''CPXF_CLOSEST''': The actor gets the closest ''classname'' actor within ''distance'' to the pointer's location.
+:*'''CPXF_SETONPTR''': The pointer exchange is set on the calling actor's pointer instead of itself.
+
+== Examples ==
+
+This script checks every second if there is at least one {{Class|DoomImp|imp}} around the player and informs them if there is.
+
+ Script "Shotgunguy_Checker" Enter
+ {
+     if ([[CheckProximity]](0, "{{Class|DoomImp}}", 256.0, 1))
+     {
+         [[Print]](s:"There's an imp somewhere around!");
+     }
+     else
+     {
+         Print(s:"There are no imps around.");
+     }
+ 
+     [[Delay]](35);
+     [[restart]];
+ }
+
+This script uses {{c|CheckProximity}} to respawn ammunition, but only if the player has already picked it up. It checks one time to see if there is a {{Class|CellPack|cell pack}} at least 4 map units away from a [[thing]] (e.g. a {{Class|MapSpot|map spot}}) with a [[TID]] of 10. If there is not, it then spawns one along with a {{Class|TeleportFog|teleport fog}}.
+
+ Script "Spawn Cellpack" (void)
+ {
+     if (![[CheckProximity]](10, "{{Class|CellPack}}", 4.0))
+     {
+         [[SpawnSpot]]("CellPack", 10);
+         SpawnSpot("{{Class|TeleportFog}}", 10); 
+     }
+ }</text>
+    <sha1>hm0tpj39jve0ffz92bh4gn4ieo1uiw0</sha1>
+  </revision>
+</page>

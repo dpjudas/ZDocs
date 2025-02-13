@@ -1,0 +1,76 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>GetLevelInfo</title>
+  <ns>0</ns>
+  <id>1581</id>
+  <revision>
+    <id>38211</id>
+    <parentid>36915</parentid>
+    <timestamp>2014-08-27T17:04:21Z</timestamp>
+    <contributor>
+      <username>Blue Shadow</username>
+      <id>2021</id>
+    </contributor>
+    <minor />
+    <comment>/* Parameters */</comment>
+    <origin>38211</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="1704" sha1="hzn02hr3xxgxryv0jk9vrtwhrwqf0w0" xml:space="preserve">__NOTOC__
+int '''GetLevelInfo''' (int ''levelinfo'')
+
+== Usage ==
+
+This function provides you with properties of the current map. If you want to find out the level time, use [[Timer]].
+
+=== Parameters ===
+*''levelinfo''
+:The level information to get:
+:*'''LEVELINFO_PAR_TIME'''
+::Par time of the map.
+:*'''LEVELINFO_SUCK_TIME'''
+::Suck time of the map.
+:*'''LEVELINFO_CLUSTERNUM'''
+::Number of the [[cluster]] to which the map belongs.
+:*'''LEVELINFO_LEVELNUM'''
+::Number of the map. (See {{c|{{MapProperty|LevelNum}}}} map property)
+:*'''LEVELINFO_TOTAL_SECRETS'''
+::Number of total [[secret]]s in the map.
+:*'''LEVELINFO_FOUND_SECRETS'''
+::Number of revealed secrets.
+:*'''LEVELINFO_TOTAL_ITEMS'''
+::Number of total {{Flag|COUNTITEM|countable}} [[item]]s in the map.
+:*'''LEVELINFO_FOUND_ITEMS'''
+::Number of picked up countable items.
+:*'''LEVELINFO_TOTAL_MONSTERS'''
+::Number of total {{Flag|COUNTKILL|countable}} [[monster]]s in the map.
+:*'''LEVELINFO_KILLED_MONSTERS'''
+::Number of killed monsters.
+
+=== Return value ===
+
+Returns value of the specified level property or 0 when the property is unknown.
+
+== Examples ==
+
+This script reports on the player's progress on killing monsters. Similar to the kill count on the automap.
+
+ script 2 (void)
+ {
+     int mtotal = [[GetLevelInfo]] ({{const|LEVELINFO_TOTAL_MONSTERS}}),
+         mkilled = [[GetLevelInfo]] ({{const|LEVELINFO_KILLED_MONSTERS}});
+ 
+     if (mkilled == mtotal)
+     {
+         [[PrintBold]] (s:"You  have killed all the monsters!");
+     }
+     else
+     {
+         [[PrintBold]] (s:"You have killed ", d:mkilled, s:" monsters!\n",
+             d:mtotal-mkilled, s:" left to go!");
+     }
+ }
+
+[[category:ACS Information functions]]</text>
+    <sha1>hzn02hr3xxgxryv0jk9vrtwhrwqf0w0</sha1>
+  </revision>
+</page>

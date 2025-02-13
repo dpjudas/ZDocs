@@ -1,0 +1,66 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>Classes:LightningCeiling</title>
+  <ns>0</ns>
+  <id>4642</id>
+  <revision>
+    <id>34784</id>
+    <parentid>21618</parentid>
+    <timestamp>2012-10-27T13:35:37Z</timestamp>
+    <contributor>
+      <username>Blue Shadow</username>
+      <id>2021</id>
+    </contributor>
+    <minor />
+    <comment>/* DECORATE definition */</comment>
+    <origin>34784</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="1099" sha1="iiz0r3mq8r1ik9unsi22cf6mqmo32hg" xml:space="preserve">{{Actor|
+| type = Explosive
+| name = Lightning
+| class = LightningCeiling
+| game = Hexen
+}}[[Classes]]: [[Classes:Lightning|Lightning]]&amp;rarr;&lt;u&gt;LightningCeiling&lt;/u&gt;&lt;br&gt;
+&amp;ensp;&amp;rarr;[[Classes:LightningFloor|LightningFloor]]&lt;br&gt;
+{{desc}}
+==== [[DECORATE]] definition ====
+ ACTOR &lt;u&gt;LightningCeiling&lt;/u&gt; : {{Class|Lightning}}
+ {
+   {{Property|Health}} 144
+   {{Property|Speed}} 25
+   {{Property|Radius}} 16
+   {{Property|Height}} 40
+   {{Property|Damage}} 8
+   {{Property|Projectile}}
+   +{{Flag|CEILINGHUGGER}}
+   {{Property|RenderStyle}} Add
+ 
+   action native [[A_LightningZap]]();
+   action native [[A_LightningClip]]();
+   action native [[A_LightningRemove]]();
+ 
+   States
+   {
+   Spawn:
+     MLFX A 2 Bright [[A_LightningZap]]
+     MLFX BCD 2 Bright [[A_LightningClip]]
+     Loop
+   Death:
+     MLF2 A 2 Bright [[A_LightningRemove]]
+     MLF2 BCDEKLM 3 Bright
+     ACLO E 35
+     MLF2 NO 3 Bright
+     MLF2 P 4 Bright
+     MLF2 QP 3 Bright
+     MLF2 Q 4 Bright
+     MLF2 P 3 Bright
+     MLF2 O 3 Bright
+     MLF2 P 3 Bright
+     MLF2 P 1 Bright [[A_HideThing]]
+     ACLO E 1050
+     Stop
+   }
+ }</text>
+    <sha1>iiz0r3mq8r1ik9unsi22cf6mqmo32hg</sha1>
+  </revision>
+</page>

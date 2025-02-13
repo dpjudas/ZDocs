@@ -1,0 +1,357 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>Compile QZDoom on Linux</title>
+  <ns>0</ns>
+  <id>9191</id>
+  <revision>
+    <id>46845</id>
+    <parentid>46309</parentid>
+    <timestamp>2019-07-30T18:07:16Z</timestamp>
+    <contributor>
+      <username>Skyrimguy</username>
+      <id>2085</id>
+    </contributor>
+    <origin>46845</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="11463" sha1="n5upfvhkv0hkhl3lhytx9u41at7baf5" xml:space="preserve">'''Open a terminal and copy and paste the whole code box for each step.'''
+
+== Install dependencies ==
+[[QZDoom]] needs certain tools and development files in order to compile:
+* '''Required'''
+** gcc 4.8 or later
+** make
+** cmake 2.8.7 or later
+** SDL 2.0.2 or later
+** libGL and libGLU ''(SDL or libSDL pull in libGLU)'' or any other GL implementation provider.
+** [http://kcat.strangesoft.net/openal.html libopenal]
+** libmpg123
+** libsndfile
+* '''Recommended'''
+** GTK3 or GTK2
+** git ''(needed in order to [[Git repository|download the source]] and compile in commit meta data)''
+** nasm 0.98.39 or later ''(x86-32 only)''
+* '''Optional'''
+** zlib ''(QZDoom has a copy of it and will be statically compiled in if not found)''
+** libbzip2 ''(possibly static)''
+** libjpeg ''(possibly static)''
+** libgme or game-music-emu ''(possibly static)''
+* '''Runtime'''
+** gxmessage ''(optional - needed to show the crash log in a window)''
+** kdialog ''(optional - for KDE users)''
+** fluidsynth ''(optional - for [[MIDI]] playback)''
+
+Install the following as root/superuser:
+
+=== Debian/Ubuntu ===
+&lt;pre&gt;
+sudo apt-get install g++ make cmake libsdl2-dev git zlib1g-dev \
+libbz2-dev libjpeg-dev libfluidsynth-dev libgme-dev libopenal-dev \
+libmpg123-dev libsndfile1-dev libgtk-3-dev timidity nasm \
+libgl1-mesa-dev
+&lt;/pre&gt;
+
+=== Fedora ===
+&lt;pre&gt;
+dnf install gcc-c++ make cmake SDL2-devel git zlib-devel bzip2-devel \
+libjpeg-turbo-devel fluidsynth-devel game-music-emu-devel openal-soft-devel \
+libmpg123-devel libsndfile-devel gtk3-devel timidity++ nasm \
+mesa-libGL-devel
+&lt;/pre&gt;
+
+=== openSUSE ===
+&lt;pre&gt;
+zypper install gcc-c++ make cmake libSDL2-devel git zlib-devel \
+libbz2-devel libjpeg-devel fluidsynth-devel libgme-devel \
+openal-soft-devel mpg123-devel libsndfile-devel gtk3-devel timidity nasm \
+Mesa-libGL-devel
+&lt;/pre&gt;
+
+=== Mageia ===
+&lt;pre&gt;
+a='' &amp;&amp; [ "$(uname -m)" = x86_64 ] &amp;&amp; a=64
+urpmi gcc-c++ make cmake lib${a}sdl2.0-devel git lib${a}zlib-devel \
+lib${a}bzip2-devel lib${a}jpeg-devel lib${a}fluidsynth-devel \
+lib${a}gme-devel lib${a}openal-devel lib${a}mpg123-devel lib${a}sndfile-devel \
+lib${a}gtk+3.0-devel lib${a}cairo-devel TiMidity++ nasm \
+lib${a}mesagl1-devel
+&lt;/pre&gt;
+
+=== Arch Linux ===
+&lt;pre&gt;
+pacman -S --needed gcc make cmake sdl2 git zlib bzip2 libjpeg-turbo \
+fluidsynth libgme openal mpg123 libsndfile gtk3 timidity++ nasm \
+mesa glu
+&lt;/pre&gt;
+
+=== Gentoo ===
+&lt;pre&gt;
+emerge -avn sys-devel/gcc sys-devel/make dev-util/cmake media-libs/libsdl2 \
+dev-vcs/git sys-libs/zlib app-arch/bzip2 media-libs/libjpeg-turbo media-sound/fluidsynth \
+media-libs/game-music-emu media-libs/openal media-sound/mpg123 media-libs/libsndfile \
+x11-libs/gtk+ media-sound/timidity++ dev-lang/nasm media-libs/mesa \
+media-libs/glu
+&lt;/pre&gt;
+
+=== PCLinuxOS ===
+&lt;pre&gt;
+a='' &amp;&amp; [ "$(uname -m)" = x86_64 ] &amp;&amp; a=64
+apt-get install gcc-c++ make cmake lib${a}sdl2.0-devel git zlib1-devel \
+lib${a}bzip2-devel lib${a}jpeg62-devel lib${a}fluidsynth1-devel lib${a}openal-devel \
+lib${a}mpg123-devel lib${a}sndfile-devel lib${a}gtk+3.0-devel TiMidity++ nasm \
+lib${a}mesagl1-devel
+&lt;/pre&gt;
+
+=== Solus ===
+&lt;pre&gt;
+sudo eopkg install g++ make cmake binutils glibc-devel pkg-config sdl2-devel \
+git zlib-devel bzip2-devel libjpeg-turbo-devel fluidsynth-devel openal-soft-devel \
+mpg123-devel libsndfile-devel libgtk-3-devel nasm mesalib-devel \
+libglu-devel
+&lt;/pre&gt;
+
+'''Do the following sections as normal user.'''
+
+== Create qzdoom_build directory ==
+&lt;pre&gt;
+mkdir -pv ~/qzdoom_build
+&lt;/pre&gt;
+
+== Download and prepare the source ==
+Download the QZDoom source and create an out of tree build directory:
+&lt;pre&gt;
+cd ~/qzdoom_build &amp;&amp;
+git clone git://github.com/raa-eruanna/qzdoom.git &amp;&amp;
+mkdir -pv qzdoom/build
+&lt;/pre&gt;
+
+and run the following commands:
+&lt;pre&gt;
+cd qzdoom
+git config --local --add remote.origin.fetch +refs/tags/*:refs/tags/*
+git pull
+&lt;/pre&gt;
+
+== Compiling ==
+To compile QZDoom:
+&lt;pre&gt;
+c="$(lscpu -p | grep -v '#' | sort -u -t , -k 2,4 | wc -l)" ; [ "$c" -eq 0 ] &amp;&amp; c=1
+cd ~/qzdoom_build/qzdoom/build &amp;&amp;
+cmake .. -DCMAKE_BUILD_TYPE=Release &amp;&amp;
+make -j$c
+&lt;/pre&gt;
+A development version of QZDoom will be compiled if you do not do [[#Latest stable version]].
+
+Assuming all goes well, a qzdoom binary should be produced. To start QZDoom, the following command should work:
+&lt;pre&gt;
+./qzdoom
+&lt;/pre&gt;
+If QZDoom complains you do not have any IWADs set up, make sure that you have your [[IWAD]] files placed in the same directory as QZDoom, in ~/.config/qzdoom/, $DOOMWADDIR, or /usr/local/share/. Alternatively, you can edit ~/.config/qzdoom/qzdoom.ini to set the path for your IWADs.
+
+=== Latest stable version ===
+Show the latest stable version:
+&lt;pre&gt;
+cd ~/qzdoom_build/qzdoom &amp;&amp;
+git tag -l | grep -E '^q[0-9]+([.][0-9]+)*$' |
+sed 's/^q//' | sort -n -t . -k 1,1 -k 2,2 -k 3,3 -k 4,4 |
+tail -n 1 | sed 's/^/q/'
+&lt;/pre&gt;
+
+If you want to compile the latest stable version, run:
+&lt;pre&gt;
+cd ~/qzdoom_build/qzdoom &amp;&amp;
+Tag="$(git tag -l | grep -E '^q[0-9]+([.][0-9]+)*$' |
+sed 's/^q//' | sort -n -t . -k 1,1 -k 2,2 -k 3,3 -k 4,4 |
+tail -n 1 | sed 's/^/q/')" &amp;&amp;
+git checkout --detach refs/tags/$Tag
+&lt;/pre&gt;
+and [[#Compiling|compile]].
+
+After compiling, [[#Backup|backing up]] and optionally [[#Installation|installing]] the latest stable version, run:
+&lt;pre&gt;
+cd ~/qzdoom_build/qzdoom &amp;&amp;
+git checkout master
+&lt;/pre&gt;
+
+== Backup ==
+If you want to backup QZDoom, do the following:
+
+Create and name a directory with the corresponding QZDoom version/revision, build type and copy qzdoom, qzdoom.pk3, lights.pk3, brightmaps.pk3 and game_support.pk3 to it:
+&lt;pre&gt;
+cd ~/qzdoom_build/qzdoom/build &amp;&amp;
+if [ -f CMakeCache.txt ]; then
+k="$(sed -n 's/.*CMAKE_BUILD_TYPE:STRING=\(.*\)/\1/p' CMakeCache.txt)"; else k=''; fi &amp;&amp;
+if [ -n "$k" ]; then b="-BuildType$k"; else b=''; fi &amp;&amp;
+BACKUPQZDOOM="../../$(sed -n 's/.*#define GIT_DESCRIPTION "\(.*\)".*/\1/p' ../src/gitinfo.h)$b" &amp;&amp;
+mkdir -pv "$BACKUPQZDOOM" &amp;&amp;
+if [ game_support.pk3 -nt zd_extra.pk3 ]; then p=game_support.pk3; else p=zd_extra.pk3; fi &amp;&amp;
+cp -v qzdoom qzdoom.pk3 lights.pk3 brightmaps.pk3 $p \
+"$BACKUPQZDOOM"/
+&lt;/pre&gt;
+
+Files are located at:
+
+/home/&lt;your username&gt;/qzdoom_build/&lt;your newly created directory&gt;
+
+== Updating ==
+When you wish to update QZDoom, copy and paste the following:
+&lt;pre&gt;
+cd ~/qzdoom_build/qzdoom &amp;&amp;
+git pull
+&lt;/pre&gt;
+
+When the update finish, go to [[#Compiling]].
+
+== Installation ==
+* '''qzdoom''' = Stable version
+* '''qzdoom-alpha''' = Development version
+
+Commands beginning with "sudo" will require temporary superuser privileges.
+
+If you want to install QZDoom, do the following:
+
+Create /usr/games/qzdoom and /usr/games/qzdoom-alpha directories:
+&lt;pre&gt;
+sudo mkdir -pv /usr/games/qzdoom /usr/games/qzdoom-alpha
+&lt;/pre&gt;
+
+Copy qzdoom, qzdoom.pk3, lights.pk3, brightmaps.pk3, game_support.pk3 and the soundfonts directory to /usr/games/qzdoom/ or /usr/games/qzdoom-alpha/:
+&lt;pre&gt;
+cd ~/qzdoom_build/qzdoom/build &amp;&amp;
+h="$(sed -n 's/.*#define GIT_HASH "\(.*\)".*/\1/p' ../src/gitinfo.h)" &amp;&amp;
+if [ -z "$(git describe --exact-match --tags $h 2&gt;/dev/null)" ]; then
+d=-alpha; else d=''; fi &amp;&amp;
+if [ game_support.pk3 -nt zd_extra.pk3 ]; then p=game_support.pk3; else p=zd_extra.pk3; fi &amp;&amp;
+sudo cp -rv qzdoom qzdoom.pk3 lights.pk3 brightmaps.pk3 $p soundfonts \
+/usr/games/qzdoom$d/
+&lt;/pre&gt;
+
+Create launch script:
+&lt;pre&gt;
+cd ~/qzdoom_build/qzdoom/build &amp;&amp;
+h="$(sed -n 's/.*#define GIT_HASH "\(.*\)".*/\1/p' ../src/gitinfo.h)" &amp;&amp;
+if [ -z "$(git describe --exact-match --tags $h 2&gt;/dev/null)" ]; then
+d=-alpha; else d=''; fi &amp;&amp;
+printf %s "\
+#!/bin/sh
+exec /usr/games/qzdoom$d/qzdoom \"\$@\"
+" &gt; qzdoom$d.sh &amp;&amp;
+chmod 755 qzdoom$d.sh &amp;&amp;
+sudo mv -v qzdoom$d.sh /usr/bin/qzdoom$d
+&lt;/pre&gt;
+
+Now from a terminal you should be able to run '''qzdoom''' or '''qzdoom-alpha''' from any user account.
+
+=== Uninstallation ===
+Remove /usr/games/qzdoom directory and all its files:
+&lt;pre&gt;
+sudo rm -rfv /usr/games/qzdoom
+&lt;/pre&gt;
+
+Remove qzdoom script:
+&lt;pre&gt;
+sudo rm -fv /usr/bin/qzdoom
+&lt;/pre&gt;
+
+Remove /usr/games/qzdoom-alpha directory and all its files:
+&lt;pre&gt;
+sudo rm -rfv /usr/games/qzdoom-alpha
+&lt;/pre&gt;
+
+Remove qzdoom-alpha script:
+&lt;pre&gt;
+sudo rm -fv /usr/bin/qzdoom-alpha
+&lt;/pre&gt;
+
+== Developing ==
+This page has helped you compile QZDoom, but perhaps you are interested in debugging the code or submitting code changes or fixes for inclusion. This section is intended for more advanced users who may be unfamiliar to CMake or debugging on Linux systems.
+
+=== Debugging ===
+'''Prerequisite:'''
+
+* [http://www.gnu.org/software/gdb/ gdb]
+
+Maybe you have found a way to make QZDoom crash, and are interested in debugging it. First, you need to compile a debug build of QZDoom. Inside the build directory, invoke CMake to set up for compiling, but this time, the build type is set to Debug:
+&lt;pre&gt;
+cd ~/qzdoom_build/qzdoom/build
+cmake .. -DCMAKE_BUILD_TYPE=Debug
+&lt;/pre&gt;
+Optionally, you may want to use some of the [[#Build options]].
+
+After CMake is done, run &lt;code&gt;make&lt;/code&gt; or to speed up compilation, run &lt;code&gt;make -j&lt;number&gt;&lt;/code&gt;, a recommended value for the &lt;code&gt;-j&lt;/code&gt; option is the number of physical cores:
+&lt;pre&gt;
+make
+&lt;/pre&gt;
+
+To run QZDoom under a debugger such as gdb, use the following command:
+&lt;pre&gt;
+gdb qzdoom
+&lt;/pre&gt;
+
+Now gdb should have you in its own command prompt:
+&lt;pre&gt;
+(gdb)
+&lt;/pre&gt;
+
+You probably want to log the output, so lets output to a file qzdoomdebug.log:
+&lt;pre&gt;
+(gdb) set logging on qzdoomdebug.log
+&lt;/pre&gt;
+
+Now start QZDoom by typing in run, and pressing enter:
+&lt;pre&gt;
+(gdb) run
+&lt;/pre&gt;
+
+Or put any [[command line parameters]] to qzdoom after run:
+&lt;pre&gt;
+(gdb) run &lt;command line parameters&gt;
+&lt;/pre&gt;
+
+If QZDoom crashes, gdb may be able to tell you the source file and line number it crashed in. Typing in the command backtrace or bt will produce information telling the last function calls, showing how execution got to the point where it crashed:
+&lt;pre&gt;
+(gdb) backtrace
+&lt;/pre&gt;
+All output will be copied into the qzdoomdebug.log, which can then be scrutinized later, or perhaps posted to the {{forum|Bugs forum|view=forum|f=2}} for other developers to look at.
+
+To exit gdb's command prompt, type quit, q or press Ctrl-D:
+&lt;pre&gt;
+(gdb) quit
+&lt;/pre&gt;
+If you want to free up space, run &lt;code&gt;make clean&lt;/code&gt; to remove the files generated by the compilation.
+
+=== Build options ===
+{|class="wikitable" width="72%"
+|+ &lt;span style="text-decoration: underline"&gt;CMake options&lt;/span&gt;
+|-
+!width="10%"|Options!!width="35%"|Description!!width="55%"|Example
+|-
+|NO_GTK=ON||Disable GTK+ dialogs.||cmake .. -DNO_GTK=ON
+|-
+|NO_OPENAL=ON||Disable OpenAL sound support.||cmake .. -DNO_OPENAL=ON
+|-
+|CMAKE_C_COMPILER||Set path for C compiler.||cmake .. -DCMAKE_C_COMPILER=/path/to/compiler/gcc
+|-
+|CMAKE_CXX_COMPILER||Set path for C++ compiler.||cmake .. -DCMAKE_CXX_COMPILER=/path/to/compiler/g++
+|}
+
+{|class="wikitable" width="72%"
+|+ &lt;span style="text-decoration: underline"&gt;CMake build types&lt;/span&gt;
+|-
+!width="10%"|Types!!width="45%"|Description!!width="45%"|Example
+|-
+|Debug||Debug information, -O1 optimization.||cmake .. -DCMAKE_BUILD_TYPE=Debug
+|-
+|Release||No debug information, -O3 optimization.||cmake .. -DCMAKE_BUILD_TYPE=Release
+|-
+|RelWithDebInfo||Debug information, -O2 optimization. Useful for finding optimization bugs that only show up in Release.||cmake .. -DCMAKE_BUILD_TYPE=RelWithDebInfo
+|-
+|MinSizeRel||Similar to Release but with less optimizations in order to save space.||cmake .. -DCMAKE_BUILD_TYPE=MinSizeRel
+|}
+
+== External links ==
+* [https://github.com/raa-eruanna/qzdoom Git Repository]
+
+[[Category:Guides]][[Category:Technical aspects]][[Category:QZDoom]]</text>
+    <sha1>n5upfvhkv0hkhl3lhytx9u41at7baf5</sha1>
+  </revision>
+</page>

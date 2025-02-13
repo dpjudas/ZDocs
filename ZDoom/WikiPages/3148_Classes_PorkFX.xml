@@ -1,0 +1,51 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>Classes:PorkFX</title>
+  <ns>0</ns>
+  <id>3148</id>
+  <revision>
+    <id>39707</id>
+    <parentid>34955</parentid>
+    <timestamp>2015-05-03T22:15:51Z</timestamp>
+    <contributor>
+      <username>Blue Shadow</username>
+      <id>2021</id>
+    </contributor>
+    <minor />
+    <comment>/* DECORATE definition */ Updated</comment>
+    <origin>39707</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="964" sha1="nj3wakljeh7zybekoq9bbnph6x695uq" xml:space="preserve">{{Actor|
+| type = Explosive
+| name = Porkalator shot
+| class = PorkFX
+| game = Hexen
+| spawnid = 40
+| spawnname = T_MORPHBLAST 
+}}[[Classes]]: [[Classes:MorphProjectile|MorphProjectile]]&amp;rarr;&lt;u&gt;PorkFX&lt;/u&gt;&lt;br&gt;
+
+Player or enemy hit by this projectile (or inherited actor) is morphed to [[Classes:PigPlayer|PigPlayer]] (for players) or to [[Classes:Pig|Pig]] (for monsters). In Hexen.wad, the sprites are actually named EGGM* and are [[Sprite renaming|renamed at load-time]] by ZDoom.
+
+
+==== [[DECORATE]] definition ====
+ ACTOR &lt;u&gt;PorkFX&lt;/u&gt; : {{Class|MorphProjectile}}
+ {
+   {{Property|Radius}} 8
+   {{Property|Height}} 8
+   {{Property|Speed}} 18
+   {{Property|MorphProjectile.PlayerClass}} "{{Class|PigPlayer}}"
+   {{Property|MorphProjectile.MonsterClass}} "{{Class|Pig}}"
+   {{Property|MorphProjectile.MorphStyle}} MRF_UNDOBYTOMEOFPOWER|MRF_UNDOBYCHAOSDEVICE
+   States
+   {
+   Spawn:
+     PRKM ABCDE 4
+     Loop
+   Death:
+     FHFX IJKL 3 Bright
+     Stop
+   }
+ }</text>
+    <sha1>nj3wakljeh7zybekoq9bbnph6x695uq</sha1>
+  </revision>
+</page>

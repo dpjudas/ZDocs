@@ -1,0 +1,344 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>A quick beginner's guide to ACS</title>
+  <ns>0</ns>
+  <id>3128</id>
+  <revision>
+    <id>45225</id>
+    <parentid>42782</parentid>
+    <timestamp>2017-05-05T21:28:56Z</timestamp>
+    <contributor>
+      <username>Gez</username>
+      <id>1283</id>
+    </contributor>
+    <minor />
+    <comment>style</comment>
+    <origin>45225</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="15310" sha1="7w8fu6czahy1d6b2rbndxnjl3ylrwtu" xml:space="preserve">If you are new to [[ACS]] scripting, or if you just need help with basic stuff, this thread will hopefully solve your issues. It is assumed that you know something about mapping, and that you are using the Hexen or UDMF [[map format]].
+
+==A basic script==
+
+This lesson will guide you into making your very first script.
+
+ #include "zcommon.acs"
+ 
+ script 1 {{SType|Enter}}
+ {
+     [[print]](s:"Hello World!");
+ } 
+
+
+This script will print the string (a data type that can hold pretty much anything, but cannot be used in any operation except strings without conversion) "Hello World!" upon entering the level.
+
+O.K. Now for the interactive part of this lesson:
+
+Open up Doom Builder and create a new map (call it MAP01) in ZDoom (Doom in Hexen) format. Create 1 sector and put whatever textures you want and a Player 1 Start.
+
+Now go to the "Scripts" Menu and choose "Edit BEHAVIOR Lump". You should see a button that says "Make New Script". Go ahead and click on that. For GZDoom Builder you should search for "Script Editor", found on the main toolbar or by pressing F10. Now go ahead and copy the code you see above. When finished, click on "Compile". Then, click on the "Test Map" button and see what happens!
+
+Now, you will learn about the structure of a script.
+
+==The structure of a script==
+
+
+ #include "zcommon.acs"
+ 
+ script 1 {{SType|Enter}} 
+ {
+     [[print]](s:"Hello World!");
+ }
+
+Each script has a number. This is script 1. '''''All numbered scripts must be between 1 - 32767.'''''
+
+After the script number comes the "type" of script. Probably the most common type is (void). '''''Remember, (void) must be in parenthesis.''''' You might use scripts with arguments, but those will be discussed later.
+
+To activate a (void) script, you must either have a thing (I hope you know what this is) with it's thing special set to 80 (monster dies, health/weapon/powerup/key picked up), a line who's special is set to 80 (line crossed, player presses use, shot hits or goes past), or activated by another script (you will learn about that later).
+
+It is very common among mappers to place linedefs that you cannot detect and will not block your path. These lines are used for scripting.
+
+For Special Script Types: [[Script types]]
+
+After declaring the type, you must have a { then a } at the end
+
+Valid
+
+ script 1 {{SType|Enter}}
+ {
+     [[print]](s:"Hello World!");
+ }
+
+ script 2 (void)
+ {
+     [[print]](s:"Bye World!");
+ }
+
+Invalid
+
+ script 1 {{SType|Enter}}
+ [[print]](s:"Hello World!");
+ {
+ }
+
+So you know about script types? Good.
+
+==The '''print''' statement==
+
+In the script you saw above that prints "Hello World!", a Print statement was used. This is a very basic statement that enables you to communicate text information to the player.
+
+The print statement's structure is like this:
+ 
+ print(?:);
+
+The ? resembles the letter '''s''' (for string), '''d''' (for decimal), and some extras (these two are the most basic, but this lesson will only teach about the string).
+
+ #include "zcommon.acs"
+ 
+ script 1 (void) 
+ {
+     [[print]](s:"Hi.");
+     [[print]](s:"lol");
+ }
+
+This makes the message "Hi." appear, and then the message "lol" appear.
+
+ #include "zcommon.acs"
+ 
+ script 1 (void) 
+ {
+     [[print]](s:"Hi.\nlol");
+ }
+
+
+The '''"\n"''' means new line. This will cause the message "Hi." to appear on one line, and "lol" to appear on another.
+
+For more information, goto [[Print]]
+
+==Variables==
+
+This lesson will teach you about variables and basic usage. 
+
+ script 2 (void) 
+ {
+     int a = 9;
+     [[print]](s:"a is " , d: a);
+ }
+
+This script does two things. First, it declares a to be an integer and setting it's value to 9. Then, it prints the string "a is " followed by the value of a. In this case, the output would be "a is 9".
+
+You can declare other variables, such as bool (boolean, which returns either true or false), string (which can hold pretty much anything, but cannot be used in operations besides strings, incorrect usage can and probably will cause errors).
+
+With integers, you can do basic math (and a little advanced math if programmed correctly).
+
+ script 2 (void) 
+ {
+     int a = 9;
+     int b = 17;
+     [[print]](d: a + b);
+ }
+
+This is basic addition. This code declares an integer a and sets it's value to 9, declares another integer b and sets it's value to 17, and prints out the value of a + b. Since a is 9 and b is 17, it will print out the value of 9 + 17, which is 26. If you activated the script while playing, you would see the number 26.
+
+If you want to print "9 + 17", then do so like this:
+
+ script 2 (void) 
+ {
+     [[print]](s:"9 + 17");
+ }
+
+Other useful functions with integers: -, *, / (BE CAREFUL WITH THIS ONE), %, ++, --.&lt;br /&gt;
+(in these examples, a is still 9 and b is still 17)
+* - is minus. a - b = -8
+* * is multiplication. a * b = 153
+* / is division. a / b = 0 (Not 0.5294, '''integers''' will always round '''down''' to the nearest whole number)
+* % is the modulus operator. a % b = 9 (After dividing 9 and 17, what is left over? )
+* ++ simply adds 1 to a variable. a++ = 10
+* -- simply subtracts 1 from a variable. a-- = 8.
+
+This concludes the basic introductory lesson to variables.
+
+==Script actions and parameters==
+
+Surely you want to do other stuff besides printing text, right? Well, you have come to the right place. Here, you will learn about scripts that do actions besides print, and parameters.
+
+Suppose we put a red key in the map. In vanilla Doom, picking it up gives you a red key, enabling you to open red doors or activate swithces that require the red key.
+
+Well, with ACS Scripting, you can make any object do any DOOM relating thing you want! You can have a red key kill the player, give him the BFG9000, do absolutely nothing, or raise dead monsters! If you have two red keys, you can make each one do something completely different!
+
+Create a sector, and put a player start, and a red key. Now, give the key a special action of 80 - H Execute Script with a script number of 1.
+
+Type the following code (Be aware this code won't compile because of a missing parameter (intentional))
+
+ #include "zcommon.acs"
+ 
+ script 1 (void) 
+ {
+     [[Thing_Damage]]();
+ }
+
+ script 2 ENTER
+ {
+     [[Thing_ChangeTID]](0, 1);
+ }
+
+Now, for the Thing_Damage statement, we need some parameters. What thing do we want to damage? How much damage? If the thing dies, what message appears?
+
+The first parameter is who we want to damage. Since we want to damage the player, we put the players identification number (make sure it is 1; set it before doing the key)
+
+With an identification of 1:
+
+ [[Thing_Damage]](1);
+
+How much damage? Let's do weak damage (with a power of 2). To move from one parameter to another, put a comma after the end of the parameter
+
+Like This:
+
+ [[Thing_Damage]](1,2);
+
+If the player dies, we just want the obituary to say "%o died" (%o is your name).
+
+We can do that like this:
+
+ [[Thing_Damage]](1,2,0);
+
+Now, replace Thing_Damage() with what you see above. Your code should look like this:
+
+ #include "zcommon.acs"
+ 
+ script 1 (void) 
+ {
+     [[Thing_Damage]](1,2,0);
+ }
+
+Test your level, pick up the red key, and watch your health. It will drop when you pick up the red key.
+
+Look at this page for more action statements
+
+[[Action specials]]
+
+==Using functions to make simple changes to a map==
+
+You can use functions and line actions to make changes to a map. This quick tutorial will show you how to do that. 
+
+To start, open Doom Builder and create a new map in ZDoom(Doom in Hexen format). Create a square sector that's roughly 512x512 in size. We'll call this the "big" sector. Put a Player Start thing somewhere in the big sector. 
+
+Create a second sector within the first--roughly 64x64 in size--Drop the floor height to -64--so it looks like an empty pool. Be sure to texture the edges of the pool. Assign sector tag 1 to the pool. The floor texture should be FWATER1 or another liquid texture (for realism's sake).
+
+After this, create another sector *outside* of the big sector. This is our control sector. Size doesn't matter for this sector--though it is recommended that you keep it as small as possible in case you want to use other control sectors. Ensure that the ceiling height of this sector matches the other sectors. Also ensure that the floor is roughly 16 units below the big sector's floor (you will see why this matters later).
+
+Click on any linedef in the control sector and assign it line action 209:[[Transfer_Heights]]. Transfer_Heights accepts two parameters (sector tag, effect). Set the first parameter to 1 (sector tag 1) and the second parameter to 8 (underwater portion is swimmable).
+
+Save and run this map. If you've done everything correctly, you'll see the pool is "full"... or rather, that the FWATER1 texture is now only 16 units below the floor instead of 64. This is because the *height* of the control sector was *transferred* to the pool. If you jump into the pool, you should be able to swim in it (go forward and move your mouse up and down. You'll float in the water instead of simply looking up and down). Exit the map and go back to Doom Builder.
+
+Next, we want to create a script that adds color and fog to the control sector. For a script to work, the control sector needs a tag--so we'll give it tag 2. For the ACS script, we need two functions: Sector_SetColor() and Sector_SetFade(). Both functions take the same 4 arguments (sector tag, red, green, blue). Each color can take a value from 0 to 255, depending on how much of that color you want. Example: setting blue to 0 will mean no blue at all, but setting it to 255 will mean as much blue as possible. 
+
+
+ #include "zcommon.acs"
+ script 1 OPEN
+ {
+     //we want to use the sector tag of the control sector
+     [[Sector_SetColor]](2, 0, 0, 205); //this creates a blue color
+     [[Sector_SetFade]](2,0,0,205); //this creates a blue fog effect
+ }
+
+
+As you've learned, this script should execute upon opening the level. Now when you swim in the pool, the underwater portion will look deep blue and murky--making it more realistic. 
+
+The next tutorial will allow you create a door that opens when you kill an enemy.
+
+To do this create a new map and make two rooms connected by a door. The first room should contain a monster, lets say a zombie, and the player 1 start. In the other room can be some random goodie or whatever. The door connecting the two should not have any line actions so that you can open the door but should have a tag, lets go with 1 again. Lets create the script. We are going to have the same first line as before and as a matter of habit this should always be your first line unless you have a comment header.
+
+ #include "zcommon.acs"
+
+Then we are going to use the print() and the door_open() functions. The print function is a complicated function but we are just going to use its most basic functionality as described by Pure Hellspawn. Feel free to check out the wiki for more information on it. The door_open() function takes three arguments: the sector tag, in our case 1, the speed to open the door, I find 64 to be good fast speed, and the light tag, this is a more advanced feature so I wont describe or use it. You can check out its usage by looking on the wiki, but we'll just set it to 0 for now. This gives us this code:
+
+ script 1 (void)
+ {
+     [[print]](s:"You killed a zombieman!"); //prints "You killed a zombieman" onto the screen
+     [[Door_Open]](1,64,0); //let's open the door
+ }
+
+Now, in order for this to work we give the zombie a thing special. In this case we will use 80:[[ACS_Execute]](). It basically runs a script. It takes five arguments: the script number we want to execute, in this case 1, the map of the script you want to execute, you can have a script from another map called from a different map and when you enter that map it will run the script on startup, we will use 0 because that denotes the current map. The next three arguments are values you can pass to a script if your script allows. Ours doesn't so we set all of them to 0.
+
+That should be everything. Notice I use the 'void' type script, also known as the closed script, because we set up a way for the script to run. Now just run it and kill the zombieman the message should print and the door should open. If you want to learn more I suggest the wiki and trial and error are you best routes, thats how I learned.
+
+==Flow control==
+
+===Conditional execution (if / else)===
+
+Otherwise known as if/else, this is a data comparison. Simply, this means that if a condition is true/false, the script (or parts of it) will/won't run.
+It's composed like this:
+
+ script # type
+ {
+     if(condition)
+     {
+         command1;
+     }
+     else if(condition)
+     {
+         command2;
+     }
+     else
+     {
+         command3;
+     }
+ }
+
+"condition" can be something like x==y (variable x is equal to variable y) or &lt;code&gt;GameType() != GAME_SINGLEPLAYER&lt;/code&gt; (the game type does not equal to single player (meaning there's more than more player in the map).
+The "else" parts are not required if you only want things to happen on one condition. 
+
+===Conditional repeating loops (while)===
+
+A "while" loop will do the same thing as an if comparison, except it will restart when finished. The script will stop repeating when the condition(s) no longer are met.
+
+NOTE ABOUT SCRIPT LOOPS:&lt;br /&gt;
+A portion of a script intended to loop MUST contain at least one "delay" function with a value over 1. If not, ZDoom will terminate the script for its own good (a looping script that won't take a break between restarts will go on in eternity without giving other things the ability to do anything). If your script is terminated, ZDoom will let you know through a message like "Runaway script # terminated" at the top of your screen.
+
+NOTE ABOUT UNTIL LOOPS:&lt;br /&gt;
+To do an until loop, simply add a ! (not) sign at the beginning (eg. while(!(i&gt;0))
+
+ script # type
+ {
+     int i = 5;
+     while(i &gt; 0)
+     {
+         command or series of commands that change i;
+     }
+ }
+
+"int i=5;" means that the compiler makes a variable "i" with a numerical value of 5.
+This while loop will run as long as the variable i is of a value greater than 0.
+
+If you want to create a while loop that never ends (perhaps to create an ongoing effect in the map), you can use an expression that never returns false to do this:
+
+ script # type
+ {
+     while ({{const|TRUE}}) // Or while(1), or while(4 == 4), etc, see zdefs.acs for common #defines
+     {
+         commands
+     }
+ }
+
+===Count-controlled loops (for)===
+A "for" loop will loop a portion of a script a defined number of times. Such a loop looks like this: 
+
+ script 1 (void)
+ {
+     for (int i=0; i&lt;10; i++)
+     {
+         log(i:i);
+     }
+ }
+
+This script will print 0 through 9 in the log.
+
+ACS uses what's known as a three-expression for loop, so called for the three expressions: the initializer (i=0), the loop-test (i&lt;10), and the counter (i++).  With the first pass of the loop is i = 0 which satisfies the loop test of i &lt; 10 and then proceeds to the commands nested within the loop.  Int i is then incremented by 1 and the next iteration of the loop begins.  This continues until i = 10, at which point the loop-test of i &lt; 10 is no longer satisfied, and the nested commands are not executed.
+
+== See also ==
+[[Tutorials]]
+
+[[category:ACS guides]]</text>
+    <sha1>7w8fu6czahy1d6b2rbndxnjl3ylrwtu</sha1>
+  </revision>
+</page>

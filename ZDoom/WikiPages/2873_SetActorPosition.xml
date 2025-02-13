@@ -1,0 +1,47 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>SetActorPosition</title>
+  <ns>0</ns>
+  <id>2873</id>
+  <revision>
+    <id>40289</id>
+    <parentid>35886</parentid>
+    <timestamp>2015-08-04T00:57:17Z</timestamp>
+    <contributor>
+      <username>AlienOverlord</username>
+      <id>2103</id>
+    </contributor>
+    <comment>heresy! coordinates are all the same, just fixed point</comment>
+    <origin>40289</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="879" sha1="08xc8tj42veuz0uba7dxiak1hnk2bvg" xml:space="preserve">bool '''SetActorPosition''' (int ''tid'', fixed ''x'', fixed ''y'', fixed ''z'', bool ''fog'')
+
+==Usage==
+
+This function sets the ''x'', ''y'', and ''z'' coordinates of the specified actor, with or without teleport fog. The coordinates are specified in [[Fixed point numbers|fixed point]]. See also: [[GetActorX]], [[GetActorY]], [[GetActorZ]].
+
+=== Return value ===
+
+Returns true if the actor position was changed successfully, and false otherwise.
+
+==Example==
+
+Here is a script that will move a decoration with a tid of 1 to stay at an equal vertical plane with the player.
+
+ #include "zcommon.acs"
+ 
+ script 1 {{SType|Enter}}
+ {
+     while ({{const|TRUE}})
+     {
+         [[SetActorPosition]](1, [[GetActorX]](1), [[GetActorY]](1), [[GetActorZ]](0), 0);
+         [[delay]](1);
+     }
+ }
+
+Note that this script will only work for one player.
+
+[[category:ACS Actor functions]]</text>
+    <sha1>08xc8tj42veuz0uba7dxiak1hnk2bvg</sha1>
+  </revision>
+</page>

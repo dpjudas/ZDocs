@@ -1,0 +1,71 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>License</title>
+  <ns>0</ns>
+  <id>6870</id>
+  <revision>
+    <id>48593</id>
+    <parentid>47076</parentid>
+    <timestamp>2021-06-20T05:09:45Z</timestamp>
+    <contributor>
+      <username>Thekins</username>
+      <id>987</id>
+    </contributor>
+    <minor />
+    <comment>Fixed link to zlib.h to not point to the old, long-dead SVN</comment>
+    <origin>48593</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="7677" sha1="cg8x89gwa4ds3bgv0utyxj4t6xmtkm5" xml:space="preserve">Since April 17, 2017, [[GZDoom]] utilizes the following licenses for its code:
+
+;{{wp|GNU_General_Public_License|GPL}}
+:The original Doom and Raven source codes, the [[FraggleScript]] code, the MAME-based OPL core as well as portions of Chocolate Doom's OPL player, are used under the GPLv3. The one remaining function taken from Build is used under the GPLv3 by permission as well.
+;{{wp|GNU_Lesser_General_Public_License|LGPL}}
+:Code under this license used in ZDoom include the internal {{wp|TiMidity++|TiMidity}} player (for [[GUS]] emulation), the [http://www.slack.net/~ant/libs/audio.html Game Music Emu] library, and the two [[OPL3]] cores. In addition, [[GZDoom]] also includes LGPL code for the {{wp|hqx}} algorithm, as well as for the OpenGL renderer code.
+;[http://dumb.sourceforge.net/ DUMB license]
+:The [[foo_DUMB]] code is under the [http://dumb.sourceforge.net/index.php?page=licences DUMB license].
+;[http://www.azillionmonkeys.com/qed/weblicense.html Paul Hsieh derivative license]
+:The hash function ZDoom uses for storing and retrieving names, found in {{c|c_dispatch.cpp}}, is based on Paul Hsieh's [http://www.azillionmonkeys.com/qed/hash.html SuperFastHash] algorithm.
+;ZDoom code license
+:Most code original to ZDoom is under the {{wp|BSD_licenses|3-point modified BSD license}}.
+;{{wp|zlib}} license
+:ZDoom includes the zlib library by Jean-loup Gailly and Mark Adler and implements several [[ZIP]] decompression protocols. The concerned files are in the zlib subdirectory. The license requests the presence of the string "deflate 1.2.3 Copyright 1995-2005 Jean-loup Gailly." in the executable or the documentation. The rest of the conditions can be seen in [https://github.com/coelckers/gzdoom/blob/master/libraries/zlib/zlib.h {{c|zlib.h}}].
+
+==Older versions==
+Earlier versions of [[ZDoom]] and its derivatives use code from several sources which varied licensing schemes. The following apply to elements of the code base that were removed or relicensed in the current version.
+
+;[[Build]] license
+:ZDoom used to borrow some elements from Ken Silverman's Build engine and tools, namely inline fixed point multiplication functions (mscinlines.h and gccinlines.h), some assembly code (asm_ia32/a.asm), [[voxel]]s rendering (r_things.cpp) and part of the decal and wall rendering code (r_segs.cpp, r_draw.cpp). Except for one voxel function, this code has been removed from current versions of GZDoom. The Build license is non-commercial only and requires the following text to be placed in the code:
+ // "Build Engine &amp; Tools" Copyright (c) 1993-1997 Ken Silverman
+ // Ken Silverman's official web site: "[http://www.advsys.net/ken http://www.advsys.net/ken]"
+ // See the included license file "[http://mancubus.net/svn/hosted/zdoom/zdoom/trunk/docs/BUILDLIC.TXT BUILDLIC.TXT]" for license info.
+:Note that the code used to read Build-engine data is not itself derived from Build code.
+;{{dw|Doom_Source_License|Doom source license}}
+:[http://mancubus.net/svn/hosted/zdoom/zdoom/trunk/docs/doomlic.txt This license] prohibits commercial use.  It naturally applies to all parts of the code originating from the ''[[Doom]]'' source code. Furthermore, the source code for ''[[Heretic]]'' and ''[[Hexen]]'' was released under Activision's standard EULA, which is {{dw|Raven_source_code_licensing|inapplicable to source code}}. Kenn Hoekstra of [[Raven Software]] allowed to use the terms of the Doom source license instead.
+{{cquote|''Regarding the Heretic/Hexen source code: According to the licensing agreement that shipped with the game, you really can't do ANYTHING with the source code. The restrictions are such that you could never legally make a mod or distribute the code or modify it or ANYTHING without Raven and/or Activision dropping the elbow on you and causing you great bodily harm. This is a mistake. The bottom line about the Heretic/Hexen source code is that you can pretty much do anything with it that people did with the DOOM source code as long as you don't charge for it or use it to make money.''}}
+:All three games had their source code eventually re-released under the terms of the GPLv2, but ZDoom used to use the older licensing scheme since the GPL is incompatible with other licenses used by parts of ZDoom; namely FMOD Ex, Build, and MAME.
+:Note that many parts of ''Heretic'' and ''Hexen'' support were written before their source code was released, and are original independent work instead.
+;[[FMOD Ex]] license
+:ZDoom's use of the FMOD Ex audio library is covered under the terms of the [http://www.fmod.org/sales/ FMOD non-commercial license]. The license also requires that the string "FMOD Sound System, copyright © Firelight Technologies Pty, Ltd., 1994-2011." be printed by the application (you see it during startup and in the [[console]] log).
+;{{wp|GNU_General_Public_License|GPL}} with special permission
+:The [[FraggleScript]] code is under the GPLv2. The GPL is normally incompatible with any non-commercial license (such as the FMOD and Build ones), and the code was therefore used with special permission from {{dw|Simon Howard}}. Code from [[SMMU]] can be used in ZDoom or derived ports, as long as the source code remains open and the full copyright notice remains in place. Following the switch to GPL license, the special permission text was removed.
+;{{wp|MAME}} license
+:The [[OPL2]] emulator is taken from the MAME project, where it was dual-licensed under the GPL and the MAME license. Reuse of parts of MAME, as is the case in ZDoom, was under a non-commercial, open-source clause:
+ The source code cannot be used in a commercial product without the written
+ authorization of the authors. Use in non-commercial products is allowed, and
+ indeed encouraged.  If you use portions of the MAME source code in your
+ program, however, you must make the full source code freely available as well.
+;MUSLib license
+:[[OPL synth emulation|OPL]] playback in ZDoom uses parts of the code from [http://www.fit.vutbr.cz/~arnost/welcome.html Vladimir Arnost]'s [http://www.fit.vutbr.cz/~arnost/muslib/index.html MUS File Player Library v1.75]. This license allows use in freeware and shareware products; but prohibits use in non-shareware commercial products; unless Vladimir Arnost is first contacted and a licensing agreement negotiated with him.
+
+==Commercial use==
+Since GZDoom v3.0 and later are under the GPL and compatible licenses, commercial use is allowed, turning it into a legally viable platform for developing new games. However, not all assets included in GZDoom's data files are compatible with a commercial distribution. Some assets are derived from commercial game data so as to support of all GZDoom's advanced features in the original games, such as for example additional characters for the game fonts allowing full localization. The support data files in GZDoom are the following:
+* {{c|gzdoom.pk3}}: basic engine support data, needed by the engine to work correctly. This data can safely remain bundled with GZDoom and is required in any case.
+* {{c|brightmaps.pk3}}: derivative data for optional extended feature. Do ''not'' include it in a commercial distribution.
+* {{c|lights.pk3}}: dynamic light definition for standard game objects. Not derivative, however unneeded for an independent game distribution.
+* {{c|game_support.pk3}}: derivative data for extended features. Do ''not'' include it in a commercial distribution. Formerly entitled {{c|zd_extra.pk3}}.
+
+Note that ZDoom was never released under the GPL and cannot be used for commercial purposes. Furthermore, all its support data are in {{c|zdoom.pk3}}, with no separation between free and non-free assets.
+[[Category:ZDoom]]</text>
+    <sha1>cg8x89gwa4ds3bgv0utyxj4t6xmtkm5</sha1>
+  </revision>
+</page>

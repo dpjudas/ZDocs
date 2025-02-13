@@ -1,0 +1,145 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>Computer Terminal</title>
+  <ns>0</ns>
+  <id>3312</id>
+  <revision>
+    <id>42838</id>
+    <parentid>42837</parentid>
+    <timestamp>2016-07-06T03:37:59Z</timestamp>
+    <contributor>
+      <username>Kfpopeye</username>
+      <id>2483</id>
+    </contributor>
+    <origin>42838</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="3116" sha1="cazmhqv40gzk6t66x94v0lqdz6p77vs" xml:space="preserve">''Tutorial written and coded by Doomguy0505'' and later updated by kfpopeye.&lt;br&gt;
+&lt;span align="left"&gt;[https://youtu.be/2ukdx-0jGds Youtube video]&lt;/span&gt;
+This is where the player can select an option and confirm it.
+
+[https://www.doomworld.com/idgames/utils/level_edit/tutorials/compterm Demonstration Wad] &lt;- Updated link 07/04/2016
+
+==Changes Required==
+
+MenuCount is changed accordingly to the size of MenuOptions.
+Script 2's Teleport is in a "control room" without any enemies (see the example).
+The control room has a "Actor hits ceiling" (9996) special that calls script 4.
+
+==Notes==
+
+Since there is not PROP_CANSHOOT, the player can still shoot while they are at a terminal.
+
+==Code==
+
+&lt;pre&gt;
+//these scripts originally coded by Doomguy0505. Minor alterations to scripts and map by kfpopoeye
+//a demonstration wad can be found here: https://www.doomworld.com/idgames/utils/level_edit/tutorials/compterm
+
+bool TerminalDone, TerminalNo = false;
+int MenuCount = 4, CurSel = 0, CamId = 0;
+str MenuOptions[4] = {"Area 1 Security Camera", "Area 2 Security Camera", "Area 3 Security Camera", "Exit"};
+
+#define ID_TERMINAL 1
+
+function void TerminalSel(int sel)
+{
+	switch(sel)
+	{
+		case 0:
+			TerminalCam(7);
+		break;
+		case 1:
+			TerminalCam(8);
+		break;
+		case 2:
+			TerminalCam(9);
+		break;
+		case 3:
+			TerminalDone = true;
+		break;
+	}
+}
+
+function void TerminalCam(int tid)
+{
+	CamId = tid;
+	Thing_Activate(tid);
+	ChangeCamera(tid, 0, 0);
+	FadeTo(0,0,0,0.0,0.0);
+	TerminalNo = true;
+}
+
+function void NextSel(void)
+{
+	if (TerminalNo)
+	{
+		TerminalNo = false;
+		Thing_Deactivate(CamId);
+		FadeTo(0,0,0,1.0,0.0);
+		ChangeCamera(0,0,0);
+		return;
+	}
+	if (MenuCount == CurSel+1)
+		CurSel = 0;
+	else
+		CurSel++;
+}
+
+//triggered by script 2. Displays instructions to player
+script 1 (void)
+{
+	TerminalDone = false;
+	int i;
+	do
+	{
+		if (TerminalNo) {
+			delay(1);
+			continue;
+		}
+		HudMessage(s:"Terminal"; HUDMSG_PLAIN, 0, CR_BLUE, 0.5, 0.1, 0.03);
+		HudMessage(s:"Press Use to change selection and Jump to confirm selection"; HUDMSG_PLAIN, 0, CR_GREEN, 0.5, 0.9, 0.03);
+		for(i=0;i&lt;MenuCount;i++)
+		{
+			if (i == CurSel)
+				HudMessage(s:MenuOptions[i]; HUDMSG_PLAIN, 0, CR_GOLD, 0.5, 0.21+i*0.05, 0.03);
+			else
+				HudMessage(s:MenuOptions[i]; HUDMSG_PLAIN, 0, CR_RED, 0.5, 0.21+i*0.05, 0.03);
+		}
+		delay(1);
+	} while(!TerminalDone);
+	HudMessage(s:""; HUDMSG_PLAIN, ID_TERMINAL, CR_RED, 0.0, 0.0, 0.0);
+	FadeTo(0,0,0,0.0,0.0);
+	Teleport_NoFog(6);  //teleport player back to switch that triggers script 2
+}
+
+//moves player to control sector and starts the menu script
+//triggered when player pushes the button
+script 2 (void)
+{
+	FadeTo(0,0,0,1.0,0.0);  //fade to black
+	Teleport_NoFog(5);  //teleport plaer to control sector
+	ACS_Execute(1, 0, 0, 0, 0); //execute script 1
+}
+
+//highlights the next option in the list
+//triggered when the player pushes use in the control sector
+script 3 (void)
+{
+	NextSel();
+}
+
+//selects highlighted option
+//triggered when the players jumps and hits the ceiling of the control sector
+script 4 (void)
+{
+	TerminalSel(CurSel);
+}
+&lt;/pre&gt;
+
+== See Also ==
+[[Tutorials]]
+
+[[category:ACS guides]]</text>
+    <sha1>cazmhqv40gzk6t66x94v0lqdz6p77vs</sha1>
+  </revision>
+</page>

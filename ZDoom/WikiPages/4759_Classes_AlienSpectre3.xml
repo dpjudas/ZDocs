@@ -1,0 +1,66 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>Classes:AlienSpectre3</title>
+  <ns>0</ns>
+  <id>4759</id>
+  <revision>
+    <id>39829</id>
+    <parentid>35191</parentid>
+    <timestamp>2015-05-04T22:00:51Z</timestamp>
+    <contributor>
+      <username>Blue Shadow</username>
+      <id>2021</id>
+    </contributor>
+    <minor />
+    <comment>/* DECORATE definition */ Updated</comment>
+    <origin>39829</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="1552" sha1="6aom201dxzca0alaeg7tji109fughxs" xml:space="preserve">{{Actor|
+| type = Monster
+| name = The Oracle's spectre
+| class = AlienSpectre3
+| game = Strife
+| doomednum = 76
+| convid = 71
+}}[[Classes]]: [[Classes:SpectralMonster|SpectralMonster]]&amp;rarr;[[Classes:AlienSpectre1|AlienSpectre1]]&amp;rarr;&lt;u&gt;AlienSpectre3&lt;/u&gt;&lt;br&gt;
+The spectre possessing the Oracle. It fires Sigil3 blasts. It is immune to {{Class|SpectralLightningV1}} and {{Class|SpectralLightningV2}}, so you need at least a second-phase {{Class|Sigil}} to hurt him. It teleports to fight you when the oracle dies or you say the wrong thing to him. If you killed Macil first you will have been to the Loremaster and have the Sigil 4 instead of 2.
+==== [[DECORATE]] definition ====
+ ACTOR &lt;u&gt;AlienSpectre3&lt;/u&gt; : {{Class|AlienSpectre1}}
+ {
+   {{Property|Health}} 1500
+   {{Property|PainChance}} 50
+   {{Property|Radius}} 24
+   +{{Flag|SPAWNCEILING}}
+   {{Property|DropItem}} "{{Class|Sigil3}}"
+   {{Property|DamageFactor}} "SpectralLow", 0
+   States
+   {
+   Spawn:
+     ALN1 ABCDEFGHIJK 5
+     Loop
+   See:
+     ALN1 AB 5 [[A_Chase]]
+     ALN1 C 5 [[A_SentinelBob]]
+     ALN1 DEF 5 [[A_Chase]]
+     ALN1 G 5 [[A_SentinelBob]]
+     ALN1 HIJ 5 [[A_Chase]]
+     ALN1 K 5 [[A_SentinelBob]]
+     Loop
+   Melee:
+     ALN1 J 4 [[A_FaceTarget]]
+     ALN1 I 4 [[A_CustomMeleeAttack]](([[DECORATE_expressions#Mathematical_functions|random]][SpectreMelee](0, 255)&amp;9)*5)
+     ALN1 C 4
+     Goto See+2
+   Missile:
+     ALN1 F 4 [[A_FaceTarget]]
+     ALN1 I 4 [[A_Spectre3Attack]]
+     ALN1 E 4
+     Goto See+10
+   Pain:
+     ALN1 J 2 [[A_Pain]]
+     Goto See+6
+   }
+ }</text>
+    <sha1>6aom201dxzca0alaeg7tji109fughxs</sha1>
+  </revision>
+</page>

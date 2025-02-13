@@ -1,0 +1,51 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>GetModifiedDamage</title>
+  <ns>0</ns>
+  <id>9694</id>
+  <revision>
+    <id>53098</id>
+    <parentid>53097</parentid>
+    <timestamp>2024-09-17T12:48:32Z</timestamp>
+    <contributor>
+      <username>Jekyll Grim Payne</username>
+      <id>2175</id>
+    </contributor>
+    <comment>/* See also */</comment>
+    <origin>53098</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="1459" sha1="aw9l2zbkez561uz3wklt1d9isiyxxfe" xml:space="preserve">__NOTOC__ 
+'''{{class|Actor}}'''
+
+native '''int''' '''GetModifiedDamage''' (Name ''damagetype'', int ''damage'', bool ''passive'', Actor ''inflictor'' = null, Actor ''source'' = null, int ''flags'' = 0)
+
+==Usage==
+Returns the amount of damage the calling actor would receive ''or'' deal as modified by {{class|Inventory|items}} in their inventory, with the specified conditions. To perform the check, it retrieves the damage value as it would be modified by the '''[[ModifyDamage]]''' calls of every item in the calling actor's inventory.
+
+'''Note:''' this function does NOT deal or modify damage, it only retrieves what the damage value ''would'' be after all modifications have taken place.
+
+===Parameters===
+*{{c|Name '''damagetype'''}}
+:The [[Actor_properties#DamageType|damage type]] to test for.
+*{{c|int '''damage'''}}
+:The amount of damage to test for.
+*{{c|bool '''passive'''}}
+:If &lt;code&gt;true&lt;/code&gt;, tests for the damage the calling actor would ''receive''. Otherwise, test for the damage the calling actor would ''deal''.
+*{{c|Actor '''inflictor'''}}
+:The actor dealing the damage (a projectile or puff, if present; if neither is used, it's the same as ''source'')
+*{{c|Actor '''source'''}}
+:The actor responsible for the damage (the shooter).
+*{{c|int '''flags'''}}
+:Same as the ones used by [[DamageMobj]].
+
+== Example ==
+{{noexamples}}
+
+==See also==
+* [[ZScript virtual functions|Virtual functions]]
+* [[ApplyDamageFactor]]
+
+[[category:ZScript]]</text>
+    <sha1>aw9l2zbkez561uz3wklt1d9isiyxxfe</sha1>
+  </revision>
+</page>

@@ -1,0 +1,113 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>Classes:Chaingun</title>
+  <ns>0</ns>
+  <id>2585</id>
+  <revision>
+    <id>53054</id>
+    <parentid>49973</parentid>
+    <timestamp>2024-09-04T18:38:01Z</timestamp>
+    <contributor>
+      <username>Jekyll Grim Payne</username>
+      <id>2175</id>
+    </contributor>
+    <origin>53054</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="2138" sha1="eyc5kiwnvkcqc45pot3fiiuhz961r56" xml:space="preserve">{{Actor|
+| type = Weapon
+| name = Chaingun
+| class = Chaingun
+| game = Doom
+| doomednum = 2002
+| spawnid = 28
+| spawnname = T_CHAINGUN 
+}}
+[[Classes]]: [[Classes:Inventory|Inventory]]&amp;rarr;[[Classes:Weapon|Weapon]]&amp;rarr;[[Classes:DoomWeapon|DoomWeapon]]&amp;rarr;&lt;u&gt;Chaingun&lt;/u&gt;
+
+The chaingun is a rapid fire bullet weapon. It is dropped by [[Classes:ChaingunGuy|chaingunners]] and uses [[Classes:Clip|clips]] for ammo.
+
+== [[ZScript]] definition ==
+{{ZScriptDefinitionNote|actors/doom/weaponchaingun.zs}} 
+&lt;syntaxhighlight lang="csharp"&gt;
+class Chaingun : DoomWeapon
+{
+	Default
+	{
+		Weapon.SelectionOrder 700;
+		Weapon.AmmoUse 1;
+		Weapon.AmmoGive 20;
+		Weapon.AmmoType "Clip";
+		Inventory.PickupMessage "$GOTCHAINGUN";
+		Obituary "$OB_MPCHAINGUN";
+		Tag "$TAG_CHAINGUN";
+	}
+	States
+	{
+	Ready:
+		CHGG A 1 A_WeaponReady;
+		Loop;
+	Deselect:
+		CHGG A 1 A_Lower;
+		Loop;
+	Select:
+		CHGG A 1 A_Raise;
+		Loop;
+	Fire:
+		CHGG AB 4 A_FireCGun;
+		CHGG B 0 A_ReFire;
+		Goto Ready;
+	Flash:
+		CHGF A 5 Bright A_Light1;
+		Goto LightDone;
+		CHGF B 5 Bright A_Light2;
+		Goto LightDone;
+	Spawn:
+		MGUN A -1;
+		Stop;
+	}
+}&lt;/syntaxhighlight&gt;
+
+See the '''[[A_FireCGun]]''' page for the definition of Chaingun's attack function.
+
+== [[DECORATE]] definition ==
+{{DecorateDefinitionNote}}
+ ACTOR &lt;u&gt;Chaingun&lt;/u&gt; : {{Class|DoomWeapon}}
+ {
+    {{Property|Weapon.SelectionOrder}} 700
+    {{Property|Weapon.AmmoUse}} 1
+    {{Property|Weapon.AmmoGive}} 20
+    {{Property|Weapon.AmmoType}} "{{Class|Clip}}"
+    {{Property|Inventory.PickupMessage}} "$GOTCHAINGUN" // "You got the chaingun"
+    {{Property|Obituary}} "$OB_MPCHAINGUN" // "%o was mowed down by %k's chaingun."
+    {{Property|Tag}} "$TAG_CHAINGUN"
+    States
+    {
+    Ready:
+      CHGG A 1 [[A_WeaponReady]]
+      Loop
+    Deselect:
+      CHGG A 1 [[A_Lower]]
+      Loop
+    Select:
+      CHGG A 1 [[A_Raise]]
+      Loop
+    Fire:
+      CHGG AB 4 [[A_FireCGun]]
+      CHGG B 0 [[A_ReFire]]
+      Goto Ready
+    Flash:
+      CHGF A 5 Bright [[A_Light1]]
+      Goto LightDone
+      CHGF B 5 Bright [[A_Light1]]
+      Goto LightDone
+    Spawn:
+      MGUN A -1
+      Stop
+    }
+ }
+
+== See also ==
+* [[A_FireCGun]]</text>
+    <sha1>eyc5kiwnvkcqc45pot3fiiuhz961r56</sha1>
+  </revision>
+</page>

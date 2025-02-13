@@ -1,0 +1,249 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>Classes:FastProjectile</title>
+  <ns>0</ns>
+  <id>5054</id>
+  <revision>
+    <id>49474</id>
+    <parentid>49473</parentid>
+    <timestamp>2022-08-09T21:46:54Z</timestamp>
+    <contributor>
+      <username>Jekyll Grim Payne</username>
+      <id>2175</id>
+    </contributor>
+    <minor />
+    <comment>/* Specific features */</comment>
+    <origin>49474</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="6835" sha1="idng47se6dzezxhntq2sw0b9xnq537s" xml:space="preserve">{{Actor|
+| type = Internal
+| name = Fast projectile
+| class = FastProjectile
+}}[[Classes]]: &lt;u&gt;FastProjectile&lt;/u&gt;&lt;br&gt;
+&amp;ensp;&amp;rarr;[[Classes:BlasterFX1|BlasterFX1]]&lt;br&gt;
+&amp;ensp;&amp;rarr;[[Classes:CFlameMissile|CFlameMissile]]&lt;br&gt;
+&amp;ensp;&amp;rarr;[[Classes:MageWandMissile|MageWandMissile]]&lt;br&gt;
+
+A base class for all fast projectiles, with special movement code. Standard missile code doesn't manage speeds greater than about 60 very well. To create a fast-moving projectile, inherit from this class or one of its children classes.
+
+The {{Property|MissileType}} property has a special use for fast projectiles. When one is specified, several (at least eight) are spawned every tic in the projectile's wake, as a trail. The greater the speed, and the smaller (yet non-null) the radius, the more numerous the steps. See {{Class|MageWandMissile}} for an example of use, and {{Class|MageWandSmoke}} for how a trail actor might be defined.
+
+The {{Property|MissileHeight}} property also has a special use for fast projectiles. Normally, trails are spawned 8 map units lower than the projectile itself. Using this property, the trail's height can be adjusted to different heights. To spawn the trail at the same height as the projectile, use a MissileHeight of 8.
+
+Ripper projectiles will also cause a lot of bloodshed, which can slow down a game's FPS quite considerably, so use with caution.
+
+Trails spawned by FastProjectile inherit their pitch and set the projectile as their target. To get the owner (for explosions, ownership, etc), use the GETOWNER flag.
+
+== Specific features ==
+
+FastProjectile is not entirely identical to regular projectiles; aside from special handling of collision for high velocities and the ability to spawn trails, they also have a few quirks authors should be aware of:
+* Fast projectiles can't be subjected to gravity; the {{Property|gravity}} property and the NOGRAVITY flag values are ignored.
+* Due to the movement code, fast projectiles are destroyed if they are incapable of moving or hit any plane. Hence, bounce properties that imply losing momentum (such as {{Property|Bouncetype}} "Doom") or other plane-related flags don't work. 
+* Fast projectiles ignore the '''Death.Sky''' [[Actor states|state sequence]] and always disappear when hitting a sky.
+
+== [[ZScript]] definition ==
+{{ZScriptDefinitionNote|actors/shared/fastprojectile.zs}} 
+
+ class FastProjectile : Actor
+ {
+ 	Default
+ 	{
+ 		Projectile;
+ 		MissileHeight 0;
+ 	}
+ 	
+ 	
+ 	virtual void Effect()
+ 	{
+ 		class&lt;Actor&gt; trail = MissileName;
+ 		if (trail != null)
+ 		{
+ 			double hitz = pos.z - 8;
+ 
+ 			if (hitz &lt; floorz)
+ 			{
+ 				hitz = floorz;
+ 			}
+ 			// Do not clip this offset to the floor.
+ 			hitz += MissileHeight;
+ 			
+ 			Actor act = Spawn (trail, (pos.xy, hitz), ALLOW_REPLACE);
+ 			if (act != null)
+ 			{
+ 				if (bGetOwner &amp;&amp; target != null)
+ 					act.target = target;
+ 				else
+ 					act.target = self;
+ 				
+ 				act.angle = angle;
+ 				act.pitch = pitch;
+ 			}
+ 		}
+ 	}
+ 	
+ 	//----------------------------------------------------------------------------
+ 	//
+ 	// AFastProjectile :: Tick
+ 	//
+ 	// Thinker for the ultra-fast projectiles used by Heretic and Hexen
+ 	//
+ 	//----------------------------------------------------------------------------
+ 
+ 	override void Tick ()
+ 	{
+ 		ClearInterpolation();
+ 		double oldz = pos.Z;
+ 
+ 		if (isFrozen())
+ 			return;
+ 
+ 		// [RH] Ripping is a little different than it was in Hexen
+ 		FCheckPosition tm;
+ 		tm.DoRipping = bRipper;
+ 
+ 		int count = 8;
+ 		if (radius &gt; 0)
+ 		{
+ 			while (abs(Vel.X) &gt;= radius * count || abs(Vel.Y) &gt;= radius * count)
+ 			{
+ 				// we need to take smaller steps.
+ 				count += count;
+ 			}
+ 		}
+ 
+ 		if (height &gt; 0)
+ 		{
+ 			while (abs(Vel.Z) &gt;= height * count)
+ 			{
+ 				count += count;
+ 			}
+ 		}
+ 
+ 		// Handle movement
+ 		bool ismoved = Vel != (0, 0, 0)
+ 			// Check Z position set during previous tick.
+ 			// It should be strictly equal to the argument of SetZ() function.
+ 			|| (   (pos.Z != floorz           ) /* Did it hit the floor?   */
+ 				&amp;&amp; (pos.Z != ceilingz - Height) /* Did it hit the ceiling? */ );
+ 
+ 		if (ismoved)
+ 		{
+ 			// force some lateral movement so that collision detection works as intended.
+ 			if (bMissile &amp;&amp; Vel.X == 0 &amp;&amp; Vel.Y == 0 &amp;&amp; !IsZeroDamage())
+ 			{
+ 				VelFromAngle(MinVel);
+ 			}
+ 
+ 			Vector3 frac = Vel / count;
+ 			int changexy = frac.X != 0 || frac.Y != 0;
+ 			int ripcount = count / 8;
+ 			for (int i = 0; i &lt; count; i++)
+ 			{
+ 				if (changexy)
+ 				{
+ 					if (--ripcount &lt;= 0)
+ 					{
+ 						tm.ClearLastRipped();	// [RH] Do rip damage each step, like Hexen
+ 					}
+ 					
+ 					if (!TryMove (Pos.XY + frac.XY, true, false, tm))
+ 					{ // Blocked move
+ 						if (!bSkyExplode)
+ 						{
+ 							let l = tm.ceilingline;
+ 							if (l &amp;&amp;
+ 								l.backsector &amp;&amp;
+ 								l.backsector.GetTexture(sector.ceiling) == skyflatnum)
+ 							{
+ 								let posr = PosRelative(l.backsector);
+ 								if (pos.Z &gt;= l.backsector.ceilingplane.ZatPoint(posr.XY))
+ 								{
+ 									// Hack to prevent missiles exploding against the sky.
+ 									// Does not handle sky floors.
+ 									Destroy ();
+ 									return;
+ 								}
+ 							}
+ 							// [RH] Don't explode on horizon lines.
+ 							if (BlockingLine != NULL &amp;&amp; BlockingLine.special == Line_Horizon)
+ 							{
+ 								Destroy ();
+ 								return;
+ 							}
+ 						}
+ 
+ 						ExplodeMissile (BlockingLine, BlockingMobj);
+ 						return;
+ 					}
+ 				}
+ 				AddZ(frac.Z);
+ 				UpdateWaterLevel ();
+ 				oldz = pos.Z;
+ 				if (oldz &lt;= floorz)
+ 				{ // Hit the floor
+ 
+ 					if (floorpic == skyflatnum &amp;&amp; !bSkyExplode)
+ 					{
+ 						// [RH] Just remove the missile without exploding it
+ 						//		if this is a sky floor.
+ 						Destroy ();
+ 						return;
+ 					}
+ 
+ 					SetZ(floorz);
+ 					HitFloor ();
+                     Destructible.ProjectileHitPlane(self, SECPART_Floor);
+ 					ExplodeMissile (NULL, NULL);
+ 					return;
+ 				}
+ 				if (pos.Z + height &gt; ceilingz)
+ 				{ // Hit the ceiling
+ 
+ 					if (ceilingpic == skyflatnum &amp;&amp; !bSkyExplode)
+ 					{
+ 						Destroy ();
+ 						return;
+ 					}
+ 
+ 					SetZ(ceilingz - Height);
+                     Destructible.ProjectileHitPlane(self, SECPART_Ceiling);
+ 					ExplodeMissile (NULL, NULL);
+ 					return;
+ 				}
+ 				CheckPortalTransition();
+ 				if (changexy &amp;&amp; ripcount &lt;= 0) 
+ 				{
+ 					ripcount = count &gt;&gt; 3;
+ 
+ 					// call the 'Effect' method.
+ 					Effect();
+ 				}
+ 			}
+ 		}
+ 		if (!CheckNoDelay())
+ 			return;		// freed itself
+ 		// Advance the state
+ 		if (tics != -1)
+ 		{
+ 			if (tics &gt; 0) tics--;
+ 			while (!tics)
+ 			{
+ 				if (!SetState (CurState.NextState))
+ 				{ // mobj was removed
+ 					return;
+ 				}
+ 			}
+ 		}
+ 	}
+ }
+
+== [[DECORATE]] definition ==
+{{DecorateDefinitionNote}}
+ Actor &lt;u&gt;FastProjectile&lt;/u&gt; native
+ {
+   {{Property|Projectile}}
+   {{Property|MissileHeight}} 0
+ }</text>
+    <sha1>idng47se6dzezxhntq2sw0b9xnq537s</sha1>
+  </revision>
+</page>

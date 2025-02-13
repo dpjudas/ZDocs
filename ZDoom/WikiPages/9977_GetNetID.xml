@@ -1,0 +1,40 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>GetNetID</title>
+  <ns>0</ns>
+  <id>9977</id>
+  <revision>
+    <id>53698</id>
+    <parentid>53697</parentid>
+    <timestamp>2024-11-12T17:52:11Z</timestamp>
+    <contributor>
+      <username>Major Cooke</username>
+      <id>1703</id>
+    </contributor>
+    <minor />
+    <origin>53698</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="1313" sha1="jkeft6py88ceek1xih2tkgicgs4al80" xml:space="preserve">__NOTOC__
+{{git|f5ceaaf}}
+int '''GetNetID''' (int ''tid'', int ''index'' [, int ''pointer'']);
+==Usage==
+This function is primarily used in conjunction with [[SetActivatorByNetID]] to get a specific actor's network ID. See [[Events and handlers#Passing objects through networks|this page]] for more information.
+
+All actors with the specific TID are iterated through, regardless of what they are, alive or dead.
+
+'''NOTE:''' Avoid using this to find out how many actors have a specific TID. Internally, this iterates through the internal actors every time this function is called up until it reaches the defined index, which can impact performance especially with a large index, if the number of actors with that TID is large.
+===Parameters===
+* ''tid'': The thing's ID number to look through. If 0, gets the activator of the script if any.
+* ''index'': Specifies the index of the internal array. This is based on which actors gain 'tid' first. Ignored if TID is 0.
+* ''pointer'': An [[Actor pointer#Decorate &amp; ACS|actor pointer]]. If an actor is found, attempts to get the net ID of the pointer if applicable. If the pointed actor doesn't exist, uses the found actor.
+
+===Return value===
+Returns the network ID of an actor, or 0 if nothing is found.
+
+==Examples==
+{{noexamples}}
+
+[[Category:ACS Actor functions]]</text>
+    <sha1>jkeft6py88ceek1xih2tkgicgs4al80</sha1>
+  </revision>
+</page>

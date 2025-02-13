@@ -1,0 +1,154 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>Classes:SpectralMonster</title>
+  <ns>0</ns>
+  <id>4768</id>
+  <revision>
+    <id>51463</id>
+    <parentid>45498</parentid>
+    <timestamp>2024-02-01T17:49:15Z</timestamp>
+    <contributor>
+      <username>Jekyll Grim Payne</username>
+      <id>2175</id>
+    </contributor>
+    <comment>added zscript definition</comment>
+    <origin>51463</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="3124" sha1="e09y43gv8m5jxn7fjfusyupmazbmaqp" xml:space="preserve">{{Actor|
+| type = Internal
+| name = Spectral monster base class
+| class = SpectralMonster
+| game = Strife
+}}[[Classes]]: &lt;u&gt;SpectralMonster&lt;/u&gt;&lt;br&gt;
+&amp;ensp;&amp;rarr;[[Classes:AlienSpectre1|AlienSpectre1]]&lt;br&gt;
+&amp;ensp;&amp;ensp;&amp;rarr;[[Classes:AlienSpectre2|AlienSpectre2]]&lt;br&gt;
+&amp;ensp;&amp;ensp;&amp;rarr;[[Classes:AlienSpectre3|AlienSpectre3]]&lt;br&gt;
+&amp;ensp;&amp;ensp;&amp;rarr;[[Classes:AlienSpectre4|AlienSpectre4]]&lt;br&gt;
+&amp;ensp;&amp;ensp;&amp;rarr;[[Classes:AlienSpectre5|AlienSpectre5]]&lt;br&gt;
+&amp;ensp;&amp;rarr;[[Classes:EntityBoss|EntityBoss]]&lt;br&gt;
+&amp;ensp;&amp;rarr;[[Classes:EntitySecond|EntitySecond]]&lt;br&gt;
+The base class for all Spectres and the Entity in Strife. Any monster of this type also has a special attribute where they deal 5 damage to any player who touches them.
+
+=== [[ZScript]] definition ===
+{{ZScriptDefinitionNote|actors/strife/spectral.zs}}
+
+&lt;syntaxhighlight lang="csharp"&gt;
+class SpectralMonster : Actor
+{
+	Default
+	{
+		Monster;
+		+SPECIAL
+		+SPECTRAL
+		+NOICEDEATH
+	}
+	
+	override void Touch (Actor toucher)
+	{
+		toucher.DamageMobj (self, self, 5, 'Melee');
+	}
+	
+
+	//============================================================================
+
+	void A_SpectreChunkSmall ()
+	{
+		Actor foo = Spawn("AlienChunkSmall", pos + (0, 0, 10), ALLOW_REPLACE);
+
+		if (foo != null)
+		{
+			int t;
+
+			t = random[SpectreChunk](0, 7);
+			foo.Vel.X = t - random[SpectreChunk](0, 15);
+
+			t = random[SpectreChunk](0, 7);
+			foo.Vel.Y = t - random[SpectreChunk](0, 15);
+
+			foo.Vel.Z = random[SpectreChunk](0, 15);
+		}
+	}
+
+	void A_SpectreChunkLarge ()
+	{
+		Actor foo = Spawn("AlienChunkLarge", pos + (0, 0, 10), ALLOW_REPLACE);
+
+		if (foo != null)
+		{
+			int t;
+
+			t = random[SpectreChunk](0, 7);
+			foo.Vel.X = t - random[SpectreChunk](0, 15);
+			
+			t = random[SpectreChunk](0, 7);
+			foo.Vel.Y = t - random[SpectreChunk](0, 15);
+
+			foo.Vel.Z = random[SpectreChunk](0, 7);
+		}
+	}
+
+	void A_Spectre3Attack ()
+	{
+		if (target == null)
+			return;
+
+		Actor foo = Spawn("SpectralLightningV2", Pos + (0, 0, 32), ALLOW_REPLACE);
+		if (foo != null)
+		{
+			foo.Vel.Z = -12;
+			foo.target = self;
+			foo.FriendPlayer = 0;
+			foo.tracer = target;
+		}
+
+		Angle -= 90.;
+		for (int i = 0; i &lt; 20; ++i)
+		{
+			Angle += 9.;
+			SpawnSubMissile ("SpectralLightningBall2", self);
+		}
+		Angle -= 90.;
+	}
+	
+	//============================================================================
+	//
+	// A_SpotLightning
+	//
+	//============================================================================
+
+	void A_SpotLightning()
+	{
+		if (target == null) return;
+
+		Actor spot = Spawn("SpectralLightningSpot", (target.pos.xy, target.floorz), ALLOW_REPLACE);
+		if (spot != null)
+		{
+			spot.threshold = 25;
+			spot.target = self;
+			spot.FriendPlayer = 0;
+			spot.tracer = target;
+		}
+	}
+
+}&lt;/syntaxhighlight&gt;
+
+=== [[DECORATE]] definition ===
+{{DecorateDefinitionNote}}
+ ACTOR &lt;u&gt;SpectralMonster&lt;/u&gt; native
+ {
+   {{Property|Monster}}
+   +{{Flag|SPECIAL}}
+   +{{Flag|SPECTRAL}}
+   +{{Flag|NOICEDEATH}}
+ 
+   action native [[A_SpectreChunkSmall]]();
+   action native [[A_SpectreChunkLarge]]();
+   action native [[A_Spectre3Attack]]();
+   action native [[A_SpotLightning]]();
+ }
+
+=== See also ===
+* [[Touch]]</text>
+    <sha1>e09y43gv8m5jxn7fjfusyupmazbmaqp</sha1>
+  </revision>
+</page>

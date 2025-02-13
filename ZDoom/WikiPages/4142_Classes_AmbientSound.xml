@@ -1,0 +1,54 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>Classes:AmbientSound</title>
+  <ns>0</ns>
+  <id>4142</id>
+  <revision>
+    <id>39799</id>
+    <parentid>35155</parentid>
+    <timestamp>2015-05-04T21:45:27Z</timestamp>
+    <contributor>
+      <username>Blue Shadow</username>
+      <id>2021</id>
+    </contributor>
+    <minor />
+    <comment>/* DECORATE definition */ Updated</comment>
+    <origin>39799</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="1756" sha1="amqd3sidc79u9bo6tsfux09t889lfdn" xml:space="preserve">{{Actor|
+| type = Map spot
+| name = Ambient sound
+| class = AmbientSound
+| doomednum = 14065
+}}
+[[Classes]]: {{Class}} &amp;rarr; &lt;u&gt;AmbientSound&lt;/u&gt;&lt;br&gt;
+&amp;nbsp;&amp;rarr; {{Class|AmbientSoundNoGravity}}
+
+The AmbientSound thing plays an ambient sound determined by its first parameter. The sounds themselves must be defined in [[SNDINFO]]. While some ambient sounds are defined in [[Predefined sounds|ZDoom.pk3]], none of them are actually added to the index of ambient sounds with the $ambient command, so a map using this thing needs a SNDINFO lump. Up to 64 ambient sounds can be used in the Doom [[map format]] and 256 in [[Hexen format]]. [[UDMF]] maps have no limit.
+
+The second parameter determines the volume of the sound, as a percentile value. 0 is interpreted as the default (100).
+
+The third parameter determines the minimum distance for sound fading to be applied. If left to zero, the standard rolloff is used instead.
+
+The fourth parameter determines the maximum distance at which the sound can be heard. If left to zero, or if lower than the third parameter, the standard rolloff is used instead.
+
+The fifth and last parameter, if not null, is a scalar for the third and fourth parameters.
+
+===Use in a Doom-format map===
+In a map format where things cannot have parameters, DoomEd numbers 14001 to 14064 can be used instead: [[ZDoom]] will translate each such item in the map to an AmbientSound actor whose first parameter is equal to its number minus 14000. (So, 14001 will be interpreted as if it were 14065 with first parameter 1.)
+
+==== [[DECORATE]] definition ====
+ ACTOR &lt;u&gt;AmbientSound&lt;/u&gt; native
+ {
+   +{{Flag|NOBLOCKMAP}}
+   +{{Flag|NOSECTOR}}
+   +{{Flag|DONTSPLASH}}
+ }
+
+==See also==
+*[[Ambient sound]]
+*[[SNDINFO]]
+*[[Predefined sounds]]</text>
+    <sha1>amqd3sidc79u9bo6tsfux09t889lfdn</sha1>
+  </revision>
+</page>

@@ -1,0 +1,53 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>A CheckCeiling</title>
+  <ns>0</ns>
+  <id>5331</id>
+  <revision>
+    <id>42394</id>
+    <parentid>42317</parentid>
+    <timestamp>2016-02-25T18:30:55Z</timestamp>
+    <contributor>
+      <username>Marisa Heit</username>
+      <id>5</id>
+    </contributor>
+    <comment>Add return type</comment>
+    <origin>42394</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="753" sha1="3b3gne1jpjzc6auc8lnfr6gl5rvfjq8" xml:space="preserve">{{codepointer|Jump}}
+state '''A_CheckCeiling''' (int ''offset'')&lt;br&gt;
+state '''A_CheckCeiling''' (str "''state''")
+{{JumpNotice}}
+==Usage==
+Jumps if actor is touching/submerged into the ceiling (calling actor's z + height).
+
+== Examples ==
+
+This {{Class|rocket}} does not explode when it hits the ceiling.
+
+ ACTOR Useless_Rocket: {{Class|Rocket}} Replaces {{Class|Rocket}}
+ {
+   {{Property|DeathSound}} "None"
+   States
+   {
+   Spawn:
+     MISL A 1 Bright
+     Loop
+   CancelMovement:
+     MISL A 1 Bright
+     Loop
+   Death:
+     MISL B 0 [[A_CheckCeiling]]("CancelMovement")
+     MISL B 0 [[A_PlaySound]]("weapons/rocklx")
+     MISL B 8 Bright [[A_Explode]]
+     MISL C 6 Bright
+     MISL D 4 Bright
+     Stop
+   }
+ }
+
+== See also ==
+* [[A_CheckFloor]]</text>
+    <sha1>3b3gne1jpjzc6auc8lnfr6gl5rvfjq8</sha1>
+  </revision>
+</page>

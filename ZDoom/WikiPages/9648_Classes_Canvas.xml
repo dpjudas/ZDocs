@@ -1,0 +1,90 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>Classes:Canvas</title>
+  <ns>0</ns>
+  <id>9648</id>
+  <revision>
+    <id>53879</id>
+    <parentid>53878</parentid>
+    <timestamp>2024-11-25T10:28:23Z</timestamp>
+    <contributor>
+      <username>Jekyll Grim Payne</username>
+      <id>2175</id>
+    </contributor>
+    <comment>/* See also */</comment>
+    <origin>53879</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="4683" sha1="2it99drumtd2utpzx6w5o3sxkzuk2cl" xml:space="preserve">Canvases are objects that can be used to draw directly on a texture. Each texture can have one canvas and any modifications to a texture's canvas are shared among anything that uses that texture. This is because textures aren't stored individually per entity or surface but are instead indexed and then shared globally. This is necessary in order to save on memory and increase efficiency.
+
+'''PLEASE NOTE''': Due to the methods by which OpenGL buffered images into memory (upside down), newer releases of GZDoom which no longer use this framework will display canvas images with their Y values flipped.  To fix this, either append DTA_FlipY to any draw calls from your canvas object, invert the Y scale of the surface you are applying the canvas to, or invert the Y uv coordinates of the model faces assigned to the canvas object.
+
+== Setting up ==
+In order to use a canvas texture:
+* Create a '''CANVASTEXTURE''' definition in [[ANIMDEFS#Canvas_textures|ANIMDEFS]]. This will define the name and the size of the canvas texture. Note: you will ''not'' need a real graphic with this name.
+* To get a Canvas ''object'' from a texture, use [[Structs:TexMan|TexMan's]] '''GetCanvas'''() function. If that texture doesn't have a canvas associated with it, it'll return &lt;code&gt;null&lt;/code&gt;.
+* From there, you'll be able to call Canvas methods on the object. The methods are the same as [[Structs:Screen|Screen]] methods, the difference being that the the Draw functions can be called at any time (as opposed to Screen which can only do so when rendering is active).
+* Canvases won't automatically clear what was drawn to them between frames. Every time you want to completely change the contents of a canvas, you will need to call '''Clear''' on it, otherwise each new draw call will ''add'' contents to it.
+
+== Methods ==
+These methods are virtually identical to the methods used by the {{struct|Screen|Screen struct}}, except they're called on a canvas pointer rather than on Screen:
+*void '''Clear'''(int left, int top, int right, int bottom, Color color, int palcolor = -1)
+*void '''Dim'''(Color col, double amount, int x, int y, int w, int h, ERenderStyle style = STYLE_Translucent)
+*vararg void '''DrawTexture'''(TextureID tex, bool animate, double x, double y, ...)
+*vararg void '''DrawShape'''(TextureID tex, bool animate, Shape2D s, ...)
+*vararg void '''DrawShapeFill'''(Color col, double amount, Shape2D s, ...)
+*vararg void '''DrawChar'''(Font font, int normalcolor, double x, double y, int character, ...)
+*vararg void '''DrawText'''(Font font, int normalcolor, double x, double y, String text, ...)
+*void '''DrawLine'''(double x0, double y0, double x1, double y1, Color color, int alpha = 255)
+*void '''DrawLineFrame'''(Color color, int x0, int y0, int w, int h, int thickness = 1)
+*void '''DrawThickLine'''(double x0, double y0, double x1, double y1, double thickness, Color color, int alpha = 255)
+*Vector2, Vector2 '''VirtualToRealCoords'''(Vector2 pos, Vector2 size, Vector2 vsize, bool vbottom=false, bool handleaspect=true)
+*void '''SetClipRect'''(int x, int y, int w, int h)
+*void '''ClearClipRect'''()
+*int, int, int, int '''GetClipRect'''()
+*double, double, double, double '''GetFullscreenRect'''(double vwidth, double vheight, int fsmode)
+*Vector2 '''SetOffset'''(double x, double y)
+*void '''ClearScreen'''(color col = 0)
+*void '''SetScreenFade'''(double factor)
+*void '''EnableStencil'''(bool on)
+*void '''SetStencil'''(int offs, int op, int flags = -1)
+*void '''ClearStencil'''()
+*void '''SetTransform'''(Shape2DTransform transform)
+*void '''ClearTransform'''()
+
+== Example ==
+=== Setting up a Map Texture ===
+In ANIMDEFS:
+ CANVASTEXTURE MyTexture 200 200
+=== Modifying a Canvas ===
+In ZScript (this can be done more or less anywhere, for example from an {{class|EventHandler|EventHandler's}} OnRegister() event):
+&lt;syntaxhighlight lang = "csharp"&gt;
+TextureID texid = TexMan.CheckForTexture("MyTexture");
+
+// Get the canvas
+Canvas cv = TexMan.GetCanvas("MyTexture");
+
+// Get the resolution
+let [w, h] = TexMan.GetSize(texid);
+
+// Get the center taking string size into account
+string hello = "Hello World";
+Font fnt = bigUpper; //bigUpper is a globally accessible pointer to the BigUpper font
+int x = (w - fnt.StringWidth(hello)) / 2;
+int y = (h - fnt.GetHeight()) / 2;
+
+// Draw some text in the middle of it
+cv.DrawText(fnt, Font.CR_RED, x, y, hello);
+
+// Hello World will now show up on anything that uses MyTexture&lt;/syntaxhighlight&gt;
+
+The canvas can now be used in levels for things like placing it on walls. Any drawing done to it will automatically update it everywhere.
+
+== See also ==
+*[[ANIMDEFS]]
+*[[Structs:TexMan]]
+*[[Structs:Screen]]
+
+[[Category:ZScript]]</text>
+    <sha1>2it99drumtd2utpzx6w5o3sxkzuk2cl</sha1>
+  </revision>
+</page>

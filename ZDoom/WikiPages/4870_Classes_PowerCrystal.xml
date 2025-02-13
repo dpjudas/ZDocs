@@ -1,0 +1,75 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>Classes:PowerCrystal</title>
+  <ns>0</ns>
+  <id>4870</id>
+  <revision>
+    <id>40150</id>
+    <parentid>36476</parentid>
+    <timestamp>2015-05-22T07:04:08Z</timestamp>
+    <contributor>
+      <username>Blue Shadow</username>
+      <id>2021</id>
+    </contributor>
+    <minor />
+    <comment>/* DECORATE definition */ Updated</comment>
+    <origin>40150</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="1382" sha1="9dzdtd6p4cjs9rdp90mxvuq09qcddi2" xml:space="preserve">{{Actor|
+| type = Breakable
+| name = PowerCrystal
+| class = PowerCrystal
+| game = Strife
+| doomednum = 92
+| convid = 201
+}}[[Classes]]: &lt;u&gt;PowerCrystal&lt;/u&gt;&lt;br&gt;
+{{desc}}
+==== [[DECORATE]] definition ====
+ ACTOR &lt;u&gt;PowerCrystal&lt;/u&gt;
+ {
+   {{Property|Health}} 50
+   {{Property|Speed}} 14
+   {{Property|Radius}} 20
+   {{Property|Height}} 16
+   {{Property|Mass}} 99999999
+   +{{Flag|SOLID}}
+   +{{Flag|SHOOTABLE}}
+   +{{Flag|NOGRAVITY}}
+   +{{Flag|NOBLOOD}}
+   +{{Flag|FLOORCLIP}}
+   {{Property|DeathSound}} "misc/explosion"
+   {{Property|ActiveSound}} "misc/reactor"
+ 
+   action native [[A_ExtraLightOff]]();
+   action native [[A_Explode512]]();
+   action native [[A_LightGoesOut]]();
+ 
+   States
+   {
+   Spawn:
+     CRYS A 16 [[A_LoopActiveSound]]
+     CRYS B 5 [[A_LoopActiveSound]]
+     CRYS CDEF 4 [[A_LoopActiveSound]]
+     Loop
+   Death:
+     BOOM A 0 Bright [[A_Scream]]
+     BOOM A 1 Bright [[A_Explode512]]
+     BOOM B 3 Bright [[A_GiveQuestItem]]({{Class|QuestItem14|14}})
+     BOOM C 2 Bright [[A_LightGoesOut]]
+     BOOM D 3 Bright [[A_Bang4Cloud]]
+     BOOM EF 3 Bright
+     BOOM G 3 Bright [[A_Bang4Cloud]]
+     BOOM H 1 Bright [[A_Explode512]]
+     BOOM I 3 Bright
+     BOOM JKL 3 Bright [[A_Bang4Cloud]]
+     BOOM MN 3 Bright
+     BOOM O 3 Bright [[A_Bang4Cloud]]
+     BOOM PQRST 3 Bright
+     BOOM U 3 Bright [[A_ExtraLightOff]]
+     BOOM VWXY 3 Bright
+     Stop
+   }
+ }</text>
+    <sha1>9dzdtd6p4cjs9rdp90mxvuq09qcddi2</sha1>
+  </revision>
+</page>

@@ -1,0 +1,73 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>Classes:BlueArmor</title>
+  <ns>0</ns>
+  <id>2485</id>
+  <revision>
+    <id>53611</id>
+    <parentid>39195</parentid>
+    <timestamp>2024-11-08T11:44:03Z</timestamp>
+    <contributor>
+      <username>Jekyll Grim Payne</username>
+      <id>2175</id>
+    </contributor>
+    <origin>53611</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="1358" sha1="s0wp2fdo9aolc55h6t0saephxzby5yd" xml:space="preserve">{{Actor|
+| type = Armor
+| name = Combat armor
+| class = BlueArmor
+| game = Doom
+| doomednum = 2019
+| spawnid = 69
+| spawnname = T_BLUEARMOR 
+}}[[Classes]]: [[Classes:Inventory|Inventory]]&amp;rarr;[[Classes:Armor|Armor]]&amp;rarr;[[Classes:BasicArmorPickup|BasicArmorPickup]]&amp;rarr;&lt;u&gt;BlueArmor&lt;/u&gt;&lt;br&gt;
+&amp;ensp;&amp;rarr;[[Classes:BlueArmorForMegasphere|BlueArmorForMegasphere]]
+
+Doom's blue armor pickup grants the player 200% of armor that resists 50% of the damage taken.  If the player is already at 200% armor, the item will not be picked up.
+
+== [[ZScript]] definition ==
+{{ZScriptDefinitionNote|ctors/doom/doomarmor.zs}}
+&lt;syntaxhighlight lang="csharp"&gt;
+class BlueArmor : BasicArmorPickup
+{
+	Default
+	{
+		Radius 20;
+		Height 16;
+		Inventory.Pickupmessage "$GOTMEGA";
+		Inventory.Icon "ARM2A0";
+		Armor.Savepercent 50;
+		Armor.Saveamount 200;
+	}
+	States
+	{
+	Spawn:
+		ARM2 A 6;
+		ARM2 B 6 bright;
+		loop;
+	}
+}
+&lt;/syntaxhighlight&gt;
+
+=== [[DECORATE]] definition ===
+{{DecorateDefinitionNote}}
+ ACTOR &lt;u&gt;BlueArmor&lt;/u&gt; : {{Class|BasicArmorPickup}}
+ {
+   {{Property|Radius}} 20
+   {{Property|Height}} 16
+   {{Property|Inventory.PickupMessage}} "$GOTMEGA" // "Picked up the MegaArmor!"
+   {{Property|Inventory.Icon}} "ARM2A0"
+   {{Property|Armor.SavePercent}} 50
+   {{Property|Armor.SaveAmount}} 200
+   States
+   {
+   Spawn:
+     ARM2 A 6
+     ARM2 B 6 Bright
+     Loop
+   }
+ }</text>
+    <sha1>s0wp2fdo9aolc55h6t0saephxzby5yd</sha1>
+  </revision>
+</page>

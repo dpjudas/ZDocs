@@ -1,0 +1,58 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>Classes:TeleporterBeacon</title>
+  <ns>0</ns>
+  <id>4607</id>
+  <revision>
+    <id>39930</id>
+    <parentid>35336</parentid>
+    <timestamp>2015-05-17T14:53:46Z</timestamp>
+    <contributor>
+      <username>Blue Shadow</username>
+      <id>2021</id>
+    </contributor>
+    <minor />
+    <comment>/* DECORATE definition */ Updated</comment>
+    <origin>39930</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="984" sha1="0vhtkzs2jfoopjwujere8chj11kxqt4" xml:space="preserve">{{actor|
+| type = Artifact
+| name = Teleporter beacon
+| class = TeleporterBeacon
+| game = Strife
+| doomednum = 10
+| convid = 166
+}}[[Classes]]: [[Classes:Inventory|Inventory]]&amp;rarr;&lt;u&gt;TeleporterBeacon&lt;/u&gt;&lt;br&gt;
+Once deployed, this item spawns up to six [[Classes:Rebel|Front soldiers]] to aid you in battle.
+==== [[DECORATE]] definition ====
+ ACTOR &lt;u&gt;TeleporterBeacon&lt;/u&gt; : {{Class|Inventory}} native
+ {
+   {{Property|Health}} 5
+   {{Property|Radius}} 16
+   {{Property|Height}} 16
+   {{Property|Inventory.MaxAmount}} 3
+   +{{Flag|DROPPED}}
+   +{{Flag|INVENTORY.INVBAR}}
+   {{Property|Inventory.Icon}} "I_BEAC"
+   {{Property|Tag}} "$TAG_TELEPORTERBEACON" // "Teleporter Beacon"
+   {{Property|Inventory.PickupMessage}} "$TXT_BEACON" // "You picked up the Teleporter Beacon."
+ 
+   action native [[A_Beacon]]();
+ 
+   States
+   {
+   Spawn:
+     BEAC A -1
+     Stop
+   Drop:
+     BEAC A 30
+     BEAC A 160 [[A_Beacon]]
+     Wait
+   Death:
+     BEAC A 1 [[A_FadeOut]](0.015)
+     Loop
+   }
+ }</text>
+    <sha1>0vhtkzs2jfoopjwujere8chj11kxqt4</sha1>
+  </revision>
+</page>

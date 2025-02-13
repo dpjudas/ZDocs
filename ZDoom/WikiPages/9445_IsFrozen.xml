@@ -1,0 +1,70 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>IsFrozen</title>
+  <ns>0</ns>
+  <id>9445</id>
+  <revision>
+    <id>50818</id>
+    <parentid>47944</parentid>
+    <timestamp>2023-10-16T13:39:02Z</timestamp>
+    <contributor>
+      <username>Jekyll Grim Payne</username>
+      <id>2175</id>
+    </contributor>
+    <comment>added example and Actor header</comment>
+    <origin>50818</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="1104" sha1="7ivhtkk0z5oi40u06hltzahb6czyeq9" xml:space="preserve">{{ZScriptNote}}
+__NOTOC__
+
+'''[[Classes:Actor|Actor]]'''
+
+bool '''IsFrozen'''()
+
+== Usage ==
+Checks if the [[Classes:Actor|actor]] is frozen. This doesn't account for the FROZEN flags but instead checks to see if the level is frozen. This will return false if the Actor has the NOTIMEFREEZE flag set or is a player. Players will only be frozen if they're not on the same team as the activator of a time freeze powerup.
+
+=== Return value ===
+Returns true if the Actor is currently frozen.
+
+== Examples ==
+This version of the [[Classes:DoomImpBall|Imp's fireball]] will spawn a trail every tic. The trail will [[A_FadeOut|fade out]] and become smaller while it exists, before disappearing.
+&lt;syntaxhighlight lang="csharp"&gt;
+class FireBallWithTrail : DoomImpBall
+{
+	override void Tick()
+	{
+		super.Tick();
+		if (!IsFrozen())
+		{
+			Spawn("FireBallTrail", pos);
+		}
+	}
+}
+
+class FireBallTrail : Actor
+{
+	Default
+	{
+		+BRIGHT
+		+NOINTERACTION
+		+NOBLOCKMAP
+		Renderstyle 'Add';
+	}
+
+	States 
+	{
+	Spawn:
+		BAL1 A 1 
+		{
+			A_FadeOut(0.05);
+			scale *= 0.95;
+		}
+		loop;
+	}
+}&lt;/syntaxhighlight&gt;
+
+[[Category:ZScript]]</text>
+    <sha1>7ivhtkk0z5oi40u06hltzahb6czyeq9</sha1>
+  </revision>
+</page>

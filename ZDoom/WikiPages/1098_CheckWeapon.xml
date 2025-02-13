@@ -1,0 +1,50 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>CheckWeapon</title>
+  <ns>0</ns>
+  <id>1098</id>
+  <revision>
+    <id>35674</id>
+    <parentid>21865</parentid>
+    <timestamp>2013-02-10T01:52:43Z</timestamp>
+    <contributor>
+      <username>Deded007</username>
+      <id>1392</id>
+    </contributor>
+    <minor />
+    <comment>formatting, returns bool</comment>
+    <origin>35674</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="1548" sha1="sujwstfoqmmernwstwq0uea7nbi5ctn" xml:space="preserve">bool '''CheckWeapon''' (str ''weapon'')
+
+==Usage==
+
+If player's active weapon is the weapon with specified class name, this function returns true. If not, it returns false. The class name must be a type of {{class|weapon}}.
+
+==Examples==
+
+There are a number of useful applications of this command. In this example, a wall is made that can be “destroyed” by using the chainsaw upon it. It uses '''CheckWeapon''' to make sure it is being sawed and not shot or punched.
+
+The first script just reports to the player that it can be sawed down, as they would be unlikely to work it out otherwise. This can be set to any line to activate once.
+
+ script 22 (void)
+ {
+ 	[[Print]](s:"That wall looks like it\ncould be sawed down...");
+ }
+ 
+ int sawed = 0;
+ script 23 (int sector)
+ {
+ 	if ([[CheckWeapon]]("{{class|Chainsaw}}") &amp;&amp; sawed &lt; 64)
+ 	{
+ 		[[Floor_LowerByValue]](sector, 20, 4);
+ 		sawed += 4;
+ 	}
+ }
+
+The script which handles the sawing is number 23. It should be set to a line as a “Projectile hits” type of activation, and it should be set to be repeatable. The sectors which “destroy” upon sawing should be given a tag which is passed to this function. The variable ''sawed'' keeps track of how much sawing has been done. The limit here is 64. If the player is using the chainsaw and there is still some wall left to be sawed, the floor is lowered and the total is updated. This is repeated whilst the player chainsaws the wall until the limit is reached or until they get bored and wander away.
+
+[[category:ACS Inventory functions]]</text>
+    <sha1>sujwstfoqmmernwstwq0uea7nbi5ctn</sha1>
+  </revision>
+</page>

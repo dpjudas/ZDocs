@@ -1,0 +1,49 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>A CheckRange</title>
+  <ns>0</ns>
+  <id>7607</id>
+  <revision>
+    <id>46727</id>
+    <parentid>46726</parentid>
+    <timestamp>2019-05-16T07:55:40Z</timestamp>
+    <contributor>
+      <username>TheMisterCat</username>
+      <id>1636</id>
+    </contributor>
+    <minor />
+    <comment>/* Examples */</comment>
+    <origin>46727</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="1080" sha1="321c275gshpsieyxeujivr0qznzc1du" xml:space="preserve">{{codepointer|Jump}}
+state '''A_CheckRange''' (float ''distance'', int ''offset'' [, bool ''2d_check''])&lt;br&gt;
+state '''A_CheckRange''' (float ''distance'', str "''state''" [, bool ''2d_check''])&lt;br&gt;
+{{JumpNotice}}
+Jumps if the calling actor is beyond ''distance'' range from all player pawns. If ''2d_check'' is {{c|true}}, the z-coordinates are not taken into account when calculating the distance, making the distance check 2D-based instead of being 3D-based. Default is {{c|false}}.
+
+== Examples ==
+This lost soul's attack will redirect if it is further than 100 mapunits from its target.
+ Actor CleverLostSoul4ZDoomWiki: [[Classes:LostSoul|LostSoul]] replaces LostSoul
+ {
+   States
+   {
+   Missile:
+     SKUL C 10 Bright [[A_FaceTarget]]
+     SKUL D 4 Bright [[A_SkullAttack]]
+   CheckRangeState:
+     SKUL CD 4 Bright A_CheckRange( 100, "AttackCorrection", True )
+     loop
+   AttackCorrection:
+     SKUL D 4 Bright A_SkullAttack
+     goto CheckRangeState
+   }
+ }
+
+== See also ==
+* [[A_CheckSight]]
+* [[A_CheckSightOrRange]]
+* [[A_JumpIfInTargetLOS]]
+* [[A_JumpIfTargetInLOS]]</text>
+    <sha1>321c275gshpsieyxeujivr0qznzc1du</sha1>
+  </revision>
+</page>

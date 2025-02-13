@@ -1,0 +1,154 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>Classes:DoomImp</title>
+  <ns>0</ns>
+  <id>2547</id>
+  <revision>
+    <id>48924</id>
+    <parentid>48446</parentid>
+    <timestamp>2021-12-27T11:16:08Z</timestamp>
+    <contributor>
+      <username>Jekyll Grim Payne</username>
+      <id>2175</id>
+    </contributor>
+    <comment>updated in accordance with updated ZScriptDefinitionNote template</comment>
+    <origin>48924</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="2966" sha1="ts2du1b4kd1kl4fqynx39ws8oh2kyqy" xml:space="preserve">{{Actor|
+| type = Monster
+| name = Imp
+| class = DoomImp
+| game = Doom
+| doomednum = 3001
+| thingindex = 12
+| spawnid = 5
+| spawnname = T_IMP
+}}
+[[Classes]]: &lt;u&gt;DoomImp&lt;/u&gt;&lt;br&gt;
+&amp;ensp;&amp;rarr;[[Classes:DeadDoomImp|DeadDoomImp]]&lt;br&gt;
+&amp;ensp;&amp;rarr;[[Classes:StealthDoomImp|StealthDoomImp]] &lt;br&gt;
+&amp;ensp;&amp;rarr;[[Classes:DarkImp|DarkImp]] {{STFeaturesmall}}
+
+
+Imps are common enemies throughout the game. They slash up close which is a pain because they always seem to get close to you when there's more than one. The [[Classes:DoomImpBall|fireballs they throw]] do average damage. Luckily they don't have that much health, and one [[Classes:Shotgun|shotgun]] blast can put them to sleep.
+
+
+==== [[ZScript]] definition ====
+{{ZScriptDefinitionNote|actors/doom/doomimp.zs}} 
+ class DoomImp : Actor
+ {
+ 	Default
+ 	{
+ 		{{Property|Health}} 60;
+ 		{{Property|Radius}} 20;
+ 		{{Property|Height}} 56;
+ 		{{Property|Mass}} 100;
+ 		{{Property|Speed}} 8;
+ 		{{Property|PainChance}} 200;
+ 		{{Property|Monster}};
+ 		+{{Flag|FLOORCLIP}}
+ 		{{Property|SeeSound}} "imp/sight";
+ 		{{Property|PainSound}} "imp/pain";
+ 		{{Property|DeathSound}} "imp/death";
+ 		{{Property|ActiveSound}} "imp/active";
+ 		{{Property|HitObituary}} "$OB_IMPHIT";
+ 		{{Property|Obituary}} "$OB_IMP";
+ 		{{Property|Tag}} "$FN_IMP";
+ 	}
+ 	States
+ 	{
+ 	Spawn:
+ 		TROO AB 10 [[A_Look]];
+ 		Loop;
+ 	See:
+ 		TROO AABBCCDD 3 [[A_Chase]];
+ 		Loop;
+ 	Melee:
+ 	Missile:
+ 		TROO EF 8 [[A_FaceTarget]];
+ 		TROO G 6 [[A_TroopAttack ]];
+ 		Goto See;
+ 	Pain:
+ 		TROO H 2;
+ 		TROO H 2 [[A_Pain]];
+ 		Goto See;
+ 	Death:
+ 		TROO I 8;
+ 		TROO J 8 [[A_Scream]];
+ 		TROO K 6;
+ 		TROO L 6 [[A_NoBlocking]];
+ 		TROO M -1;
+ 		Stop;
+ 	XDeath:
+ 		TROO N 5;
+ 		TROO O 5 [[A_XScream]];
+ 		TROO P 5;
+ 		TROO Q 5 [[A_NoBlocking]];
+ 		TROO RST 5;
+ 		TROO U -1;
+ 		Stop;
+ 	Raise:
+ 		TROO ML 8;
+ 		TROO KJI 6;
+ 		Goto See;
+ 	}
+ }
+==== [[DECORATE]] definition ====
+{{DecorateDefinitionNote}}
+ ACTOR &lt;u&gt;DoomImp&lt;/u&gt;
+ {
+   {{Property|Health}} 60
+   {{Property|Radius}} 20
+   {{Property|Height}} 56
+   {{Property|Mass}} 100
+   {{Property|Speed}} 8
+   {{Property|PainChance}} 200
+   {{Property|Monster}}
+   +{{Flag|FLOORCLIP}}
+   {{Property|SeeSound}} "imp/sight"
+   {{Property|PainSound}} "imp/pain"
+   {{Property|DeathSound}} "imp/death"
+   {{Property|ActiveSound}} "imp/active"
+   {{Property|HitObituary}} "$OB_IMPHIT"
+   {{Property|Obituary}} "$OB_IMP"
+   States
+   {
+   Spawn:
+     TROO AB 10 [[A_Look]]
+     Loop
+   See:
+     TROO AABBCCDD 3 [[A_Chase]]
+     Loop
+   Melee:
+   Missile:
+     TROO EF 8 [[A_FaceTarget]]
+     TROO G 6 [[A_TroopAttack]]
+     Goto See
+   Pain:
+     TROO H 2
+     TROO H 2 [[A_Pain]]
+     Goto See
+   Death:
+     TROO I 8
+     TROO J 8 [[A_Scream]]
+     TROO K 6
+     TROO L 6 [[A_NoBlocking]]
+     TROO M -1
+     Stop
+   XDeath:
+     TROO N 5
+     TROO O 5 [[A_XScream]]
+     TROO P 5
+     TROO Q 5 [[A_NoBlocking]]
+     TROO RST 5
+     TROO U -1
+     Stop
+   Raise:
+     TROO ML 8
+     TROO KJI 6
+     Goto See
+   }
+ }</text>
+    <sha1>ts2du1b4kd1kl4fqynx39ws8oh2kyqy</sha1>
+  </revision>
+</page>

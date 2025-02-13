@@ -1,0 +1,74 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>Compile ZDoom on Mac OS X</title>
+  <ns>0</ns>
+  <id>5332</id>
+  <revision>
+    <id>46451</id>
+    <parentid>46450</parentid>
+    <timestamp>2019-03-06T22:05:30Z</timestamp>
+    <contributor>
+      <username>Edward-san</username>
+      <id>1763</id>
+    </contributor>
+    <minor />
+    <comment>spelling</comment>
+    <origin>46451</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="4119" sha1="9tnatye6peztryo8pclctj9afiryy1m" xml:space="preserve">{{note|For GZDoom 3.7 and above, please follow this guide: [[Compile GZDoom on Mac OS X]]}}
+
+Compiling ZDoom on Mac OS X may seem like a daunting task, but it's actually pretty similar to [[Compile ZDoom on Linux|the process for Linux]].
+
+== Requirements ==
+* A Mac computer with an Intel or PowerPC processor.
+* Mac OS X 10.4 Tiger and above
+* Latest version of Xcode, available [http://developer.apple.com/tools/xcode/ here] (requires free registration)
+** Make sure you install GCC 4.2 and the Mac OS X 10.4u SDK, which should both be included in the Xcode package.
+* [http://www.cmake.org/cmake/resources/software.html CMake 2.4 or later]
+* &lt;!-- broken dead link {{LatestFMOD|m|msg=FMOD Ex v{{LatestFMOD/Version|.}}}} --&gt; [http://www.fmod.org/download/fmodex/api/Mac/fmodapi43600mac-installer.dmg FMOD Ex]
+* [http://libsdl.org/download-1.2.php libSDL 1.2] (Only needed for header files.)
+
+== Source code ==
+
+It is recommended that you use a recent version from the [[Git repository]] to compile, but you may use an older version's source from the {{plainlink|[http://www.zdoom.org/download.html ZDoom Downloads Page]}} if desired. Note that compilation steps may differ for older versions.
+
+== Configuring with CMake ==
+
+When you run the CMake application, you will be greeted with a window asking for a source code path and a build directory. The directions for CMake on Linux apply here, except with a GUI.
+
+After you click Configure, you will end up having to tell CMake where the FMOD library is located.  This should be "/Developer/FMOD Programmers API Mac/api/libfmodex.dylib".  In addition set CMAKE_BUILD_TYPE to "Release".  As of this writing you will also want to remove -O3 from CMAKE_CXX_FLAGS_RELEASE, set CMAKE_OSX_ARCHITECTURES to "i386" or "ppc" depending on your processor, and check the option for NO_ASM (you may need to switch to advanced view to see these options).
+
+After this, click "Configure" one more time and you should be good. When you click "Generate", select the &lt;tt&gt;Unix Makefiles&lt;/tt&gt; option.
+
+=== MacPorts ===
+If you are using {{wp|MacPorts}} to compile ZDoom, use the following command line to create the makefiles:
+&lt;pre&gt;
+cmake -DCMAKE_BUILD_TYPE=Release \
+-DFMOD_LIBRARY="/Developer/FMOD Programmers API Mac/api/lib/libfmodex.dylib" \
+-DFMOD_INCLUDE_DIR="/Developer/FMOD Programmers API Mac/api/inc/" \
+-DNO_ASM=true
+&lt;/pre&gt;
+
+== Configuring for cross compiling ==
+{{warning|ZDoom does not support building universal binaries directly. Attempting to do so will likely succeed, but the resulting binary will not run on all architectures.}}
+Skip this step if you are doing a native build. Since ZDoom uses some tools to generate files during the build and sets architecture specific optimizations for some files, there may be additional steps required to build for a non-native architecture.
+
+=== Cross compiling with Rosetta ===
+If you are running OS X 10.4-10.6 on an Intel system, you can build PowerPC binaries natively. Simply set CMAKE_OSX_ARCHITECTURES to ppc and everything should build fine.
+
+=== Cross compiling without Rosetta ===
+If your system does not have Rosetta, a universal binary can still be built. First you must create a native build directory following the directions without this step. This will create an ImportExecutables.cmake in your build directory. This file tells CMake where to find a pre-existing build of the tools needed.
+
+First enable FORCE_CROSSCOMPILE and then feed the ImportExecutables.cmake into IMPORT_EXECUTABLES variable. Finally set CMAKE_OSX_ARCHITECTURES to the desired target arch along with CMAKE_OSX_SYSROOT/CMAKE_OSX_DEPLOYMENT_TARGET.
+
+=== Making a universal binary ===
+Once you've built ZDoom for each architecture, you can combine the resulting binaries using the lipo tool.
+ lipo -arch i386 /path/to/zdoom.i386 -arch x86_64 /path/to/zdoom.x86_64 -arch ppc /path/to/zdoom.ppc -create -output zdoom
+
+== Compiling ==
+Open a terminal and cd to the trunk directory.  Type "make" to compile.  Assuming everything was done correctly you should have a working ZDoom application bundle.
+
+[[Category:Guides]][[Category:Technical aspects]]</text>
+    <sha1>9tnatye6peztryo8pclctj9afiryy1m</sha1>
+  </revision>
+</page>

@@ -1,0 +1,49 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>Classes:ArtiSpeedBoots</title>
+  <ns>0</ns>
+  <id>3397</id>
+  <revision>
+    <id>39689</id>
+    <parentid>38870</parentid>
+    <timestamp>2015-05-02T21:41:02Z</timestamp>
+    <contributor>
+      <username>Blue Shadow</username>
+      <id>2021</id>
+    </contributor>
+    <minor />
+    <comment>/* DECORATE definition */ Updated</comment>
+    <origin>39689</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="916" sha1="96bozyq1xnxtu7y617bx0vjidx0st5p" xml:space="preserve">{{Actor|
+| type = Artifact
+| name = Boots of speed
+| class = ArtiSpeedBoots
+| game = Hexen
+| doomednum = 8002
+| spawnid = 13
+| spawnname = T_ITEMBOOTS 
+}}[[Classes]]: [[Classes:Inventory|Inventory]]&amp;rarr;[[Classes:PowerupGiver|PowerupGiver]]&amp;rarr;&lt;u&gt;ArtiSpeedBoots&lt;/u&gt;
+
+The boots of speed increase the player's speed by 50% and leave a {{Class|PlayerSpeedTrail|trail of afterimages}}. It is possible to outrun your own projectile attacks when using this artifact.
+
+==== [[DECORATE]] definition ====
+ ACTOR &lt;u&gt;ArtiSpeedBoots&lt;/u&gt; : {{Class|PowerupGiver}}
+ {
+   +{{Flag|FLOATBOB}}
+   +{{Flag|COUNTITEM}}
+   +{{Flag|INVENTORY.PICKUPFLASH}}
+   {{Property|Inventory.Icon}} ARTISPED
+   {{Property|Inventory.PickupMessage}} "$TXT_ARTISPEED" // "BOOTS OF SPEED"
+   {{Property|Tag}} "$TAG_ARTISPEED"
+   {{Property|Powerup.Type}} {{Class|PowerSpeed|Speed}}
+   States
+   {
+   Spawn:
+     SPED ABCDEFGH 3 Bright
+     Loop
+   }
+ }</text>
+    <sha1>96bozyq1xnxtu7y617bx0vjidx0st5p</sha1>
+  </revision>
+</page>

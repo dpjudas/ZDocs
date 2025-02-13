@@ -1,0 +1,69 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>WorldRailgunFired</title>
+  <ns>0</ns>
+  <id>10017</id>
+  <revision>
+    <id>54085</id>
+    <parentid>54080</parentid>
+    <timestamp>2024-12-23T12:27:53Z</timestamp>
+    <contributor>
+      <username>Jekyll Grim Payne</username>
+      <id>2175</id>
+    </contributor>
+    <origin>54085</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="2612" sha1="dgasywya1crceagdqi3kmdq9ejp2hrr" xml:space="preserve">'''{{class|StaticEventHandler}}'''
+
+{{c|void '''WorldRailgunFired''' (WorldEvent ''e'')}} {{new|4.14.0}}
+
+== Usage ==
+An [[Events and handlers|event handler]] virtual function that is called after a railgun attack has been fired in the level. In contrast to [[WorldRailgunPreFired|{{c|WorldRailgun''Pre''Fired}}]], this event cannot prevent the attack from happening, but it can be used to apply some kind of extra effects based on the attack (for example, spawn visual tracers or something else).
+
+'''Note:''' This event is only triggered by rail attacks, i.e. attacks fired by [[RailAttack|{{c|RailAttack()}}]] or its derivatives. It is NOT triggered by "bullet" [[hitscan]] attacks such as [[LineAttack (ZScript)|{{c|LineAttack()}}]] or any of its derivatives (for that see [[WorldHitscanFired|{{c|World''Hitscan''Fired}}]]). Please note that internally "bullet" and "railgun" attacks, while technically both hitscans, are handled by different functions and have a few special, different behaviors tied to them.
+
+=== Passed values ===
+This event gets a pointer to the {{struct|WorldEvent}} struct, and can read certain fields from it preceding the value with &lt;code&gt;e.&lt;/code&gt;.
+*{{c|Actor '''thing'''}}
+:A pointer to the actor who fired the attack.
+*{{c|Vector3 '''AttackPos'''}}
+:World coordinates of the point from which the attack originated. (Normally this would be the position of the shooter with their attack height added on top.)
+*{{c|Vector3 '''DamagePosition'''}}
+:World coordinates of the point where the attack hit.
+*{{c|Actor '''Inflictor'''}}
+:The [[puff]] that was used by the attack.
+*{{c|int '''AttackLineFlags'''}}
+:{{moreinfo}}
+
+The direction vector from the attack origin to the point where it ended can be calculated with [[Structs:LevelLocals#Vec3Diff|{{c|level.Vec3Diff(e.AttackPos, e.DamagePosition).Unit()}}]].
+
+== Examples ==
+This event handler simply prints information on the screen and to the console whenever a railgun attack is fired:
+&lt;syntaxhighlight lang="cs"&gt;
+class RailgunInfoHandler: EventHandler
+{
+	override void WorldRailgunFired(WorldEvent e)
+	{
+		Console.MidPrint(smallfont, String.Format(
+			"Railgun fired:"
+			"\nAttacker: \cd%s\c-"
+			"\nAttack pos: \cd%d, %d, %d\c-"
+			"\nDamage pos: \cd%d, %d, %d\c-"
+			"\nInflictor: \cd%s\c-",
+			e.thing.GetClassName(),
+			e.attackpos.x, e.attackpos.y, e.attackpos.z,
+			e.damagePosition.x, e.damagePosition.y, e.damagePosition.z,
+			e.inflictor? e.inflictor.GetClassName() : 'none'));
+	}
+}
+&lt;/syntaxhighlight&gt;
+
+== See also ==
+* [[WorldRailgunPreFired]]
+* [[Events and handlers]]
+
+[[Category:ZScript]]
+[[Category:Event handlers]]</text>
+    <sha1>dgasywya1crceagdqi3kmdq9ejp2hrr</sha1>
+  </revision>
+</page>

@@ -1,0 +1,65 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>Port forwarding</title>
+  <ns>0</ns>
+  <id>2843</id>
+  <revision>
+    <id>46405</id>
+    <parentid>46404</parentid>
+    <timestamp>2019-02-01T23:29:12Z</timestamp>
+    <contributor>
+      <username>Hellser</username>
+      <id>1914</id>
+    </contributor>
+    <origin>46405</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="4794" sha1="ol0prx9go8q1qlrqu3mcdufwtj1hw2n" xml:space="preserve">Port Forwarding allows a user to host a [[multiplayer]] internet game from behind a [http://www.grc.com/nat/nat.htm NAT Router]. To understand Port Forwarding, you must first understand a little about how [http://www.grc.com/nat/nat.htm NAT Routers] work. The following is a brief and oversimplified description:&lt;br&gt;
+A [http://www.grc.com/nat/nat.htm NAT Router] only allows information in from IPs to which you have already sent information (i.e. the data is "solicited"). 
+
+
+For example, when you connect to zdoom.org, your browser sends information to zdoom.org and zdoom.org sends you the webpage (zdoom.org).  Because you sent something to zdoom.org first, your router will allow traffic (the webpage) back from zdoom.org.   
+
+However, when you host a [[multiplayer]] game, you haven't sent any information to your friends yet, so your router does not know to allow them in. The result is a ZDoom game that never starts--this is a bummer. 
+
+
+The solution (or, at least, a solution): '''Port Forwarding'''&lt;br&gt;
+By default, ZDoom uses UDP port 5029 for [[multiplayer]] games (this can be changed using the -port command--see [[Command line parameters]] for more info).
+
+In order to host, you must forward this port through your router. '''''This is a six-step process:'''''&lt;br&gt;&lt;br&gt;
+'''1) Navigate to your router's configuration IP and enter the password.'''  Often, this address is 192.168.1.1 but it depends on your manufacturer.  Check out [http://www.portforward.com/ PortForward.com] or ask [http://google.com Google] for your specific model.
+
+'''2) Find your private IP address.'''  This is something like 192.168.1.15 or 10.2.2.6. One way to find it is to consult the LAN table of your router, often located on the "administration" tab. You'll see your machine name followed by your private IP address.  You can also find this information by accessing your network connection (in control panel, or in the taskbar) and then viewing the support tab.
+
+'''3) Locate the tab which allows you to forward ports and forward UDP port 5029 to your private IP address.''' "Applications and Gaming" is a good place to look, if you can't find a more obvious "Forwarding" tab.  Also note that some routers forward ports by range; in this case, simply forward from 5029 to 5029.
+
+'''4) Enable the port forwarding and save your changes.'''
+
+'''5) Play ZDoom!''' 
+
+'''6) When you're done playing, turn off the forwarding''' and (again) save changes to your router.  This is very important for security reasons: leaving ports open is not recommended for extended periods of time when it can be easily avoided.
+
+==I've forwarded my port, but my friends still can't connect!==
+
+If you've forwarded your port correctly and you still can't connect, there are a number of things to check:&lt;br&gt; 
+'''1)''' Is everyone's firewall allowing ZDoom to send information to the internet?
+
+'''2)''' Is the host's firewall allowing ZDoom to accept connections from the internet (server privileges)?
+
+'''3)''' Is everyone joining the right IP address?  To join a ZDoom game, you must connect to the public IP address of the host--i.e. the address of their router (not the same one as in step 2 above!).  If you are the host, you can find out your public IP address [http://www.myipaddress.com/ here],[http://www.whatismyipaddress.com/ here],or [https://www.grc.com/x/ne.dll?bh0bkyd2 here]. Give this to your friends.
+
+If you still can't connect, check your internet connection. Temporary outages do occur from time to time, so make sure you can access webpages and other web services.
+
+==Port forwarding is too hard and/or too time consuming==
+There are several alternatives to Port Forwarding; however, most of them involve additional software.&lt;br&gt;
+One alternative is to use a VPN client such as [https://www.vpn.net Hamachi] to act as a LAN network across the internet.
+Hamachi is a VPN client that allows you to connect with others across the internet as if they were on your same LAN. Futhermore, Hamachi creates mediated peer to peer connections, so you and your friends are able to connect directly without forwarding any ports.  Not only is this more convenient, it acts as another layer of security as well. Hamachi also helps in many situations where ISPs do strange things that block or degrade ZDoom's multiplayer experience.  
+
+'''''Tips for connecting via Hamachi:''''' The host shouldn't have to change anything. The clients, however, will have to replace the Hamachi IP address with the Public IP they were using before. For example: -join 5.12.58.221
+
+==I'm still having trouble!==
+If you're still having trouble, come on over to the {{forum|Networking|view=forum|f=5}} forum and ask for help.  In most cases, you'll receive a reply within 5 hours and sometimes in as few as 5 minutes.
+
+[[category:Guides]]</text>
+    <sha1>ol0prx9go8q1qlrqu3mcdufwtj1hw2n</sha1>
+  </revision>
+</page>

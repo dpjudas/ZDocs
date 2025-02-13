@@ -1,0 +1,146 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>SphericalCoords</title>
+  <ns>0</ns>
+  <id>9282</id>
+  <revision>
+    <id>52569</id>
+    <parentid>52145</parentid>
+    <timestamp>2024-04-26T14:09:27Z</timestamp>
+    <contributor>
+      <username>Jekyll Grim Payne</username>
+      <id>2175</id>
+    </contributor>
+    <comment>replaced LevelLocals with Level where it's a variable</comment>
+    <origin>52569</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="6938" sha1="srgg3kptzzndhe6sounkntbjvbk03xu" xml:space="preserve">__NOTOC__{{ZScriptNote}}
+
+&lt;small style="opacity:.8"&gt;{{c|struct [[LevelLocals]]}}&lt;/small&gt;&lt;br /&gt;
+{{c|static Vector3 '''SphericalCoords'''(Vector3 &lt;var&gt;viewpoint&lt;/var&gt;, Vector3 &lt;var&gt;targetPos&lt;/var&gt; [, Vector2 &lt;var&gt;viewAngles&lt;/var&gt;] [, bool &lt;var&gt;absolute&lt;/var&gt;]);}}
+&lt;br /&gt;
+
+== Usage ==
+Computes [[Wikipedia:Spherical coordinate system|spherical coordinates]] pointing to &lt;var&gt;targetPos&lt;/var&gt; from &lt;var&gt;viewpoint&lt;/var&gt;.
+
+Must be called on a global &lt;code&gt;level&lt;/code&gt; variable.
+
+=== Parameters ===
+*{{c|Vector3 &lt;var&gt;viewpoint&lt;/var&gt;}}
+:Origin point (in world x,y,z coordinates). Computed spherical coordinates will be relative to this origin point.
+:''Note:'' If you want the source coordinates to match be the player's line of fire, use the following for the viewpoint: &lt;code&gt;mo.pos + (0, 0, mo.height*0.5 - mo.floorclip + mo.AttackZOffset*mo.player.crouchFactor)&lt;/code&gt; where &lt;code&gt;mo&lt;/code&gt; is a {{class|PlayerPawn}} actor.
+*{{c|Vector3 &lt;var&gt;targetPos&lt;/var&gt;}}
+:A distant point (in world x,y,z coordinates). Computed spherical coordinates will point from &lt;var&gt;viewpoint&lt;/var&gt; to &lt;var&gt;targetPos&lt;/var&gt;.
+*{{c|Vector2 &lt;var&gt;viewAngles&lt;/var&gt;}}
+:2-component vector containing the viewpoint's yaw and pitch angles. This corresponds to the [[actor]] fields {{c|Angle}} and {{c|Pitch}}. Default is ''(0, 0)''.
+*{{c|bool &lt;var&gt;absolute&lt;/var&gt;}}
+:If {{c|true}}, the calculation will ignore [[portal]]s. Default is {{c|false}}, meaning portals will be accounted for.
+
+=== Return Value ===
+A {{c|Vector3}}, with these components:
+*&lt;var&gt;X&lt;/var&gt;
+:How far &lt;var&gt;viewAngles&lt;/var&gt;.X (the viewpoint's yaw) must turn left (if negative) or right (if positive) to face &lt;var&gt;targetPos&lt;/var&gt;, in degrees. This is the &lt;dfn&gt;[[Wikipedia:Azimuth|azimuthal angle]]&lt;/dfn&gt; or &lt;dfn&gt;φ&lt;/dfn&gt; (phi).
+*&lt;var&gt;Y&lt;/var&gt;
+:How far &lt;var&gt;viewAngles&lt;/var&gt;.Y (the viewpoint's pitch) must pitch down (if negative) or up (if positive) to face &lt;var&gt;targetPos&lt;/var&gt;, in degrees. This is the &lt;dfn&gt;polar angle&lt;/dfn&gt; or &lt;dfn&gt;θ&lt;/dfn&gt; (theta).
+*&lt;var&gt;Z&lt;/var&gt;
+:How far &lt;var&gt;targetPos&lt;/var&gt; is from &lt;var&gt;viewpoint&lt;/var&gt;, in world units. This is the &lt;dfn&gt;radius&lt;/dfn&gt; or &lt;dfn&gt;r&lt;/dfn&gt;.
+
+Note that the &lt;var&gt;Z&lt;/var&gt; coordinate is the same as you'd get from &lt;code&gt;[[LevelLocals|Level]].Vec3Diff(&lt;var&gt;viewpoint&lt;/var&gt;, &lt;var&gt;targetPos&lt;/var&gt;).Length()&lt;/code&gt;, and similar to &lt;code&gt;&lt;var&gt;a&lt;/var&gt;.Distance3D(&lt;var&gt;b&lt;/var&gt;)&lt;/code&gt; (where &lt;var&gt;a&lt;/var&gt; and &lt;var&gt;b&lt;/var&gt; are [[actor]]s). {{c|Distance3D}} only computes distances between the bottoms of actors, however, and does not account for their heights or viewpoints.
+
+== Examples ==
+
+You can use this to determine how close an actor is to the player's crosshairs.
+
+ [[PlayerPawn]] &lt;var&gt;viewer&lt;/var&gt;;
+ [[Actor]] &lt;var&gt;other&lt;/var&gt;;
+ 
+ &lt;span style="color:green"&gt;// Get the world position (x,y,z) of the player's eyes.&lt;/span&gt;
+ [[Vector3]] &lt;var&gt;viewpoint&lt;/var&gt; = &lt;var&gt;viewer&lt;/var&gt;.Pos;
+ &lt;var&gt;viewpoint&lt;/var&gt;.Z = &lt;var&gt;viewer&lt;/var&gt;.[[PlayerInfo|Player]].viewz;
+ 
+ &lt;span style="color:green"&gt;// Get the world position of the middle of the other actor. Actor.Pos is normally at the very bottom of the actor, so we'll take other.Pos and add half of its height.&lt;/span&gt;
+ Vector3 &lt;var&gt;otherCenter&lt;/var&gt; = &lt;var&gt;other&lt;/var&gt;.Pos;
+ &lt;var&gt;otherCenter&lt;/var&gt;.Z += &lt;var&gt;other&lt;/var&gt;.Height * .5;
+ 
+ &lt;span style="color:green"&gt;// Get the player actor's yaw and pitch.&lt;/span&gt;
+ [[Vector2]] &lt;var&gt;viewAngles&lt;/var&gt; = (&lt;var&gt;viewer&lt;/var&gt;.Angle, &lt;var&gt;viewer&lt;/var&gt;.Pitch);
+ 
+ &lt;span style="color:green"&gt;// Compute how close the other actor is to the player's crosshairs.&lt;/span&gt;
+ Vector3 &lt;var&gt;sphericalCoords&lt;/var&gt; = '''Level.SphericalCoords'''(&lt;var&gt;viewpoint&lt;/var&gt;, &lt;var&gt;otherCenter&lt;/var&gt;, &lt;var&gt;viewAngles&lt;/var&gt;);
+ double &lt;var&gt;distanceFromCenter&lt;/var&gt; = &lt;var&gt;sphericalCoords&lt;/var&gt;.XY.Length();
+ 
+ if (&lt;var&gt;distanceFromCenter&lt;/var&gt; &lt;= 20)
+ {
+ 	&lt;span style="color:green"&gt;// This block only runs if &lt;var&gt;other&lt;/var&gt; is no more than 20° from the center of the player's view.&lt;/span&gt;
+ }
+
+Here's a more complete example: an inventory item that tells you what you're aiming at.
+
+ class SimpleActorIdentifier : [[Inventory]] {
+ 	override void Tick() {
+ 		if (!Owner) {
+ 			Target = null;
+ 			return;
+ 		}
+ 		
+ 		&lt;span style="color:green"&gt;// Get the world position (x,y,z) of the owner's eyes.&lt;/span&gt;
+ 		Vector3 &lt;var&gt;viewpoint&lt;/var&gt; = Owner.Pos;
+ 		
+ 		if (Owner.Player)
+ 			&lt;var&gt;viewpoint&lt;/var&gt;.Z = Owner.Player.viewz;
+ 		else
+ 			&lt;var&gt;viewpoint&lt;/var&gt;.Z += Owner.GetCameraHeight();
+ 		
+ 		&lt;span style="color:green"&gt;// Find the owner's view angles (yaw and pitch).&lt;/span&gt;
+ 		Vector2 &lt;var&gt;viewAngles&lt;/var&gt; = (Owner.Angle, Owner.Pitch);
+ 		
+ 		&lt;span style="color:green"&gt;// Find the actor that's closest to the owner's crosshairs. Ignore actors that are more than 20° away from the center.&lt;/span&gt;
+ 		Actor &lt;var&gt;closest&lt;/var&gt; = null;
+ 		double &lt;var&gt;closestDistFromCenter&lt;/var&gt; = 20;
+ 		
+ 		for (let &lt;var&gt;i&lt;/var&gt; = BlockThingsIterator.Create(Owner, 512); &lt;var&gt;i&lt;/var&gt;.Next();) {
+ 			Actor &lt;var&gt;other&lt;/var&gt; = &lt;var&gt;i&lt;/var&gt;.thing;
+ 			
+ 			&lt;span style="color:green"&gt;// The owner can't aim at itself, of course.&lt;/span&gt;
+ 			if (&lt;var&gt;other&lt;/var&gt; == Owner)
+ 				continue;
+ 			
+ 			&lt;span style="color:green"&gt;// Get the world position of the middle of the other actor. Actor.Pos is normally at the very bottom of the actor, so we'll take other.Pos and add half of its height.&lt;/span&gt;
+ 			Vector3 &lt;var&gt;otherCenter&lt;/var&gt; = &lt;var&gt;other&lt;/var&gt;.Pos;
+ 			&lt;var&gt;otherCenter&lt;/var&gt;.Z += &lt;var&gt;other&lt;/var&gt;.Height * .5;
+ 			
+ 			&lt;span style="color:green"&gt;// Compute how close the other actor is to the player's crosshairs.&lt;/span&gt;
+ 			Vector3 &lt;var&gt;sphericalCoords&lt;/var&gt; = '''Level.SphericalCoords'''(&lt;var&gt;viewpoint&lt;/var&gt;, &lt;var&gt;otherCenter&lt;/var&gt;, &lt;var&gt;viewAngles&lt;/var&gt;);
+ 			double &lt;var&gt;distanceFromCenter&lt;/var&gt; = &lt;var&gt;sphericalCoords&lt;/var&gt;.XY.Length();
+ 			
+ 			&lt;span style="color:green"&gt;// Is it closer?&lt;/span&gt;
+ 			if (&lt;var&gt;distanceFromCenter&lt;/var&gt; &amp;lt; &lt;var&gt;closestDistFromCenter&lt;/var&gt;) {
+ 				&lt;var&gt;closest&lt;/var&gt; = &lt;var&gt;other&lt;/var&gt;;
+ 				&lt;var&gt;closestDistFromCenter&lt;/var&gt; = &lt;var&gt;distanceFromCenter&lt;/var&gt;;
+ 			}
+ 		}
+ 		
+ 		&lt;span style="color:green"&gt;// Now, decide on what message to log, if any.&lt;/span&gt;
+ 		String &lt;var&gt;msg&lt;/var&gt; = "";
+ 		
+ 		if (!&lt;var&gt;closest&lt;/var&gt; &amp;amp;&amp;amp; Target)
+ 			&lt;span style="color:green"&gt;// Was aiming at something, but no longer is.&lt;/span&gt;
+ 			&lt;var&gt;msg&lt;/var&gt; = "Not aiming at anything";
+ 		else if (&lt;var&gt;closest&lt;/var&gt; != Target)
+ 			&lt;span style="color:green"&gt;// Was aiming at something else (or nothing).&lt;/span&gt;
+ 			&lt;var&gt;msg&lt;/var&gt; = String.Format("Now aiming at %s", &lt;var&gt;closest&lt;/var&gt;.GetTag(&lt;var&gt;closest&lt;/var&gt;.GetClassName()));
+ 		
+ 		&lt;span style="color:green"&gt;// Log the message, if any.&lt;/span&gt;
+ 		if (&lt;var&gt;msg&lt;/var&gt;)
+ 			Owner.A_Log(&lt;var&gt;msg&lt;/var&gt;);
+ 		
+ 		&lt;span style="color:green"&gt;// Update the Target pointer to whatever was chosen. Next tic, we'll check again whether the owner is still aiming at the same thing.&lt;/span&gt;
+ 		Target = &lt;var&gt;closest&lt;/var&gt;;
+ 	}
+ }
+
+[[Category:ZScript]]
+[[Category:LevelLocals]]</text>
+    <sha1>srgg3kptzzndhe6sounkntbjvbk03xu</sha1>
+  </revision>
+</page>

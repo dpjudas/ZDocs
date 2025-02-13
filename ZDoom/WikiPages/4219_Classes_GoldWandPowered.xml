@@ -1,0 +1,49 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>Classes:GoldWandPowered</title>
+  <ns>0</ns>
+  <id>4219</id>
+  <revision>
+    <id>39392</id>
+    <parentid>34110</parentid>
+    <timestamp>2015-04-29T17:49:55Z</timestamp>
+    <contributor>
+      <username>Blue Shadow</username>
+      <id>2021</id>
+    </contributor>
+    <minor />
+    <comment>/* DECORATE definition */ Updated</comment>
+    <origin>39392</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="1047" sha1="hdo0hyl0wexjh9fycnv3d7mmt79vfhe" xml:space="preserve">{{Actor|
+| type = Weapon
+| name = Tomed elvenwand
+| class = GoldWandPowered
+| game = Heretic
+}}[[Classes]]: [[Classes:Inventory|Inventory]]&amp;rarr;[[Classes:Weapon|Weapon]]&amp;rarr;[[Classes:HereticWeapon|HereticWeapon]]&amp;rarr;[[Classes:GoldWand|GoldWand]]&amp;rarr;&lt;u&gt;GoldWandPowered&lt;/u&gt;&lt;br&gt;
+[[Classes:HereticPlayer|Corvus]]'s [[Classes:GoldWand|elvenwand]] with the [[Classes:ArtiTomeOfPower|tome of power]] activated. It fires five weak [[Classes:GoldWandPuff2|hitscan shots]] with a fan-like spread, and two [[Classes:GoldWandFX2|projectiles]] at the edges of said fan spread.
+
+==== [[DECORATE]] definition ====
+ ACTOR &lt;u&gt;GoldWandPowered&lt;/u&gt; : {{Class|GoldWand}}
+ {
+   +{{Flag|WEAPON.POWERED_UP}}
+   {{Property|Weapon.AmmoGive}} 0
+   {{Property|Weapon.SisterWeapon}} "{{Class|GoldWand}}"
+   {{Property|Obituary}} "$OB_MPPGOLDWAND"
+   {{Property|Tag}} "$TAG_GOLDWANDP"
+ 
+   action native [[A_FireGoldWandPL2]]();
+ 
+   States
+   {
+   Fire:
+     GWND B 3 
+     GWND C 4 [[A_FireGoldWandPL2]]
+     GWND D 3
+     GWND D 0 [[A_ReFire]]
+     Goto Ready
+   }
+ }</text>
+    <sha1>hdo0hyl0wexjh9fycnv3d7mmt79vfhe</sha1>
+  </revision>
+</page>

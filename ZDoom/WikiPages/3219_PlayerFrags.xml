@@ -1,0 +1,47 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>PlayerFrags</title>
+  <ns>0</ns>
+  <id>3219</id>
+  <revision>
+    <id>26608</id>
+    <parentid>22921</parentid>
+    <timestamp>2010-04-20T07:37:30Z</timestamp>
+    <contributor>
+      <username>Solarsnowfall</username>
+      <id>488</id>
+    </contributor>
+    <comment>/* Examples */</comment>
+    <origin>26608</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="1055" sha1="35obrv1qjostrrgz1h5r9x1f1kbyhkb" xml:space="preserve">int '''PlayerFrags''' (void)
+
+==Usage==
+
+Returns the current number of frags for the player who activated the script. This is only really useful in multiplayer games. Remember that the number returned may be negative if the player has commited suicide.
+
+For scripts not activated by a player, '''PlayerFrags''' will return 0.
+
+== Examples ==
+In this example, if the player gets a frag the player's frag count and name are displayed.  It does this by assigning a script as the thing special for each player.  The script is executed when the player dies and the activator is credited as the thing that killed the player.  Script 3 checks the [[PlayerNumber]] to make to only print in the event that the activator was a player.  Note that this will also activate if the player suicides.
+
+ script 1 enter
+ {
+   SetThingSpecial(0, 226, 3, 0);
+ }
+ 
+ script 2 respawn
+ {
+   SetThingSpecial(0, 226, 3, 0);
+ } 
+ 
+ script 3 (void)
+ {
+   if (PlayerNumber() &gt;= 0)
+     printbold(n:0, s:" has ", i:PlayerFrags(), s:" frags");
+ }
+
+[[category:ACS Information functions]]</text>
+    <sha1>35obrv1qjostrrgz1h5r9x1f1kbyhkb</sha1>
+  </revision>
+</page>

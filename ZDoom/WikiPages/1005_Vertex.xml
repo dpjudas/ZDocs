@@ -1,0 +1,32 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>Vertex</title>
+  <ns>0</ns>
+  <id>1005</id>
+  <revision>
+    <id>31828</id>
+    <parentid>31827</parentid>
+    <timestamp>2012-02-03T15:59:41Z</timestamp>
+    <contributor>
+      <username>Gez</username>
+      <id>1283</id>
+    </contributor>
+    <comment>some more info</comment>
+    <origin>31828</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="1081" sha1="dzgxfhuposqo6948pokcr3poni4wcp3" xml:space="preserve">{{doomwiki}}Vertices are used by the [[LINEDEFS]] and [[SEGS]] lumps in the [[Doom format|Doom]] and [[Hexen format|Hexen]] [[map format]]s.
+
+Vertices are numbered by the order in which they are listed. Since linedefs and segments use unsigned shorts to represent which vertex they are referencing, a map in a binary format reaches its limit at 65535 vertices. However, unless using [[ZDBSP]] extended [[node]]s, the actual limit is reached sooner than a [[map editor]]'s built-in statistics tool could let one think. Node building will create additional vertices to split existing lines into segments. These extra vertices are trimmed down silently when loading a map in a map editor, and recreated when saving again. It is difficult to estimate how many additional vertices will be created during nodebuilding, as that depends on the map geometry and the approach used by the node builder to split it into a BSP tree.
+
+==Specification==
+{| {{prettytable}}
+!Bytes!!Data type!!Description
+|-
+|0-1||Signed short||X position
+|-
+|2-3||Signed short||Y position
+|}
+[[Category:Glossary]]</text>
+    <sha1>dzgxfhuposqo6948pokcr3poni4wcp3</sha1>
+  </revision>
+</page>

@@ -1,0 +1,76 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>Draw</title>
+  <ns>0</ns>
+  <id>9355</id>
+  <revision>
+    <id>53245</id>
+    <parentid>51165</parentid>
+    <timestamp>2024-10-07T22:04:23Z</timestamp>
+    <contributor>
+      <username>Jekyll Grim Payne</username>
+      <id>2175</id>
+    </contributor>
+    <comment>/* Examples */</comment>
+    <origin>53245</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="1645" sha1="g56s65se5623lz5ei9007dnl03vbibt" xml:space="preserve">{{ZScriptNote}}
+__NOTOC__
+'''{{class|BaseStatusBar}}'''
+
+native virtual void '''Draw'''(int ''state'', double ''TicFrac'')
+
+== Usage ==
+Called at the same rate as the current frame rate. This is used to handle drawing HUD elements. Internally this function handles refreshing the border around the HUD, calling [[DrawMyPos]], drawing the crosshair, and calling [[DrawAutomapHUD]].
+
+=== Parameters ===
+*{{c|int '''state'''}}
+:The current state of the HUD. This can be one of the following constants:
+:*{{c|HUD_StatusBar}} - The status bar is currently visible
+:*{{c|HUD_Fullscreen}} - The status bar is currently hidden but the HUD is still being drawn
+:*{{c|HUD_None}} - The HUD is completely disabled
+:*{{c|HUD_AltHud}} - GZDoom's alternate HUD is being used
+
+*{{c|double '''TicFrac'''}}
+:Since Draw is called between tics, this is the fraction of the way the game is to the next tic. For instance, if the game is running at 140 FPS this value would fluctuate between 0, 0.25, 0.5, and 0.75
+
+== Examples ==
+This example is from DoomStatusBar, the HUD used in Doom:
+&lt;syntaxhighlight lang="csharp"&gt;
+class DoomStatusBar : BaseStatusBar
+{
+	override void Draw (int state, double TicFrac)
+	{
+		Super.Draw (state, TicFrac);
+
+		if (state == HUD_StatusBar)
+		{
+			BeginStatusBar();
+			DrawMainBar (TicFrac);
+		}
+		else if (state == HUD_Fullscreen)
+		{
+			BeginHUD();
+			DrawFullScreenStuff ();
+		}
+	}
+
+	protected void DrawMainBar (double TicFrac)
+	{
+		... //omitted for brevity
+	}
+
+	protected void DrawFullScreenStuff ()
+	{
+		... //omitted for brevity
+	}
+	
+	... //omitted for brevity
+}
+&lt;/syntaxhighlight&gt;
+
+[[Category:ZScript]]
+[[Category:BaseStatusBar]]</text>
+    <sha1>g56s65se5623lz5ei9007dnl03vbibt</sha1>
+  </revision>
+</page>

@@ -1,0 +1,363 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>Structs:Sector</title>
+  <ns>0</ns>
+  <id>9397</id>
+  <revision>
+    <id>53474</id>
+    <parentid>53409</parentid>
+    <timestamp>2024-10-31T18:17:06Z</timestamp>
+    <contributor>
+      <username>Inkoalawetrust</username>
+      <id>2604</id>
+    </contributor>
+    <comment>Documented new relfectivity functions, and updated note.</comment>
+    <origin>53474</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="21184" sha1="4bzobc41yrgd2dghr73fv7dazdfubv9" xml:space="preserve">Sector contains information related to a sector including colors, specials, floor and ceiling plane data, lines, etc. The current map's sectors can be accessed through [[Structs:LevelLocals|LevelLocal]]'s Sectors array. Many values can be directly modified here allowing for a large amount of control over a sector from within ZScript.
+
+== Fields ==
+*{{c|''readonly'' FColormap '''ColorMap'''}}
+:A struct that contains information related to the colormap of the current sector
+:*{{c|Color '''LightColor'''}} - The current ARGB color of the sector
+:*{{c|Color '''FadeColor'''}} - The current ARGB of the sector's fade
+:*{{c|uint8 '''Desaturation'''}} - The current level of desaturation in the sector
+:*{{c|uint8 '''BlendFactor'''}} - The current amount of blending in the sector
+:*{{c|uint16 '''FogDensity'''}} - How thick the fog density currently is in the sector
+*''readonly'' Color '''SpecialColors'''[5]
+:An array that stores individual ARGB colors for the floor, ceiling, top of the walls, bottom of the walls, and sprites respectively in the sector
+*''readonly'' Color '''AdditiveColors'''[5]
+:Same as SpecialColors but stores additive color values instead of blended
+*{{c|Actor '''SoundTarget'''}}
+:Used for sound checking when an enemy calls A_Look. This is used to determine who last made a sound that propagated to this sector
+*{{c|int '''special'''}}
+:The special action that the sector currently has
+*{{c|int16 '''lightlevel'''}}
+:The current brightness of the sector
+*{{c|int16 '''seqType'''}}
+:The current type of light sequence in the sector
+*{{c|int '''sky'''}}
+:Which MAPINFO sky is being displayed. 0 for Sky1, 0x40000000 for Sky2
+*{{c|Name '''SeqName'''}}
+:The name of the sector's current light sequence
+*{{c|''readonly'' Vector2 '''centerspot'''}}
+:The pre-calculated center of the sector. Note that this is not guaranteed to be in the sector itself if it has holes in its middle
+*{{c|int '''validcount'''}}
+:Used to keep track of whether or not the sector has already been visited across various functions
+*{{c|Actor '''thinglist'''}}
+:Stores a pointer to the head of the linked list of all Actors in the sector. Each Actor stores the next one in its '''snext''' pointer
+*{{c|double '''friction'''}}
+:The friction factor of the sector
+*{{c|double '''movefactor'''}}
+:The movement speed factor of the sector
+*{{c|int '''terrainnum[2]'''}}
+:The index for the Sector's floor and ceiling TerrainDefs respectively in the Terrains global array. -1 if none is present
+*{{c|SectorEffect '''floordata'''}}
+:Stores information about the sector's current floor action e.g. when it's raising
+*{{c|SectorEffect '''ceilingdata'''}}
+:Stores information about the sector's current ceiling action e.g. when it's crushing
+*{{c|SectorEffect '''lightingdata'''}}
+:Stores information about the sector's current lighting action e.g. when lights are strobing
+*{{c|uint8 '''soundtraversed'''}}
+:Determines whether or not the sector has already been traversed when propagating sounds
+*{{c|int8 '''stairlock'''}}
+:If -2, the sector is currently building stairs. If -1, it is done building and waiting for connected stair sectors to finish. If 0, it's not building stairs at all
+*{{c|int '''prevsec'''}}
+:Index of the previous linked sector in the Sectors global array
+*{{c|int '''nextsec'''}}
+:Index of the next linked sector in the Sectors global array
+*{{c|''readonly'' Array&lt;Line&gt; '''lines'''}}
+:An array that contains all the lines linked to the sector
+*{{c|''readonly'' @SecPlane '''floorplane'''}}
+:Pointer to the [[Structs:SecPlane|plane]] that makes up the sector's floor
+*{{c|''readonly'' @SecPlane '''ceilingplane'''}}
+:Pointer to the [[Structs:SecPlane|plane]] that makes up the sector's ceiling
+*{{c|''readonly'' Sector '''heightsec'''}}
+:Pointer to the control sector used when transferring sector height (e.g. with Boom's deep water)
+*{{c|uint '''bottommap'''}}
+:Special blend to use when viewer is below the floor. Used with height control sectors
+*{{c|uint '''midmap'''}}
+:Special blend to use when viewer is in the sector. Used with height control sectors
+*{{c|uint '''topmap'''}}
+:Special blend to use when viewer is above the ceiling. Used with height control sectors
+*{{c|double '''gravity'''}}
+:The gravity factor in this sector
+*{{c|Name '''damagetype'''}}
+:The name of the damage type applied when this sector hurts an Actor
+*{{c|int '''damageamount'''}}
+:The amount of damage this sector deals when it hurts an Actor
+*{{c|int16 '''damageinterval'''}}
+:The interval in tics that this sector damages Actors
+*{{c|int16 '''leakydamage'''}}
+:Chance sector leaks damage through the radiation suit
+*{{c|''readonly'' uint16 '''ZoneNumber'''}}
+:Index of the sector's sound environment in the Zones array (array is currently inaccessible)
+*{{c|''readonly'' int '''healthceiling'''}}
+:The current health of the sector's ceiling
+*{{c|''readonly'' int '''healthfloor'''}}
+:The current health of the sector's floor
+*{{c|''readonly'' int '''healthceilinggroup'''}}
+:The id of the geometry the ceiling is linked to when it takes damage
+*{{c|''readonly'' int '''healthfloorgroup'''}}
+:The id of the geometry the floor is linked to when it takes damage
+*{{c|uint '''Flags'''}}
+:Contains flags related to the sector
+:*{{c|SECF_SILENT}} - Actors in this sector make no noise
+:*{{c|SECF_NOFALLINGDAMAGE}} - Disable falling damage in this sector
+:*{{c|SECF_FLOORDROP}} - Keep any Actors attached to the floor when lowering quickly
+:*{{c|SECF_NORESPAWN}} - Player cannot respawn in this sector
+:*{{c|SECF_FRICTION}} - Enable friction in this sector
+:*{{c|SECF_PUSH}} - Enable pushers in this sector
+:*{{c|SECF_SILENTMOVE}} - Sector makes no sound when moving
+:*{{c|SECF_DMGTERRAINFX}} - When damage is inflicted by the sector, spawn the associated terrain splash
+:*{{c|SECF_ENDGODMODE}} - The sector ends the god mode of any Actor damaged by it
+:*{{c|SECF_ENDLEVEL}} - If health is below 10, end the current level
+:*{{c|SECF_HAZARD}} - Use Strife's sector damage handling instead of regular sector damage
+:*{{c|SECF_NOATTACK}} - Monsters can't start attacks when in this sector
+:*{{c|SECF_EXIT1}} - Instantly kills the player in it and exits them to the next level. {{verification}} {{removed}}
+:*{{c|SECF_EXIT2}} - Dito, but exits them to the assigned secret level instead. {{verification}} {{removed}}
+:*{{c|SECF_KILLMONSTERS}} - Instantly kill all land monsters that are on the ground in this sector. {{removed}}
+:*{{c|SECF_WASSECRET}} - The sector was a secret that got discovered
+:*{{c|SECF_SECRET}} - The sector is currently still considered a secret
+:*{{c|SECF_DAMAGEFLAGS}} - Combination of {{c|SECF_ENDGODMODE}}, {{c|SECF_ENDLEVEL}}, {{c|SECF_DMGTERRAINFX}}, and {{c|SECF_HAZARD}}
+:*{{c|SECF_NOMODIFY}} - Combination of {{c|SECF_SECRET}} and {{c|SECF_WASSECRET}}
+:*{{c|SECF_SPECIALFLAGS}} - Combination of {{c|SECF_DAMAGEFLAGS}}, {{c|SECF_FRICTION}}, and {{c|SECF_PUSH}}
+*{{c|uint16 '''MoreFlags'''}}
+:Contains additional flags related to the sector
+:*{{c|SECMF_FAKEFLOORONLY}} - If a height control sector, only transfer the floor
+:*{{c|SECMF_CLIPFAKEPLANES}} - If a height control sector, clip floor and ceiling to target sector's
+:*{{c|SECMF_NOFAKELIGHT}} - If a height control sector, don't transfer light level
+:*{{c|SECMF_IGNOREHEIGHTSEC}} - If a height sector, only trigger sector actions and nothing else
+:*{{c|SECMF_UNDERWATER}} - Sector is considered under water
+:*{{c|SECMF_FORCEDUNDERWATER}} - Forcefully consider the sector under water
+:*{{c|SECMF_UNDERWATERMASK}} - Combination of {{c|SECMF_UNDERWATER}} and {{c|SECMF_FORCEDUNDERWATER}}
+:*{{c|SECMF_DRAWN}} - The sector has been rendered at least once
+:*{{c|SECMF_HIDDEN}} - Don't draw this sector's textures on the automap
+:*{{c|SECMF_OVERLAPPING}} - Enabled when the sectors' floor is higher than its' ceiling. Used by the renderer to treat the sector differently to prevent visual glitches. {{removed}}
+:*{{c|SECMF_NOSKYWALLS}} - {{moreinfo}} {{removed}}
+:*{{c|SECMF_LIFT}} - Turned on when the sector has one of the platform specials, and is set to be able to repeatedly activate them, AKA if map has the sector set up as part of a normal lift. {{removed}}
+:*{{c|SECMF_HURTMONSTERS}} - Non-player actors in this sector (Or for 3D floors, the floors' control sector), such as decorations and monsters. Can be hurt by all the same sector properties used for hurting players. Such as ''damageamount'' and ''damageinterval''. Does NOT work with Strife-style delayed damage. {{removed}}
+:*{{c|SECMF_HARMINAIR}} - Actors in this sector can be hurt by its' standard damage properties even without touching it. Normally, this will just make players in mid-air take damage. But in conjunction with SECMF_HURTMONSTERS, it can be used to also hurt flying monsters. {{removed}}
+*{{c|SectorAction '''SecActTarget'''}}
+:The SectorAction that gets activated when its specific sector action requirement is met (e.g. something hits the floor). If there are multiple SectorActions present, they're stored in a linked list where each SectorAction stores the next one in its tracer field
+*''internal'' uint '''Portals'''[2]
+:The index for the Sector's floor and ceiling SectorPortal respectively in the SectorPortals global array. 0 if none is present
+*{{c|''readonly'' int '''PortalGroup'''}}
+:The id the sector uses to connect it to other portal-linked sectors
+*{{c|''readonly'' int '''sectornum'''}}
+:The index of the sector in the Sectors global array
+
+== Methods ==
+=== Non-static ===
+{{note|Whenever any functions below have an {{c|int '''pos'''}} or {{c|int '''plane'''}} argument, the valid values for that parameter are &lt;code&gt;Sector.Floor&lt;/code&gt; for the floor plane and &lt;code&gt;Sector.Ceiling&lt;/code&gt; for the ceiling plane.}}
+
+*{{c|int '''Index'''()}}
+:Returns the index of the sector.
+*{{c|double, Sector, F3DFloor '''[[NextHighestCeilingAt]]'''(double ''x'', double ''y'', double ''bottomz'', double ''topz'', int ''flags'' }}={{c| 0)}}
+:Returns the highest ceiling point closest to the specified position.
+*{{c|double, Sector, F3DFloor '''[[NextLowestFloorAt]]'''(double ''x'', double ''y'', double ''z'', int ''flags'' }}={{c| 0, double ''steph'' }}={{c| 0)}}
+:Returns the lowes floor point closest to the specified position.
+*[[Structs:F3DFloor|F3DFloor]] '''Get3DFloor'''(int ''index'')
+:Returns a pointer to a {{struct|F3DFloor|3D floor}} that is in this sector based on the index passed.
+*{{c|int '''Get3DFloorCount'''()}}
+:Returns the total number of {{struct|F3DFloor|3D floors}} attached to this sector.
+*{{c|Sector '''GetAttached'''(int ''index'')}}
+:Returns a pointer to the control sector of a {{struct|F3DFloor|3D floor}} that is in this sector based on the index passed. {{verification}}
+*{{c|int '''GetAttachedCount'''()}}
+:Returns the total number of {{struct|F3DFloor|3D floor}} control sectors attached to this sector.
+*{{c|void '''RemoveForceField'''()}}
+:Removes all forcefields in the sector. Meaning that it removes the [[ForceField]] [[special]] from all lines in the sector that have it, along with removing the lines' middle textures. And their ML_BLOCKING and ML_BLOCKEVERYTHING flags.
+*{{c|bool '''PlaneMoving'''(int ''pos'')}}
+:Returns true if the sectors' planes are moving.
+*{{c|int '''GetFloorLight'''()}}
+:Returns the floor's light level.
+*{{c|int '''GetCeilingLight'''()}}
+:Returns the ceiling's light level.
+*{{c|Sector '''GetHeightSec'''()}}
+:Returns a pointer to the control sector which is applying the [[Transfer_Heights]] special to the sector.
+*{{c|void '''TransferSpecial'''(Sector ''model'')}}
+:Transfer the damage variables, sector special, and sector flags of the ''model'' sector to the calling one.
+*void [[Structs:SecSpecial|GetSpecial]](out [[Structs:SecSpecial|SecSpecial]] ''spec''):
+*void [[Structs:SecSpecial|SetSpecial]]([[Structs:SecSpecial|SecSpecial]] ''spec'')
+*{{c|int '''GetTerrain'''(int ''pos'')}}
+:{{moreinfo}}
+*[[Structs:TerrainDef|TerrainDef]] '''GetFloorTerrain'''(int ''pos'')
+:Obtains {{struct|TerrainDef|terrain information}} at the position.
+*{{c|void '''CheckPortalPlane'''(int ''plane'')}}
+:{{moreinfo}}
+*{{c|double, Sector '''HighestCeilingAt'''(Vector2 ''a'')}}
+:Returs the absolute height and a pointer to the sector of the highest ceiling at the specified XY position. &lt;code&gt;a&lt;/code&gt; is a Vector2 that determines the 2D position.
+*{{c|double, Sector '''LowestFloorAt'''(Vector2 ''a'')}}
+:Returs the absolute height and a pointer to the sector of the lowest ceiling at the specified XY position. &lt;code&gt;a&lt;/code&gt; is a Vector2 that determines the 2D position.
+*{{c|double, double [[GetFriction_(Sector)|GetFriction]](int ''plane'')}}
+
+
+The following functions get and set the transforms of the sectors' floor and ceiling textures.
+*void '''SetXOffset'''(int ''pos'', double ''o'')}}
+:Sets the X texture offset of the specified plane.  ''o'' is what to set the offset to.
+*{{c|void '''AddXOffset'''(int ''pos'', double ''o'')}}
+:Ditto, but ''o'' is relative to the textures' current offset.
+*{{c|double '''GetXOffset'''(int pos)}}
+:Returns the X texture offset of the specified plane.
+*{{c|void '''SetYOffset'''(int ''pos'', double ''o'')}}
+:Sets the Y texture offset of the specified plane. ''o'' is what to set the offset to.
+*{{c|void '''AddYOffset'''(int ''pos'', double ''o'')}}
+:Ditto, but ''o'' is relative to the textures' current offset.
+*{{c|double '''GetYOffset'''(int ''pos'', bool ''addbase'' }}={{c| true)}}
+:Returns the X texture offset of the specified plane. ''addbase'' {{moreinfo}}
+*{{c|void '''SetXScale'''(int ''pos'', double ''o'')}}
+:Sets the X scale of the texture on the specified plane, ''o'' is the scale to set.
+*{{c|double '''GetXScale'''(int ''pos'')}}
+:Returns the X scale of the texture on the specified plane.
+*{{c|void '''SetYScale'''(int 'pos'', double ''o'')}}
+: Sets the Y scale of the texture on the specified plane, ''o'' is the scale to set.
+*{{c|double '''GetYScale'''(int ''pos'')}}
+:Returns the Y scale of the texture on the specified plane.
+*{{c|void '''SetAngle'''(int ''pos'', double ''o'')}}
+:Sets the angle of the texture on the specified plane.
+*{{c|double '''GetAngle'''(int ''pos'', bool ''addbase'' }}={{c| true)}}
+:Returns the angle of the texture on the specified plane. ''addbase'' {{moreinfo}}
+*{{c|void '''SetBase'''(int ''pos'', double ''y'', double ''o'')}}
+:{{moreinfo}}
+*{{c|void '''SetAlpha'''(int pos, double o)}}
+:{{moreinfo}}
+*{{c|double '''GetAlpha'''(int ''pos'')}}
+:{{moreinfo}}
+*{{c|int '''GetFlags'''(int ''pos'')}}
+:{{moreinfo}}
+*{{c|int '''GetVisFlags'''(int ''pos'')}}
+:Returns the sector's visibility flags, which include:
+:*{{c|PLANEF_ABSLIGHTING}} - floor/ceiling light is absolute, not relative
+:*{{c|PLANEF_BLOCKED}} - can not be moved anymore.
+:*{{c|PLANEF_ADDITIVE}} - rendered additive
+:*{{c|PLANEF_NORENDER}}
+:*{{c|PLANEF_NOPASS}} - impassable linked portal {{verification}}
+:*{{c|PLANEF_DISABLED}} - disabled linked portal {{verification}}
+:*{{c|PLANEF_OBSTRUCTED}} - if the portal plane is beyond the sector's floor or ceiling (linked portal)
+:*{{c|PLANEF_LINKED}} - plane is flagged as a linked portal
+*{{c|void '''ChangeFlags'''(int ''pos'', int ''And'', int ''Or'')}}
+:{{moreinfo}}
+*{{c|int '''GetPlaneLight'''(int ''pos'')}}
+:{{moreinfo}}
+*{{c|void '''SetPlaneLight'''(int ''pos'', int ''level'')}}
+:{{moreinfo}}
+*{{c|void '''SetColor'''(Color ''c'', int ''desat'' }}={{c| 0)}}
+:Sets the sectors' color. ''desat'' is a desaturation value ranging from 0.0 (No desaturation) to 1.0 (Full desaturation).
+*{{c|void '''SetFade'''(Color ''c'')}}
+:Sets the sectors' fade/[[fog]] color.
+*{{c|void '''SetFogDensity'''(int ''dens'')}}
+:The sectors' fog density. The maximum value is 65535.
+*{{c|double '''GetGlowHeight'''(int ''pos'')}}
+:{{moreinfo}}
+*{{c|Color '''GetGlowColor'''(int ''pos'')}}
+:{{moreinfo}}
+*{{c|void '''SetGlowHeight'''(int ''pos'', double ''height'')}}
+:{{moreinfo}}
+*{{c|void '''SetGlowColor'''(int ''pos'', Color ''color'')}}
+:{{moreinfo}}
+*{{c|void '''SetSpecialColor'''(int ''pos'', Color ''color'')}}
+:{{moreinfo}}
+*{{c|void '''SetAdditiveColor'''(int ''pos'', Color ''color'')}}
+:{{moreinfo}}
+*{{c|void '''SetColorization'''(int ''tier'', Name ''cname'')}}
+:{{moreinfo}}
+*{{c|TextureID '''GetTexture'''(int ''pos'')}}
+:Returns the [[ZScript_variables#Types|TextureID]] of the floor or ceiling texture.
+*{{c|void '''SetTexture'''(int ''pos'', TextureID ''tex'', bool ''floorclip'' }}={{c| true)}}
+:Sets the texture of the specified plane to ''tex''.If ''floorclip'' is true, [[AdjustFloorClip|the floorclip of any actors in the sector will also be adjusted]]. 
+*{{c|double '''GetPlaneTexZ'''(int ''pos'')}}
+:{{moreinfo}}
+*{{c|void '''SetPlaneTexZ'''(int ''pos'', double ''val'', bool ''dirtify'' }}={{c| false)}}
+:{{moreinfo}}
+*{{c|void '''ChangeLightLevel'''(int ''newval'')}}
+:Changes the sectors' light level relative to the current one. The maximum is 255.
+*{{c|void '''SetLightLevel'''(int ''newval'')}}
+:Sets the light level to the exact amount specified. The maximum is 255.
+*{{c|int '''GetLightLevel'''()}}
+:Returns the sectors' light level.
+*{{c|void '''SetFloorReflectivity'''(int ''pos'', double ''val'')}} {{git|275635a}}
+:Sets how reflective the floor is, from a scale of 0.0 (Totally opaque) to 1.0 (Perfect [[mirror]] like reflectivity).
+*{{c|clearscope double '''GetFloorReflectivity'''(int ''pos'')}} {{git|275635a}}
+:Returns how reflective the floor is.
+*{{c|bool '''IsLinked'''(Sector ''other'', bool ''ceiling'')}}
+:{{moreinfo}}
+*{{c|bool '''PortalBlocksView'''(int ''plane'')}}
+:{{moreinfo}}
+*{{c|bool '''PortalBlocksSight'''(int ''plane'')}}
+:{{moreinfo}}
+*{{c|bool '''PortalBlocksMovement'''(int ''plane'')}}
+:{{moreinfo}}
+*{{c|bool '''PortalBlocksSound'''(int ''plane'')}}
+:{{moreinfo}}
+*{{c|bool '''PortalIsLinked'''(int ''plane'')}}
+:{{moreinfo}}
+*{{c|void '''ClearPortal'''(int ''plane'')}}
+:{{moreinfo}}
+*{{c|double '''GetPortalPlaneZ'''(int ''plane'')}}
+:{{moreinfo}}
+*{{c|Vector2 '''GetPortalDisplacement'''(int ''plane'')}}
+:{{moreinfo}}
+*{{c|int '''GetPortalType'''(int ''plane'')}}
+:{{moreinfo}}
+*{{c|int '''GetOppositePortalGroup'''(int ''plane'')}}
+:{{moreinfo}}
+*{{c|double '''CenterFloor'''()}}
+:Gets the height of the floors' center.
+*{{c|double '''CenterCeiling'''()}}
+:Gets the height of the ceilings' center.
+*{{c|int [[MoveFloor]](double ''speed'', double ''dest'', int ''crush'', int ''direction'', bool ''hexencrush'', bool ''instant'' }}={{c| false)
+*int [[MoveCeiling]](double ''speed'', double ''dest'', int ''crush'', int ''direction'', bool ''hexencrush'')
+*Sector [[NextSpecialSector]](int ''type'', Sector ''prev'')
+*double, Vertex [[FindLowestFloorSurrounding]]()
+*double, Vertex [[FindHighestFloorSurrounding]]()
+*double, Vertex [[FindNextHighestFloor]]()
+*double, Vertex [[FindNextLowestFloor]]()
+*double, Vertex [[FindLowestCeilingSurrounding]]()
+*double, Vertex [[FindHighestCeilingSurrounding]]()
+*double, Vertex [[FindNextHighestCeiling]]()
+*double, Vertex [[FindNextLowestCeiling]]()
+*double [[FindShortestTextureAround]]()
+*double [[FindShortestUpperAround]]()
+*Sector [[FindModelFloorSector]](double ''floordestheight'')
+*Sector [[FindModelCeilingSector]](double ''floordestheight'')
+*int [[FindMinSurroundingLight]](int ''max'')
+*double, Vertex [[FindLowestCeilingPoint]]()
+*double, Vertex [[FindHighestFloorPoint]]()
+*void '''SetEnvironment'''(string ''env'')}}
+:Set the sectors' [[REVERBS|sound environment]] based on its' name (e.g Castle Alcove, City Abandoned)
+*{{c|void '''SetEnvironmentID'''(int ''envnum'')}}
+:Set the sectors' sound environment based on its' ID. {{moreinfo}}
+*[[Structs:SeqNode|SeqNode]] '''StartSoundSequenceID'''(int chan, int sequence, int type, int modenum, bool nostop }}={{c| false)
+*{{c|SeqNode '''StartSoundSequence'''(int ''chan'', Name ''seqname'', int ''modenum'')
+*SeqNode '''CheckSoundSequence'''(int ''chan'')
+*void '''StopSoundSequence'''(int ''chan'')}}
+:Stops the sound sequence on the specified sound channel.
+*{{c|bool '''IsMakingLoopingSound'''()}}
+:Returns true if the sectors' [[sound sequence]] is looping.
+*{{c|bool '''IsSecret'''()}}
+:Returns true if the sector is secret. (Has the SECF_SECRET flag)
+*{{c|bool '''WasSecret'''()}}
+:Returns true if the sector was secret. (Has the SECF_WASSECRET flag)
+*{{c|void '''ClearSecret'''()}}
+:Clears SECF_SECRET from the sector.
+*{{c|int '''GetUDMFInt'''(Name ''nm'')}}
+:Returns the integer value of the specified UDMF key (e.g user_customvalue).
+*{{c|double '''GetUDMFFloat'''(Name ''nm'')}}
+:Returns the float value of the specified UDMF key (e.g user_customvalue).
+*{{c|string '''GetUDMFString'''(Name ''nm'')}}
+:Returns the string value of the specified UDMF key (e.g user_linedefname).
+*bool [[TriggerSectorActions]](Actor thing, int activation)
+*int [[GetHealth]](SectorPart part)
+*void [[SetHealth]](SectorPart part, int newhealth)
+*int '''CountTags'''()
+:Returns the total number of [[Tag|tags]] attached to the sector. The resulting value can be used in a FOR loop to iterate over tag indexes and get the actual tags with {{c|GetTag()}}.
+*int '''GetTag'''(int ''index'')
+:Returns the [[Tag|tag]] at the specified index. The maximum index can be obtained with {{c|CountTags()}} {{verification}}
+
+[[Category:ZScript]]
+[[Category:Structs]]
+[[Category:Sector]]
+[[Category:ZScript map data]]</text>
+    <sha1>4bzobc41yrgd2dghr73fv7dazdfubv9</sha1>
+  </revision>
+</page>

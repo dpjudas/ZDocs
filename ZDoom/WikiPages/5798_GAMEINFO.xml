@@ -1,0 +1,53 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>GAMEINFO</title>
+  <ns>0</ns>
+  <id>5798</id>
+  <revision>
+    <id>51315</id>
+    <parentid>50156</parentid>
+    <timestamp>2024-01-28T11:39:09Z</timestamp>
+    <contributor>
+      <username>Jekyll Grim Payne</username>
+      <id>2175</id>
+    </contributor>
+    <comment>Made warning more visible</comment>
+    <origin>51315</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="2697" sha1="2iki64wlh2cvw0yqhkvtcwz17hcrat9" xml:space="preserve">{{note|This page is about the dedicated GAMEINFO lump. It should not be confused with the '''[[MAPINFO/GameInfo definition|Gameinfo definition]] in the [[MAPINFO]] lump'''.}}
+
+'''GAMEINFO''' is a special lump that is parsed even before ZDoom starts loading fully. It can be used to influence how the game loads.
+
+== Properties ==
+{{list|Property|Description|content=
+{{-|{{LE|IWAD}} {{=}} "&lt;iwadname.wad&gt;"
+|ZDoom will skip the [[IWAD selection box]] and load the listed [[IWAD]]. The -iwad [[command line parameter]] can override this, however.}}
+{{-|{{LE|LOAD}} {{=}} "&lt;file1&gt;"[, "&lt;file2&gt;"[, "&lt;file3&gt;"[, ...]]]
+|ZDoom will automatically load the listed files, if it finds them. It will look first in the same directory as the file containing the GAMEINFO lump, and then in the current working directory. These files are loaded ''before'' the one containing the GAMEINFO lump.}}
+{{-|{{LE|NOSPRITERENAME}} {{=}} "&lt;string&gt;"
+|If set to ''true'', [[sprite renaming]] happens, contrary to the property's name.}}
+{{-|{{LE|STARTUPTITLE}} {{=}} "&lt;title string&gt;"
+|Allows to modify the text of the banner title shown on the [[Startup lumps|startup screen]].}}
+{{-|{{LE|STARTUPCOLORS}} {{=}} "&lt;foreground color&gt;", "&lt;background color&gt;"
+|Allows to modify the colors of the banner title shown on the [[Startup lumps|startup screen]]. This is expressed in HEX values.}}
+{{-|{{LE|STARTUPTYPE}} {{=}} "&lt;game name&gt;"
+|Allows to choose which [[startup screen]] will be displayed. Valid values are &lt;tt&gt;Doom&lt;/tt&gt; (text), &lt;tt&gt;Heretic&lt;/tt&gt;, &lt;tt&gt;Hexen&lt;/tt&gt; and &lt;tt&gt;Strife&lt;/tt&gt;. This overrides the game default.}}
+{{-|{{LE|STARTUPSONG}} {{=}} "&lt;lump name&gt;"
+|Allows to choose which song to play during the Hexen loading screen, just in case you don't want to name that song "orb".}}
+{{-|{{LE|LOADLIGHTS}} {{=}} &lt;integer&gt;
+|Set to 0 to disable loading lights.pk3, set to 1 to forcibly load it. Useful for [[DEHACKED]] mods that may replace Actors with different, less suitable actors.}}
+{{-|{{LE|LOADBRIGHTMAPS}} {{=}} &lt;integer&gt;
+|Set to 0 to disable loading brightmaps.pk3, set to 1 to forcibly load it. Useful for [[DEHACKED]] mods that may replace Actors with different, less suitable actors.}}
+{{-|{{LE|LOADWIDESCREEN}} {{=}} &lt;integer&gt;
+|Set to 0 to disable loading game_widescreen_gfx.pk3, set to 1 to forcibly load it.}}
+{{-|{{LE|DISCORDAPPID}} {{=}} "&lt;id&gt;"
+|Set to a Discord App ID to appear as that game in Discord's rich presence system. If not entered, will default to a generic "GZDoom" app. Only useful for standalone games.}}
+{{-|{{LE|STEAMAPPID}} {{=}} "&lt;id&gt;"
+|Set to a Steam App ID to appear as that game in Discord's rich presence system. Only useful for standalone games.}}
+}}
+
+
+[[Category:ZDoom special lumps]]</text>
+    <sha1>2iki64wlh2cvw0yqhkvtcwz17hcrat9</sha1>
+  </revision>
+</page>

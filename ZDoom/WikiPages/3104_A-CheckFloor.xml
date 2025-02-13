@@ -1,0 +1,53 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>A CheckFloor</title>
+  <ns>0</ns>
+  <id>3104</id>
+  <revision>
+    <id>43633</id>
+    <parentid>42393</parentid>
+    <timestamp>2017-01-07T12:17:28Z</timestamp>
+    <contributor>
+      <username>The Zombie Killer</username>
+      <id>2078</id>
+    </contributor>
+    <minor />
+    <comment>Add A_CheckSolidFooting to "See also" section</comment>
+    <origin>43633</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="736" sha1="jc9es1fb0luzh4tmtx0vmstsgqhssx5" xml:space="preserve">{{codepointer|Jump}}
+state '''A_CheckFloor''' (int ''offset'')&lt;br&gt;
+state '''A_CheckFloor''' (str "''state''")
+{{JumpNotice}}
+Jumps if actor is standing on or submerged into the floor.
+
+== Examples ==
+This {{Class|rocket}} does not explode when it hits the ground.
+
+ ACTOR Useless_Rocket: {{Class|Rocket}} Replaces {{Class|Rocket}}
+ {
+   {{Property|DeathSound}} "None"
+   States
+   {
+   Spawn:
+     MISL A 1 Bright
+     Loop
+   CancelMovement:
+     MISL A 1 Bright
+     Loop
+   Death:
+     MISL B 0 [[A_CheckFloor]]("CancelMovement")
+     MISL B 0 [[A_PlaySound]]("weapons/rocklx")
+     MISL B 8 Bright [[A_Explode]]
+     MISL C 6 Bright
+     MISL D 4 Bright
+     Stop
+   }
+ }
+
+== See also ==
+*[[A_CheckCeiling]]
+*[[A_CheckSolidFooting]]</text>
+    <sha1>jc9es1fb0luzh4tmtx0vmstsgqhssx5</sha1>
+  </revision>
+</page>

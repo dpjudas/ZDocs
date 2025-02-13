@@ -1,0 +1,129 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>Display options</title>
+  <ns>0</ns>
+  <id>5367</id>
+  <revision>
+    <id>45966</id>
+    <parentid>45603</parentid>
+    <timestamp>2018-03-25T18:08:52Z</timestamp>
+    <contributor>
+      <username>Blue Shadow</username>
+      <id>2021</id>
+    </contributor>
+    <minor />
+    <comment>Remove {{new}}</comment>
+    <origin>45966</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="7952" sha1="qkxlm0dpmagim06rg2b635yg2e8ufo2" xml:space="preserve">{{menutrail|Main menu|Options menu}}
+[[File:DisplayOptions.png|thumb|The display options menu in [[Heretic]].]]
+The '''display options''' menu allows to tailor how the game is displayed. Its [[MENUDEF]] name is {{c|VideoOptions}} and it can be summoned with the {{c|{{CCMD|O|menu_display}}}} console command.
+
+*'''{{LE|OpenGL options}}''' {{OpenGLsmall}}
+:Opens the [[OpenGL options]] menu.
+*'''{{LE|Scoreboard options|menu_scoreboard}}'''
+:{{c|menu_scoreboard}}
+:Opens the [[Scoreboard options]] menu.
+
+
+*'''{{LE|Screensize|screenblocks}}''' (3&amp;mdash;12)
+:{{c|{{CVAR|R|screenblocks}}}}
+:This is the same as using the + and - keys from the original game. The maximal size (screenblocks 12) corresponds to full-screen without the [[HUD]], then below that are full screen with HUD (11) and normal statusbar (10). Values lesser than that display the statusbar and shrinks the size of the view window, bordering it with a flat; the minimal size is screenblocks 3, at this size the actual view window is less than one-tenth of the entire game screen area.
+*'''{{LE|Brightness|Gamma}}'''/'''{{LE|Gamma correction}}''' (0.75&amp;mdash;3.0, by 0.05 increments)
+:{{c|{{CVAR|R|gamma}}}}
+:The degree of gamma correction. In [[GZDoom]], this option is called "Gamma correction" rather than brightness; brightness is a separate setting.
+*'''{{LE|Brightness|vid_brightness}}''' (-0.8&amp;mdash;0.8, by 0.05 increments) {{OpenGLsmall}}
+:{{c|{{CVAR|R|vid_brightness}}}}
+:The brightness level. This is not to be confused with gamma correction, which is called brightness in ZDoom.
+*'''{{LE|Contrast|vid_contrast}}''' (0.1&amp;mdash;3.0, by 0.1 increments) {{OpenGLsmall}}
+:{{c|{{CVAR|R|vid_contrast}}}}
+:The contrast level.
+*'''{{LE|Vertical sync|vid_vsync}}''' (On/Off)
+:{{c|{{CVAR|R|vid_vsync}}}}
+:Turns vertical synchronization on or off.
+*'''{{LE|Rendering Interpolation|cl_capfps}}''' (On/Off)
+:{{c|{{CVAR|R|cl_capfps}}}}
+:Turns framerate capping on or off.
+*'''{{LE|Blood Flash Intensity|blood_fade_scalar}}''' (0.0&amp;mdash;1.0, by 0.05 increments)
+:{{c|{{CVAR|R|blood_fade_scalar}}}}
+:Controls the intensity of the screen flash effect upon taking damage. Higher values increases the intensity while lower values decreases it. Setting this to 0, disables the effect.
+*'''{{LE|Pickup Flash Intensity|pickup_fade_scalar}}''' (0.0&amp;mdash;1.0, by 0.05 increments)
+:{{c|{{CVAR|R|pickup_fade_scalar}}}}
+:Controls the intensity of the screen flash effect upon picking up items. Higher values increases the intensity while lower values decreases it. Setting this to 0, disables the effect.
+*'''{{LE|Column render mode|r_columnmethod}}''' (Original/Optimized)
+:{{c|{{CVAR|R|r_columnmethod}}}}
+:Chooses whether using the method from the original games or an optimized method.
+
+
+*'''{{LE|Screen wipe style|wipetype}}''' (None/Melt/Burn/Crossfade)
+:{{c|{{CVAR|R|wipetype}}}}
+:Chooses how the screen [[screen wipe|transitions]] between different images, such as between the game and an intermission. The original games used Melt for ''Doom'', Crossfade for ''Strife'', and None for ''Heretic'' and ''Hexen''.
+*'''{{LE|Show ENDOOM screen|showendoom}}''' (Off/On/Only modified) (Win32 only)
+:{{c|{{CVAR|R|showendoom}}}}
+:Whether to show the [[ENDOOM]] text screen after leaving the game. In the original game, they were displayed above the command line and had no other effect; however in a windowed environment they require closing the window even after having left the game and can be considered annoying for this reason.
+*'''{{LE|Stretch short skies|r_stretchsky}}''' (On/Off)
+:{{c|{{CVAR|R|r_stretchsky}}}}
+:Whether short [[sky|skies]] (less than 240 pixel tall) should be [[sky stretching|stretched]] or not. If they are not stretched, they are tiled vertically, which will look bad for any sky texture with a horizon.
+*'''{{LE|Use fuzz effect|r_drawfuzz}}''' (Translucent/Fuzz/Shadow)
+:{{c|{{CVAR|R|r_drawfuzz}}}}
+:If this option is set to its default value of Fuzz, actors with the "Fuzzy" {{Property|RenderStyle}} uses the fuzz effect from ''Doom'''s {{Class|spectre}}s. If set to Translucent, they are instead treated as being translucent.
+:If set to Shadow, the "shadow" render style is used. This emulates the rendering of fuzz in [[GZDoom]] when not using one of the pixel shaders.
+*'''{{LE|Classic Transparency|r_vanillatrans}}''' (ZDoom (Forced)/Vanilla (Forced)/Auto (ZDoom Preferred)/Auto (Vanilla Preferred))
+:{{c|{{CVAR|R|r_vanillatrans}}}}
+:{{moreinfo}}
+*'''{{LE|Lost Soul translucency|transsouls}}''' (0.25&amp;mdash;1.0, by 0.05 increments)
+:{{c|{{CVAR|R|transsouls}}}}
+:This commands the alpha value of [[actor]]s drawn with the {{c|SoulTrans}} {{Property|RenderStyle}}, such as the {{Class|LostSoul}}.
+*'''{{LE|Use fake contrast|r_fakecontrast}}''' (Off/On/Smooth)
+:{{c|{{CVAR|R|r_fakecontrast}}}}
+:Determines the default setting for [[fake contrast]]: on (as in [[vanilla Doom]]), off (also called "flat lighting" or "even lighting"), or smooth.
+*'''{{LE|Rocket trails|cl_rockettrails}}''' (Off/Particles/Sprites/Sprites &amp; Particles)
+:{{c|{{CVAR|R|cl_rockettrails}}}}
+:If on, actors with the {{Flag|ROCKETTRAIL}} or {{Flag|GRENADETRAIL}} flag will leave a trail, and the nature of the trail ([[particle]]s, [[sprite]]s, or both). If off, they do not.
+*'''{{LE|Blood type|cl_bloodtype}}''' (Sprites/Sprites &amp; Particles/Particles)
+:{{c|{{CVAR|R|cl_bloodtype}}}}
+:Chooses whether actors "bleed" [[sprite]]s, [[particle]]s, or both when they are hurt.
+*'''{{LE|Bullet puff type|cl_pufftype}}''' (Sprites/Particles/Sprites &amp; Particles)
+:{{c|{{CVAR|R|cl_pufftype}}}}
+:Chooses whether bullet impacts result in drawing [[sprite]], [[particle]] or both.
+*'''{{LE|Number of particles|r_maxparticles}}''' (100&amp;mdash;10000, by 100 increments)
+:{{c|{{CVAR|R|r_maxparticles}}}}
+:Selects the maximum number of [[particle]]s displayed at once on the screen.
+*'''{{LE|Number of decals|cl_maxdecals}}''' (0&amp;mdash;10000, by 100 increments)
+:{{c|{{CVAR|R|cl_maxdecals}}}}
+:Selects the maximum number of [[decal]]s present at once on the current map.
+*'''{{LE|Show player sprites|r_drawplayersprites}}''' (On/Off)
+:{{c|{{CVAR|R|r_drawplayersprites}}}}
+:Turns the drawing of player [[HUD]] sprites (such as those from the weapons) on or off.
+*'''{{LE|Death camera|r_deathcamera}}''' (On/Off)
+:{{c|{{CVAR|R|r_deathcamera}}}}
+:If on, the camera changes to third-person view when the player avatar dies, letting the player see the death animation.
+*'''{{LE|Teleporter zoom|telezoom}}''' (On/Off)
+:{{c|{{CVAR|R|telezoom}}}}
+:This option allows to enable or disable the subtle zooming effect that happens in the fraction of second after a teleport.
+*'''{{LE|Earthquake shake intensity|r_quakeintensity}}''' (0.0&amp;mdash;1.0, by 0.05 increments)
+:{{c|{{CVAR|R|r_quakeintensity}}}}
+:Factor which scales the camera-shaking effects of Hexen-style [[earthquake]]s. Value can be between 0 (no shaking) and 1 (normal shaking). 
+*'''{{LE|Interpolate monster movement|nomonsterinterpolation}}''' (No/Yes)
+:{{c|{{CVAR|R|nomonsterinterpolation}}}}
+:Chooses whether monster movement is interpolated when playing with uncapped framerate.
+*'''{{LE|Menu dim|dimamount}}''' (0.0&amp;mdash;1.0, by 0.05 increments)
+:{{c|{{CVAR|C|dimamount}}}}
+:Controls how much the game screen is "dimmed" to the dim color when in menu mode.
+*'''{{LE|Dim color|dimcolor}}'''
+:{{c|{{CVAR|C|dimcolor}}}}
+:The color to which the screen is dimmed when in menu mode.
+*'''{{LE|View bob amount while moving|movebob}}''' (0.0&amp;mdash;1.0, by 0.05 increments)
+:{{c|{{CVAR|C|movebob}}}}
+:Controls how much the view bobs up and down while moving.
+*'''{{LE|View bob amount while not moving|stillbob}}''' (0.0&amp;mdash;1.0, by 0.05 increments)
+:{{c|{{CVAR|C|stillbob}}}}
+:Controls how much the view bobs up and down while standing still.
+*'''{{LE|Weapon bob speed|wbobspeed}}''' (0.0&amp;mdash;2.0, by 0.1 increments)
+:{{c|{{CVAR|C|wbobspeed}}}}
+:A multiplier for weapon bob speed. Lower values slow it down, while higher values speed it up.
+
+[[Category:Menus]]</text>
+    <sha1>qkxlm0dpmagim06rg2b635yg2e8ufo2</sha1>
+  </revision>
+</page>

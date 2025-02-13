@@ -1,0 +1,67 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>CheckMeleeRange</title>
+  <ns>0</ns>
+  <id>9594</id>
+  <revision>
+    <id>49153</id>
+    <timestamp>2022-05-19T03:05:49Z</timestamp>
+    <contributor>
+      <username>Inkoalawetrust</username>
+      <id>2604</id>
+    </contributor>
+    <comment>Created the page.</comment>
+    <origin>49153</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="1660" sha1="hzw6o9dg0wi958r2wml9bdquf433h77" xml:space="preserve">__NOTOC__
+Bool '''CheckMeleeRange''' (Double ''Range'' = -1)
+
+== Usage ==
+Checks if the calling actor is within melee range of his target. This function is used by several other internal functions such as [[A_Chase]]
+
+=== Parameters ===
+
+*''Range'': The range the check should use. Default is -1, which means that the range of the check corresponds to the callers' {{property|MeleeRange}} instead.
+
+== Return value ==
+Returns true if the caller can perform a melee attack to his target. False if not, the conditions that make the check fail are as follows:
+
+* The caller is inside a sector with the [[Sector_flags|SECF_NOATTACK]] flag on.
+* The target is out of the callers' range.
+* The target is above the callers' height, or below the callers' bottom. And the caller doesn't have the {{flag|NOVERTICALMELEERANGE}} flag.
+* Both the caller and the target are {{flag|FRIENDLY|friendly}} monsters that work for the same player.
+* The target is out of the callers' sight.
+
+== Examples ==
+This big Imp has a much more powerful attack than his normal counterparts. But he first calls CheckMeleeRange with a custom range of 128, to make sure that he is able to use his melee.
+
+ Class BigImp : {{class|DoomImp}}
+ {
+ 	Default
+ 	{
+ 		Health 250;
+ 		Radius 30;
+ 		Height 84;
+ 		Mass 250;
+ 		Speed 6;
+ 		Scale 1.5;
+ 		PainChance 150;
+ 	}
+ 	States
+ 	{
+ 		Missile:
+ 			TNT1 A 0 A_JumpIf (CheckMeleeRange(128),"BigMelee");
+ 			TROO EF 10 A_FaceTarget();
+ 			TROO G 8 A_SpawnProjectile ("DoomImpBall",48);
+ 			Goto See;
+ 		BigMelee:
+ 			TROO EF 12 A_FaceTarget();
+ 			TROO G 10 A_CustomMeleeAttack (10 * Random (1, 8),"Imp/Melee");
+ 			Goto See;
+ 	}
+ }
+
+[[Category:ZScript]]</text>
+    <sha1>hzw6o9dg0wi958r2wml9bdquf433h77</sha1>
+  </revision>
+</page>

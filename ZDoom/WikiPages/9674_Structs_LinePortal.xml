@@ -1,0 +1,57 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>Structs:LinePortal</title>
+  <ns>0</ns>
+  <id>9674</id>
+  <revision>
+    <id>52988</id>
+    <parentid>50700</parentid>
+    <timestamp>2024-08-22T10:50:28Z</timestamp>
+    <contributor>
+      <username>Blue Shadow</username>
+      <id>2021</id>
+    </contributor>
+    <minor />
+    <comment>remove {{new}}</comment>
+    <origin>52988</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="3382" sha1="bbm6hhagw1m9elx43iskgzpnla4uj1d" xml:space="preserve">{{ZScriptNote}}
+
+The '''LinePortal''' struct stores information pertaining to a specific portal linedef. Such as its' alignment, rotation, and attributes.
+
+== Fields ==
+*[[Structs:Line|Line]] '''mOrigin''': The linedef that created the portal.
+*Line '''mDestination''': The other linedef which the portal leads to.
+*Vector2 '''mDisplacement''': The difference between the ''mDestination'' and ''mOrigin'' lines' XY positions. This is only relevant for static/PORTT_LINKED portals.
+*UInt8 '''mType''': The type of portal that this line portal is. Possible values include:
+*:*'''PORTT_VISUAL''': The portal is purely visual and not traversable at all. Such as a portal used as window.
+*:*'''PORTT_TELEPORT''': The portal is a teleport only portal. This is the most basic type of traversable portal. Not allowing for sound or light traversal, being detectable by the [[automap]] etcetera.
+*:*'''PORTT_INTERACTIVE''': More or less the same as above. But can also be recognized as a portal by portal aware functions like [[Vec3Offset]] and [[Vec2Angle]].
+*:*'''PORTT_LINKED''': The two portals are statically linked with each other. Meaning that they cannot be changed or have any automatic plane alignments.
+*:*'''PORTT_LINKEDEE''': [[Eternity Engine|Eternity]]-compatible version of PORTT_LINKED, used for Eternity portal specials translated by [[XLAT]]. For more information, check [[Line_SetPortal]].
+*UInt8 '''mFlags''': The line portals' flags. Possible values include:
+*:*'''PORTF_VISIBLE''': The portal is a visible-type one. {{verification}}
+*:*'''PORTF_PASSABLE''': The portal is passable by actors and hitscans.
+*:*'''PORTF_SOUNDTRAVERSE''': Monster hearing can traverse through this portal.
+*:*'''PORTF_INTERACTIVE''': The portal is an interactive-type portal.
+*:*'''PORTF_POLYOBJ''': The portal is attached to a [[polyobject]].
+*:*'''PORTF_TYPETELEPORT''': Implies PORTF_VISIBLE, PORTF_PASSABLE, and PORTF_SOUNDTRAVERSE.
+*:*'''PORTF_TYPEINTERACTIVE''': Implies PORTF_VISIBLE, PORTF_PASSABLE, PORTF_SOUNDTRAVERSE, and PORTF_INTERACTIVE.
+*UInt8 '''mDefFlags''': The flags the portal spawned with. Since non-static portals can have their flags changed at runtime. This field can be used to check the portals' original attributes.
+*UInt8 '''mAlign''': What [[Structs:SecPlane|sector plane]] the line portal is automatically aligned to. Only PORTT_VISUAL and PORTT_TELEPORT portals support this. Possible values include:
+*:*'''PORG_ABSOLUTE''': The portal has no alignment. This is always the default for non visual and teleporter portals.
+*:*'''PORG_FLOOR''': The portal is aligned to the floor plane.
+*:*'''PORG_CEILING''': The portal is aligned to the ceiling plane.
+*double '''mAngleDiff''': The angle difference between ''mDestination'' and ''mOrigin''. This is always zero for linked/static portals.
+*double '''mSinRot''': The sine rotation of the portal, based on ''mAngleDiff''. Used by non-static portals to position raycasts and actors properly on the other side of the portal. This is always zero for linked/static portals.
+*double '''mCosRot''': The cosine rotation of the portal, based on ''mAngleDiff''. Used by non-static portals to position raycasts and actors properly on the other side of the portal. This is always 1.0 for linked/static portals.
+
+== See also ==
+*[[Structs:SectorPortal]]
+
+[[Category:ZScript]]
+[[Category:Structs]]
+[[Category:ZScript map data]]</text>
+    <sha1>bbm6hhagw1m9elx43iskgzpnla4uj1d</sha1>
+  </revision>
+</page>

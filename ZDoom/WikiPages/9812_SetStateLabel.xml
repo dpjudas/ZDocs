@@ -1,0 +1,80 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>SetStateLabel</title>
+  <ns>0</ns>
+  <id>9812</id>
+  <revision>
+    <id>52788</id>
+    <parentid>51572</parentid>
+    <timestamp>2024-06-28T11:46:53Z</timestamp>
+    <contributor>
+      <username>Jekyll Grim Payne</username>
+      <id>2175</id>
+    </contributor>
+    <comment>Clarfied the nofunction argument</comment>
+    <origin>52788</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="2241" sha1="r2lfh15xoss2r55s83zfpxxnrwkyzle" xml:space="preserve">'''{{class|Actor}}'''
+
+{{c|bool '''SetStateLabel'''(statelabel ''st'', bool ''nofunction'' }}={{c| false)}}
+
+== Usage ==
+Forcefully sets the calling actor's {{struct|State}} to the specified state sequence. Same as [[SetState]], except the first argument is the name of a state sequence (like "Spawn") rather than a state pointer.
+
+'''Note:''' This is NOT a state jump function, and it should not be called from inside a state/[[Anonymous functions|anonymous function]]. It's meant to be called from outside of states. For state jumps, use [[FindState|{{c|return FindState("&lt;State label&gt;")}}]] in actors, or [[ResolveState|{{c|return ResolveState("&lt;State label&gt;")}}]] in weapons.
+
+=== Parameters ===
+*{{c|statelabel '''st'''}}
+:The name of a [[Actor states|state sequence]], like "Spawn".
+*{{c|bool '''nofunction'''}}
+:If the first state in the defined state label has a function attached, passing &lt;code&gt;true&lt;/code&gt; to this argument will force that function to not be called.
+=== Return values ===
+Returns true if the state was successfully modified.
+
+== [[ZScript]] definition ==
+{{ZScriptDefinitionNote|actors/actor.zs#L808}}
+&lt;syntaxhighlight lang="csharp"&gt;
+bool SetStateLabel(statelabel st, bool nofunction = false) 
+{
+    return SetState(FindState(st), nofunction);
+}&lt;/syntaxhighlight&gt;
+
+== Examples ==
+This version of {{class|DoomImpBall|Doom Imp's fireball}} after existing for 10 tics will move from Spawn state sequence to the Plasma state sequence, which makes it look like the {{class|PlasmaBall}}:
+&lt;syntaxhighlight lang="csharp"&gt;
+class FakePlasmaBall : DoomImpBall
+{
+	override void Tick()
+	{
+		super.Tick();
+		// Check if age is above 10 tics and the actor is currently
+		// in its spawn state sequence:
+		if (GetAge() &gt; 10 &amp;&amp; InStateSequence(curstate, spawnstate))
+		{
+			SetStateLabel("Plasma");
+		}
+	}
+
+	States 
+	{
+	Plasma:
+		PLSS AB 5 bright;
+		loop;
+	}
+}&lt;/syntaxhighlight&gt;
+Used in the example:
+* [[GetAge]]
+* [[InStateSequence]]
+
+Note: &lt;code&gt;spawnstate&lt;/code&gt; is an Actor field that contains a pointer to the first {{struct|State|state}} in their Spawn state sequence. It's the same as &lt;code&gt;FindState("Spawn")&lt;/code&gt;.
+
+== See also ==
+* [[Structs:State]]
+* [[SetState]]
+* [[ResolveState]]
+* [[FindState]]
+
+[[Category:ZScript]]</text>
+    <sha1>r2lfh15xoss2r55s83zfpxxnrwkyzle</sha1>
+  </revision>
+</page>

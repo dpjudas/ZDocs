@@ -1,0 +1,63 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>Classes:TreeDestructible</title>
+  <ns>0</ns>
+  <id>4484</id>
+  <revision>
+    <id>39627</id>
+    <parentid>34731</parentid>
+    <timestamp>2015-05-02T21:02:49Z</timestamp>
+    <contributor>
+      <username>Blue Shadow</username>
+      <id>2021</id>
+    </contributor>
+    <minor />
+    <comment>/* DECORATE definition */ Updated</comment>
+    <origin>39627</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="850" sha1="oq0x9865r438gr210j4xxdrd505ruem" xml:space="preserve">{{Actor|
+| type = Breakable
+| name = Tree
+| class = TreeDestructible
+| game = Hexen
+| doomednum = 8062
+}}[[Classes]]: &lt;u&gt;TreeDestructible&lt;/u&gt;&lt;br&gt;
+{{desc}}
+==== [[DECORATE]] definition ====
+ ACTOR &lt;u&gt;TreeDestructible&lt;/u&gt;
+ {
+   {{Property|Health}} 70
+   {{Property|Radius}} 15
+   {{Property|Height}} 180
+   {{Property|DeathHeight}} 24
+   {{Property|Mass}} 0x7fffffff
+   {{Property|PainSound}} "TreeExplode"
+   {{Property|DeathSound}} "TreeBreak"
+   +{{Flag|SOLID}}
+   +{{Flag|SHOOTABLE}}
+   +{{Flag|NOBLOOD}}
+   +{{Flag|NOICEDEATH}}
+   States
+   {
+   Spawn:
+     TRDT A -1
+     Stop
+   Death:
+     TRDT B 5
+     TRDT C 5 [[A_Scream]]
+     TRDT DEF 5
+     TRDT G -1
+     Stop
+   Burn:
+     TRDT H 5 Bright [[A_Pain]]
+     TRDT IJKL 5 Bright
+     TRDT M 5 Bright [[A_Explode]](10, 128)
+     TRDT N 5 Bright
+     TRDT OP 5
+     TRDT Q -1
+     Stop
+   }
+ }</text>
+    <sha1>oq0x9865r438gr210j4xxdrd505ruem</sha1>
+  </revision>
+</page>

@@ -1,0 +1,73 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>Classes:Pig</title>
+  <ns>0</ns>
+  <id>4699</id>
+  <revision>
+    <id>34828</id>
+    <parentid>24348</parentid>
+    <timestamp>2012-11-05T14:52:05Z</timestamp>
+    <contributor>
+      <username>Blue Shadow</username>
+      <id>2021</id>
+    </contributor>
+    <comment>/* DECORATE definition */ Updated.</comment>
+    <origin>34828</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="1380" sha1="7spsrtuxjfkguski2z7rconbrolltf1" xml:space="preserve">{{Actor|
+| type = Monster
+| name = Pig
+| class = Pig
+| game = Hexen
+}}[[Classes]]: [[Classes:MorphedMonster|MorphedMonster]]&amp;rarr;&lt;u&gt;Pig&lt;/u&gt;&lt;br&gt;
+Monsters hit by a [[Classes:ArtiPork|porkalator]] [[Classes:PorkFX|shot]], unless immune to morphing thanks to the {{flag|DONTMORPH}}, are turned into this. 
+
+==== [[DECORATE]] definition ====
+ ACTOR &lt;u&gt;Pig&lt;/u&gt; : {{Class|MorphedMonster}}
+ {
+   {{Property|Health}} 25
+   {{Property|PainChance}} 128
+   {{Property|Speed}} 10
+   {{Property|Radius}} 12
+   {{Property|Height}} 22
+   {{Property|Mass}} 60
+   {{Property|Monster}}
+   -{{Flag|COUNTKILL}}
+   +{{Flag|WINDTHRUST}}
+   +{{Flag|DONTMORPH}}
+   {{Property|SeeSound}} "PigActive1"
+   {{Property|PainSound}} "PigPain"
+   {{Property|DeathSound}} "PigDeath"
+   {{Property|ActiveSound}} "PigActive1"
+   States
+   {
+   Spawn:
+     PIGY B 10 [[A_Look]]
+     Loop
+   See:
+     PIGY ABCD 3 [[A_Chase]]
+     Loop
+   Pain:
+     PIGY D 4 [[A_PigPain]]
+     Goto See
+   Melee:
+     PIGY A 5 [[A_FaceTarget]]
+     PIGY A 10 [[A_CustomMeleeAttack]]([[DECORATE_expressions#Mathematical_functions|random]][PigAttack](2, 3), "PigAttack")
+     Goto See
+   Death:
+     PIGY E 4 [[A_Scream]]
+     PIGY F 3 [[A_NoBlocking]]
+     PIGY G 4 [[A_QueueCorpse]]
+     PIGY H 3
+     PIGY IJK 4
+     PIGY L -1
+     Stop
+   Ice:
+     PIGY M 5 [[A_FreezeDeath]]
+     PIGY M 1 [[A_FreezeDeathChunks]]
+     Wait
+   }
+ }</text>
+    <sha1>7spsrtuxjfkguski2z7rconbrolltf1</sha1>
+  </revision>
+</page>

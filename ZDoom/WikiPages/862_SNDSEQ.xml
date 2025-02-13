@@ -1,0 +1,173 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>SNDSEQ</title>
+  <ns>0</ns>
+  <id>862</id>
+  <revision>
+    <id>48277</id>
+    <parentid>48116</parentid>
+    <timestamp>2021-02-01T16:43:19Z</timestamp>
+    <contributor>
+      <username>Blue Shadow</username>
+      <id>2021</id>
+    </contributor>
+    <minor />
+    <comment>remove {{new}}</comment>
+    <origin>48277</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="6772" sha1="550kuz6664380xbmhbdh6ypz2dvex7a" xml:space="preserve">'''SNDSEQ''' is used to create [[sound sequence|sequences]] of sounds to be used for doors and platforms or in scripts. If you want to use them with doors and platforms, in older map formats you must use the [[sound sequence thing]] in the affected sectors with its first argument set to the index of the sound, or, in UDMF maps, you can set the soundsequence property of the sector to the name of the sound sequence directly. To play them in a script you can use the [[SoundSequence]] function.
+
+The syntax is as follows
+
+ :SoundSequenceName 
+      commands
+      ...
+ end
+
+The name defines the internal name for this sound sequence. Currently this is only used by [[ACS]] and [[class:SeqNode|SeqNode in ZScript]] or for some predefined sound sequences.
+
+The following commands can be used in a sound sequence definition:
+* '''play''' &lt;''soundname''&gt;
+*: plays the specified sound.
+* '''playuntildone''' &lt;''soundname''&gt;
+*: plays the specified sound and waits until it has finished.
+* '''playtime''' &lt;''soundname''&gt; &lt;''delay''&gt;
+*: plays the specified sound and waits for the given period of time. The delay is specified in [[tic]]s (1/35th of a second).
+* '''playrepeat''' &lt;''soundname''&gt;
+*: plays the given sound repeatedly in an endless loop.
+* '''playloop''' &lt;''soundname''&gt; &lt;''delay''&gt;
+*: plays the sound repeatedly with a specified delay between each loop. The time is specified in tics and it's the time between each loop starts.
+* '''delay''' &lt;''time''&gt;
+*: Waits for the given period of time. The delay is specified in tics.
+* '''delayonce''' &lt;''time''&gt;
+*: Waits for the given period of time after level start to start playing. The delay is specified in tics.
+* '''delayrand''' &lt;''min''&gt; &lt;''max''&gt;
+*: Waits for a random period of time. The minimum and maximum of this period are specified in tics.
+* '''volume''' &lt;''volume''&gt;
+*: Specifies the volume at which all following sounds are played.
+* '''volumerel'''
+*: ''description is missing.''
+* '''volumerand''' &lt;''min''&gt; &lt;''max''&gt;
+*: Specifies the minimum and maximum volume between which all following sounds are played. The precise value is randomly chosen for each sound every time it's played.
+* '''attenuation''' &lt;''mode''&gt;
+*: Specifies the kind of sound. The following modes exist:
+** '''normal'''
+**: a 'normal' sound. This is the default.
+**'''idle'''
+**: ''description is missing.''
+**'''static'''
+**: this sound is more local. It fades out much quicker with increasing distance.
+** '''none'''
+**: The sound is played at full volume in the entire level.
+**'''surround'''
+**: The sound is played at full volume in surround mode.
+* '''door''' &lt;''index''&gt;
+*: Defines the sound sequence index for use as a door sequence. A door in this context is any sector movement by a 'Door' type or a polyobject. The index determines which sound sequence thing you have to place in the door sector to hear this sound sequence. Note that Hexen predefines the first 10 sequences so for custom sequences in Hexen the index must be larger than 10. Index must be in the range of 0 to 4095.
+* '''platform''' &lt;''index''&gt;
+*: Defines the sound sequence index for use as a platform sequence. A platform in this context is any sector movement that is done by a 'Ceiling', 'Floor', 'Elevator' or 'Plat' type. See 'door' for a more detailed description of how this works.
+*'''environment''' &lt;''index''&gt;
+*: Defines the sound sequence index for use as an environment sequence. Environment sequences are used in Heretic.
+* '''stopsound''' &lt;''soundname''&gt;
+*: Specifies the sound that is played when the sound sequence is stopped.
+* '''nostopcutoff'''
+*: Does not terminate a currently playing sound when the sound sequence is stopped.
+* '''end'''
+* '''slot''' &lt;''slot''&gt;
+* '''randomsequence'''
+* '''restart'''
+
+Examples:
+
+ // plays a sound repeatedly
+ :CeilingNormal
+    playrepeat	plats/pt1_mid
+ end
+
+ // plays a sound when the sequence is stopped
+ :CeilingSemiSilent
+    stopsound	plats/pt1_stop
+ end
+
+ // plays a sound once and does not terminate it
+ // when the sequence is stopped itself
+ :DoorOpenNormal
+    play		doors/dr1_open
+    nostopcutoff
+ end
+
+ // plays a sound repeatedly and
+ // another sound when it is terminated
+ :Floor
+    playrepeat	plats/pt1_mid
+    stopsound	plats/pt1_stop
+ end
+
+ // starts one sound, if that is finished loops another
+ // and plays a third sound when the sequence is stopped
+ // also use this as sequence 0 for use on doors
+ :Seq1Door
+    door 0
+    playuntildone Door1BEG
+    playrepeat Door1MID
+    stopsound Door1END
+ end
+ 
+ // Same as the above but use it as sequence 1 for use
+ // on platforms
+ :Seq2Plat
+    platform 1
+    playuntildone Plat1BEG
+    playrepeat Plat1MID
+    stopsound Plat1END
+ end
+
+
+Hexen didn't let you use more than one sound sequence for a door, so it would make the same sound when opening and closing. The following syntax allows multiple sounds for a door while still remaining compatible with Hexen's system of setting sound sequences using things and polyobject arguments.
+
+Here, this is the one from Doom:
+
+ [DoorNormal
+  0		DoorOpenNormal
+  1		DoorCloseNormal
+  2		DoorOpenBlazing
+  3		DoorCloseBlazing
+ ]
+
+
+All doors in Doom are assigned the sound sequence DoorNormal (unless you override it). However, there are actually four different door sounds used by Doom. A normal sound sequence would only be able to play one of them. So instead of playing anything with the DoorNormal sound sequence, it's defined as a "mini-sound sequence" that just lists the four different sequences to play depending on how the door is moving. Aside from redirecting to the real sound sequences, the only other thing you can do with a mini-sound sequence is specify an ID for the sound sequence things:
+
+ [DoorMine
+  Door 1
+  0  MyDoorOpen
+  1  MyDoorClose
+  2  MyDoorFastOpen
+  3  MyDoorFastClose
+ ]
+ 
+To use the above definition, you also need to define the MyDoorOpen, MyDoorClose, MyDoorFastOpen, and MyDoorFastClose sequences beforehand in the normal way.
+
+The above "mini sequence" has been allocated index 1 (using Door 1).  If a sound sequence thing for allocating sound sequence index 1 to a sector was placed in a door sector, the door would use the following sound sequences: MyDoorOpen when opening at normal speeds, MyDoorClose when closing at normal speeds, MyDoorFastOpen when opening at blazing speeds and MyDoorFastClose when closing at blazing speeds.
+
+If you don't want want a door to play different sounds depending on its speed, you can make the sequences 2 and 3 the same as 0 and 1:
+
+ [DoorMine
+  Door 1
+  0  MyDoorOpen
+  1  MyDoorClose
+  2  MyDoorOpen
+  3  MyDoorClose
+ ]
+
+== See also ==
+* [[REVERBS]]
+* [[SNDINFO]]
+* [[Predefined sounds]]
+
+== Forum threads ==
+* {{forum|t=26527|SNDSEQ and polyobjects}}
+
+[[Category:ZDoom special lumps]]
+[[Category:Audio lumps]]</text>
+    <sha1>550kuz6664380xbmhbdh6ypz2dvex7a</sha1>
+  </revision>
+</page>

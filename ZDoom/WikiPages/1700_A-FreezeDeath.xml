@@ -1,0 +1,99 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>A FreezeDeath</title>
+  <ns>0</ns>
+  <id>1700</id>
+  <revision>
+    <id>52915</id>
+    <parentid>52896</parentid>
+    <timestamp>2024-08-20T14:06:17Z</timestamp>
+    <contributor>
+      <username>Jekyll Grim Payne</username>
+      <id>2175</id>
+    </contributor>
+    <minor />
+    <comment>/* Usage */</comment>
+    <origin>52915</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="2654" sha1="hq9kv825gb6umn0girqslw8mnz11p3n" xml:space="preserve">{{codepointer|Freeze death}}
+
+{{class|Actor}}
+
+{{c|void '''A_FreezeDeath'''()}}&lt;br&gt;
+{{c|void '''A_GenericFreezeDeath'''()}}
+
+== Usage ==
+Performs [[frozen death]] effects. These functions are intended to be used in the first state of the actor's '''Ice''' [[Actor states|state sequence]].
+
+[[A_FreezeDeath]] was designed for [[Hexen]] and performs a number of operations:
+* sets a bunch of flags to make the actor solid, shootable, non-bleeding etc.;
+* resets the actor's {{property|Height}} to its default value (since when dying actor's height is normally reset to 25% of their normal height or to their {{property|DeathHeight}} value);
+* calls the actor's [[special]];
+* modifiers the actor's [[renderstyle]];
+* randomly modifies the duration of the state where the function is called;
+and a few other minor operations.
+
+[[A_GenericFreezeDeath]] is a fallback solution that can be applied to all actors, even those that don't have a custom ice death sprite (in contrast to Hexen monsters, which do). In lieu of custom sprites, this function sets the calling actor's [[Translation|color translation]] to a special internal Ice palette, which has colors that may not be available in the current game's main palette.
+
+Both of these functions are usually followed by '''[[A_FreezeDeathChunks]]''' which allow the monster to be broken into chunks by damage.
+
+== [[ZScript]] definition ==
+=== A_FreezeDeath ===
+{{ZScriptDefinitionNote|actors/shared/ice.zs#L84}}
+&lt;syntaxhighlight lang="csharp"&gt;
+	void A_FreezeDeath()
+	{
+
+		int t = random[freezedeath]();
+		tics = 75+t+random[freezedeath]();
+		bSolid = bShootable = bNoBlood = bIceCorpse = bPushable = bTelestomp = bCanPass = bSlidesOnWalls = bCrashed = true;
+		Height = Default.Height;
+		A_SetRenderStyle(1, STYLE_Normal);
+
+		A_StartSound ("misc/freeze", CHAN_BODY);
+
+		// [RH] Andy Baker's stealth monsters
+		if (bStealth)
+		{
+			Alpha = 1;
+			visdir = 0;
+		}
+
+		if (player)
+		{
+			player.damagecount = 0;
+			player.poisoncount = 0;
+			player.bonuscount = 0;
+		}
+		else if (bIsMonster &amp;&amp; special)
+		{ // Initiate monster death actions
+			A_CallSpecial(special, args[0],	args[1], args[2], args[3], args[4]);
+			special = 0;
+		}
+	}&lt;/syntaxhighlight&gt;
+
+=== A_GenericFreezeDeath ===
+{{ZScriptDefinitionNote|actors/shared/ice.zs#L189}}
+&lt;syntaxhighlight lang="csharp"&gt;
+	void A_GenericFreezeDeath()
+	{
+		A_SetTranslation('Ice');
+		A_FreezeDeath();
+	}&lt;/syntaxhighlight&gt;
+
+== Examples ==
+
+This would create the same freezing properties from Hexen:
+ class FreezeDeathImp : [[Classes:DoomImp|DoomImp]]
+ {
+   States
+   {
+   Ice:
+     TROO V 5 '''A_FreezeDeath''';
+     TROO V 1 [[A_FreezeDeathChunks]];
+     wait;
+   }
+ }</text>
+    <sha1>hq9kv825gb6umn0girqslw8mnz11p3n</sha1>
+  </revision>
+</page>

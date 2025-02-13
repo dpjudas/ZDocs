@@ -1,0 +1,93 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>GetArmorType</title>
+  <ns>0</ns>
+  <id>5389</id>
+  <revision>
+    <id>36020</id>
+    <parentid>35167</parentid>
+    <timestamp>2013-03-02T20:53:55Z</timestamp>
+    <contributor>
+      <username>Deded007</username>
+      <id>1392</id>
+    </contributor>
+    <minor />
+    <comment>templates</comment>
+    <origin>36020</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="2715" sha1="ivto667cov40x0jyfs6iqcaeo09tij5" xml:space="preserve">__NOTOC__
+int '''GetArmorType''' (string ''armortype'', int ''playernum'')
+
+Returns true if the player's armor type matches the first parameter.
+=== Parameters ===
+* ''armortype'': The class name of an armor type. This must be either “None”, the name of a {{Class|BasicArmorPickup}} or that of a {{Class|BasicArmorBonus}}.
+* ''playernum'': Player number. This information can be obtained through [[PlayerNumber]].
+
+This function targets only players. It concerns only {{Class|BasicArmor}} and therefore does not cover {{Class|HexenArmor}}.
+=== Return value ===
+The return value is the number of armor points if the player wears the designated armor, 0 otherwise.
+
+== Examples ==
+This script constantly informs the first player which kind of Doom armor he is wearing.
+
+ #[[Constants|define]] ARMORTYPES	4
+ 
+ [[Data_types#String|str]] armor_types[ARMORTYPES] = {
+   "{{Class|ArmorBonus}}",
+   "{{Class|GreenArmor}}",
+   "{{Class|BlueArmor}}",
+   "{{Class|BlueArmorForMegasphere}}"
+ };
+ 
+ [[Data_types#String|str]] armor_messages[6] = {
+   "You are unarmored, but have found armor bonuses.",
+   "You are wearing security armor.",
+   "You are wearing combat armor.",
+   "You have a megasphere.",
+   "What the hell are you wearing?",
+   "You are unarmored."
+ };
+ 
+ [[Functions|function]] void PrintArmorType (void)
+ {
+   [[Data_types#Boolean|bool]] found_armor;
+ 
+   [[A_quick_beginner%27s_guide_to_ACS#Conditional_execution_.28if_.2F_else.29|if]] ([[CheckInventory]]("{{Class|Armor}}")) // If player has at least 1 armor point, proceed to check the type...
+   {
+     [[Loops|for]] ([[Data_types#Integer|int]] i; i&lt;ARMORTYPES; i++)
+     {
+       [[A_quick_beginner%27s_guide_to_ACS#Conditional_execution_.28if_.2F_else.29|if]] ([[GetArmorType]](armor_types[i], [[PlayerNumber]]()))
+       {
+         found_armor = {{const|TRUE}};
+         [[break]];
+       }
+     }
+ 
+     [[A_quick_beginner%27s_guide_to_ACS#Conditional_execution_.28if_.2F_else.29|if]] (found_armor)
+     {
+       [[HudMessage]](s:armor_messages[i]; {{const|HUDMSG_PLAIN}}, 1, {{const|CR_RED}}, 0.1, 0.9, 1.0);
+     }
+     [[A_quick_beginner%27s_guide_to_ACS#Conditional_execution_.28if_.2F_else.29|else]]
+     {
+       [[HudMessage]](s:armor_messages[4]; {{const|HUDMSG_PLAIN}}, 1, {{const|CR_RED}}, 0.1, 0.9, 1.0);
+     }
+   }
+   [[A_quick_beginner%27s_guide_to_ACS#Conditional_execution_.28if_.2F_else.29|else]] // ... otherwise, print the "unarmored" message
+   {
+     [[HudMessage]](s:armor_messages[5]; {{const|HUDMSG_PLAIN}}, 1, {{const|CR_RED}}, 0.1, 0.9, 1.0);
+   }
+ }
+ 
+ [[ACS|script]] 1 {{SType|Enter}}
+ {
+   [[Loops|while]] ({{const|TRUE}})
+   {
+     PrintArmorType();
+     [[delay]](35);
+   }
+ }
+
+[[category:ACS Information functions]]</text>
+    <sha1>ivto667cov40x0jyfs6iqcaeo09tij5</sha1>
+  </revision>
+</page>

@@ -1,0 +1,44 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>Audio loop</title>
+  <ns>0</ns>
+  <id>6070</id>
+  <revision>
+    <id>48185</id>
+    <parentid>38581</parentid>
+    <timestamp>2020-12-06T23:24:22Z</timestamp>
+    <contributor>
+      <username>Gez</username>
+      <id>1283</id>
+    </contributor>
+    <comment>important note about LOOP_BIDI not being available anymore</comment>
+    <origin>48185</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="2358" sha1="h0zopnr91kvzmpyqct2v53sgkq60m1q" xml:space="preserve">{{doomwiki}}Many audio formats allow to embed tags containing meta data (such as song title, author name, and so on). [[ZDoom]] supports using certain custom tags to achieve greater control over the song. This is supported for the Ogg Vorbis and FLAC [[music format|formats]]. This is ''not'' supported for the MP3 format. Custom tags can be set through most music players &amp;mdash; [http://www.foobar2000.org/ Foobar2000], [http://www.winamp.com/ WinAmp], [http://www.un4seen.com/xmplay.html XMPlay] and others should allow you to do this.
+
+ZDoom supports using these tags not just for music, but also for sounds.
+
+The tags are:
+* '''LOOP_START''': Start time for the loop. If omitted, the song repeats from the beginning.
+* '''LOOP_END''': End time for the loop. If omitted, the song loops at the end.
+* {{deprecated}} '''LOOP_BIDI''': Set it to "1", "On", "True", or "Yes" to use a bidirectional loop. This only works with sounds and not music, because music is streamed and therefore does not support them. '''Note:''' this is based on an [[FMOD Ex]] functionality and is not available in [[OpenAL]]. As a result this does not exist anymore in [[GZDoom]] v3.0 and later!
+
+You only need to specify either LOOP_START or LOOP_END to set the custom loop. Naturally, you can set them both, as well. The format for each tag is the same:
+
+* If it contains a colon (:), it specifies by time. This may be of the form 00:00:00.00 (HH:MM:SS.ss) to specify by play. Various parts may be left off. e.g. To start the loop at 20 seconds in, you can use ":20", 0:20", "00:00:20", ":20.0", etc. Values after the decimal are fractions of a second and accurate to one millisecond.
+* If you do not include a colon but just have a raw number, then it is the number of PCM samples at which to loop.
+* Any characters other than digits (0-9), colons (:), or a single decimal point for the seconds portion will result in the tag being ignored.
+
+Music is always looped; however sounds do not play looped by default. If you want sounds to use their loops, they must be started with [[A_PlaySound|CHAN_LOOP]] so that the higher level sound code knows they loop and can handle them accordingly.
+
+== See also==
+* [[Music format]]
+* [[Sound format]]
+
+== External links ==
+* {{forum|t=26353|Feature suggestion thread}}
+* {{forum|t=26590|Troubleshooting thread}}
+[[Category:Audio formats]]</text>
+    <sha1>h0zopnr91kvzmpyqct2v53sgkq60m1q</sha1>
+  </revision>
+</page>

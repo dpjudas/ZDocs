@@ -1,0 +1,181 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>Classes:ArtiPoisonBag</title>
+  <ns>0</ns>
+  <id>4668</id>
+  <revision>
+    <id>53616</id>
+    <parentid>53615</parentid>
+    <timestamp>2024-11-08T11:50:21Z</timestamp>
+    <contributor>
+      <username>Jekyll Grim Payne</username>
+      <id>2175</id>
+    </contributor>
+    <comment>/* ZScript definition */</comment>
+    <origin>53616</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="4561" sha1="ez5odnswp668rrligocsol8cp5he28q" xml:space="preserve">{{Actor|
+| type = Artifact
+| name = Fléchette
+| class = ArtiPoisonBag
+| game = Hexen
+| doomednum = 8000
+| spawnid = 72
+| spawnname = T_ITEMFLECHETTE 
+}}[[Classes]]: {{Class|Inventory}}&amp;rarr;&lt;u&gt;ArtiPoisonBag&lt;/u&gt;&lt;br&gt;
+&amp;ensp;&amp;rarr;{{Class|ArtiPoisonBag1}}&lt;br&gt;
+&amp;ensp;&amp;rarr;{{Class|ArtiPoisonBag2}}&lt;br&gt;
+&amp;ensp;&amp;rarr;{{Class|ArtiPoisonBag3}}&lt;br&gt;
+&amp;ensp;&amp;rarr;{{Class|ArtiPoisonBagGiver}}&lt;br&gt;
+&amp;ensp;&amp;rarr;{{Class|ArtiPoisonBagShooter}}&lt;br&gt;
+
+A collectible vial of green liquid which acts as a versatile support weapon for the player characters of [[Hexen]].  The item's subclasses provide the differing behaviours for the three Hexen player classes. The correct subclass is placed in the player's inventory when the item is picked up, based on the player class's {{Property|Player.FlechetteType}} property.
+
+*''Note:'' Because this item itself is never actually placed in the player's inventory but replaced by one of its subclasses, it cannot be activated by the '''{{CCMD|P|use}} artipoisonbag''' [[CCMDs|console command]]. A special '''{{CCMD|P|useflechette}}''' command is provided instead, which activates the correct type of ArtiPoisonBag depending on the player's class.
+
+=== [[ZScript]] definition ===
+{{ZScriptDefinitionNote|actors/hexen/flechette.zs#L155}}
+&lt;syntaxhighlight lang="cs"&gt;
+class ArtiPoisonBag : Inventory
+{
+	Default
+	{
+		+FLOATBOB
+		Inventory.DefMaxAmount;
+		Inventory.PickupFlash "PickupFlash";
+		+INVENTORY.INVBAR +INVENTORY.FANCYPICKUPSOUND
+		Inventory.Icon "ARTIPSBG";
+		Inventory.PickupSound "misc/p_pkup";
+		Inventory.PickupMessage "$TXT_ARTIPOISONBAG";
+		Tag "$TAG_ARTIPOISONBAG";
+	}
+	States
+	{
+	Spawn:
+		PSBG A -1;
+		Stop;
+	}
+	
+	//============================================================================
+	//
+	// AArtiPoisonBag :: BeginPlay
+	//
+	//============================================================================
+
+	override void BeginPlay ()
+	{
+		Super.BeginPlay ();
+		// If a subclass's specific icon is not defined, let it use the base class's.
+		if (!Icon.isValid())
+		{
+			Icon = GetDefaultByType("ArtiPoisonBag").Icon;
+		}
+	}
+
+	//============================================================================
+	//
+	// GetFlechetteType
+	//
+	//============================================================================
+
+	private class&lt;Actor&gt; GetFlechetteType(Actor other)
+	{
+		class&lt;Actor&gt; spawntype = null;
+		PlayerPawn pp = PlayerPawn(other);
+		if (pp)
+		{
+			spawntype = pp.FlechetteType;
+		}
+		if (spawntype == null)
+		{
+			// default fallback if nothing valid defined.
+			spawntype = "ArtiPoisonBag3";
+		}
+		return spawntype;
+	}
+
+	//============================================================================
+	//
+	// AArtiPoisonBag :: HandlePickup
+	//
+	//============================================================================
+
+	override bool HandlePickup (Inventory item)
+	{
+		// Only do special handling when picking up the base class
+		if (item.GetClass() != "ArtiPoisonBag")
+		{
+			return Super.HandlePickup (item);
+		}
+
+		if (GetClass() == GetFlechetteType(Owner))
+		{
+			if (Amount &lt; MaxAmount || sv_unlimited_pickup)
+			{
+				Amount += item.Amount;
+				if (Amount &gt; MaxAmount &amp;&amp; !sv_unlimited_pickup)
+				{
+					Amount = MaxAmount;
+				}
+				item.bPickupGood = true;
+			}
+			return true;
+		}
+		return false;
+	}
+
+	//============================================================================
+	//
+	// AArtiPoisonBag :: CreateCopy
+	//
+	//============================================================================
+
+	override Inventory CreateCopy (Actor other)
+	{
+		// Only the base class gets special handling
+		if (GetClass() != "ArtiPoisonBag")
+		{
+			return Super.CreateCopy (other);
+		}
+
+		class&lt;Actor&gt; spawntype = GetFlechetteType(other);
+		let copy = Inventory(Spawn (spawntype));
+		if (copy != null)
+		{
+			copy.Amount = Amount;
+			copy.MaxAmount = MaxAmount;
+			GoAwayAndDie ();
+		}
+		return copy;
+	}
+}
+&lt;/syntaxhighlight&gt;
+
+==== See also ====
+* [[BeginPlay]]
+* [[HandlePickup]]
+* [[CreateCopy]]
+
+=== [[DECORATE]] definition ===
+{{DecorateDefinitionNote}}
+ ACTOR &lt;u&gt;ArtiPoisonBag&lt;/u&gt; : {{Class|Inventory}} native
+ {
+   +{{Flag|FLOATBOB}}
+   {{Property|Inventory.DefMaxAmount}}
+   {{Property|Inventory.PickupFlash}} "{{Class|PickupFlash}}"
+   +{{Flag|INVENTORY.INVBAR|INVBAR}}
+   +{{Flag|INVENTORY.FANCYPICKUPSOUND|FANCYPICKUPSOUND}}
+   {{Property|Inventory.Icon}} "ARTIPSBG"
+   {{Property|Inventory.PickupSound}} "misc/p_pkup"
+   {{Property|Inventory.PickupMessage}} "$TXT_ARTIPOISONBAG" // "FLECHETTE"
+   {{Property|Tag}} "$TAG_ARTIPOISONBAG"
+   States
+   {
+   Spawn:
+     PSBG A -1
+     Stop
+   }
+ }</text>
+    <sha1>ez5odnswp668rrligocsol8cp5he28q</sha1>
+  </revision>
+</page>

@@ -1,0 +1,49 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>Classes:ArtiTorch</title>
+  <ns>0</ns>
+  <id>2618</id>
+  <revision>
+    <id>39719</id>
+    <parentid>38864</parentid>
+    <timestamp>2015-05-03T22:22:02Z</timestamp>
+    <contributor>
+      <username>Blue Shadow</username>
+      <id>2021</id>
+    </contributor>
+    <minor />
+    <comment>/* DECORATE definition */ Updated</comment>
+    <origin>39719</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="1051" sha1="6vnx5s7s4dlcbq0v2kktibx8c71p20p" xml:space="preserve">{{Actor|
+| type = Artifact
+| name = Torch
+| class = ArtiTorch
+| game = Raven
+| doomednum = 33
+| spawnid = 73
+| spawnname = T_ITEMTORCH 
+}}[[Classes]]: [[Classes:Inventory|Inventory]]&amp;rarr;[[Classes:PowerupGiver|PowerupGiver]]&amp;rarr;&lt;u&gt;ArtiTorch&lt;/u&gt;
+
+The torch works like Doom's [[Classes:Infrared|light amplification goggles]] by brightening all sector light to 255. In [[GZDoom]] and [[Skulltag]], the OpenGL renderer's option of "enhanced light vision mode" gives a faint yellow hue to everything. If that option is off, or when using the software renderer, the torch effect is exactly the same as the goggle effect.
+
+==== [[DECORATE]] definition ====
+ ACTOR &lt;u&gt;ArtiTorch&lt;/u&gt; : {{Class|PowerupGiver}}
+ {
+   +{{Flag|COUNTITEM}}
+   +{{Flag|FLOATBOB}}
+   +{{Flag|INVENTORY.PICKUPFLASH}}
+   {{Property|Inventory.Icon}} ARTITRCH
+   {{Property|Inventory.PickupMessage}} "$TXT_ARTITORCH" // "TORCH"
+   {{Property|Tag}} "$TAG_ARTITORCH"
+   {{Property|Powerup.Type}} {{Class|PowerTorch|Torch}}
+   States
+   {
+   Spawn:
+     TRCH ABC 3 Bright
+     Loop
+   }
+ }</text>
+    <sha1>6vnx5s7s4dlcbq0v2kktibx8c71p20p</sha1>
+  </revision>
+</page>

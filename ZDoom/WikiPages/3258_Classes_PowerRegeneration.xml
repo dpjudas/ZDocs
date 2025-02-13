@@ -1,0 +1,59 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>Classes:PowerRegeneration</title>
+  <ns>0</ns>
+  <id>3258</id>
+  <revision>
+    <id>44157</id>
+    <parentid>41093</parentid>
+    <timestamp>2017-03-20T11:55:37Z</timestamp>
+    <contributor>
+      <username>Gez</username>
+      <id>1283</id>
+    </contributor>
+    <minor />
+    <comment>removing "new" for GZDoom 2.4.0 release</comment>
+    <origin>44157</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="1570" sha1="c1z46cdvl63s93ocaaw19koj5mpy7vn" xml:space="preserve">{{actor|
+| type = Power
+| name = Health regeneration power
+| class = PowerRegeneration
+}}[[Classes]]: [[Classes:Inventory|Inventory]]&amp;rarr;[[Classes:Powerup|Powerup]]&amp;rarr;&lt;u&gt;PowerRegeneration&lt;/u&gt;&lt;br&gt;
+
+&lt;u&gt;PowerRegeneration&lt;/u&gt; is an internal class. An item of this class is placed in the player's inventory while regenerating. This powerup regenerates 5 health (this can be customized through the {{c|{{Property|Powerup.Strength}}}} property) of the player every second up to the normal max health of the playerclass until the powerup has expired. Each time health increases due to the powerup's effect, the {{c|*regenerate}} [[Player Sounds|player sound]] is played on the ''item'' channel.
+
+Like all other [[Classes:Powerup|Powerup]]s items of this class are never used directly. Instead you have to create a new item that inherits from [[Classes:PowerupGiver|PowerupGiver]] to give it to the player.
+
+==Examples==
+
+This defines ZDoom's Regeneration item and is an example for an item that is put in the inventory:
+
+ actor Regen : PowerupGiver
+ {
+  inventory.pickupmessage "Regeneration!!"
+  inventory.icon "MEGAA0"
+  powerup.color gold 0.25
+  inventory.maxamount 0
+  inventory.usesound "pickups/slowmo"
+  powerup.type "Regeneration"
+  powerup.duration 1000
+  translation "128:143=64:79"
+  +AUTOACTIVATE
+  +INVENTORY.FANCYPICKUPSOUND
+    states
+  {
+  Spawn:
+    MEGA ABCD 4 bright
+    loop
+  }
+ }
+==== [[DECORATE]] definition ====
+ ACTOR &lt;u&gt;PowerRegeneration&lt;/u&gt; : {{Class|Powerup}} native
+ {
+   {{Property|Powerup.Duration}} -120
+   {{Property|Powerup.Strength}} 5
+ }</text>
+    <sha1>c1z46cdvl63s93ocaaw19koj5mpy7vn</sha1>
+  </revision>
+</page>

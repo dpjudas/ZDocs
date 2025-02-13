@@ -1,0 +1,85 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>Tips for using ZIPs as WAD replacement</title>
+  <ns>0</ns>
+  <id>5026</id>
+  <revision>
+    <id>38032</id>
+    <parentid>38031</parentid>
+    <timestamp>2014-06-06T23:49:59Z</timestamp>
+    <contributor>
+      <username>Blue Shadow</username>
+      <id>2021</id>
+    </contributor>
+    <minor />
+    <comment>/* File system method */</comment>
+    <origin>38032</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="3560" sha1="a6c5htlmt6a0kf9qofsad081jpveou4" xml:space="preserve">Due to the fact that there are few WAD management tools that support pk3's, this page is for documenting easy strategies to do so.
+
+== File system method ==
+
+Just place your files in a sub directory following [[Using_ZIPs_as_WAD_replacement|the PK3 directory structure]], and reference that directory when starting ZDoom. When done this way, you do not need to pack the files to an archive after every modification.
+
+If you saved your files to {{c|mydirectory}}, you can use them as a WAD like in the following example:
+
+  zdoom -iwad doom2.wad -file mydirectory
+
+== [[User:NerdBoy1392|NerdBoy1392]]'s Method ==
+
+=== Setup ===
+Note: I put all the filenames in this tutorial in quotes. Do NOT include the quotes when making directories and files. 
+
+*Make a directory with the name of your project. For example, I will be using my 'The Magi' WAD. I will create a directory with the name 'TheMagi'.
+*In this directory, make another directory named 'pk3'. This will be your source directory. Anything in here will be put in the WAD, and the directory structure will be maintained.
+*Download and install 7-zip. You can get it [http://www.7-zip.org/ here].
+*Go to your 7-zip directory. Select '7z.exe', and '7z.dll'. Copy them to your project directory.
+*Now you need to make the batch files. Open notepad or your favorite ''plain text'' text editor. Paste this information into it:
+
+  @echo off
+  set ProjName=themagi
+  echo Ready to Start.
+  
+  echo Step 1: Packing
+  echo Packing...
+  cd pk3
+  ..\7z a -r -ssw -tzip ..\%ProjName%n.pk3 "*" 
+  echo Done packing.
+  
+  echo Step 2: Replace old version
+  echo Replacing old version.
+  cd ..
+  del %ProjName%.pk3
+  ren %ProjName%n.pk3 %ProjName%.pk3
+  echo Done replacing.
+  
+  echo Done.
+  pause
+*Replace the word after 'ProjName=' to what you want to name the pk3. If you set it to 'themagi' then you will get 'themagi.pk3'.
+*Save this file into your project directory as 'compile.bat'.
+*Your project directory should look something like this:
+[[image:tip_pk3_nb1392_1.png|Your project directory should look kinda like this.]]&lt;BR/&gt;
+Notice that I have also made a shortcut to ZDoom ('Run WAD') which loads my WAD, and an 'other' directory. The contents of this directory are NOT loaded into the WAD. The only files loaded into the WAD are the ones in the 'pk3' folder.
+
+== Use ==
+* Open up the pk3 directory. You can fill it with the standard directories, like me, or not.
+* Standard directory names are located on the [[Using ZIPs as WAD replacement]] page.
+* You can now build your WAD, using the appropriate directories, and following the instructions at the [[Using ZIPs as WAD replacement]] page.
+* My directory looks like this:
+[[image:tip_pk3_nb1392_2.png|My 'pk3' directory looks like this.]]
+* Once compiled, the inside of the pk3 looks like this too.
+* Once you are done editing your files and placing your lumps, or if you just want to test it, simply click on the 'compile.bat' file to compile it. You can then use your preferred method to load the WAD into ZDoom. (For this I use a shortcut.)
+
+== UNIX method ==
+
+Put a simple Makefile in the pk3 directory itself.
+
+ all:
+         rm -f ../name.pk3; zip -0r ../name.pk3 .
+
+&lt;code&gt;-0&lt;/code&gt; indicates no compression, which is handy during development because it is faster. When the final pk3 file is released, it should be changed to &lt;code&gt;-9&lt;/code&gt;. Alternatively, p7zip (`&lt;code&gt;7z a ...&lt;/code&gt;`) or ZDoom's own [[zipdir]] can be used instead, which provides for alternate compression methods beyond just DEFLATE that zip(1) would use.
+
+[[Category:Guides]]</text>
+    <sha1>a6c5htlmt6a0kf9qofsad081jpveou4</sha1>
+  </revision>
+</page>

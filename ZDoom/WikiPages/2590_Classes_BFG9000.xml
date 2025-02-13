@@ -1,0 +1,133 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>Classes:BFG9000</title>
+  <ns>0</ns>
+  <id>2590</id>
+  <revision>
+    <id>53766</id>
+    <parentid>53260</parentid>
+    <timestamp>2024-11-19T09:05:49Z</timestamp>
+    <contributor>
+      <username>Jekyll Grim Payne</username>
+      <id>2175</id>
+    </contributor>
+    <comment>Moved function definitions out of this page, and updated their pages</comment>
+    <origin>53766</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="2683" sha1="czh25yfvcdi3yxlo9m9hk4zf4tyxx27" xml:space="preserve">{{Actor|
+| type = Weapon
+| name = BFG 9000
+| class = BFG9000
+| game = Doom
+| doomednum = 2006
+| spawnid = 31
+| spawnname = T_BFG 
+}}
+[[Classes]]: [[Classes:Inventory|Inventory]]&amp;rarr;[[Classes:Weapon|Weapon]]&amp;rarr;[[Classes:DoomWeapon|DoomWeapon]]&amp;rarr;&lt;u&gt;BFG9000&lt;/u&gt;
+
+
+The BFG9000 is the deadliest and strongest weapon available in Doom. The weapon itself has a few effects not found in other weapons, such as the 40 hitscan {{Class|BFGExtra|tracers}} that fire out when the weapon hits a target, each doing 100 damage (cumulative with the damage from the {{Class|BFGBall|projectile}}) to anything in the way. It uses 40 [[Classes:Cell|cell]] ammo per shot to function.&lt;br /&gt;
+&lt;br /&gt;
+
+== [[ZScript]] definition ==
+{{ZScriptDefinitionNote|actors/doom/weaponbfg.zs}} 
+&lt;syntaxhighlight lang="csharp"&gt;
+class BFG9000 : DoomWeapon
+{
+	Default
+	{
+		Height 20;
+		Weapon.SelectionOrder 2800;
+		Weapon.AmmoUse 40;
+		Weapon.AmmoGive 40;
+		Weapon.AmmoType "Cell";
+		+WEAPON.NOAUTOFIRE;
+		Inventory.PickupMessage "$GOTBFG9000";
+		Tag "$TAG_BFG9000";
+	}
+	States
+	{
+	Ready:
+		BFGG A 1 A_WeaponReady;
+		Loop;
+	Deselect:
+		BFGG A 1 A_Lower;
+		Loop;
+	Select:
+		BFGG A 1 A_Raise;
+		Loop;
+	Fire:
+		BFGG A 20 A_BFGsound;
+		BFGG B 10 A_GunFlash;
+		BFGG B 10 A_FireBFG;
+		BFGG B 20 A_ReFire;
+		Goto Ready;
+	Flash:
+		BFGF A 11 Bright A_Light1;
+		BFGF B 6 Bright A_Light2;
+		Goto LightDone;
+	Spawn:
+		BFUG A -1;
+		Stop;
+	OldFire:
+		BFGG A 10 A_BFGsound;
+		BFGG BBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBB 1 A_FireOldBFG;
+		BFGG B 0 A_Light0;
+		BFGG B 20 A_ReFire;
+		Goto Ready;
+	}
+}
+&lt;/syntaxhighlight&gt;
+
+== [[DECORATE]] definition ==
+{{DecorateDefinitionNote}}
+ ACTOR &lt;u&gt;BFG9000&lt;/u&gt; : {{Class|DoomWeapon}}
+ {
+   {{Property|Height}} 20
+   {{Property|Weapon.SelectionOrder}} 2800
+   {{Property|Weapon.AmmoUse}} 40
+   {{Property|Weapon.AmmoGive}} 40
+   {{Property|Weapon.AmmoType}} "{{Class|Cell}}"
+   +{{Flag|WEAPON.NOAUTOFIRE}}
+   {{Property|Inventory.PickupMessage}} "$GOTBFG9000"
+   {{Property|Tag}} "$TAG_BFG9000"
+   States
+   {
+   Ready:
+     BFGG A 1 [[A_WeaponReady]]
+     Loop
+   Deselect:
+     BFGG A 1 [[A_Lower]]
+     Loop
+   Select:
+     BFGG A 1 [[A_Raise]]
+     Loop
+   Fire:
+     BFGG A 20 [[A_BFGSound]]
+     BFGG B 10 [[A_GunFlash]]
+     BFGG B 10 [[A_FireBFG]]
+     BFGG B 20 [[A_ReFire]]
+     Goto Ready
+   Flash:
+     BFGF A 11 Bright [[A_Light1]]
+     BFGF B 6 Bright [[A_Light2]]
+     Goto LightDone
+   Spawn:
+     BFUG A -1
+     Stop
+   OldFire:
+     BFGG A 10 [[A_BFGSound]]
+     BFGG BBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBB 1 [[A_FireOldBFG]]
+     BFGG B 0 [[A_Light0]]
+     BFGG B 20 [[A_ReFire]]
+     Goto Ready
+   }
+ }
+
+== See also ==
+* [[A_BFGSound]]
+* [[A_FireBFG]]
+* [[A_FireOldBFG]]</text>
+    <sha1>czh25yfvcdi3yxlo9m9hk4zf4tyxx27</sha1>
+  </revision>
+</page>

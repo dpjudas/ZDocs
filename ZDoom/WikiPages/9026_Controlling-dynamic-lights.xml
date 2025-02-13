@@ -1,0 +1,44 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>Controlling dynamic lights</title>
+  <ns>0</ns>
+  <id>9026</id>
+  <revision>
+    <id>50043</id>
+    <parentid>47289</parentid>
+    <timestamp>2023-01-07T19:33:30Z</timestamp>
+    <contributor>
+      <username>Major Cooke</username>
+      <id>1703</id>
+    </contributor>
+    <comment>/* Flags */ Added missing DONTLIGHTMAP.</comment>
+    <origin>50043</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="2348" sha1="f5aizusk18vbed5qd5bgnsq8fyd8j5w" xml:space="preserve">{{ZScriptNote}}
+By creating and using a {{Class|PointLight}} inheriting class, it's possible to change a dynamic light's colors and size. To change its size and color, simply change the dynamic lights '''arguments'''.
+
+== Parameters ==
+* '''args[0,1,2]''' - Red, green and blue channels respectively. Ranges from 0 - 255 each. The higher the number, the higher the saturation of that color.
+* '''args[3]''' - The size of the light. Note that the max mapunit radius is actually ''double'' the size argument, so this represents the 50% falloff point in mapunits.
+* '''args[4]''' - For flicker and pulse lights only, sets the secondary size.
+
+{{note|The DynamicLight class has constants defined for accessing dynamic light args - instead of using 0, 1, 2, 3 and 4, it is advisable to use '''DynamicLight.LIGHT_RED''', '''DynamicLight.LIGHT_GREEN''', '''DynamicLight.LIGHT_BLUE''', '''DynamicLight.LIGHT_INTENSITY''' and '''DynamicLight.LIGHT_SECONDARY_INTENSITY''' (respectively), for better readable code. The ''DynamicLight.'' prefix can be left off if the constants are being used inside a {{Class|DynamicLight}}-derived class.}}
+
+== Flags ==
+* '''DYNAMICLIGHT.SUBTRACTIVE''' - Light becomes subtractive (darkening effect).
+* '''DYNAMICLIGHT.ADDITIVE''' - {{moreinfo}}
+* '''DYNAMICLIGHT.DONTLIGHTSELF''' - Actor does not light itself.
+* '''DYNAMICLIGHT.ATTENUATE''' - Light uses the angle attenuation formula, providing more realistic (if slightly dimmer) illumination on angled surfaces.
+* '''DYNAMICLIGHT.NOSHADOWMAP''' - Light will not create shadow maps, which are realistic shadows created from map geometry obscuring other surfaces.
+* '''DYNAMICLIGHT.DONTLIGHTACTORS''' - Light will not affect other actors.
+* '''DYNAMICLIGHT.DONTLIGHTMAP''' - Light will not affect the map.
+* '''DYNAMICLIGHT.SPOT''' - Light is a spot light. Spot lights are in cones like a lamp, or a flash light.
+
+== Usage ==
+Unlike regularly assigned dynamic lights, these lights will not disappear immediately upon the target actor's removal, change of sprite/frame or usage of the Light() property. Book keeping may be required.
+
+The tradeoff is that there is much more control over the lights, especially with color manipulation and various sizes. Manually spawned lights can have changing arguments which will immediately be reflected in the game.
+[[Category:ZScript]]</text>
+    <sha1>f5aizusk18vbed5qd5bgnsq8fyd8j5w</sha1>
+  </revision>
+</page>

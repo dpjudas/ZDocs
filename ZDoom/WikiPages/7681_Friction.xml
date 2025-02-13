@@ -1,0 +1,26 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>Friction</title>
+  <ns>0</ns>
+  <id>7681</id>
+  <revision>
+    <id>37494</id>
+    <timestamp>2014-01-01T14:00:31Z</timestamp>
+    <contributor>
+      <username>Gez</username>
+      <id>1283</id>
+    </contributor>
+    <comment>created page</comment>
+    <origin>37494</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="1643" sha1="jyaba5oqggdcc8uidafly6nrtzsuua9" xml:space="preserve">{{doomwiki}}
+'''Friction''' affects movement. Internally, it is represented by a fixed-point value that multiplies movement, therefore a high friction value results in low actual friction. A friction value of 1.0 (65536) correspond to no friction at all, movement being unaffected. Lower values result in greater friction, with a value of 0 being infinite friction and preventing all movement.
+
+There are two types of friction: air friction for airborne objects, and ground friction for land-bound movement. Ground friction corresponds to a value of 59392 by default (90.625% of movement speed is retained), but this can be changed by using [[sector special|sector type]] 79:Sector_LowFriction (63744, about 97.27% of speed is retained), the [[Sector_SetFriction]] special (using arbitrary percentage values), or by tying a [[flat]] texture to a set friction through [[TERRAIN]] definition.
+
+Air friction also depends on circumstances: there is some friction while flying with the {{CCMD|D|fly}} or {{CCMD|D|noclip2}} [[cheat]]s or the {{Class|ArtiFly|Wings of Wrath}}, but a different amount (which can be null, depending on {{CVAR|C|sv_aircontrol}}) for jumping or falling actors (including player pawns) and floating monsters. Player flight friction is 60160 (retaining about 92% of speed), while otherwise air friction is 65536 (100% of speed) if sv_aircontrol is 1/256th or less, and computed from the formula {{c|1.0004 - (0.941 &amp;times; sv_aircontrol)}} otherwise. For example, with the default aircontrol value of 0.00390625, air friction is 65321 (retaining about 99.67% of speed).
+ 
+[[Category:Glossary]][[Category:Technical aspects]]</text>
+    <sha1>jyaba5oqggdcc8uidafly6nrtzsuua9</sha1>
+  </revision>
+</page>

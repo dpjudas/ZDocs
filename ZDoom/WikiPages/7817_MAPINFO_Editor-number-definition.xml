@@ -1,0 +1,60 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>MAPINFO/Editor number definition</title>
+  <ns>0</ns>
+  <id>7817</id>
+  <revision>
+    <id>49461</id>
+    <parentid>45599</parentid>
+    <timestamp>2022-08-05T01:49:42Z</timestamp>
+    <contributor>
+      <username>Blue Shadow</username>
+      <id>2021</id>
+    </contributor>
+    <minor />
+    <comment>note about ZScript and editor number assignment</comment>
+    <origin>49461</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="2280" sha1="fsb2nmrbuxjhvyf0fzujef40virqf70" xml:space="preserve">An [[editor number]] definition begins with the keyword “''DoomEdNums''”, followed by a list of actor names and their assigned editor numbers. Optionally, an [[action specials|action special]] and or arguments can also be assigned to the actor class, as well. The syntax is as follows:
+
+ DoomEdNums
+ {
+     &lt;number&gt; = &lt;class&gt; [, noskillflags] [, special] [, arg0 [, arg1 [, arg2 [, arg3 [, arg4]]]]]
+ }
+
+Editor number assignments through this method are overridden by the [[DECORATE]] one. An actor's special and arguments cannot be overridden through the editor if said actor class has been assigned a special and arguments through this method. Actors can be assigned multiple editor numbers, and already-assigned editor numbers can be mapped to nothing by passing {{c|None}} instead of an actor class name. They can also be mapped to other actors. If ''noskillflags'' is specified, the engine ignores the actor's map-set difficulty setting filters and spawns it regardless.
+
+Actors created in [[ZScript]] can only be assigned editor numbers through this method.
+
+==Examples==
+
+In this example, actor MarblePillar is given editor number 11001; actor GreenCard is given 11002 and [[Autosave]] action special; actor IceDemon is given 11004 and [[Thing_Spawn]] action special with its first three arguments set to some values; and lastly, actor GooFountain is given 11023 as its editor number, with its first argument set to 32 and no action special.
+ DoomEdNums
+ {
+     11001 = MarblePillar
+     11002 = GreenCard, [[Autosave]]
+     11004 = IceDemon, [[Thing_Spawn]], 0, 25, 0
+     11023 = GooFountain, 32
+ }
+
+
+This example removes all map-placed {{Class|Archvile|archviles}}, {{Class|ChaingunGuy|former commandos}} and {{Class|Revenant|revenants}} from the game. This is done by mapping their editor numbers to {{c|None}}.
+ DoomEdNums
+ {
+     64 = None
+     65 = None
+     66 = None
+ }
+
+
+This one replaces all map-placed {{Class|HealthBonus|health bonus}} and {{Class|ArmorBonus|armor bonus}} items with {{Class|Soulsphere|soul spheres}} and {{Class|BlueArmor|combat armors}}, respectively, by remapping the former items' editor numbers to the latter items.
+ DoomEdNums
+ {
+     2014 = {{Class|Soulsphere}}
+     2015 = {{Class|BlueArmor}}
+ }
+
+[[Category:MAPINFO|Editor number]]</text>
+    <sha1>fsb2nmrbuxjhvyf0fzujef40virqf70</sha1>
+  </revision>
+</page>

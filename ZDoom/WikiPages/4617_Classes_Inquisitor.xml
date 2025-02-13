@@ -1,0 +1,109 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>Classes:Inquisitor</title>
+  <ns>0</ns>
+  <id>4617</id>
+  <revision>
+    <id>39850</id>
+    <parentid>35214</parentid>
+    <timestamp>2015-05-04T22:12:09Z</timestamp>
+    <contributor>
+      <username>Blue Shadow</username>
+      <id>2021</id>
+    </contributor>
+    <minor />
+    <comment>/* DECORATE definition */ Updated</comment>
+    <origin>39850</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="2787" sha1="dgzaf5e56i3pl16giczktwv9hiclph4" xml:space="preserve">{{actor|
+| type = Monster
+| name = Inquisitor
+| class = Inquisitor
+| game = Strife
+| doomednum = 16
+| convid = 93
+}}[[Classes]]: &lt;u&gt;Inquisitor&lt;/u&gt;&lt;br&gt;
+Inquisitors are huge robots with a lot of health and dangerous weaponry. From afar, they shoot bullets like the [[Classes:Reaver|Reaver]] (although they do so twice in a single attack). If they get close, they fire a pair of grenades, which can be devastating if not avoided. Inquisitors are also equipped with a jetpack which allows them to fly to get to you.
+==== [[DECORATE]] definition ====
+ ACTOR &lt;u&gt;Inquisitor&lt;/u&gt;
+ {
+   {{property|Health}} 1000
+   {{property|Speed}} 12
+   {{property|Radius}} 40
+   {{property|Height}} 110
+   {{property|Mass}} 0x7fffffff
+   {{property|Monster}}
+   +{{flag|DROPOFF}}
+   +{{flag|NOBLOOD}}
+   +{{flag|BOSS}}
+   +{{flag|FLOORCLIP}}
+   +{{flag|DONTMORPH}}
+   +{{flag|NORADIUSDMG}}
+   {{property|MaxDropOffHeight}} 32
+   {{property|MinMissileChance}} 150
+   {{property|SeeSound}} "inquisitor/sight"
+   {{property|DeathSound}} "inquisitor/death"
+   {{property|ActiveSound}} "inquisitor/active"
+   {{property|Obituary}} "$OB_INQUISITOR" // "%o was sentenced by an Inquisitor."
+ 
+   action native [[A_InquisitorWalk]]();
+   action native [[A_InquisitorDecide]]();
+   action native [[A_InquisitorAttack]]();
+   action native [[A_InquisitorJump]]();
+   action native [[A_InquisitorCheckLand]]();
+   action native [[A_TossArm]]();
+   action native [[A_ReaverRanged]]();
+ 
+   States
+   {
+   Spawn:
+     ROB3 AB 10 [[A_Look]]
+     Loop
+   See:
+     ROB3 B 3 [[A_InquisitorWalk]]
+     ROB3 B 3 [[A_Chase]]
+     ROB3 CCDD 4 [[A_Chase]]
+     ROB3 E 3 [[A_InquisitorWalk]]
+     ROB3 E 3 [[A_InquisitorDecide]]
+     Loop
+   Missile:
+     ROB3 A 2 [[A_InquisitorDecide]]
+     ROB3 F 6 [[A_FaceTarget]]
+     ROB3 G 8 Bright [[A_ReaverRanged]]
+     ROB3 G 8 [[A_ReaverRanged]]
+     Goto See
+   Grenade:
+     ROB3 K 12 [[A_FaceTarget]]
+     ROB3 J 6 Bright [[A_InquisitorAttack]]
+     ROB3 K 12
+     Goto See
+   Jump:
+     ROB3 H 8 Bright [[A_InquisitorJump]]
+     ROB3 I 4 Bright [[A_InquisitorCheckLand]]
+     ROB3 H 4 Bright [[A_InquisitorCheckLand]]
+     Goto Jump+1
+   Death:
+     ROB3 L 0 [[A_StopSoundEx]]("Item")
+     ROB3 L 4 [[A_TossGib]]
+     ROB3 M 4 [[A_Scream]]
+     ROB3 N 4 [[A_TossGib]]
+     ROB3 O 4 Bright [[A_Explode]](128, 128, 1, 1)
+     ROB3 P 4 Bright [[A_TossGib]]
+     ROB3 Q 4 Bright [[A_NoBlocking]]
+     ROB3 RSTUV 4 [[A_TossGib]]
+     ROB3 W 4 Bright [[A_Explode]](128, 128, 1, 1)
+     ROB3 XY 4 Bright [[A_TossGib]]
+     ROB3 Z 4 [[A_TossGib]]
+     ROB3 "[" 4 [[A_TossGib]]
+     ROB3 "\" 3 [[A_TossGib]]
+     ROB3 "]" 3 Bright [[A_Explode]](128, 128, 1, 1)
+     RBB3 A 3 Bright [[A_TossArm]]
+     RBB3 B 3 Bright [[A_TossGib]]
+     RBB3 CD 3 [[A_TossGib]]
+     RBB3 E -1
+     Stop
+   }
+ }</text>
+    <sha1>dgzaf5e56i3pl16giczktwv9hiclph4</sha1>
+  </revision>
+</page>

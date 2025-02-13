@@ -1,0 +1,144 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>Classes:SpectatorCamera</title>
+  <ns>0</ns>
+  <id>9937</id>
+  <revision>
+    <id>53302</id>
+    <parentid>52935</parentid>
+    <timestamp>2024-10-12T10:44:09Z</timestamp>
+    <contributor>
+      <username>Blue Shadow</username>
+      <id>2021</id>
+    </contributor>
+    <minor />
+    <comment>{{git}} -&gt; {{new}} for 4.13.0</comment>
+    <origin>53302</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="4051" sha1="32r79xb0h2xn3kv5etde0xec85b5xl5" xml:space="preserve">{{ZScriptDefinitionNote|actors/shared/camera.zs#L132}}
+
+{{actor|
+| type = Internal
+| name = SpectatorCamera
+| class = SpectatorCamera
+}}[[Classes]]: &lt;u&gt;SpectatorCamera&lt;/u&gt;&lt;br&gt;
+&amp;ensp;&amp;rarr;[[Hierarchical class list|All other classes]]&lt;br&gt;
+
+{{new|4.13.0}}
+
+Spectator Camera is meant to look at and follow an actor (pointed to by its tracer field) from a constant angle and pitch. This is achieved via the use of its {{c|ViewPos}} field. So the camera viewpoint's position is typically different from the camera actor's position.
+
+== Properties ==
+
+*'''{{LE|SpectatorCamera.lagdistance}}''' ''value''
+: Sets the lag distance between the camera's (not the viewpoint's) and its tracer's position above which a lazy-follow gets triggered and the camera chases the tracer.
+: Default is 0.0.
+
+*'''{{LE|SpectatorCamera.chasemode}}''' ''value''
+: Integer that determines type of lazy follow. The behavior is:
+:: 0 - chase tracer until positions are equal.
+:: 1 - same as 0, but move only when the tracer is moving.
+:: 2 (or above) - stops chasing if tracer comes within lag distance of camera position (not viewpoint position).
+: Default is 0.
+
+*'''{{LE|SpectatorCamera.chasemode}}''' ''value''
+: A boolean property that indicates whether a lazy-follow condition has been triggered.
+
+== Methods ==
+
+*{{c|void '''Init'''(double ''dist'', double ''yaw'', double ''inpitch'', int ''inflags'')}}
+: The camera viewpoint's position can be initialized to be a distance {{c|dist}} away from and looking at the camera actor's position from an angle {{c|yaw}} and pitch {{c|inpitch}}. The {{c|inflags}} argument are to supply the {{class|ViewPosition}} flags. Typically, the flag {{c|VPSF_ABSOLUTEOFFSET}} is set.
+
+*{{c|void '''LookAtSelf'''(double ''inpitch'')}}
+: Adjusts angle such that the viewpoint is looking at the camera actor's position. Sets pitch to {{c|inpitch}}. Used by {{c|'''Init'''}}.
+
+== [[ZScript]] definition ==
+
+&lt;syntaxhighlight lang="csharp"&gt;
+class SpectatorCamera : Actor
+{
+
+	bool chasingtracer;
+	double lagdistance; // camera gives chase (lazy follow) if tracer gets &gt; lagdistance away from camera.pos
+	int chasemode; // 0: chase until tracer centered, 1: same but only when tracer is moving, 2: stop chase if tracer within lagdistance
+	property lagdistance : lagdistance;
+	property chasingtracer : chasingtracer;
+	property chasemode : chasemode;
+
+	default
+	{
+		+NOBLOCKMAP
+		+NOGRAVITY
+		+NOINTERACTION
+		RenderStyle "None";
+		CameraHeight 0;
+		SpectatorCamera.chasingtracer false;
+		SpectatorCamera.lagdistance 0.0;
+		SpectatorCamera.chasemode 0;
+	}
+
+	void Init(double dist, double yaw, double inpitch, int inflags)
+	{
+
+		double zshift = 0.0;
+		if(tracer != NULL)
+		{
+			if(player != NULL) zshift = -0.25*tracer.height;
+			else zshift = 0.5*tracer.height;
+		}
+		else if (player != NULL &amp;&amp; player.mo != NULL) zshift = -0.5*player.mo.height;
+
+		SetViewPos((-dist*Cos(yaw)*Cos(inpitch), -dist*Sin(yaw)*Cos(inpitch), dist*Sin(inpitch)+zshift), inflags);
+		LookAtSelf(inpitch);
+	}
+
+	void LookAtSelf(double inpitch)
+	{
+		if(ViewPos.Offset.length() &gt; 0.)
+		{
+			Vector3 negviewpos = (-1.0) * ViewPos.Offset;
+			angle = negviewpos.Angle();
+			pitch = inpitch;
+		}
+	}
+
+	override void Tick()
+	{
+		if(tracer != NULL)
+		{
+			Vector3 distvec = tracer.pos - pos;
+			double dist = distvec.length();
+			if((dist &lt;= 4 &amp;&amp; chasingtracer) || lagdistance &lt;= 0.0) // Keep tracer centered on screen
+			{
+				SetOrigin(tracer.pos, true);
+				chasingtracer = false;
+			}
+			else // Lazy follow tracer
+			{
+				if(dist &gt;= 2*lagdistance)
+				{
+					SetOrigin(tracer.pos, true);
+					chasingtracer = false;
+				}
+				else if(dist &gt; lagdistance &amp;&amp; !chasingtracer) chasingtracer = true;
+
+				if(chasingtracer)
+				{
+					speed = tracer.vel.xy.length()/dist;
+					if((speed == 0.0) &amp;&amp; (chasemode == 0)) speed = tracer.speed/dist;
+					SetOrigin(pos + 2*distvec*speed, true);
+					if(chasemode &gt; 1) chasingtracer = false;
+				}
+			}
+		}
+		else if(player != NULL &amp;&amp; player.mo != NULL)
+		{
+			cameraFOV = player.FOV;
+			SetOrigin(player.mo.pos, true);
+		}
+	}
+}
+&lt;/syntaxhighlight&gt;</text>
+    <sha1>32r79xb0h2xn3kv5etde0xec85b5xl5</sha1>
+  </revision>
+</page>

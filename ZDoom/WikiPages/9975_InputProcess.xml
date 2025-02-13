@@ -1,0 +1,76 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>InputProcess</title>
+  <ns>0</ns>
+  <id>9975</id>
+  <revision>
+    <id>54042</id>
+    <parentid>54041</parentid>
+    <timestamp>2024-12-08T18:25:43Z</timestamp>
+    <contributor>
+      <username>Jekyll Grim Payne</username>
+      <id>2175</id>
+    </contributor>
+    <comment>/* Examples */</comment>
+    <origin>54042</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="2712" sha1="2z02hf8iavahtiouq7k83k6gcv53ym5" xml:space="preserve">'''{{class|StaticEventHandler}}'''
+
+{{c|bool '''InputProcess''' (InputEvent ''e'')}}
+
+== Usage ==
+This virtual function can be used in an [[Events and handlers|event handler]] to catch and potentially override player's input.
+
+=== Passed values ===
+The following values are passed from the {{struct|InputEvent}} struct to this event, and can be read if preceded with the &lt;code&gt;e.&lt;/code&gt; prefix:
+
+{{: Structs:InputEvent}}
+
+=== Return values ===
+* bool — &lt;code&gt;false&lt;/code&gt; by default. If &lt;code&gt;true&lt;/code&gt; is returned instead, this will completely block player's input. Can be used to manually override specific inputs.
+
+== Examples ==
+{{warning|While it may be obvious to more experienced developers, ''inputs must never be bound to keys explicitly.'' As such, this event must never be used to create behaviors like "pressing W produces this action" (with the exception of extremely niche cases, like perhaps requiring the player to input a password, although for that [[UiProcess]] would be arguably more suitable.) For the majority of cases the logical approach is to create a custom command that calls a network event which gets captured and processed in '''[[NetworkProcess]]''', ''not'' to catch specific keys.}}
+
+This example shows how the input for scrolling between weapons can be overridden in order to add custom behavior (for example, if you're creating another system where weapon scrolling gets different use).
+&lt;syntaxhighlight lang="cs"&gt;
+class WeaponSwitchDetector : EventHandler
+{
+    override bool InputProcess(InputEvent e)
+    {
+        // only process the input when the key is pressed,
+        // not when it's let go:
+        if (e.Type != InputEvent.Type_KeyDown)
+        {
+            return false;
+        }
+        if (bindings.GetBinding(e.KeyScan) ~== "weapnext")
+        {
+            // Print a message and call a custom network event:
+            Console.Printf("Pressed Next Weapon key");
+            EventHandler.SendNetworkEvent("PlayerPressedWeapNext");
+            return true;
+        }
+        if (bindings.GetBinding(e.KeyScan) ~== "weapprev")
+        {
+            // Print a message and call a custom network event:
+            Console.Printf("Pressed Previous Weapon key");
+            EventHandler.SendNetworkEvent("PlayerPressedWeapPrev");
+            DoCustomScrollBehavior(next: false);
+            return true;
+        }
+        return false;
+    }
+}
+&lt;/syntaxhighlight&gt;
+
+Note: Since {{c|InputProcess}} is UI-scoped, to do something in the play scope, you'll need to use [[Events_and_handlers#Networking|{{c|EventHandler.SendNetworkEvent}}]], as shown in the example above.
+
+== See also ==
+* [[Events and handlers]]
+
+[[Category:ZScript]]
+[[Category:Event handlers]]</text>
+    <sha1>2z02hf8iavahtiouq7k83k6gcv53ym5</sha1>
+  </revision>
+</page>

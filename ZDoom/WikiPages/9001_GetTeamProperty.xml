@@ -1,0 +1,70 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>GetTeamProperty</title>
+  <ns>0</ns>
+  <id>9001</id>
+  <revision>
+    <id>43687</id>
+    <timestamp>2017-01-08T22:41:56Z</timestamp>
+    <contributor>
+      <username>Tiger</username>
+      <id>2074</id>
+    </contributor>
+    <comment>Imported article from the zandronum wiki.</comment>
+    <origin>43687</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="2140" sha1="g0pfpn63wjxtm76x67pzqrqzs8946wu" xml:space="preserve">{{STFeature}}
+int '''GetTeamProperty''' (int ''team'', int ''prop'')
+
+==Usage==
+
+Returns the requested information on the specified team.
+
+==Properties==
+
+&lt;div style="border: 1px dotted; white-space: pre-wrap;"&gt;
+;TPROP_NumLivePlayers
+:Returns number of live players remaining on this team.
+;TPROP_IsValid
+:Whether the team is valid and can be joined to.
+;TPROP_Score
+:Returns the effective score of this team. This is frags in team deathmatch, wins in TLMS, flags in CTF, etc.
+;TPROP_TextColor
+:Text color for the team. This returns a "color range" identifier, which can be used in the ''color'' field in HudMessage.
+;TPROP_PlayerStartNum
+:Returns the id of what the team spawns on.
+;TPROP_Spread
+:Returns the spread of points between teams.
+;TPROP_Assister
+:The player who returned the team's item. If a score occurrs, this person will get an Assist medal. -1 if nobody is eligible for an assist.
+;TPROP_Carrier
+:The enemy player carrying this team's item. -1 if team item is not stolen.
+;TPROP_FragCount
+:Returns total frags of this team.
+;TPROP_DeathCount
+:Returns total deaths of this team.
+;TPROP_WinCount
+:Returns total wins.of this team. (TLMS)
+;TPROP_PointCount
+:Returns total point count of this team. (CTF, Skulltag, Possession, Teamgame)
+;TPROP_ReturnTics
+:How many tics until the dropped team item will be automatically returned to its pedestal. 0 if the team item is not dropped in the first place.
+;TPROP_NumPlayers
+:Returns number of players on a team.
+;TPROP_TeamItem
+:Dynamic string containing the class name of the team item, such as BlueFlag.
+;TPROP_WinnerTheme
+:Dynamic string containing the music played for members of this team if this team won.
+;TPROP_LoserTheme
+:Dynamic string containing the music played for members of this team if this team lost.
+;TPROP_Name
+:Dynamic string containing the name of team.&lt;/div&gt;
+Note: TPROP_ReturnTics and TPROP_Assister do not work in client-side scripts yet. 8/28/2012
+
+TPROP_Name, TPROP_TeamItem, TPROP_WinnerTheme, TPROP_LoserTheme are dynamic strings akin to those returned by [http://zdoom.org/wiki/strparam StrParam]. After one tick, they expire.
+
+==Examples==
+{{noexamples}}</text>
+    <sha1>g0pfpn63wjxtm76x67pzqrqzs8946wu</sha1>
+  </revision>
+</page>

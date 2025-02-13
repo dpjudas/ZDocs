@@ -1,0 +1,74 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>GetDefaultByType</title>
+  <ns>0</ns>
+  <id>9200</id>
+  <revision>
+    <id>51192</id>
+    <parentid>51191</parentid>
+    <timestamp>2024-01-09T18:22:51Z</timestamp>
+    <contributor>
+      <username>Jekyll Grim Payne</username>
+      <id>2175</id>
+    </contributor>
+    <comment>Formatted the page properly</comment>
+    <origin>51192</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="1777" sha1="kriz1ya9heao4zblkpq4et5g7ig72ni" xml:space="preserve">{{ZScriptNote}}
+
+{{c|static readonly&lt;Actor&gt; '''GetDefaultByType'''(class&lt;Actor&gt; type)}}
+
+==Usage==
+
+Use this to find the default property of a class, rather than those of any particular actor instance.
+
+Note that this is sensitive to whether the caller has a backpack, so it is not necessary to specifically check for a backpack and backpackmaxamount - checking maxamount will cover both situations.
+
+===Parameters===
+*{{c|class&lt;Actor&gt; '''type'''}}
+:The name of an {{class|Actor}}-based class whose default values should be obtained.
+
+===Return values===
+This function is fairly unique in that it returns a ''readonly'' pointer to an {{c|Actor}} instance (as opposed to, for example, casting the return value of [[Spawn (ZScript)|Spawn()]]).
+
+==Examples==
+
+&lt;syntaxhighlight lang="csharp"&gt;
+class Example
+{
+    static void getImpRadius() 
+    {
+        class&lt;Actor&gt; cls = "DoomImp";
+        int impRadius = GetDefaultByType(cls).Radius;
+        console.printf("Imp default radius is: %d", impRadius);
+    }
+}&lt;/syntaxhighlight&gt;
+
+Custom property defaults can also be retrieved by using the name of the variable that the property refers to. This class retrieves the custom DropCategory property of the class that represents a treasure dropped by a monster:
+
+&lt;syntaxhighlight lang="csharp"&gt;
+class MonsterDrop : Inventory 
+{
+    String myCategory;
+    property DropCategory: myCategory;
+
+    Default 
+    {
+        MonsterDrop.DropCategory "Jewellery";
+    }
+ }
+
+class Example
+{
+    static void getMonsterDropCategory(String dropClass)
+    {
+        class&lt;Actor&gt; cls = dropClass;
+        String dropCategory = MonsterDrop(GetDefaultByType(cls)).myCategory;
+        console.printf("Drop category for %s is: %d", dropClass, dropCategory);
+    }
+}&lt;/syntaxhighlight&gt;
+
+[[Category:ZScript]]</text>
+    <sha1>kriz1ya9heao4zblkpq4et5g7ig72ni</sha1>
+  </revision>
+</page>

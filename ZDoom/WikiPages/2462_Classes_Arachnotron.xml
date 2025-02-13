@@ -1,0 +1,162 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>Classes:Arachnotron</title>
+  <ns>0</ns>
+  <id>2462</id>
+  <revision>
+    <id>48928</id>
+    <parentid>48422</parentid>
+    <timestamp>2021-12-27T11:16:29Z</timestamp>
+    <contributor>
+      <username>Jekyll Grim Payne</username>
+      <id>2175</id>
+    </contributor>
+    <comment>updated in accordance with updated ZScriptDefinitionNote template</comment>
+    <origin>48928</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="3171" sha1="m1yih6xwc8jc4p4pjphi1q8nwc9z6t9" xml:space="preserve">{{Actor|
+| type = Monster
+| name = Arachnotron
+| class = Arachnotron
+| game = Doom2
+| doomednum = 68
+| thingindex = 21
+| spawnid = 6
+| spawnname = T_ARACHNOTRON
+}}
+[[Classes]]: &lt;u&gt;Arachnotron&lt;/u&gt;&lt;br&gt;
+&amp;ensp;&amp;rarr;[[Classes:StealthArachnotron|StealthArachnotron]]
+
+Arachnotrons are spider-like enemies that first appear in Doom 2. Their choice of weapon is plasma, which deals the same damage as the player's [[Classes:PlasmaRifle|plasma rifle]], although the colors are different and they do not fire as fast.
+
+
+==== [[ZScript]] definition ====
+{{ZScriptDefinitionNote|actors/doom/arachnotron.zs}}
+ class Arachnotron : Actor
+ {
+ 	Default
+ 	{
+ 		{{Property|Health}} 500;
+ 		{{Property|Radius}} 64;
+ 		{{Property|Height}} 64;
+ 		{{Property|Mass}} 600;
+ 		{{Property|Speed}} 12;
+ 		{{Property|PainChance}} 128;
+ 		{{Property|Monster}};
+ 		+{{Flag|FLOORCLIP}}
+ 		+{{Flag|BOSSDEATH}}
+ 		{{Property|SeeSound}} "baby/sight";
+ 		{{Property|PainSound}} "baby/pain";
+ 		{{Property|DeathSound}} "baby/death";
+ 		{{Property|ActiveSound}} "baby/active";
+ 		{{Property|Obituary}} "$OB_BABY";
+ 		{{Property|Tag}} "$FN_ARACH";
+ 	}
+ 	States
+ 	{
+ 	Spawn:
+ 		BSPI AB 10 [[A_Look]];
+ 		Loop;
+ 	See:
+ 		BSPI A 20;
+ 		BSPI A 3 [[A_BabyMetal]];
+ 		BSPI ABBCC 3 [[A_Chase]];
+ 		BSPI D 3 [[A_BabyMetal]];
+ 		BSPI DEEFF 3 [[A_Chase]];
+ 		Goto See+1;
+ 	Missile:
+ 		BSPI A 20 BRIGHT [[A_FaceTarget]];
+ 		BSPI G 4 BRIGHT [[A_BspiAttack]];
+ 		BSPI H 4 BRIGHT;
+ 		BSPI H 1 BRIGHT [[A_SpidRefire]];
+ 		Goto Missile+1;
+ 	Pain:
+ 		BSPI I 3;
+ 		BSPI I 3 [[A_Pain]];
+ 		Goto See+1;
+ 	Death:
+ 		BSPI J 20 [[A_Scream]];
+ 		BSPI K 7 [[A_NoBlocking]];
+ 		BSPI LMNO 7;
+ 		BSPI P -1 [[A_BossDeath]];
+ 		Stop;
+ 	Raise:
+ 		BSPI P 5;
+ 		BSPI ONMLKJ 5;
+ 		Goto See+1;
+ 	}
+ }
+ 
+ extend class Actor
+ {
+ 	void [[A_BspiAttack]]()
+ 	{
+ 		if (target)
+ 		{
+ 			[[A_FaceTarget]]();
+ 			SpawnMissile(target, "ArachnotronPlasma");
+ 		}
+ 	}
+ 	
+ 	void [[A_BabyMetal]]()
+ 	{
+ 		[[A_StartSound]]("baby/walk", CHAN_BODY, CHANF_DEFAULT, 1, ATTN_IDLE);
+ 		[[A_Chase]]();
+ 	}
+ }
+
+==== [[DECORATE]] definition ====
+{{DecorateDefinitionNote}}
+ ACTOR &lt;u&gt;Arachnotron&lt;/u&gt;
+ {
+   {{Property|Health}} 500
+   {{Property|Radius}} 64
+   {{Property|Height}} 64
+   {{Property|Mass}} 600
+   {{Property|Speed}} 12
+   {{Property|PainChance}} 128
+   {{Property|Monster}}
+   +{{Flag|FLOORCLIP}}
+   +{{Flag|BOSSDEATH}}
+   {{Property|SeeSound}} "baby/sight"
+   {{Property|PainSound}} "baby/pain"
+   {{Property|DeathSound}} "baby/death"
+   {{Property|ActiveSound}} "baby/active"
+   {{Property|Obituary}} "$OB_BABY"
+   States
+   {
+   Spawn:
+     BSPI AB 10 [[A_Look]]
+     Loop
+   See:
+     BSPI A 20
+     BSPI A 3 [[A_BabyMetal]]
+     BSPI ABBCC 3 [[A_Chase]]
+     BSPI D 3 [[A_BabyMetal]]
+     BSPI DEEFF 3 [[A_Chase]]
+     Goto See+1
+   Missile:
+     BSPI A 20 Bright [[A_FaceTarget]]
+     BSPI G 4 Bright [[A_BspiAttack]]
+     BSPI H 4 Bright
+     BSPI H 1 Bright [[A_SpidRefire]]
+     Goto Missile+1
+   Pain:
+     BSPI I 3
+     BSPI I 3 A_Pain
+     Goto See+1
+   Death:
+     BSPI J 20 [[A_Scream]]
+     BSPI K 7 [[A_NoBlocking]]
+     BSPI LMNO 7
+     BSPI P -1 [[A_BossDeath]]
+     Stop
+   Raise:
+     BSPI P 5
+     BSPI ONMLKJ 5
+     Goto See+1
+   }
+ }</text>
+    <sha1>m1yih6xwc8jc4p4pjphi1q8nwc9z6t9</sha1>
+  </revision>
+</page>

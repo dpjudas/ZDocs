@@ -1,0 +1,76 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>Classes:Pod</title>
+  <ns>0</ns>
+  <id>4161</id>
+  <revision>
+    <id>39382</id>
+    <parentid>34094</parentid>
+    <timestamp>2015-04-29T17:44:09Z</timestamp>
+    <contributor>
+      <username>Blue Shadow</username>
+      <id>2021</id>
+    </contributor>
+    <minor />
+    <comment>/* DECORATE definition */ Updated</comment>
+    <origin>39382</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="1433" sha1="m4n64j4ixzea9d6e13s6lay9su5yq11" xml:space="preserve">{{Actor|
+| type = Hazard
+| name = Pod
+| class = Pod
+| game = Heretic
+| doomednum = 2035
+| spawnid = 125
+| spawnname = T_POD
+}}[[Classes]]: &lt;u&gt;Pod&lt;/u&gt;&lt;br&gt;
+A strange fungal growth, floating a few inches over the ground, which explodes when damaged too much. Like Doom's [[Classes:ExplosiveBarrel|explosive barrels]], chain reactions are possible. In places where a [[Classes:PodGenerator|PodGenerator]] is present, new pods will appear spontaneously to replace exploded pods.
+
+==== [[DECORATE]] definition ====
+ ACTOR &lt;u&gt;Pod&lt;/u&gt;
+ {
+   {{Property|Health}} 45
+   {{Property|Radius}} 16
+   {{Property|Height}} 54
+   {{Property|PainChance}} 255
+   +{{Flag|SOLID}}
+   +{{Flag|NOBLOOD}}
+   +{{Flag|SHOOTABLE}}
+   +{{Flag|DROPOFF}}
+   +{{Flag|WINDTHRUST}}
+   +{{Flag|PUSHABLE}}
+   +{{Flag|SLIDESONWALLS}}
+   +{{Flag|CANPASS}}
+   +{{Flag|TELESTOMP}}
+   +{{Flag|DONTMORPH}}
+   +{{Flag|NOBLOCKMONST}}
+   +{{Flag|DONTGIB}}
+   +{{Flag|OLDRADIUSDMG}}
+   {{Property|DeathSound}} "world/podexplode"
+   {{Property|PushFactor}} 0.5
+ 
+   action native [[A_PodPain]](class&lt;Actor&gt; podtype = "{{Class|PodGoo}}");
+   action native [[A_RemovePod]]();
+ 
+   States
+   {
+   Spawn:
+     PPOD A 10
+     Loop
+   Pain:
+     PPOD B 14 [[A_PodPain]]
+     Goto Spawn
+   Death:
+     PPOD C 5 Bright [[A_RemovePod]]
+     PPOD D 5 Bright [[A_Scream]]
+     PPOD E 5 Bright [[A_Explode]]
+     PPOD F 10 Bright
+     Stop
+   Grow:
+     PPOD IJKLMNOP 3
+     Goto Spawn
+   }
+ }</text>
+    <sha1>m4n64j4ixzea9d6e13s6lay9su5yq11</sha1>
+  </revision>
+</page>

@@ -1,0 +1,142 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>Subversion repository</title>
+  <ns>0</ns>
+  <id>2762</id>
+  <revision>
+    <id>36865</id>
+    <parentid>36813</parentid>
+    <timestamp>2013-07-11T19:31:23Z</timestamp>
+    <contributor>
+      <username>Gez</username>
+      <id>1283</id>
+    </contributor>
+    <comment>/* Repository URL */</comment>
+    <origin>36865</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="7827" sha1="3rakszouogr5rjrvgf7zicvqsbs1pg8" xml:space="preserve">{{Warning|The SVN repository is no longer used, and has been replaced by the [[Git repository]]. ZDoom 2.7.0 was the last version to be hosted by the SVN.}}
+
+= What is Subversion, and why? =
+
+{{wp|Apache_Subversion|Subversion}} is a {{wp|Revision_control|version control system}}, for keeping track of changes to source code.
+Subversion allows to
+* see the history of changes made to source code
+* retrieve any version of any file
+* see the difference between any two versions of code
+* see the changes you made locally, compared to the version you originally checked out
+* create patches of any changes
+* update your local copy to the latest version, or any specific version, "merging" changes automatically
+
+This is very useful for those working with source code - looking for bugs, making changes or simply compiling the latest version because of features or bugfixes.
+
+== Advantages ==
+This can result in quicker and easier turnaround for features and bugfixes:
+* Changes made by Randy or another [[ZDoom:Contributors|ZDoom developer]] can be made available instantly without uploading a full release, and coders can automatically merge them into their "working copies".
+* Coders can be looking at the most current version of the code, testing it, looking for bugs, adding features. When someone posts a patch, it can be against the latest version, which makes it easier for Randy to integrate, if he decides to. And when he does, changes are again instantly available for everyone.
+* Source control provides a backup of the code at each point where it was checked in.  This leads to less loss in the case of unexpected hard drive failure or similar circumstances.  It also makes it much easier to go back to the last known working version if that becomes necessary.
+
+= Precompiled builds =
+DRDTeam hosts precompiled SVN builds of [[ZDoom]] and a number of other Doom-related programs, notably [[GZDoom]], the [[Eternity Engine]], [[Doom Builder 2]] and [[SLADE 3]]. If you missed the giant link on the [[Main Page|main page]] of this wiki, the SVN build site is [http://svn.drdteam.org/ here].
+
+= Repository URL =
+The ZDoom subversion repository is generously hosted by Manc at http://mancubus.net/svn/hosted/zdoom. Additionally, if you are interested, you may find the GZDoom SVN in nearly the same location at http://mancubus.net/svn/hosted/gzdoom. Be aware, however, that GZDoom takes some additional effort to compile.
+
+'''Subversion checkout path''' - If you want just the latest development version of ZDoom, and aren't interested in grabbing the old stable release nor the anciliary tools ZDBSP and ACC, you should use your subversion client to check out http://mancubus.net/svn/hosted/zdoom/zdoom/trunk.
+
+'''Browse the repository''' - You can browse the entire zdoom repository and view detailed information (like revision histories, dates, etc.) by pointing your web browser here:
+
+http://mancubus.net/svn/zdoom/
+
+'''Change log''' - If you want to view the change log, point your web browser here:
+
+http://mancubus.net/svn/zdoom/?op=log
+
+A text file log also exist containing pre-SVN changes, going as far back as March 1998. It was for a time maintained concurrently with the SVN, but was dropped in January 2010 as redundant. It can be seen [http://mancubus.net/svn/hosted/zdoom/zdoom/trunk/docs/rh-log.txt here].
+
+==GitHub URL==
+Although ZDoom has moved to a [[Git repository]], it is still possible to use a Subversion client to get the latest revisions thanks to a special GitHub feature.
+
+https://github.com/rheit/zdoom
+
+= Getting the sources =
+
+== Using Subversion's own utilities ==
+
+Download Subversion tools at http://subversion.apache.org/packages.html . Add the directory where you installed them to PATH.
+
+To check out ZDoom sources, open a command prompt window and:
+&lt;pre&gt;
+cd c:\path\to\where\you\want\sources
+svn checkout http://mancubus.net/svn/hosted/zdoom/zdoom/trunk
+&lt;/pre&gt;
+
+To update previously checked-out sources:
+&lt;pre&gt;
+cd c:\same\path\as\before
+svn up
+&lt;/pre&gt;
+
+== Using TortoiseSVN (Windows Explorer plug-in) ==
+
+Download TortoiseSVN from [http://tortoisesvn.net/downloads TortoiseSVN.net].
+
+To check out ZDoom sources,
+* navigate an Explorer window to the folder of your choice.
+* find "checkout" in context menus
+* enter repository URL: either http://mancubus.net/svn/hosted/zdoom (full project) or http://mancubus.net/svn/hosted/zdoom/zdoom/trunk (just the current trunk)
+
+There is also a Firefox plugin for TortoiseSVN at [http://www.pumacode.org/projects/tsvnmenu/ Pumacode.org]. You need to install TortoiseSVN first for it to work, of course.
+
+''Note'': TortoiseSVN can be used instead of Subversion to download the revisions, however it cannot be used by the ZDoom makefiles to get revision information. If you do not have Subversion as well, any compiled build you do will show "r0" instead of the accurate revision number. Since ZDoom uses the revision number for backward compatibility with saved games, using such a build can create broken saves.
+
+= Experimental branches =
+While most of the development happens in the trunk, experimental branches are created for working on elements (new features or rewrites of existing subsystems) that need a lot of work before they can be finished to an acceptable level and stabilized enough to be merged in the main development trunk.
+
+== Unfinished branches ==
+These branches were used for on-going projects, which means what they tried to achieve was not finished yet. They have been ported to the [[Git repository]].
+;3dfloors3
+:Complete support for [[3D floors]], including sloped ones, in the software renderer.
+;doom64
+:Support for the {{dw|Doom_64|Doom 64}} game, using the [[IWAD]] generated by {{dw|Doom64_EX|Doom64 EX}}.
+;float
+:Update of all single-precision floating point values (&lt;tt&gt;float&lt;/tt&gt;) to double-precision (&lt;tt&gt;double&lt;/tt&gt;).
+;minimap
+:Feature allowing to embed the [[automap]] anywhere in the [[HUD]], and possibly even on [[texture]]s. See {{forum|t=32810}} for further information.
+;openal
+:Changes to the sound code to allow to use either [[FMOD Ex]] or OpenAL as the audio library, allowing to port ZDoom to more platforms.
+;scripting
+:Development of the long-awaited [[DoomScript]].
+
+== Completed branches ==
+These branches have served their purpose and been merged back in the trunk.
+;2.4.1
+:Served to separate between new features and bug fixes for the creation of ZDoom version 2.4.1, since version 2.4.0 suffered from critical bugs.
+;3dfloors (abandoned)
+:Support for [[Sector_Set3dFloor]] to ZDoom's software renderer (first attempt). Replaced by the 3dfloors2 branch.
+;3dfloors2
+:Support for [[Sector_Set3dFloor]] to ZDoom's software renderer, using a different approach from the first attempt.
+;automap
+:Used to develop the textured automap feature that was added shortly after the 2.5.0 version.
+;finale
+:Rewrite of the finale code, so as to externalize things such as the Doom II cast call endgame.
+;gc
+:Rewrite of the garbage collector system to be more efficient and prevent memory leaks.
+;menu
+:Rewrite of the menu code, allowing to define menu externally with a new [[MENUDEF]] lump.
+;newmapinfo
+:Used to develop a new format for [[MAPINFO]], with a more robust syntax, without breaking compatibility with older MAPINFO lumps.
+;polyobjects
+:Served to allow polyobjects to roam in any sector, using a system similar to the [[Eternity Engine]]'s "dynasegs", and then to allow complex shapes for polyobjects through dynamically-recalculated mini BSP trees.
+;usdf
+:Used to implement support for the [[Universal Strife Dialog Format]] and its variant the [[ZDoom Strife Dialog Format]].
+;voxel
+:Support for [[Build]]-engine [[voxel]]s.
+
+= Forum threads =
+
+* {{forum|Features Suggestions / SVN Repo?|p=204428}}
+* {{forum|ZDoom News / Subversion Repository|t=9515}}
+[[Category:Glossary]][[Category:ZDoom]]</text>
+    <sha1>3rakszouogr5rjrvgf7zicvqsbs1pg8</sha1>
+  </revision>
+</page>

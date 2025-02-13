@@ -1,0 +1,66 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>Line SetIdentification</title>
+  <ns>0</ns>
+  <id>715</id>
+  <revision>
+    <id>38641</id>
+    <parentid>38639</parentid>
+    <timestamp>2014-12-30T00:56:30Z</timestamp>
+    <contributor>
+      <username>Marisa Heit</username>
+      <id>5</id>
+    </contributor>
+    <minor />
+    <comment>Undo revision 38639 by [[Special:Contributions/Gez|Gez]] ([[User talk:Gez|talk]]) Line_SetIdentification is not ignored for Hexen format maps</comment>
+    <origin>38641</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="3185" sha1="mjmcmnbiehk318gkqyub7qjh6lqzsv6" xml:space="preserve">{{DISPLAYTITLE:Line_SetIdentification}}
+{{Special|121|lineid, moreflags, reserved1, reserved2, lineid_hi|Miscellaneous|use=line}}
+
+{{warning|text=This special exists only in the Hexen [[map format]]. The line ID and all flags available with this special can instead be set directly within the linedef properties of a [[UDMF]] map, giving this special no reason to be available in this format.}}
+
+* ''lineid'': Identification number for this line 
+* ''moreflags'': Allows setting of line flags that don't fit in the flag word anymore.
+* ''lineid_hi'': High byte of the line id
+
+Used to identify this line for certain specials and [[ACS]] commands, as well as to give it additional [[linedef]] flags that are not supported by the Hexen map format.
+
+The following bits are defined for ''moreflags'':
+{| {{prettytable}}
+! Value !! UDMF name !! Description
+|-
+| align="right"| '''1''' || {{c|zoneboundary}} || Defines a zone boundary for sound environments.
+|-
+| align="right"| '''2''' || {{c|jumpover}} || Defines a railing. A railing has the lowest 32 map units blocked but is passable above that.
+|-
+| align="right"| '''4''' || {{c|blockfloaters}} || Blocks floating monsters.
+|-
+| align="right"| '''8''' || {{c|clipmidtex}} || Clip mid textures to floor and ceiling.
+|-
+| align="right"| '''16''' || {{c|wrapmidtex}} || Wrap mid textures so that they fill the entire height between floor and ceiling. This implies clipping them to floor and ceiling.
+|-
+| align="right"| '''32''' || {{c|midtex3d}} || [[3D middle texture|3dMidtex]]: Treats the mid texture on this linedef as a part of solid geometry. The texture part of such a linedef blocks actor movement (like a railing) and players and monsters can walk on such textures. Linedefs with this flag set can be attached to moving sectors via the [[Sector_Attach3dMidtex]] action special.
+|-
+| align="right"| '''64''' || {{c|checkswitchrange}} || Performs a check whether a switch is reachable for the player before activating it. If a switch is too high or low or completely in the ground or ceiling it will not activate.
+|-
+| align="right"| '''128''' || {{c|firstsideonly}} || Line can only be triggered from the front side.
+|}
+
+'''How to use the high byte in ''lineid_hi'':'''
+
+Parameter 1 has the low byte, and parameter 5 has the high byte, so the lineid is ''parm1''+(''parm5''×256). This lets you affect lineids higher than 255. For example, if the lineid is 4 then the low byte is 4 and the high byte is 0. But if the lineid is 3027, the low byte is 211 and the high byte is 11 (11×256 + 211 = 3027).
+
+{{note|text=For the original Hexen maps, or any maps using the Hexen [[MAPINFO]] format, the 2nd&amp;ndash;5th parameters of this special are ignored. This is to restore compatibility with classic maps which may have set these parameters even though they were not used at the time. To ensure that this special works as expected, make sure to use ZDoom's new MAPINFO format as defined [[MAPINFO|here]].}}
+
+==Examples==
+    in 'linedefs mode', right-click on a line, and at the 'action' textbox, input #121
+    from then on, fill the options that appear.
+    Use the lineid you set in your scripts.
+
+
+==External links==
+* {{oldref}}</text>
+    <sha1>mjmcmnbiehk318gkqyub7qjh6lqzsv6</sha1>
+  </revision>
+</page>

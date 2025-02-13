@@ -1,0 +1,52 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>SpawnMissile</title>
+  <ns>0</ns>
+  <id>9933</id>
+  <revision>
+    <id>52871</id>
+    <timestamp>2024-08-10T13:01:10Z</timestamp>
+    <contributor>
+      <username>Jekyll Grim Payne</username>
+      <id>2175</id>
+    </contributor>
+    <comment>Created page with " '''{{class|Actor}}'''  native Actor '''SpawnMissile'''(Actor ''dest'', class&lt;Actor&gt; ''type'', Actor ''owner'' = null)  == Usage == This is one of the highly generalized [[projectile]]-spawning functions that can be used in actors. It fires a projectile at the specified actor pointer.  Functions like a significantly abbreviated version of '''[[A_SpawnProjectile]]'''.  === Parameters === *{{c|Actor '''dest'''}} :[[Actor pointers|Pointer]] to the actor to aim the projectil..."</comment>
+    <origin>52871</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="968" sha1="9pud6t3mf9ignijg5e7rkkgizyhvw81" xml:space="preserve">
+'''{{class|Actor}}'''
+
+native Actor '''SpawnMissile'''(Actor ''dest'', class&lt;Actor&gt; ''type'', Actor ''owner'' = null)
+
+== Usage ==
+This is one of the highly generalized [[projectile]]-spawning functions that can be used in actors. It fires a projectile at the specified actor pointer.
+
+Functions like a significantly abbreviated version of '''[[A_SpawnProjectile]]'''.
+
+=== Parameters ===
+*{{c|Actor '''dest'''}}
+:[[Actor pointers|Pointer]] to the actor to aim the projectile at.
+*{{c|class&lt;Actor&gt; '''type'''}}
+:The class name of the projectile to fire.
+*{{c|Actor '''owner'''}}
+:Pointer to the actor who should be considered the shooter of the projectile.
+
+== Examples ==
+The [[A_CyberAttack]] function used by Doom's {{class|Cyberdemon}} uses this function:
+&lt;syntaxhighlight lang="csharp"&gt;
+void A_CyberAttack()
+{
+	if (target)
+	{
+		A_FaceTarget();
+		SpawnMissile (target, "Rocket");
+	}
+}&lt;/syntaxhighlight&gt;
+
+== See also ==
+*[[A_SpawnProjectile]]
+
+[[Category:ZScript]]</text>
+    <sha1>9pud6t3mf9ignijg5e7rkkgizyhvw81</sha1>
+  </revision>
+</page>

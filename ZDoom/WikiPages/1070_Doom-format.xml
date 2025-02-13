@@ -1,0 +1,61 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>Doom format</title>
+  <ns>0</ns>
+  <id>1070</id>
+  <revision>
+    <id>40211</id>
+    <parentid>30112</parentid>
+    <timestamp>2015-06-12T05:28:38Z</timestamp>
+    <contributor>
+      <username>Gez</username>
+      <id>1283</id>
+    </contributor>
+    <minor />
+    <origin>40211</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="1784" sha1="hc5e8777jq6zemajr84k0hjf05vs0a3" xml:space="preserve">'''Doom format''' is the [[map format]] originally used by [[Doom]], Doom II, and [[Heretic]]. Maps can be converted to [[Hexen format]] using [[ZWADCONV]]. A technical description of the Doom map format follows. 
+
+* [[THINGS]] - 10 bytes
+** Bytes 0-1: Location (x) (short)
+** Bytes 2-3: Location (y) (short)
+** Bytes 4-5: Facing angle (short)
+** Bytes 6-7: Type ID (short)
+** Bytes 8-9: Flags (short) 
+* [[LINEDEFS]] - 12 bytes
+** Bytes 0-1: Start VERTEX (short)
+** Bytes 2-3: End VERTEX (short)
+** Bytes 4-5: Attributes (short)
+** Bytes 6-7: Special effects type (short)
+** Bytes 8-9: Tag (short)
+** Bytes 10-11: Right SIDEDEF (short)
+** Bytes 12-13: Left SIDEDEF (short) 
+* [[SIDEDEFS]] - 30 bytes
+** Bytes 0-1: Texture x offset (short)
+** Bytes 0-3: Texture y offset (short)
+** Bytes 4-11: Upper texture name (8 byte string)
+** Bytes 12-19: Lower texture name (8 byte string)
+** Bytes 20-27: Middle texture name (8 byte string)
+** Bytes 28-29: Sector id (short) 
+* [[VERTEXES]] - 4 bytes
+** Bytes 0-1: x coordinate (short)
+** Bytes 2-3: y coordinate (short) 
+* [[SEGS]] (created by node builder)
+* [[SSECTORS]] (created by node builder)
+* [[NODES]] (created by node builder)
+* [[SECTORS]] - 26 bytes
+** Bytes 0-1: Floor height (short)
+** Bytes 2-3: Ceiling height (short)
+** Bytes 4-11: Floor texture (8 byte string)
+** Bytes 12-19: Ceiling texture (8 byte string)
+** Bytes 20-21: Light level (short)
+** Bytes 22-23: Special sector (short)
+** Bytes 24-25: Tag (short) 
+* [[REJECT]] (created by node builder)
+* [[BLOCKMAP]] (created by node builder) 
+
+All long integers are 32 bit unsigned longs in little-endian format (shorts are signed, 16 bits, little-endian as well). So the byte sequence 212 2 0 0 is really 0 0 2 212 which translates to 724 decimal.
+[[Category:Map formats]]</text>
+    <sha1>hc5e8777jq6zemajr84k0hjf05vs0a3</sha1>
+  </revision>
+</page>

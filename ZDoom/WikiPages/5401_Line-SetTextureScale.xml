@@ -1,0 +1,53 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>Line SetTextureScale</title>
+  <ns>0</ns>
+  <id>5401</id>
+  <revision>
+    <id>31123</id>
+    <parentid>31121</parentid>
+    <timestamp>2011-07-10T08:56:43Z</timestamp>
+    <contributor>
+      <username>Gez</username>
+      <id>1283</id>
+    </contributor>
+    <minor />
+    <comment>/* Usage */ wiki conventions are to avoid contractions</comment>
+    <origin>31123</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="1365" sha1="5noxt765idi85j2s9txztvuv0jbrnus" xml:space="preserve">{{DISPLAYTITLE:Line_SetTextureScale}}
+{{Special|56|lineid, x, y, side, flags|Renderer|use=script}}
+
+==Usage==
+
+Changes the scale of a texture at run-time. This can be used during runtime for special effects, and it is possible to set the scales of upper, mid, and lower textures separately. This special cannot be used directly on a line in the map, but must be called from an ACS script instead. If you are using the [[UDMF]] format and do not intend to adjust texture scales later on, you can use the native scaling features located under the sidedefs custom tab.
+
+''side'' can be '''LINE_FRONT''' or '''LINE_BACK'''.
+
+''x'' and ''y'' are fixed point values; using '''NO_CHANGE''' leaves it alone.
+
+''flags'' can be a combination of the following flags:
+*'''1''': upper texture
+*'''2''': mid texture
+*'''4''': lower texture
+*'''8''': apply to current scale (as opposed to directly setting it)
+
+== Examples ==
+This example sets the lines with the matching line id into a sort of pulsing growing and shrinking pattern.  It uses a scaled [[sin]] and [[cos]] wave pattern for the scale values.  Wonky!
+
+ script 1 (int lineid)
+ {
+   while (TRUE)
+   {
+     for (int angle=0; angle&lt;1.0; angle+=0.01)
+     {
+       int x = 1.0 + cos(angle) / 4;
+       int y = 1.0 + sin(angle) / 4;
+       Line_SetTextureScale(lineid, x, y, SIDE_FRONT, 2);
+       delay(1);
+     }
+   }
+ }</text>
+    <sha1>5noxt765idi85j2s9txztvuv0jbrnus</sha1>
+  </revision>
+</page>

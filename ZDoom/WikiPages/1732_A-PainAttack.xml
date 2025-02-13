@@ -1,0 +1,208 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>A PainAttack</title>
+  <ns>0</ns>
+  <id>1732</id>
+  <revision>
+    <id>53664</id>
+    <parentid>53662</parentid>
+    <timestamp>2024-11-12T00:23:52Z</timestamp>
+    <contributor>
+      <username>Jekyll Grim Payne</username>
+      <id>2175</id>
+    </contributor>
+    <origin>53664</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="6227" sha1="7pxvab4yv3f6em2jyp9bew44a53gos5" xml:space="preserve">{{codepointer|Classic attack}}
+{{doomwiki|A_PainAttack}}
+
+'''{{class|Actor}}'''
+
+void '''A_PainAttack''' (class&lt;Actor&gt; ''spawntype'' = "LostSoul", double ''addangle'' = 0, int ''flags'' = 0, int ''limit'' = -1)&lt;br&gt;
+void '''A_DualPainAttack''' (class&lt;Actor&gt; ''spawntype'' = "LostSoul")&lt;br&gt;
+void '''A_PainShootSkull''' (class&lt;Actor&gt; ''spawntype'', double ''addangle'', int ''flags'', int ''limit'' = -1) — ''the core function that performs the actual logic''
+
+==Usage==
+The attack of Doom's {{Class|PainElemental|Pain Elemental}}. If no parameter is specified this shoots a {{Class|LostSoul|Lost Soul}}. '''A_DualPainAttack''' is the variant from Doom64. It shoots two actors at an angle of +45 and -45 degrees.
+
+Both  functions are just wrappers for '''A_PainShootSkull''', which handles the actual logic.
+
+If the calling actor is {{DamageType|Massacre|massacred}}, the functions do nothing.
+
+===Parameters===
+*{{c|Actorr '''spawntype'''}}
+:The type of actor to spawn. Default is {{c|"{{Class|LostSoul}}"}}.
+*{{c|double '''addangle'''}}
+:The angle at which the spawned actor is projected. Default is 0.
+*{{c|int '''flags'''}}
+:Flags to modify the behavior. Multiple flags can be combined with &lt;code&gt;|&lt;/code&gt;:
+:*{{c|'''PAF_NOSKULLATTACK'''}} — The spawned actor will not immediately call [[A_SkullAttack]] as it normally would.
+:*{{c|'''PAF_AIMFACING'''}} — The calling actor will not call [[A_FaceTarget]] before spawning the monster.
+:*{{c|'''PAF_NOTARGET'''}} — The spawned actor will not adopt the calling actor's target as its own.
+*{{c|int '''limit'''}}
+:Spawning the given actor will fail if there are already that many on the map. 0 is unlimited. If {{c|[[Compatibility options#compat_limitpain|compat_limitpain]]}} is on and this is less than 0, the limit is set to 21, otherwise it is unlimited. Default is -1.
+
+== Examples ==
+This example is taken straight from Doom's Pain Elemental.
+
+ Missile:
+    PAIN DE 5 [[A_FaceTarget]];
+    PAIN F 5 bright [[A_FaceTarget]];
+    PAIN F 0 bright '''A_PainAttack''';    {{comment|See {{Class|LostSoul}}}}
+    goto See;
+
+== [[ZScript]] definition ==
+{{ZScriptDefinitionNote|actors/doom/painelemental.zs}}
+These are the functions defined for the Pain Elemental. As described earlier, they're just wrappers:
+&lt;syntaxhighlight lang="csharp"&gt;
+	void A_PainAttack(class&lt;Actor&gt; spawntype = "LostSoul", double addangle = 0, int flags = 0, int limit = -1)
+	{
+		if (target)
+		{
+			A_FaceTarget();
+			A_PainShootSkull(spawntype, angle + addangle, flags, limit);
+		}
+	}
+	
+	void A_DualPainAttack(class&lt;Actor&gt; spawntype = "LostSoul")
+	{
+		if (target)
+		{
+			A_FaceTarget();
+			A_PainShootSkull(spawntype, angle + 45);
+			A_PainShootSkull(spawntype, angle - 45);
+		}
+	}&lt;/syntaxhighlight&gt;
+
+The actual function that performs spawning is this:
+&lt;syntaxhighlight lang="csharp"&gt;
+	void A_PainShootSkull(Class&lt;Actor&gt; spawntype, double angle, int flags = 0, int limit = -1)
+	{
+		// Don't spawn if we get massacred.
+		if (DamageType == 'Massacre') return;
+
+		if (spawntype == null) spawntype = "LostSoul";
+
+		// [RH] check to make sure it's not too close to the ceiling
+		if (pos.z + height + 8 &gt; ceilingz)
+		{
+			if (bFloat)
+			{
+				Vel.Z -= 2;
+				bInFloat = true;
+				bVFriction = true;
+			}
+			return;
+		}
+
+		// [RH] make this optional
+		if (limit &lt; 0 &amp;&amp; (Level.compatflags &amp; COMPATF_LIMITPAIN))
+			limit = 21;
+
+		if (limit &gt; 0)
+		{
+			// count total number of skulls currently on the level
+			// if there are already 21 skulls on the level, don't spit another one
+			int count = limit;
+			ThinkerIterator it = ThinkerIterator.Create(spawntype);
+			Thinker othink;
+
+			while ( (othink = it.Next ()) )
+			{
+				if (--count == 0)
+					return;
+			}
+		}
+
+		// okay, there's room for another one
+		double otherradius = GetDefaultByType(spawntype).radius;
+		double prestep = 4 + (radius + otherradius) * 1.5;
+
+		Vector2 move = AngleToVector(angle, prestep);
+		Vector3 spawnpos = pos + (0,0,8);
+		Vector3 destpos = spawnpos + move;
+
+		Actor other = Spawn(spawntype, spawnpos, ALLOW_REPLACE);
+
+		// Now check if the spawn is legal. Unlike Boom's hopeless attempt at fixing it, let's do it the same way
+		// P_XYMovement solves the line skipping: Spawn the Lost Soul near the PE's center and then use multiple
+		// smaller steps to get it to its intended position. This will also result in proper clipping, but
+		// it will avoid all the problems of the Boom method, which checked too many lines that weren't even touched
+		// and despite some adjustments never worked with portals.
+
+		if (other != null)
+		{
+			double maxmove = other.radius - 1;
+
+			if (maxmove &lt;= 0) maxmove = 16;
+
+			double xspeed = abs(move.X);
+			double yspeed = abs(move.Y);
+
+			int steps = 1;
+
+			if (xspeed &gt; yspeed)
+			{
+				if (xspeed &gt; maxmove)
+				{
+					steps = int(1 + xspeed / maxmove);
+				}
+			}
+			else
+			{
+				if (yspeed &gt; maxmove)
+				{
+					steps = int(1 + yspeed / maxmove);
+				}
+			}
+
+			Vector2 stepmove = move / steps;
+			bool savedsolid = bSolid;
+			bool savednoteleport = other.bNoTeleport;
+			
+			// make the PE nonsolid for the check and the LS non-teleporting so that P_TryMove doesn't do unwanted things.
+			bSolid = false;
+			other.bNoTeleport = true;
+			for (int i = 0; i &lt; steps; i++)
+			{
+				Vector2 ptry = other.pos.xy + stepmove;
+				double oldangle = other.angle;
+				if (!other.TryMove(ptry, 0))
+				{
+					// kill it immediately
+					other.ClearCounters();
+					other.DamageMobj(self, self, TELEFRAG_DAMAGE, 'None');
+					bSolid = savedsolid;
+					other.bNoTeleport = savednoteleport;
+					return;
+				}
+
+				if (other.pos.xy != ptry)
+				{
+					// If the new position does not match the desired position, the player
+					// must have gone through a portal.
+					// For that we need to adjust the movement vector for the following steps.
+					double anglediff = deltaangle(oldangle, other.angle);
+
+					if (anglediff != 0)
+					{
+						stepmove = RotateVector(stepmove, anglediff);
+					}
+				}
+
+			}
+			bSolid = savedsolid;
+			other.bNoTeleport = savednoteleport;
+
+			// [RH] Lost souls hate the same things as their pain elementals
+			other.CopyFriendliness (self, !(flags &amp; PAF_NOTARGET));
+
+			if (!(flags &amp; PAF_NOSKULLATTACK))
+			{
+				other.A_SkullAttack();
+			}
+		}
+	}&lt;/syntaxhighlight&gt;</text>
+    <sha1>7pxvab4yv3f6em2jyp9bew44a53gos5</sha1>
+  </revision>
+</page>

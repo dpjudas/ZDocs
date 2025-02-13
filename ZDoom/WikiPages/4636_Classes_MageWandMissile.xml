@@ -1,0 +1,54 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>Classes:MageWandMissile</title>
+  <ns>0</ns>
+  <id>4636</id>
+  <revision>
+    <id>34794</id>
+    <parentid>24463</parentid>
+    <timestamp>2012-10-27T14:25:33Z</timestamp>
+    <contributor>
+      <username>Blue Shadow</username>
+      <id>2021</id>
+    </contributor>
+    <comment>/* DECORATE definition */ Updated.</comment>
+    <origin>34794</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="819" sha1="ijp3ote5foj5nfezkm9krxm2byx7jkh" xml:space="preserve">{{Actor|
+| type = Explosive
+| name = Sapphire wand shot
+| class = MageWandMissile
+| game = Hexen
+}}[[Classes]]: [[Classes:FastProjectile|FastProjectile]]&amp;rarr;&lt;u&gt;MageWandMissile&lt;/u&gt;&lt;br&gt;
+{{desc}}
+==== [[DECORATE]] definition ====
+ ACTOR &lt;u&gt;MageWandMissile&lt;/u&gt; : {{Class|FastProjectile}}
+ {
+   {{Property|Speed}} 184
+   {{Property|Radius}} 12
+   {{Property|Height}} 8
+   {{Property|Damage}} 2
+   +{{Flag|RIPPER}}
+   +{{Flag|CANNOTPUSH}}
+   +{{Flag|NODAMAGETHRUST}}
+   +{{Flag|SPAWNSOUNDSOURCE}}
+   {{Property|MissileType}} "{{Class|MageWandSmoke}}"
+   {{Property|SeeSound}} "MageWandFire"
+   {{Property|Obituary}} "$OB_MPMWEAPWAND"
+   States
+   {
+   Spawn:
+     MWND CD 4 Bright
+     Loop
+   Death:
+     MWND E 4 Bright
+     MWND F 3 Bright
+     MWND G 4 Bright
+     MWND H 3 Bright
+     MWND I 4 Bright
+     Stop
+   }
+ }</text>
+    <sha1>ijp3ote5foj5nfezkm9krxm2byx7jkh</sha1>
+  </revision>
+</page>

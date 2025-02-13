@@ -1,0 +1,57 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>Classes:ExplosiveBarrel2</title>
+  <ns>0</ns>
+  <id>2985</id>
+  <revision>
+    <id>40037</id>
+    <parentid>37199</parentid>
+    <timestamp>2015-05-22T05:56:22Z</timestamp>
+    <contributor>
+      <username>Blue Shadow</username>
+      <id>2021</id>
+    </contributor>
+    <minor />
+    <comment>/* DECORATE definition */ Updated</comment>
+    <origin>40037</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="783" sha1="f53wqqv965jejet7tttvb3atryvzpma" xml:space="preserve">{{Actor|
+| type = Hazard
+| name = Explosive barrel
+| class = ExplosiveBarrel2
+| game = Strife
+| doomednum = 94
+| convid = 204
+}}[[Classes]]: &lt;u&gt;ExplosiveBarrel2&lt;/u&gt;&lt;br&gt;
+An explosive barrel, like Doom's.
+==== [[DECORATE]] definition ====
+ ACTOR &lt;u&gt;ExplosiveBarrel2&lt;/u&gt;
+ {
+   {{Property|Health}} 30
+   {{Property|Radius}} 10
+   {{Property|Height}} 32
+   +{{Flag|SOLID}}
+   +{{Flag|SHOOTABLE}}
+   +{{Flag|NOBLOOD}}
+   +{{Flag|OLDRADIUSDMG}}
+   {{Property|DeathSound}} "world/barrelx"
+   +{{Flag|INCOMBAT}}
+   States
+   {
+   Spawn:
+     BART A -1
+     Stop
+   Death:
+     BART B 2 Bright [[A_Scream]]
+     BART CD 2 Bright
+     BART E 2 Bright [[A_NoBlocking]]
+     BART F 2 Bright [[A_Explode]](64, 64, 1, 1)
+     BART GHIJ 2 Bright
+     BART K 3 Bright
+     BART L -1
+     Stop
+   }
+ }</text>
+    <sha1>f53wqqv965jejet7tttvb3atryvzpma</sha1>
+  </revision>
+</page>

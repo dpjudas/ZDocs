@@ -1,0 +1,93 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>PolyObjects</title>
+  <ns>0</ns>
+  <id>767</id>
+  <revision>
+    <id>53296</id>
+    <parentid>53050</parentid>
+    <timestamp>2024-10-12T09:18:29Z</timestamp>
+    <contributor>
+      <username>Blue Shadow</username>
+      <id>2021</id>
+    </contributor>
+    <minor />
+    <comment>remove {{new}}</comment>
+    <origin>53296</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="7427" sha1="kxofbuxfd67d8b8uj0xazyalwekv705" xml:space="preserve">{{doomwiki|link=Polyobject|name=polyobject}}Since the use of a precalculated {{dw|BSP}} for rendering forces vertical level geometry to remain constant, it is impossible to move a structure on the X and Y axes in [[vanilla Doom]]. ZDoom addresses this problem by providing '''PolyObjects'''. A PolyObject typically consists of a group of connected one-sided lines contained in a single subsector.
+
+==Creating simple polyobjects==
+
+Making a polyobject is fairly simple, though it may seem hard at first, once you get the hang of it you will be able to crank them out in no time.
+
+{|
+|[[Image:Poly01.png|right]]||First we need the actual map.  We will make a sliding door polyobject (arguably the easiest kind), so we'll need two rooms with ceiling heights of 192 and a middle corridor (which is where the polys will appear) with a ceiling of 128.  All floors are at height 0.
+|-
+|[[Image:Poly02.png|right]]||Next you need to construct the polyobjects. You should place them in a 'dummy' sector or another inaccessible place because the space they occupy on the map will usually still be considered blocked out, resulting in unwanted situations such as a swinging door that leaves an invisible barrier when opened. Furthermore, the holding sectors will be automatically hidden on the [[automap]].
+
+Note that the polyobjects are 'solid' columns of void composed of only 1-sided linedefs.
+
+The lines marked in yellow should be &lt;tt&gt;[[Polyobj_StartLine]]&lt;/tt&gt; which takes three arguments, the polyobject number, mirrored polyobject and the sound it makes while moving (defined in [[SNDSEQ]]).  For the top poly you should use polyobject number 0, and for the bottom you should use number 1 (though any number would do).  Since these polys will mirror one another (their actions will be the same, only in reverse, poly1 will open to the right and poly0 will open to the left for example) you should place the opposite poly number in the second field.  Sound isn't important to us now, so just leave it zero.
+|-
+|[[Image:Poly03.png|right]]||Now you have to place polyobject anchors and start spots.  These will determine where the polyobjects actually get placed on the map.  First place the anchors, which have DoomEdNum 9300.  These should be placed within the polyobjects as you have them drawn on the map (or close to the edge), like in the image.  The only important thing about the anchors is their angle, which should correspond to the polyobj number.  So the anchor at the top has angle 0 and the anchor under it has an angle of 1.
+|-
+|[[Image:Poly04.png|right]]||Next we place the start spots.  These are placed in a similar way to the anchors; in a place where you want the polyobject to appear in game relative to the anchor.  So in this case we placed the anchor in the center of the poly, so we want the start spot placed in the center of where we want the poly to appear, as shown in the image.  Start spots have the DoomEdNum 9301, 9302 or 9303:
+:'''9301:''' Normal polyobject, it aborts its movement if it collides with an actor.
+:'''9302:''' Crushing polyobject, it continues to move and actors that get in the way are crushed.
+:'''9303:''' Harmful polyobject, it deals damage on touch even before the actor is crushed.
+|-
+|[[Image:poly05.png|right]]||Here we have a completed setup. Note that since ZDoom 2.5.0, you can have complex geometry for polyobjects and you can make them move anywhere you want in the map. Previous versions had strict limitations on what a polyobject could be and do. This example being already old, it shows a very simple setup.
+|-
+|[[Image:Poly06.png|right]]||Finally, you probably want the polyobjects to actually open.  This is quite simple, just give the wide sides of the polyobjects the &lt;tt&gt;[[Polyobj_DoorSlide]]&lt;/tt&gt; special, with the arguments 0, 32, 128, 64, 105 which are polyobj number, speed of movement, [[angle]], distance to move and delay before the polys shift back to their original position (in [[tic]]s, 105 is 3 seconds (35 tics per second)).  You need not worry about polyobject 1 in this case because it will mirror whatever polyobject 0 does.  That's it, you're all done!
+|}
+
+* [[:Image:Polyexample.zip|Download the example wad (729 bytes)]]
+
+== Creating advanced polyobjects==
+While the simple polyobjects explained above are enough in most cases, sometimes they are not enough. What if you want a see-through polyobject, for example? You will then need to use two-sided linedefs. However, the engine cannot create the polyobject automatically in these cases, so you need to use [[Polyobj_ExplicitLine]] on each line of the polyobject.
+
+# Build your polyobject in a holding sector as before, but make them into a self-referencing sector (both sides of the polyobject will belong to the holding sector).
+# Each line of the polyobject is marked with Polyobj_ExplicitLine. For rendering order, you can use the value 1 on all of them, since this parameter is a leftover from ''[[Hexen]]'''s original implementation.
+# If you want some of the lines of the polyobject to be active, you need to give them a lineid. In [[Hexen format]], this is done with one of the Polyobj_ExplicitLine parameters; in [[UDMF]] it is one of the [[linedef]] properties. You will then need to have an [[ACS]] [[OPEN]] script calling [[SetLineSpecial]]) on the chosen lineid to give it a different special.
+# Since the polyobject is now two-sided, make sure it actually has a middle texture!
+# The holding sector should have the same floor and ceiling heights as the destination sector; not because the engine requires it, but because it will make it much easier for the modder to set the vertical offsets of the polyobject textures. Use the "lower unpegged" flag if you want the polyobject to appear on the ground.
+# Give the polyobject lines the "[[3D middle texture]]" flag to give it finite vertical collision box. Note that the polyobject's holding sector will be used as a reference for checking if there is room above or below it, not the sector it is actually in!
+
+== Customizing the damage of polyobjects ==
+[[Image:Polyobject Damage.png|500px|right]]
+To change the exact damage that crushing and hurts-to-touch type polyobjects do every time they touch an actor, you must (in [[Ultimate Doom Builder]] or [[Doom_Builder#GZDB-Bugfix|GZDoom Builder (Bugfix)]]) go to the anchor things' Action/Tag/Misc tab, and change the anchors' health value, like how polyobjects are linked together using the start spot and anchors' angle.
+
+The default health of 1 means that the polyobject uses its default damage of 3. Any value above 1 instantly kills anything that gets in the way. And negative values set the exact damage that the polyobject does with every impact. For example, a health of -10 will do 10 damage per hit instead of 3.
+
+==See also==
+* [[Tutorials]]
+
+For specials related to PolyObjects, see the following topics:
+* [[Polyobj_DoorSlide]]
+* [[Polyobj_DoorSwing]]
+* [[Polyobj_ExplicitLine]]
+* [[Polyobj_Move]]
+* [[Polyobj_MoveTimes8]]
+* [[Polyobj_MoveTo]]
+* [[Polyobj_MoveToSpot]]
+* [[Polyobj_OR_Move]]
+* [[Polyobj_OR_MoveTimes8]]
+* [[Polyobj_OR_MoveTo]]
+* [[Polyobj_OR_MoveToSpot]]
+* [[Polyobj_OR_RotateLeft]]
+* [[Polyobj_OR_RotateRight]]
+* [[Polyobj_RotateLeft]]
+* [[Polyobj_RotateRight]]
+* [[Polyobj_StartLine]]
+* [[Polyobj_Stop]]
+* [[GetPolyobjX]]
+* [[GetPolyobjY]]
+
+For scripting with PolyObjects:
+* [[PolyWait]]
+
+[[Category:Features]][[Category:Glossary]][[Category:Guides]]</text>
+    <sha1>kxofbuxfd67d8b8uj0xazyalwekv705</sha1>
+  </revision>
+</page>

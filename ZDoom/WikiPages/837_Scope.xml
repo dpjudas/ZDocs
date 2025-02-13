@@ -1,0 +1,128 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>Scope</title>
+  <ns>0</ns>
+  <id>837</id>
+  <revision>
+    <id>40398</id>
+    <parentid>38705</parentid>
+    <timestamp>2015-09-19T03:00:42Z</timestamp>
+    <contributor>
+      <username>Blzut3</username>
+      <id>413</id>
+    </contributor>
+    <minor />
+    <comment>Provided SVCT is working, you can have more than 20 script variables.</comment>
+    <origin>40398</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="4095" sha1="i8z7enf2xfwwkwk5k4idivzzku50wcg" xml:space="preserve">Variable scope is necessary for editing ACS, and it's also a fundamental thing you should know if you plan on programming in pretty much any language (including ACS) at some point.  There are four kinds of variables in ACS, and thus four kinds of scope.
+
+;Script scope:Any (non-static) variables declared within the body of a script have script scope.  That is they cannot be accessed by any scripts or functions outside of the script in which they are defined. Example:
+ Script "Example" (void)
+ {
+     int script_scope_variable;
+ }
+
+;Map scope:These variables are declared outside of scripts and can be accessed or modified by any script or function defined within the same [[BEHAVIOR]] lump or in any currently imported library.  Alternatively, they can be declared as static variables in a script. You can have maximum of 128 map-scope variables in a script. Examples:
+ int map_scope_variable_1;
+ 
+ Script "Example" (void)
+ {
+     static int map_scope_variable_2;
+ } 
+
+;World scope:These variables have scope within a [[hub]] of maps (à la ''[[Hexen]]''), so that two or more maps within the same hub can access and alter these variables. They are reset to 0 when entering a new hub. They are given an index number with which they are identified: they have to be redeclared in each map's source code, and it is the index, not the name, which defines their common identity. The index limit is 1 through 256, thus you can have maximum of 256 world-scope variables at any given time. Example:
+ world int 1:world_scope_var_1;
+:You could technically have "int 1:MyVar" in one script and "int 1:YourVar" in another script and they would actually be the same variable.  This practice is not recommended, however, as it could easily lead to confusion when reading the script's source.
+
+;Global scope:This type of variable is accessible to all scripts and functions from any map or [[library]] and are only reset when exiting or starting a new game. They are similar to world scope variable, and likewise need to be given an index number, however they are not reset to 0 when entering a new hub, and the index limit is 64. Example:
+ global int 1:global_scope_var_1;
+:Note that global and world scope variables are stored separately, so a global variable and a world variable can share the same index number without risk of confusion.
+
+==Examples==
+These are three map scripts from an imaginary pwad which has three maps, E1M1, E1M2 and E2M1.  E1M1 and E1M2 are hubbed together, but E2M1 is a stand alone map.
+
+-----
+
+&lt;pre&gt;
+//scripts for E1M1 of imaginary pwad
+#include "zcommon.acs"
+
+world int 1:gotkey; //world scope
+global int 2:dooropen; //global scope
+int counter = 0; //map scope
+
+script 1 (void)
+{
+   int q = 0; //script scope
+   while(q &lt;= 10)
+   {
+      print(d:q);
+      delay(35);
+      counter = addTen(counter);
+      q++;
+   }
+
+   counter++;
+
+   if(gotkey == 1)
+      counter = addTen(counter);
+
+   if(dooropen == 1)
+      gotkey = 0;
+}
+
+function int addTen(int z)
+{
+   int q = 10 + counter;
+   return z + q;
+}
+&lt;/pre&gt;
+
+-----
+
+&lt;pre&gt;
+//scripts for E1M2 of imaginary pwad
+#include "zcommon.acs"
+
+world int 1:gotkey; //world scope
+global int 2:dooropen; //global scope
+int keycheck = 0; //map scope
+
+script 100 (void)
+{
+   if(gotkey == 0)
+   {
+      keycheck = checkinventory("RedSkull");
+      if(keycheck == 1)
+         gotkey = 1;
+   }
+}
+&lt;/pre&gt;
+
+-----
+
+&lt;pre&gt;
+//scripts for E2M1 of imaginary pwad
+#include "zcommon.acs"
+
+world int 2:shotgun; //world scope
+global int 2:dooropen; //global scope
+
+script 200 (void)
+{
+   if(dooropen == 1)
+   {
+      shotgun = 1;
+      giveinventory("Shotgun", 1);
+   }
+}
+&lt;/pre&gt;
+
+-----
+
+Note that 'dooropen' can be accessed by all three maps (though it needs to be defined so [[ACC]] knows about it), whereas gotkey can be accessed by E1M1 and E1M2 but not E2M1.  Also note that in E1M1 there are two different variables named q, but what happens to q in one script has no effect on q in the other. When function addTen is called and it makes q into 10 + the value of counter, the q in script 1 remains unchanged.
+[[Category:ACS guides]][[Category:Glossary]]</text>
+    <sha1>i8z7enf2xfwwkwk5k4idivzzku50wcg</sha1>
+  </revision>
+</page>

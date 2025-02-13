@@ -1,0 +1,42 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>SetSectorGlow</title>
+  <ns>0</ns>
+  <id>9063</id>
+  <revision>
+    <id>45167</id>
+    <parentid>44503</parentid>
+    <timestamp>2017-05-02T14:53:45Z</timestamp>
+    <contributor>
+      <username>Blue Shadow</username>
+      <id>2021</id>
+    </contributor>
+    <minor />
+    <comment>Remove {{new}}</comment>
+    <origin>45167</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="979" sha1="951o3nbl44uegase6eri0b11qhcti4t" xml:space="preserve">void '''SetSectorGlow''' (int ''tag'', bool ''plane'', int ''red'', int ''green'', int ''blue'', int ''height'')
+{{Gzdoomfeature}}
+== Usage ==
+Applies a [[GLDEFS#Glowing_flats|glow effect]] on the floor or ceiling of the tagged [[sector]].
+
+=== Parameters ===
+* ''tag'': the [[tag]] of the sector on which to apply the effect.
+* ''plane'': if {{c|true}}, the glow is applied on the ceiling, otherwise (i.e. if {{c|false}}) it is applied on the floor.
+* ''red'': the red compound of the color. If this is set to -1, the glow effect is removed (the other color compounds are ignored).
+* ''green'': the green compound of the color.
+* ''blue'': the blue compound of the color.
+* ''height'': the height of the glow.
+
+== Examples ==
+This script applies a red glow on the floor and a blue one on the ceiling.
+ script "Init" {{SType|Open}}
+ {
+     [[SetSectorGlow]](1, false, 255, 0, 0, 64);
+     [[SetSectorGlow]](1, true, 0, 0, 255, 64);
+ }
+
+[[category:ACS Level alteration functions]]</text>
+    <sha1>951o3nbl44uegase6eri0b11qhcti4t</sha1>
+  </revision>
+</page>

@@ -1,0 +1,138 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>Intermission script</title>
+  <ns>0</ns>
+  <id>2747</id>
+  <revision>
+    <id>49624</id>
+    <parentid>49391</parentid>
+    <timestamp>2022-10-22T06:25:06Z</timestamp>
+    <contributor>
+      <username>Blue Shadow</username>
+      <id>2021</id>
+    </contributor>
+    <minor />
+    <comment>remove {{new}} for 4.8.1</comment>
+    <origin>49624</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="5910" sha1="fdbjpmnqfz8bevgs0ubn4nxoc08vyr7" xml:space="preserve">[[File:IntermissionScript.png|thumb|A custom intermission screen created for [[The Ultimate Doom|Thy Flesh Consumed]].]]'''Intermission scripts''' are very simple stand-alone definition files that specialize the backdrops used for the [[intermission]] screens between levels, i.e. 'Level finished' and 'Entering level'. The format was primarily designed to get rid of a lot of awful special coding in the intermission screen code. The idea was to enable defining the intermission screens for an entire episode in one file.
+
+Intermission scripts are specified by the '''enterpic''' and '''exitpic''' [[MAPINFO]] commands.
+
+==Commands==
+The following commands are supported:
+
+:*'''NOAUTOSTARTMAP'''
+::The player has to manually end the intermission and start the new map. Use this if you want the 'entering' screen to be active longer than a few seconds.
+
+:*'''BACKGROUND''' picture
+::A graphics patch or texture that is used as the background. The background is automatically tiled if it is smaller in size than 128x128. If it is of that size or bigger, then it is tiled if the TILEBACKGROUND command is present.
+::If this is a patch all coordinates specified here will be relative to the texture, otherwise it will be relative to a 320x200 screen. If no background is specified the screen will be cleared with black.
+
+:*'''TILEBACKGROUND'''
+::Tiles the background graphic across the screen. If this command is not present, the background is stretched to fill the screen if its size is bigger than or equal to 128x128, otherwise it is tiled, still.
+
+:*'''SPLAT''' picture
+::Defines the graphic with which all visited levels will be marked. Named 'splat' for Doom's original graphic used for this purpose.
+
+:*'''POINTER''' picture1 picture2
+::Defines the pointer which will be used to point to the next level the player is about to enter. There are 2 graphics because normally pointers have their origin at one side so this way there is an alternative if one pointer would be off screen. Doom originally also uses 2 pointer graphics.
+
+:*'''SPOTS'''&lt;br&gt;{&lt;br&gt;''list''&lt;br&gt;}&lt;br&gt;
+::Defines a list of coordinate spots where the splats and pointers should be drawn to. The list consists of entries of the format
+::''mapname'' xpos ypos.&lt;br&gt;
+
+::'''''Note:''''' Spots will only appear if placed below the graphics at the top of the screen (eg. "Now entering", "Finished") whether or not they will interfere with those graphics.
+
+:*'''ANIMATION''' x y speed [ONCE] &lt;br&gt;{&lt;br&gt;''piclist''&lt;br&gt;}&lt;br&gt;
+::Defines an animation that is played on the backdrop. You have to specify the x- and y- position and an animation speed. Animation speed is always randomized with the given speed as the maximum time in 1/35 of a second. The list is just a list of graphics patches. There can be 20 patches per animation at most.
+
+::Adding '''ONCE''' after the speed will stop the animation on the last frame instead of restarting. This is used by E2M9: Fortress of Mystery when the player enters the level.
+
+:*'''PIC''' xpos ypos picname
+::Displays a single patch at the given coordinate.
+
+:*'''IFENTERING''' mapname command
+::Executes the following command only if the player enters the specified map. This condition is only true on the 'Entering level' screen. The only supported commands are '''ANIMATION''' and '''PIC'''.
+
+:*'''IFNOTENTERING''' mapname command
+::Executes the following command only if the player does not enter the specified map. This condition can only be false on the 'Entering level' screen.  The only supported commands are '''ANIMATION''' and '''PIC'''.
+
+:*'''IFLEAVING''' mapname command
+::Executes the following command only if the player is leaving the specified map. This condition can only be true on the 'Level finished' screen. The only supported commands are '''ANIMATION''' and '''PIC'''.
+
+:*'''IFNOTLEAVING''' mapname command
+::Executes the following command only if the player is leaving the specified map. This condition can only be false on the 'Level finished' screen. The only supported commands are '''ANIMATION''' and '''PIC'''.
+
+:*'''IFVISITED''' mapname command
+::Executes the following command only if the player has already visited the specified map. This can be used to draw special graphics if the player has found a secret level. The only supported commands are '''ANIMATION''' and '''PIC'''.
+
+:*'''IFNOTVISITED''' mapname command
+::Executes the following command only if the player has not already visited the specified map. The only supported commands are '''ANIMATION''' and '''PIC'''.
+
+:*'''IFTRAVELLING''' mapname1 mapname2 command
+::Executes the following command only if the player is right between the two specified maps. The only supported commands are '''ANIMATION''' and '''PIC'''.
+
+:*'''IFNOTTRAVELLING''' mapname1 mapname2 command
+::Executes the following command only if the player is not between the two specified maps. The only supported commands are '''ANIMATION''' and '''PIC'''.
+
+:*'''SCREENSIZE''' width height
+::Sets a virtual screen size to draw the animated graphics and splats on.
+
+==Example==
+This example shows custom entry for MAPINFO which points to an intermission script (taken from thyinterpic.wad)
+ map E4M1 lookup "HUSTR_E4M1"
+ {
+ 	levelnum = 31
+ 	titlepatch = "WILV30"
+ 	next = "E4M2"
+ 	secretnext = "E4M9"
+ 	sky1 = "SKY4"
+ 	cluster = 4
+ 	music = "$MUSIC_E3M4"
+ 	exitpic = "$IN_E4"
+ 	enterpic = "$IN_E4"
+ }
+And this example is the script itself, placed in a lump named {{c|IN_E4}}:
+ NoAutoStartMap
+ Background wimap3
+ Splat wisplat
+ Pointer wiurh0 wiurh1
+ 
+ Spots
+ {
+ 	E4M1 101 177
+ 	E4M2 183 148
+ 	E4M3 172 97
+ 	E4M4 78 85
+ 	E4M5 251 85
+ 	E4M6 33 24
+ 	E4M7 260 47
+ 	E4M8 191 24
+ 	E4M9 88 58
+ }
+ 
+ Animation 72 107 9
+ {
+ 	WIA30000
+ 	WIA30001
+ 	WIA30002
+ }
+ 
+ Animation 259 55 17
+ {
+ 	WIA30100
+ 	WIA30101
+ 	WIA30102
+ 	WIA30103
+ 	WIA30102
+ 	WIA30101
+ }
+ 
+ IfEntering E4M8 Pic 198 31 WIA30200
+ IfLeaving E4M7 Pic 198 31 WIA30200
+
+[[Category:ZDoom special lumps]]</text>
+    <sha1>fdbjpmnqfz8bevgs0ubn4nxoc08vyr7</sha1>
+  </revision>
+</page>

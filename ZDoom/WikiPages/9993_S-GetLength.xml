@@ -1,0 +1,91 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>S GetLength</title>
+  <ns>0</ns>
+  <id>9993</id>
+  <revision>
+    <id>53685</id>
+    <parentid>53679</parentid>
+    <timestamp>2024-11-12T12:23:01Z</timestamp>
+    <contributor>
+      <username>Jekyll Grim Payne</username>
+      <id>2175</id>
+    </contributor>
+    <origin>53685</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="1898" sha1="i2h2vdv1eivinj421x7iep5ij64arpe" xml:space="preserve">{{DISPLAYTITLE:S_GetLength}}
+
+{{c|native static float '''S_GetLength'''(Sound ''sound_id'')}}
+
+== Usage ==
+Returns the length of a given sound in seconds as a float-point number. Note, this calculation may be somewhat imprecise.
+
+This function can be called in [[ZScript]] in any context and scope.
+
+=== Parameters ===
+*{{c|Sound '''sound_id'''}}
+:The name of a sound as defined in [[SNDINFO]].
+
+=== Return value ===
+*float — the length of the sound in seconds.
+
+== Examples ==
+This is a basic example of how an NPC actor could be created with a custom function that makes them talk. Once the sound is started, the {{c|StartTalking}} function calculates how long it is and starts counting down a custom timer, so the NPC will stop its Talk animation when the timer runs out. (This is an example, you will have to provide your own sprites):
+
+&lt;syntaxhighlight lang="csharp"&gt;
+class TalkingNPC : Actor
+{
+	// Custom timer for how long this NPC
+	// should talk:
+	int talkTime;
+
+	// Custom function that can be called on this
+	// NPC to make them play a sound (presumably,
+	// a voice line):
+	void StartTalking(Sound snd)
+	{
+		// Calculate the duration of the sound and convert it
+		// to tics by multiplying it by TICRATE:
+		talkTime = int(ceil(S_GetLength(snd) * TICRATE));
+		A_StartSound(snd, CHAN_VOICE); // play the sound
+		SetStateLabel("Talk"); // begin talking animation
+	}
+
+	// Count the talk timer down:
+	override void Tick()
+	{
+		Super.Tick();
+		if (talkTime &gt; 0)
+		{
+			talkTime--;
+		}
+	}
+
+	States {
+	Spawn:
+		TGUY A -1;
+		stop;
+	Talk:
+		TGUY BCDEF 1;
+		#### # 0
+		{
+			// If the talking time has run out,
+			// return to Spawn:
+			if (talkTime &lt;= 0)
+			{
+				return spawnstate;
+			}
+			// Otherwise continue talking:
+			return ResolveState(null);
+		}
+		loop;
+	}
+}&lt;/syntaxhighlight&gt;
+
+(See also [[ResolveState]] and [[A_StartSound]])
+
+[[Category:ZScript]]
+[[Category:ZScript sound functions]]</text>
+    <sha1>i2h2vdv1eivinj421x7iep5ij64arpe</sha1>
+  </revision>
+</page>

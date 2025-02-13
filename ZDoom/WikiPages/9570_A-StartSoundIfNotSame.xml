@@ -1,0 +1,57 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>A StartSoundIfNotSame</title>
+  <ns>0</ns>
+  <id>9570</id>
+  <revision>
+    <id>53846</id>
+    <parentid>53845</parentid>
+    <timestamp>2024-11-23T14:35:16Z</timestamp>
+    <contributor>
+      <username>Jekyll Grim Payne</username>
+      <id>2175</id>
+    </contributor>
+    <origin>53846</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="2774" sha1="kwnzqgvcnocawl27smphi8oh7jq0209" xml:space="preserve">__NOTOC__{{codepointer|Sound}}
+
+'''{{class|Actor}}'''
+
+{{c|native clearscope void '''A_StartSoundIfNotSame'''(sound ''whattoplay'', sound ''checkagainst', int slot {{=}} ''CHAN_BODY'', int ''flags'' {{=}} 0, double ''volume'' {{=}} 1.0, double ''attenuation'' {{=}} ATTN_NORM, double ''pitch'' {{=}} 0.0, double ''startTime'' {{=}} 0.0)}}
+
+== Usage ==
+Plays the specified sound only if it is different from the one to check against.
+
+The two sounds are considered different if they have different names. For [[SNDINFO#alias|aliases]], the function checks the name of the sound which is referenced by the alias in order to make a decision. A [[SNDINFO#random|random sound]]'s assigned set of sounds is of no consequence, as the function only checks the sound's name.
+
+=== Parameters ===
+*{{c|Sound '''whattoplay'''}}
+:The desired sound to play, as defined in [[SNDINFO]].
+*{{c|Sound '''checkagainst'''}}
+:The sound to compare to, as defined in [[SNDINFO]]. If this sound is playing, ''whattoplay'' sound will not be played.
+*{{c|int '''slot'''}}
+:The sound slot used for the sound. Unlike {{c|[[A_PlaySound]]}}, the slot is not limited to predefined slots and can be any positive number other than 0 (which enables special behavior). The predefined slots are:
+{{:StartSound channels}}
+*{{c|int '''flags'''}}
+{{: StartSound flags}}
+*double '''volume'''
+:The volume of the sound, which ranges from 0 to 1.0. Default 1.0.
+*{{c|double '''attenuation'''}}
+:This is a positive value that specifies how quickly the sound fades with distance from its source. The exact formula for attenuation is: '''attenuation = default max hearable distance / desired max hearable distance'''. So, for example, in Doom the default max hearable distance is 1200; with attenuation of 20 the max hearable distance for the sound will be 60 map units (1200 / 20 = 60). This argument also accepts the following predefined constants: 
+:*'''ATTN_NONE''' — Plays the sound globally at the specified volume, disregarding distance. 
+:*'''ATTN_NORM''' — Uses the {{c|close_dist}} and {{c|clipping_dist}} fields defined in the sound definition. Default.
+:*'''ATTN_IDLE''' — Uses Doom's normal default sound attenuation behavior. 
+:*'''ATTN_STATIC''' — Fades quickly (inaudible from 512 units).
+*{{c|double '''pitch'''}}
+:The sound pitch to play the sound with. Default is 0, which means the engine uses whatever pitch shift (range) that is defined in SNDINFO, if any. For non-zero values anything lower than 1.0 will slow down the sound, while higher values speed it up.
+*{{c|double '''startTime'''}}
+:Sets how much of the sound to skip when starting. The value can be anywhere between 0 and 1.0, translating to 0% to 100%. Default is 0.
+
+== Examples ==
+{{noexamples}}
+
+== See also ==
+*[[A_StartSound]]</text>
+    <sha1>kwnzqgvcnocawl27smphi8oh7jq0209</sha1>
+  </revision>
+</page>

@@ -1,0 +1,135 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>ValidateInvFirst</title>
+  <ns>0</ns>
+  <id>9987</id>
+  <revision>
+    <id>53597</id>
+    <parentid>53566</parentid>
+    <timestamp>2024-11-08T11:30:06Z</timestamp>
+    <contributor>
+      <username>Jekyll Grim Payne</username>
+      <id>2175</id>
+    </contributor>
+    <comment>/* Usage */</comment>
+    <origin>53597</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="3256" sha1="82ala0u704i9ebn7u91wq03f2nk4mf0" xml:space="preserve">
+'''{{class|BaseStatusBar}}'''
+
+{{c|Inventory '''ValidateInvFirst''' (int ''numVisible'') const}}
+
+== Usage ==
+Obtains a pointer to the first {{class|Inventory}} item that is guaranteed to be at the beginning of the linked list containing all items in an actor. This can be used to draw an inventory bar in a custom HUD or elsewhere in UI scope. 
+
+The [[DrawInventoryBar (ZScript)|'''DrawInventoryBar''']] defined in {{class|BaseStatusBar}} calls this function as well to obtain the correct first item.
+
+=== Return values ===
+* Inventory — a pointer to the inventory item that the iteration should begin with. If no valid item is found, returns &lt;code&gt;null&lt;/code&gt;.
+
+== [[ZScript]] definition ==
+{{ZScriptDefinitionNote|ui/statusbar/statusbar.zs#L256}}
+&lt;syntaxhighlight lang="cs"&gt;
+	Inventory ValidateInvFirst (int numVisible) const
+	{
+		Inventory item;
+		int i;
+		let pmo = CPlayer.mo;
+
+		if (pmo.InvFirst == NULL)
+		{
+			pmo.InvFirst = pmo.FirstInv();
+			if (pmo.InvFirst == NULL)
+			{ // Nothing to show
+				return NULL;
+			}
+		}
+
+		// If there are fewer than numVisible items shown, see if we can shift the
+		// view left to show more.
+		for (i = 0, item = pmo.InvFirst; item != NULL &amp;&amp; i &lt; numVisible; ++i, item = item.NextInv())
+		{ }
+
+		while (i &lt; numVisible)
+		{
+			item = pmo.InvFirst.PrevInv ();
+			if (item == NULL)
+			{
+				break;
+			}
+			else
+			{
+				pmo.InvFirst = item;
+				++i;
+			}
+		}
+
+		if (pmo.InvSel == NULL)
+		{
+			// Nothing selected, so don't move the view.
+			return pmo.InvFirst == NULL ? pmo.Inv : pmo.InvFirst;
+		}
+		else
+		{
+			// Check if InvSel is already visible
+			for (item = pmo.InvFirst, i = numVisible;
+				 item != NULL &amp;&amp; i != 0;
+				 item = item.NextInv(), --i)
+			{
+				if (item == pmo.InvSel)
+				{
+					return pmo.InvFirst;
+				}
+			}
+			// Check if InvSel is to the right of the visible range
+			for (i = 1; item != NULL; item = item.NextInv(), ++i)
+			{
+				if (item == pmo.InvSel)
+				{
+					// Found it. Now advance InvFirst
+					for (item = pmo.InvFirst; i != 0; --i)
+					{
+						item = item.NextInv();
+					}
+					return item;
+				}
+			}
+			// Check if InvSel is to the left of the visible range
+			for (item = pmo.Inv;
+				item != pmo.InvSel;
+				item = item.NextInv())
+			{ }
+			if (item != NULL)
+			{
+				// Found it, so let it become the first item shown
+				return item;
+			}
+			// Didn't find the selected item, so don't move the view.
+			// This should never happen.
+			return pmo.InvFirst;
+		}
+	}&lt;/syntaxhighlight&gt;
+
+== Examples ==
+This is how [[DrawInventoryBar (ZScript)|'''DrawInventoryBar''']] uses this function. If no pointer is obtained, the bar is not drawn:
+&lt;syntaxhighlight lang="cs"&gt;
+void DrawInventoryBar(InventoryBarState parms, Vector2 position, int numfields, int flags = 0, double bgalpha = 1.)
+{
+	double width = parms.boxsize.X * numfields;
+	[position, flags] = AdjustPosition(position, flags, width, parms.boxsize.Y);
+	
+	CPlayer.mo.InvFirst = ValidateInvFirst(numfields);
+	if (CPlayer.mo.InvFirst == null) return;	// Player has no listed inventory items.
+
+	[...] // Otherwise the bar is drawn (the rest of the code is omitted for brevity)
+&lt;/syntaxhighlight&gt;
+
+== See also ==
+* {{class|BaseStatusBar}}
+* [[DrawInventoryBar (ZScript)]]
+
+[[Category:ZScript]]
+[[Category:BaseStatusBar]]</text>
+    <sha1>82ala0u704i9ebn7u91wq03f2nk4mf0</sha1>
+  </revision>
+</page>

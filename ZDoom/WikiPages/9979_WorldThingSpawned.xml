@@ -1,0 +1,73 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>WorldThingSpawned</title>
+  <ns>0</ns>
+  <id>9979</id>
+  <revision>
+    <id>53510</id>
+    <parentid>53503</parentid>
+    <timestamp>2024-11-01T13:31:25Z</timestamp>
+    <contributor>
+      <username>Jekyll Grim Payne</username>
+      <id>2175</id>
+    </contributor>
+    <comment>/* Usage */</comment>
+    <origin>53510</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="1587" sha1="6jio0qj44d4cj2khtunj3kc95k9fydl" xml:space="preserve">'''{{class|StaticEventHandler}}'''
+
+{{c|void '''WorldThingSpawned''' (WorldEvent ''e'')}}
+
+== Usage ==
+An [[Events and handlers|event handler]] virtual function that is called when an [[actor]] spawns in the map.
+
+=== Passed values ===
+This event gets a pointer to the {{struct|WorldEvent}} struct and can read the following from it by preceding the value with &lt;code&gt;e.&lt;/code&gt;:
+*{{c|Actor '''thing'''}}
+:&lt;code&gt;e.thing&lt;/code&gt; is a pointer to the actor that was spawned.
+
+== Examples ==
+This event handler puts all projectiles in an array (which is globally accessible by finding the event handler with [[Events_and_handlers#Functions|EventHandler.Find()]]), and removes them when they're destroyed:
+&lt;syntaxhighlight lang="cs"&gt;
+class MyEventHandler : EventHandler
+{
+  array&lt;Actor&gt; allProjectiles;
+
+  override void WorldThingSpawned(WorldEvent e)
+  {
+    // if the actor has the MISSILE flag, put it in the array:
+    if (e.thing.bMissile)
+    {
+      allProjectiles.Push(e.thing);
+    }
+  }
+
+  
+  override void WorldThingDestroyed(WorldEvent e)
+  {
+    // when an actor is destroyed, check if it was in the array,
+    // and if so, remove it from it:
+    int index = allProjectiles.Find(e.thing);
+    if (index &lt; allProjectiles.Size())
+    {
+      allProjectiles.Delete(index);
+    }
+  }
+}
+
+// Example of reading it from elsewhere in the code:
+let handler = MyEventHandler(EventHandler.Find('MyEventHandler'));
+if (handler)
+{
+  // do something with handler.allProjectiles here
+}
+&lt;/syntaxhighlight&gt;
+
+== See also ==
+* [[Events and handlers]]
+
+[[Category:ZScript]]
+[[Category:Event handlers]]</text>
+    <sha1>6jio0qj44d4cj2khtunj3kc95k9fydl</sha1>
+  </revision>
+</page>

@@ -1,0 +1,44 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>A Punch</title>
+  <ns>0</ns>
+  <id>2701</id>
+  <revision>
+    <id>52571</id>
+    <parentid>48970</parentid>
+    <timestamp>2024-04-28T11:31:31Z</timestamp>
+    <contributor>
+      <username>Jekyll Grim Payne</username>
+      <id>2175</id>
+    </contributor>
+    <minor />
+    <origin>52571</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="1186" sha1="6pad7q9ixb9grtxw7gu67kftgvnxhl6" xml:space="preserve">{{DISPLAYTITLE:A_Punch}}
+{{doomwiki|A_Punch}}
+'''A_Punch'''
+
+(no parameters)
+
+
+Doom's standard {{Class|fist}} attack. This checks whether the player has the {{Class|Berserk|Berserk pack}} by looking for the presence of a {{Class|PowerStrength}} item in the inventory. Damage is 2x 1d10, multiplied again by 10 when berserk. If the attack hits a damageable actor, the {{c|*fist}} [[player sounds|player sound]] is played, on the ''weapon'' ({{const|CHAN_WEAPON}}) channel.
+
+The range of the attack, which is 64, is determined by adding 20 to the calling actor's {{c|{{Property|MeleeRange}}}}. Although the actor property could be used to alter the range, it is best to instead use the more flexible [[A_CustomPunch]] function to give an attack its own range. This feature exists only for {{dw|MBF21}} support.
+
+You can implement A_Punch using {{c|[[A_CustomPunch]]}}. You can find an example of how to do this on that action's page (near the bottom).
+
+== Examples ==
+This example is taken from Doom's Fist weapon.
+
+   Fire:
+     PUNG B 4
+     PUNG C 4 [[A_Punch]]
+     PUNG D 5
+     PUNG C 4
+     PUNG B 5 [[A_ReFire]]
+     goto Ready
+
+[[category:Decorate Weapon attack functions|Punch]]</text>
+    <sha1>6pad7q9ixb9grtxw7gu67kftgvnxhl6</sha1>
+  </revision>
+</page>

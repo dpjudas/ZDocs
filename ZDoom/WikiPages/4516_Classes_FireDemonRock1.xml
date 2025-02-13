@@ -1,0 +1,58 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>Classes:FireDemonRock1</title>
+  <ns>0</ns>
+  <id>4516</id>
+  <revision>
+    <id>39490</id>
+    <parentid>34546</parentid>
+    <timestamp>2015-04-30T21:32:19Z</timestamp>
+    <contributor>
+      <username>Blue Shadow</username>
+      <id>2021</id>
+    </contributor>
+    <minor />
+    <comment>/* DECORATE definition */ Updated</comment>
+    <origin>39490</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="912" sha1="d0sdvg0z3qt98mkyozx6821c4dhtibu" xml:space="preserve">{{Actor|
+| type = SFX
+| name = Afrit rock
+| class = FireDemonRock1
+| game = Hexen
+}}[[Classes]]: &lt;u&gt;FireDemonRock1&lt;/u&gt;&lt;br&gt;
+&amp;ensp;&amp;rarr;[[Classes:FireDemonRock2|FireDemonRock2]]&lt;br&gt;
+&amp;ensp;&amp;rarr;[[Classes:FireDemonRock3|FireDemonRock3]]&lt;br&gt;
+&amp;ensp;&amp;rarr;[[Classes:FireDemonRock4|FireDemonRock4]]&lt;br&gt;
+&amp;ensp;&amp;rarr;[[Classes:FireDemonRock5|FireDemonRock5]]&lt;br&gt;
+A rock that can be created when an [[Classes:FireDemon|afrit]] unrolls from its protective ball.
+==== [[DECORATE]] definition ====
+ ACTOR &lt;u&gt;FireDemonRock1&lt;/u&gt;
+ {
+   {{Property|Health}} 1000
+   {{Property|ReactionTime}} 8
+   {{Property|Radius}} 3
+   {{Property|Height}} 5
+   {{Property|Mass}} 16
+   +{{Flag|NOBLOCKMAP}}
+   +{{Flag|DROPOFF}}
+   +{{Flag|MISSILE}}
+   +{{Flag|NOTELEPORT}}
+ 
+   action native [[A_SmBounce]]();
+ 
+   States
+   {
+   Spawn:
+     FDMN S 4
+     Loop
+   Death:
+     FDMN S 5 [[A_SmBounce]]
+   XDeath:
+     FDMN S 200
+     Stop
+   }
+ }</text>
+    <sha1>d0sdvg0z3qt98mkyozx6821c4dhtibu</sha1>
+  </revision>
+</page>

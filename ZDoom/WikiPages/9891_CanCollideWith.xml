@@ -1,0 +1,60 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>CanCollideWith</title>
+  <ns>0</ns>
+  <id>9891</id>
+  <revision>
+    <id>52593</id>
+    <parentid>52530</parentid>
+    <timestamp>2024-05-04T19:28:53Z</timestamp>
+    <contributor>
+      <username>Jekyll Grim Payne</username>
+      <id>2175</id>
+    </contributor>
+    <comment>/* Examples */</comment>
+    <origin>52593</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="2104" sha1="c7v3u3iqab7pjqrue45pd8uxz5wy5z3" xml:space="preserve">'''{{class|Actor}}'''
+
+{{c|bool '''CanCollideWith'''(Actor ''other'', bool ''passive'')}}
+
+== Usage ==
+Called when two actors may be capable of colliding are about to collide with each other. This function is called from both actors involved in the collision. The return value determines if the collision is possible between the two actors.
+
+'''Note:''' This will only be called if regular actor blocking is not bypassed entirely with the use of flags like {{flag|THRUACTORS}} or an object lacking {{flag|SOLID}} while not having {{flag|BLOCKEDBYSOLIDACTORS}}, etc.
+
+{{warning|This function assumes that the two colliding actors are the same before and after the calls. Do NOT destroy, damage, or perform any complex alterations of either actor within these calls as doing so may cause memory issues. If you need to perform checks like these when a collision occurs, then use '''{{c|[[CollidedWith]]}}''' instead !}}
+
+=== Parameters ===
+*{{c|Actor '''other'''}}
+:The actor the caller is potentially colliding with.
+*{{c|bool '''passive'''}}
+:Used to determine which actor is currently calling the function. If &lt;code&gt;false&lt;/code&gt;, the actor that caused the collision is the current caller; otherwise the caller is the actor that is being collided with.
+
+=== Return value ===
+* ''bool'' — determines if the two actors are allowed to collide. If one of the actors returns &lt;code&gt;false&lt;/code&gt;, the engine will act as though the two actors didn't collide. If both return &lt;code&gt;true&lt;/code&gt;, then standard collision behavior is used.
+
+== Examples ==
+An actor using this code will never collide (either actively or passively) with actors that belong to the same class as it, or are [[Using inheritance|based on]] this class:
+&lt;syntaxhighlight lang="csharp"&gt;
+class TestMonster : Actor
+{
+  override bool CanCollideWith(Actor other, bool passive)
+  {
+    if (other is self.GetClass())
+    {
+      return false;
+    }
+    return Super.CanCollideWith(other, passive);
+  }
+}&lt;/syntaxhighlight&gt;
+
+== See also ==
+* [[CollidedWith]]
+* [[ZScript virtual functions]]
+
+[[Category:ZScript]]
+[[Category:Actor virtual functions]]</text>
+    <sha1>c7v3u3iqab7pjqrue45pd8uxz5wy5z3</sha1>
+  </revision>
+</page>

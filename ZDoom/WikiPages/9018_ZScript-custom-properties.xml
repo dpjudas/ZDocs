@@ -1,0 +1,148 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>ZScript custom properties</title>
+  <ns>0</ns>
+  <id>9018</id>
+  <revision>
+    <id>53534</id>
+    <parentid>46906</parentid>
+    <timestamp>2024-11-01T17:02:48Z</timestamp>
+    <contributor>
+      <username>Blue Shadow</username>
+      <id>2021</id>
+    </contributor>
+    <comment>/* Format */ using self as a prefix from 4.13.2</comment>
+    <origin>53534</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="3652" sha1="51ig8mpfozkwjkmabazm983o1xxoyir" xml:space="preserve">{{ZScriptNote}}
+
+Sometimes you might want to give an actor variable a starting value without going through the trouble of overriding the (Post)BeginPlay function every time. This can be done by creating a custom property that points to that variable, and then using the "Default" block to set the required values.
+
+
+== Format ==
+Inside the main (parent) actor block, for initial setup:
+ property ''PropertyName'': '''LocalVar1, LocalVar2,''' ...
+
+The '''LocalVar(s)''' can be anything except arrays, as they are not yet supported. They must be defined in the base class's global namespace outside states and Default block.
+
+Inside the Default block, for the main actor class or any inheriting class:
+ &lt;NameOfBaseClass&gt;.''PropertyName'' '''&lt;LocalVar1&gt;, &lt;LocalVar2&gt;,''' ...
+
+{{new|4.13.2}}
+
+For the class which defines the property only (the main class), {{c|self}} can be used instead of ''NameOfBaseClass''. All inheriting classes must use ''NameOfBaseClass'', still.
+
+{{note|The following feature is limited to internal actor classes only, and as such, cannot be used in user code.}}
+For historical reasons, some class names may have an explicit prefix defined, which can be used in place of the class name itself. [[PlayerPawn]] uses this for properties, shortening the name:
+ property prefix: '''Player''';
+ Default
+ {
+ 	Player.AttackZOffset 8;
+ 	//...
+ }
+
+=== Getting the default value ===
+Inside a function, if the default value is required:
+ Speed = Default.Speed;
+ PuzzleItemNumber = Default.PuzzleItemNumber;
+Note that inside a function you will still be using the actual variable name rather than the property name.
+
+== Examples ==
+
+The following examples are from GZDoom. For brevity these excerpts do '''not''' contain the code necessary to use the custom properties themselves.
+
+From PuzzleItem:
+
+ class PuzzleItem : Inventory
+ {
+ 	int PuzzleItemNumber;
+ 	String PuzzFailMessage;
+ 	
+ 	property Number: PuzzleItemNumber;
+ 	property FailMessage: PuzzFailMessage;
+ 
+ 	Default
+ 	{
+ 		+NOGRAVITY
+ 		+INVENTORY.INVBAR
+ 		Inventory.DefMaxAmount;
+ 		Inventory.UseSound "PuzzleSuccess";
+ 		Inventory.PickupSound "misc/i_pkup";
+ 		PuzzleItem.FailMessage("$TXT_USEPUZZLEFAILED"); //Setting up its own default after being defined.
+ 	}
+ 	// ...
+ }
+
+This is an example using the Health class and Doom's Medikit.
+In the Health class, the following are defined:
+
+ class Health : Inventory
+ {
+ 	int LowHealth;
+ 	String LowHealthMessage;
+ 	property LowMessage: LowHealth, LowHealthMessage;
+ 	// ...
+ }
+
+And in the Medikit:
+ class Medikit : Health
+ {
+ 	Default
+ 	{
+ 		Inventory.Amount 25;
+ 		Inventory.PickupMessage "$GOTMEDIKIT";
+ 		Health.LowMessage 25, "$GOTMEDINEED"; //&lt;--------- The custom property. Uses LowHealth, and then the LowHealthMessage.
+ 	}
+ 	States
+ 	{
+ 	Spawn:
+ 		MEDI A -1;
+ 		Stop;
+ 	}
+ }
+
+
+For a functioning '''standalone''' example, here are three cyberdemons with different obituaries:
+ class FriendlyCyberdemon : Cyberdemon
+ {
+ 	String CyberdemonName;
+ 	property CyberdemonName: CyberdemonName;
+ 
+ 	Default
+ 	{
+ 		+FRIENDLY
+ 		FriendlyCyberdemon.CyberdemonName "";
+ 	}
+ 
+ 	override String GetObituary
+ 	(
+ 		actor victim, actor inflictor, name mod, bool playerattack
+ 	)
+ 	{
+ 		string namearticle;
+ 		if (CyberdemonName == "") namearticle = "a";
+ 		else namearticle = CyberdemonName.." the";
+ 		return "%o got in the way of "..namearticle.." Friendly Cyberdemon!";
+ 	}
+ }
+ 
+ class FriendlyCyberdemonBill : FriendlyCyberdemon
+ {
+ 	Default
+ 	{
+ 		FriendlyCyberdemon.CyberdemonName "Bill";
+ 	}
+ }
+ 
+ class FriendlyCyberdemonBob : FriendlyCyberdemon
+ {
+ 	Default
+ 	{
+ 		FriendlyCyberdemon.CyberdemonName "Bob";
+ 	}
+ }
+
+[[Category:ZScript]]</text>
+    <sha1>51ig8mpfozkwjkmabazm983o1xxoyir</sha1>
+  </revision>
+</page>

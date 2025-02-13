@@ -1,0 +1,62 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>A Mushroom</title>
+  <ns>0</ns>
+  <id>1681</id>
+  <revision>
+    <id>45417</id>
+    <parentid>38190</parentid>
+    <timestamp>2017-06-23T10:47:40Z</timestamp>
+    <contributor>
+      <username>Voros</username>
+      <id>2523</id>
+    </contributor>
+    <comment>Add A_Mushroom example</comment>
+    <origin>45417</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="2384" sha1="rp2hx8s4z10ibv8peq7xza6vdkncmt9" xml:space="preserve">{{DISPLAYTITLE:A_Mushroom}}
+'''A_Mushroom''' [(string ''spawntype'' [, int ''amount''[, int ''flags''[, float ''vrange''[, float ''hrange'']]]])]
+
+Shoots the specified amount of missiles high into the air with a mushroom cloud effect, performing a radius attack of the calling actor's {{property|DamageType}} as [[damage type]] and both damage and radius of 128.
+
+The parameters are:
+* ''spawntype'': type of projectile to throw. Default [[Classes:FatShot|Mancubus fireballs]].
+* ''amount'': the number of thrown projectiles. If 0, then the number is determined by the calling actor's '''damage''' property. Default 0.
+* ''flags'': the following flags can be combined by using the {{c|{{!}}}} character between the constant names:
+** '''MSF_Standard'''&amp;nbsp;&amp;mdash; uses the normal ZDoom projectile spawning function, in which the vertical velocity is one component of the projectile's speed. This flag is implied if the {{c|flags}} parameter is undefined or zero.
+** '''MSF_Classic'''&amp;nbsp;&amp;mdash; uses the old Doom function in which the vertical velocity is added to the projectile's speed. Since A_Mushroom by default aims its projectiles at very steep angles, the difference between the standard and classic is very noticeable; the older mode results in a more chaotic-looking, asymmetrical explosion, that spreads much higher and farther.
+** '''MSF_DontHurt'''&amp;nbsp;&amp;mdash; the target of the calling actor is considered to be the shooter of the debris projectiles and won't be hurt by the explosion. Use this flag if A_Mushroom is called from a [[projectile]] and should not hurt its shooter.
+* ''vrange'': controls how high the projectiles are aimed, the larger the value, the higher they go. Default 4.0.
+* ''hrange'': factor by which the speed of the projectiles is multiplied. Default 0.5.
+
+== Example ==
+ ACTOR MushRoomBall
+ {
+   {{Property|Radius}} 3
+   {{Property|Height}} 2
+   {{Property|Speed}} 15
+   {{Property|FastSpeed}} 22
+   {{Property|Damage}} 6
+   {{Property|Projectile}}
+   +{{Flag|RANDOMIZE}}
+   {{Property|RenderStyle}} Add
+   {{Property|Alpha}} 0.75
+   {{Property|SeeSound}} "imp/attack"
+   {{Property|DeathSound}} "imp/shotx"
+   States
+   {
+   Spawn:
+     BAL1 AB 2 Bright
+     Loop
+   Death:
+     BAL1 CDE 2 Bright A_Mushroom("PlasmaBall", 10, MSF_DontHurt, 8, 0.1)
+     Stop
+   }
+ }
+
+{{DEFAULTSORT:Mushroom}}
+
+[[Category:Decorate Classic attack functions]]</text>
+    <sha1>rp2hx8s4z10ibv8peq7xza6vdkncmt9</sha1>
+  </revision>
+</page>

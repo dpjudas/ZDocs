@@ -1,0 +1,108 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>Tick</title>
+  <ns>0</ns>
+  <id>9732</id>
+  <revision>
+    <id>51954</id>
+    <parentid>51302</parentid>
+    <timestamp>2024-03-13T12:31:05Z</timestamp>
+    <contributor>
+      <username>Jekyll Grim Payne</username>
+      <id>2175</id>
+    </contributor>
+    <comment>/* Usage */</comment>
+    <origin>51954</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="2990" sha1="43x761s151cc9mi5vg8jsrmp359olzd" xml:space="preserve">__NOTOC__
+
+'''[[Thinker]]'''
+
+{{c|virtual void '''Tick'''()}}
+
+==Usage==
+A basic [[ZScript virtual functions|virtual function]] used by [[Thinker]]. It's called every [[tic|game tick]] (35 times/second). Whether it gets called automatically or not is determined by the type of thinker. [[Classes:Actor|Actors]] call it automatically to perform movement, animation, collision, and all the other key behaviors.
+
+This function can be overridden to add new looped behaviors to actors. When doing that, it's important to remember to call &lt;code&gt;Super.Tick()&lt;/code&gt;, otherwise the actor will not be able to move, animate or otherwise meaningfully interact with the world.
+
+For actors it's also important to check the value of '''[[IsFrozen]]()''', to make sure the contents of the override do not run while the actor is frozen by some kind of an effect (like the '''freeze''' console cheat or [[Classes:PowerTimeFreezer|PowerTimeFreezer]]), unless desired.
+
+{{warning|On [[PlayerPawn]] actors, weird quirks can occur if [[Voodoo doll|voodoo dolls]] are present and '''Tick''' is overridden without proper handling, because both the original PlayerPawn and its voodoo doll will execute the override at the same time. See the [[Voodoo doll]] page for information on how to check if a PlayerPawn is a voodoo doll or not.}}
+
+==Examples==
+This version of the [[Classes:DoomImpBall|Imp's fireball]] will spawn a trail every tic. The trail will [[A_FadeOut|fade out]] and become smaller while it exists, before disappearing:
+&lt;syntaxhighlight lang="csharp"&gt;
+class FireBallWithTrail : DoomImpBall
+{
+	override void Tick()
+	{
+		super.Tick();
+		if (!IsFrozen())
+		{
+			Spawn("FireBallTrail", pos);
+		}
+	}
+}
+
+class FireBallTrail : Actor
+{
+	Default
+	{
+		+BRIGHT
+		+NOINTERACTION
+		+NOBLOCKMAP
+		Renderstyle 'Add';
+	}
+
+	States 
+	{
+	Spawn:
+		BAL1 A 1 
+		{
+			A_FadeOut(0.05);
+			scale *= 0.95;
+		}
+		loop;
+	}
+}&lt;/syntaxhighlight&gt;
+
+This version of the [[Classes:Zombieman|Zombieman]] will spawn [[Classes:ExplosiveBarrel|explosive barrels]] every 70 tics while it's alive. The barrels are put into a [[Dynamic arrays|dynamic array]]. Once the monster is killed, all those barrels will explode with the help of a '''[[Die|Die()]]''' override:
+&lt;syntaxhighlight lang="csharp"&gt;
+class BarrelZombie : Zombieman
+{
+	array &lt;Actor&gt; barrels;
+
+	override void Tick()
+	{
+		super.Tick();
+		if (health &gt; 0 &amp;&amp; !isFrozen() &amp;&amp; GetAge() % 70 == 0)
+		{
+			let bar = Spawn("ExplosiveBarrel", pos, ALLOW_REPLACE);
+			if (bar)
+			{
+				barrels.Push(bar);
+			}
+		}
+	}
+
+	override void Die(Actor source, Actor inflictor, int dmgflags, Name MeansOfDeath)
+	{
+		for (int i = 0; i &lt; barrels.Size(); i++)
+		{
+			let bar = barrels[i];
+			if (bar &amp;&amp; bar.health &gt; 0)
+			{
+				bar.DamageMobj(self, self, bar.health, 'normal');
+			}
+		}
+		super.Die(source, inflictor, dmgflags, MeansOfDeath);
+	}
+}&lt;/syntaxhighlight&gt;
+
+[[Category:ZScript]]
+[[Category:ZScript virtual functions]]
+[[Category:Actor virtual functions]]
+[[Category:Thinker virtual functions]]</text>
+    <sha1>43x761s151cc9mi5vg8jsrmp359olzd</sha1>
+  </revision>
+</page>

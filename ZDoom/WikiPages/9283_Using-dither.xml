@@ -1,0 +1,41 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>Using dither</title>
+  <ns>0</ns>
+  <id>9283</id>
+  <revision>
+    <id>46266</id>
+    <parentid>46203</parentid>
+    <timestamp>2018-10-30T11:14:46Z</timestamp>
+    <contributor>
+      <username>Blue Shadow</username>
+      <id>2021</id>
+    </contributor>
+    <minor />
+    <comment>Remove {{new}}</comment>
+    <origin>46266</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="3704" sha1="pyq3ex8ey5lme6q65ilgz0ktaxtcxfm" xml:space="preserve">{{OpenGL}}
+{{note|activating dither may slow the render down on older GPUs. Most cards which support OpenGL 4.0 and above should be able to handle it gracefully, though. A feature like this is more noticeable when it is turned off than when it is activated. If it cannot be seen, then it is working properly.}}
+
+Modern Windows versions show the desktop in 24-bit color. There are 3 channels per color, so that is 8 bits per channel. If running ''[[GZDoom]]'' in a window, it is quite likely that this is the only option to ever be seen run with the desktop, at least until Windows catches up with advances in display technology that support higher color depths.
+
+==Dither modes==
+The dither option is accessible from the [[OpenGL options|OpenGL options menu]], and can be set to ''Off'', ''On'', ''6 BPC'', ''8 BPC'', ''10 BPC'' or ''12 BPC''. "BPC" stands for "bits per channel". For the most part, choosing either ''On'' or ''8 BPC'' is sufficient. The main reason for the other options is because of all the display adapters to choose from; there are a lot of options for different types. The most common types are LCD, CRT, and Plasma, with LCD by far having the highest usage in modern systems. Unfortunately, LCD is by far the most restrictive.
+
+===LCD===
+Unless one's LCD screen is terribly slow, it is very likely that it supports 6 BPC natively. It simulates 8 BPC by doing a dither internally that can be barely seen. The dither is done by alternating and very quickly flashing pixels off and on. It does it so quickly that cannot be seen unless you trace your eyes across a row very slowly and precisely to the speed of the pixel flips. The reason for this is because 6 BPC LCDs can respond much quicker to changes in display data, which makes LCD screens more suitable for gaming. However, the cost is those two bits per channel. It is not normally seen though, because of the screen's internal dithering and pixel flashing mentioned before, which covers up the limitations in the color depth.
+
+On these screens, ''6 BPC'' can be chosen, which makes the dither less noticeable on such screens. When using ''8 BPC'' on these screens, the picture is a lot more smooth, as long as it is not moving. But when running around and into single-color walls and stuff with the distance fading, the 8 BPC dithering becomes very quickly noticeable, more so than the 6 BPC one. This is because of the pixel flashing mentioned earlier. In most cases though, one has to really be paying attention to see it.
+
+===CRT===
+For CRT monitors, ''8 BPC'' is by far the best one. CRTs support the full color depth natively, and the dither is so small and subtle that it should not even be seen. This is also further helped by the fact that pixels in a CRT are a little more dull, so the changes are more spread out, unlike LCDs where pixels are usually pretty well confined to their space in the grid. CRTs are also very quick to respond to changes to display data.
+
+===Plasma===
+Plasma screens may come in an HDR variety. "HDR" means "high dynamic range". These displays may support 10 or 12 BPC. Please keep in mind that the computer must be able to actually transmit these images. There are many software and hardware incompatibilities which may prevent that. Ideally, turning on the {{c|vid_hdr}} [[CVARs|console variable]] and using fullscreen mode should do the trick, though, depending on if the driver supports it. If the screen does support it, the dither might not even be needed, but can still be benefited from, as the dither will simulate an extra 4 BPC for even these screens, resulting in even smoother gradients than is possible on cheaper screens.
+
+[[Category:Guides]]
+[[Category:Technical aspects]]</text>
+    <sha1>pyq3ex8ey5lme6q65ilgz0ktaxtcxfm</sha1>
+  </revision>
+</page>

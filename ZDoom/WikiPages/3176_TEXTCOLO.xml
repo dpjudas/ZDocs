@@ -1,0 +1,155 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>TEXTCOLO</title>
+  <ns>0</ns>
+  <id>3176</id>
+  <revision>
+    <id>50270</id>
+    <parentid>50108</parentid>
+    <timestamp>2023-04-29T12:40:11Z</timestamp>
+    <contributor>
+      <username>Jekyll Grim Payne</username>
+      <id>2175</id>
+    </contributor>
+    <minor />
+    <comment>Added "Use of fonts" category</comment>
+    <origin>50270</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="8932" sha1="m942km4bqusdit0e3d5tg0uzdyep4sn" xml:space="preserve">The TEXTCOLO lump is used to define custom text colors for use in hudmessages. This is especially useful when truecolor rendering is available (in an [[OpenGL]] [[source port]] or, on Windows systems, through ZDoom's use of DirectX for 2D rendering), or with wads that utilize a modified palette. Thanks to this lump, the use of cyan or magenta text, for example, is now a possibility.
+
+== Creating new colors ==
+
+The format for creating new text colors is simple. Take a look at the template below. (Square brackets represent optional parameters, that you can safely omit.)
+
+ ColorName [AlternateName [OtherAlternateName [...]]]
+ {
+ 	#RRGGBB  #RRGGBB  [x y]
+ 	#RRGGBB  #RRGGBB  [x y]
+ 	#RRGGBB  #RRGGBB  [x y]
+ 	...
+ [Console:
+ 	#RRGGBB  #RRGGBB  [x y]
+ 	#RRGGBB  #RRGGBB  [x y]
+ 	#RRGGBB  #RRGGBB  [x y]
+ 	...]
+ [Flat:
+ 	#RRGGBB]
+ }
+
+"Color" is simply whatever name you choose, whether it be LimeGreen, DarkPurple, or NeonRainbowSmoothie. Take your pick.
+"#RRGGBB" specifies the color (in hex). For example, #FF0000 is bright red, #008888 would be a dark teal color, and #775522 is a rather ugly shade of brown.
+Notice how each #RRGGBB color definition comes in pairs of two. This is a color range. The first color in the range specifies the darkest shade that appears in the color, while the second color is the lightest. ZDoom will then use these to create a gradient between the colors. As a quick example, ZDoom's standard "Gold" translation looks like "#732B00  #FFFF73" in the new format.
+Keep in mind that it is possible to create odd translations as well. If you really feel the need to create an ugly green/purple gradient ("#008800  #FF00FF"), it's quite possible.
+
+The optional x and y parameters are range specifiers and also the beginning and ending brightness indexes. ZDoom internally converts the font to a grayscale image before applying the new color, so an x value of "0" would represent the absolute darkest shade "#000000" and a y value of "255" would represent the lightest shade "#FFFFFF". These are the shades of gray, or brightness of the color, once the image is converted to gray scale. "127" is equivalent to a gray scale brightness of "#7F7F7F". These parameters are generally more useful for the console ranges, but can be used for the normal range as well.
+
+The "Flat:" entry can be used to associate the color range to a single, specific color. This is used for example for player colors on the [[scoreboard]].
+
+=== Notes ===
+* "Untranslated" is a reserved word. If you try to define color ranges for this color, or to give it alternate names, you will get an error message.
+* The range specifiers, if given, must start at 0. They need to be in the [0, 255] range, and each given range must have a start larger than the previous range's end, and an end larger than their own start.
+* If there are not range specifiers, the range is assumed to begin at the previous range's end + 1 (or zero if this is the first set of range), and to end at 255. Consequently, no additional range can be given after a range without a specifier.
+* If omitted, the "Console:" entry is considered to be a range of whites.
+* Names can include spaces if they are put within quotes.
+
+== Using new colors ==
+
+Thankfully, once your new colors are defined, using them is very simple. In your [[HudMessage]] or [[Print]] string, insert a \c[Color] code. For example,
+    print (s:"\c[Green]Some text");
+would make the text green, starting at whatever spot you choose. It is also possible to change the color in the middle of the text by inserting another \c code.
+    print (s:"\c[Red]Dual \c[Blue]Colors!");
+
+== Examples ==
+This example is designed to match the yellow Hexen font, which has a gray outline filled with shades of yellow.
+ Yellow
+ {
+ 	#272727  #515151    0  64
+ 	#784918  #F3A718   65 207
+ 	#F3A82A  #FCD043  208 256
+ Console:
+ 	#000000  #7F7F00    0 127
+ 	#FFFF00  #FFFFFF  128 256
+ Flat:
+ 	#EEEE33
+ }
+
+
+This example illustrates the use of multiple names for a single color.
+ DarkGray DarkGrey "Dark Gray" "Dark Grey"
+ {
+ 	#232323  #8B8B8B
+ Console:
+ 	#000000  #646464    0 127
+ 	#404040  #B4B4B4  128 256
+ Flat:
+ 	#808080
+ }
+
+Additional examples:
+ Teal
+ {
+ 	#004444  #00AAAA
+  Console:
+ 	#000000  #007F7F    0 127
+ 	#00FFFF  #DEFFFF  128 256
+ }
+
+ ZenGreen
+ {
+ 	#004400  #00FF00
+ Console:
+ 	#000000  #007F00    0 127
+ 	#00FF00  #FEFFFE  128 256
+ }
+
+== Default colors ==
+ZDoom comes equipped with quite a few default translation ranges. Simply use these colors in hudmessages the same as mentioned above.
+
+{| {{prettytable}}
+! Color name !! Color range !! Console range !! !! Color name !! Color range !! Console range !! !! Color name !! Color range !! Console range
+|-
+|{{color|#000000}} Black || {{gradient|19, 19, 19|80, 80, 80}} || {{gradient|0, 0, 0|50, 50, 50|64}}{{gradient|10, 10, 10|80, 80, 80|64}} ||  
+|{{color|#800000}} DarkRed / "Dark Red" || {{gradient|43, 0, 0|175, 43, 43}} || {{gradient|0, 0, 0|115, 0, 0|64}}{{gradient|128, 0, 0|255, 220, 220|64}} || 
+|{{color|#FFAA00}} Orange || {{gradient|32, 0, 0|255, 128, 0}} || {{gradient|32, 0, 0|144, 64, 0|64}}{{gradient|255, 127, 0|255, 254, 254|64}}
+|-
+|{{color|#9999FF}} Blue || {{gradient|10, 0, 39|0, 0, 255}} || {{gradient|0, 0, 0|0, 0, 127|64}}{{gradient|64, 64, 255|222, 222, 255|64}} || 
+|{{color|#D57604}} Fire || {{gradient|102, 0, 0|213, 118, 4|52}}{{gradient|213, 118, 4|255, 255, 0|76}} || {{gradient|111, 0, 0|213, 118, 4|64}}{{gradient|213, 118, 4|255, 255, 0|64}} || 
+|{{color|#9966CC}} Purple || {{gradient|35, 0, 35|207, 0, 207}} || {{gradient|0, 0, 0|159, 0, 155|64}}{{gradient|255, 0, 255|255, 255, 255|64}}
+|-
+|{{color|#CC3333}} Brick || {{gradient|71, 0, 0|255, 184, 184}} || {{gradient|71, 0, 0|163, 92, 92|64}}{{gradient|128, 0, 0|255, 254, 254|64}} || 
+|{{color|#FFCC00}} Gold || {{gradient|115, 43, 0|255, 255, 115}} || {{gradient|0, 0, 0|127, 192, 64|64}}{{gradient|223, 191, 0|223, 255, 254|64}} || 
+|{{color|#FF5566}} Red || {{gradient|63, 0, 0|255, 0, 0}} || {{gradient|0, 0, 0|127, 0, 0|64}}{{gradient|255, 0, 0|255, 254, 254|64}}
+|-
+|{{color|#996633}} Brown || {{gradient|83, 63, 47|191, 167, 143}} || {{gradient|0, 0, 0|127, 64, 0|64}}{{gradient|67, 47, 31|255, 231, 207|64}} || 
+|{{color|#CCCCCC}} Gray / Grey || {{gradient|39, 39, 39|239, 239, 239}} || {{gradient|39, 39, 39|139, 139, 139|64}}{{gradient|80, 80, 80|255, 255, 255|64}} || 
+|{{color|#506CFC}} Sapphire || {{gradient|0, 4, 104|80, 108, 252|47}}{{gradient|80, 108, 252|80, 236, 252|81}} || {{gradient|0, 4, 104|80, 108, 252|64}}{{gradient|80, 108, 252|80, 236, 252|64}} || 
+|-
+|{{color|#FFCC99}} Cream || {{gradient|207, 131, 83|255, 215, 187}} || {{gradient|43, 35, 15|191, 123, 75|64}}{{gradient|255, 179, 131|255, 255, 255|64}} || 
+|{{color|#00CC00}} Green || {{gradient|11, 23, 7|119, 255, 111}} || {{gradient|0, 0, 0|0, 127, 0|64}}{{gradient|0, 255, 0|254, 255, 254|64}} || 
+|{{color|#D2B48C}} Tan || {{gradient|51, 43, 19|255, 235, 223}} || {{gradient|51, 43, 19|153, 139, 121|64}}{{gradient|153, 139, 121|255, 255, 255|64}}
+|-
+|{{color|#00DDDD}} Cyan || {{gradient|0, 31, 31|0, 240, 240}} || {{gradient|0, 0, 0|0, 127, 127|64}}{{gradient|0, 255, 255|254, 255, 255|64}} || 
+|{{color|#7C7C98}} Ice || {{gradient|52, 52, 80|124, 124, 152|47}}{{gradient|124, 124, 152|224, 224, 224|81}} || {{gradient|52, 52, 80|124, 124, 152|64}}{{gradient|124, 124, 152|224, 224, 224|64}} || 
+|{{color|#236773}} Teal || {{gradient|0, 31, 31|35, 103, 115|45}}{{gradient|35, 103, 115|123, 179, 195|83}} || {{gradient|0, 31, 31|35, 103, 115|64}}{{gradient|35, 103, 115|123, 179, 195|64}}
+|-
+|{{color|#663333}} DarkBrown / "Dark Brown" || {{gradient|31, 23, 11|163, 107, 63}} || {{gradient|43, 35, 15|119, 48, 0|64}}{{gradient|115, 87, 67|247, 189, 88|64}} || 
+|{{color|#33EEFF}} LightBlue / "Light Blue" || {{gradient|0, 0, 115|180, 180, 255}} || {{gradient|0, 0, 60|80, 80, 255|64}}{{gradient|128, 128, 255|255, 255, 255|64}} || 
+|{{color|#DFDFDF}} White || {{gradient|36, 36, 36|255, 255, 255}} || {{gradient|0, 0, 0|127, 127, 127|64}}{{gradient|128, 128, 128|255, 255, 255|64}}
+|-
+|{{color|#808080}} DarkGray / DarkGrey / "Dark Gray" / "Dark Grey" || {{gradient|35, 35, 35|139, 139, 139}} || {{gradient|0, 0, 0|100, 100, 100|64}}{{gradient|64, 64, 64|180, 180, 180|64}} || 
+|{{color|#D1D8A8}} Olive || {{gradient|47, 55, 31|123, 127, 80}}  || {{gradient|55, 63, 39|123, 127, 99|64}}{{gradient|103, 107, 79|209, 216, 168|64}} ||
+|{{color|#EEEE33}} Yellow || {{gradient|39, 39, 39|81, 81, 81|32}}{{gradient|120, 73, 24|243, 167, 24|71}}{{gradient|243, 168, 42|252, 208, 67|25}} || {{gradient|0, 0, 0|127, 127, 0|64}}{{gradient|255, 255, 0|255, 255, 255|64}}
+|-
+|{{color|#008C00}} DarkGreen / "Dark Green" || {{gradient|11, 23, 7|67, 147, 55}} || {{gradient|0, 0, 0|0, 88, 0|64}}{{gradient|0, 140, 0|220, 255, 220|64}}
+|}
+* Untranslated
+
+== See also ==
+*[[Print]]
+*[[HudMessage]]
+[[Category:Graphics lumps]]
+[[Category:ZDoom special lumps]]
+[[Category:Use of fonts]]</text>
+    <sha1>m942km4bqusdit0e3d5tg0uzdyep4sn</sha1>
+  </revision>
+</page>

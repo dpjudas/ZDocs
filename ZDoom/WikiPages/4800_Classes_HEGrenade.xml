@@ -1,0 +1,62 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>Classes:HEGrenade</title>
+  <ns>0</ns>
+  <id>4800</id>
+  <revision>
+    <id>40143</id>
+    <parentid>37191</parentid>
+    <timestamp>2015-05-22T07:00:30Z</timestamp>
+    <contributor>
+      <username>Blue Shadow</username>
+      <id>2021</id>
+    </contributor>
+    <minor />
+    <comment>/* DECORATE definition */ Updated</comment>
+    <origin>40143</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="1125" sha1="7maliv29wd7qjnrkhcrwg4mbq5x5uee" xml:space="preserve">{{Actor|
+| type = Explosive
+| name = High-explosive grenade
+| class = HEGrenade
+| game = Strife
+| convid = 106
+}}[[Classes]]: &lt;u&gt;HEGrenade&lt;/u&gt;&lt;br&gt;
+The projectile fired by the Grenade Launcher.
+==== [[DECORATE]] definition ====
+ ACTOR &lt;u&gt;HEGrenade&lt;/u&gt;
+ {
+   {{Property|Speed}} 15
+   {{Property|Radius}} 13
+   {{Property|Height}} 13
+   {{Property|Mass}} 20
+   {{Property|Damage}} 1
+   {{Property|ReactionTime}} 30
+   {{Property|Projectile}}
+   -{{Flag|NOGRAVITY}}
+   +{{Flag|STRIFEDAMAGE}}
+   +{{Flag|BOUNCEONACTORS}}
+   +{{Flag|EXPLODEONWATER}}
+   {{Property|MaxStepHeight}} 4
+   {{Property|BounceType}} "Doom"
+   {{Property|BounceFactor}} 0.5
+   {{Property|BounceCount}} 2
+   {{Property|SeeSound}} "weapons/hegrenadeshoot"
+   {{Property|DeathSound}} "weapons/hegrenadebang"
+   {{Property|Obituary}} "$OB_MPSTRIFEGRENADE" // "%o was inverted by %k's H-E grenade."
+   States
+   {
+   Spawn:
+     GRAP AB 3 [[A_Countdown]]
+     Loop
+   Death:
+     BNG4 A 0 Bright [[A_NoGravity]]
+     BNG4 A 0 Bright [[A_SetTranslucent]](1, 1)
+     BNG4 A 2 Bright [[A_Explode]](192, 192, 1, 1)
+     BNG4 BCDEFGHIJKLMN 3 Bright
+     Stop
+   }
+ }</text>
+    <sha1>7maliv29wd7qjnrkhcrwg4mbq5x5uee</sha1>
+  </revision>
+</page>

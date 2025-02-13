@@ -1,0 +1,145 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>MakeFootsteps</title>
+  <ns>0</ns>
+  <id>9967</id>
+  <revision>
+    <id>54011</id>
+    <parentid>53497</parentid>
+    <timestamp>2024-12-03T19:32:04Z</timestamp>
+    <contributor>
+      <username>TheMisterCat</username>
+      <id>1636</id>
+    </contributor>
+    <minor />
+    <comment>Fixed spelling mistakes</comment>
+    <origin>54011</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="3940" sha1="didcs1b8cm7z5syqdjhfi5xkibgeijo" xml:space="preserve">{{git|12d1afc}}
+
+'''{{class|PlayerPawn}}'''
+
+{{c|virtual void '''MakeFootsteps''' ()}}
+
+== Usage ==
+{{Note|This function requires the player pawn in question to have the {{flag|PLAYERPAWN.MAKEFOOTSTEPS|MAKEFOOTSTEPS}} flag set to run.}}
+Handles the playing of player footstep sounds. By default, this function works on [[TERRAIN|terrains]] with the {{c|[[TERRAIN#WalkStepTics|WalkStepTics]]}}, {{c|[[TERRAIN#RunStepTics|RunStepTics]]}}, the {{c|[[TERRAIN#RightStepSounds|(Left/Right)StepSounds]]}}, and {{c|[[TERRAIN#StepVolume|StepVolume]]}} properties set. Essentially just giving a built-in use for all those terrain properties. It also spawns the terrains' splash if splashes are assigned, such as for walking on a liquid.
+
+If a terrain uses the {{c|[[TERRAIN#StepDistance|StepDistance]]}} and, optionally, the {{c|[[TERRAIN#StepDistanceMinVel|StepDistanceMinVel]]}} properties instead, they will take precedence over the above properties, allowing for a distance-based interval for terrains instead.
+
+However, being a virtual method, the function can also be overridden, such as to be extended or entirely replaced with a different footstep system, such as one that only uses a terrain's {{c|[[TERRAIN#StepSounds|StepSounds]]}}, and scales the frequency and volume of the sound based on the player's velocity, regardless of terrain properties.
+
+== [[ZScript]] definition ==
+{{ZScriptDefinitionNote|actors/player/player.zs}}
+This is the ZScript code of the default footstep system, including the {{c|[[DoFootstep]]}} function, the built-in system uses.
+&lt;syntaxhighlight lang="csharp"&gt;
+	//---------------------------------------------------------------------------
+	//
+	// Handle player footstep sounds.
+	// Default footstep handling.
+	//
+	//---------------------------------------------------------------------------
+
+	int footstepCounter;
+	double footstepLength;
+	bool footstepFoot;
+
+	void DoFootstep(TerrainDef Ground)
+	{
+		Sound Step = Ground.StepSound;
+
+		//Generic foot-agnostic sound takes precedence.
+		if(!Step)
+		{
+			//Apparently most people walk with their right foot first, so assume that here.
+			if (!footstepFoot)
+			{
+				Step = Ground.LeftStepSound;
+			}
+			else
+			{
+				Step = Ground.RightStepSound;
+			}
+
+			footstepFoot = !footstepFoot;
+		}
+
+		if(Step)
+		{
+			A_StartSound(Step, flags: CHANF_OVERLAP, volume: Ground.StepVolume * snd_footstepvolume);
+		}
+
+		//Steps make splashes regardless.
+		bool Heavy = (Mass &gt;= 200) ? 0 : THW_SMALL; //Big player makes big splash.
+		HitWater(CurSector, (Pos.XY, CurSector.FloorPlane.ZatPoint(Pos.XY)), true, false, flags: Heavy | THW_NOVEL);
+	}
+
+	virtual void MakeFootsteps()
+	{
+		if(pos.z &gt; floorz) return;
+
+		let Ground = GetFloorTerrain();
+
+		if(Ground &amp;&amp; (player.cmd.forwardMove != 0 || player.cmd.sideMove != 0))
+		{
+			int Delay = (player.cmd.buttons &amp; BT_RUN) ? Ground.RunStepTics : Ground.WalkStepTics;
+
+			if((player.cmd.buttons ^ player.oldbuttons) &amp; BT_RUN)
+			{ // zero out counters when starting/stopping a run
+				footstepCounter = 0;
+				footstepLength = Ground.StepDistance;
+			}
+
+			if(Ground.StepDistance &gt; 0)
+			{ // distance-based terrain
+				footstepCounter = 0;
+
+				double moveVel = vel.xy.length();
+
+				if(moveVel &gt; Ground.StepDistanceMinVel)
+				{
+					footstepLength += moveVel;
+
+					while(footstepLength &gt; Ground.StepDistance)
+					{
+						footstepLength -= Ground.StepDistance;
+						DoFootstep(Ground);
+					}
+				}
+				else
+				{
+					footstepLength = Ground.StepDistance;
+				}
+
+			}
+			else if(Delay &gt; 0)
+			{ // delay-based terrain
+				footstepLength = 0;
+				
+				if(footstepCounter % Delay == 0)
+				{
+					DoFootstep(Ground);
+				}
+
+				footstepCounter = (footstepCounter + 1) % Delay;
+			}
+		}
+		else
+		{
+			footstepCounter = 0;
+			footstepLength = Ground.StepDistance;
+			footstepFoot = false;
+		}
+
+	}
+&lt;/syntaxhighlight&gt;
+
+== See also ==
+* [[Classes:PlayerPawn]]
+* [[Footsteps]]
+
+[[Category:ZScript]]
+[[Category:ZScript virtual functions]]</text>
+    <sha1>didcs1b8cm7z5syqdjhfi5xkibgeijo</sha1>
+  </revision>
+</page>

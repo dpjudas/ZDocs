@@ -1,0 +1,66 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>LibADLMIDI</title>
+  <ns>0</ns>
+  <id>9287</id>
+  <revision>
+    <id>47884</id>
+    <parentid>47882</parentid>
+    <timestamp>2020-10-06T20:58:02Z</timestamp>
+    <contributor>
+      <username>Wohlstand</username>
+      <id>2594</id>
+    </contributor>
+    <minor />
+    <comment>/* OPL cores */ Clarify license for the Opal emulator, it's in Public Domain</comment>
+    <origin>47884</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="3869" sha1="meal26d5c44im7gnxj279elpi46exzp" xml:space="preserve">'''libADLMIDI''' - is a software MIDI synthesizer based on {{wp|Yamaha YMF262|OPL3}} chips emulation. It is the one of [[software synthesizer]]s offered by ZDoom which does not use [[sound fonts]]. It's similar to [[OPL synth emulation]] synthesizer, however, it has a different base and workflow algorithm. It doesn't support using of OP2 lumps from WAD files as [[OPL synth emulation]] does. It has the own set of embedded GM banks are taken from various games and musical software or was built by various people. Together with embedded banks, it has a support of custom banks in WOPL format which gives ability to build a complete GS or XG compatible bank that has more than 128 melodic and 80 percussion instruments. In GZDoom, OPL-specific options can be edited from the [[advanced sound options]] menu.
+
+== Features ==
+* OPL3 emulation with four-operator mode support
+* FM patches from a number of known PC games, copied from files typical to AIL = Miles Sound System / DMX / HMI = Human Machine Interfaces / Creative IBK.
+* Pitch-bender with adjustable range
+* Vibrato that responds to RPN/NRPN parameters
+* Sustain (a.k.a. Pedal hold) and Sostenuto enable/disable
+* Use automatic arpeggio with chords to relieve channel pressure
+* Support for multiple concurrent MIDI synthesizers (per-track device/port select FF 09 message), can be used to overcome 16 channel limit
+* Support for custom banks of [https://github.com/Wohlstand/OPL3BankEditor/blob/master/Specifications/WOPL-and-OPLI-Specification.txt WOPL format]
+* Partial support for GS and XG standards (having more instruments than in one 128:128 GM set and ability to use multiple channels for percussion purposes, and a support for some GS/XG exclusive controllers)
+* CC74 "Brightness" affects a modulator scale (to simulate frequency cut-off on WT synths)
+* Portamento support (CC5, CC37, and CC65)
+* SysEx support that supports some generic, GS, and XG features
+* Full-panning stereo option 
+
+== OPL cores ==
+The OPL core emulates a number of OPL chips. ZDoom extends them with features that did not exist on the emulated hardware, notably full [[MIDI]] stereo panning (OPL2 is normally mono, and OPL3 limited to 3 panning positions), though such enhancements can be turned off from the [[advanced sound options]] menu. There are three different cores available:
+
+;DOSBox OPL3:
+:This OPL3 core comes from the {{wp|DOSBox}} project. This is the only emulator affected by the "Run at PCM rate" feature which allows running the emulation with fewer cycles to reduce CPU usage on slow machines.
+
+;Nuked OPL3:
+:This OPL3 core was contributed by Alexey Khokholov.
+
+;Nuked OPL3 v1.7:
+:The older version of Nuked OPL3, but slightly optimized and works a bit faster than Nuked OPL3 1.8.
+
+;Opal OPL3:
+:This OPL3 core comes from the [https://www.3eality.com/productions/reality-adlib-tracker Reality AdLib Tracker] project. It's an incomplete OPL3-only emulator that lacks some features like OPL2 and rhythm mode. It is in the Public Domain.
+
+;Java OPL3:
+:This OPL3 core is a {{wp|C++}} port of "[http://opl3.cozendey.com/ That Vintage Tone]", Robson Cozendey's OPL emulator written in {{wp|Java (programming language)|Java}}.
+
+== See also ==
+* [[OPL synth emulation]]
+* [[libOPNMIDI]]
+* [[Sound options]]
+
+== External links ==
+* [https://github.com/Wohlstand/OPL3BankEditor OPL3 Bank Editor] - a utility that allows the creation of custom WOPL banks are can be used with this synthesizer.
+* [https://github.com/Wohlstand/libADLMIDI libADLMIDI] - GitHub page that contains latest source code of this synthesizer and related documentation.
+* [https://github.com/Wohlstand/OPL3BankEditor/blob/master/Specifications/WOPL-and-OPLI-Specification.txt WOPL format specification] - A complete specification of WOPL bank format used by this synthesizer.
+* [http://www.dosbox.com/ DOSBox project]
+[[Category:Audio systems]]</text>
+    <sha1>meal26d5c44im7gnxj279elpi46exzp</sha1>
+  </revision>
+</page>

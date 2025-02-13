@@ -1,0 +1,151 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>A SpawnParticleEx</title>
+  <ns>0</ns>
+  <id>9634</id>
+  <revision>
+    <id>54020</id>
+    <parentid>54014</parentid>
+    <timestamp>2024-12-04T18:28:44Z</timestamp>
+    <contributor>
+      <username>Jekyll Grim Payne</username>
+      <id>2175</id>
+    </contributor>
+    <origin>54020</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="8392" sha1="s13rgaymch9m072uvjyxjdamoyee7c1" xml:space="preserve">{{DISPLAYTITLE:A_SpawnParticleEx}}{{ZScriptNote}}
+
+'''{{class|Actor}}'''
+
+{{c|void '''A_SpawnParticleEx''' (color ''color1'', TextureID ''texture'', int ''style'' {{=}} STYLE_None, int ''flags'' {{=}} 0, int ''lifetime'' {{=}} TICRATE, double ''size'' {{=}} 1, double ''angle'' {{=}} 0, double ''xoff'' {{=}} 0, double ''yoff'' {{=}} 0, double ''zoff'' {{=}} 0, double ''velx'' {{=}} 0, double ''vely'' {{=}} 0, double ''velz'' {{=}} 0, double ''accelx'' {{=}} 0, double ''accely'' {{=}} 0, double ''accelz'' {{=}} 0, double ''startalphaf'' {{=}} 0, double ''fadestepf'' {{=}} -1, double ''sizestep'' {{=}} 0, double ''startroll'' {{=}} 0, double ''rollvel'' {{=}} 0, double ''rollacc'' {{=}} 0)}}
+==Usage==
+Spawns a single [[particle]]. Unlike [[A_SpawnParticle]], this function also allows for creating textured particles, animated textured particles, shading particles, and giving them roll.
+
+For a more flexible, [[Structs|struct]]-based version, see [[SpawnParticle (ZScript)|'''SpawnParticle''']].
+
+Note: in [[ZScript]] using [[SpawnParticle (ZScript)|{{c|level.SpawnParticle()}}]] instead is generally preferable as it offers more flexibility. If you decide to go with this function after all, due to a very large number of arguments, using [[ZScript named arguments]] is recommended.
+
+===Parameters===
+*{{c|Color '''color1'''}}
+:The color of the particle. Can be used with a hexadecimal value or a predefined value such as "Black". Colors can also be applied to textured particles to tint them a certain color, but this requires setting {{c|style}} to {{c|STYLE_Shaded}} (or {{c|STYLE_AddShaded}}, if you want them to be additive as well). Use &lt;code&gt;""&lt;/code&gt; to pass no color if you want to make a textured particle and ''not'' apply any tint to it.
+*{{c|TextureID '''texture'''}}
+:The texture to use for the particle, this requires a TextureID. Can be any graphic type, such as textures, sprites, miscellaneous graphics etc. This also supports graphics animated through [[ANIMDEFS]].
+*{{c|int '''style'''}}
+:The render style to apply to the particle, these styles can be used both on textured and non-textured particles. Available render styles include:
+:*'''STYLE_None'''/'''STYLE_Normal'''/'''STYLE_Translucent''': The particle is rendered normally, and can have custom alpha. All these styles have the same effect on particles. The default style is STYLE_None.
+:*'''STYLE_Add''': Particle uses additive translucency.
+:*'''STYLE_Stencil''': Particle is drawn ONLY with a the color defined in ''color1'', this is only really useful for textured particles. Has no visual effect on untextured particles, since they're already colorized in a single flat color.
+:*'''STYLE_AddStencil''': Same as STYLE_Stencil, but additive.
+:*'''STYLE_Shaded''': Particle uses shaded renderstyle, tinted to the same color tone (but not a flat color, in contrast to Stencil). Has no visual effect on untextured particles, since they're already colorized in a single flat color.
+:*'''STYLE_AddShaded''': Particle uses shaded renderstyle, tinted to the same color tone, and also uses additive translucency.
+:*'''STYLE_Fuzzy''': Creates undefined behavior with textured and untextured particles.
+:*'''STYLE_Subtract''': Uses inverted additive translucency, darkening the particle instead of making it lighter.
+:*'''STYLE_Shadow''': Creates an effect similar to giving the particle STYLE_Stencil and giving it a ''startalphaf'' of 0.3.
+*{{c|int '''flags'''}}
+:Customizes the behavior of the function. Multiple flags can be combined by using the bitwise OR operator (&lt;code&gt;|&lt;/code&gt;) between the constant names:
+{{: SpawnParticle flags}}
+:Default is 0 (no flags).
+*{{c|int '''lifetime'''}}
+:The lifetime of the particle in [[tics]]. Default is 35.
+*{{c|double '''size'''}}
+:The size of the particle in absolute map units. If a texture is used, it'll be automatically scaled to fit this size. Default is 1.
+*{{c|double '''angle'''}}
+:The angle to offset the particle by. Default is 0.
+*{{c|double '''xoff'''}}
+:The forward/backward offset from the actor to spawn the particle at. Note that this is not relative. Default is 0.
+*{{c|double '''yoff'''}}
+:The left/right offset from the actor to spawn the particle at. Note that this is not relative. Default is 0.
+*{{c|double '''zoff'''}}
+:The vertical offset from the actor's feet to spawn the particle at. Default is 0.
+*{{c|double '''velx'''}}
+*{{c|double '''vely'''}}
+*{{c|double '''velz'''}}
+:The velocity along the X/Y/Z axis to apply to the particle. This is in absolute direction, not relative. Default is 0.
+*{{c|double '''accelx'''}}
+*{{c|double '''accely'''}}
+*{{c|double '''accelz'''}}
+:Defines how much to accelerate the particle by over its lifespan. Default is 0.
+*{{c|double '''startalphaf'''}}
+:Specifies the particle's alpha upon spawning. Default is 1.0.
+*{{c|double '''fadestepf'''}}
+:The amount by which the particle fades each tic. The particle is automatically removed early if it fades completely before ''lifetime'' expires. By default any negative value indicates an automatic complete fade-out over the length of ''lifetime''. With {{c|SPF_NEGATIVE_FADESTEP}}, negative values will be taken literally, causing the particle to fade in instead. Default is -1.
+*{{c|double '''sizestep'''}}
+:The particle grows or shrinks in size by this amount per tic.
+*{{c|double '''startroll'''}}
+:The amount of roll the particle starts with. Default is 0. {{c|SPF_ROLL}} must be set for this parameter to be used.
+*{{c|double '''rollvel'''}}
+:The velocity at which the particle rotates. Default is 0. {{c|SPF_ROLL}} must be set for this parameter to be used.
+*{{c|double '''rollacc'''}}
+:How much the particle will accelerate its' roll over its' lifespan. Default is 0. {{c|SPF_ROLL}} must be set for this parameter to be used.
+
+== Examples ==
+This actor spawns additive textured particles that use the sprites of the {{class|DoomImpBall|Imps' fireball}}, these particles then randomly pick if they should roll left or right, and accelerate their roll over time. The particles also increase in scale and fade out slowly.
+
+ {{color|blue|Class TexturedParticleExample}} : {{color|blue|Actor}}
+ {
+ 	{{color|blue|Override Void}} {{color|green|Tick()}}
+ 	{
+ 		{{color|blue|Bool}} Left = Random ({{color|blue|True}},{{color|blue|False}});
+ 		{{color|green|A_SpawnParticleEx}}
+ 		(
+ 			"{{color|green|FFFFFF}}",
+ 			[[TexMan|&lt;span style="color:blue;"&gt;TexMan&lt;/span&gt;]].[[CheckForTexture|&lt;span style="color:green;"&gt;CheckForTexture&lt;/span&gt;]] ("{{color|green|BAL1A0}}"),
+ 			style: STYLE_Add,
+ 			flags: SPF_FULLBRIGHT|SPF_RELATIVE|SPF_ROLL,
+ 			lifetime: TICRATE * FRandom (1,4),
+ 			size: 0.5,
+ 			angle: 0.,
+ 			xoff: FRandom (64,-64),
+ 			yoff: FRandom (64,-64),
+ 			zoff: 0.,
+ 			velx: FRandom (0.5,-0.5),
+ 			vely: FRandom (0.5,-0.5),
+ 			velz: FRandom (0.4,3.0),
+ 			accelx: 0,
+ 			accely: 0,
+ 			accelz: -0.001,
+ 			startalphaf: 1.25,
+ 			fadestepf: -0.002,
+ 			sizestep: 0.25,
+ 			startroll: 180/2,
+ 			rollvel: Left ? 0.5 : -0.5,
+ 			rollacc: Left ? 0.02 : -0.02
+ 		);
+ 	}
+ }
+
+=== Animated particles example ===
+In addition to being able to use static graphics as particles, you can also use animated textures and graphics as particles as well. Below is an example on how the fireball particle spawner above can be animated using the Imp fireballs' original sprites.
+
+The below [[TEXTURES]] definition creates new fireball textures using the original sprites as patches.
+
+ {{color|green|// Texture definitions generated by SLADE3}}
+ {{color|green|// on Fri Nov 11 05:41:11 2022}}
+ 
+ {{color|blue|Texture}} "{{color|green|ANIMBAL1}}", 15, 15
+ {
+ 	{{color|blue|Patch}} "{{color|green|BAL1A0}}", 0, 0
+ }
+ 
+ {{color|blue|Texture}} "{{color|green|ANIMBAL2}}", 15, 15
+ {
+ 	{{color|blue|Patch}} "{{color|green|BAL1B0}}", 0, 0
+ }
+ 
+ {{color|green|// End of texture definitions}}
+
+Now that the original Imp fireball sprites are used to create new textures. [[ANIMDEFS]] can be used to turn the new textures into an animated texture.
+
+ {{color|blue|Texture}} ANIMBAL1 {{color|blue|Range}} ANIMBAL2 {{color|blue|Tics 8}}
+
+The sprites have now been turned into an animated texture. And you can change the graphic used by the ''texture'' parameter to one that is part of the animated texture. Causing the particles to turn into fully animated Imp fireballs.
+
+== See also ==
+*[[A_SpawnParticle]]
+*[[SpawnParticle (ZScript)]]
+
+[[Category:DECORATE]]
+[[Category:ZScript]]</text>
+    <sha1>s13rgaymch9m072uvjyxjdamoyee7c1</sha1>
+  </revision>
+</page>

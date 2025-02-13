@@ -1,0 +1,71 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>Classes:Clip</title>
+  <ns>0</ns>
+  <id>2572</id>
+  <revision>
+    <id>53604</id>
+    <parentid>39184</parentid>
+    <timestamp>2024-11-08T11:36:17Z</timestamp>
+    <contributor>
+      <username>Jekyll Grim Payne</username>
+      <id>2175</id>
+    </contributor>
+    <origin>53604</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="1292" sha1="dzkdgtojmokgjajnyhe0kepvg4exdk0" xml:space="preserve">{{Actor|
+| type = Ammo
+| name = Clip
+| class = Clip
+| game = Doom
+| doomednum = 2007
+| spawnid = 11
+| spawnname = T_CLIP 
+}}[[Classes]]: [[Classes:Inventory|Inventory]]&amp;rarr;[[Classes:Ammo|Ammo]]&amp;rarr;&lt;u&gt;Clip&lt;/u&gt;&lt;br&gt;
+&amp;ensp;&amp;rarr;[[Classes:ClipBox|ClipBox]]
+
+Clip is the ammunition for both [[Classes:Pistol|pistols]] and [[Classes:Chaingun|chainguns]] in Doom. A normal clip contains 10 bullets. Not to be confused with Strife's own [[Classes:ClipOfBullets|clip]].
+
+=== [[ZScript]] definition ===
+{{ZScriptDefinitionNote|actors/doom/doomammo.zs}}
+&lt;syntaxhighlight lang="cs"&gt;
+class Clip : Ammo
+{
+	Default
+	{
+		Inventory.PickupMessage "$GOTCLIP";
+		Inventory.Amount 10;
+		Inventory.MaxAmount 200;
+		Ammo.BackpackAmount 10;
+		Ammo.BackpackMaxAmount 400;
+		Inventory.Icon "CLIPA0";
+		Tag "$AMMO_CLIP";
+	}
+	States
+	{
+	Spawn:
+		CLIP A -1;
+		Stop;
+	}
+}
+&lt;/syntaxhighlight&gt;
+=== [[DECORATE]] definition ===
+{{DecorateDefinitionNote}}
+ ACTOR &lt;u&gt;Clip&lt;/u&gt; : {{Class|Ammo}}
+ {
+   {{Property|Inventory.PickupMessage}} "$GOTCLIP" // "Picked up a clip."
+   {{Property|Inventory.Amount}} 10
+   {{Property|Inventory.MaxAmount}} 200
+   {{Property|Ammo.BackpackAmount}} 10
+   {{Property|Ammo.BackpackMaxAmount}} 400
+   {{Property|Inventory.Icon}} "CLIPA0"
+   States
+   {
+   Spawn:
+     CLIP A -1
+     Stop
+   }
+ }</text>
+    <sha1>dzkdgtojmokgjajnyhe0kepvg4exdk0</sha1>
+  </revision>
+</page>

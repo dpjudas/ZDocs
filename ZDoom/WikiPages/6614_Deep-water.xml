@@ -1,0 +1,41 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>Deep water</title>
+  <ns>0</ns>
+  <id>6614</id>
+  <revision>
+    <id>32533</id>
+    <parentid>31678</parentid>
+    <timestamp>2012-04-29T13:16:07Z</timestamp>
+    <contributor>
+      <username>Gez</username>
+      <id>1283</id>
+    </contributor>
+    <minor />
+    <origin>32533</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="3135" sha1="ruxichct88566jkmp3u1kccsi5fs0ih" xml:space="preserve">{{doomwiki|making_deep_water|making deep water}}In [[vanilla Doom]], water is just a more-or-less convincing floor texture. [[Heretic]] improved it a bit by adding [[flat]]-specific floor clipping and splashes, which [[ZDoom]] manages through the [[TERRAIN]] lump, but this still only covered very shallow water.
+
+The [[waterlevel]] variable is only updated by [[swimmable]] [[3D floor]]s and [[Boom]]-style deep water. Terrain effects and vanilla hacks will not affect it.
+
+== Vanilla deep water ==
+A number of editing tricks have been developed by mappers to create deep water effects. By increasing degree of hackiness, we have:
+* Flat bleeding: by exploiting a glitch in the original renderer's "flood fill" algorithm to draw flats, it is possible to hide a sector's floor under the floor texture or a higher sector that encircles it if the boundary linedefs do not have lower textures. The effect is used notably in MAP02 of [[Final Doom|TNT: Evilution]].
+* Self-referencing sector: another hack in which the boundary linedefs are edited to have the inner sector on both sides. The outer sector defines the appearance but the inner sector defines the effect.
+* Superposed sector: two sectors with the exact same shape are created, one of them (the bottom one) cut in two by a diagonal and untextured linedef. After they are finished, the two sectors are moved so that they occupy the same space, but the [[map editor]] should not merge vertices or linedefs.
+
+Since these methods remain very limited and prone to glitches, and may not be well supported by all ports, nodebuilders or even map editors, advanced ports started defining genuine methods to create deep water. These tricks remain purely cosmetic; as far as [[ZDoom]] is concerned, such constructions are not genuine deep water. They will not affect an actor's [[waterlevel]] and will not trigger [[REVERBS|underwater reverberation]].
+
+== Boom deep water ==
+[[Boom]] defined several {{dw|Linedef_type#Property_transfer|property transfer linetypes}} to achieve effects not possible before -- or at least not possible without hacks. The one meant to create, among other things, deep water, is linetype 242. In the [[Hexen format]] and [[UDMF]], ZDoom [[map translator|translates it]] to 209:[[Transfer_Heights]] and adds several optional enhancements as well. Contrarily to the vanilla hacks, it is even possible to make water deep enough to [[swim]] in it. This is generally the recommended method to use for ZDoom projects.
+
+== 3D floor water == 
+Another alternative feature for creating deep water is using a [[3D floor]] for it. The advantage over the [[Transfer_Heights]] method is that the water can be translucent, allowing to see in when you are outside; or out when you are inside.
+
+== Water zone ==
+A sector containing a {{Class|WaterZone}} thing is considered [[swimmable]] and underwater. Placing such things is not needed when using Transfer_Heights or Sector_Set3dFloor, since these [[special]]s allow to create swimmable deep water directly; but it might be used for example to create an underwater tunnel between two deep water pools.
+
+[[Category:Glossary]]</text>
+    <sha1>ruxichct88566jkmp3u1kccsi5fs0ih</sha1>
+  </revision>
+</page>

@@ -1,0 +1,43 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>EVENT scripts</title>
+  <ns>0</ns>
+  <id>8999</id>
+  <revision>
+    <id>43685</id>
+    <timestamp>2017-01-08T22:41:22Z</timestamp>
+    <contributor>
+      <username>Tiger</username>
+      <id>2074</id>
+    </contributor>
+    <comment>Imported article from the Zandronum Wiki; ACS Events</comment>
+    <origin>43685</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="1650" sha1="gngs6hbxrgembcduigf9skaytop8a71" xml:space="preserve">{{STFeature}}
+
+EVENT scripts are scripts that are triggered by various in-game events:
+
+ script 123 (int type, int arg1, int arg2) EVENT
+
+The event that caused the script to be fired is enumerated into the &lt;tt&gt;type&lt;/tt&gt; argument. &lt;tt&gt;arg1&lt;/tt&gt; and &lt;tt&gt;arg2&lt;/tt&gt; may or may not be used (depending on the event type) to provide additional data.
+
+== Script types ==
+;GAMEEVENT_PLAYERFRAGS 0
+:Player frags another player. The activator is the killing player and &lt;tt&gt;arg1&lt;/tt&gt; is the number of the player who was fragged.
+;GAMEEVENT_MEDALS 1
+:Player receives a medal. The activator is the player who recieves the medal and &lt;tt&gt;arg1&lt;/tt&gt; is the string containing the name of the medal.
+;GAMEEVENT_CAPTURES 2
+:Player captures the flag/skull. The activator is the capturing player and &lt;tt&gt;arg1&lt;/tt&gt; is the player who assisted. If nobody assisted the capture, -1 is supplied instead.
+;GAMEEVENT_TOUCHES 3
+:Player touches the flag/skull. The activator is the player who touched the team item and &lt;tt&gt;arg1&lt;/tt&gt; is the team index of the team whose flag/skull was touched.
+;GAMEEVENT_RETURNS 4
+:The flag/skull is returned. The activator is the player who returned the team item (or the world if the item was automatically returned), &lt;tt&gt;arg1&lt;/tt&gt; is the index of the team whose item was returned. &lt;tt&gt;arg2&lt;/tt&gt; is set to 0 if the return was done automatically or 1 if it was done by a player.
+;GAMEEVENT_ROUND_STARTS 5
+:When the round starts.
+;GAMEEVENT_ROUND_ENDS 6
+:The current round ends and the win sequence starts, e.g. when the fraglimit is hit.
+;GAMEEVENT_ROUND_ABORTED 7
+:If the round is aborted (e.g. in duel where one of the combatants leaves the game).</text>
+    <sha1>gngs6hbxrgembcduigf9skaytop8a71</sha1>
+  </revision>
+</page>

@@ -1,0 +1,162 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>ZScript HUDs</title>
+  <ns>0</ns>
+  <id>9168</id>
+  <revision>
+    <id>53467</id>
+    <parentid>53466</parentid>
+    <timestamp>2024-10-31T10:32:45Z</timestamp>
+    <contributor>
+      <username>Jekyll Grim Payne</username>
+      <id>2175</id>
+    </contributor>
+    <origin>53467</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="6954" sha1="ootcg8i2m0jqehljww328qvgivgay38" xml:space="preserve">{{ZScriptNote}}
+
+ZScript offers a much more flexible (but complex) way to code fully custom HUDs, in contrast to [[SBARINFO]]. Making a custom HUD requires using the {{class|BaseStatusBar}} class (for the main HUD, such as fullscreen HUD and statusbar), and, optionally, the {{class|AltHUD}} class (to replace GZDoom's [[alternative HUD]]).
+
+== Related classes ==
+{| class="wikitable"
+|-
+! Name !! Description
+|-
+| '''[[Classes:BaseStatusBar|BaseStatusBar]]''' || The base status bar which all status bars must inherit from.
+|-
+| '''[[Classes:AltHUD|AltHUD]]''' || The base class that [[Alternate HUD]] replacements must inherit from.
+|-
+| '''[[Classes:HUDFont|HUDFont]]''' || Used for setting up fonts for use with the DrawString function in BaseStatusBar.
+|-
+| '''[[Classes:InventoryBarState|InventoryBarState]]''' || Used for showing the inventory items and cycling through them, if they possess INVENTORY.INVBAR. 
+|-
+| '''[[Classes:LinearValueInterpolator|LinearValueInterpolator]]''' || Used for interpolating between one value to the next on a linear course.
+|-
+| '''[[Classes:DynamicValueInterpolator|DynamicValueInterpolator]]''' || Similar to Linear, but can be used to gradually scale the start and end of the approach to and from its destination.
+|}
+[[Category:ZScript]]
+
+== Implementation ==
+=== Adding a custom HUD in the game ===
+First, create a custom HUD class based on {{class|BaseStatusBar}}. If you also want to replace the [[alternative HUD]], add another HUD based on the {{class|AltHUD}} class.
+
+Second, you will need to add your HUDs via the [[MAPINFO/GameInfo_definition|GameInfo block of the MAPINFO lump]] as follows:
+&lt;syntaxhighlight lang="cs"&gt;
+GameInfo
+{
+  StatusBarClass = "MyCustomHUD" //replaces the base HUD
+  AltHUDClass = "MyCustomAltHUD" //replaces the alternative HUD
+}&lt;/syntaxhighlight&gt;
+
+'''NOTE:''' Status bars cannot be replaced like actors via [[DECORATE]]. The last loaded mod with a definition of StatusBarClass will be the one to load. All others will be disregarded.
+
+=== Basic structure of a HUD ===
+There are a few key virtual functions that determine the HUD's code flow:
+* {{c|[[Init (BaseStatusBar)|'''Init'''()]]}}
+: Called once, when the HUD is first initialized (when entering a level). Used to set up all the basics, such as {{class|HUDFont|HUD fonts}}.
+* {{c|[[Tick (BaseStatusBar)|'''Tick'''()]]}}
+: Similar to {{class|Thinker}}'s [[Tick]] function, {{class|BaseStatusBar}} also has a Tick function that is called every game tic, but it's still called in UI scope. You can't draw anything here, but you can, for example, count down custom timers that must happen with fixed frequency.
+* {{c|[[Draw|'''Draw'''(int state, double TicFrac)]]}}
+: This is where you can actually draw HUD elements with functions like [[DrawImage (BaseStatusBar)|DrawImage]], [[DrawTexture (BaseStatusBar)|DrawTexture]], [[DrawString (BaseStatusBar)|DrawString]] and others.
+
+At the absolute minimum, you will need Init and Draw. Plenty of others can be overridden and modified for various purposes — see [Classes:BaseStatusBar#Virtual|BaseStatusBar's virtual functions]].
+
+=== Placement of elements in a HUD ===
+{{class|AltHUD}} uses global screen coordinates and utilizes {{struct|Screen}} methods for drawing anything, so see its page for details. It's also very inflexible and is rarely used in custom projects.
+
+{{class|BaseStatusBar}}, however, utilizes virtual resolution that is adjusted to fit over the screen's resolution, and it relies on its virtual coordinates. By default, the HUD can also be scaled by the player. As such, explicit values must ''never'' be used to place elements at specific locations. For example, never try to use a position like (320, 0) to draw an element in the top right corner, because that point will actually shift depending on the specific player's monitor resolution and aspect ratio.
+
+Instead, familiarize yourself with DI_SCREEN* and DI_ITEM* flags used by most BaseStatusBar functions. See [[Classes:BaseStatusBar#Non-static|specific function's pages]] for information about them.
+
+=== Triggering HUD functions with gameplay events ===
+Triggering UI-scoped functions from play scope is described [Events_and_handlers#Communicating_with_the_UI|on the event handlers page]]. As a general example:
+&lt;syntaxhighlight lang="cs"&gt;
+class MyCustomHUD : BaseStatusBar
+{
+    int damageEffectTics; // this will be updated every time we're damaged, then count down
+    int mostRecentdamage; // this will store the most recent amount of damage received
+
+    void PlayerDamaged(int damageAmount = 0)
+    {
+        damageEffectTics = TICRATE; // update damageEffectTics value to be equal to 1 second
+        mostRecentDamage = damageAmount; // cache most recent damage
+    }
+
+    override void Tick()
+    {
+        Super.Tick();
+        // count down damageEffectTics every tic if it's above zero:
+        if (damageEffectTics &gt; 0)
+        {
+            damageEffectTics--;
+            if (damageEffectTics == 0)
+            {
+                mostRecentDamage = 0; // reset most recent damage information
+            }
+        }
+    }
+
+    override void Draw(int state, double TicFrac)
+    {
+        Super.Draw(state, TicFrac);
+
+        [...] // draw other HUD elements (omitted for brevity)
+
+        if (state != HUD_None &amp;&amp; damageEffectTics &gt; 0)
+        {
+            DrawCustomDamageEffects();
+        }
+    }
+
+    void DrawCustomDamageEffects()
+    {
+        // This function is meant to be used to draw
+        // some kind of custom "recently damaged"
+        // effect, possibly relying on the mostRecentDamage
+        // value.
+        [...]
+    }
+}
+
+// This custom handler will send information to our
+// custom HUD whenever the player is damaged:
+class CustomEventHandler : EventHandler
+{
+    // Detect when a player is damaged:
+    override void WorldThingDamaged(WorldEvent e)
+    {
+        if (e.thing.player)
+        {
+            // Send an interface event using the damaged player's number
+            // and passing the damage they received to the first argument:
+            EventHandler.SendInterfaceEvent(e.thing.PlayerNumber(), "HUDEVENT_PlayerDamaged", e.damage);
+        }
+    }
+
+    override void InterfaceProcess(ConsoleEvent e)
+    {
+        // Detect when the above mentioned interface event
+        // is triggered:
+        if (e.name ~== "HUDEVENT_PlayerDamaged")
+        {
+            // Cast the current statusbar as our custom HUD:
+            let hud = MyCustomHUD(statusbar);
+            if (hud)
+            {
+                // If the cast suceeded, call the custom PlayerDamaged
+                // function, and pass the first argument of the interface
+                // event (which is supposed to contain the amount of damage)
+                // to its argument:
+                hud.PlayerDamaged(e.args[0]);
+            }
+        }
+    }
+}&lt;/syntaxhighlight&gt;
+
+== See also ==
+* [[Classes:BaseStatusBar]]
+* [[Classes:AltHUD]]
+* [[Category:BaseStatusBar]]</text>
+    <sha1>ootcg8i2m0jqehljww328qvgivgay38</sha1>
+  </revision>
+</page>

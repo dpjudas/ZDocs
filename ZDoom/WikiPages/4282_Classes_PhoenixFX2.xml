@@ -1,0 +1,58 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>Classes:PhoenixFX2</title>
+  <ns>0</ns>
+  <id>4282</id>
+  <revision>
+    <id>34151</id>
+    <parentid>18156</parentid>
+    <timestamp>2012-09-02T11:49:41Z</timestamp>
+    <contributor>
+      <username>Blue Shadow</username>
+      <id>2021</id>
+    </contributor>
+    <comment>/* DECORATE definition */ Updated.</comment>
+    <origin>34151</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="970" sha1="pmdfubvn4j8rmzas6nor6zypyezuu7q" xml:space="preserve">{{Actor|
+| type = Explosive
+| name = Tomed phoenix rod flame
+| class = PhoenixFX2
+| game = Heretic
+}}[[Classes]]: &lt;u&gt;PhoenixFX2&lt;/u&gt;&lt;br&gt;
+
+The fire thrown by a [[Classes:ArtiTomeOfPower|powered-up]] [[Classes:PhoenixRodPowered|phoenix rod]]. These projectiles have a half chance of freezing the player who shot them for four tics upon impact.
+
+==== [[DECORATE]] definition ====
+ ACTOR &lt;u&gt;PhoenixFX2&lt;/u&gt; native
+ {
+   {{Property|Radius}} 6
+   {{Property|Height}} 8
+   {{Property|Speed}} 10
+   {{Property|Damage}} 2
+   {{Property|DamageType}} Fire
+   {{Property|Projectile}}
+   {{Property|RenderStyle}} Add
+   {{Property|Obituary}} "$OB_MPPPHOENIXROD"
+ 
+   action native [[A_FlameEnd]]();
+   action native [[A_FloatPuff]]();
+ 
+   States
+   {
+   Spawn:
+     FX09 ABABA 2 Bright
+     FX09 B 2 Bright [[A_FlameEnd]]
+     FX09 CDEF 2 Bright
+     Stop
+   Death:
+     FX09 G 3 Bright
+     FX09 H 3 Bright [[A_FloatPuff]]
+     FX09 I 4 Bright
+     FX09 JK 5 Bright
+     Stop
+   }
+ }</text>
+    <sha1>pmdfubvn4j8rmzas6nor6zypyezuu7q</sha1>
+  </revision>
+</page>

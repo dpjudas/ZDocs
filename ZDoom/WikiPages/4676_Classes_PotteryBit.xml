@@ -1,0 +1,69 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>Classes:PotteryBit</title>
+  <ns>0</ns>
+  <id>4676</id>
+  <revision>
+    <id>34739</id>
+    <parentid>34738</parentid>
+    <timestamp>2012-10-24T11:08:40Z</timestamp>
+    <contributor>
+      <username>Blue Shadow</username>
+      <id>2021</id>
+    </contributor>
+    <comment>Added a description.</comment>
+    <origin>34739</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="945" sha1="81nsqb6gsd7wpaahovv1xn0gem4z2pm" xml:space="preserve">{{Actor|
+| type = SFX
+| name = PotteryBit
+| class = PotteryBit
+| game = Hexen
+}}[[Classes]]: &lt;u&gt;PotteryBit&lt;/u&gt;
+
+A shattered pottery piece that is spawned when a {{Class|Pottery1|pottery}} is smashed.
+==== [[DECORATE]] definition ====
+ ACTOR &lt;u&gt;PotteryBit&lt;/u&gt;
+ {
+   {{Property|Radius}} 5
+   {{Property|Height}} 5
+   +{{Flag|MISSILE}}
+   +{{Flag|NOTELEPORT}}
+   +{{Flag|NOICEDEATH}}
+ 
+   action native [[A_PotteryChooseBit]]();
+   action native [[A_PotteryCheck]]();
+ 
+   States
+   {
+   Spawn:
+     PBIT ABCDE -1
+     Stop
+   Death:
+     PBIT F 0 [[A_PotteryChooseBit]]
+     Stop
+   Pottery1:
+     PBIT F 140
+     PBIT F 1 [[A_PotteryCheck]]
+     Stop
+   Pottery2:
+     PBIT G 140
+     PBIT G 1 [[A_PotteryCheck]]
+     Stop
+   Pottery3:
+     PBIT H 140
+     PBIT H 1 [[A_PotteryCheck]]
+     Stop
+   Pottery4:
+     PBIT I 140
+     PBIT I 1 [[A_PotteryCheck]]
+     Stop
+   Pottery5:
+     PBIT J 140
+     PBIT J 1 [[A_PotteryCheck]]
+     Stop
+   }
+ }</text>
+    <sha1>81nsqb6gsd7wpaahovv1xn0gem4z2pm</sha1>
+  </revision>
+</page>

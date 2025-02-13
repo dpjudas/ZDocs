@@ -1,0 +1,39 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>GetAmount</title>
+  <ns>0</ns>
+  <id>9755</id>
+  <revision>
+    <id>50962</id>
+    <timestamp>2023-11-12T20:34:35Z</timestamp>
+    <contributor>
+      <username>Jekyll Grim Payne</username>
+      <id>2175</id>
+    </contributor>
+    <comment>Created page with "'''[[Classes:BaseStatusBar|BaseStatusBar]]'''  {{c|int, int '''GetAmount'''(class&lt;Inventory&gt; item)}}  ==Usage== Can be used in a [[Classes:BaseStatusBar|ZScript HUD]] to obtai..."</comment>
+    <origin>50962</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="893" sha1="meqz6pz9v25vay4p7b0a38eo9tndy4w" xml:space="preserve">'''[[Classes:BaseStatusBar|BaseStatusBar]]'''
+
+{{c|int, int '''GetAmount'''(class&lt;Inventory&gt; item)}}
+
+==Usage==
+Can be used in a [[Classes:BaseStatusBar|ZScript HUD]] to obtain amount and maxamount of the specified [[Classes:Inventory|Inventory]] class type.
+
+===Return values===
+Has 2 return values:
+# int - the amount of this item in the player's inventory. If the player doesn't have that item, returns 0.
+# int - the maximum of this item. If the player has this item in their inventory, returns its {{c|maxamount}} field (accounting for possible dynamic modifications); otherwise returns the default {{property|maxamount}} value for this class.
+
+==Examples==
+&lt;syntaxhighlight lang="csharp"&gt;
+int am, maxam;
+[am, maxam] = GetAmount('BloodVial');
+DrawString(mHUDfont, String.Format("Blood vials: %d/%d", am, maxam), (4, 4));
+&lt;/syntaxhighlight&gt;
+
+[[Category:ZScript]]
+[[Category:BaseStatusBar]]</text>
+    <sha1>meqz6pz9v25vay4p7b0a38eo9tndy4w</sha1>
+  </revision>
+</page>

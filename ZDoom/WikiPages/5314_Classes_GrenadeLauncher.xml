@@ -1,0 +1,77 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>Classes:GrenadeLauncher</title>
+  <ns>0</ns>
+  <id>5314</id>
+  <revision>
+    <id>21591</id>
+    <parentid>21496</parentid>
+    <timestamp>2009-05-03T13:02:22Z</timestamp>
+    <contributor>
+      <username>Gez</username>
+      <id>1283</id>
+    </contributor>
+    <minor />
+    <comment>Added slotnumber property</comment>
+    <origin>21591</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="1500" sha1="ap7ovbiua0mirgql9cxcvy9c0ambalg" xml:space="preserve">{{Actor|
+| type = Weapon
+| name = Grenade launcher
+| class = GrenadeLauncher
+| game = Skulltag
+| doomednum = 5011
+| spawnid = 163
+| spawnname = T_GRENADELAUNCHER
+}}
+[[Classes]]: [[Classes:Inventory|Inventory]]&amp;rarr;[[Classes:Weapon|Weapon]]&amp;rarr;[[Classes:DoomWeapon|DoomWeapon]]&amp;rarr;&lt;u&gt;GrenadeLauncher&lt;/u&gt;
+
+A grenade launcher inspired by Quake's own. It uses {{Class|RocketAmmo|standard rockets}} rather than a separate type of grenade ammunitions.
+==== [[DECORATE]] definition ====
+ ACTOR &lt;u&gt;GrenadeLauncher&lt;/u&gt; : {{Class|DoomWeapon}} 5011
+ {
+   SpawnID 163
+   Radius 20
+   Height 16
+   Weapon.Selectionorder 2500
+   +WEAPON.NOAUTOFIRE
+   +WEAPON.NOAUTOAIM
+   Weapon.AmmoUse 1
+   Weapon.AmmoGive 2
+   Weapon.AmmoType "{{Class|RocketAmmo}}"
+   Weapon.Kickback 100
+   Weapon.SlotNumber 5 // This line isn't in skulltag.pk3, which instead defines the slot directly in {{Class|DoomPlayer}}
+   Inventory.PickupMessage "$PICKUP_GRENADELAUNCHER" // "You got the grenade launcher!"
+ 
+   action native [[A_FireSTGrenade]] ();
+ 
+   States
+   {
+   Spawn:
+     GLAU A -1
+     Stop
+   Ready:
+     GRLG A 1 [[A_WeaponReady]]
+     Loop
+   Deselect:
+     GRLG A 1 [[A_Lower]]
+     Loop
+   Select: 
+     GRLG A 1 [[A_Raise]]
+     Loop
+   Fire: 
+     GRLG B 8 [[A_GunFlash]]
+     GRLG B 12 [[A_FireSTGrenade]]
+     GRLG B 0 [[A_ReFire]]
+     Goto Ready 
+   Flash: 
+     GRLF A 3 bright [[A_Light1]]
+     GRLF B 4 bright
+     GRLF C 4 bright [[A_Light2]]
+     GRLF D 4 bright [[A_Light2]]
+     Goto LightDone
+   }
+ }</text>
+    <sha1>ap7ovbiua0mirgql9cxcvy9c0ambalg</sha1>
+  </revision>
+</page>

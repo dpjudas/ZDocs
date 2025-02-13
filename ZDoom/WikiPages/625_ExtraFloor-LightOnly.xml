@@ -1,0 +1,42 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>ExtraFloor LightOnly</title>
+  <ns>0</ns>
+  <id>625</id>
+  <revision>
+    <id>42539</id>
+    <parentid>34805</parentid>
+    <timestamp>2016-03-19T03:45:26Z</timestamp>
+    <contributor>
+      <username>Eevee</username>
+      <id>44</id>
+    </contributor>
+    <comment>mention that damage is transferred!</comment>
+    <origin>42539</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="2019" sha1="hk6xhco4765rspchg4nhjp875opznp6" xml:space="preserve">{{DISPLAYTITLE:ExtraFloor_LightOnly}}
+{{Special|50|tag, type|Renderer|use=line}}
+
+* ''tag'': tag of sector to apply effect to 
+* ''type'': Type of light effect (see below)
+
+This special, when placed on a line, will transfer the [[control sector]]'s (the sector on the first side) light level to the walls of the sector referenced by ''tag'' at the heights specified from the control sector.
+
+If you have a real sector, floor/ceiling heights 0 and 128, and have a control sector with heights 64 and 96, you would get sort of a white bar from 64 to 96 in the real sector. You can, of course, apply [[slope]]s, [[colored lighting]] and any effect to the control sector.
+
+The second parameter is the type of light effect to do. The available values are as follows:
+
+:0&amp;nbsp;&amp;mdash; Extra light extends from ceiling of control sector down to top of another type 0 light. 
+:1&amp;nbsp;&amp;mdash; Extra light extends from ceiling down to the floor of the control sector. 
+:2&amp;nbsp;&amp;mdash; Extra light extends from control sector's ceiling down to the top of another extra light. 
+
+Note that when using two or more extra lights on a sector, the linedef with the lower number has priority.
+
+Example: let's say the real sector's floor/ceiling heights are 0 and 128, the first control sector's heights are 0 and 64, and the second control sector's heights are 32 and 128. If the first control sector's type 50 linedef is linedef #100, and the second's is linedef #200, that would mean heights 0&amp;ndash;64 would be the light level of the first control sector, and 64&amp;ndash;128 the level of the second control sector. If the linedef numbers were swapped over, then heights 0&amp;ndash;32 would be the light level of the first control sector, and 32&amp;ndash;128 the level of the second control sector.
+
+Note that this is implemented as a [[Sector_Set3DFloor]] with invisible textures, so sector effects such as damaging specials are also transferred.
+
+An example wad can be found {{plainlink|[http://zdoom.org/files/examples/extralight.zip here]}}.</text>
+    <sha1>hk6xhco4765rspchg4nhjp875opznp6</sha1>
+  </revision>
+</page>

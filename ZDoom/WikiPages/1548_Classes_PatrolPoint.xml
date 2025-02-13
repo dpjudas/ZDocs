@@ -1,0 +1,52 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>Classes:PatrolPoint</title>
+  <ns>0</ns>
+  <id>1548</id>
+  <revision>
+    <id>39782</id>
+    <parentid>37486</parentid>
+    <timestamp>2015-05-03T22:53:41Z</timestamp>
+    <contributor>
+      <username>Blue Shadow</username>
+      <id>2021</id>
+    </contributor>
+    <minor />
+    <comment>/* DECORATE definition */ Updated</comment>
+    <origin>39782</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="1380" sha1="8zxbha3vqfaemkyagu5953alom236t6" xml:space="preserve">{{Actor|
+| type = Script thing
+| name = Patrol point
+| class = PatrolPoint
+| doomednum = 9024
+}}[[Classes]]: &lt;u&gt;PatrolPoint&lt;/u&gt;&lt;br&gt;
+
+Monster routes are controlled through the use of patrol points, or path nodes. A patrol point ignores its special and assigns special meaning to its arguments.
+===Arguments===
+Patrol points take two arguments:
+
+{{TArgs|0}} [[TID]] of the next {{Class|PatrolPoint}} in the path.
+{{TArgs|1}} time (in seconds) a monster should wait at this node before proceeding to the next one.
+
+To set a monster on a path, you have two options: use the [[Thing_SetGoal]] special in a script or on a line to send a monster or group of monsters to a node, or set a monster's special to [[Thing_SetGoal]]. If a monster's special is [[Thing_SetGoal]], and the tid specified for the special is 0, the monster will be sent to the node automatically when the level is loaded, and its special will be ignored if it dies.
+
+Also of note is the [[Classes:PatrolSpecial|patrol special]] thing which can be used to execute a thing special when an actor reaches a certain path node.
+==== [[DECORATE]] definition ====
+ ACTOR &lt;u&gt;PatrolPoint&lt;/u&gt;
+ {
+   {{Property|Radius}} 8
+   {{Property|Height}} 8
+   {{Property|Mass}} 10
+   +{{Flag|NOGRAVITY}}
+   +{{Flag|NOBLOCKMAP}}
+   +{{Flag|DONTSPLASH}}
+   {{Property|RenderStyle}} None
+ }
+
+== See Also ==
+*[[Tutorials]]
+[[Category:Guides]]</text>
+    <sha1>8zxbha3vqfaemkyagu5953alom236t6</sha1>
+  </revision>
+</page>

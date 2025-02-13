@@ -1,0 +1,84 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>A CallSpecial</title>
+  <ns>0</ns>
+  <id>5051</id>
+  <revision>
+    <id>53649</id>
+    <parentid>53042</parentid>
+    <timestamp>2024-11-08T22:08:20Z</timestamp>
+    <contributor>
+      <username>Jekyll Grim Payne</username>
+      <id>2175</id>
+    </contributor>
+    <comment>/* Examples */</comment>
+    <origin>53649</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="2384" sha1="b1bopdb0c92cl62zbibsshek4bbtcr9" xml:space="preserve">{{DISPLAYTITLE:A_CallSpecial}}
+
+'''{{class|Actor}}'''
+
+bool '''A_CallSpecial''' (int ''special'', int ''arg1'' = 0, int ''arg2'' = 0, int ''arg3'' = 0, int ''arg4'' = 0, int ''arg5'' = 0)
+
+== Usage ==
+Used to call an actor [[special]] directly in [[ZScript]] or [[DECORATE]]. The special activated this way can be any special (not necessarily the one attached to the actor), and it gets activated as soon as the function is called, without the need for a usual activation trigger like killing/using/bumping into the actor.
+
+Functions as a wrapper for {{struct|LevelLocals|'''level.ExecuteSpecial()'''}}.
+
+=== Parameters ===
+*{{c|int '''special'''}}
+:The [[special]] to activate. Pass &lt;code&gt;&lt;pointer to actor&gt;.special&lt;/code&gt; here if you want to activate the special attached to the actor.
+*{{c|int '''arg1'''}}
+*{{c|int '''arg2'''}}
+*{{c|int '''arg3'''}}
+*{{c|int '''arg4'''}}
+*{{c|int '''arg5'''}}
+:The arguments to pass to the special.
+
+=== Return value ===
+*bool — returns &lt;code&gt;true&lt;/code&gt; if the special was successfully activated.
+
+== [[ZScript]] definition ==
+{{ZScriptDefinitionNote|actors/actor.zs#L1159}}
+&lt;syntaxhighlight lang="csharp"&gt;
+bool A_CallSpecial(int special, int arg1=0, int arg2=0, int arg3=0, int arg4=0, int arg5=0)
+{
+	return Level.ExecuteSpecial(special, self, null, false, arg1, arg2, arg3, arg4, arg5);
+}&lt;/syntaxhighlight&gt;
+
+== Examples ==
+This code will make the actor call [[Floor_LowerToLowest]] upon death:
+ Death:
+     BOSS I 8;
+     BOSS J 8 A_Scream;
+     BOSS K 8;
+     BOSS L 8 A_NoBlocking;
+     BOSS M 0 A_CallSpecial ({{color|#c2c|Floor_LowerToLowest}}, 17, 64); {{comment|tag 17, speed 64}}
+     BOSS MN 8;
+     BOSS O -1;
+     stop;
+
+This version of the {{class|Zombieman}} will trigger its attached special every time it's damaged rather than when it's killed:
+&lt;syntaxhighlight lang="csharp"&gt;
+class TriggerfulZombieman: Zombieman
+{
+	override int DamageMobj (Actor inflictor, Actor source, int damage, Name mod, int flags, double angle)
+	{
+		int dmg = super.DamageMobj(inflictor, source, damage, mod, flags, angle);
+		if (dmg &gt; 0)
+		{
+			// Pass its own special and arguments:
+			A_CallSpecial(special, args[0], args[1], args[2], args[3], args[4]);
+		}
+		return dmg;
+	}
+}&lt;/syntaxhighlight&gt;
+See '''[[DamageMobj]]'''.
+
+[[Category:Action functions]]
+[[category:Action specials]]
+[[category:Decorate Internal functions]]
+{{DEFAULTSORT:CallSpecial}}</text>
+    <sha1>b1bopdb0c92cl62zbibsshek4bbtcr9</sha1>
+  </revision>
+</page>

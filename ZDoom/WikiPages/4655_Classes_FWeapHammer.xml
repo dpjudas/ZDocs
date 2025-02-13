@@ -1,0 +1,79 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>Classes:FWeapHammer</title>
+  <ns>0</ns>
+  <id>4655</id>
+  <revision>
+    <id>39482</id>
+    <parentid>34517</parentid>
+    <timestamp>2015-04-30T21:26:47Z</timestamp>
+    <contributor>
+      <username>Blue Shadow</username>
+      <id>2021</id>
+    </contributor>
+    <minor />
+    <comment>/* DECORATE definition */ Updated</comment>
+    <origin>39482</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="1950" sha1="91oxs6svxy1zmnp57unbhh1yog7hypg" xml:space="preserve">{{Actor|
+| type = Weapon
+| name = Hammer of retribution
+| class = FWeapHammer
+| game = Hexen
+| doomednum = 123
+| spawnid = 28
+| spawnname = T_FIGHTERHAMMER 
+}}[[Classes]]: [[Classes:Inventory|Inventory]]&amp;rarr;[[Classes:Weapon|Weapon]]&amp;rarr;[[Classes:FighterWeapon|FighterWeapon]]&amp;rarr;&lt;u&gt;FWeapHammer&lt;/u&gt;&lt;br&gt;
+The {{Class|FighterPlayer|Fighter}}'s third weapon, Hammer of retribution, is a powerful tool both for melee and long range. At long range, it launches {{Class|HammerMissile|flaming hammers}} with splash damage, using some {{Class|Mana2|green mana}}. At melee combat, it is stronger than {{Class|FWeapAxe|Timon's Axe}}, although slower. Uses no mana in melee attacks.
+==== [[DECORATE]] definition ====
+ ACTOR &lt;u&gt;FWeapHammer&lt;/u&gt; : {{Class|FighterWeapon}}
+ {
+   +{{Flag|BLOODSPLATTER}}
+   {{Property|Weapon.SelectionOrder}} 900
+   +{{Flag|WEAPON.AMMO_OPTIONAL}}
+   +{{Flag|WEAPON.MELEEWEAPON}}
+   {{Property|Weapon.AmmoUse1}} 3
+   {{Property|Weapon.AmmoGive1}} 25
+   {{Property|Weapon.KickBack}} 150
+   {{Property|Weapon.YAdjust}} -10
+   {{Property|Weapon.AmmoType1}} "{{Class|Mana2}}"
+   {{Property|Inventory.PickupMessage}} "$TXT_WEAPON_F3"
+   {{Property|Obituary}} "$OB_MPFWEAPHAMMERM"
+   {{Property|Tag}} "$TAG_FWEAPHAMMER"
+ 
+   action native [[A_FHammerAttack]]();
+   action native [[A_FHammerThrow]]();
+ 
+   States
+   {
+   Spawn:
+     WFHM A -1
+     Stop
+   Select:
+     FHMR A 1 [[A_Raise]]
+     Loop
+   Deselect:
+     FHMR A 1 [[A_Lower]]
+     Loop
+   Ready:
+     FHMR A 1 [[A_WeaponReady]]
+     Loop
+   Fire:
+     FHMR B 6 [[Offset]](5, 0)
+     FHMR C 3 [[Offset]](5, 0) [[A_FHammerAttack]]
+     FHMR D 3 [[Offset]](5, 0)
+     FHMR E 2 [[Offset]](5, 0)
+     FHMR E 10 [[Offset]](5, 150) [[A_FHammerThrow]]
+     FHMR A 1 [[Offset]](0, 60)
+     FHMR A 1 [[Offset]](0, 55)
+     FHMR A 1 [[Offset]](0, 50)
+     FHMR A 1 [[Offset]](0, 45)
+     FHMR A 1 [[Offset]](0, 40)
+     FHMR A 1 [[Offset]](0, 35)
+     FHMR A 1
+     Goto Ready
+   }
+ }</text>
+    <sha1>91oxs6svxy1zmnp57unbhh1yog7hypg</sha1>
+  </revision>
+</page>

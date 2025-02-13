@@ -1,0 +1,72 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>ChangeCamera</title>
+  <ns>0</ns>
+  <id>727</id>
+  <revision>
+    <id>36421</id>
+    <parentid>35814</parentid>
+    <timestamp>2013-05-13T07:16:53Z</timestamp>
+    <contributor>
+      <username>Gez</username>
+      <id>1283</id>
+    </contributor>
+    <minor />
+    <origin>36421</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="2382" sha1="llssnaxak6doi5y8098tlhgbo8844xl" xml:space="preserve">{{Special|237|tid, who, revert|Miscellaneous}}
+ 
+* ''tid'': Thing ID of the camera to use (0 for normal player's view) 
+* ''who'': Set to 1 if the view change should affect all players 
+* ''revert'': Set to 1 if movement should cancel the special 
+
+==Usage==
+
+Causes a player's view to move to a camera. If ''tid'' is 0, then the player's view is restored to a spot inside his head. If ''who'' is 0, only the player who activated the special has his view changed, otherwise, everyone's view changes. 
+
+If ''revert'' is 1, then if a player moves, his view will be returned to his body automatically. This behavior makes this special more suitable for such things as [[Classes:SecurityCamera|security cameras]].
+
+'''What can be viewed'''
+
+* {{Class|AimingCamera|Aiming camera}}
+* {{Class|MovingCamera|Moving camera}}
+* {{Class|SecurityCamera|Security camera}}
+* Monsters ''(be sure to use the {{property|CameraHeight}} property.''
+
+Or just about any other object in the game. The results will vary, though.
+
+==Examples==
+
+There are different uses for cameras. Other than security cameras, they can be used very effectively for short cutscenes in games. See the second example of [[Thing_Hate]].
+
+To make a set of security cameras, a script like this can be used:
+
+ int cam = 0;
+ script 5 (int min, int max)
+ {
+ 	if (cam &lt; min || cam &gt;= max)
+ 		cam = min;
+ 	else
+ 		cam++;
+ 	
+ 	[[ChangeCamera]](cam, {{const|FALSE}}, {{const|TRUE}});
+ }
+
+This will implement a set of different views which can be switched through. They will exit once the player moves. The script has two parameters, the minimum TID and the maximum TID of the sequence of cameras. It scrolls through all the TID's in between. This script can be used on many places in a map, with many different sequences of cameras. It can only be used for one player maps. An updated script which can store screen numbers for multiplayer would look like this:
+
+ int cam[8]; // Maximum number of players
+ script 5 (int min, int max)
+ {
+        &lt;!-- empty &lt;b&gt; tags added due to wiki engine limitations --&gt;
+ 	if (cam[&lt;b&gt;&lt;/b&gt;[[PlayerNumber]]()] &lt; min || cam[&lt;b&gt;&lt;/b&gt;[[PlayerNumber]]()]&gt;= max)
+ 		cam[&lt;b&gt;&lt;/b&gt;[[PlayerNumber]]()] = min;
+ 	else
+ 		cam[&lt;b&gt;&lt;/b&gt;[[PlayerNumber]]()]++;
+ 	
+ 	[[ChangeCamera]](cam[&lt;b&gt;&lt;/b&gt;[[PlayerNumber]]()], {{const|FALSE}}, {{const|TRUE}});
+ }
+
+This assumes a maximum number of 8 players, but is trivial to extend.</text>
+    <sha1>llssnaxak6doi5y8098tlhgbo8844xl</sha1>
+  </revision>
+</page>

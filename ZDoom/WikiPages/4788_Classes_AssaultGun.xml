@@ -1,0 +1,63 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>Classes:AssaultGun</title>
+  <ns>0</ns>
+  <id>4788</id>
+  <revision>
+    <id>40135</id>
+    <parentid>36456</parentid>
+    <timestamp>2015-05-22T06:56:31Z</timestamp>
+    <contributor>
+      <username>Blue Shadow</username>
+      <id>2021</id>
+    </contributor>
+    <minor />
+    <comment>/* DECORATE definition */ Updated</comment>
+    <origin>40135</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="1333" sha1="1t1uffrszl6w6zx6ojboshus34rte6x" xml:space="preserve">{{Actor|
+| type = Weapon
+| name = Assault gun
+| class = AssaultGun
+| game = Strife
+| doomednum = 2002
+| convid = 188, 182, 186
+}}[[Classes]]: [[Classes:Inventory|Inventory]]&amp;rarr;[[Classes:Weapon|Weapon]]&amp;rarr;[[Classes:StrifeWeapon|StrifeWeapon]]&amp;rarr;&lt;u&gt;AssaultGun&lt;/u&gt;&lt;br&gt;
+An assault rifle. Fairly innaccurate by default, but can be improved in this regard by [[Classes:UpgradeAccuracy|Accuracy Upgrades]].
+==== [[DECORATE]] definition ====
+ ACTOR &lt;u&gt;AssaultGun&lt;/u&gt; : {{Class|StrifeWeapon}}
+ {
+   +{{Flag|FLOORCLIP}}
+   {{Property|Weapon.SelectionOrder}} 600
+   {{Property|Weapon.AmmoUse1}} 1
+   {{Property|Weapon.AmmoGive1}} 20
+   {{Property|Weapon.AmmoType1}} "{{Class|ClipOfBullets}}"
+   {{Property|Inventory.Icon}} "RIFLA0"
+   {{Property|Tag}} "$TAG_ASSAULTGUN" // "Assault Gun"
+   {{Property|Inventory.PickupMessage}} "$TXT_ASSAULTGUN" // "You picked up the assault gun."
+   {{Property|Obituary}} "$OB_MPASSAULTGUN" // "%o was drilled full of holes by %k's assault gun."
+   States
+   {
+   Spawn:
+     RIFL A -1
+     Stop
+   Ready:
+     RIFG A 1 [[A_WeaponReady]]
+     Loop
+   Deselect:
+     RIFG B 1 [[A_Lower]]
+     Loop
+   Select:
+     RIFG A 1 [[A_Raise]]
+     Loop
+   Fire:
+     RIFF AB 3 [[A_FireAssaultGun]]
+     RIFG D 3 [[A_FireAssaultGun]]
+     RIFG C 0 [[A_ReFire]]
+     RIFG B 2 [[A_Light0]]
+     Goto Ready
+   }
+ }</text>
+    <sha1>1t1uffrszl6w6zx6ojboshus34rte6x</sha1>
+  </revision>
+</page>

@@ -1,0 +1,174 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>DeHackEd</title>
+  <ns>0</ns>
+  <id>781</id>
+  <revision>
+    <id>33498</id>
+    <parentid>23745</parentid>
+    <timestamp>2012-07-27T12:18:04Z</timestamp>
+    <contributor>
+      <username>Enjay</username>
+      <id>416</id>
+    </contributor>
+    <origin>33498</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="8638" sha1="fw99qvut8kttyp1igz2fm5qzzwne803" xml:space="preserve">{{Note|text=[[DECORATE]] offers a much more powerful feature set for creating custom items and enemies.  It is recommended that you use it instead of DeHacked for future projects.}}
+
+{{Doomwiki}}
+This is referred to from [[Special lumps]], however, it is its own topic as well. ZDoom allows you to import a DeHacked patch into a WAD so that a whole mod can be packaged neatly into one file. Simple DeHacked (text, not code patches -- DeHacked version 3.0 or later) or .BEX patches may be used. For changing [[Strings]] you should use the [[LANGUAGE]] lump. The only thing that can't be done any other way is changing the default amounts of Doom's [[Classes:Ammo|Ammo]] items.
+
+----
+
+'''DeHacked''' is an editor originally created for vanilla Doom that allows you to change the executable file. Hit points, sounds, frame sequences, text [[Strings]] and a few other miscellaneous values can be changed. The most common patches have been making super-fast monsters, super-fast weapons, player-seeking-self-detonating barrels, and so on, however more balanced and artistic modifications can and have been made. Even though many great effects can be achieved with DeHacked, the flexibility is not complete. Things like monster AI and [[armor class]] are still fixed or don't budge much.
+
+Older DeHacked patches contained only illegible code that was to be applied to an executable file by the DeHacked patching utility. Later versions of DeHacked saved their patches in a human-readable plain text format that could be used the same way, but you could edit them with any text editor, mostly only feasible for small edits. When [[BOOM]] came around, it was able to load these plain-text patches and affect changes to the game upon startup without any crude hacking such as what DeHacked did to executables -- no patching of the executable. Other source-ports followed suit, and now we have command-line loadable DeHacked support with most modern source-ports. BOOM also provided certain extensions for DeHacked support, so if you see a file ending in .BEX, for Boom Extended, that is a file that uses said extensions. BEX allows greater flexibility in string editing (such as being able to do it AT ALL outside of [[vanilla Doom]], because the prior format relied on replacing text based on offsets, which were useless unless used in conjunction with the original executable file the patch was created for.) BEX also allows application of codepointers to any frame.
+
+ZDoom did the same, and now has its own [[ZDoom codepointer extensions]] in addition to [[BOOM]]'s, which allow using effects such as the ones in Hexen and more in Doom. These are ZDoom-specific and not backward-compatible with [[vanilla Doom]] or with any other source-ports. ZDoom also has its own set of bits ([[ZDoom-specific bits in BEX]]) that can be applied to Things. These bits are also not backward-compatible.
+
+A great place to learn to use DeHacked from the ground up is at Enjay's reference: http://www.aspectsweb.co.uk/dehacked/index.html
+
+If you want to create dehacked patches without actually using DeHacked, you will need to know the DeHacked thing numbers. These are a set of numbers that correspond to the order the actors were defined in doom2.exe. They have no meaning outside of DeHacked and ZDoom's DeHacked loader.
+
+* 1	{{Class|DoomPlayer|Player}}
+* 2	{{Class|ZombieMan|Trooper}}
+* 3	{{Class|ShotgunGuy|Sergeant}}
+* 4	{{Class|Archvile}}
+* 5	{{Class|ArchvileFire|Archvile Attack}}
+* 6	{{Class|Revenant}}
+* 7	{{Class|RevenantTracer|Revenant Fireball}}
+* 8	{{Class|RevenantTracerSmoke|Fireball Trail}}
+* 9	{{Class|Fatso|Mancubus}}
+* 10	{{Class|FatShot|Mancubus Fireball}}
+* 11	{{Class|ChaingunGuy|Chaingun Commando}}
+* 12	{{Class|DoomImp|Imp}}
+* 13	{{Class|Demon}}
+* 14	{{Class|Spectre}}
+* 15	{{Class|Cacodemon}}
+* 16	{{Class|BaronOfHell|Baron}}
+* 17	{{Class|BaronBall|Baron Fireball}}
+* 18	{{Class|HellKnight|Hell Knight}}
+* 19	{{Class|LostSoul|Lost Soul}}
+* 20	{{Class|SpiderMastermind|Spiderdemon}}
+* 21	{{Class|Arachnotron}}
+* 22	{{Class|Cyberdemon}}
+* 23	{{Class|PainElemental|Pain Elemental}}
+* 24	{{Class|WolfensteinSS|SS Nazi}}
+* 25	{{Class|CommanderKeen|Commander Keen}}
+* 26	{{Class|BossBrain|Big Brain}}
+* 27	{{Class|BossEye|Demon Spawner}}
+* 28	{{Class|BossTarget|Demon Spawn Spot}}
+* 29	{{Class|SpawnShot|Demon Spawn Cube}}
+* 30	{{Class|SpawnFire|Demon Spawn Fire}}
+* 31	{{Class|ExplosiveBarrel|Barrel}}
+* 32	{{Class|DoomImpBall|Imp Fireball}}
+* 33	{{Class|CacodemonBall|Caco Fireball}}
+* 34	{{Class|Rocket|Rocket (in air)}}
+* 35	{{Class|PlasmaBall|Plasma Bullet}}
+* 36	{{Class|BFGBall|BGF Shot}}
+* 37	{{Class|ArachnotronPlasma|Arach. Fireball}}
+* 38	{{Class|BulletPuff|Bullet Puff}}
+* 39	{{Class|Blood|Blood Splat}}
+* 40	{{Class|TeleportFog|Teleport Flash}}
+* 41	{{Class|ItemFog|Item Respawn Fog}}
+* 42	{{Class|TeleportDest|Teleport Exit}}
+* 43	{{Class|BFGExtra|BFG Hit}}
+* 44	{{Class|GreenArmor|Green Armor}}
+* 45	{{Class|BlueArmor|Blue Armor}}
+* 46	{{Class|HealthBonus|Health Potion}}
+* 47	{{Class|ArmorBonus|Armor Helmet}}
+* 48	{{Class|BlueCard|Blue Key Card}}
+* 49	{{Class|RedCard|Red Key Card}}
+* 50	{{Class|YellowCard|Yellow Key Card}}
+* 51	{{Class|YellowSkull|Yellow Skull Key}}
+* 52	{{Class|RedSkull|Red Skull Key}}
+* 53	{{Class|BlueSkull|Blue Skull Key}}
+* 54	{{Class|Stimpack|Stim Pack}}
+* 55	{{Class|Medikit|Medical Kit}}
+* 56	{{Class|Soulsphere|Soul Sphere}}
+* 57	{{Class|InvulnerabilitySphere|Invulnerability Sphere}}
+* 58	{{Class|Berserk|Berserk Sphere}}
+* 59	{{Class|BlurSphere|Blur Sphere}}
+* 60	{{Class|RadSuit|Radiation Suit}}
+* 61	{{Class|Allmap|Computer Map}}
+* 62	{{Class|Infrared|Lite Amp. Visor}}
+* 63	{{Class|Megasphere|Mega Sphere}}
+* 64	{{Class|Clip|Ammo Clip}}
+* 65	{{Class|ClipBox|Box Of Ammo}}
+* 66	{{Class|RocketAmmo|Rocket}}
+* 67	{{Class|RocketBox|Box Of Rockets}}
+* 68	{{Class|Cell|Energy Cell}}
+* 69	{{Class|CellPack|Energy Pack}}
+* 70	{{Class|Shell|Shells}}
+* 71	{{Class|ShellBox|Box Of Shells}}
+* 72	{{Class|Backpack}}
+* 73	{{Class|BFG9000|BFG 9000}}
+* 74	{{Class|Chaingun}}
+* 75	{{Class|Chainsaw}}
+* 76	{{Class|RocketLauncher|Rocket Launcher}}
+* 77	{{Class|PlasmaRifle|Plasma Gun}}
+* 78	{{Class|Shotgun}}
+* 79	{{Class|SuperShotgun|Super Shotgun}}
+* 80	{{Class|TechLamp|Tall Lamp}}
+* 81	{{Class|TechLamp2|Tall Lamp 2}}
+* 82	{{Class|Column|Short Lamp}}
+* 83	{{Class|TallGreenColumn|Tall Green Pillar}}
+* 84	{{Class|ShortGreenColumn|Short Green Pillar}}
+* 85	{{Class|TallRedColumn|Tall Red Pillar}}
+* 86	{{Class|ShortRedColumn|Short Red Pillar}}
+* 87	{{Class|SkullColumn|Pillar With Skull}}
+* 88	{{Class|HeartColumn|Pillar With Heart}}
+* 89	{{Class|EvilEye|Eye In Symbol}}
+* 90	{{Class|FloatingSkull|Flaming Skulls}}
+* 91	{{Class|TorchTree|Grey Tree}}
+* 92	{{Class|BlueTorch|Tall Blue Torch}}
+* 93	{{Class|GreenTorch|Tall Green torch}}
+* 94	{{Class|RedTorch|Tall Red Torch}}
+* 95	{{Class|ShortBlueTorch|Small Blue Torch}}
+* 96	{{Class|ShortGreenTorch|Small Green Torch}}
+* 97	{{Class|ShortRedTorch|Small Red Torch}}
+* 98	{{Class|Stalagtite|Brown Stub}}
+* 99	{{Class|TechPillar|Technical Column}}
+* 100	{{Class|Candlestick|Candle}}
+* 101	{{Class|Candelabra}}
+* 102	{{Class|BloodyTwitch|Swaying Body}}
+* 103	{{Class|Meat2|Hanging Arms Out}}
+* 104	{{Class|Meat3|One-Legged Body}}
+* 105	{{Class|Meat4|Hanging Torso}}
+* 106	{{Class|Meat5|Hanging Leg}}
+* 107	{{Class|NonsolidMeat2|Hanging Arms Out 2}}
+* 108	{{Class|NonsolidMeat4|Hanging Torso 2}}
+* 109	{{Class|NonsolidMeat3|One-Legged Body 2}}
+* 110	{{Class|NonsolidMeat5|Hanging Leg 2}}
+* 111	{{Class|NonsolidTwitch|Swaying Body 2}}
+* 112	{{Class|DeadCacodemon|Dead Cacodemon}}
+* 113	{{Class|DeadMarine|Dead Marine}}
+* 114	{{Class|DeadZombieMan|Dead Trooper}}
+* 115	{{Class|DeadDemon|Dead Demon}}
+* 116	{{Class|DeadLostSoul|Dead Lost Soul}}
+* 117	{{Class|DeadDoomImp|Dead Imp}}
+* 118	{{Class|DeadShotgunGuy|Dead Sergeant}}
+* 119	{{Class|GibbedMarine|Guts And Bones}}
+* 120	{{Class|GibbedMarineExtra|Guts And Bones 2}}
+* 121	{{Class|HeadsOnAStick|Skewered Heads}}
+* 122	{{Class|Gibs|Pool Of Blood}}
+* 123	{{Class|HeadOnAStick|Pool With Skull}}
+* 124	{{Class|HeadCandles|Pile Of Skulls}}
+* 125	{{Class|DeadStick|Impaled Body}}
+* 126	{{Class|LiveStick|Twitching Body}}
+* 127	{{Class|BigTree|Large Tree}}
+* 128	{{Class|BurningBarrel|Flaming Barrel}}
+* 129	{{Class|HangNoGuts|Hanging Body 1}}
+* 130	{{Class|HangBNoBrain|Hanging Body 2}}
+* 131	{{Class|HangTLookingDown|Hanging Body 3}}
+* 132	{{Class|HangTSkull|Hanging Body 4}}
+* 133	{{Class|HangTLookingUp|Hanging Body 5}}
+* 134	{{Class|HangTNoBrain|Hanging Body 6}}
+* 135	{{Class|ColonGibs|Pool Of Blood 1}}
+* 136	{{Class|SmallBloodPool|Pool Of Blood 2}}
+* 137	{{Class|BrainStem|Brains}}
+
+[[category:Editing tools]]</text>
+    <sha1>fw99qvut8kttyp1igz2fm5qzzwne803</sha1>
+  </revision>
+</page>

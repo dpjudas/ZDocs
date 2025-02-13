@@ -1,0 +1,53 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>DepleteOrDestroy</title>
+  <ns>0</ns>
+  <id>9856</id>
+  <revision>
+    <id>52110</id>
+    <timestamp>2024-03-27T12:33:47Z</timestamp>
+    <contributor>
+      <username>Jekyll Grim Payne</username>
+      <id>2175</id>
+    </contributor>
+    <comment>Created page with "'''{{class|Inventory}}'''  == Usage == A [[ZScript virtual functions|virtual function]] used by the {{class|Inventory}} class. Normally, this is called automatically when the..."</comment>
+    <origin>52110</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="1226" sha1="o01yirdjceffig9bbq308jmmp829h38" xml:space="preserve">'''{{class|Inventory}}'''
+
+== Usage ==
+A [[ZScript virtual functions|virtual function]] used by the {{class|Inventory}} class. Normally, this is called automatically when the item's &lt;code&gt;amount&lt;/code&gt; is reduced to 0 by any means, to determine if an instance of this item should still stay in the owner's inventory, or if it should be removed entirely. By default, it only checks for the presence of the {{flag|KEEPDEPLETED}} flag, but it can be overridden to add custom behavior.
+
+== [[ZScript]] definition ==
+{{ZScriptDefinitionNote|actors/inventory/inventory.zs#L908}}
+
+&lt;syntaxhighlight lang="csharp"&gt;
+	virtual void DepleteOrDestroy ()
+	{
+		// If it's not ammo or an internal armor, destroy it.
+		// Ammo needs to stick around, even when it's zero for the benefit
+		// of the weapons that use it and to maintain the maximum ammo
+		// amounts a backpack might have given.
+		// Armor shouldn't be removed because they only work properly when
+		// they are the last items in the inventory.
+		if (bKeepDepleted)
+		{
+			Amount = 0;
+		}
+		else
+		{
+			Destroy();
+		}
+	}&lt;/syntaxhighlight&gt;
+
+== Examples ==
+{{noexamples}}
+
+== See also ==
+* [[Inventory virtual functions]]
+
+[[Category:ZScript]]
+[[Category:ZScript virtual functions]]</text>
+    <sha1>o01yirdjceffig9bbq308jmmp829h38</sha1>
+  </revision>
+</page>

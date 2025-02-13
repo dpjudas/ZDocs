@@ -1,0 +1,52 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>GetSpecies</title>
+  <ns>0</ns>
+  <id>9040</id>
+  <revision>
+    <id>52728</id>
+    <parentid>52727</parentid>
+    <timestamp>2024-05-29T12:52:46Z</timestamp>
+    <contributor>
+      <username>Jekyll Grim Payne</username>
+      <id>2175</id>
+    </contributor>
+    <origin>52728</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="1250" sha1="7owvofewbx1o408vriwrtagnottqcy2" xml:space="preserve">{{ZScriptNote}}
+name '''GetSpecies''' ()
+
+==Usage==
+
+This returns the [[species]] of the calling actor.
+
+===Return value===
+
+The species of the actor, as a name. If the actor does not have its {{property|Species}} property defined, or its set to {{c|'N'one}}, the return value is determined as follows:
+*If the calling actor is a [[monster]], the function goes up the inheritance chain of the actor's class, stopping at the first class encountered which has a non-monster parent class. This class's name serves as both the return value and the species of the actor.
+*If the calling actor is not a monster, its class's name serves as the return value as well as its species.
+
+==Examples==
+
+Every [[tic]], this {{Class|ZombieMan|former human}} checks if its target is an {{Class|DoomImp|imp}}, and if it is, executes some code.
+
+ class ImpChecker : {{Class|ZombieMan}}
+ {
+     override void Tick () // See [[ZScript virtual functions]].
+     {
+         if (target &amp;&amp; target.'''GetSpecies'''() == "{{Class|DoomImp}}")
+         {
+             // Do something - for example, have an enemy act differently to different targets.
+         }
+ 
+         Super.Tick();
+     }     
+ }
+
+== See also ==
+* {{property|Species|Species property}}
+
+[[Category:ZScript]]</text>
+    <sha1>7owvofewbx1o408vriwrtagnottqcy2</sha1>
+  </revision>
+</page>

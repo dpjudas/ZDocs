@@ -1,0 +1,68 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>Distance3DSquared</title>
+  <ns>0</ns>
+  <id>9882</id>
+  <revision>
+    <id>52380</id>
+    <parentid>52376</parentid>
+    <timestamp>2024-04-11T13:10:29Z</timestamp>
+    <contributor>
+      <username>Jekyll Grim Payne</username>
+      <id>2175</id>
+    </contributor>
+    <origin>52380</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="1454" sha1="dbf8ek4sauvnhshggzhlkqkeh1gjdgs" xml:space="preserve">{{ZScriptNote}}
+
+'''{{class|Actor}}'''
+
+{{c|native clearscope double '''Distance3DSquared'''(Actor ''other'') const}}
+
+==Usage==
+Returns the '''squared''' 3D distance from the calling actor to ''other'' ([[Stacked sectors|portal]]-aware). Essentially, this is the same as {{c|[[Distance3D]]}}, but {{c|Distance3D}} involves a square root calculation, whereas this version doesn't, making it a little less computationally expensive. As a result, it must be compared to the ''squared'' desired distance (see [[#Examples|examples]]).
+
+To square the desired value, use the [[Operators_(ZScript)#.2A.2A_.28power.29|ZScript power operator]]: &lt;code&gt;**&lt;/code&gt;.
+
+===Parameters===
+
+*{{c|Actor '''other'''}}
+:A pointer to the actor we are getting the distance to.
+
+===Return Value===
+
+The distance to the other actor on all axes.
+
+==Examples==
+
+This Imp will check if the target is under 128 units away in its [[Tick|Tick() virtual override]] and halve its walking speed:
+
+&lt;syntaxhighlight lang="csharp"&gt;
+class WaryImp : DoomImp
+{
+    override void Tick() 
+    {
+        // if we are less than 128 units away:
+        if (target &amp;&amp; Distance3DSquared(target) &lt; 128**2)
+        {
+            speed = default.speed * 0.5;
+        }
+        // otherwise:
+        else
+        {
+            speed = default.speed;
+        }
+        Super.Tick();
+    }     
+}
+&lt;/syntaxhighlight&gt;
+
+== See also ==
+*[[Distance2DSquared]]
+*[[Distance2D]]
+*[[Distance3D]]
+
+[[Category:ZScript]]</text>
+    <sha1>dbf8ek4sauvnhshggzhlkqkeh1gjdgs</sha1>
+  </revision>
+</page>

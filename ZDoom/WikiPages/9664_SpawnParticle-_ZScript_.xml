@@ -1,0 +1,241 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>SpawnParticle (ZScript)</title>
+  <ns>0</ns>
+  <id>9664</id>
+  <revision>
+    <id>54016</id>
+    <parentid>54015</parentid>
+    <timestamp>2024-12-04T18:13:47Z</timestamp>
+    <contributor>
+      <username>Jekyll Grim Payne</username>
+      <id>2175</id>
+    </contributor>
+    <comment>/* FSpawnParticleParams */</comment>
+    <origin>54016</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="11108" sha1="fk2f4bkrz0c6q9k35408db3llma7g0r" xml:space="preserve">{{ZScriptNote}}
+'''{{struct|LevelLocals}}'''
+
+{{c|native void '''SpawnParticle'''(FSpawnParticleParams &lt;var&gt;p&lt;/var&gt;)}}
+
+== Usage ==
+Spawns a particle on the map. This acts as a struct-using replacement for [[A_SpawnParticleEx]], due to how many parameters that method has.
+
+This is a method of the {{struct|LevelLocals}} struct, so to perform the spawn itself, it must be called as &lt;code&gt;level.SpawnParticle&lt;/code&gt; ({{c|level}} is a global pointer to an instance of LevelLocals). The FSPawnParticleParams struct must be set up before that, however.
+
+=== Parameters ===
+*''p'': A pointer to the FSpawnParticleParams struct that stores the parameters the function will use.
+
+=== FSpawnParticleParams ===
+{{warning|The default values for the fields in a struct are the same as the default values of a variable upon declaration (so, for example, for integer fields the default value is 0, for double fields it's 0.0, etc.). As such, fields like ''startalpha'' and ''color1'' do not have the same default values as the parameters of [[A_SpawnParticleEx]] and must be set to the necessary value explicitly!
+
+For example, &lt;u&gt;you must explicitly set startalpha to 1.0 and size to a positive value, otherwise the particle will be invisible&lt;/u&gt;!}}
+The parameters the FSpawnParticleParams struct has are the same as [[A_SpawnParticleEx#Parameters| the ones {{c|A_SpawnParticleEx}} uses]]. However, several parameters are squashed into [[ZScript_variables|Vector3]] parameters, and some are renamed:
+
+*{{c|int '''color1'''}}
+:This parameter is what 'color1' is renamed to. Color can be applied to textured particles as well, resulting in tinted textures.
+:Since this is an integer field, the default value for it is &lt;code&gt;0&lt;/code&gt;, which means black. If you want to use a textured particle and NOT apply colorization to it, you need to explicitly set &lt;code&gt;color1 = ""&lt;/code&gt;.
+*{{c|TextureID '''texture'''}}
+:The texture used by the particle, same as [[A_SpawnParticleEx]]. If omitted, default untextured particles will be used.
+*{{c|vector3 '''pos'''}}
+:The absolute XYZ coordinate to spawn the particle in. It replaces the relative x/y/zoff parameters that the other particle spawn methods have.
+*{{c|vector3 '''vel'''}}
+:The velocity to apply to the particle on the XYZ axes, like the velx/y/z parameters it replaces, these values are absolute as well.
+*{{c|vector3 '''accel'''}}
+:The acceleration to apply to the particle on the XYZ axes. It replaces the accelx/y/z parameters that the other particle spawn methods have.
+*{{c|int '''flags'''}}
+{{: SpawnParticle ZScript flags}}
+:Note: SPF_REL* flags are not supported, in contrast to [[A_SpawnParticleEx]], since FSpawnparticleParams has no ''angle'' field. Use [[RotateVector]] to convert absolute offsets to relative according to a specified angle.
+
+*{{c|int '''style'''}}
+:The [[Renderstyle|render style]] of the particle. {{c|STYLE_Normal}} and {{c|STYLE_Translucent}} have the same effect.
+:For shaded render styles, the shading color is determined by the &lt;code&gt;color1&lt;/code&gt; parameter. Note that even without {{c|STYLE_Shaded}}, if &lt;code&gt;color1&lt;/code&gt; is not &lt;code&gt;""&lt;/code&gt;, the particle will be shaded to that color.
+*{{c|int '''lifetime'''}}
+:The time in tics the particle will exist for.
+*{{c|double '''size'''}}
+:The size of the particle. Note that it's the absolute size in map units, and that, if the particle is textured, its texture will be scaled to this size. If you wish to apply scale in the same way you'd apply it to an actor (i.e. relative to the size of the graphic), you will first need to obtain the texture's size with [[Structs:TexMan|&lt;code&gt;TexMan.GetSize()&lt;/code&gt;]] and then multiply the result by the desired scale (such as 0.5 for 50% of the size), and use that value as {{c|size}}.
+:Note that particles are always round/square. As such, non-square textures will be stretched to fit.
+*{{c|double '''sizestep'''}}
+:By how much the size of the particle will change every tic. Negative values will make it smaller, positive values will make it bigger. Note, this isn't relative scale, this is absolute value, just like {{c|size}}.
+*{{c|double '''startalpha'''}}
+:This parameter is what 'startalphaf' is renamed to.
+:Since this is a double field, its default value is &lt;code&gt;0.0&lt;/code&gt; Unless you explicitly set it to a higher value, your particle will spawn invisible!
+*{{c|double '''fadestep'''}}
+:Same as ''fadestepf'' in [[A_SpawnParticle]]: determines by how much the particle's alpha will be reduced every [[Tic|tic]]. If left unspecified, the particle will be fully opaque until it disappears. Set to &lt;code&gt;-1&lt;/code&gt; if you want to see gradual fadeout over its lifetime.
+:''fadestep'' can also be negative: if the value is negative (but not &lt;code&gt;-1&lt;/code&gt; exactly), particles that are initially translucent can be faded in.
+*{{c|double '''startroll'''}}
+:The starting roll position of the particle in degrees. Requires the {{c|SPF_ROLL}} flag.
+*{{c|double '''rollvel'''}}
+:The particle's roll will change by this value every tick. Requires the {{c|SPF_ROLL}} flag.
+*{{c|double '''rollacc'''}}
+:The {{c|rollvel}} value will change by this value every tick (which allows you to increase or decrease the value by which the roll changes). Requires the {{c|SPF_ROLL}} flag.
+
+
+The ''angle'' parameter does not exist in FSpawnParticleParams, since the SpawnParticle method uses absolute coordinates. This also means that the &lt;code&gt;SPF_REL*&lt;/code&gt; flags do nothing by extension.
+
+== Examples ==
+This simple actor uses textures particles to spawn textured particles (using the PLSSB0 sprite from the {{class|PlasmaBall}}) that move in a flame-like manner.
+
+Note that it spawns 5 particles per tic using a FOR loop, and you can choose how much randomization you want to choosing what parts of the definition are inside the loop and which are outside.
+&lt;syntaxhighlight lang="csharp"&gt;
+class ParticlePlasmaFire : Actor
+{
+	Default
+	{
+		+NOINTERACTION
+		+NOBLOCKMAP
+		radius 16;
+	}
+
+	override void Tick()
+	{
+		super.Tick();
+		if (isFrozen())
+			return;
+		
+		FSpawnParticleParams fp;
+		fp.texture = TexMan.CheckForTexture('PLSSB0');
+		fp.flags = SPF_FULLBRIGHT|SPF_ROLL|SPF_REPLACE;
+		fp.color1 = "";
+		for (int i = 5; i &gt; 0; i--)
+		{
+			fp.lifetime = random[fp](40, 80);
+			
+			fp.pos.x = pos.x + frandom[fp](-radius, radius);
+			fp.pos.y = pos.y + frandom[fp](-radius, radius);
+			fp.pos.z = pos.z + frandom[fp](0, 16);
+			
+			fp.vel.xy = (frandom[fp](-2, 2), frandom[fp](-2, 2));
+			fp.vel.z = frandom[fp](2, 4);
+			fp.accel.xy = -(fp.vel.xy * 0.035); //acceleration is aimed to the opposite of velocity
+			fp.accel.z = -(fp.vel.z / fp.lifetime);
+
+			fp.size = random[fp](4, 10);
+			fp.sizeStep = -(fp.size / fp.lifetime); //size reduces to 0 over lifetime
+			fp.startalpha = frandom[fp](0.75, 1.0);
+			fp.fadestep = -1;
+			fp.startRoll = frandom[fp](0, 360);
+			fp.rollvel = frandom[fp](-15, 15);
+			fp.rollacc = -(fp.rollvel / fp.lifetime); //rollvel reduces to 0 over lifetime
+
+			Level.SpawnParticle(fp);
+		}
+	}
+}&lt;/syntaxhighlight&gt;
+
+
+This is a spawner that [[Making_configurable_actors_in_DECORATE|can be configured in a level editor]] to spawn different types of particles at a specified frequency:
+
+ class RandomParticleSpawner : Actor
+ {
+ 	Default
+ 	{
+ 		//[[Editor_keys|$Title]] Random Particle Spawner
+ 		//$Category Decoration
+ 		//$Arg0 Particle Types
+ 		//$Arg0Tooltip "What type of particle should the spawner create"
+ 		//$Arg0Type 11
+ 		//$Arg0Enum {0 = "Default"; 1 = "Fire Particles"; 2 = "Doomguy Hologram";}
+ 		//$Arg1 Frequency
+ 		//$Arg1Tooltip "How frequently (in tics) the spawner should create a particle"
+ 		//$Arg1Default 35
+ 		+{{flag|NoInteraction}};
+ 		+{{flag|NoGravity}};
+ 	}
+ 	
+ 	//Give some names to the possible values of Args[0]
+ 	enum EParticleTypes
+ 	{
+ 		TYPE_DEFAULT = 0,
+ 		TYPE_FIREBALL = 1,
+ 		TYPE_DOOMGUY = 2
+ 	}
+ 	
+ 	Vector3 offsets; //The offsets relative to the spawner to use for each particle.
+ 	
+ 	override void Tick()
+ 	{
+ 		Super.Tick();
+ 		
+ 		//Spawn a particle every time that the age of the spawner can be divided by the spawn frequency. Or immediately spawn one if the frequency is 0 or less.
+ 		if (args[1] &lt;= 0 || GetAge() % args[1] == 0)
+ 		{
+ 			//Play fire sound for fire particles.
+ 			if (args[0] == TYPE_FIREBALL)
+ 				[[A_StartSound]] ("vile/firecrkl",flags:CHANF_NOSTOP);
+ 			//Stop fire sound if the particle type was changed during runtime.
+ 			else
+ 				[[A_StopSound]] (CHAN_BODY);
+ 			
+ 			//Spawn boring default particle.
+ 			if (args[0] == TYPE_DEFAULT)
+ 			{
+ 				offsets = (FRandom (64,-64),FRandom (64,-64),0);
+ 				
+ 				FSpawnParticleParams DefaultParticle;
+ 				DefaultParticle.Color1 = "Gray";
+ 				DefaultParticle.Style = STYLE_None;
+ 				DefaultParticle.Lifetime = 70;
+ 				DefaultParticle.Pos = Vec3Offset (Offsets.X,Offsets.Y,Offsets.Z); //Spawn relative to the spawner.
+ 				DefaultParticle.Size = 1.5;
+ 				DefaultParticle.SizeStep = 1;
+ 				DefaultParticle.Vel.Z = FRandom (0.2,6); //Randomize the velocity of the particle.
+ 				DefaultParticle.StartAlpha = 1;
+ 				DefaultParticle.FadeStep = 0.004;
+ 				
+ 				[[Structs:LevelLocals|Level]].SpawnParticle (DefaultParticle);
+ 			}
+ 			//Spawn cool fire particle.
+ 			else if (args[0] == TYPE_FIREBALL)
+ 			{
+ 				offsets = (FRandom (64,-64),FRandom (64,-64),0);
+ 				
+ 				FSpawnParticleParams FireballParticle;
+ 				FireballParticle.Texture = TexMan.CheckForTexture ("BAL1A0");
+ 				FireballParticle.Color1 = "FFFFFF";
+ 				FireballParticle.Style = STYLE_Add;
+ 				FireballParticle.Flags = SPF_ROLL|SPF_FULLBRIGHT;
+ 				FireballParticle.Vel = (FRandom (0.5,-0.5),FRandom (0.5,-0.5),FRandom (0.1,0.8)); //Randomize the velocity of the particle.
+ 				FireballParticle.RollVel = 0.25;
+ 				FireballParticle.StartAlpha = 1;
+ 				FireballParticle.Size = 0.4;
+ 				FireballParticle.SizeStep = 0.2;
+ 				FireballParticle.Lifetime = FRandom (35,35*4); //Randomize the lifespan of the particle.
+ 				FireballParticle.Pos = Vec3Offset (Offsets.X,Offsets.Y,Offsets.Z); //Spawn relative to the spawner.
+ 				
+ 				Level.SpawnParticle (FireballParticle);
+ 				Level.SpawnParticle (FireballParticle); //Spawn more particles for better effect.
+ 				Level.SpawnParticle (FireballParticle);
+ 			}
+ 			//Spawn super cool Doomguy particle.
+ 			else if (Args[0] == TYPE_DOOMGUY)
+ 			{
+ 				FSpawnParticleParams DoomguyParticle;
+ 				DoomguyParticle.Texture = TexMan.CheckForTexture ("PLAYA1");
+ 				DoomguyParticle.Lifetime = INT.MAX; //Doom(guy) is eternal.
+ 				DoomguyParticle.Style = STYLE_Add;
+ 				DoomguyParticle.StartAlpha = 1;
+ 				DoomguyParticle.FadeStep = -1;
+ 				DoomguyParticle.Size = 75;
+ 				DoomguyParticle.SizeStep = 0;
+ 				DoomguyParticle.Color1 = "Blue";
+ 				DoomguyParticle.Flags = SPF_FULLBRIGHT|SPF_REPLACE;
+ 				DoomguyParticle.Pos = Self.Pos; //Spawn relative to the spawner.
+ 				
+ 				Level.SpawnParticle (DoomguyParticle);
+ 			}
+ 			
+ 			//If the spawner has no frequency, spawn only one particle and go away. Allows for spawning a single permanent Doomguy hologram for example.
+ 			if (Args[1] &lt;= 0)
+ 				[[Object#Functions|Destroy]]();
+ 		}
+ 	}
+ }
+
+
+[[Category:ZScript]]
+[[Category:LevelLocals]]</text>
+    <sha1>fk2f4bkrz0c6q9k35408db3llma7g0r</sha1>
+  </revision>
+</page>

@@ -1,0 +1,46 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>Classes:SkyPicker</title>
+  <ns>0</ns>
+  <id>4324</id>
+  <revision>
+    <id>39793</id>
+    <parentid>37013</parentid>
+    <timestamp>2015-05-03T22:59:11Z</timestamp>
+    <contributor>
+      <username>Blue Shadow</username>
+      <id>2021</id>
+    </contributor>
+    <minor />
+    <comment>/* DECORATE definition */ Updated</comment>
+    <origin>39793</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="1087" sha1="btyz5v9ts2mzkladds2fw9ytpw79qny" xml:space="preserve">{{Actor|
+| type = Map spot
+| name = Sky picker
+| class = SkyPicker
+| doomednum = 9081
+}}[[Classes]]: &lt;u&gt;SkyPicker&lt;/u&gt;&lt;br&gt;
+
+The sky picker is used to choose which [[skybox]] to use in a sector. It takes 2 arguments.
+
+The first argument is the {{c|[[TID|tid]]}} of the [[Classes:SkyViewpoint|SkyViewpoint]]. If this argument is zero, then the sector will use the default normal sky texture (as defined in [[MAPINFO]]) rather than one of the level's skybox. If it is not zero, the [[Classes:SkyViewpoint|SkyViewpoint]] with the corresponding {{c|tid}} will be used.
+
+The second argument has 3 options:
+:''0'': Apply the skybox on both floor and ceiling (if both use the F_SKY1 flat)
+:''1'': Apply the skybox only to the ceiling
+:''2'': Apply the skybox only to the floor
+
+This way it is possible to place two sky pickers in a single sector, one to chose a skybox for the floor and the other to chose a skybox for the ceiling.
+
+==== [[DECORATE]] definition ====
+ ACTOR &lt;u&gt;SkyPicker&lt;/u&gt; native
+ {
+   +{{Flag|NOSECTOR}}
+   +{{Flag|NOBLOCKMAP}}
+   +{{Flag|NOGRAVITY}}
+   +{{Flag|DONTSPLASH}}
+ }</text>
+    <sha1>btyz5v9ts2mzkladds2fw9ytpw79qny</sha1>
+  </revision>
+</page>

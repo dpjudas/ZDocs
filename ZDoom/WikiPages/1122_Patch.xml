@@ -1,0 +1,63 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>Patch</title>
+  <ns>0</ns>
+  <id>1122</id>
+  <revision>
+    <id>27771</id>
+    <parentid>15599</parentid>
+    <timestamp>2010-09-24T22:57:01Z</timestamp>
+    <contributor>
+      <username>Gez</username>
+      <id>1283</id>
+    </contributor>
+    <comment>Updated article</comment>
+    <origin>27771</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="4601" sha1="q78ha846fu7efo62397dpu6l23hwfrc" xml:space="preserve">{{doomwiki}}
+In the original Doom engine, a '''patch''' is an image that is used as the building block for a composite texture (also called a multipatch texture). Since the original Doom renderer draws floors and ceilings horizontally (line after line), but walls and sprites vertically (column after column), the native Doom format for patches is a column-major format. [[Sprite]]s also used this format.
+
+[[ZDoom]], however, features a texture manager that allows to use any of the supported [[image format]]s for any purpose. There exist therefore the need to make a distinction between the two different things that "patch" may mean in ZDoom: the [[namespace]] and the picture format.
+
+==Patch namespace==
+The patch [[namespace]] is a special case. Although the [[IWAD]]s all make use of [[P_START]]/[[P_END]] markers, the original engines do not actually use these markers. In [[WAD]] files, patches are therefore, along with other graphics that are neither [[sprite]]s nor [[flat]]s, in the global namespace. A few old [[utilities]] however assume that the P_ markers are needed and can be relied upon. Furthermore, [[ZDoom]] does require patches to be properly namespaced in [[PK3]] archives. Composite textures, created through a [[TEXTUREx]] or [[TEXTURES]] lump, use patches to build the finished textures. [[TEXTURES]] is able to use images placed in other namespaces as well, but will, in a PK3, prioritize patches over other graphics in case of name conflict.
+
+==Patch image format==
+{{doomwiki|Picture_format|picture format}}All graphics in [[Doom]] and other Doom-engine games are stored either in this format or as [[raw image]]s. Patches are useful because they take up a fairly small amount of disk space since they do not store any [[palette]] information and they skip transparent pixels entirely. If the image has enough transparent areas, it makes it more efficient than the raw format used by flats. ''Contrarily to popular belief propagated by old [[utilities]], this format is '''not''' the {{wp|BMP_file_format|BMP}} format, transparency is '''not''' based on a specific index and certainly not on the color cyan, which is not even in the Doom palette, and definitely not at index 247 which is black.''
+
+Getting more in depth, patches have three sections to them.  The first is an 8-byte header with the following sections. As usual for Doom data, all integers are stored little-endian.
+
+{| {{prettytable}}
+!Bytes!!Data type!!Description
+|-
+|0-1||Unsigned short (uint16)||Width
+|-
+|2-3||Unsigned short (uint16)||Height
+|-
+|4-5||Signed short (int16)||X offset
+|-
+|6-7||Signed short (int16)||Y offset
+|}
+
+Next is a group of long integers (4 bytes, uint32) which are pointers to each column of the image. The number of pointers is equal to the width of the image. A column is a vertical arrangement of single pixels. Due to transparency, columns don't always have the same size which is why the offsets are necessary.
+
+Each column is constituted of a number of spans starting with a header like this:
+
+{| {{prettytable}}
+!Byte!!Data type!!Description
+|-
+|0||Unsigned byte (uint8)||Starting offset of the span (Y position)
+|-
+|1||Unsigned byte (uint8)||Number of pixels in this span
+|-
+|2||Unsigned byte (uint8)||Garbage byte; unused
+|}
+
+After the header, each non-transparent pixel is a value from 0-255 which corresponds to a color in the [[palette]]. Spans follow each others, the offset of each being simply computed from the number of pixels in its predecessor. The final span in a column has 255 as its Y position, such a span is altogether ignored and will not, generally, even have a complete header. Transparent areas in a column are simply skipped: if the first span starts at 0 and has 10 pixels, then the second span starts at 50 and has 14 pixels, the column is transparent from pixels 10 to 49. If the first span of a column has a Y position of 255, then the column is entirely transparent.
+
+ZDoom and some other ports such as [[Boom]] allow for textures taller than 256 pixels. This method is achieved by a little trick with the starting offset. If it is a value lesser than the Y position of the last pixel of the previous span in the column, then the starting offset is taken as a value that needs to be added to the previous span's own starting offset. This method, called "tall patches", works because none of the [[utilities]] ever written for Doom engine games write a patch's spans otherwise than top-to-bottom. In theory, the spans in a column do not have to be ordered to work in [[vanilla Doom]].
+
+[[Category:Technical aspects]][[Category:Image formats]]</text>
+    <sha1>q78ha846fu7efo62397dpu6l23hwfrc</sha1>
+  </revision>
+</page>

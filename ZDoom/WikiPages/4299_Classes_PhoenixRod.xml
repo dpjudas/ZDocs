@@ -1,0 +1,71 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>Classes:PhoenixRod</title>
+  <ns>0</ns>
+  <id>4299</id>
+  <revision>
+    <id>39415</id>
+    <parentid>34147</parentid>
+    <timestamp>2015-04-29T18:05:39Z</timestamp>
+    <contributor>
+      <username>Blue Shadow</username>
+      <id>2021</id>
+    </contributor>
+    <minor />
+    <comment>/* DECORATE definition */ Updated</comment>
+    <origin>39415</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="1476" sha1="6hwezobbzqkk39at2pc58ro960dvk55" xml:space="preserve">{{Actor|
+| type = Weapon
+| name = Phoenix rod
+| class = PhoenixRod
+| game = Heretic
+| doomednum = 2003
+| spawnid = 29
+| spawnname = T_PHOENIXROD 
+}}[[Classes]]: [[Classes:Inventory|Inventory]]&amp;rarr;[[Classes:Weapon|Weapon]]&amp;rarr;&lt;u&gt;PhoenixRod&lt;/u&gt;
+&amp;ensp;&amp;rarr;[[Classes:PhoenixRodPowered|PhoenixRodPowered]]&lt;br&gt;
+
+The phoenix rod has radically different uses whether it's used with or without a [[Classes:ArtiTomeOfPower|tome of power]]. In its normal mode, it fires a long-distance, explosive [[Classes:PhoenixFX1|projectile]] but with the tome it turns into a short-range flamethrower.
+
+==== [[DECORATE]] definition ====
+ ACTOR &lt;u&gt;PhoenixRod&lt;/u&gt; : {{Class|Weapon}} native
+ {
+   +{{Flag|WEAPON.NOAUTOFIRE}}
+   {{Property|Weapon.SelectionOrder}} 2600
+   {{Property|Weapon.Kickback}} 150
+   {{Property|Weapon.YAdjust}} 15
+   {{Property|Weapon.AmmoUse}} 1
+   {{Property|Weapon.AmmoGive}} 2
+   {{Property|Weapon.AmmoType}} "{{Class|PhoenixRodAmmo}}"
+   {{Property|Weapon.SisterWeapon}} "{{Class|PhoenixRodPowered}}"
+   {{Property|Inventory.PickupMessage}} "$TXT_WPNPHOENIxROD"
+   {{Property|Tag}} "$TAG_PHOENIxROD"
+ 
+   action native [[A_FirePhoenixPL1]]();
+ 
+   States
+   {
+   Spawn:
+     WPHX A -1
+     Stop
+   Ready:
+     PHNX A 1 [[A_WeaponReady]]
+     Loop
+   Deselect:
+     PHNX A 1 [[A_Lower]]
+     Loop
+   Select:
+     PHNX A 1 [[A_Raise]]
+     Loop
+   Fire:
+     PHNX B 5
+     PHNX C 7 [[A_FirePhoenixPL1]]
+     PHNX DB 4
+     PHNX B 0 [[A_ReFire]]
+     Goto Ready
+   }
+ }</text>
+    <sha1>6hwezobbzqkk39at2pc58ro960dvk55</sha1>
+  </revision>
+</page>

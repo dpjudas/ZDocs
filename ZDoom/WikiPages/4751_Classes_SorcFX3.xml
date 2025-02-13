@@ -1,0 +1,55 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>Classes:SorcFX3</title>
+  <ns>0</ns>
+  <id>4751</id>
+  <revision>
+    <id>34594</id>
+    <parentid>18674</parentid>
+    <timestamp>2012-10-21T09:24:40Z</timestamp>
+    <contributor>
+      <username>Blue Shadow</username>
+      <id>2021</id>
+    </contributor>
+    <minor />
+    <comment>/* DECORATE definition */</comment>
+    <origin>34594</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="772" sha1="60z1gkg4sub8nsl194oaohghq3zpyp7" xml:space="preserve">{{Actor|
+| type = Explosive
+| name = Dark bishop summoning spell
+| class = SorcFX3
+| game = Hexen
+}}[[Classes]]: &lt;u&gt;SorcFX3&lt;/u&gt;&lt;br&gt;
+The [[Classes:Heresiarch|Heresiarch]]'s [[Classes:Bishop|dark bishop]] summoning spell.
+==== [[DECORATE]] definition ====
+ ACTOR &lt;u&gt;SorcFX3&lt;/u&gt;
+ {
+   {{Property|Speed}} 15
+   {{Property|Radius}} 22
+   {{Property|Height}} 65
+   +{{Flag|NOBLOCKMAP}}
+   +{{Flag|MISSILE}}
+   +{{Flag|NOTELEPORT}}
+   {{Property|SeeSound}} "SorcererBishopSpawn"
+ 
+   action native [[A_SpawnBishop]]();
+   action native [[A_SorcererBishopEntry]]();
+ 
+   States
+   {
+   Spawn:
+     SBS3 ABC 2 Bright
+     Loop
+   Death:
+     SBS3 A 4 Bright
+     BISH P 4 [[A_SorcererBishopEntry]]
+     BISH ON 4
+     BISH MLKJIH 3
+     BISH G 3 [[A_SpawnBishop]]
+     Stop
+   }
+ }</text>
+    <sha1>60z1gkg4sub8nsl194oaohghq3zpyp7</sha1>
+  </revision>
+</page>

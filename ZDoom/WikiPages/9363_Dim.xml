@@ -1,0 +1,55 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>Dim</title>
+  <ns>0</ns>
+  <id>9363</id>
+  <revision>
+    <id>54140</id>
+    <parentid>53569</parentid>
+    <timestamp>2025-01-17T11:51:32Z</timestamp>
+    <contributor>
+      <username>Jekyll Grim Payne</username>
+      <id>2175</id>
+    </contributor>
+    <comment>/* Examples */</comment>
+    <origin>54140</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="1506" sha1="pf6guwa4at3tokukn46qiggrgx4tv40" xml:space="preserve">{{ZScriptNote}}
+__NOTOC__
+
+'''[[Structs:Screen|Screen]]'''
+
+{{c|native static void '''Dim'''(Color ''col'', double ''amount'', int ''x'', int ''y'', int ''w'', int ''h'', ERenderStyle ''style'' }}={{c| STYLE_Translucent)}}
+
+== Usage ==
+Used to blend the screen in the specified bounding box to a color. If using a palette color is desired then [[Clear]] should be used instead. Coordinates are absolute and start from the top left of the screen with positive x values shifting to the right and positive y values shifting downward.
+
+'''Warning:''' This can only be called from within functions that are specifically designed to draw UI elements (e.g. {{class|BaseStatusBar|BaseStatusBar's {{c|Draw()}}}} or [[Events_and_handlers#RenderOverlay|EventHandler's {{c|RenderOverlay()}}]]).
+
+=== Parameters ===
+*{{c|Color '''col'''}}
+:The color to fill the area of the box with
+*{{c|double '''amount'''}}
+:The alpha value of the color. A value of 1 is fully opaque while a value of 0 is fully transparent
+*{{c|int '''x'''}}
+:The x offset of the box
+*{{c|int '''y'''}}
+:The y offset of the box
+*{{c|int '''w'''}}
+:The width of the box
+*{{c|int '''h'''}}
+:The height of the box
+*{{c|ERenderStyle '''style'''}}
+:The [[renderstyle]] to apply to the blend. Defaults to {{c|STYLE_Translucent}}.
+
+== Examples ==
+This fills the entire screen in black color:
+&lt;syntaxhighlight lang="csharp"&gt;
+Screen.Dim(0x000000, 1.0, 0, 0, Screen.GetWidth(), Screen.GetHeight());
+&lt;/syntaxhighlight&gt;
+
+[[Category:ZScript]]
+[[Category:Screen]]</text>
+    <sha1>pf6guwa4at3tokukn46qiggrgx4tv40</sha1>
+  </revision>
+</page>

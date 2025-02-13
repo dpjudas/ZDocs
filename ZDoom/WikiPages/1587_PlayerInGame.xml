@@ -1,0 +1,86 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>PlayerInGame</title>
+  <ns>0</ns>
+  <id>1587</id>
+  <revision>
+    <id>26611</id>
+    <parentid>26610</parentid>
+    <timestamp>2010-04-20T08:41:04Z</timestamp>
+    <contributor>
+      <username>Solarsnowfall</username>
+      <id>488</id>
+    </contributor>
+    <comment>/* Examples */</comment>
+    <origin>26611</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="1672" sha1="b0z11uzb5an55755e79felgwlzfijfd" xml:space="preserve">bool '''PlayerInGame''' (int ''playernumber'')
+
+==Usage==
+
+Returns true if the player [0..7] is in the game and false if not. If it returns false, that player is not counted by [[PlayerCount]].
+
+==Examples==
+This example picks a player at random of the players that are in the game.  It then cripples this player by reducing their speed for 30 seconds.  The script then prints a message for whether the player quit, was killed, or survived the 30 seconds.  If the player survived, their speed is restored.
+
+ int alive[8];
+ 
+ script 1 enter
+ {
+   alive[PlayerNumber()] = TRUE;
+   Thing_ChangeTID(0, 1000 + PlayerNumber());
+ }
+ 
+ script 2 respawn
+ {
+   alive[PlayerNumber()] = TRUE;
+   Thing_ChangeTID(0, 1000 + PlayerNumber());
+ } 
+ 
+ script 3 death
+ {
+   alive[PlayerNumber()] = FALSE;
+ }
+ 
+ script 4 open
+ {
+   int p, tics;
+   while (GameType() == GAME_NET_DEATHMATCH) //don't run otherwise
+   {
+     delay(35 * 60);
+     
+     do { 
+       p = random(0, 7);
+    } while (!PlayerInGame(p) &amp;&amp; !alive[p]); 
+ 
+     SetActorProperty(1000 + p, APROP_Speed, 0.5);
+     printbold(s:"Everybody get ", n:p + 1, s:"!");
+     
+     tics = 0;
+     do { 
+       tics++;
+       delay(1);
+     } while (tics &lt;= 35 * 30 &amp;&amp; alive[p] &amp;&amp; PlayerInGame(p));
+       
+     
+     if (tics &lt;= 1050)
+     {
+       if (!alive[p])
+         printbold(s:"Well that takes care of that!");
+       else
+         printbold(s:"The quitter!");
+     }
+     else
+     {
+       SetActorProperty(1000 + p, APROP_Speed, 1.0);
+       printbold(n:p + 1, s:" dodged the bullet!");
+     }
+   }
+ }
+
+See [[PlayerNumber]] and [[PlayerCount]] for general player-counting commands.
+
+[[category:ACS Information functions]]</text>
+    <sha1>b0z11uzb5an55755e79felgwlzfijfd</sha1>
+  </revision>
+</page>

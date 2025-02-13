@@ -1,0 +1,87 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>Health Point Bar</title>
+  <ns>0</ns>
+  <id>3119</id>
+  <revision>
+    <id>36005</id>
+    <parentid>25562</parentid>
+    <timestamp>2013-03-01T03:49:36Z</timestamp>
+    <contributor>
+      <username>Deded007</username>
+      <id>1392</id>
+    </contributor>
+    <minor />
+    <comment>fixed some errors, cleaned up</comment>
+    <origin>36005</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="2506" sha1="rswd3dtny8p3ok71p266tnbe40ktvcq" xml:space="preserve">''Tutorial written and coded by Apothem''
+==Description==
+This is an example of healthbar script for bosses and minibosses. 
+
+To use this script replace mtid with the TID of the monster you want the bar to monitor and replace the value of mmaxhp with the max health of the monster you're monitoring.
+
+'''Make sure to replace ENTER with (void) if you do not want the script to activate with the player entering the level.'''
+
+The lumps fillcrit, filldang, fillnorm, and fillcaut are all the filler pics for the bar. Please put these inside the wad outside of any tags. The bar itself, HPMONBAR, is the actual bar pic. also place that inside the wad, but outside of any tags.
+
+==Code==
+
+ #include "zcommon.acs"
+ 
+ int mtid = 666; //Replace the number here with your monster [[TID]]
+ 
+ Script 4 {{SType|Enter}} //Replace ENTER with (void) if you want to activate the script
+ {              //with a line instead of on level entry.
+     int hdisp;
+     int monhp = [[GetActorProperty]] (mtid, {{const|APROP_Health}});
+     int mmaxhp = [[GetActorProperty]] (mtid, {{const|APROP_SpawnHealth}});
+     [[SetFont]] ("NORMAL");
+     hdisp = (monhp * 100 / mmaxhp);
+     if (hdisp &lt;= 0)
+         hdisp = 0;
+ 
+     [[SetHudSize]] (800,600, {{const|FALSE}});
+     [[HudMessage]] (i:hdisp; {{const|HUDMSG_FadeOut}}, 101, {{const|CR_WHITE}}, 120.1, 10.1, 0.1, 1.0);
+ 
+     int acounter;
+     int bcounter;
+     [[SetFont]] ("MONHPBAR");
+     [[HudMessage]] (s:"a"; {{const|HUDMSG_FadeOut}}, 102, {{const|CR_GREEN}}, 0.1, 1.1, 0.1, 1.0);
+ 
+     for (acounter = 0; acounter &lt;= hdisp; acounter++)
+     {
+         if (hdisp &lt;= 0)
+             [[break]];
+ 
+         bcounter = bcounter + 2.0;
+         [[SetFont]] ("FILLNORM"); //By default, the bar shows as a blue bar.
+ 
+         if (hdisp &lt; 75) //If the hp is at a caution level (75%) Display a yellow bar.
+             [[SetFont]] ("FILLCAUT");
+ 
+         if (hdisp &lt; 50) //If the hp is at a danger level (50%) Display an orange bar.
+             [[SetFont]] ("FILLDANG");
+ 
+         if (hdisp &lt; 25) // If the hp is at a critical level (25%) Display a red bar.
+             [[SetFont]] ("FILLCRIT");
+ 
+         [[HudMessage]] (s:"a"; {{const|HUDMSG_FadeOut}}, acounter, {{const|CR_GREEN}}, 23.1 + bcounter, 7.1, 0.1, 1.0);
+     }
+     bcounter = 0;
+     acounter = 0;
+     [[Delay]] (1);
+     [[Restart]];
+ }
+
+==Extras==
+*{{forum|Demo map|root=download/file|id=3004}}
+
+== See Also ==
+[[Tutorials]]&lt;br&gt;
+[[Enjay's modification of Apothem's HP bar]]
+
+[[category:ACS guides]]</text>
+    <sha1>rswd3dtny8p3ok71p266tnbe40ktvcq</sha1>
+  </revision>
+</page>

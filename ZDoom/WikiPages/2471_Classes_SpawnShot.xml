@@ -1,0 +1,88 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>Classes:SpawnShot</title>
+  <ns>0</ns>
+  <id>2471</id>
+  <revision>
+    <id>52439</id>
+    <parentid>47716</parentid>
+    <timestamp>2024-04-13T21:41:14Z</timestamp>
+    <contributor>
+      <username>Jekyll Grim Payne</username>
+      <id>2175</id>
+    </contributor>
+    <origin>52439</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="1613" sha1="5gjlq6qj4icbgln90pdnhqjlb47w93a" xml:space="preserve">{{Actor|
+| type = Explosive
+| name = Boss cube
+| class = SpawnShot
+| game = Doom2
+}}[[Classes]]: {{Class}} &amp;rarr; &lt;u&gt;SpawnShot&lt;/u&gt;
+
+Projectile fired by a {{Class|BossEye}} at a random {{Class|BossTarget}}. Once the target is reached, a random monster is spawned.  Flies through walls.
+
+== Monster list ==
+A custom spawn shot can define its own list of monsters to spawn from its {{Property|DropItem}} list. If it does so, it overrides its boss eye's monster list. See {{Class|BossEye}} for more information on the syntax.
+
+== [[ZScript]] definition ==
+{{ZScriptDefinitionNote|actors/doom/bossbrain.zs#L87}}
+&lt;syntaxhighlight lang="csharp"&gt;
+class SpawnShot : Actor
+{
+	Default
+	{
+		Radius 6;
+		Height 32;
+		Speed 10;
+		Damage 3;
+		Projectile;
+		+NOCLIP
+		-ACTIVATEPCROSS
+		+RANDOMIZE
+		SeeSound "brain/spit";
+		DeathSound "brain/cubeboom";
+	}
+	States
+	{
+	Spawn:
+		BOSF A 3 BRIGHT A_SpawnSound;
+		BOSF BCD 3 BRIGHT A_SpawnFly;
+		Loop;
+	}
+}&lt;/syntaxhighlight&gt;
+
+== [[DECORATE]] definition ==
+{{DecorateDefinitionNote}}
+ ACTOR &lt;u&gt;SpawnShot&lt;/u&gt;
+ {
+   {{Property|Radius}} 6
+   {{Property|Height}} 32
+   {{Property|Speed}} 10
+   {{Property|Damage}} 3
+   {{Property|Projectile}}
+   +{{Flag|NOCLIP}}
+   -{{Flag|ACTIVATEPCROSS}}
+   +{{Flag|RANDOMIZE}}
+   {{Property|SeeSound}} "brain/spit"
+   {{Property|DeathSound}} "brain/cubeboom"
+   States
+   {
+   Spawn:
+     BOSF A 3 Bright [[A_SpawnSound]]
+     BOSF BCD 3 Bright [[A_SpawnFly]] // See {{Class|SpawnFire}}
+     Loop
+   }
+ }
+
+== See also ==
+* [[Classes:BossBrain]]
+* [[Classes:BossEye]]
+* [[Classes:BossTarget]]
+* [[A_BrainSpit]]
+* [[A_SpawnFly]]
+
+[[Category:Icon of Sin]]</text>
+    <sha1>5gjlq6qj4icbgln90pdnhqjlb47w93a</sha1>
+  </revision>
+</page>

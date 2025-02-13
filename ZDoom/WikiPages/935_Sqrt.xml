@@ -1,0 +1,105 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>Sqrt</title>
+  <ns>0</ns>
+  <id>935</id>
+  <revision>
+    <id>50468</id>
+    <parentid>40832</parentid>
+    <timestamp>2023-08-20T04:25:27Z</timestamp>
+    <contributor>
+      <username>Inkoalawetrust</username>
+      <id>2604</id>
+    </contributor>
+    <minor />
+    <comment>Minor grammar fix 7 years later.</comment>
+    <origin>50468</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="2356" sha1="ji3idzjsg9rktsr54deoeqhhe91ac63" xml:space="preserve">int '''Sqrt''' (int ''number'') 
+
+fixed '''FixedSqrt''' (fixed ''number'') 
+
+== Usage ==
+
+Returns the square root of an integer or fixed point number.
+
+=== Parameters ===
+
+* ''number'': Value to take the square root of.
+
+=== Return value ===
+
+Either the rounded integer or fixed point square root of the number.
+
+== Manual calculation ==
+In older versions of ZDoom, the function is not built into ACS so here are several that work fine. Do note that for the distance between to objects the [[distance]] function can be faster.
+
+This version uses Newton's method, where the solution converges quadratically from the initial guess. This function has been compared with the following two, and is at least 5 to 10 times faster in normal use.
+ function int sqrt(int number)
+ {
+ 	if(number &lt;= 3) { return number &gt; 0; }
+ 
+ 	int oldAns = number &gt;&gt; 1,                     // initial guess
+ 	    newAns = (oldAns + number / oldAns) &gt;&gt; 1; // first iteration
+ 
+ 	// main iterative method
+ 	while(newAns &lt; oldAns)
+ 	{
+ 		oldAns = newAns;
+ 		newAns = (oldAns + number / oldAns) &gt;&gt; 1;
+ 	}
+ 
+ 	return oldAns;
+ }
+
+This is a simpler, but slower, version of a square root function. It rounds the root up or down.
+
+ function int sqrt (int x)
+ {
+ 	int r;
+ 	x = x + 1 &gt;&gt; 1;
+ 	while (x &gt; r)
+ 		x -= r++;
+ 	return r;
+ }
+
+If you need a function that rounds down, this one will work. Based off of [http://snippets.dzone.com/posts/show/2715 this algorithm].
+ function int isqrt (int n)
+ {
+ 	int a;
+ 	for (a=0;n&gt;=(2*a)+1;n-=(2*a++)+1);
+ 	return a;
+ }
+
+
+This sample-based formulae processes fixed values and returns a fixed result which accuracy is defined by the ''samples'' integer, and results zero if the input number is negative.
+ function int sqrt(int number) 
+ { 
+   int samples=15; //Samples for accuracy
+ 
+   if (number == 1.0) return 1.0; 
+   if (number &lt;= 0) return 0;
+   int val = samples&lt;&lt;17 + samples&lt;&lt;19; //x*10 = x&lt;&lt;1 + x&lt;&lt;3
+   for (int i=0; i&lt;samples; i++) 
+     val = (val + FixedDiv(number, val)) &gt;&gt; 1;
+ 
+   return val; 
+ }
+
+This is the same as above but is optimised for 15 samples
+ function int sqrt(int number) 
+ {
+   if (number == 1.0) return 1.0; 
+   if (number &lt;= 0) return 0;
+   int val = 150.0;
+   for (int i=0; i&lt;15; i++) 
+     val = (val + FixedDiv(number, val)) &gt;&gt; 1;
+ 
+   return val; 
+ }
+
+[[category:Sample ACS functions]]
+[[category:ACS Math functions]]</text>
+    <sha1>ji3idzjsg9rktsr54deoeqhhe91ac63</sha1>
+  </revision>
+</page>

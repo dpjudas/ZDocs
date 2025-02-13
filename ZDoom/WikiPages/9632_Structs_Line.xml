@@ -1,0 +1,162 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>Structs:Line</title>
+  <ns>0</ns>
+  <id>9632</id>
+  <revision>
+    <id>54176</id>
+    <parentid>54175</parentid>
+    <timestamp>2025-01-31T18:26:20Z</timestamp>
+    <contributor>
+      <username>Boondorl</username>
+      <id>2606</id>
+    </contributor>
+    <minor />
+    <comment>/* Fields */</comment>
+    <origin>54176</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="10173" sha1="6m6p1w45wwrphybmp8jvphmeebbk2ne" xml:space="preserve">Lines are what make up [[Structs:Sector|sectors]] within a map. They're defined by two [[Structs:Vertex|vertices]] and are made up of three parts: a bottom, a middle, and a top. Lines that have no back sector are set to be one-sided, making them impassable by default with only their middle part being usable. The bottom and top come into play when there are floor and ceiling height differences between two sectors. With [[Structs:F3DFloor|3D floors]] the middle part is the only one that can be used and represents the outside texture of the floor's walls. Textures can be applied to the middle of two-sided lines, but it will not tile vertically to fill the entire space like one-sided lines do. This can be used to create effects like glass or fences since they can have transparency. If a line is two-sided then it will hold a pointer to both its front and back sector, otherwise only having a front sector. There are multiple ways to access lines. [[Structs:Side|Sides]] have a '''linedef''' variable which will point to their line. Sectors have an array, '''lines''', which contains all of their lines. [[Structs:LevelLocals|Level]] also has a '''Lines''' array which contains every line in the map.
+
+==Fields==
+*{{c|readonly Vertex '''v1'''}}
+:The first [[Structs:Vertex|vertex]] that makes up the line. This one is always to the right of the line relative to its facing direction.
+*{{c|readonly Vertex '''v2'''}}
+:The second [[Structs:Vertex|vertex]] that makes up the line. This one is always to the left of the line relative to its facing direction.
+*{{c|readonly Vector2 '''delta'''}}
+:A vector that points from v1 to v2 with the length of the line.
+*{{c|uint '''flags'''}}
+:Flags for the line:
+:*{{c|Line.ML_BLOCKING}} - Line is set to block anything that isn't a hitscan attack or projectile.
+:*{{c|Line.ML_BLOCKMONSTERS}} - Line is set to block monster movement.
+:*{{c|Line.ML_TWOSIDED}} - Line has both a front and back sector.
+:*{{c|Line.ML_DONTPEGTOP}} - Draw the top part of the line from top to bottom instead of the other way around.
+:*{{c|Line.ML_DONTPEGBOTTOM}} - Draw the bottom and (if two-sided) middle parts of the line from bottom to top instead of the other way around.
+:*{{c|Line.ML_SECRET}} - Draw the line in the automap as though it were one-sided.
+:*{{c|Line.ML_SOUNDBLOCK}} - If two lines with this flag form a barrier between sectors, sound is blocked from traversing through it.
+:*{{c|Line.ML_DONTDRAW}} - Don't draw the line on the automap at all.
+:*{{c|Line.ML_MAPPED}} - Set if the line has already been drawn in the automap.
+:*{{c|Line.ML_REPEAT_SPECIAL}} - Allow the special on this line to be activated multiple times.
+:*{{c|Line.ML_ADDTRANS}} - This line is set to use additive translucency.
+:*{{c|Line.ML_MONSTERSCANACTIVATE}} - Monsters can activate this line similar to a player.
+:*{{c|Line.ML_BLOCK_PLAYERS}} - Line is set to block player movement.
+:*{{c|Line.ML_BLOCKEVERYTHING}} - Line is set to block anything that tries to move past it.
+:*{{c|Line.ML_ZONEBOUNDARY}} - Line acts as a barrier for reverbs.
+:*{{c|Line.ML_RAILING}} - Line acts like a 32-unit high rail.
+:*{{c|Line.ML_BLOCK_FLOATERS}} - Line is set to block anything with the FLOAT flag.
+:*{{c|Line.ML_CLIP_MIDTEX}} - If two-sided, the texture in the line's middle part is set to never render below the floor or above the ceiling.
+:*{{c|Line.ML_WRAP_MIDTEX}} - The middle part's texture is set to fill the entire space vertically if the line is two-sided.
+:*{{c|Line.ML_3DMIDTEX}} - If two-sided, the middle part's texture acts like a 3D floor.
+:*{{c|Line.ML_CHECKSWITCHRANGE}} - Check the vertical range of the activator when trying to use this line.
+:*{{c|Line.ML_FIRSTSIDEONLY}} - This line can only be activated when done from the front side.
+:*{{c|Line.ML_BLOCKPROJECTILE}} - Line is set to block projectiles.
+:*{{c|Line.ML_BLOCKUSE}} - Line is set to block the use action.
+:*{{c|Line.ML_BLOCKSIGHT}} - Line is set to block any sight checks.
+:*{{c|Line.ML_BLOCKHITSCAN}} - Line is set to block hitscan attacks.
+:*{{c|Line.ML_3DMIDTEX_IMPASS}} - If set to use a 3D mid texture, treat the line similar to '''Line.ML_BLOCKING''' and allow projectiles and hitscan attacks to go through it.
+*{{c|uint '''flags2'''}}
+:Additional flags for the line:
+**'''Line.ML2_BLOCKLANDMONSTERS''' - Line is set to block anything without the FLOAT flag.
+*{{c|uint '''activation'''}}
+:The type of trigger needed to activate this line. This is a bit field, so it can contain multiple values. (See [[Operators_(ZScript)#Bitwise_operators|bitwise operators]] for how to check values of bit fields.)
+:*{{c|SPAC_Cross}}: Activate when crossed by a player.
+:*{{c|SPAC_Use}}: Activate when used by a player.
+:*{{c|SPAC_MCross}}: Activate when crossed by a monster.
+:*{{c|SPAC_Impact}}: Activate when hit by a projectile.
+:*{{c|SPAC_Push}}: Activate when pushed by a player.
+:*{{c|SPAC_PCross}}: Activate when crossed by a projectile.
+:*{{c|SPAC_UseThrough}}: Allow the player's use action to continue past this line instead of stopping on it.
+:*{{c|SPAC_AnyCross}}: Activate when crossed by any actor without {{flag|NOTELEPORT}}. This normally applies to projectiles.
+:*{{c|SPAC_MUse}}: Activate when used by a monster.
+:*{{c|SPAC_MPush}}: Activate when pushed by a monster.
+:*{{c|SPAC_UseBack}}: Activate when used from behind.
+:*{{c|SPAC_Damage}}: [[Destructible_geometry|Activate when the line is damaged]].
+:*{{c|SPAC_Death}}: Activate when the line is killed.
+:*{{c|SPAC_Walking}}: If it's a SPAC_Cross or SPAC_MCross line, then it will only activate if the actor triggering it is on the floor. {{new|4.13.0}}
+:*{{c|SPAC_PlayerActivate}}: All of the activation types for players using lines. Implies ''SPAC_Cross'', ''SPAC_Use'', ''SPAC_Impact'', ''SPAC_Push'', ''SPAC_AnyCross'', ''SPAC_UseThrough'', and ''SPAC_UseBack''. GZDoom only uses this for the [[automap]] code internally.
+*{{c|int '''special'''}}
+:The [[special]] to trigger when activated.
+*{{c|int '''args'''[5]}}
+:An array containing up to 5 arguments for the special that activates.
+*{{c|double '''alpha'''}}
+:The transparency of the line.
+*{{c|readonly Side '''sidedef'''[2]}}
+:An array containing the front [[Structs:Side|Side]] and, if two-sided, back [[Structs:Side|Side]].
+**'''Line.front''' - Index for the front [[Structs:Side|Side]].
+**'''Line.back''' - Index for the back [[Structs:Side|Side]].
+*''readonly'' double '''bbox'''[4] - Bounding box that encapsulates the entire line.
+**'''0''' - The maximum y coordinate of the box
+**'''1''' - The minimum y coordinate of the box
+**'''2''' - The minimum x coordinate of the box
+**'''3''' - The maximum x coordinate of the box
+*{{c|readonly Sector '''frontsector'''}}
+:The sector on the front side of the line.
+*{{c|readonly Sector '''backsector'''}}
+:The sector on the back side of the line if two-sided.
+*{{c|int '''validcount'''}}
+:Used to keep track of whether or not the line has already been visited across various functions.
+*{{c|int '''locknumber'''}}
+:What lock number is needed for the line to activate.
+*{{c|readonly uint '''portalindex'''}}
+:The index for the line's portal in level's '''LinePortals''' array (currently inaccessible).
+*{{c|readonly uint '''portaltransferred'''}}
+:The index for the sector portal that the line's portal was transferred to in level's '''SectorPortals''' array.
+*{{c|readonly int '''health'''}}
+:How much health the line currently has.
+*{{c|readonly int '''healthgroup'''}}
+:The id of the geometry the line is linked to when it takes damage.
+
+==Methods==
+===Non-static===
+*{{c|bool '''isLinePortal'''()}}
+:Returns true if the linedef is a [[Portal#Line_portals|traversable portal]]. False otherwise.
+*{{c|bool '''isVisualPortal'''()}}
+:Returns true if the linedef is a purely visual portal. False otherwise.
+*{{c|Line '''getPortalDestination'''()}}
+:If the line is a portal linked to another line, this will return a pointer to the destination line. Returns null otherwise.
+*{{c|int '''getPortalFlags'''()}}
+:Returns the [[Structs:LinePortal#Fields|portals' flags]]. If the line is not a portal, it returns 0 instead.
+*{{c|int '''getPortalAlignment'''()}}
+:Returns what sector plane the portal is aligned too. If the line is not a visual or simple teleport portal, it returns 0 instead.
+*{{c|int '''getPortalType'''()}}
+:Returns what type of portal the linedef is. If any.
+*{{c|Vector2 '''getPortalDisplacement'''()}}
+:Returns the displacement of the linedefs' portal. Returns (0,0) if the line is not a static/linked portal.
+*{{c|double '''getPortalAngleDiff'''()}}
+:Returns the angle difference between the lines' portal and the destination line portal. Returns 0 if there is no portal or it's a static/linked portal.
+*{{c|int '''Index'''()}}
+:Returns the lines' index number.
+*{{c|bool '''[[Activate_(Line)|Activate]]'''(Actor ''activator'', int ''side'', int ''type'')}}
+*{{c|bool '''[[RemoteActivate_(Line)|RemoteActivate]]'''(Actor ''activator'', int ''side'', int ''type'', Vector3 ''pos'')}}
+*{{c|int '''GetUDMFInt'''(Name ''nm'')}}
+:Returns the integer value of the specified UDMF key (e.g user_customvalue).
+*{{c|double '''GetUDMFFloat'''(Name ''nm'')}}
+:Returns the float value of the specified UDMF key (e.g user_customvalue).
+*{{c|string '''GetUDMFString'''(Name ''nm'')}}
+:Returns the string value of the specified UDMF key (e.g user_linedefname).
+*{{c|int '''GetHealth'''()}}
+:Returns the lines' health. Or if it's in a health group, the groups' health.
+*{{c|void '''SetHealth''' (int ''newhealth'')}}
+:Sets the lines' health, or if it's in a health group, the groups' health.
+*{{c|int '''CountIDs'''()}}
+:Returns the total number of [[Tag|tags]] attached to the line. 
+*{{c|void '''GetID'''(int ''index'')}}
+:Returns the [[Tag|tag]] of the linedef at the specified position. Example:
+&lt;syntaxhighlight lang="csharp"&gt;
+// myline is a line pointer, desiredLineID is the ID you're looking for:
+int id;
+for (int i = 0; (id = myline.GetID(i)) != 0; i++)
+{
+    if (id == desiredLineID)
+    {
+        DoMyThing();
+        break;
+    }
+}&lt;/syntaxhighlight&gt;
+*{{c|bool, double, double '''[[GetMidTexturePosition]]''' (int ''side'')}} const
+
+[[Category:ZScript]]
+[[Category:Structs]]
+[[Category:ZScript map data]]</text>
+    <sha1>6m6p1w45wwrphybmp8jvphmeebbk2ne</sha1>
+  </revision>
+</page>

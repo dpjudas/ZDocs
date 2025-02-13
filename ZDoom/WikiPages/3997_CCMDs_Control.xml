@@ -1,0 +1,173 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>CCMDs:Control</title>
+  <ns>0</ns>
+  <id>3997</id>
+  <revision>
+    <id>44378</id>
+    <parentid>44194</parentid>
+    <timestamp>2017-03-20T16:56:56Z</timestamp>
+    <contributor>
+      <username>Gez</username>
+      <id>1283</id>
+    </contributor>
+    <minor />
+    <comment>replacing git tags with new tags for GZDoom 2.4.0 release</comment>
+    <origin>44378</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="8653" sha1="43vc88743jie71e4lnj6j2stiy2480o" xml:space="preserve">These [[CCMDs|console commands]] are used to directly control the player or HUD.  They can be bound to a key in the controls menu from within the game.
+
+See the [[CCMDs]] article for general information on how to use commands.
+
+==Controls==
+Each control has both a + command and a corresponding - command.  Where the + command begins a player action, the - command ends the same action.  For example, pressing the key bound to +forward will start the player moving forward.  Releasing it will execute -forward, which halts the players forward movement.
+
+===Game controls===
+* '''{{LE|+altattack|-altattack}}'''
+:Use your [[weapon]]'s secondary fire.
+* '''{{LE|+attack|-attack}}'''
+:Use your [[weapon]]'s primary fire.
+* '''{{LE|+back|-back}}'''
+:Move backward. (Backpedal)
+* '''{{LE|+crouch|-crouch}}'''
+:Makes the player [[crouch]] while the key is pressed. Not to be confused with [[#crouch|crouch]], which toggles crouching on and off.
+* '''{{LE|+forward|-forward}}'''
+:Move (walk or run) forward. 
+* '''{{LE|+jump|-jump}}'''
+:[[Jump]]. You can also use this command to [[swim]] upwards. If you were [[crouching]], you also automatically uncrouch.
+* '''{{LE|+klook|-klook}}'''
+:[[Free look|Look]] modifier key.  While active, [[#+forward|+forward]] and [[#+back|+back]] behave like [[#+lookup|+lookup]] and [[#+lookdown|+lookdown]], respectively.
+* '''{{LE|+left|-left}}'''
+:Turn (rotate) to the left.
+* '''{{LE|+lookdown|-lookdown}}'''
+:Look down toward the floor.
+* '''{{LE|+lookup|-lookup}}'''
+:Look up toward the ceiling.
+* '''{{LE|+mlook|-mlook}}'''
+:Mouselook modifier.  If the {{CVAR|C|freelook}} CVAR is false, you must use the key bound to this while moving your mouse forward or backwards to look up and down.  Otherwise, this does nothing.
+* '''{{LE|+movedown|-movedown}}'''
+:[[Fly]] or [[swim]] down.
+* '''{{LE|+moveleft|-moveleft}}'''
+:Move (strafe) to the left.
+* '''{{LE|+moveright|-moveright}}'''
+:Move (strafe) to the right.
+* '''{{LE|+moveup|-moveup}}'''
+:[[Fly]] or [[swim]] up.
+* '''{{LE|+reload|-reload}}'''
+:Go to the [[weapon]]'s "reload" [[state]], provided that the weapon explicitly allows it with [[A_WeaponReady]](WRF_ALLOWRELOAD).
+* '''{{LE|+right|-right}}'''
+:Turn (rotate) to the right.
+* '''{{LE|+showscores|-showscores}}'''
+:While held, displays the [[scoreboard]], which displays player names and frag count during a [[multiplayer]] game.
+* '''{{LE|+speed|-speed}}'''
+:Normally, this causes your player to move faster (run) while held.  If the {{CVAR|C|cl_run}} CVAR is set, then this reverses roles and causes your player to move more slowly (walk) instead. 
+* '''{{LE|+strafe|-strafe}}'''
+:Strafe modifier key.  While active, [[#+left|+left]] and [[#+right|+right]] behave like [[#+moveleft|+moveleft]] and [[#+moveright|+moveright]], respectively.
+* '''{{LE|+use|-use}}'''
+:Try to use or activate something in front of you. 
+* '''{{LE|+user1|-user1}}'''
+* '''{{LE|+user2|-user2}}'''
+* '''{{LE|+user3|-user3}}'''
+* '''{{LE|+user4|-user4}}'''
+:Go to the [[weapon]]'s "user#" [[state]], provided that the weapon explicitly allows it with [[A_WeaponReady]](WRF_ALLOWUSER#).
+* '''{{LE|+zoom|-zoom}}'''
+:Go to the [[weapon]]'s "zoom" [[state]], provided that the weapon explicitly allows it with [[A_WeaponReady]](WRF_ALLOWZOOM).
+
+===Automap controls===
+These controls are only active while in full [[automap]] mode.
+* '''{{LE|+am_pandown|-am_pandown}}'''
+:If the {{CVAR|A|am_followplayer}} CVAR is false, the view of the map moves downward (to the South).
+* '''{{LE|+am_panleft|-am_panleft}}'''
+:If the {{CVAR|A|am_followplayer}} CVAR is false, the view of the map moves leftward (to the West).
+* '''{{LE|+am_panright|-am_panright}}'''
+:If the {{CVAR|A|am_followplayer}} CVAR is false, the view of the map moves rightward (to the East).
+* '''{{LE|+am_panup|-am_panup}}'''
+:If the {{CVAR|A|am_followplayer}} CVAR is false, the view of the map moves upward (to the North).
+* '''{{LE|+am_zoomin|-am_zoomin}}'''
+:Zoom in to get a closer look at the map.
+* '''{{LE|+am_zoomout|-am_zoomout}}'''
+:Zoom out to get a broader view of the map.
+* '''{{LE|am_clearmarks}}'''
+:Removes all user-placed automap marks.
+* '''{{LE|am_gobig}}'''
+:Zoom the map out to put the entire level in view
+* '''{{LE|am_restorecolors}}'''
+:Reset custom automap colors to their default values.
+* '''{{LE|am_setmark}}'''
+:Set a mark at the center position (player arrow in follow mode; crosshair in no-follow mode).
+* '''{{LE|am_togglefollow}}'''
+:Toggles follow mode on and off.
+* '''{{LE|am_togglegrid}}'''
+:Toggles grid layer display on and off.
+* '''{{LE|am_toggletexture}}'''
+:Toggles textured automap on and off. Note that textured automap requires [[GL node]]s to have been built: if no GL nodes are available, the automap will remain untextured.
+* '''{{LE|am_zoom}}''' int ''value''
+:Zoom to the given zoom level.
+
+==Other commands==
+* '''{{LE|centerview}}'''
+:Resets [[free look]] to the horizontal.
+* '''{{LE|crouch}}'''
+:Toggles [[crouching]] mode on and off. Not to be confused with [[#+crouch|+crouch]], which only enables crouching while the key is pressed.
+* '''{{LE|invdrop}}'''
+:Drops the currently selected [[inventory item]].
+* '''{{LE|invnext}}'''
+:Selects the next [[inventory item]] you possess. In addition, it plays the {{c|"misc/invchange"}} sound if defined. By default it is not.
+* '''{{LE|invprev}}'''
+:Selects the previous [[inventory item]] you possess. In addition, it plays the {{c|"misc/invchange"}} sound if defined. By default it is not.
+* '''{{LE|invuse}}'''
+:Activates the currently selected [[inventory item]].
+* '''{{LE|invuseall}}'''
+:Activates every [[inventory item]] you possess.
+* '''{{LE|land}}'''
+:If you are using a [[flight]] item, deactivates it and causes you to land.
+* '''{{LE|pause}}'''
+:Pauses and unpauses the game.
+* '''{{LE|select}}''' &lt;item&gt;
+:Selects the given [[artifact]], provided there is one in inventory.
+* '''{{LE|showpop}}''' &lt;number&gt;
+:Display a ''[[Strife]]''-style pop-up. The ''number'' can be:
+:# Log / mission objectives
+:# Key list
+:# Status / weapons, ammo, and statistics
+* '''{{LE|sizedown}}'''
+:Decrements {{CVAR|R|screenblocks}} by 1, shrinking the view window.
+* '''{{LE|sizeup}}'''
+:Increments {{CVAR|R|screenblocks}} by 1, enlarging the view window.
+* '''{{LE|slot}}''' &lt;slotnumber&gt;
+:Selects the next [[weapon]] from the specified [[weapon slot]].
+* '''{{LE|toggleconsole}}'''
+:Toggles display of the [[console]] on/off.
+* '''{{LE|togglemap}}'''
+:Press to active the [[automap]]. Press again to return to the game. If {{CVAR|A|am_overlay}} is true, this is also used toggle the overlay map.
+* '''{{LE|togglemessages}}'''
+:Toggles display of game messages on/off. The only difference between doing this and "{{CCMD|O|toggle}} {{CVAR|M|show_messages}}" is that this command always displays a message describing the current state of messages.
+* '''{{LE|togglescoreboard}}'''
+:Toggles the display of the [[scoreboard]] on and off.
+* '''{{LE|turn180}}'''
+:Instantly turns the player 180 degrees, reversing his facing.
+* '''{{LE|turnspeeds}}''' [speed1 [speed2 [speed3 [speed4]]]]
+:Controls how quickly you turn with the keyboard. Using this command without any parameters lists the current turning speeds. To set the speeds, specify at least one, and any you do not specify will be filled in automatically. The different speeds are used in the following situations:
+:#Turning while walking
+:#Turning while running
+:#Just started turning while walking
+:#Just started turning while running
+* '''{{LE|use}}''' &lt;item&gt;
+:Uses an item of class type &lt;item&gt;, if present in the player's inventory.  If the item is not present, nothing happens.  For correct activation of [[Hexen]]'s [[Classes:ArtiPoisonBag|flechettes]] from the console, see ''useflechette'' below.
+* '''{{LE|useflechette}}'''
+:[[Hexen]]'s [[Classes:ArtiPoisonBag|flechettes]] require special handling due to the actual item in the inventory being different depending on the player class picking them up.  This command uses a flechette of the type corresponding to the player class, if present in the player's inventory. If the player has no flechettes in their inventory, nothing happens.
+* '''{{LE|weapdrop}}'''
+:Drops the currently selected [[weapon]].
+* '''{{LE|weapnext}}'''
+:Selects the next [[weapon]] (in order) that you own and have {{Class|ammo}} for. In addition, it plays the {{c|"misc/weaponchange"}} sound if defined. By default it is not.
+* '''{{LE|weapprev}}'''
+:Selects the previous [[weapon]] (in order) that you own and have {{Class|ammo}} for. In addition, it plays the {{c|"misc/weaponchange"}} sound if defined. By default it is not.
+
+==See also==
+*[[CVARs]]
+*[[CCMDs]]
+
+[[category:ZDoom console]]</text>
+    <sha1>43vc88743jie71e4lnj6j2stiy2480o</sha1>
+  </revision>
+</page>

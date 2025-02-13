@@ -1,0 +1,74 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>Portal</title>
+  <ns>0</ns>
+  <id>1544</id>
+  <revision>
+    <id>50505</id>
+    <parentid>50504</parentid>
+    <timestamp>2023-09-03T00:38:16Z</timestamp>
+    <contributor>
+      <username>Major Cooke</username>
+      <id>1703</id>
+    </contributor>
+    <minor />
+    <comment>/* Line portals */</comment>
+    <origin>50505</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="5977" sha1="8ne5opi2063337lpzpz5zo0g0o0jvob" xml:space="preserve">'''Portals''' are visual connections between separate areas of the map. There are two categories of portals: line portals (between two walls) and sector portals, also known as '''stacked sectors'''' (between a floor and a ceiling). Each category is also divided into several types, ranging from a purely visual effect to allowing seamless movement between both sides of the portal.
+
+== Line portals ==
+'''Line portals''' are created with special 156:[[Line_SetPortal]]. These portals can also, depending on the type, be dynamically reassigned with [[Line_SetPortalTarget]].
+
+There are four "levels" of interactivity with line portals, offering increasing integration at the cost of increasing restrictions:
+* Visual: the lowest level. These portals are only a rendering effect; it is not possible to move through them.
+* Teleporter: in addition to the visual effect, moving through the portal is now possible. The "real" geometry behind the portal must allow the actor to pass through without being stopped by a collision during the move, so these portals have to be two-sided and have enough room behind them.
+* Interactive: in addition to the teleporter effect, some other effects take the portal into account. Both sectors joined by the portals must have the same altitude.
+* Static/Linked: in addition to the interactive effects, the automap will display both linked areas as overlapping, and sound will physically propagate (the actual sound being played at both ends of the portal). Both lines must have the same angle, and all possible paths between the linked areas must have the same offsets. Notably it is not possible to have a non-portal path between both areas (specifically, both sectors on either side of the portal cannot be physically touching, and both must be unique, i.e. non-joined/merged sectors). Furthermore, the destination cannot be modified during the game with [[Line_SetPortalTarget]].
+
+== Stacked sectors ==
+'''Stacked sectors''' are a nice way to give the illusion of true 3D architecture. They can be an alternative to [[3D floor]]s, and can be combined with them. Depending on the situation, either portals or 3D floors might be more appropriate.
+
+=== Using ===
+To make stacked sectors you first need to create two sectors with the same shape and size (it isn't strictly necessary that the sectors be the same shape, but this is a good way to start). Next you need to set the sector heights accordingly.  The ceiling of the lower sector should be the same as the floor of the upper sector.  Again, this isn't strictly necessary, but is a good way to get started.  For instance, you could make the lower sector have a floor height of 0 and a ceiling height of 128 and the upper sector a floor height of 128 and the ceiling a height of 256.
+
+Note that the outlines of upper and lower sectors do not need to match.  Any sector whose floor or ceiling is to act as a portal into another area must have a stacked sector thing in it, but the sectors in the region that the player is looking into do not.
+
+Once both areas are done, there is two different ways of establishing the portals. The linedef method is especially interesting when there are many sectors that must share the same portal view.
+
+==== With a linedef special ====
+Choose two linedefs that are at the "same" place in both areas. Mark them both with special [[Sector_SetPortal|57:Sector_SetPortal]] and give them appropriate parameters as explained on the special's page.
+
+==== With stack points ==== 
+{{deprecated}}&lt;br/&gt;
+Place thing [[Classes:UpperStackLookOnly|9077]] in the sector you want to be on top, place thing [[Classes:LowerStackLookOnly|9078]] in the same spot in the lower sector, and give them both the same TID.  If you've ever used [[TeleportGroup]] you can think of this as working in a similar fashion, thing placement-wise.
+
+If you'd like a texture to be drawn 'between' the sectors, set the first argument of each stack thing to the desired opacity, where 0=totally transparent, and 255=totally opaque.  If the texture has transparent parts, those parts will always be drawn completely transparent.  In this way you could, for example, make a net (X pattern at 255 opacity) or glass with streaks (/ pattern at maybe 128) between the upper and lower areas.
+
+This way of defining portals has been deprecated. For new maps it is advised to use the linedef based methods because it creates far more robust portal setups.
+
+=== Limits ===
+Keep in mind that ZDoom treats mid-textures on 1-sided lines as extending infinitely far up and down, lower textures infinitely far down, and upper textures infinitely far up.  This has the implication that, the sector you are looking into must not have any walls or upper/lower textures that would occlude the 'portal' (the area of the floor/ceiling where the 2 sectors appear to meet) if the player were standing behind those walls in the corresponding part of the 'viewed' sector.  If you did not follow that, perhaps this diagram will explain things better.
+
+  P = player
+  U = upper sector
+  L = lower sector
+  &lt; = east-facing wall
+  &gt; = west-facing wall
+  I = imp
+  . = point of interest
+  
+  Lower region:   P   .    L
+  
+  Upper region:       &lt; &gt;  U    I
+
+In the map illustrated above, you might expect the player to be able to see the imp through the hole in the ceiling.  Instead, the hole will appear to be filled with the east-facing wall in the upper region.  To avoid this situation, the mapper would either have to make sure that the player can never see the hole in the ceiling from behind the point of interest, (re)move the east-facing wall, or replace the wall with a lowered (almost but not quite to the floor) ceiling.  The west facing wall, on the other hand, should not pose any problems, be it a 1-sided line or the lower texture on a raised floor; since that wall faces away from the player, ZDoom would never draw it.
+
+== See also ==
+* [[3D floor]]
+* [[Tutorials]]
+
+[[Category:Guides]][[Category:Glossary]]</text>
+    <sha1>8ne5opi2063337lpzpz5zo0g0o0jvob</sha1>
+  </revision>
+</page>

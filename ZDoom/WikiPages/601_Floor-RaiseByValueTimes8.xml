@@ -1,0 +1,48 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>Floor RaiseByValueTimes8</title>
+  <ns>0</ns>
+  <id>601</id>
+  <revision>
+    <id>44580</id>
+    <parentid>44566</parentid>
+    <timestamp>2017-04-02T16:36:46Z</timestamp>
+    <contributor>
+      <username>Gez</username>
+      <id>1283</id>
+    </contributor>
+    <minor />
+    <comment>/* Conversions from linedef types */</comment>
+    <origin>44580</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="1255" sha1="pormkjbvpoo46zah0y21gf8nw1qamtp" xml:space="preserve">{{DISPLAYTITLE:Floor_RaiseByValueTimes8}}
+{{Special|35|tag, speed, height|Floor|RaiseByValueTimes8}}
+
+* ''tag'': Tag of affected sector 
+* ''speed'': How quickly the floor moves 
+* ''height'': Amount to raise floor by 
+
+Raises a tagged sector's floor by (''height'' * 8) units. If ''tag'' is 0, then the sector on the line's back side is used. This special is useful in the Hexen [[map format]] where argument cannot exceed 255; in [[UDMF]] large values can be used with [[Floor_RaiseByValue]].
+
+== Examples ==
+
+{{noexamples}}
+
+== Conversions from linedef types ==
+The following Doom map format types can be converted as Floor_RaiseByValueTimes8:
+{| {{prettytable}}
+!Type!!Conversion!!Trigger
+|-
+|{{icon|Doom}} 140:S1 Floor Up 512 || Floor_RaiseByValueTimes8(tag, {{xlat|F_SLOW}}, 64) || Player Use
+|-
+|{{icon|Strife}} 140:S1 Floor Up 512 || Floor_RaiseByValueTimes8(tag, {{xlat|F_SLOW}}, 64) || Player Use
+|-
+|{{icon|Boom}} 142:W1 Floor Up 512 || Floor_RaiseByValueTimes8(tag, {{xlat|F_SLOW}}, 64) || Player Cross
+|-
+|{{icon|Boom}} 147:WR Floor Up 512 || Floor_RaiseByValueTimes8(tag, {{xlat|F_SLOW}}, 64) || Player Cross, Repeatable
+|-
+|{{icon|Boom}} 178:SR Floor Up 512 || Floor_RaiseByValueTimes8(tag, {{xlat|F_SLOW}}, 64) || Player Use, Repeatable
+|}</text>
+    <sha1>pormkjbvpoo46zah0y21gf8nw1qamtp</sha1>
+  </revision>
+</page>

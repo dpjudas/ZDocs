@@ -1,0 +1,103 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>Classes:PowerWeaponLevel2</title>
+  <ns>0</ns>
+  <id>3172</id>
+  <revision>
+    <id>40327</id>
+    <parentid>36543</parentid>
+    <timestamp>2015-08-21T05:09:46Z</timestamp>
+    <contributor>
+      <username>Blue Shadow</username>
+      <id>2021</id>
+    </contributor>
+    <minor />
+    <comment>/* DECORATE definition */ Updated with NOTELEPORTFREEZE</comment>
+    <origin>40327</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="2000" sha1="htrnci0z8xn3x0mstzy0wnmbllmnd12" xml:space="preserve">{{actor|
+| type = Power
+| name = Enhanced weapon power
+| class = PowerWeaponLevel2
+}}[[Classes]]: [[Classes:Inventory|Inventory]]&amp;rarr;[[Classes:Powerup|Powerup]]&amp;rarr;&lt;u&gt;PowerWeaponLevel2&lt;/u&gt;&lt;br&gt;
+
+&lt;u&gt;PowerWeaponLevel2&lt;/u&gt; is an internal class. An item of this class is placed in the player's inventory while the player's weapons are powered-up, like the power-up given by the [[Classes:ArtiTomeOfPower|tome of power]] from Heretic.
+
+To make powered-up weapons, you must add the flag POWERED_UP to the powered up weapon and add the Weapon.SisterWeapon property to both weapons (powered-up and normal). If a weapon has no powered-up sister weapon, PowerWeaponLevel2 has no effect on it.
+
+Here's an example:
+
+This is the normal weapon
+&lt;pre&gt;
+ACTOR AK47 : Weapon
+{
+	Inventory.PickupSound "misc/pkup" 
+	Inventory.PickupMessage "You got the AK47!" 
+	Weapon.AmmoType "Clip" 
+	Weapon.AmmoGive 60
+	Weapon.AmmoUse 1
+	Weapon.SisterWeapon AK9000
+	AttackSound "weapons/pistol" 
+	Obituary "%o was mowed down by %k's AK47."
+	States 
+	{ 
+	Spawn: 
+		SK74 A -1 
+		Loop 
+	Ready: 
+		AK47 A 1 A_WeaponReady 
+		Loop 
+	Deselect: 
+		AK47 A 1 A_Lower 
+		Loop 
+	Select: 
+		AK47 A 1 A_Raise 
+		Loop 
+	Fire: 
+		AK47 A 0 A_GunFlash
+		AK47 A 4 A_FireBullets(5, 0, 1, 5, 0, 1)
+		AK47 B 4 A_FireBullets(5, 0, 1, 5, 0, 1)
+		AK47 B 0 A_ReFire
+		goto Ready
+	Flash: 
+		AKFL A 5 BRIGHT A_Light1 
+		AKFL B 5 BRIGHT A_Light0 
+		Stop 
+	} 
+} 
+&lt;/pre&gt;
+
+And this is the powered up weapon
+
+&lt;pre&gt;
+ACTOR AK9000 : AK47
+{ 
+	+POWERED_UP 
+	Weapon.AmmoGive 0 
+	Weapon.SisterWeapon AK47
+	States 
+	{ 
+	Fire: 
+		AK47 A 0 A_GunFlash
+		AK47 A 2 A_FireBullets(5, 3, 3, 4, 0, 1)
+		AK47 B 2 A_FireBullets(5, 3, 3, 4, 0, 1)
+		AK47 B 0 A_ReFire
+		goto Ready 
+	Flash: 
+		AKFL A 3 BRIGHT A_Light1 
+		AKFL B 3 BRIGHT A_Light0 
+		Stop 
+	}
+} 
+&lt;/pre&gt;
+
+==== [[DECORATE]] definition ====
+ ACTOR &lt;u&gt;PowerWeaponLevel2&lt;/u&gt; : {{Class|Powerup}} native
+ {
+   {{Property|Powerup.Duration}} -40
+   {{Property|Inventory.Icon}} "SPINBK0"
+   +{{Flag|INVENTORY.NOTELEPORTFREEZE}}
+ }</text>
+    <sha1>htrnci0z8xn3x0mstzy0wnmbllmnd12</sha1>
+  </revision>
+</page>

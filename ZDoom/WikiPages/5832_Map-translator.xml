@@ -1,0 +1,138 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>Map translator</title>
+  <ns>0</ns>
+  <id>5832</id>
+  <revision>
+    <id>48019</id>
+    <parentid>28525</parentid>
+    <timestamp>2020-10-17T12:00:35Z</timestamp>
+    <contributor>
+      <username>Gez</username>
+      <id>1283</id>
+    </contributor>
+    <minor />
+    <origin>48019</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="4241" sha1="5c3gfht0kkbybk9rv54k5695mwlj4ut" xml:space="preserve">[[ZDoom]] features a [[map format]] translator named '''xlat''' which allows to convert map elements into their equivalent used internally by ZDoom. For instance, the Doom linedef special 6, W1_Ceiling_fastCrushAndRaise, becomes turned into [[Ceiling_CrushAndRaiseA]] (tag, C_NORMAL, C_NORMAL, 10) by xlat. This translation system also handles linedef flags, sector flags and sector effects.
+
+To use a custom map translator, either create a [[MAPINFO]] for your map with a [[MAPINFO/Map_definition|translator = &lt;your translator lump&gt;]] property, or use the -xlat &lt;your translator file&gt; [[command line parameter]].
+
+== Example ==
+This makes the {{dw|MAP32: Super Secret (Scythe 2)|Super Secret}} level easier to reach in {{dw|Scythe 2}}, by slowing the speed at which a very tall door closes, giving you more time to reach the super secret exit before it is blocked. Name it map31cheat.txt, for example.
+ include "xlat/doom.txt"
+ 3 = WALK, Door_Close (tag, D_SLOW/16)
+Insert this in scythe2.zip; and use a command line such as &lt;tt&gt;zdoom -file scythe2.zip -xlat map31cheat.txt&lt;/tt&gt;.
+
+== Constants ==
+Xlat uses a number of constants to define the standard values used by the [[Doom]], [[Heretic]] and [[Strife]] specials. These can be useful to know as a reference when wanting to imitate the speed of certain vanilla actions in the parameterized format offered by the [[Hexen]] map format and [[UDMF]]. The unit for movement is in eighth of map unit per tic, so C_SLOW corresponds to a movement of 35 units per second. The unit for scrolling is in sixty-fourth of map unit per tic.
+&lt;div class="references-small" style="-moz-column-width: 20em; column-width: 20em;"&gt;
+;Ceiling and crusher speed
+:C_SLOW		= 8
+:C_NORMAL	= 16
+:C_FAST		= 32
+:C_TURBO	= 64
+;Floor speed
+:F_SLOW		= 8
+:F_NORMAL	= 16
+:F_FAST		= 32
+:F_TURBO	= 64
+;Door speed
+:D_SLOW		= 16
+:D_NORMAL	= 32
+:D_FAST		= 64
+:D_TURBO	= 128
+:VDOORWAIT	= 150
+;Stair building speed
+:ST_SLOW	= 2
+:ST_NORMAL	= 4
+:ST_FAST	= 16
+:ST_TURBO	= 32
+;Platform/lift speed
+:P_SLOW		= 8,
+:P_NORMAL	= 16
+:P_FAST		= 32
+:P_TURBO	= 64
+:PLATWAIT	= 105
+:ELEVATORSPEED	= 32
+;Donut/pillar speed
+:DORATE		= 4
+;Texture scrollers
+:SCROLL_UNIT	= 64
+&lt;/div&gt;
+==Format==
+The syntax used by xlat is somewhat similar to C, but uses a linebreak rather than a semi-colon to end declarations. Constants can be defined through an '''enum''' or through the '''define''' keyword. Examples:
+ enum
+ {
+ 	D_SLOW		= 16,
+ 	D_NORMAL	= 32,
+ 	D_FAST		= 64,
+ 	D_TURBO		= 128
+ }
+ 
+ define VDOORWAIT	(150)
+
+
+Actual translation instructions are on this form:
+;For normal linedefs
+:&lt;number&gt; = &lt;flags&gt;, &lt;special&gt;(parameters&gt;)
+:Example:
+ 9 = USE, [[Floor_Donut]] (tag, DORATE, DORATE)
+
+;For generalized linedefs
+:[&lt;special&gt;] (&lt;range start&gt;, &lt;range end&gt;)
+:{
+: flags = &lt;value&gt;
+: arg&lt;number&gt; = &lt;value&gt;
+:}
+:A value can be given as a range of bitflags corresponding each to the equivalent value. If no value is given, or no value that corresponds to the bitflag provided, then the final value is zero.
+:Example:
+ &lt;nowiki&gt;[&lt;/nowiki&gt;[[Generic_Floor]]&lt;nowiki&gt;]&lt;/nowiki&gt; (0x6000, 0x7fff)
+ {
+ 	flags |= 0x0c20 [0x0020 : MONST]
+ 	arg2 = 0x0018 [0x0000 : F_SLOW,
+ 			0x0008 : F_NORMAL,
+ 			0x0010 : F_FAST,
+ 			0x0018 : F_TURBO]
+ 	arg3 = 0x0380 [0x0300 : 24,
+ 			0x0380 : 32]
+ 	arg4 = 0x0380 [0x0000 : 1,
+ 			0x0080 : 2,
+ 			0x0100 : 3,
+ 			0x0180 : 4,
+ 			0x0200 : 5,
+ 			0x0280 : 6]
+ 	arg5 = 0x0c00 [0x0000 : 0,
+ 			0x0400 : 1,
+ 			0x0800 : 2,
+ 			0x0c00 : 3]
+ 	arg5 |= 0x0060 [0x0020 : 4,
+ 			 0x0040 : 8,
+ 			 0x0060 : 12]
+ 	arg5 |= 0x1000 [0x1000 : 16]
+ }
+;For sector effects
+:sector &lt;number&gt; = &lt;name&gt;
+:All sector names are actually constants defined as enums in xlat/defines.i.
+:Example:
+ sector 1 = dLight_Flicker;
+ sector 2 = dLight_StrobeFast;
+ sector 3 = dLight_StrobeSlow;
+ sector 4 = dLight_Strobe_Hurt;
+ sector 5 = dDamage_Hellslime;
+ sector 7 = dDamage_Nukage;
+ sector 8 = dLight_Glow;
+ sector 9 = SECRET_MASK nobitmask;
+;For linedef flags
+:lineflag &lt;position&gt; = &lt;value&gt;
+:All values are actually constants defined as enums in xlat/defines.i.
+:Example:
+ lineflag 0 = ML_BLOCKING;
+ lineflag 1 = ML_BLOCKMONSTERS;
+ lineflag 2 = ML_TWOSIDED;
+ lineflag 3 = ML_DONTPEGTOP;
+ lineflag 4 = ML_DONTPEGBOTTOM;
+[[Category:Features]][[Category:Technical aspects]]</text>
+    <sha1>5c3gfht0kkbybk9rv54k5695mwlj4ut</sha1>
+  </revision>
+</page>

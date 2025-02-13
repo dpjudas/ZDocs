@@ -1,0 +1,83 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>Functions</title>
+  <ns>0</ns>
+  <id>1547</id>
+  <revision>
+    <id>53571</id>
+    <parentid>52819</parentid>
+    <timestamp>2024-11-07T11:32:34Z</timestamp>
+    <contributor>
+      <username>Jekyll Grim Payne</username>
+      <id>2175</id>
+    </contributor>
+    <origin>53571</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="1892" sha1="so00l6pdhdlonjws42o9n594drpjj9l" xml:space="preserve">{{Note|This page covers the creation of functions in [[ACS]]. For [[ZScript]] see '''[[ZScript functions]]'''.}}
+
+'''Functions''' are&amp;nbsp;&amp;mdash; like [[ACS|script]]s&amp;nbsp;&amp;mdash; an arbitrary number of sequenced commands. Unlike scripts, functions are identified by a name and can be easily called from anywhere in your scripts or other functions. They can also return a value to the calling script or function. You can place functions anywhere in your script file.&lt;br&gt;
+'''Note''': you cannot use latent functions (such as [[Delay]]) in your functions.
+
+
+Functions have to be defined like this:
+
+ function type function_name([type arg1 [, type arg2 [...]]])
+ {
+ 	// function body
+ 
+ 	return value;
+ }
+
+* '''type'''&amp;nbsp;&amp;mdash; variable type the function will return. Use void to not return anything
+* '''function_name'''&amp;nbsp;&amp;mdash; the name of the function. It is used to execute the function. Note that function names may not contain blanks
+* '''type argx'''&amp;nbsp;&amp;mdash; type is the variable type of the argument. argx is the name of the variable as it is used in the function. Like scripts, if you are not using arguments you must specify '''void'''.
+* '''return'''&amp;nbsp;&amp;mdash; optional. The function will return this value
+
+
+
+== Examples ==
+
+ #include "zcommon.acs"
+ 
+ script 1 {{SType|Open}}
+ {
+ 	int ret;
+ 	
+ 	ret = square(3);
+ 	
+ 	[[Print]](s:"the square of 3 is ", d:ret);
+ }
+ 
+ function int square(int val)
+ {
+ 	return val * val;
+ }
+
+
+
+;Defining a function with no arguments and no return value&lt;nowiki&gt;:&lt;/nowiki&gt;
+
+ function void my_useful_function(void)
+ {
+      //     Do Stuff:
+ }
+
+
+
+;Defining a function with a return value and no arguments&lt;nowiki&gt;:&lt;/nowiki&gt;
+
+ function int my_useful_function(void)
+ {
+      //     Do Stuff:
+      return 1 ;
+ }
+
+
+
+== See also ==
+
+* [[Other useful functions]], a list of pre-made functions you can use and learn from.
+[[Category:ACS guides]]</text>
+    <sha1>so00l6pdhdlonjws42o9n594drpjj9l</sha1>
+  </revision>
+</page>

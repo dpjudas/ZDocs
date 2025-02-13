@@ -1,0 +1,55 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>ACS NamedExecute</title>
+  <ns>0</ns>
+  <id>7117</id>
+  <revision>
+    <id>35683</id>
+    <parentid>33666</parentid>
+    <timestamp>2013-02-10T02:34:17Z</timestamp>
+    <contributor>
+      <username>Deded007</username>
+      <id>1392</id>
+    </contributor>
+    <minor />
+    <comment>/* Examples */  formatting</comment>
+    <origin>35683</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="1453" sha1="owy39v0nlh97856wti662257yu6190j" xml:space="preserve">{{DISPLAYTITLE:ACS_NamedExecute}}
+bool '''ACS_NamedExecute''' (string ''script'', int ''map'', int ''s_arg1'', int ''s_arg2'', int ''s_arg3'') &lt;br /&gt;
+'''ACS_NamedExecute''' (string ''script'', int ''map'', int ''s_arg1'', int ''s_arg2'', int ''s_arg3'')
+
+== Usage ==
+Variant of [[ACS_Execute]] for [[named script]]s.
+
+There is both an [[ACS]] and a [[DECORATE]] version of this function. Both behave identically.
+
+However, it is not available as an [[action special]]: to call named scripts from a a line or thing [[special]], you have to use the non-named variant ([[ACS_Execute]]) in [[UDMF]], with the &lt;tt&gt;arg0str&lt;/tt&gt; custom argument set to the name of the script &amp;mdash; this will override the first parameter.
+
+=== Parameters ===
+* ''script'': Name of the script to execute 
+* ''map'': Map which contains the script 
+* ''s_arg1'': First argument passed to the script 
+* ''s_arg2'': Second argument passed to the script 
+* ''s_arg3'': Third argument passed to the script 
+
+=== Return value ===
+Returns true if the script could be executed successfully, false otherwise. [[Deferred script]]s are always considered successful.
+
+==Examples==
+Execute a script named GollyFluff.
+  script "PinFeathers" (void)
+  {
+      [[ACS_NamedExecute]]("GollyFluff", 0);
+  }
+  
+  script "GollyFluff" (void)
+  {
+      [[print]](s:"Golly Fluff!");
+  }
+{{DEFAULTSORT:Execute}}[[Category:ACS Script functions]][[Category:Decorate Script functions]]
+
+{{script functions}}</text>
+    <sha1>owy39v0nlh97856wti662257yu6190j</sha1>
+  </revision>
+</page>

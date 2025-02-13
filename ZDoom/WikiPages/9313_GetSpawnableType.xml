@@ -1,0 +1,62 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>GetSpawnableType</title>
+  <ns>0</ns>
+  <id>9313</id>
+  <revision>
+    <id>50856</id>
+    <parentid>46777</parentid>
+    <timestamp>2023-10-17T11:43:23Z</timestamp>
+    <contributor>
+      <username>Jekyll Grim Payne</username>
+      <id>2175</id>
+    </contributor>
+    <origin>50856</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="1012" sha1="jq1cymj0mxw8u84zt57ym16kt4kra2k" xml:space="preserve">__NOTOC__
+
+'''[[Classes:Actor|Actor]]'''
+
+static class&lt;Actor&gt; '''GetSpawnableType''' (int ''spawnnum'')
+
+==Usage==
+Retrieves the class of the actor that is associated with the specified [[spawn number]].
+
+===Parameters===
+*''spawnnum'': the spawn number by which to retrieve the actor class.
+
+===Return value===
+A class pointer to the actor class. If no actor class with the spawn number is found, {{c|null}} is returned.
+
+==Examples==
+Upon pickup, this item spawns a {{Class|HellKnight|hell knight}} in front of the player.
+
+ class HellKnightSummoner : {{Class|CustomInventory}}
+ {
+     States
+     {
+     Spawn:
+         SOUL ABCD 6 Bright;
+         Loop;
+ 
+     Pickup:
+         TNT1 A 0
+         {
+             let kind = [[GetSpawnableType]]({{Class|HellKnight|113}});
+ 
+             if (kind)
+             {
+                 [[A_SpawnItemEx]](kind, 64);
+                 return true;
+             }
+ 
+             return false;
+         }
+     }
+ }
+
+[[Category:ZScript]]
+[[Category:Actor static functions]]</text>
+    <sha1>jq1cymj0mxw8u84zt57ym16kt4kra2k</sha1>
+  </revision>
+</page>

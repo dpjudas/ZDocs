@@ -1,0 +1,70 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>Classes:ArtiPoisonBagShooter</title>
+  <ns>0</ns>
+  <id>7126</id>
+  <revision>
+    <id>53621</id>
+    <parentid>53620</parentid>
+    <timestamp>2024-11-08T11:52:40Z</timestamp>
+    <contributor>
+      <username>Jekyll Grim Payne</username>
+      <id>2175</id>
+    </contributor>
+    <comment>/* ZScript definition */</comment>
+    <origin>53621</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="1390" sha1="nzvez6qhw1qfhm4dy9n6q1v5lw28y3j" xml:space="preserve">{{Actor|
+| type = Artifact
+| name = Generic shooter fléchette
+| class = ArtiPoisonBagShooter
+}}[[Classes]]: [[Classes:Inventory|Inventory]]&amp;rarr;[[Classes:ArtiPoisonBag|ArtiPoisonBag]]&amp;rarr;&lt;u&gt;ArtiPoisonBagShooter&lt;/u&gt;&lt;br&gt;
+
+A generic [[Classes:ArtiPoisonBag|fléchette]] class from which to derive custom actors to create new types of fléchettes. When used, the fléchette will make the player shoot a projectile corresponding to its {{Property|MissileType}}.
+
+To assign a flechette type to a player class, use the {{Property|Player.FlechetteType}} property in the code for the player class.
+
+=== [[ZScript]] definition ===
+{{ZScriptDefinitionNote|actors/hexen/flechette.zs#L400}}
+&lt;syntaxhighlight lang="cs"&gt;
+class ArtiPoisonBagShooter : ArtiPoisonBag
+{
+	Default
+	{
+		Inventory.Icon "ARTIPSB5";
+	}
+	
+	override bool Use (bool pickup)
+	{
+		Class&lt;Actor&gt; missiletype = MissileName;
+		if (missiletype != null)
+		{
+			Actor mo = Owner.SpawnPlayerMissile(missiletype);
+			if (mo != null)
+			{
+				// automatic handling of seeker missiles
+				if (mo.bSeekerMissile)
+				{
+					mo.tracer = Owner.target;
+				}
+				return true;
+			}
+		}
+		return false;
+	}
+	
+}
+&lt;/syntaxhighlight&gt;
+
+==== See also ====
+* [[SpawnPlayerMissile]]
+
+=== [[DECORATE]] definition ===
+{{DecorateDefinitionNote}}
+ ACTOR &lt;u&gt;ArtiPoisonBagShooter&lt;/u&gt; : {{Class|ArtiPoisonBag}} native
+ {
+   {{Property|Inventory.Icon}} "ARTIPSB5"
+ }</text>
+    <sha1>nzvez6qhw1qfhm4dy9n6q1v5lw28y3j</sha1>
+  </revision>
+</page>

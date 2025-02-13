@@ -1,0 +1,50 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>GetActorPitch</title>
+  <ns>0</ns>
+  <id>3100</id>
+  <revision>
+    <id>42689</id>
+    <parentid>35970</parentid>
+    <timestamp>2016-05-27T13:40:54Z</timestamp>
+    <contributor>
+      <username>Gez</username>
+      <id>1283</id>
+    </contributor>
+    <minor />
+    <comment>/* Return value */ give degree equivalences for the values</comment>
+    <origin>42689</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="1205" sha1="186go0713rucl49t12fx1j9loh5s8v1" xml:space="preserve">__NOTOC__
+fixed '''GetActorPitch''' (int ''tid'')
+
+== Usage ==
+
+Returns the actor's pitch.
+
+=== Parameters ===
+
+* ''tid'': [[TID]] of the actor.  Passing 0 will get the activator's pitch.
+
+=== Return value ===
+
+The actor's pitch is a [[Definitions|fixed point angle]]. Due to the limits of [[freelook]] in the software renderer, this value is bounded by -0.0888977 (approximately -32°) and 0.155548 (approximately 56°), more precisely -5825 and 10194 as ints, but in GL freelook will go from -0.25 (-90°) to 0.25 (+90°). Note that looking '''up''' produces a negative value and looking '''down''' produces a positive value. 0 is looking straight ahead.
+
+== Examples ==
+
+This script will alter the trajectory of a {{class|DoomImpBall}} fired from a thing with a [[TID]] of 1 based on the pitch of the activator.
+
+ script 1 (void)
+ {
+     int speed, vspeed;
+     speed = [[cos]]([[GetActorPitch]](0)) * 64 &gt;&gt; 16;
+     vspeed = -[[sin]]([[GetActorPitch]](0)) * 64 &gt;&gt; 16;
+     [[SpawnProjectile]](1, "{{class|DoomImpBall}}", 0, speed, vspeed, 1, 0);
+ }
+
+For more advanced uses, see the [[Cleaned up Third Person Cam]] tutorial or the [[hudmessageonactor]] function.
+
+[[category:ACS Information functions]]</text>
+    <sha1>186go0713rucl49t12fx1j9loh5s8v1</sha1>
+  </revision>
+</page>

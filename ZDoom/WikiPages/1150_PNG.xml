@@ -1,0 +1,45 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>PNG</title>
+  <ns>0</ns>
+  <id>1150</id>
+  <revision>
+    <id>50464</id>
+    <parentid>47121</parentid>
+    <timestamp>2023-08-13T20:15:24Z</timestamp>
+    <contributor>
+      <username>Inkoalawetrust</username>
+      <id>2604</id>
+    </contributor>
+    <comment>ZDoom and GZDoom have not used PNGs as savefiles for years.</comment>
+    <origin>50464</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="3454" sha1="o36twy46ujhfrlppxgbcmxhryhd9xyf" xml:space="preserve">{{doomwiki}}'''PNG''' (for ''{{wp|Portable_Network_Graphics|Portable Network Graphics}}'') is a graphic file format that is supported by ZDoom in a few different ways:
+
+* Screenshots are stored as PNGs
+* Savegames are stored as PNGs, with game data stored in meta-data chunks. This allows one to save their game, and be able to look through their saves with any program that can view PNGs, as the savegames appear as a screenshot at the point of the save. This has no longer been the case since late 2016, as savegames are now stored as JSON data.
+* You can insert specially formatted (see notes below) PNG files between [[TX_START]] and [[TX_END]] (more info on those in [[Texture]]) lumps in a wad file, and use them as textures.
+
+== Transparency ==
+
+Transparency in a PNG image is achieved through the alpha channel for 32-bit PNG or through alpha levels for palette indices (specified in a tRNS chunk) in an 8-bit paletted PNG. ''Cyan is not transparent!'' Cyan pixels in a PNG will be interpreted as cyan color by ZDoom and matched to the closest color (in the default [[palette|Doom palette]], the closest color will be light gray). MS Paint is the only commonly-used graphic software that is unable to manage transparency, if you use it to edit images you have to use another tool, such as IrfanView or GIMP, to add the alpha channel. When saving a PNG image as 8-bit paletted, IrfanView allows you to click on a pixel to mark its color as being transparent.
+
+== Palettes ==
+
+ZDoom needs to convert all images rendered in the 3D view (walls, flats, and sprites) to the current palette.  HUD weapons and other 2D graphics, however, are displayed with their full color information. ZDoom's OpenGL-capable child ports can display all graphics with full color information, too.
+
+GIMP palette files are available for [[:Image:Doom.gpl|Doom]], [[:Image:Heretic.gpl|Heretic]] and [[:Image:Hexen.gpl|Hexen]].  You can save them in your GIMP\share\gimp\2.0\palettes directory to use them in the program.
+
+== Special chunks ==
+PNG chunks can be likened to WAD lumps, they are a specific subpart of the file. Contrarily to lumps, they are case-sensitive: The first letter is upper-case for "critical" chunks (without which the image cannot work) and lower-case for "ancillary" chunks (which can be ignored). The second letter is upper case for public chunks (part of the standard specifications) or lower case for "private" chunks (non-standard, which is the case here for the alPh and grAb chunks). The third letter has no given role yet and is thus always upper case, and the last letter indicates whether image manipulation software that does not recognize the chunk should delete it (upper-case) or keep it (lower-case).
+PNGs used for sprites and decals may include the ZDoom-specific chunks:
+* [[grAb]] - indicates the center position of the image
+* alPh - indicates that a grayscale image should be treated as a standalone alpha channel (for [[decals]]). Only used by the software renderer until GZDoom 3.2.x. GZDoom 3.3.x and newer do not read or need this chunk for alpha textures anymore.
+
+These chunks may be set using [[SetPNG]], grabpng, [[SLumpEd]] or [[SLADE|Slade 3]].
+
+[[Savegame]]s used to be embedded in PNG files and used a number of additional custom chunks. However, as of late 2016, ZDoom and later GZDoom stopped using custom PNGs for this purpose in favor of {{wp|JSON}} files.
+[[Category:Image formats]][[Category:Technical aspects]]</text>
+    <sha1>o36twy46ujhfrlppxgbcmxhryhd9xyf</sha1>
+  </revision>
+</page>

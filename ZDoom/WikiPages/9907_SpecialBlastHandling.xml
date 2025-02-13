@@ -1,0 +1,66 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>SpecialBlastHandling</title>
+  <ns>0</ns>
+  <id>9907</id>
+  <revision>
+    <id>52656</id>
+    <parentid>52655</parentid>
+    <timestamp>2024-05-15T09:54:40Z</timestamp>
+    <contributor>
+      <username>Jekyll Grim Payne</username>
+      <id>2175</id>
+    </contributor>
+    <minor />
+    <comment>/* Examples */</comment>
+    <origin>52656</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="2057" sha1="044gei0rg24c5gspfcgf8ykpl30bbd8" xml:space="preserve">'''{{class|Actor}}'''
+
+{{c|virtual bool '''SpecialBlastHandling''' (Actor ''source'', double ''strength'')}}
+
+== Usage ==
+This [[ZScript virtual functions|virtual function]] is called on actors when they're blasted by [[A_Blast]] or [[BlastActor]]. Allows adding custom behavior to modify how actors react to being blasted.
+
+=== Parameters ===
+*{{c|Actor '''source'''}}
+:Pointer to the actor responsible for blasting.
+*{{c|double '''strength'''}}
+:The strength of the blast. Has to be explicitly passted by [[A_Blast]], using its '''strength''' argument.
+
+=== Return values ===
+* bool — if the function returns &lt;code&gt;true&lt;/code&gt;, the actor will be blasted as usual. If &lt;code&gt;false&lt;/code&gt; is returned, the actor ignores the blast.
+
+== [[ZScript]] definition ==
+{{ZScriptDefinitionNote|actors/actor.zs#L564}}
+In the base {{class|Actor}} class this function doesn't do anything special:
+&lt;syntaxhighlight lang="csharp"&gt;
+	virtual bool SpecialBlastHandling (Actor source, double strength)
+	{
+		return true;
+	}&lt;/syntaxhighlight&gt;
+
+== Examples ==
+{{class|HolySpirit}}, the wraiths fired by the Cleric's {{class|CWeapWraithverge|Wraithverge}} weapon in [[Hexen]], has a special reaction to being blasted: the wraith will change allegiance and hunt down its original shooter, while the actor that blasted it becomes its owner. This is intended for [[deathmatch]] games, where other players can reflect Cleric's wraiths with a {{class|ArtiBlastRadius|Disc of Repulsion}} (which uses [[A_Blast]]).
+
+(Reminder: since the wraiths are projectiles, the "owner" is stored in the &lt;code&gt;target&lt;/code&gt; pointer, while the actor the wraith is hunting is stored in its &lt;code&gt;tracer&lt;/code&gt; pointer. See [[Actor_pointer#Projectiles|'''here''']] how pointers work in projectiles.)
+
+&lt;syntaxhighlight lang="csharp"&gt;
+	override bool SpecialBlastHandling (Actor source, double strength)
+	{
+		if (tracer == source)
+		{
+			tracer = target;
+			target = source;
+		}
+		return true;
+	}&lt;/syntaxhighlight&gt;
+
+== See also ==
+*[[A_Blast]]
+
+[[Category:ZScript]]
+[[Category:ZScript virtual functions]]</text>
+    <sha1>044gei0rg24c5gspfcgf8ykpl30bbd8</sha1>
+  </revision>
+</page>

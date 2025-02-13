@@ -1,0 +1,43 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>A SetBlend</title>
+  <ns>0</ns>
+  <id>2687</id>
+  <revision>
+    <id>46049</id>
+    <parentid>46048</parentid>
+    <timestamp>2018-05-09T05:21:05Z</timestamp>
+    <contributor>
+      <username>LordMisfit</username>
+      <id>1752</id>
+    </contributor>
+    <origin>46049</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="1249" sha1="c7a3sgghhzisduetc25iess3z21g5t1" xml:space="preserve">{{codepointer|Special action}}
+'''A_SetBlend''' (color ''color1'', double ''alpha'', int ''tics'' [, color ''color2'' [, double ''alpha2'']])
+
+Sets a [[palette blend]] effect to the calling player's screen. This function should only be used by {{Class|PlayerPawn|player classes}}, {{Class|Weapon|weapons}} or {{Class|CustomInventory|custom inventory items}}. Colors are specified as an "rr gg bb" string or by using one of the color names specified in [[X11R6RGB]] lump.
+
+Alpha defines opaqueness. An alpha of 1.0 is completely opaque, and 0.0 is completely invisible. 
+
+Over ''[[tic]]s'' duration, ''color1'' will steadily shift to ''color2''. If ''color2'' is not provided, it will instead decrease the intensity of the blending.
+
+This is more or less the [[DECORATE]] equivalent of [[FadeRange]].
+
+== Example ==
+
+If you wanted to add a separate pain state for Doomguy getting zorched, and you used the "zorch" damagetype for those weapons, you could use this code to add a convincing red flash to the pain state associated with the zorch damagetype.
+
+    actor MyDoomPlayer : {{class|DoomPlayer}}
+    {
+    	States
+   	{
+   	Pain.Zorch:
+    		PLAY O 4 '''A_SetBlend'''("99 20 20", .5, 5)
+   		PLAY O 4 [[A_Pain]]
+    		Goto Spawn
+         }
+    }</text>
+    <sha1>c7a3sgghhzisduetc25iess3z21g5t1</sha1>
+  </revision>
+</page>

@@ -1,0 +1,51 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>Classes:BloodySkull</title>
+  <ns>0</ns>
+  <id>4199</id>
+  <revision>
+    <id>34103</id>
+    <parentid>17173</parentid>
+    <timestamp>2012-09-01T17:29:15Z</timestamp>
+    <contributor>
+      <username>Blue Shadow</username>
+      <id>2021</id>
+    </contributor>
+    <minor />
+    <comment>/* DECORATE definition */</comment>
+    <origin>34103</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="740" sha1="13yquhmfryq1w7b51s85osaae5b95xf" xml:space="preserve">{{Actor|
+| type = Gibs
+| name = Bloody sidhe skull
+| class = BloodySkull
+| game = Heretic
+}}[[Classes]]: [[Classes:PlayerPawn|PlayerPawn]]&amp;rarr;[[Classes:PlayerChunk|PlayerChunk]]&amp;rarr;&lt;u&gt;BloodySkull&lt;/u&gt;&lt;br&gt;
+Bloody skull created when [[Classes:HereticPlayer|Corvus]] is gibbed.
+
+==== [[DECORATE]] definition ====
+ ACTOR &lt;u&gt;BloodySkull&lt;/u&gt; : {{Class|PlayerChunk}}
+ {
+   {{Property|Radius}} 4
+   {{Property|Height}} 4
+   +{{Flag|NOBLOCKMAP}}
+   +{{Flag|DROPOFF}}
+   +{{Flag|LOWGRAVITY}}
+   +{{Flag|CANNOTPUSH}}
+   +{{Flag|SKYEXPLODE}}
+   +{{Flag|NOBLOCKMONST}}
+   +{{Flag|NOSKIN}}
+   States
+   {
+   Spawn:
+     BSKL A 0
+     BSKL ABCDE 5 [[A_CheckFloor]]("Hit")
+     Goto Spawn+1
+   Hit:
+     BSKL F 16 [[A_CheckPlayerDone]]
+     Wait
+   }
+ }</text>
+    <sha1>13yquhmfryq1w7b51s85osaae5b95xf</sha1>
+  </revision>
+</page>

@@ -1,0 +1,144 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>Classes:Fatso</title>
+  <ns>0</ns>
+  <id>2561</id>
+  <revision>
+    <id>48921</id>
+    <parentid>48447</parentid>
+    <timestamp>2021-12-27T11:15:50Z</timestamp>
+    <contributor>
+      <username>Jekyll Grim Payne</username>
+      <id>2175</id>
+    </contributor>
+    <comment>updated in accordance with updated ZScriptDefinitionNote template</comment>
+    <origin>48921</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="2952" sha1="dosp3ojy8zs5cnrj9pi2ze5i98sd1hq" xml:space="preserve">{{Actor|
+| type = Monster
+| name = Mancubus
+| class = Fatso
+| game = Doom2
+| doomednum = 67
+| thingindex = 9
+| spawnid = 112
+| spawnname = T_MANCUBUS
+}}
+[[Classes]]: &lt;u&gt;Fatso&lt;/u&gt;&lt;br&gt;
+&amp;ensp;&amp;rarr;[[Classes:StealthFatso|StealthFatso]]
+
+
+The mancubus has a lot of health so killing them won't be easy, especially when they can shoot 6 [[Classes:FatShot|fireballs]] at a time every time they attack! The [[Classes:FatShot|fireballs]] take lots of health off too, and can be hard to dodge because they are huge. Get lots of cover before challenging these huge things.
+
+
+==== [[ZScript]] definition ====
+{{ZScriptDefinitionNote|actors/doom/fatso.zs}} 
+ class Fatso : Actor
+ {
+ 	Default
+ 	{
+ 		{{Property|Health}} 600;
+ 		{{Property|Radius}} 48;
+ 		{{Property|Height}} 64;
+ 		{{Property|Mass}} 1000;
+ 		{{Property|Speed}} 8;
+ 		{{Property|PainChance}} 80;
+ 		{{Property|Monster}};
+ 		+{{Flag|FLOORCLIP}}
+ 		+{{Flag|BOSSDEATH}}
+ 		{{Property|SeeSound}} "fatso/sight";
+ 		{{Property|PainSound}} "fatso/pain";
+ 		{{Property|DeathSound}} "fatso/death";
+ 		{{Property|ActiveSound}} "fatso/active";
+ 		{{Property|Obituary}} "$OB_FATSO";
+ 		{{Property|Tag}} "$FN_MANCU";
+ 	}
+ 	States
+ 	{
+ 	Spawn:
+ 		FATT AB 15 [[A_Look]];
+ 		Loop;
+ 	See:
+ 		FATT AABBCCDDEEFF 4 [[A_Chase]];
+ 		Loop;
+ 	Missile:
+ 		FATT G 20 [[A_FatRaise]];
+ 		FATT H 10 BRIGHT [[A_FatAttack1]];
+ 		FATT IG 5 [[A_FaceTarget]];
+ 		FATT H 10 BRIGHT [[A_FatAttack2]];
+ 		FATT IG 5 [[A_FaceTarget]];
+ 		FATT H 10 BRIGHT [[A_FatAttack3]];
+ 		FATT IG 5 [[A_FaceTarget]];
+ 		Goto See;
+ 	Pain:
+ 		FATT J 3;
+ 		FATT J 3 [[A_Pain]];
+ 		Goto See;
+ 	Death:
+ 		FATT K 6;
+ 		FATT L 6 [[A_Scream]];
+ 		FATT M 6 [[A_NoBlocking]];
+ 		FATT NOPQRS 6;
+ 		FATT T -1 [[A_BossDeath]];
+ 		Stop;
+ 	 Raise:
+ 		FATT R 5;
+ 		FATT QPONMLK 5;
+ 		Goto See;
+ 	}
+ }
+==== [[DECORATE]] definition ====
+{{DecorateDefinitionNote}}
+ ACTOR &lt;u&gt;Fatso&lt;/u&gt;
+ {
+   {{Property|Health}} 600
+   {{Property|Radius}} 48
+   {{Property|Height}} 64
+   {{Property|Mass}} 1000
+   {{Property|Speed}} 8
+   {{Property|PainChance}} 80
+   {{Property|Monster}}
+   +{{Flag|FLOORCLIP}}
+   +{{Flag|BOSSDEATH}}
+   {{Property|SeeSound}} "fatso/sight"
+   {{Property|PainSound}} "fatso/pain"
+   {{Property|DeathSound}} "fatso/death"
+   {{Property|ActiveSound}} "fatso/active"
+   {{Property|Obituary}} "$OB_FATSO"
+   States
+   {
+   Spawn:
+     FATT AB 15 [[A_Look]]
+     Loop
+   See:
+     FATT AABBCCDDEEFF 4 [[A_Chase]]
+     Loop
+   Missile:
+     FATT G 20 [[A_FatRaise]]
+     FATT H 10 Bright [[A_FatAttack1]]
+     FATT IG 5 [[A_FaceTarget]]
+     FATT H 10 Bright [[A_FatAttack2]]
+     FATT IG 5 [[A_FaceTarget]]
+     FATT H 10 Bright [[A_FatAttack3]]
+     FATT IG 5 [[A_FaceTarget]]
+     Goto See
+   Pain:
+     FATT J 3
+     FATT J 3 [[A_Pain]]
+     Goto See
+   Death:
+     FATT K 6
+     FATT L 6 [[A_Scream]]
+     FATT M 6 [[A_NoBlocking]]
+     FATT NOPQRS 6
+     FATT T -1 [[A_BossDeath]]
+     Stop
+   Raise:
+     FATT R 5
+     FATT QPONMLK 5
+     Goto See
+   }
+ }</text>
+    <sha1>dosp3ojy8zs5cnrj9pi2ze5i98sd1hq</sha1>
+  </revision>
+</page>

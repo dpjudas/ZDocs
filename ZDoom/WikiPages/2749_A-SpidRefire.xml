@@ -1,0 +1,68 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>A SpidRefire</title>
+  <ns>0</ns>
+  <id>2749</id>
+  <revision>
+    <id>53984</id>
+    <parentid>34237</parentid>
+    <timestamp>2024-11-30T12:03:46Z</timestamp>
+    <contributor>
+      <username>Jekyll Grim Payne</username>
+      <id>2175</id>
+    </contributor>
+    <comment>Removed redirect to [[A MonsterRefire]]</comment>
+    <origin>53984</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="1266" sha1="kvt6cyo91gbgtzbw0fpm3pby0797s7h" xml:space="preserve">{{DISPLAYTITLE:A_SpidRefire}}
+{{BuiltInFunctionNote|A_MonsterRefire}}
+
+'''{{class|Actor}}'''
+
+{{c|void '''A_SpidRefire'''()}}
+
+== Usage ==
+Used by {{class|SpiderMastermind}}. Calls [[A_FaceTarget]] and then lets the monster refire. If the target is dead or out of sight, will abort the attack and go back to its "See" state sequence with a 10 out of 255 chance. Also aborts if the monster hit its ally.
+
+== Examples ==
+From {{class|SpiderMastermind}}'s code:
+&lt;syntaxhighlight lang="csharp"&gt;
+	Missile:
+		SPID A 20 BRIGHT A_FaceTarget;
+		SPID G 4 BRIGHT A_SPosAttackUseAtkSound;
+		SPID H 4 BRIGHT A_SposAttackUseAtkSound;
+		SPID H 1 BRIGHT A_SpidRefire;
+		Goto Missile+1;
+&lt;/syntaxhighlight&gt;
+
+== [[ZScript]] definition ==
+{{ZScriptDefinitionNote|actors/doom/spidermaster.zs}}
+&lt;syntaxhighlight lang="csharp"&gt;
+	void A_SpidRefire()
+	{
+		if (HitFriend())
+		{
+			SetState(SeeState);
+			return;
+		}
+		// keep firing unless target got out of sight
+		A_FaceTarget();
+		if (Random[CPosRefire](0, 255) &gt;= 10)
+		{
+			if (!target
+				|| target.health &lt;= 0
+				|| !CheckSight(target, SF_SEEPASTBLOCKEVERYTHING|SF_SEEPASTSHOOTABLELINES))
+			{
+				SetState(SeeState);
+			}
+		}
+	}
+&lt;/syntaxhighlight&gt;
+
+== See also ==
+* [[A_MonsterRefire]]
+
+[[Category:Decorate Generic Attack functions]]</text>
+    <sha1>kvt6cyo91gbgtzbw0fpm3pby0797s7h</sha1>
+  </revision>
+</page>

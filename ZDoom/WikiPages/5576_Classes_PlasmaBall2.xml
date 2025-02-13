@@ -1,0 +1,58 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>Classes:PlasmaBall2</title>
+  <ns>0</ns>
+  <id>5576</id>
+  <revision>
+    <id>50013</id>
+    <parentid>49983</parentid>
+    <timestamp>2022-12-30T10:45:28Z</timestamp>
+    <contributor>
+      <username>Jekyll Grim Payne</username>
+      <id>2175</id>
+    </contributor>
+    <minor />
+    <comment>/* DECORATE definition */ added {{DecorateDefinitionNote}}</comment>
+    <origin>50013</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="984" sha1="gskpo6tb40h2oei9x75fzkkz86qvktm" xml:space="preserve">{{Actor|
+| type = Explosive
+| name = Beta plasma rifle bolt
+| class = PlasmaBall2
+| game = Doom
+}}[[Classes]]: {{Class|PlasmaBall}}&amp;rarr;{{Class|PlasmaBall1}}&amp;rarr;&lt;u&gt;PlasmaBall2&lt;/u&gt;&lt;br&gt;
+&amp;nbsp;&lt;br&gt;
+
+A red projectile fired from the player's {{Class|PlasmaRifle|plasma rifle}} and {{Class|BFG9000|BFG 9000}} in the press-release beta version of Doom. It bounces off floors and ceilings without losing momentum, but explodes when it impacts a wall. Used alongside [[Classes:PlasmaBall1|PlasmaBall1]].
+==== [[ZScript]] definition ====
+{{ZScriptDefinitionNote|actors/doom/weaponplasma.zs#L98}} 
+&lt;syntaxhighlight lang="csharp"&gt;
+class PlasmaBall2 : PlasmaBall1
+{
+	States
+	{
+	Spawn:
+		PLS2 AB 6 Bright;
+		Loop;
+	Death:
+		PLS2 CDE 4 Bright;
+		Stop;
+	}
+}&lt;/syntaxhighlight&gt;
+==== [[DECORATE]] definition ====
+{{DecorateDefinitionNote}}
+ ACTOR &lt;u&gt;PlasmaBall2&lt;/u&gt; : {{Class|PlasmaBall1}}
+ {
+   States
+   {
+   Spawn:
+     PLS2 AB 6 Bright
+     Loop
+   Death:
+     PLS2 CDE 4 Bright
+     Stop
+   }
+ }</text>
+    <sha1>gskpo6tb40h2oei9x75fzkkz86qvktm</sha1>
+  </revision>
+</page>

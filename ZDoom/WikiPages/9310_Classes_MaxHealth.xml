@@ -1,0 +1,86 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>Classes:MaxHealth</title>
+  <ns>0</ns>
+  <id>9310</id>
+  <revision>
+    <id>53714</id>
+    <parentid>47046</parentid>
+    <timestamp>2024-11-13T11:04:28Z</timestamp>
+    <contributor>
+      <username>Jekyll Grim Payne</username>
+      <id>2175</id>
+    </contributor>
+    <origin>53714</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="2524" sha1="evi6zrs72zg8nmo94u8mtcxxte3x67j" xml:space="preserve">{{Actor|
+| type = Internal
+| name = Maximum health
+| class = MaxHealth
+}}[[Classes]]: {{Class|Inventory}}&amp;rarr;{{Class|Health}}&amp;rarr;&lt;u&gt;MaxHealth&lt;/u&gt;&lt;br&gt;
+
+A &lt;u&gt;MaxHealth&lt;/u&gt; increases the maximum health of an actor by way of adding to its '''maximum health points gain'''. Only {{Class|PlayerPawn|player-based actors}}, however, can have their maximum health increased by items of this class. It also retains its {{Class|Health|parent class}}'s functionality of increasing current health.
+
+&lt;u&gt;MaxHealth&lt;/u&gt; is never used directly. This class is only used as a base class for items defined in [[DECORATE]] or [[ZScript]].
+
+== Usage ==
+Max health items support the same properties as {{Class|Health|health items}}. The following properties have extra functionality, in addition to that of the health items:
+
+*'''Inventory.Amount''' ''value''
+:Sets the amount of maximum health points gain this item gives when picked up.
+*'''Inventory.MaxAmount''' ''value''
+:Sets the maximum amount of maximum health points gain that can be reached by picking up this item. If the current maximum health points gain is at this value or above, picking up this item will have no effect on it, though the item could still be picked up to increase current health.
+
+== Examples ==
+In addition to increasing current health, this item increases the player's maximum health by 1 point. The maximum health points gain that can be reached with this item is 200.
+ class VitalityBonus : &lt;u&gt;MaxHealth&lt;/u&gt;
+ {
+     Default
+     {
+         {{Property|Inventory.Amount}} 1;
+         {{Property|Inventory.MaxAmount}} 200;
+         {{Property|Inventory.PickupMessage}} "Picked up a vitality bonus.";
+ 
+         +{{Flag|COUNTITEM}}
+         +{{Flag|INVENTORY.ALWAYSPICKUP}}
+     }
+ 
+     States
+     {
+     Spawn:
+         BON1 ABCDCB 6;
+         Loop;
+     }
+ }
+
+== [[ZScript]] definition ==
+{{ZScriptDefinitionNote|actors/inventory/health.zs}}
+&lt;syntaxhighlight lang="csharp"&gt;
+class MaxHealth : Health
+{
+	//===========================================================================
+	//
+	// TryPickup
+	//
+	//===========================================================================
+
+	override bool TryPickup (in out Actor other)
+	{
+		bool success = false;
+		let player = PlayerPawn(other);
+		if (player)
+		{
+			if (player.BonusHealth &lt; MaxAmount)
+			{
+				player.BonusHealth = min(player.BonusHealth + Amount, MaxAmount);
+				success = true;
+			}
+		}
+		success |= Super.TryPickup(other);
+		if (success) GoAwayAndDie();
+		return success;
+	}
+}&lt;/syntaxhighlight&gt;</text>
+    <sha1>evi6zrs72zg8nmo94u8mtcxxte3x67j</sha1>
+  </revision>
+</page>

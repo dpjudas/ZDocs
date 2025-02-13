@@ -1,0 +1,99 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>Classes:TeleportFog</title>
+  <ns>0</ns>
+  <id>3619</id>
+  <revision>
+    <id>48907</id>
+    <parentid>48531</parentid>
+    <timestamp>2021-12-27T11:13:22Z</timestamp>
+    <contributor>
+      <username>Jekyll Grim Payne</username>
+      <id>2175</id>
+    </contributor>
+    <comment>updated in accordance with updated ZScriptDefinitionNote template</comment>
+    <origin>48907</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="1573" sha1="tov8e9amgca7rqnww6efuwz5rgr2002" xml:space="preserve">{{Actor|
+| type = SFX
+| name = Teleport fog
+| class = TeleportFog
+}}[[Classes]]: &lt;u&gt;TeleportFog&lt;/u&gt;
+
+The &lt;u&gt;Teleport Fog&lt;/u&gt; is a special effect flash that is spawned when an actor teleports and, by default, when an actor morphs or unmorphs. Teleport Fogs set the teleporting actor as their [[actor pointer|target]], so actor manipulation via pointers is possible. This includes when an actor (un)morphs.
+
+
+==== [[ZScript]] definition ====
+{{ZScriptDefinitionNote|actors/shared/teleport.zs}} 
+ class TeleportFog : Actor
+ {
+ 	default
+ 	{
+ 		+{{Flag|NOBLOCKMAP}}
+ 		+{{Flag|NOTELEPORT}}
+ 		+{{Flag|NOGRAVITY}}
+ 		+{{Flag|ZDOOMTRANS}}
+ 		{{Property|RenderStyle}} "Add";
+ 	}
+ 	States
+ 	{
+ 	Spawn:
+ 		TFOG ABABCDEFGHIJ 6 Bright;
+ 		Stop;
+ 	
+ 	Raven:
+ 		TELE ABCDEFGHGFEDC 6 Bright;
+ 		Stop;
+ 
+ 	Strife:
+ 		TFOG ABCDEFEDCB 6 Bright;
+ 		Stop;
+ 	}
+ 	
+ 	override void PostBeginPlay ()
+ 	{
+ 		Super.PostBeginPlay ();
+ 		[[A_StartSound]] ("misc/teleport", CHAN_BODY);
+ 		switch (gameinfo.gametype)
+ 		{
+ 		case GAME_Hexen:
+ 		case GAME_Heretic:
+ 			[[SetStateLabel]]("Raven");
+ 			break;
+ 
+ 		case GAME_Strife:
+ 			[[SetStateLabel]]("Strife");
+ 			break;
+ 			
+ 		default:
+ 			break;
+ 		}
+ 	}
+ 	
+ }
+==== [[DECORATE]] definition ====
+{{DecorateDefinitionNote}}
+ ACTOR &lt;u&gt;TeleportFog&lt;/u&gt; native
+ {
+   +{{flag|NOBLOCKMAP}}
+   +{{flag|NOTELEPORT}}
+   +{{flag|NOGRAVITY}}
+   {{property|RenderStyle}} Add
+   States
+   {
+   Spawn:
+     TFOG ABABCDEFGHIJ 6 Bright
+     Stop
+   
+   Raven:
+     TELE ABCDEFGHGFEDC 6 Bright
+     Stop
+   
+   Strife:
+     TFOG ABCDEFEDCB 6 Bright
+     Stop
+   }
+ }</text>
+    <sha1>tov8e9amgca7rqnww6efuwz5rgr2002</sha1>
+  </revision>
+</page>

@@ -1,0 +1,65 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>GoAway</title>
+  <ns>0</ns>
+  <id>10027</id>
+  <revision>
+    <id>54030</id>
+    <timestamp>2024-12-05T16:46:02Z</timestamp>
+    <contributor>
+      <username>Jekyll Grim Payne</username>
+      <id>2175</id>
+    </contributor>
+    <comment>Created page with "'''{{class|Inventory}}'''  {{c|protected bool '''GoAway''' ()}}  == Usage == An {{class|Inventory}} function that is mainly used to determine if this instance of the item can be given to the player directly, or if another instance must be created. Its main purpose is to be called from [[CreateCopy|{{c|CreateCopy}}]] and [[GoAwayAndDie|{{c|GoAwayAndDie}}]].  === Return value === *''bool'' — returns true if a copy of this item must be created.  == [[ZScript]] definition..."</comment>
+    <origin>54030</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="1064" sha1="p6ctf6zpefqvdtgt5rq5dvdtx29t7ie" xml:space="preserve">'''{{class|Inventory}}'''
+
+{{c|protected bool '''GoAway''' ()}}
+
+== Usage ==
+An {{class|Inventory}} function that is mainly used to determine if this instance of the item can be given to the player directly, or if another instance must be created. Its main purpose is to be called from [[CreateCopy|{{c|CreateCopy}}]] and [[GoAwayAndDie|{{c|GoAwayAndDie}}]].
+
+=== Return value ===
+*''bool'' — returns true if a copy of this item must be created.
+
+== [[ZScript]] definition ==
+{{ZScriptDefinitionNote|actors/inventory/inventory.zs}}
+&lt;syntaxhighlight lang="csharp"&gt;
+	protected bool GoAway ()
+	{
+		if (IsCreatingLocalCopy())
+			return true;
+
+		// Dropped items never stick around
+		if (bDropped)
+		{
+			return false;
+		}
+
+		if (!ShouldStay ())
+		{
+			Hide ();
+			if (ShouldRespawn ())
+			{
+				return true;
+			}
+			return false;
+		}
+		return true;
+	}
+&lt;/syntaxhighlight&gt;
+
+== Examples ==
+See [[GoAwayAndDie#ZScript_definition|'''GoAwayAndDie''']].
+
+== See also ==
+* {{class|Inventory}}
+* [[GoAwayAndDie]]
+* [[CreateCopy]]
+
+[[Category:ZScript]]
+[[Category:Inventory]]</text>
+    <sha1>p6ctf6zpefqvdtgt5rq5dvdtx29t7ie</sha1>
+  </revision>
+</page>

@@ -1,0 +1,62 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>Classes:Backpack</title>
+  <ns>0</ns>
+  <id>3376</id>
+  <revision>
+    <id>53609</id>
+    <parentid>39192</parentid>
+    <timestamp>2024-11-08T11:38:45Z</timestamp>
+    <contributor>
+      <username>Jekyll Grim Payne</username>
+      <id>2175</id>
+    </contributor>
+    <origin>53609</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="1190" sha1="d8uvenrnfn828o4uaf5sth2dx4ibym1" xml:space="preserve">{{Actor|
+| type = Ammo
+| name = Backpack
+| class = Backpack
+| game = Doom
+| doomednum = 8
+| spawnid = 144
+| spawnname = T_BACKPACK 
+}}[[Classes]]: [[Classes:Inventory|Inventory]]&amp;rarr;[[Classes:BackpackItem|BackpackItem]]&amp;rarr;&lt;u&gt;Backpack&lt;/u&gt;&lt;br&gt;
+The backpack contains a sample of each ammunition type (the quantity of which depends on the ammunition, not on the backpack) and extends the carrying capacity of each ammunition type (again, this is a factor of the ammunition).
+
+Note, creating new backpacks doesn't necessary require inheriting from Backpack. Instead, the core class, '''{{class|BackpackItem}}''', can be used.
+
+=== [[ZScript]] definition ===
+{{ZScriptDefinitionNote|actors/doom/doomammo.zs}}
+&lt;syntaxhighlight lang="cs"&gt;
+class Backpack : BackpackItem
+{
+	Default
+	{
+		Height 26;
+		Inventory.PickupMessage "$GOTBACKPACK";
+	}
+	States
+	{
+	Spawn:
+		BPAK A -1;
+		Stop;
+	}
+}
+&lt;/syntaxhighlight&gt;
+=== [[DECORATE]] definition ===
+{{DecorateDefinitionNote}}
+ ACTOR &lt;u&gt;Backpack&lt;/u&gt; : {{Class|BackpackItem}}
+ {
+   {{Property|Height}} 26
+   {{Property|Inventory.PickupMessage}} "$GOTBACKPACK" // "Picked up a backpack full of ammo!"
+   States
+   {
+   Spawn:
+     BPAK A -1
+     Stop
+   }
+ }</text>
+    <sha1>d8uvenrnfn828o4uaf5sth2dx4ibym1</sha1>
+  </revision>
+</page>

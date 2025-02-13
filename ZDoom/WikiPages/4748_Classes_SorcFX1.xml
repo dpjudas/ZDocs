@@ -1,0 +1,59 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>Classes:SorcFX1</title>
+  <ns>0</ns>
+  <id>4748</id>
+  <revision>
+    <id>34602</id>
+    <parentid>34591</parentid>
+    <timestamp>2012-10-21T11:01:24Z</timestamp>
+    <contributor>
+      <username>Blue Shadow</username>
+      <id>2021</id>
+    </contributor>
+    <comment>More info in the description.</comment>
+    <origin>34602</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="1178" sha1="i0u96n0eo9xub8kc39ajtoztw8m2rua" xml:space="preserve">{{Actor|
+| type = Explosive
+| name = Lava head
+| class = SorcFX1
+| game = Hexen
+}}[[Classes]]: &lt;u&gt;SorcFX1&lt;/u&gt;
+
+One of the attack spells of the {{Class|Heresiarch}}. When fired, the projectile bounces around while [[A_SorcFX1Seek|seeking]] the target, inflicting [[A_Explode|splash damage]] on impact. Unlike most projectiles, it has a limited "life" after which it'll explode and disappear, dealing damage to nearby creatures. The {{Class|Heresiarch}} fires two of these.
+==== [[DECORATE]] definition ====
+ ACTOR &lt;u&gt;SorcFX1&lt;/u&gt;
+ {
+   {{Property|Speed}} 7
+   {{Property|Radius}} 5
+   {{Property|Height}} 5
+   {{Property|Projectile}}
+   -{{Flag|ACTIVATEIMPACT}}
+   -{{Flag|ACTIVATEPCROSS}}
+   -{{Flag|NOGRAVITY}}
+   +{{Flag|FULLVOLDEATH}}
+   +{{Flag|CANBOUNCEWATER}}
+   +{{Flag|NOWALLBOUNCESND}}
+   {{Property|BounceFactor}} 1.0
+   +{{Flag|HEXENBOUNCE}}
+   {{Property|SeeSound}} "SorcererBallBounce"
+   {{Property|DeathSound}} "SorcererHeadScream"
+ 
+   action native [[A_SorcFX1Seek]]();
+ 
+   States
+   {
+   Spawn:
+     SBS1 A 2 Bright
+     SBS1 BCD 3 Bright [[A_SorcFX1Seek]]
+     Loop
+   Death:
+     FHFX S 2 Bright [[A_Explode]](30, 128)
+     FHFX SS 6 Bright
+     Stop
+   }
+ }</text>
+    <sha1>i0u96n0eo9xub8kc39ajtoztw8m2rua</sha1>
+  </revision>
+</page>

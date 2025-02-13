@@ -1,0 +1,122 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>CheckAmmo</title>
+  <ns>0</ns>
+  <id>9841</id>
+  <revision>
+    <id>52056</id>
+    <parentid>52054</parentid>
+    <timestamp>2024-03-22T11:25:24Z</timestamp>
+    <contributor>
+      <username>Jekyll Grim Payne</username>
+      <id>2175</id>
+    </contributor>
+    <comment>/* Parameters */</comment>
+    <origin>52056</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="3092" sha1="bzmp5dw33e5m9w2hfs7zcon8s7a55iw" xml:space="preserve">'''{{class|Weapon}}'''
+
+{{c|virtual bool '''CheckAmmo'''(int ''fireMode'', bool ''autoSwitch'', bool ''requireAmmo'' }}={{c| false, int ''ammocount'' }}={{c| -1)}}
+
+== Usage ==
+A [[ZScript virtual functions|virtual function]] used by {{class|Weapon|weapons}} to checks if the weapon has enough ammo to fire or to be selected. Returns true if it does. Can be overridden to add custom behavior. Can also be called directly when there's a need to check for ammo but not consume it.
+
+To check ''and'' consume ammo, see '''[[DepleteAmmo]]'''.
+
+=== Parameters ===
+*{{c|int '''fireMode'''}}
+:Determines which ammo properties to use. Valid values are &lt;code&gt;PrimaryFire&lt;/code&gt;, &lt;code&gt;AltFire&lt;/code&gt;, and &lt;code&gt;EitherFire&lt;/code&gt;.
+*{{c|bool '''autoSwitch'''}}
+:If true, automatically switches the player's weapon to a new one if out of ammo.
+*{{c|bool '''requireAmmo'''}}
+:If true, {{flag|WEAPON.AMMO_OPTIONAL}}/{{flag|WEAPON.ALT_AMMO_OPTIONAL}} flags are ignored.
+*{{c|int '''ammocount'''}}
+:If the weapon is defined in [[DeHackEd]] and this value is not negative, use it instead of the {{property|Weapon.AmmoUse1}}/{{property|Weapon.AmmoUse2}} properties.
+
+== [[ZScript]] definition ==
+{{ZScriptDefinitionNote|actors/inventory/weapons.zs#L936}}
+The base Weapon class defines the function as follows:
+&lt;syntaxhighlight lang="csharp"&gt;
+	virtual bool CheckAmmo(int fireMode, bool autoSwitch, bool requireAmmo = false, int ammocount = -1)
+	{
+		int count1, count2;
+		int enough, enoughmask;
+		int lAmmoUse1;
+        int lAmmoUse2 = AmmoUse2;
+
+		if (sv_infiniteammo || (Owner.FindInventory ('PowerInfiniteAmmo', true) != null))
+		{
+			return true;
+		}
+		if (fireMode == EitherFire)
+		{
+			bool gotSome = CheckAmmo (PrimaryFire, false) || CheckAmmo (AltFire, false);
+			if (!gotSome &amp;&amp; autoSwitch)
+			{
+				PlayerPawn(Owner).PickNewWeapon (null);
+			}
+			return gotSome;
+		}
+		let altFire = (fireMode == AltFire);
+		let optional = (altFire? bAlt_Ammo_Optional : bAmmo_Optional);
+		let useboth = (altFire? bAlt_Uses_Both : bPrimary_Uses_Both);
+
+		if (!requireAmmo &amp;&amp; optional)
+		{
+			return true;
+		}
+		count1 = (Ammo1 != null) ? Ammo1.Amount : 0;
+		count2 = (Ammo2 != null) ? Ammo2.Amount : 0;
+
+		if (bDehAmmo &amp;&amp; Ammo1 == null)
+		{
+			lAmmoUse1 = 0;
+		}
+		else if (ammocount &gt;= 0)
+		{
+			lAmmoUse1 = ammocount;
+			lAmmoUse2 = ammocount;
+		}
+		else
+		{
+			lAmmoUse1 = AmmoUse1;
+		}
+
+		enough = (count1 &gt;= lAmmoUse1) | ((count2 &gt;= lAmmoUse2) &lt;&lt; 1);
+		if (useboth)
+		{
+			enoughmask = 3;
+		}
+		else
+		{
+			enoughmask = 1 &lt;&lt; altFire;
+		}
+		if (altFire &amp;&amp; FindState('AltFire') == null)
+		{ // If this weapon has no alternate fire, then there is never enough ammo for it
+			enough &amp;= 1;
+		}
+		if (((enough &amp; enoughmask) == enoughmask) || (enough &amp;&amp; bAmmo_CheckBoth))
+		{
+			return true;
+		}
+		// out of ammo, pick a weapon to change to
+		if (autoSwitch)
+		{
+			PlayerPawn(Owner).PickNewWeapon (null);
+		}
+		return false;
+	}&lt;/syntaxhighlight&gt;
+
+== Examples ==
+{{noexamples}}
+
+== See also ==
+*[[Classes:Weapon]]
+*[[Weapon virtual functions]]
+*[[DepleteAmmo]]
+
+[[Category:ZScript]]
+[[Category:ZScript virtual functions]]</text>
+    <sha1>bzmp5dw33e5m9w2hfs7zcon8s7a55iw</sha1>
+  </revision>
+</page>

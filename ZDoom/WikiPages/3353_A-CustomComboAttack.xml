@@ -1,0 +1,41 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>A CustomComboAttack</title>
+  <ns>0</ns>
+  <id>3353</id>
+  <revision>
+    <id>40208</id>
+    <parentid>35773</parentid>
+    <timestamp>2015-06-09T01:26:47Z</timestamp>
+    <contributor>
+      <username>XaserAcheron</username>
+      <id>2510</id>
+    </contributor>
+    <comment>Added "This is for monsters" disclaimer.</comment>
+    <origin>40208</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="1263" sha1="jifsw9frquo7897f58ppljhsbuwvjae" xml:space="preserve">{{codepointer|Generic Attack}}__NOTOC__
+'''A_CustomComboAttack''' (string ''missiletype'', float ''spawnheight'', int ''damage'', string ''meleesound'', string ''damagetype'', bool ''bleed'')
+
+==Usage==
+A customizable combo attack for [[monster]]s. The actor performs either a melee or missile attack depending on the distance to the target.  A melee attack will be used if the target is within the actor's specified [[Actor properties#Attacks|melee range]].  Otherwise, a projectile is generated instead.
+
+===Parameters===
+* ''missiletype'': The class name of the missile to spawn.
+* ''spawnheight'': The height of the spawned missile.
+* ''damage'': The melee damage dealt to the target.
+* ''meleesound'': The sound played when the melee attack is used.
+* ''damagetype'': The type of damage dealt if a melee attack is used.  Defaults to "melee".
+* ''bleed'': Controls whether the target bleeds on a successful hit by the melee attack.  Defaults to true.
+
+== Examples ==
+This example actually replicates the {{Class|BaronOfHell|Baron of Hell}}'s attack ([[A_BruisAttack]]) using this function:
+
+   Melee:
+   Missile:
+     BOSS EF 8 [[A_FaceTarget]]
+     BOSS G 8 '''A_CustomComboAttack'''("{{Class|BaronBall}}", 32, 10 * random(1, 8), "baron/melee")
+     Goto See</text>
+    <sha1>jifsw9frquo7897f58ppljhsbuwvjae</sha1>
+  </revision>
+</page>

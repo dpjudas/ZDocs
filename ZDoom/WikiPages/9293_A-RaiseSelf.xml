@@ -1,0 +1,67 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>A RaiseSelf</title>
+  <ns>0</ns>
+  <id>9293</id>
+  <revision>
+    <id>53230</id>
+    <parentid>53229</parentid>
+    <timestamp>2024-10-06T11:35:03Z</timestamp>
+    <contributor>
+      <username>Jekyll Grim Payne</username>
+      <id>2175</id>
+    </contributor>
+    <minor />
+    <origin>53230</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="1453" sha1="ic1jknt3k1pq6jq31dwiocd0kgm9d7z" xml:space="preserve">__NOTOC__{{codepointer|Monster AI}}bool '''A_RaiseSelf''' [(int ''flags'')]
+
+==Usage==
+Resurrects the calling actor. The actor cannot be resurrected if:
+*it is not a {{Flag|CORPSE|corpse}}.
+*the duration of its current state is not -1 and said state lacks the {{c|[[Actor_states#CanRaise|CanRaise]]}} keyword.
+*it is a player.
+*lacks the {{c|Raise}} state.
+*there is not enough room for it to raise (this check is bypassed if the RF_NOCHECKPOSITION flag is passed to the function).
+*{{c|[[CanResurrect]]}} resolves to failure.
+
+===Parameters===
+*''flags'': the following flags can be combined using the bit-wise OR operator (|):
+**'''RF_NOCHECKPOSITION''' — resurrect the actor without checking for room.
+
+===Return value===
+The function returns ''true'' if the actor is resurrected successfully, otherwise it returns ''false''.
+
+==Examples==
+This {{Class|Knight|undead warrior}} keeps coming back to life as long it does not sustain heavy damage.
+ class ResKnight : {{Class|Knight}}
+ {
+     States
+     {
+     Death:
+         KNIG I 6;
+         KNIG J 6 [[A_Scream]];
+         KNIG K 6;
+         KNIG L 6 [[A_NoBlocking]];
+         KNIG MN 6;
+         KNIG O 105;
+         KNIG O -1
+         {
+             if (health &gt; -100)
+             {
+                 [[A_RaiseSelf]]();
+             }
+         }
+         Stop;
+ 
+     Raise:
+         KNIG NMLKJI 5;
+         Goto See;
+     }
+ }
+
+[[Category:ZScript]]
+[[Category:Monster resurrection functions]]</text>
+    <sha1>ic1jknt3k1pq6jq31dwiocd0kgm9d7z</sha1>
+  </revision>
+</page>

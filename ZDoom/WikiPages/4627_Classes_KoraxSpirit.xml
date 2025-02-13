@@ -1,0 +1,50 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>Classes:KoraxSpirit</title>
+  <ns>0</ns>
+  <id>4627</id>
+  <revision>
+    <id>34774</id>
+    <parentid>18383</parentid>
+    <timestamp>2012-10-25T14:25:06Z</timestamp>
+    <contributor>
+      <username>Blue Shadow</username>
+      <id>2021</id>
+    </contributor>
+    <minor />
+    <comment>/* DECORATE definition */</comment>
+    <origin>34774</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="667" sha1="t6ma38z5u6qserepcsazvvrvn0ja9qd" xml:space="preserve">{{actor|
+| type = Gibs
+| name = Korax spirit
+| class = KoraxSpirit
+| game = Hexen
+}}[[Classes]]: &lt;u&gt;KoraxSpirit&lt;/u&gt;&lt;br&gt;
+When [[Classes:Korax|Korax]] dies, six of these spirits emerges from its broken body and wander around for a while before dissipating.
+==== [[DECORATE]] definition ====
+ ACTOR &lt;u&gt;KoraxSpirit&lt;/u&gt;
+ {
+   {{Property|Speed}} 8
+   {{Property|Projectile}}
+   +{{Flag|NOCLIP}}
+   -{{Flag|ACTIVATEPCROSS}}
+   -{{Flag|ACTIVATEIMPACT}}
+   {{Property|RenderStyle}} Translucent
+   {{Property|Alpha}} 0.4
+ 
+   action native [[A_KSpiritRoam]]();
+ 
+   States
+   {
+   Spawn:
+     SPIR AB 5 [[A_KSpiritRoam]]
+     Loop
+   Death:
+     SPIR DEFGHI 5
+     Stop
+   }
+ }</text>
+    <sha1>t6ma38z5u6qserepcsazvvrvn0ja9qd</sha1>
+  </revision>
+</page>

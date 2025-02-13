@@ -1,0 +1,59 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>Classes:Pottery1</title>
+  <ns>0</ns>
+  <id>4673</id>
+  <revision>
+    <id>39628</id>
+    <parentid>34875</parentid>
+    <timestamp>2015-05-02T21:04:14Z</timestamp>
+    <contributor>
+      <username>Blue Shadow</username>
+      <id>2021</id>
+    </contributor>
+    <minor />
+    <comment>/* DECORATE definition */ Updated</comment>
+    <origin>39628</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="870" sha1="q0fxerkpf7zxoppyogmw8w0y4u39qgv" xml:space="preserve">{{Actor|
+| type = Breakable
+| name = Tall pottery
+| class = Pottery1
+| game = Hexen
+| doomednum = 104
+}}[[Classes]]: &lt;u&gt;Pottery1&lt;/u&gt;&lt;br&gt;
+&amp;ensp;&amp;rarr;[[Classes:Pottery2|Pottery2]]&lt;br&gt;
+&amp;ensp;&amp;rarr;[[Classes:Pottery3|Pottery3]]
+
+A pottery that can be broken. [[Hexen breakable items|It may contain something in it]], which is spawned when [[A_PotteryExplode]] is called.
+==== [[DECORATE]] definition ====
+ ACTOR &lt;u&gt;Pottery1&lt;/u&gt; native
+ {
+   {{Property|Health}} 15
+   {{Property|Speed}} 10
+   {{Property|Height}} 32
+   +{{Flag|SOLID}}
+   +{{Flag|SHOOTABLE}}
+   +{{Flag|NOBLOOD}}
+   +{{Flag|DROPOFF}}
+   +{{Flag|SLIDESONWALLS}}
+   +{{Flag|PUSHABLE}}
+   +{{Flag|TELESTOMP}}
+   +{{Flag|CANPASS}}
+   +{{Flag|NOICEDEATH}}
+ 
+   action native [[A_PotteryExplode]]();
+ 
+   States
+   {
+   Spawn:
+     POT1 A -1
+     Loop
+   Death:
+     POT1 A 0 [[A_PotteryExplode]]
+     Stop
+   }
+ }</text>
+    <sha1>q0fxerkpf7zxoppyogmw8w0y4u39qgv</sha1>
+  </revision>
+</page>

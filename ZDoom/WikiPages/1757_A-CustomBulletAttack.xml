@@ -1,0 +1,78 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>A CustomBulletAttack</title>
+  <ns>0</ns>
+  <id>1757</id>
+  <revision>
+    <id>53857</id>
+    <parentid>51095</parentid>
+    <timestamp>2024-11-23T19:04:47Z</timestamp>
+    <contributor>
+      <username>Jekyll Grim Payne</username>
+      <id>2175</id>
+    </contributor>
+    <minor />
+    <comment>/* Examples */</comment>
+    <origin>53857</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="3327" sha1="gcxyhvsgk5md4kver2qvb17gy0tucmb" xml:space="preserve">{{DISPLAYTITLE:A_CustomBulletAttack}}
+'''{{class|Actor}}'''
+
+void '''A_CustomBulletAttack'''(double ''spread_xy'', double ''spread_z'', int ''numbullets'', int ''damageperbullet'', class&lt;Actor&gt; ''pufftype'' = "BulletPuff", double ''range'' = 0, int ''flags'' = 0, int ''ptr'' = AAPTR_TARGET, class&lt;Actor&gt; ''missile'' = null, double ''Spawnheight'' = 32, double ''Spawnofs_xy'' = 0)
+
+==Usage==
+
+A customizable hitscan attack for [[monster]]s.  Fires a number of bullets with the specified damage and spread.  The bullet puff and range can also be specified, as well as whether the actor uses its current target for aiming purposes.
+
+==Parameters==
+
+*{{c|double '''horz_spread'''}}
+:The horizontal spread, in degrees.
+*{{c|double '''vert_spread'''}}
+:The vertical spread, in degrees.
+*{{c|int '''numbullets'''}}
+:The number of bullets to fire.
+*{{c|int '''damageperbullet'''}}
+:The amount of damage each bullet does. Unless the NORANDOM flag is set, this is multiplied by a random value between 1 and 3.
+*{{c|class&lt;Actor&gt; '''pufftype'''}}
+:The [[puff]] to spawn at the point of impact. Default is '{{Class|BulletPuff}}'.
+*{{c|double '''range'''}}
+:The maximum range of the bullets. Default is 0, which is interpreted as 2048. 
+*{{c|int '''flags'''}}
+:Flags that modify the behavior of the function. (Multiple flags can be combined with &lt;code&gt;|&lt;/code&gt;.)
+:*{{c|CBAF_AIMFACING}} — If set, the attack will be fired in the direction the actor is currently facing, rather than at the actor's current target.
+:*{{c|CBAF_NORANDOM}} — If set, the damage per bullet is not randomized.
+:*{{c|CBAF_EXPLICITANGLE}} — If set, the horizontal and vertical spread are used as explicitly stated, instead of being used as a range for random spread.
+:*{{c|CBAF_NOPITCH}} — If set, the vertical angle is not adjusted to aim at the target.
+:*{{c|CBAF_NORANDOMPUFFZ}} — If set, the random z offset given to the puff when spawned is disabled.
+:*{{c|CBAF_PUFFTARGET}} — Only works when &lt;code&gt;missile&lt;/code&gt; is used. Sets the puff as the missile's target.
+:*{{c|CBAF_PUFFMASTER}} — Only works when &lt;code&gt;missile&lt;/code&gt; is used. Sets the puff as the missile's master.
+:*{{c|CBAF_PUFFTRACER}} — Only works when &lt;code&gt;missile&lt;/code&gt; is used. Sets the puff as the missile's tracer.
+:'''NOTE''': The pointer flags will not work if the puff does not exist, i.e. spawning [[Blood]] instead of itself.
+*{{c|int '''ptr'''}}
+:The actor to attack. This takes an [[actor pointer]]. Default is {{c|{{const|AAPTR_TARGET}}}}.
+*{{c|class&lt;Actor&gt; '''missile'''}}
+:The actor projectile to spawn. This actor faces the bullet puff and travels directly towards it. Default is none.
+*{{c|double '''Spawnheight'''}}
+:Offsets how high up from the base of the actor &lt;code&gt;missile&lt;/code&gt; spawns. Default is 32.
+*{{c|double '''Spawnofs_xy'''}}
+:Offsets how far to the calling actor's right to spawn &lt;code&gt;missile&lt;/code&gt; from (assuming one is viewing the actor from behind). Negative values spawn it to the left. Default is 0.
+
+==Examples==
+ Class Sniper : {{Class|ShotgunGuy}}
+ {
+   States
+   {
+   Missile:
+     SPOS E 2 [[A_FaceTarget]];
+     SPOS E 0 [[A_PlaySound]]("weapons/sshotf");
+     SPOS F 3 Bright [[A_CustomBulletAttack]](2, 2, 1, 20);
+     SPOS E 5;
+     Goto See;
+   }
+ }
+
+[[category:Decorate Generic Attack functions]]{{DEFAULTSORT:CustomBulletAttack}}</text>
+    <sha1>gcxyhvsgk5md4kver2qvb17gy0tucmb</sha1>
+  </revision>
+</page>

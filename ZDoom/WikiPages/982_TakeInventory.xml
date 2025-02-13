@@ -1,0 +1,54 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>TakeInventory</title>
+  <ns>0</ns>
+  <id>982</id>
+  <revision>
+    <id>52106</id>
+    <parentid>52099</parentid>
+    <timestamp>2024-03-27T12:18:26Z</timestamp>
+    <contributor>
+      <username>Jekyll Grim Payne</username>
+      <id>2175</id>
+    </contributor>
+    <origin>52106</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="1435" sha1="of1clogaomdflf2pow47omar5i7ir2u" xml:space="preserve">{{SameNameNote|ACS|ZScript|TakeInventory (ZScript)}}
+
+void '''TakeInventory'''(str ''inventory_item'', int ''amount'');
+
+==Usage==
+
+This function will take the number of items specified from the activator. In the case of ammo, health and armor it will take the total number (so &lt;code&gt;TakeInventory("Shells", 5)&lt;/code&gt; and &lt;code&gt;TakeInventory("ShellBox", 5)&lt;/code&gt; will both take five shells from the player).
+
+Unlike [[ClearInventory]], '''TakeInventory''' can remove items that are flagged as undroppable.
+
+If the function is run with no activator (for example an [[Script_types|OPEN script]] or removing an existing activator with [[SetActivator]]), it will run for and affect all active players in the game.
+
+See the [[Inventory]] page for a list of items in ZDoom.
+
+==Examples==
+
+This script randomly removes objects from the player. Sometimes it does not remove any object, though. It is due to how lucky the player is.
+
+ str weapons[8] = {"{{class|Pistol}}", "{{class|Shotgun}}", "{{class|SuperShotgun}}",
+ "{{class|Chaingun}}", "{{class|RocketLauncher}}", "{{class|PlasmaRifle}}", "{{class|BFG9000}}",
+ "{{class|Chainsaw}}"};
+ 
+ script 10 (void)
+ {
+ 	int targ = [[random]](0, 7);
+ 	
+ 	if ([[CheckInventory]](weapons[targ]))
+ 	{
+ 		[[TakeInventory]](weapons[targ], 1);
+ 		[[Print]](s:"You have dropped a weapon!\ncareless player...");
+ 	}
+ }
+
+Note that no inventory can be a negative amount.
+
+[[category:ACS Inventory functions]]</text>
+    <sha1>of1clogaomdflf2pow47omar5i7ir2u</sha1>
+  </revision>
+</page>

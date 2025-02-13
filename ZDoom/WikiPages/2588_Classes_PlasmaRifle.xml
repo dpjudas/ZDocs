@@ -1,0 +1,167 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>Classes:PlasmaRifle</title>
+  <ns>0</ns>
+  <id>2588</id>
+  <revision>
+    <id>49980</id>
+    <parentid>39283</parentid>
+    <timestamp>2022-12-16T20:59:38Z</timestamp>
+    <contributor>
+      <username>Jekyll Grim Payne</username>
+      <id>2175</id>
+    </contributor>
+    <comment>added zscript definition</comment>
+    <origin>49980</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="2895" sha1="38a50yyaa2xsvpvaqhqr0ifwl16xnby" xml:space="preserve">{{Actor|
+| type = Weapon
+| name = Plasma rifle
+| class = PlasmaRifle
+| game = Doom
+| doomednum = 2004
+| spawnid = 30
+| spawnname = T_PLASMAGUN 
+}}
+[[Classes]]: [[Classes:Inventory|Inventory]]&amp;rarr;[[Classes:Weapon|Weapon]]&amp;rarr;[[Classes:DoomWeapon|DoomWeapon]]&amp;rarr;&lt;u&gt;PlasmaRifle&lt;/u&gt;
+
+
+The plasma rifle. A fast {{Class|PlasmaBall|projectile}}-launching weapon which uses [[Classes:Cell|cells]] for ammo.
+==== [[ZScript]] definition ====
+{{ZScriptDefinitionNote|actors/doom/weaponplasma.zs}}
+&lt;syntaxhighlight lang="csharp"&gt;
+class PlasmaRifle : DoomWeapon
+{
+	Default
+	{
+		Weapon.SelectionOrder 100;
+		Weapon.AmmoUse 1;
+		Weapon.AmmoGive 40;
+		Weapon.AmmoType "Cell";
+		Inventory.PickupMessage "$GOTPLASMA";
+		Tag "$TAG_PLASMARIFLE";
+	}
+	States
+	{
+	Ready:
+		PLSG A 1 A_WeaponReady;
+		Loop;
+	Deselect:
+		PLSG A 1 A_Lower;
+		Loop;
+	Select:
+		PLSG A 1 A_Raise;
+		Loop;
+	Fire:
+		PLSG A 3 A_FirePlasma;
+		PLSG B 20 A_ReFire;
+		Goto Ready;
+	Flash:
+		PLSF A 4 Bright A_Light1;
+		Goto LightDone;
+		PLSF B 4 Bright A_Light1;
+		Goto LightDone;
+	Spawn:
+		PLAS A -1;
+		Stop;
+	}
+}
+
+class PlasmaBall : Actor
+{
+	Default
+	{
+		Radius 13;
+		Height 8;
+		Speed 25;
+		Damage 5;
+		Projectile;
+		+RANDOMIZE
+		+ZDOOMTRANS
+		RenderStyle "Add";
+		Alpha 0.75;
+		SeeSound "weapons/plasmaf";
+		DeathSound "weapons/plasmax";
+		Obituary "$OB_MPPLASMARIFLE";
+	}
+	States
+	{
+	Spawn:
+		PLSS AB 6 Bright;
+		Loop;
+	Death:
+		PLSE ABCDE 4 Bright;
+		Stop;
+	}
+}
+
+extend class StateProvider
+{
+
+	//===========================================================================
+	//
+	// A_FirePlasma
+	//
+	//===========================================================================
+
+	action void A_FirePlasma()
+	{
+		if (player == null)
+		{
+			return;
+		}
+		Weapon weap = player.ReadyWeapon;
+		if (weap != null &amp;&amp; invoker == weap &amp;&amp; stateinfo != null &amp;&amp; stateinfo.mStateType == STATE_Psprite)
+		{
+			if (!weap.DepleteAmmo (weap.bAltFire, true, 1))
+				return;
+			
+			State flash = weap.FindState('Flash');
+			if (flash != null)
+			{
+				player.SetSafeFlash(weap, flash, random[FirePlasma](0, 1));
+			}
+			
+		}
+		
+		SpawnPlayerMissile ("PlasmaBall");
+	}
+}&lt;/syntaxhighlight&gt;
+==== [[DECORATE]] definition ====
+{{DecorateDefinitionNote}}
+ ACTOR &lt;u&gt;PlasmaRifle&lt;/u&gt; : {{Class|DoomWeapon}}
+ {
+   {{Property|Weapon.SelectionOrder}} 100
+   {{Property|Weapon.AmmoUse}} 1
+   {{Property|Weapon.AmmoGive}} 40
+   {{Property|Weapon.AmmoType}} "{{Class|Cell}}"
+   {{Property|Inventory.PickupMessage}} "$GOTPLASMA"
+   {{Property|Tag}} "$TAG_PLASMARIFLE"
+   States
+   {
+   Ready:
+     PLSG A 1 [[A_WeaponReady]]
+     Loop
+   Deselect:
+     PLSG A 1 [[A_Lower]]
+     Loop
+   Select:
+     PLSG A 1 [[A_Raise]]
+     Loop
+   Fire:
+     PLSG A 3 [[A_FirePlasma]]
+     PLSG B 20 [[A_ReFire]]
+     Goto Ready
+   Flash:
+     PLSF A 4 Bright [[A_Light1]]
+     Goto LightDone
+     PLSF B 4 Bright [[A_Light1]]
+     Goto LightDone
+   Spawn:
+     PLAS A -1
+     Stop
+   }
+ }</text>
+    <sha1>38a50yyaa2xsvpvaqhqr0ifwl16xnby</sha1>
+  </revision>
+</page>

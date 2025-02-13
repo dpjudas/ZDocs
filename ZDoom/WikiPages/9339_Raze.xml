@@ -1,0 +1,240 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>Raze</title>
+  <ns>0</ns>
+  <id>9339</id>
+  <revision>
+    <id>50009</id>
+    <parentid>49039</parentid>
+    <timestamp>2022-12-25T12:45:31Z</timestamp>
+    <contributor>
+      <username>Dynamo</username>
+      <id>2607</id>
+    </contributor>
+    <minor />
+    <comment>/* Supported games */</comment>
+    <origin>50009</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="11237" sha1="m032nf5vlgu6kry3a72bitb5iunu4qf" xml:space="preserve">[[File:Raze_logo.png|thumb|Logo of the Raze source port]]
+Raze is a [[source port]] of [[Build]] engine games implementing several systems as found in the [[GZDoom]] source port. It combines JFDuke, DukeGDX, PCExhumed, and NBlood in a single package, amongst various stability and renderer improvements. It is primarily developed by [[User:Graf Zahl|Christoph Oelckers]] and [[User:Rachael|Rachael Alexanderson]] with inclusion of several other codebases. 
+
+The first private release was 0.3.0, released January 23, 2020, consisting of only source code. Following the public announcement of Raze, Oelckers released the first public pre-alpha, version 0.4.0, on February 4, 2020.
+
+==Features==
+While Raze's primary goal is enhancing stability and unifying several Build titles into one package, several new features have been incorporated so far. Currently Raze includes the following features:
+* [[Polymost]] is used as the primary render, but significantly rewritten and separated from [[OpenGL]], utilizing a new texture manager. Polymost is only used in this capacity to generate polygons and sending them off to the backend, which runs on OpenGL 3.3 with the option to use OpenGL 4.5 features. This ensures that new render features can be added to the same backend later, and where a different renderer other than Polymost can also be used
+* GZDoom's post-processing effects framework is incorporated, allowing effects such as bloom and faking increased color ranges with dithering to be possible
+* A replaced and revamped file system, based on the [[WAD]] manager used in GZDoom
+* Runs on the full GZDoom backend
+* Overhauled input system, with synchronized and unsynchronized modes
+* Improved interpolation, both engine-side and game-side
+* Skies are rendered as a composite texture, curing the visible seams in many sky textures
+* A lighter version of GZDoom's "[[ZMusic]]" library is used as music system
+* [[OpenAL]] is used as sound system
+* The menu code from GZDoom is used as a generic system across all supported games
+* Support for [[internationalization|multiple languages]]
+* Integrated widescreen compatible assets for the supported games
+* Games are in their own modules and do not interact with each other. Render, sound system, and input are used universally across the titles
+* Controller support is included, using the existing [[ZDoom]] controller code
+* Multiplayer and networking have a different implementation per game, which are currently entirely nonfunctional and left ''as-is''
+* OSD and configuration maintenance replaced with ZDoom's console and config code
+
+==Supported games==
+* Duke Nukem 3D v1.3D, Atomic Edition, and Twentieth Anniversary World Tour ''(via JFDuke &amp; EDuke 2.0; World Tour extensions via DukeGDX)''
+* One Unit Whole Blood ''(via NBlood)''
+* Shadow Warrior ''(via SWP &amp; VoidSW)''
+* NAM ''(via EDuke 2.1)''
+* WW2GI ''(via EDuke 2.1)''
+* Redneck Rampage, Redneck Rampage Rides Again, and Suckin' Grits on Route 66 ''(via Rednukem)''
+* Powerslave/Exhumed ''(via PCExhumed, with various enhancements inspired by PowerslaveGDX)''
+
+{| {{prettytable}}
+!Game!!Name!! colspan="2" | Notes and links !! Files required
+|-
+| rowspan="2" valign="top"|[[File:MiniBloodLogoIcon.png]]
+| Blood || rowspan="2" valign="top" | {{goglink|game/blood_fresh_supply|Buy on GOG.com}} || rowspan="2" valign="top" | {{steamlink|app/1010750/|Buy on Steam}}
+| {{c|BLOOD.INI}}, {{c|BLOOD.RFF}}, {{c|GUI.RFF}}, {{c|SOUNDS.RFF}}, {{c|SURFACE.DAT}}, {{c|TILES000.ART}} to {{c|TILES017.ART}}, {{c|VOXEL.DAT}}
+|-
+| Cryptic Passage || {{c|CP*.MAP}}, {{c|CPART07.AR_}}, {{c|CPART15.AR_}}, {{c|CRYPTIC.INI}}, {{c|CRYPTIC.SMK}}, {{c|CRYPTIC.WAV}}
+|-
+| rowspan="4" valign="top"|[[File:MiniDuke3DLogoIcon.png]]
+| Duke Nukem 3D || N/A ||{{steamlink|app/434050/|Buy on Steam}} || {{c|DUKE3D.GRP}} (note: proper support for World Tour's extra features requires the whole game installation)
+|-
+| Duke It Out in D.C. || colspan="2" rowspan="3" valign="top" | {{zoomlink|duke-nukem-3d-atomic-edition|Buy on Zoom Platform}} || {{c|DUKEDC.GRP}}
+|-
+| Duke Caribbean: Life's a Beach || {{c|VACATION.GRP}}
+|-
+| Duke: Nuclear Winter || {{c|NWINTER.GRP}}
+|-
+|valign="top"|[[File:MiniExhumedLogoIcon.png]]
+| Exhumed/Powerslave || {{goglink|game/powerslave|Buy on GOG.com}} || {{steamlink|app/1260020/|Buy on Steam}} || {{c|BOOK.MOV}}, {{c|STUFF.DAT}}
+|-
+|valign="top"|[[File:MiniNAMLogoIcon.png]]
+| NAM || {{goglink|game/nam|Buy on GOG.com}} || {{steamlink|app/329650/|Buy on Steam}} || {{c|GAME.CON}}, {{c|NAM.GRP}}
+|-
+| rowspan="3" valign="top"|[[File:MiniRRLogoIcon.png]]
+| Redneck Rampage || rowspan="3" valign="top" | {{goglink|game/redneck_rampage_collection|Buy on GOG.com}} || rowspan="2" valign="top" | {{steamlink|app/565550/|Buy on Steam}} (no music) || {{c|REDNECK.GRP}}
+|-
+| Suckin' Grits on Route 66 || All files with names ending in {{c|66}} and the extensions {{c|.ANM}}, {{c|.ART}}, {{c|.CON}}, {{c|.VOC}}, all {{c|.MAP}} files in {{c|route66/}} folder&lt;br/&gt;{{c|ASYAMB.VOC}}, {{c|G_BITE.VOC}}, {{c|G_SIT.VOC}}, {{c|NEON.VOC}}
+|-
+| Redneck Rampage Rides Again || {{steamlink|app/580940/|Buy on Steam}} (no music)|| {{c|REDNECK.GRP}} (same filename as the original title)
+|-
+| rowspan="3" valign="top"|[[File:MiniSWLogoIcon.png]]
+| Shadow Warrior || rowspan="3" | {{goglink|game/shadow_warrior_complete|Free on GOG.com}} || {{steamlink|app/238070/|Free on Steam}} || {{c|SW.GRP}}
+|-
+| Twin Dragon || rowspan="2" | {{steamlink|app/358400/|Buy on Steam}} || {{c|TD.GRP}} or {{c|TWINDRAG.GRP}}*
+|-
+| Wanton Destruction || {{c|WT.GRP}}
+|-
+| rowspan="2" valign="top"|[[File:MiniWW2GILogoIcon.png]]
+| World War II GI || N/A || {{steamlink|app/376750/|Buy on Steam}} || {{c|WW2GI.GRP}}
+|-
+| Platoon Leader || colspan="2" | [http://dukertcm.com/knowledge-base/downloads-rtcm/wwiigi-addons/ Free download] from RTCM || {{c|PLATOONL.DAT}}
+|}
+
+&lt;nowiki&gt;*&lt;/nowiki&gt;The distribution of Twin Dragon varies. It can be found as a single file named either {{c|TD.GRP}} or {{c|TWINDRAG.GRP}}, or as a set of loose files as in GOG.com's ''Shadow Warrior Complete'' distribution. The loose files are not yet supported by Raze.
+
+===Music===
+Several Build games come with a CD soundtrack, notably ''Blood'', ''Exhumed''/''Powerslave'', ''Redneck Rampage'', and ''Shadow Warrior''. While ''Blood'' also features a MIDI soundtrack when CD audio is not available, Shadow Warrior's MIDI soundtrack is limited to the shareware episode while Exhumed/Powerslave and Redneck Rampage do not have MIDI music at all.
+To play the redbook tracks, Raze expects to find them in the same directory as the game's main files, or a a {{c|/music/}} sub-folder of it; usually named {{c|track02.ogg}}, {{c|track03.ogg}}, etc. ''Blood'' features eight tracks (named {{c|blood02.ogg}} to {{c|blood09.ogg}}), ''Exhumed''/''Powerslave'' features eighteen tracks (the last being {{c|track19.ogg}}, both ''Redneck Rampage'' and ''Redneck Rampage Rides Again'' have nine tracks each (ending with {{c|track10.ogg}}), and ''Shadow Warrior'' has thirteen tracks (up to {{c|track14.ogg}}). Track numbers start from 2 since track 1 was used for the CD-ROM data.
+
+For ''Exhumed'', the tracks may also be named {{c|exhumed02}} to {{c|exhumed19.ogg}}.
+
+The GOG distribution of the ''Redneck Rampage Collection'' does not feature the soundtrack as a loose collection of ogg files. Instead, an {{wp|disk image|image}} is provided in the form of a {{wp|Cue sheet (computing)|BIN+CUE}} pair, with the BIN file named {{c|REDNECK.gog}} (or {{c|RRRAGAIN.gog}}) and the CUE file named {{c|REDNECK.inst}} (or {{c|RRRAGAIN.inst}}). The Steam distribution of Redneck Rampage does not feature the CD soundtrack at all, in any form.
+
+==Credits==
+As Raze combines several codebases into one package, the following credits are in order:
+
+===Raze team and contributors===
+* ''Alexey "_mental_" Lysiuk''
+* ''Christoph "Graf Zahl" Oelckers''
+* ''Magnus "dpJudas" Norddahl''
+* ''Rachael Alexanderson''
+* ''Dynamo''
+* ''Mitchell Richters''
+* ''Nash Muhandes''
+* ''Nigel "Enjay" Rowland''
+* ''sinisterseed''
+===EDuke32 engine &amp; game programming===
+Alpha versions {{forum|t=69875|before 0.7}} included the EDuke32 codebase.
+* ''Richard "TerminX" Gobeille''
+* ''Evan "Hendricks266" Ramos''
+* ''pogokeen''
+* ''Pierre-Loup "Plagman" Griffais''
+* ''Philipp "Helixhorned" Kutin''
+* ''Alexey "Nuke.YKT" Khokholov''
+====EDuke32 credits team====
+&lt;div class="references-small" style="-moz-column-count: 3; column-count: 3;"&gt;
+* ''Alexey Skrybykin''
+* ''Bioman''
+* ''Brandon Bergren''
+* ''Charlie Honig''
+* ''Dan Gaskill''
+* ''David Koenig''
+* ''Ed Coolidge''
+* ''Emile Belanger''
+* ''Fox''
+* ''Hunter_rus''
+* ''James Bentler''
+* ''Jasper Foreman''
+* ''Javier Martinez''
+* ''Jeff Hart''
+* ''Jonathan Strander''
+* ''Jordon Moss''
+* ''Jose del Castillo''
+* ''Lachlan McDonald''
+* ''LSDNinja''
+* ''Marcus Herbert''
+* ''Matthew Palmer''
+* ''Matt Saettler''
+* ''NY00123''
+* ''Ozkan Sezer''
+* ''Peter Green''
+* ''Peter Veenstra''
+* ''Robin Green''
+* ''Ryan Gordon''
+* ''Stephen Anthony''
+* ''tueidj''
+&lt;/div&gt;
+* ''Pär "Parkar" Karlsson''
+===JFDuke3D===
+* ''JonoF''
+===BUILD Engine technology===
+* ''Ken Silverman''
+===NBlood programming===
+* ''Alexey "Nuke.YKT" Khokholov''
+* ''NoOne''
+* ''sirlemonhead''
+====Widescreen tiles &amp; NBlood logo====
+* ''Maxi Clouds''
+====NBlood special thanks====
+&lt;div class="references-small" style="-moz-column-count: 3; column-count: 3;"&gt;
+* ''NY00123''
+* ''MetHy''
+* ''Striker''
+* ''oasiz''
+* ''Mblackwell''
+* ''Zombie''
+* ''Marphy Black''
+* ''SAmik37''
+* ''meleemario''
+&lt;/div&gt;
+====NBlood contributors====
+* ''Alexey "_mental_" Lysiuk''
+* ''CommonLoon102''
+* ''Jan200101''
+===PCExhumed programming===
+* ''sirlemonhead''
+* ''Alexey "Nuke.YKT" Khokholov''
+* ''NY00123''
+====PCExhumed special thanks====
+&lt;div class="references-small" style="-moz-column-count: 3; column-count: 3;"&gt;
+* ''Evan "Hendricks266" Ramos''
+* ''Jonathon "JonoF" Fowler''
+* ''NY00123''
+* ''MetHy''
+* ''oasiz''
+* ''Daedolon''
+* ''NoOne''
+* ''phredreeke''
+* ''Lobotomy Software''
+&lt;/div&gt;
+===BuildGDX programming===
+* ''Alexander "M210" Makarov''
+===Widescreen assets===
+====Duke Nukem 3D====
+* ''James Manning'' (HUD Knuckle Crack)
+* ''fgsfds'' (Status Bar, Level Ending Screens)
+* ''Kinsie'' (Title Picture)
+* Weapon sprites taken from ''Duke Nukem 3D: Megaton Edition''
+====Powerslave/Exhumed====
+* ''Dzierzan'' (HUD)
+* ''Dzierzan, fgsfds, MaxED'' (Weapons)
+====Shadow Warrior====
+* ''James Manning'' (Weapons, Status Bar)
+* ''phredreeke'' (Summary Screen)
+====Redneck Rampage====
+* ''fgsfds'' (Status Bar, Crossbow &amp; Chicken Crossbow)
+* ''phredreeke'' (TNT, Alien Hand, Rake)
+* '' Dzierzan'' (Rake, Crossbow &amp; Chicken Crossbow, Bike, Boat)
+====NAM====
+* ''James Manning'' (HUD Knuckle Crack)
+* ''fgsfds'' (M-16, RPG, Status Bar)
+====WW2GI====
+* ''James Manning'' (HUD Knuckle Crack)
+* ''fgsfds'' (Bazooka)
+
+= External links =
+* {{plainlink|[https://raze.zdoom.org/ Raze website]}}
+* [https://github.com/coelckers/Raze/ Raze Git Repository]
+* [https://devbuilds.drdteam.org/raze/ Raze Autobuilds]
+* [https://github.com/coelckers/ZMusic/ ZMusic, standalone library], at Github
+* {{forum|Raze announcement thread|t=67139}}
+* [[eduke:Main Page|EDuke32 Wiki]]
+* [[blood:Main Page|Blood Wiki]]
+
+[[Category:Software]]
+[[Category:Raze]]</text>
+    <sha1>m032nf5vlgu6kry3a72bitb5iunu4qf</sha1>
+  </revision>
+</page>

@@ -1,0 +1,170 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>Structs:LevelInfo</title>
+  <ns>0</ns>
+  <id>9767</id>
+  <revision>
+    <id>53273</id>
+    <parentid>52996</parentid>
+    <timestamp>2024-10-12T08:59:15Z</timestamp>
+    <contributor>
+      <username>Blue Shadow</username>
+      <id>2021</id>
+    </contributor>
+    <minor />
+    <comment>remove {{new}}</comment>
+    <origin>53273</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="7058" sha1="5mu7q6kp9ixahopd7fmaarsz1wsv8da" xml:space="preserve">{{ZScriptNote}}
+
+The LevelInfo struct contains information about the level.
+
+==Usage==
+A global pointer to the current LeveInfo instance is available via [[Structs:LevelLocals|LevelLocals]], with &lt;code&gt;Level.info&lt;/code&gt;.
+
+LevelInfo contains a lot of the same information as LevelLocals, but in a static context. It can also be used to check properties of other maps aside from the current one, in contrast to LevelLocals.
+
+===Fields===
+*{{c|readonly int '''levelnum'''}}
+*{{c|readonly String '''MapName'''}}
+*{{c|readonly String '''NextMap'''}}
+*{{c|readonly String '''NextSecretMap'''}}
+*{{c|readonly String '''SkyPic1'''}}
+*{{c|readonly String '''SkyPic2'''}}
+*{{c|readonly String '''F1Pic'''}}
+*{{c|readonly int '''cluster'''}}
+*{{c|readonly int '''partime'''}}
+*{{c|readonly int '''sucktime'''}}
+*{{c|readonly int '''flags'''}}
+:First set of flags:
+:*{{c|LEVEL_NOINTERMISSION}}
+:*{{c|LEVEL_NOINVENTORYBAR}} - This effects Doom only since it's the only one without a standard inventory bar.
+:*{{c|LEVEL_DOUBLESKY}}
+:*{{c|LEVEL_HASFADETABLE}} - Level uses Hexen's fadetable mapinfo to get fog
+:*{{c|LEVEL_MAP07SPECIAL}}
+:*{{c|LEVEL_BRUISERSPECIAL}}
+:*{{c|LEVEL_CYBORGSPECIAL}}
+:*{{c|LEVEL_SPIDERSPECIAL}}
+:*{{c|LEVEL_SPECLOWERFLOOR}}
+:*{{c|LEVEL_SPECOPENDOOR}}
+:*{{c|LEVEL_SPECLOWERFLOORTOHIGHEST}}
+:*{{c|LEVEL_SPECACTIONSMASK}}
+:*{{c|LEVEL_MONSTERSTELEFRAG}}
+:*{{c|LEVEL_ACTOWNSPECIAL}}
+:*{{c|LEVEL_SNDSEQTOTALCTRL}}
+:*{{c|LEVEL_FORCETILEDSKY}}
+:*{{c|LEVEL_CROUCH_NO}}
+:*{{c|LEVEL_JUMP_NO}}
+:*{{c|LEVEL_FREELOOK_NO}}
+:*{{c|LEVEL_FREELOOK_YES}} - The absence of both of the following bits means that this level does not
+:*{{c|LEVEL_FALLDMG_ZD}} - Level uses ZDoom's falling damage
+:*{{c|LEVEL_FALLDMG_HX}} - Level uses Hexen's falling damage
+:*{{c|LEVEL_HEADSPECIAL}} - Heretic episode 1/4
+:*{{c|LEVEL_MINOTAURSPECIAL}} - Heretic episode 2/5
+:*{{c|LEVEL_SORCERER2SPECIAL}} - Heretic episode 3
+:*{{c|LEVEL_SPECKILLMONSTERS}}
+:*{{c|LEVEL_STARTLIGHTNING}} - Automatically start lightning
+:*{{c|LEVEL_FILTERSTARTS}} - Apply mapthing filtering to player starts
+:*{{c|LEVEL_LOOKUPLEVELNAME}} - Level name is the name of a language string
+:*{{c|LEVEL_USEPLAYERSTARTZ}} - Use the Z position of player starts
+:*{{c|LEVEL_SWAPSKIES}} - Used by lightning
+:*{{c|LEVEL_NOALLIES}} - i.e. Inside Strife's front base
+:*{{c|LEVEL_CHANGEMAPCHEAT}} - Don't display cluster messages
+:*{{c|LEVEL_VISITED}} - Used for intermission map
+*{{c|readonly int '''flags2'''}}
+:Second set of flags:
+:*{{c|LEVEL2_RANDOMPLAYERSTARTS}} - Select single player starts randomnly (no voodoo dolls)
+:*{{c|LEVEL2_ALLMAP}} - The player picked up a map on this level
+:*{{c|LEVEL2_LAXMONSTERACTIVATION}} - Monsters can open doors depending on the door speed
+:*{{c|LEVEL2_LAXACTIVATIONMAPINFO}} - LEVEL_LAXMONSTERACTIVATION is not a default.
+:*{{c|LEVEL2_MISSILESACTIVATEIMPACT}} - Missiles are the activators of SPAC_IMPACT events not their shooters
+:*{{c|LEVEL2_NEEDCLUSTERTEXT}} - A map with this flag needs to retain its cluster intermission texts when being redefined in UMAPINFO
+:*{{c|LEVEL2_KEEPFULLINVENTORY}} - doesn't reduce the amount of inventory items to 1
+:*{{c|LEVEL2_PRERAISEWEAPON}} - players should spawn with their weapons fully raised (but not when respawning it multiplayer)
+:*{{c|LEVEL2_MONSTERFALLINGDAMAGE}}
+:*{{c|LEVEL2_CLIPMIDTEX}}
+:*{{c|LEVEL2_WRAPMIDTEX}}
+:*{{c|LEVEL2_CHECKSWITCHRANGE}}	
+:*{{c|LEVEL2_PAUSE_MUSIC_IN_MENUS}}
+:*{{c|LEVEL2_TOTALINFIGHTING}}
+:*{{c|LEVEL2_NOINFIGHTING}}
+:*{{c|LEVEL2_NOMONSTERS}}
+:*{{c|LEVEL2_INFINITE_FLIGHT}}
+:*{{c|LEVEL2_ALLOWRESPAWN}}
+:*{{c|LEVEL2_FORCETEAMPLAYON}}
+:*{{c|LEVEL2_FORCETEAMPLAYOFF}}
+:*{{c|LEVEL2_CONV_SINGLE_UNFREEZE}}
+:*{{c|LEVEL2_NOCLUSTERTEXT}} - ignore intermission texts fro clusters. This gets set when UMAPINFO is used to redefine its properties.
+:*{{c|LEVEL2_DUMMYSWITCHES}}
+:*{{c|LEVEL2_HEXENHACK}} - Level was defined in a Hexen style MAPINFO
+:*{{c|LEVEL2_SMOOTHLIGHTING}} - Level uses the smooth lighting feature.
+:*{{c|LEVEL2_POLYGRIND}} - Polyobjects grind corpses to gibs.
+:*{{c|LEVEL2_RESETINVENTORY}} - Resets player inventory when starting this level (unless in a hub)
+:*{{c|LEVEL2_RESETHEALTH}} - Resets player health when starting this level (unless in a hub)
+:*{{c|LEVEL2_NOSTATISTICS}} - This level should not have statistics collected
+:*{{c|LEVEL2_ENDGAME}} - This is an epilogue level that cannot be quit.
+:*{{c|LEVEL2_NOAUTOSAVEHINT}} - tell the game that an autosave for this level does not need to be kept
+:*{{c|LEVEL2_FORGETSTATE}} - forget this map's state in a hub
+*{{c|readonly int '''flags3'''}}
+:Third set of flags:
+:*{{c|LEVEL3_FORCEFAKECONTRAST}} - forces fake contrast even with fog enabled
+:*{{c|LEVEL3_REMOVEITEMS}} - kills all INVBAR items on map change.
+:*{{c|LEVEL3_ATTENUATE}} - attenuate lights?
+:*{{c|LEVEL3_NOLIGHTFADE}} - no light fading to black.
+:*{{c|LEVEL3_NOCOLOREDSPRITELIGHTING}} - draw sprites only with color-less light
+:*{{c|LEVEL3_EXITNORMALUSED}}
+:*{{c|LEVEL3_EXITSECRETUSED}}
+:*{{c|LEVEL3_FORCEWORLDPANNING}} - Forces the world panning flag for all textures even those without it explicitly set.
+:*{{c|LEVEL3_HIDEAUTHORNAME}}
+:*{{c|LEVEL3_PROPERMONSTERFALLINGDAMAGE}} - Properly apply falling damage to the monsters
+:*{{c|LEVEL3_SKYBOXAO}} - Apply SSAO to sector skies
+:*{{c|LEVEL3_E1M8SPECIAL}}
+:*{{c|LEVEL3_E2M8SPECIAL}}
+:*{{c|LEVEL3_E3M8SPECIAL}}
+:*{{c|LEVEL3_E4M8SPECIAL}}
+:*{{c|LEVEL3_E4M6SPECIAL}}
+:*{{c|LEVEL3_NOSHADOWMAP}} - disables shadowmaps for a given level.
+:*{{c|LEVEL3_AVOIDMELEE}} - global flag needed for proper MBF support.
+:*{{c|LEVEL3_NOJUMPDOWN}} - only for MBF21. Inverse of MBF's dog_jumping flag.
+:*{{c|LEVEL3_LIGHTCREATED}} - a light had been created in the last frame
+*{{c|readonly String '''Music'''}}
+*{{c|readonly String '''LevelName'''}}
+*{{c|readonly String '''AuthorName'''}}
+*{{c|readonly int '''musicorder'''}}
+*{{c|readonly float '''skyspeed1'''}}
+*{{c|readonly float '''skyspeed2'''}}
+*{{c|readonly bool '''LightningSound'''}}
+*{{c|readonly int '''cdtrack'''}}
+*{{c|readonly double '''gravity'''}}
+*{{c|readonly double '''aircontrol'''}}
+*{{c|readonly int '''airsupply'''}}
+*{{c|readonly int '''compatflags'''}}
+*{{c|readonly int '''compatflags2'''}}
+*{{c|readonly name '''deathsequence'''}}
+*{{c|readonly int '''fogdensity'''}}
+*{{c|readonly int '''outsidefogdensity'''}}
+*{{c|readonly int '''skyfog'''}}
+*{{c|readonly float '''pixelstretch'''}}
+*{{c|readonly name '''RedirectType'''}}
+*{{c|readonly String '''RedirectMapName'''}}
+*{{c|readonly double '''teamdamage'''}}
+
+==Methods==
+===Non-static===
+*{{c|bool '''isValid'''() const}}
+*{{c|String '''LookupLevelName'''() const}}
+===Static===
+*{{c|static int '''GetLevelInfoCount'''()}}
+*{{c|static LevelInfo '''GetLevelInfo'''(int ''index'')}}
+*{{c|static LevelInfo '''FindLevelInfo'''(String ''mapname'')}}
+*{{c|static LevelInfo '''FindLevelByNum'''(int ''num'')}}
+*{{c|static bool '''MapExists'''(String ''mapname'')}}
+*{{c|static String '''MapChecksum'''(String ''mapname'')}}
+
+[[Category:ZScript]]
+[[Category:Structs]]
+[[Category:LevelLocals]]
+[[Category:ZScript map data]]</text>
+    <sha1>5mu7q6kp9ixahopd7fmaarsz1wsv8da</sha1>
+  </revision>
+</page>

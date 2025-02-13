@@ -1,0 +1,59 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>Classes:SnakeProjA</title>
+  <ns>0</ns>
+  <id>2921</id>
+  <revision>
+    <id>39450</id>
+    <parentid>34177</parentid>
+    <timestamp>2015-04-30T21:06:39Z</timestamp>
+    <contributor>
+      <username>Blue Shadow</username>
+      <id>2021</id>
+    </contributor>
+    <minor />
+    <comment>/* DECORATE definition */ Updated</comment>
+    <origin>39450</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="953" sha1="c17019gp6er318ir1lpd2vz7vth804u" xml:space="preserve">{{Actor|
+| type = Explosive
+| name = Ophidian ice ball
+| class = SnakeProjA
+| game = Heretic
+| spawnid = 138
+| spawnname = T_SNAKEPROJECTILE 
+}}[[Classes]]: &lt;u&gt;SnakeProjA&lt;/u&gt;&lt;br&gt;
+&amp;ensp;&amp;rarr;[[Classes:SnakeProjB|SnakeProjB]]&lt;br&gt;
+[[Classes:Snake|Ophidians]] throw a volley of three of these projectiles, quickly followed by [[Classes:SnakeProjB|one of a more dangerous type]].
+
+==== [[DECORATE]] definition ====
+ ACTOR &lt;u&gt;SnakeProjA&lt;/u&gt;
+ {
+   {{Property|Radius}} 12
+   {{Property|Height}} 8
+   {{Property|Speed}} 14
+   {{Property|FastSpeed}} 20
+   {{Property|Damage}} 1
+   {{Property|Projectile}}
+   -{{Flag|NOBLOCKMAP}}
+   -{{Flag|ACTIVATEIMPACT}}
+   -{{Flag|ACTIVATEPCROSS}}
+   +{{Flag|WINDTHRUST}}
+   +{{Flag|SPAWNSOUNDSOURCE}}
+   {{Property|RenderStyle}} Add
+   {{Property|SeeSound}} "snake/attack"
+   States
+   {
+   Spawn:
+     SNFX ABCD 5 Bright
+     Loop
+   Death:
+     SNFX EF 5 Bright
+     SNFX G 4 Bright
+     SNFX HI 3 Bright
+     Stop
+   }
+ }</text>
+    <sha1>c17019gp6er318ir1lpd2vz7vth804u</sha1>
+  </revision>
+</page>

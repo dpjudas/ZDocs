@@ -1,0 +1,52 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>GetActorProperty</title>
+  <ns>0</ns>
+  <id>990</id>
+  <revision>
+    <id>36601</id>
+    <parentid>35654</parentid>
+    <timestamp>2013-06-01T08:41:21Z</timestamp>
+    <contributor>
+      <username>Blue Shadow</username>
+      <id>2021</id>
+    </contributor>
+    <comment>/* Return value */  String-based properties can be used with GetActorProperty (r4307).</comment>
+    <origin>36601</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="1303" sha1="9e3gu8qw745i1bj860zc96iswmnofv7" xml:space="preserve">__NOTOC__
+int '''GetActorProperty''' (int ''tid'', int ''property'')
+
+=== Parameters ===
+* ''tid'': TID of the actor.  Use 0 to refer to the activator.
+
+* ''property'': One of the properties listed below.
+
+===Actor Properties===
+{{:ACS actor properties|nostring}}
+
+=== Return value ===
+
+The value of the specified property of the actor. Since [[ACS]] does not handle dynamic strings (this is not the case starting with {{rev|4295}}), this function cannot be used with certain properties and [[CheckActorProperty]] can be used instead (note that as of {{rev|4307}}, this is not the case, and this function can be used on string-based properties). It's important to note that when using APROP_Health, it returns the exact value of the current health, even if it's a negative value.
+
+== Examples ==
+
+This script checks for a few different properties and prints helpful messages about them.
+
+ script 1 (int tid)
+ {
+     if ([[GetActorProperty]] (tid, {{const|APROP_Health}}) &lt;= 25)
+         [[print]] (s:"Thing ", d:tid, " has less than 26 health!!");
+ 
+     if ([[GetActorProperty]] (12, {{const|APROP_RenderStyle}}) == {{const|STYLE_OptFuzzy}})
+         [[print]] (s:"Thing 12 is probably a spectre!");
+ }
+
+==See also==
+*[[CheckActorProperty]]
+*[[SetActorProperty]]
+
+[[category:ACS Information functions]]</text>
+    <sha1>9e3gu8qw745i1bj860zc96iswmnofv7</sha1>
+  </revision>
+</page>

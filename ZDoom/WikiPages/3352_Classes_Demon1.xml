@@ -1,0 +1,103 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>Classes:Demon1</title>
+  <ns>0</ns>
+  <id>3352</id>
+  <revision>
+    <id>39472</id>
+    <parentid>36256</parentid>
+    <timestamp>2015-04-30T21:21:26Z</timestamp>
+    <contributor>
+      <username>Blue Shadow</username>
+      <id>2021</id>
+    </contributor>
+    <minor />
+    <comment>/* DECORATE definition */ Updated</comment>
+    <origin>39472</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="4554" sha1="rkzlu4oidpi5cjppwzo2zi4d0u3a5xg" xml:space="preserve">{{Actor|
+| type = Monster
+| name = Green chaos serpent
+| class = Demon1
+| game = Hexen
+| doomednum = 31
+| spawnid = 3
+| spawnname = T_DEMON1 
+}}[[Classes]]: &lt;u&gt;Demon1&lt;/u&gt;&lt;br&gt;
+&amp;ensp;&amp;rarr;[[Classes:Demon1Mash|Demon1Mash]]&lt;br&gt;
+&amp;ensp;&amp;rarr;[[Classes:Demon2|Demon2]]&lt;br&gt;
+&amp;ensp;&amp;ensp;&amp;rarr;[[Classes:Demon2Mash|Demon2Mash]]&lt;br&gt;
+
+The green chaos serpent is a common foe in Hexen, appearing first in the Seven Portals. However, they are quite weak compared to the exceptional specimen of that breed that [[Classes:Sorcerer1|D'Sparil]] rode to battle in E3M8 of [[Heretic]]. They can spit [[Classes:Demon1FX1|fireballs]] and have a powerful bite attack. Even when they aren't gibbed, their body explode and not much is left of it when they die.
+
+==== [[DECORATE]] definition ==== 
+ ACTOR &lt;u&gt;Demon1&lt;/u&gt;
+ {
+   {{Property|Health}} 250
+   {{Property|PainChance}} 50
+   {{Property|Speed}} 13
+   {{Property|Radius}} 32
+   {{Property|Height}} 64
+   {{Property|Mass}} 220
+   {{Property|Monster}}
+   +{{Flag|TELESTOMP}}
+   +{{Flag|FLOORCLIP}}
+   {{Property|SeeSound}} "DemonSight"
+   {{Property|AttackSound}} "DemonAttack"
+   {{Property|PainSound}} "DemonPain"
+   {{Property|DeathSound}} "DemonDeath"
+   {{Property|ActiveSound}} "DemonActive"
+   {{Property|Obituary}} "$OB_DEMON1"
+   const int ChunkFlags = {{const|SXF_TRANSFERTRANSLATION}}|{{const|SXF_ABSOLUTEVELOCITY}};
+   States
+   {
+   Spawn:
+     DEMN AA 10 [[A_Look]]
+     Loop
+   See:
+     DEMN ABCD 4 [[A_Chase]]
+     Loop
+   Pain:
+     DEMN E 4
+     DEMN E 4 [[A_Pain]]
+     Goto See
+   Melee:
+     DEMN E 6 [[A_FaceTarget]]
+     DEMN F 8 [[A_FaceTarget]]
+     DEMN G 6 [[A_CustomMeleeAttack]]([[DECORATE_expressions#Mathematical_functions|random]][DemonAttack1](1, 8)*2)
+     Goto See
+   Missile:
+     DEMN E 5 [[A_FaceTarget]]
+     DEMN F 6 [[A_FaceTarget]]
+     DEMN G 5 [[A_CustomMissile]]("{{Class|Demon1FX1}}", 62, 0)
+     Goto See
+   Death:
+     DEMN HI 6
+     DEMN J 6 [[A_Scream]]
+     DEMN K 6 [[A_NoBlocking]]
+     DEMN L 6 [[A_QueueCorpse]]
+     DEMN MNO 6
+     DEMN P -1
+     Stop
+   XDeath:
+     DEMN H 6
+     DEMN I 0 [[A_SpawnItemEx]]("{{Class|Demon1Chunk1}}", 0, 0, 45, [[DECORATE_expressions#Mathematical_functions|frandom]][DemonChunks](1, 4.984375)*[[DECORATE_expressions#Mathematical_functions|cos]]([[DECORATE_expressions#Variables|angle]]+90),
+                            [[DECORATE_expressions#Mathematical_functions|frandom]][DemonChunks](1, 4.984375)*[[DECORATE_expressions#Mathematical_functions|sin]]([[DECORATE_expressions#Variables|angle]]+90), 8, 90, ChunkFlags)
+     DEMN I 0 [[A_SpawnItemEx]]("{{Class|Demon1Chunk2}}", 0, 0, 45, [[DECORATE_expressions#Mathematical_functions|frandom]][DemonChunks](1, 4.984375)*[[DECORATE_expressions#Mathematical_functions|cos]]([[DECORATE_expressions#Variables|angle]]-90),
+                            [[DECORATE_expressions#Mathematical_functions|frandom]][DemonChunks](1, 4.984375)*[[DECORATE_expressions#Mathematical_functions|sin]]([[DECORATE_expressions#Variables|angle]]-90), 8, 270, ChunkFlags)
+     DEMN I 0 [[A_SpawnItemEx]]("{{Class|Demon1Chunk3}}", 0, 0, 45, [[DECORATE_expressions#Mathematical_functions|frandom]][DemonChunks](1, 4.984375)*[[DECORATE_expressions#Mathematical_functions|cos]]([[DECORATE_expressions#Variables|angle]]-90),
+                            [[DECORATE_expressions#Mathematical_functions|frandom]][DemonChunks](1, 4.984375)*[[DECORATE_expressions#Mathematical_functions|sin]]([[DECORATE_expressions#Variables|angle]]-90), 8, 270, ChunkFlags)
+     DEMN I 0 [[A_SpawnItemEx]]("{{Class|Demon1Chunk4}}", 0, 0, 45, [[DECORATE_expressions#Mathematical_functions|frandom]][DemonChunks](1, 4.984375)*[[DECORATE_expressions#Mathematical_functions|cos]]([[DECORATE_expressions#Variables|angle]]-90),
+                            [[DECORATE_expressions#Mathematical_functions|frandom]][DemonChunks](1, 4.984375)*[[DECORATE_expressions#Mathematical_functions|sin]]([[DECORATE_expressions#Variables|angle]]-90), 8, 270, ChunkFlags)
+     DEMN I 6 [[A_SpawnItemEx]]("{{Class|Demon1Chunk5}}", 0, 0, 45, [[DECORATE_expressions#Mathematical_functions|frandom]][DemonChunks](1, 4.984375)*[[DECORATE_expressions#Mathematical_functions|cos]]([[DECORATE_expressions#Variables|angle]]-90),
+                            [[DECORATE_expressions#Mathematical_functions|frandom]][DemonChunks](1, 4.984375)*[[DECORATE_expressions#Mathematical_functions|sin]]([[DECORATE_expressions#Variables|angle]]-90), 8, 270, ChunkFlags)
+     Goto Death+2
+   Ice:
+     DEMN Q 5 [[A_FreezeDeath]]
+     DEMN Q 1 [[A_FreezeDeathChunks]]
+     Wait
+   }
+ }</text>
+    <sha1>rkzlu4oidpi5cjppwzo2zi4d0u3a5xg</sha1>
+  </revision>
+</page>

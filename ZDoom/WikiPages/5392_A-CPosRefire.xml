@@ -1,0 +1,65 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>A CPosRefire</title>
+  <ns>0</ns>
+  <id>5392</id>
+  <revision>
+    <id>53983</id>
+    <parentid>53979</parentid>
+    <timestamp>2024-11-30T12:02:26Z</timestamp>
+    <contributor>
+      <username>Jekyll Grim Payne</username>
+      <id>2175</id>
+    </contributor>
+    <origin>53983</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="1330" sha1="ff214nars8p33wwee90o5nbw4w5potv" xml:space="preserve">{{DISPLAYTITLE:A_CPosRefire}}
+{{BuiltInFunctionNote|A_MonsterRefire}}
+
+'''{{class|Actor}}'''
+
+{{c|void '''A_CPosRefire'''()}}
+
+== Usage ==
+Used by {{class|ChaingunGuy}} and {{class|WolfensteinSS}}. Calls [[A_FaceTarget]] and then lets the monster refire. If the target is dead or out of sight, will abort the attack and go back to its "See" state sequence with a 40 out of 255 chance. Also aborts if the monster hit its ally.
+
+== Examples ==
+From {{class|ChaingunGuy}}'s code:
+&lt;syntaxhighlight lang="csharp"&gt;
+	Missile:
+		CPOS E 10 A_FaceTarget;
+		CPOS FE 4 BRIGHT A_CPosAttack;
+		CPOS F 1 A_CPosRefire; //goes back to See if attack is to be aborted
+		Goto Missile+1; //otherwise goes back to Missile but skips the first 10-tic-long state
+&lt;/syntaxhighlight&gt;
+
+== [[ZScript]] definition ==
+{{ZScriptDefinitionNote|actors/doom/possessed.zs}}
+&lt;syntaxhighlight lang="csharp"&gt;
+	void A_CPosRefire()
+	{
+		if (HitFriend())
+		{
+			SetState(SeeState);
+			return;
+		}
+		// keep firing unless target got out of sight
+		A_FaceTarget();
+		if (Random[CPosRefire](0, 255) &gt;= 40)
+		{
+			if (!target
+				|| target.health &lt;= 0
+				|| !CheckSight(target, SF_SEEPASTBLOCKEVERYTHING|SF_SEEPASTSHOOTABLELINES))
+			{
+				SetState(SeeState);
+			}
+		}
+	}&lt;/syntaxhighlight&gt;
+
+== See also ==
+* [[A_MonsterRefire]]
+
+[[Category:Decorate Generic Attack functions]]</text>
+    <sha1>ff214nars8p33wwee90o5nbw4w5potv</sha1>
+  </revision>
+</page>

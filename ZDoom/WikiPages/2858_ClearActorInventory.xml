@@ -1,0 +1,67 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>ClearActorInventory</title>
+  <ns>0</ns>
+  <id>2858</id>
+  <revision>
+    <id>42468</id>
+    <parentid>42467</parentid>
+    <timestamp>2016-03-03T01:17:18Z</timestamp>
+    <contributor>
+      <username>Matt</username>
+      <id>135</id>
+    </contributor>
+    <minor />
+    <comment>/* Examples */</comment>
+    <origin>42468</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="1374" sha1="iy2o3pbwd40tjscvyhshkbbgrn2bqeg" xml:space="preserve">void '''ClearActorInventory'''(int ''tid'');
+
+==Usage==
+
+This function will clear the specified actor's inventory in a similar fashion to [[ClearInventory]].
+
+Note: This will not remove an inventory item or weapon that is flagged with the {{flag|INVENTORY.UNDROPPABLE}} flag. An explicit call to [[TakeActorInventory]] is required to remove such items.
+
+== Examples ==
+This could be a very nasty piece of code if implemented into a deathmatch level. Every minute a player will be picked at random and stripped of their inventory.
+
+ #define {{const|NUM_PLAYERS}}     8
+ #define {{const|PLAYER_BASE_TID}} 1000
+ #define {{const|CLEAR_INTERVAL}}  2100 // 1 minute
+ 
+ script 1 ENTER
+ {
+     [[Thing_ChangeTID]](0, {{const|PLAYER_BASE_TID}} + [[PlayerNumber]]());
+ }
+ 
+ script 2 OPEN
+ {
+     int p;
+ 
+     while ({{const|TRUE}})
+     {
+         [[delay]]({{const|CLEAR_INTERVAL}});
+ 
+         [[Loops#Do-until|do]] {
+ 
+             p = [[random]](0, {{const|NUM_PLAYERS}}-1);
+ 
+         } [[Loops#Do-until|until]] ([[PlayerInGame]](p));
+ 
+ 	[[ClearActorInventory]]({{const|PLAYER_BASE_TID}} + p);
+ 
+         [[HudMessageBold]](n:p+1, s:" is begging for a quick death!";
+             {{const|HUDMSG_FADEOUT}}, 1, {{const|CR_RED}}, 0.5, 0.5, 3.0, 1.0);
+     }
+ }
+
+==See also==
+*[[GiveActorInventory]]
+*[[TakeActorInventory]]
+*[[ClearInventory]]
+
+[[category:ACS Inventory functions]]</text>
+    <sha1>iy2o3pbwd40tjscvyhshkbbgrn2bqeg</sha1>
+  </revision>
+</page>

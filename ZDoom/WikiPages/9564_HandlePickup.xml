@@ -1,0 +1,129 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>HandlePickup</title>
+  <ns>0</ns>
+  <id>9564</id>
+  <revision>
+    <id>51952</id>
+    <parentid>50570</parentid>
+    <timestamp>2024-03-13T12:27:29Z</timestamp>
+    <contributor>
+      <username>Jekyll Grim Payne</username>
+      <id>2175</id>
+    </contributor>
+    <comment>/* Usage */</comment>
+    <origin>51952</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="6101" sha1="gvorpz4rcqlutxn3yngf3fahvlcbmzo" xml:space="preserve">__NOTOC__virtual bool '''HandlePickup''' (Inventory ''item'')
+
+==Usage==
+A [[ZScript_virtual_functions|virtual function]] called by all {{Class|Inventory|inventory items}} that are currently in somebody's inventory whenever the owner is receiving a new item (but before it's actually received). By default this virtual is used to handle duplicate pick ups, so that if an item being picked up is already present in the owner's inventory, instead of receiving a new instance of that item, the ''amount'' of the existing item will be increased. 
+
+Returning ''true'' means the item doesn't need any further processing. If this is done without changing the ''amount'' of an item, or without giving anything, returning ''true'' will simply mean the owner won't receive that item. If the item is a pickup, it'll stay in the world without being picked up. This means the functionality can be expanded. By using a specific token item with a custom HandlePickup() override, authors can control what items the player may or may not receive, or replace one item with another.
+
+===Return values===
+
+If a HandlePickup() call of a specific Inventory item returns '''true''', this means the ''item'' handled by the function will not be handled by any other HandlePickup() calls. 
+
+Returning '''false''' will let other items handle the ''item'' with their HandlePickup() calls as well. Each Inventory item will process the ''item'' with their HandlePickup() in succession, until '''true''' is returned. If there are multiple items in the player's inventory with a HandlePickup() override that is meant to handle the same ''item'', they're executed in a stack succession (starting with the latest item the player received and ending with the one they received first).
+
+===Limitations===
+
+A HandlePickup() override in an item is not guaranteed to be able to intercept ''all'' items the player receives. The received items are first processed by instances of the same item class the player already has. For example, the {{class|Ammo}} class uses its HandlePickup() override to process new ammo pickups, and returns &lt;code&gt;true&lt;/code&gt; once the processing is done, blocking the ability of other items to process it.
+
+The only way to force a specific item's HandlePickup() to run before all others is to have it at the end of the &lt;code&gt;Inv&lt;/code&gt; linked list (the linked list defined in the {{class|Actor}} class that contains the items in the actor's inventory). The order of that list is based on the order in which items are received.
+
+==Examples==
+
+Having a designated control item, you can add a HandlePickup() override to manually handle what items the players can or can not receive, or add some other type of custom processing.
+
+A simple example is to block the player from receiving certain items they're not supposed to receive. For example, if you have a mod with a mage class that should be able to see the guns in Doom levels but shouldn't be able to pick them up:
+
+&lt;syntaxhighlight lang="csharp"&gt;
+class ItemPickupControl : Inventory
+{
+	Default
+	{
+		// These are just some useful values for an inventory token
+		// that make sure it can't be taken away or dropped:
+		inventory.maxamount 1;
+		+INVENTORY.UNDROPPABLE
+		+INVENTORY.UNTOSSABLE
+		+INVENTORY.PERSISTENTPOWER
+	}
+	
+	override bool HandlePickup(Inventory item)
+	{
+		if (item is "DoomWeapon")
+		{
+			return true; //do not process the item in any way (it stays unpicked)
+		}
+		//otherwise do what should normally be done 
+		return super.HandlePickup(item);
+	}
+}&lt;/syntaxhighlight&gt;
+
+&lt;syntaxhighlight lang="csharp"&gt;
+// This will make sure all players have the item:
+class GiveItemPickupControl : EventHandler 
+{
+	override void PlayerEntered(playerEvent e) 
+	{
+		let plr = players[e.PlayerNumber].mo;
+		if (plr) 
+		{
+			plr.GiveInventory("ItemPickupControl", 1);
+		}
+	}
+}&lt;/syntaxhighlight&gt;
+(Don't forget to register the event handler via [[MAPINFO/GameInfo definition|MAPINFO]].)
+
+A fitting application for this can be for weapon mods that replace vanilla Doom weapons directly. While the ''replaces'' keyword or a ''CheckReplacement()'' event of an [[Events and handlers|event handler]] can replace the items in the world, this doesn't prevent the player from receiving those items directly (for example, with a "give &lt;item&gt;" console cheat, or any of the ZScript or ACS "give" functions). This can be a problem, for example, in custom maps with ACS scripts that do something like this:
+
+&lt;syntaxhighlight lang="csharp"&gt;
+script 50 (void)
+{
+	Print(s:"You hand your weapons over to security.");
+	ClearInventory();
+	GiveInventory("Fist", 1);
+}&lt;/syntaxhighlight&gt;
+
+This is where a HandlePickup() override becomes useful. Let's say your mod has a ''Custom_Fist'' class that you want the player to receive instead of [[Fist]]. You can achieve this by making sure the players have this control item in their inventory:
+
+&lt;syntaxhighlight lang="csharp"&gt;
+class FistPickupControl : Inventory
+{
+	Default
+	{
+		inventory.maxamount 1;
+		+INVENTORY.UNDROPPABLE
+		+INVENTORY.UNTOSSABLE
+		+INVENTORY.PERSISTENTPOWER
+	}
+	
+	override bool HandlePickup(Inventory item)
+	{
+		if (item.GetClass() == "Fist")
+		{
+			// Setting bPickupgood to true makes sure the original item 
+			// is "consumed" (removed from the map). Obviously, a Fist 
+			// can't be a pickup on the map, but it's relevant for other 
+			// items that can:
+			item.bPickupgood = true;
+			owner.GiveInventory("Custom_Fist", 1); // Give the replacement
+			return true; // Do not process Fist further
+		}
+		return super.HandlePickup(item);
+	}
+}&lt;/syntaxhighlight&gt;
+
+With the help of arrays and/or a switch block this could be expanded to handle all weapons. This will not only make a weapon mod compatible with ACS scripts as described above, but will also make sure that the player doesn't receive a double set of weapons when using ''give all'' (which may not look nice on the HUD, and may also lead to them being accidentally auto-switched to a vanilla weapon). This can also be applied to any other type of item.
+
+==See also==
+* [[ZScript virtual functions|Virtual functions]]
+
+[[Category:ZScript]]
+[[Category:Inventory]]</text>
+    <sha1>gvorpz4rcqlutxn3yngf3fahvlcbmzo</sha1>
+  </revision>
+</page>

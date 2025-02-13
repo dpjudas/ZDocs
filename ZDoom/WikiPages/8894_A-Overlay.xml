@@ -1,0 +1,58 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>A Overlay</title>
+  <ns>0</ns>
+  <id>8894</id>
+  <revision>
+    <id>53785</id>
+    <parentid>53767</parentid>
+    <timestamp>2024-11-19T10:59:31Z</timestamp>
+    <contributor>
+      <username>Jekyll Grim Payne</username>
+      <id>2175</id>
+    </contributor>
+    <minor />
+    <origin>53785</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="3322" sha1="492vcm5cssxmmajks24j5mvtaje5oa0" xml:space="preserve">__NOTOC__
+{{DISPLAYTITLE:A_Overlay}}
+'''{{class|Actor}}'''
+
+{{c|bool '''A_Overlay'''(int ''layer'', statelabel ''start'' }}={{c| null, bool ''nooverride'' }}={{c| false)}}
+== Usage ==
+This function is a considerably expanded version of [[A_GunFlash]], allowing users to create multi-layer weapon animations.
+
+Note, although this functions is defined in {{class|Actor}}, its behavior is tied to the {{class|PSprite|'''PSprite class'''}}. As such, it can only be utilized in those classes that have access to PSprite and can create new instances of it, which includes {{class|PlayerPawn}} and classes based on {{class|StateProvider}}: {{class|Weapon}} and {{class|CustomInventory}}. In case of '''StateProvider''', this function can ''only'' be called in states that are already being drawn with the help of a PSprite, i.e. the states that are designed to draw sprites on the screen (so, for example, you can use it in the weapon's Ready/Fire/Hold and similar states, but not its Spawn states). For manually creating a new layer without [[A_Overlay]], see [[Structs:PlayerInfo#PlayerInfo_PSprite_methods|'''PlayerInfo PSprite methods''']].
+
+Regular actors, {{class|Inventory|Inventory items}} and such can NOT utilize overlays or PSprite in any way.
+
+Calling '''A_Overlay''' creates a new sprite layer (which is handled by a new instance of {{class|PSprite}}) and sends that layer into the specified state sequence. That state sequence will be played on a separate layer. Note that you can create multiple layers that utilize the same state sequence (thus, independently showing multiple versions of the same animation on different layers).
+
+To specify different behaviors for overlays, use [[A_OverlayFlags]].
+
+== Parameters ==
+*{{c|int '''layer'''}}
+:Indicates the draw hierarchy for the layer. Higher numbered layers will be drawn over lower numbers.
+:There are several layer aliases that are used by GZDoom:
+:*{{c|'''PSP_STRIFEHANDS'''}} (-1) - Used by [[A_ItBurnsItBurns]] in Strife. This should never be utilized by '''A_Overlay''' due to special hardcoded quirks.
+:*{{c|'''PSP_WEAPON'''}} (1) - Used by the actual weapon. This should never be utilized by '''A_Overlay''' because it must not be overridden; the core weapon logic is tied to this layer. However, it's fine to use other overlay functions on this layer (like [[A_OverlayFlags]], [[A_OverlayScale]], etc.).
+:*{{c|'''PSP_FLASH'''}} (1000) - Used by [[A_GunFlash]]. This can be freely utilized by custom overlays, if desired.
+:It's recommended that custom layers utilize values starting with -2 and below or 2 and above. The number of layers is not limited.
+:Using &lt;code&gt;OverlayID()&lt;/code&gt; for {{c|layer}} will return the index of the layer used by the state sequence where this function is called. This is useful for other overlay functions but should ''not'' be used by '''A_Overlay''' because the layer will try to override itself.
+*{{c|statelabel '''start'''}}
+:The name of the state label that the overlay should draw.
+*{{c|bool '''nooverride'''}}
+:If set to &lt;code&gt;true&lt;/code&gt;, the function will not create an overlay if the specified layer already exists.
+== Examples ==
+{{noexamples}}
+== See Also ==
+*[[A_OverlayFlags]]
+*[[A_OverlayOffset]]
+*[[A_WeaponOffset]]
+
+{{DEFAULTSORT:Overlay}}[[category:Decorate Weapon functions]]
+
+[[Category:StateProvider]]</text>
+    <sha1>492vcm5cssxmmajks24j5mvtaje5oa0</sha1>
+  </revision>
+</page>

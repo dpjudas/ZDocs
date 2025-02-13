@@ -1,0 +1,59 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>Line SetBlocking</title>
+  <ns>0</ns>
+  <id>5215</id>
+  <revision>
+    <id>52805</id>
+    <parentid>52804</parentid>
+    <timestamp>2024-07-08T15:27:26Z</timestamp>
+    <contributor>
+      <username>Jekyll Grim Payne</username>
+      <id>2175</id>
+    </contributor>
+    <minor />
+    <comment>/* Examples */</comment>
+    <origin>52805</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="1754" sha1="7fep0hds1fqfun1zj4nd5m7vs0fhdg0" xml:space="preserve">{{DISPLAYTITLE:Line_SetBlocking}}
+{{Special|55|lineid, setflags, clearflags|Miscellaneous}}
+
+* ''lineid'': The ID of the line(s) to affect.
+
+* ''setflags'': The blocking flags to set.
+
+* ''clearflags'': The blocking flags to clear.
+
+Alters the types of things which are blocked from crossing the [[linedef]]s with the specified ''lineid''.  Any block types present in ''setflags'' are turned on, while those present in ''clearflags'' are turned off.  Types not specified in either argument are left alone.
+
+The following block types are available for use in either of the flags arguments:
+* '''BLOCKF_CREATURES''' (1): Blocks walking things (players and enemies)
+* '''BLOCKF_MONSTERS''' (2): Blocks monsters (but not players)
+* '''BLOCKF_PLAYERS''' (4): Blocks players
+* '''BLOCKF_FLOATERS''' (8): Blocks floating creatures
+* '''BLOCKF_PROJECTILES''' (16): Blocks projectiles
+* '''BLOCKF_EVERYTHING''' (32): Blocks all of the above
+* '''BLOCKF_RAILING''' (64): Emulates Strife's railing behavior (blocks actors under 32 units of the line)
+* '''BLOCKF_USE''' (128): Blocks switches from being used across the line
+* '''BLOCKF_SIGHT''' (256): Blocks monster line of sight
+* '''BLOCKF_HITSCAN''' (512): Blocks [[hitscan]] attacks
+* '''BLOCKF_SOUND''' (1024): Blocks sound
+* '''BLOCKF_LANDMONSTERS''' (2048): Blocks land monsters
+
+== Examples ==
+This script will unset the "Block Everything" flag from the specified line. (It is assumed that it was set to block everything prior to that.)
+
+   script 1 (int lineid)
+   {
+      if ([[CheckInventory]]("{{class|BlueSkull}}"))
+      {
+         [[Line_SetBlocking]](lineid, 0, {{const|BLOCKF_EVERYTHING}});
+      }
+      else
+      {
+         [[Print]](s:{{color|green|"Blue Skull key is needed!"}});
+      }
+   }</text>
+    <sha1>7fep0hds1fqfun1zj4nd5m7vs0fhdg0</sha1>
+  </revision>
+</page>

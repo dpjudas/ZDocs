@@ -1,0 +1,79 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>Classes:Infrared</title>
+  <ns>0</ns>
+  <id>2492</id>
+  <revision>
+    <id>53742</id>
+    <parentid>53741</parentid>
+    <timestamp>2024-11-13T12:58:36Z</timestamp>
+    <contributor>
+      <username>Jekyll Grim Payne</username>
+      <id>2175</id>
+    </contributor>
+    <comment>/* ZScript definition */</comment>
+    <origin>53742</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="1705" sha1="qtxweybu41odaixozx0xka2ero6l1at" xml:space="preserve">{{Actor|
+| type = Powerup
+| name = Light-amplification visor
+| class = Infrared
+| game = Doom
+| doomednum = 2045
+| spawnid = 138
+| spawnname = T_LIGHTAMP 
+}}[[Classes]]: [[Classes:Inventory|Inventory]]&amp;rarr;[[Classes:PowerupGiver|PowerupGiver]]&amp;rarr;&lt;u&gt;Infrared&lt;/u&gt;
+
+The light amplification goggles illuminate the whole level. In [[GZDoom]] and [[Skulltag]], the OpenGL renderer's option of "enhanced light vision mode" turns some actors (monsters and pickups) an inverted white palette as in the effect of the [[Classes:InvulnerabilitySphere|invulnerability sphere]], and gives a strong green hue to everything else.
+
+This item is based on {{class|PowerupGiver}}, and the effect itself is provided with the {{class|PowerLightAmp}} powerup class.
+
+=== [[ZScript]] definition ===
+{{ZScriptDefinitionNote|actors/doom/doomartifacts.zs}}
+&lt;syntaxhighlight lang="csharp"&gt;
+class Infrared : PowerupGiver
+{
+	Default
+	{
+		+COUNTITEM
+		+INVENTORY.AUTOACTIVATE
+		+INVENTORY.ALWAYSPICKUP
+		Inventory.MaxAmount 0;
+		Powerup.Type "PowerLightAmp";
+		Inventory.PickupMessage "$GOTVISOR";
+	}
+	States
+	{
+	Spawn:
+		PVIS A 6 Bright;
+		PVIS B 6;
+		Loop;
+	}
+}
+&lt;/syntaxhighlight&gt;
+
+=== [[DECORATE]] definition ===
+{{DecorateDefinitionNote}}
+ ACTOR &lt;u&gt;Infrared&lt;/u&gt; : {{Class|PowerupGiver}}
+ {
+   +{{Property|COUNTITEM}}
+   +{{Property|INVENTORY.AUTOACTIVATE}}
+   +{{Property|INVENTORY.ALWAYSPICKUP}}
+   {{Property|Inventory.MaxAmount}} 0
+   {{Property|Powerup.Type}} "{{Class|PowerLightAmp|LightAmp}}"
+   {{Property|Inventory.PickupMessage}} "$GOTVISOR" // "Light Amplification Visor"
+   States
+   {
+   Spawn:
+     PVIS A 6 Bright
+     PVIS B 6
+     Loop
+   }
+ }
+
+=== See also ===
+* {{class|PowerupGiver}}
+* {{class|PowerLightAmp}}</text>
+    <sha1>qtxweybu41odaixozx0xka2ero6l1at</sha1>
+  </revision>
+</page>

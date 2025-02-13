@@ -1,0 +1,57 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>ThingCountName</title>
+  <ns>0</ns>
+  <id>2885</id>
+  <revision>
+    <id>26428</id>
+    <parentid>22912</parentid>
+    <timestamp>2010-04-01T07:46:13Z</timestamp>
+    <contributor>
+      <username>Gez</username>
+      <id>1283</id>
+    </contributor>
+    <minor />
+    <origin>26428</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="1157" sha1="c5rch8p904mcj72k6nf6cg43c9k1na8" xml:space="preserve">int '''ThingCountName''' (str ''classname'', int ''tid'')
+
+==Usage==
+
+'''ThingCountName''' counts all things specified on the map. Monsters are specified by their names (see [[Classes]]), or by name and tid.
+
+'''ThingCountName''' will not count dead monsters, even though their things still exist and can be used, for instance, by [[SpawnSpot]].
+
+==Example==
+
+For example let's say you have a map with 10 enemies:
+
+Imp - tid 5&lt;br&gt;
+Imp - tid 5&lt;br&gt;
+Imp - tid 0&lt;br&gt;
+Baron - tid 5&lt;br&gt;
+Baron - tid 5&lt;br&gt;
+Baron - tid 4&lt;br&gt;
+Baron - tid 0&lt;br&gt;
+Demon - tid 5&lt;br&gt;
+Demon - tid 4&lt;br&gt;
+Demon - tid 0&lt;br&gt;
+
+Here are some example values:&lt;br&gt;
+
+&lt;tt&gt;ThingCountName("DoomImp", 0)&lt;/tt&gt; = 3&lt;br&gt;
+&lt;tt&gt;ThingCountName("BaronOfHell", 0)&lt;/tt&gt; = 4&lt;br&gt;
+&lt;tt&gt;ThingCountName("Demon", 0)&lt;/tt&gt; = 3&lt;br&gt;
+&lt;tt&gt;ThingCountName("DoomImp", 5)&lt;/tt&gt; = 2&lt;br&gt;
+&lt;tt&gt;ThingCountName("Demon", 4)&lt;/tt&gt; = 1&lt;br&gt;
+&lt;tt&gt;ThingCountName("DoomImp", 4)&lt;/tt&gt; = 0&lt;br&gt;
+
+Notice that specifying a tid of 0 means that ThingCountName will just ignore the tid and count all instances of the specified thing, as opposed to only counting things with a tid of 0.
+
+==See also==
+* [[ThingCount]]
+
+[[category:ACS Information functions]]</text>
+    <sha1>c5rch8p904mcj72k6nf6cg43c9k1na8</sha1>
+  </revision>
+</page>

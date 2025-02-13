@@ -1,0 +1,51 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>A SprayDecal</title>
+  <ns>0</ns>
+  <id>9053</id>
+  <revision>
+    <id>54189</id>
+    <parentid>53964</parentid>
+    <timestamp>2025-02-06T23:17:28Z</timestamp>
+    <contributor>
+      <username>Inkoalawetrust</username>
+      <id>2604</id>
+    </contributor>
+    <comment>Documented new translation parameter.</comment>
+    <origin>54189</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="1898" sha1="dlka30eq8ywijotdnxmborrvvsqoww6" xml:space="preserve">{{DISPLAYTITLE:A_SprayDecal}}
+'''{{class|Actor}}'''
+
+{{c|void '''A_SprayDecal''' (String ''name'', double ''dist'' }}={{c| 172)}} - [[DECORATE|''Decorate version'']]
+&lt;br&gt;
+{{c|void '''A_SprayDecal''' (String ''name'', double ''dist'' }}={{c| 172, vector3 ''offset'' }}={{c| (0, 0, 0), vector3 ''direction'' }}={{c| (0, 0, 0), bool ''useBloodColor'' }}={{c| false, color ''decalColor'' }}={{c| 0}}, {{c|TranslationID ''translation'' }}={{c| 0)}} - [[ZScript|''ZScript version'']]
+
+==Usage==
+Generates the specified [[decal]] on a nearby wall. The calling actor needs to be facing the wall in order to successfully generate the decal.
+
+===Parameters===
+*{{c|String '''name'''}}
+:The name of the decal to generate as defined in [[DECALDEF]].
+*{{c|double '''dist'''}}
+:The maximum distance in map units the calling actor can stand from the wall and still successfully generate the decal. Default is 172.0.
+*{{c|vector3 '''offset'''}}
+:The offset from the caller's position. If no offset is passed, uses the center of the caller.
+*{{c|vector3 '''direction'''}}
+:The direction to test for surfaces. If none is passed, the caller's angle and pitch are used.
+*{{c|bool '''useBloodColor'''}}
+:If this is &lt;code&gt;true&lt;/code&gt;, the sprayed decal is shaded to match the calling actor's {{Property|BloodColor|blood color}}, as stored in the actor's &lt;code&gt;bloodTranslation&lt;/code&gt; field. Default is &lt;code&gt;false&lt;/code&gt;.
+*{{c|color '''decalColor'''}}
+:The desired color of the decal. Due to how decals work in the engine, the decal is only properly colorized if the graphic is grayscaled. This parameter takes precedence over &lt;code&gt;useBloodColor&lt;/code&gt;. Default is &lt;code&gt;0&lt;/code&gt;.
+*{{c|TranslationID '''translation'''}} {{git|864fe1f}}
+:The [[translation]] to use for recoloring the decal. Default is &lt;code&gt;0&lt;/code&gt;.
+
+==Examples==
+{{noexamples}}
+
+[[Category:ZScript]]
+[[Category:DECORATE]]
+[[Category:Action functions]]</text>
+    <sha1>dlka30eq8ywijotdnxmborrvvsqoww6</sha1>
+  </revision>
+</page>

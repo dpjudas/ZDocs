@@ -1,0 +1,55 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>Classes:LittleFly</title>
+  <ns>0</ns>
+  <id>7810</id>
+  <revision>
+    <id>44288</id>
+    <parentid>41186</parentid>
+    <timestamp>2017-03-20T13:24:52Z</timestamp>
+    <contributor>
+      <username>Gez</username>
+      <id>1283</id>
+    </contributor>
+    <minor />
+    <comment>removing "new" for GZDoom 2.4.0 release</comment>
+    <origin>44288</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="730" sha1="ezvt5hhfv1n9rohrwl6zo8dc4miwufm" xml:space="preserve">{{Actor|
+| type = SFX
+| name = Fly
+| class = LittleFly
+| game = Hexen
+| doomednum = 112
+}}[[Classes]]: &lt;u&gt;LittleFly&lt;/u&gt;&lt;br&gt;
+
+A fly from the retail beta of ''[[Hexen]]'' which buzzes around corpses. The sprites are included with [[ZDoom]].
+
+==== [[DECORATE]] definition ====
+ ACTOR &lt;u&gt;LittleFly&lt;/u&gt;
+ {
+   +{{Flag|NOBLOCKMAP}}
+   +{{Flag|NOGRAVITY}}
+   +{{Flag|CANPASS}}
+   {{Property|Speed}} 6
+   {{Property|Radius}} 5
+   {{Property|Height}} 5
+   {{Property|Mass}} 2
+   {{Property|ActiveSound}} "FlyBuzz"
+ 
+   action native [[A_FlySearch]]();
+   action native [[A_FlyBuzz]]();
+ 
+   States
+   {
+   Spawn:
+     TNT1 A 20 [[A_FlySearch]] // Invisible when not flying
+     Loop
+   Buzz:
+     AFLY ABCD 3 [[A_FlyBuzz]]
+     Loop
+   }
+ }</text>
+    <sha1>ezvt5hhfv1n9rohrwl6zo8dc4miwufm</sha1>
+  </revision>
+</page>

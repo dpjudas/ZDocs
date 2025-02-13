@@ -1,0 +1,237 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>Classes:Archvile</title>
+  <ns>0</ns>
+  <id>2465</id>
+  <revision>
+    <id>49958</id>
+    <parentid>48933</parentid>
+    <timestamp>2022-12-11T14:00:44Z</timestamp>
+    <contributor>
+      <username>Gez</username>
+      <id>1283</id>
+    </contributor>
+    <minor />
+    <comment>not necessarily DECORATE since ZScript exists</comment>
+    <origin>49958</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="5698" sha1="45lca9hsrioswbztbicd39mf55kqz27" xml:space="preserve">{{Actor|
+| type = Monster
+| name = Arch-Vile
+| class = Archvile
+| game = Doom2
+| doomednum = 64
+| thingindex = 4
+| spawnid = 111
+| spawnname = T_VILE
+}}
+
+[[Classes]]: &lt;u&gt;Archvile&lt;/u&gt;&lt;br&gt;
+&amp;ensp;&amp;rarr;[[Classes:StealthArchvile|StealthArchvile]]
+
+
+The Archvile's primary attack sends a huge flame into its target, which then punts it up into the air and knocking large amounts of health. The only way to dodge it is to get behind a wall fast, or hurt the Archvile before it can complete the attack. The Archvile can also resurrect it's hellish brethren. However, Archviles cannot resurrect the [[Classes:Cyberdemon|Cyberdemon]], [[Classes:SpiderMastermind|Spider Mastermind]], [[Classes:LostSoul|Lost Soul]], [[Classes:PainElemental|Pain Elemental]], or fellow Archviles. The Archvile is lacking from the console versions of Doom.
+
+The Archvile can only resurrect an actor if they have a Raise [[Actor states|state]] in their actor definition.  By default, the large enemies (listed above) do not have this state and so the Archvile won't attempt to resurrect them.  If you want to create a new actor inherited from one with a Raise state, but don't want the new monster to be resurrectable, you can disable the Raise state using the following code in your actor:
+
+ Raise:
+   Stop
+
+
+==== [[ZScript]] definition ====
+{{ZScriptDefinitionNote|actors/doom/archvile.zs}}
+ class Archvile : Actor
+ {
+ 	Default
+ 	{
+ 		{{Property|Health}} 700;
+ 		{{Property|Radius}} 20;
+ 		{{Property|Height}} 56;
+ 		{{Property|Mass}} 500;
+ 		{{Property|Speed}} 15;
+ 		{{Property|PainChance}} 10;
+ 		{{Property|Monster}};
+ 		{{Property|MaxTargetRange}} 896;
+ 		+{{Flag|QUICKTORETALIATE}} 
+ 		+{{Flag|FLOORCLIP}} 
+ 		+{{Flag|NOTARGET}}
+ 		{{Property|SeeSound}} "vile/sight";
+ 		{{Property|PainSound}} "vile/pain";
+ 		{{Property|DeathSound}} "vile/death";
+ 		{{Property|ActiveSound}} "vile/active";
+ 		{{Property|MeleeSound}} "vile/stop";
+ 		{{Property|Obituary}} "$OB_VILE";
+ 		{{Property|Tag}} "$FN_ARCH";
+ 	}
+ 	States
+ 	{
+ 	Spawn:
+ 		VILE AB 10 [[A_Look]];
+ 		Loop;
+ 	See:
+ 		VILE AABBCCDDEEFF 2 [[A_VileChase]];
+ 		Loop;
+ 	Missile:
+ 		VILE G 0 BRIGHT [[A_VileStart]];
+ 		VILE G 10 BRIGHT [[A_FaceTarget]];
+ 		VILE H 8 BRIGHT [[A_VileTarget]];
+ 		VILE IJKLMN 8 BRIGHT [[A_FaceTarget]];
+ 		VILE O 8 BRIGHT [[A_VileAttack]];
+ 		VILE P 20 BRIGHT;
+ 		Goto See;
+ 	Heal:
+ 		VILE [\] 10 BRIGHT;
+ 		Goto See;
+ 	Pain:
+ 		VILE Q 5;
+ 		VILE Q 5 [[A_Pain]];
+ 		Goto See;
+ 	Death:
+ 		VILE Q 7;
+ 		VILE R 7 [[A_Scream]];
+ 		VILE S 7 [[A_NoBlocking]];
+ 		VILE TUVWXY 7;
+ 		VILE Z -1;
+ 		Stop;
+ 	}
+ }
+ 
+ extend class Actor
+ {
+ 
+ 	void [[A_VileStart]]()
+ 	{
+ 		[[A_StartSound]] ("vile/start", CHAN_VOICE);
+ 	}
+ 	
+ 	//
+ 	// [[A_VileTarget]]
+ 	// Spawn the hellfire
+ 	//
+ 	void [[A_VileTarget]](class&lt;Actor&gt; fire = "ArchvileFire")
+ 	{
+ 		if (target)
+ 		{
+ 			[[A_FaceTarget]] ();
+ 
+ 			Actor fog = Spawn (fire, target.Pos, ALLOW_REPLACE);
+ 			if (fog != null)
+ 			{
+ 				tracer = fog;
+ 				fog.target = self;
+ 				fog.tracer = self.target;
+ 				fog.[[A_Fire]](0);
+ 			}
+ 		}
+ 	}
+ 	
+ 	void [[A_VileAttack]](sound snd = "vile/stop", int initialdmg = 20, int blastdmg = 70, int blastradius = 70, double thrust = 1.0, name damagetype = "Fire", int flags = 0)
+ 	{
+ 		Actor targ = target;
+ 		if (targ)
+ 		{
+ 			[[A_FaceTarget]]();
+ 			if (!CheckSight(targ, 0)) return;
+ 			[[A_StartSound]](snd, CHAN_WEAPON);
+ 			int newdam = targ.DamageMobj (self, self, initialdmg, (flags &amp; VAF_DMGTYPEAPPLYTODIRECT)? damagetype : 'none');
+ 
+ 			targ.TraceBleed (newdam &gt; 0 ? newdam : initialdmg, self);
+ 			
+ 			Actor fire = tracer;
+ 			if (fire)
+ 			{
+ 				// move the fire between the vile and the player
+ 				fire.SetOrigin(targ.Vec3Angle(-24., angle, 0), true);
+ 				fire.[[A_Explode]](blastdmg, blastradius, XF_NOSPLASH, false, 0, 0, 0, "BulletPuff", damagetype);
+ 			}
+ 			if (!targ.bDontThrust)
+ 			{
+ 				targ.Vel.z = thrust * 1000 / max(1, targ.Mass);
+ 			}
+ 		}
+ 	}
+ 	
+ 	void [[A_StartFire]]()
+ 	{
+ 		[[A_StartSound]] ("vile/firestrt", CHAN_BODY);
+ 		[[A_Fire]]();
+ 	}
+ 	
+ 	//
+ 	// [[A_Fire]]
+ 	// Keep fire in front of player unless out of sight
+ 	//
+ 	void [[A_Fire]](double spawnheight = 0)
+ 	{
+ 		Actor dest = tracer;
+ 		if (!dest || !target) return;
+ 				
+ 		// don't move it if the vile lost sight
+ 		if (!target.CheckSight (dest, 0) ) return;
+ 
+ 		SetOrigin(dest.Vec3Angle(24, dest.angle, spawnheight), true);
+ 	}
+ 	
+ 	void [[A_FireCrackle]]()
+ 	{
+ 		[[A_StartSound]] ("vile/firecrkl", CHAN_BODY);
+ 		[[A_Fire]]();
+ 	}
+ }
+
+==== [[DECORATE]] definition ====
+{{DecorateDefinitionNote}}
+ ACTOR &lt;u&gt;Archvile&lt;/u&gt;
+ {
+   {{Property|Health}} 700
+   {{Property|Radius}} 20
+   {{Property|Height}} 56
+   {{Property|Mass}} 500
+   {{Property|Speed}} 15
+   {{Property|PainChance}} 10
+   {{Property|Monster}}
+   {{Property|MaxTargetRange}} 896
+   +{{Flag|QUICKTORETALIATE}}
+   +{{Flag|FLOORCLIP}}
+   +{{Flag|NOTARGET}}
+   {{Property|SeeSound}} "vile/sight"
+   {{Property|PainSound}} "vile/pain"
+   {{Property|DeathSound}} "vile/death"
+   {{Property|ActiveSound}} "vile/active"
+   {{Property|MeleeSound}} "vile/stop"
+   {{Property|Obituary}} "$OB_VILE"
+   States
+   {
+   Spawn:
+     VILE AB 10 [[A_Look]]
+     Loop
+   See:
+     VILE AABBCCDDEEFF 2 [[A_VileChase]]
+     Loop
+   Missile:
+     VILE G 0 Bright [[A_VileStart]]
+     VILE G 10 Bright [[A_FaceTarget]]
+     VILE H 8 Bright [[A_VileTarget]]
+     VILE IJKLMN 8 Bright [[A_FaceTarget]]
+     VILE O 8 Bright [[A_VileAttack]]
+     VILE P 20 Bright
+     Goto See
+   Heal:
+     VILE "[\]" 10 Bright
+     Goto See
+   Pain:
+     VILE Q 5   
+     VILE Q 5 [[A_Pain]]
+     Goto See
+   Death:
+     VILE Q 7
+     VILE R 7 [[A_Scream]]
+     VILE S 7 [[A_NoBlocking]]
+     VILE TUVWXY 7
+     VILE Z -1
+     Stop
+   }
+ }</text>
+    <sha1>45lca9hsrioswbztbicd39mf55kqz27</sha1>
+  </revision>
+</page>

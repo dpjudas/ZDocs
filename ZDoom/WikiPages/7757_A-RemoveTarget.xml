@@ -1,0 +1,60 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>A RemoveTarget</title>
+  <ns>0</ns>
+  <id>7757</id>
+  <revision>
+    <id>46800</id>
+    <parentid>44261</parentid>
+    <timestamp>2019-07-16T06:01:01Z</timestamp>
+    <contributor>
+      <username>Quaker540</username>
+      <id>2135</id>
+    </contributor>
+    <minor />
+    <comment>Replaced the deprecated action function</comment>
+    <origin>46800</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="2449" sha1="j4vi56zi83i5t8jlgk5wcylbpinoa7u" xml:space="preserve">{{codepointer|Monster AI}}
+'''A_RemoveTarget''' [(int ''flags'' [, string ''filter'' [, string ''species'']])]
+
+==Usage==
+Called by monsters to completely remove the monster that is in their [[actor pointer|target]] pointer. Currently the only function that sets the necessary information is [[A_SpawnItemEx]].
+
+Monsters spawned with [[A_SpawnProjectile]] are not affected by this. [[A_SpawnProjectile]] was never designed to spawn monsters.
+
+This function can target actors that are non-monsters, but only by using flags.
+
+=== Parameters ===
+*''flags'': the following flags can be combined using the {{!}} character between name constants:
+**'''RMVF_MISSILES''' - Allows removal of missiles associated with the pointer.
+**'''RMVF_NOMONSTERS''' - The function will not remove monsters and simply skip them. By default, before the introduction of assigning masters to missiles, similar functions would only work on monsters. To ensure consistency, only monsters are allowed for removal by default.
+**'''RMVF_MISC''' - Allows removal of things that are neither missile nor monster.
+**'''RMVF_EVERYTHING''' - Overrides all other flags. Disables discrimination and removes the actor of any type regardless of what it is.
+**'''RMVF_EXFILTER''' — inverts the case of the class name filter; the calling actor's target is only removed if its class name does not match the value passed to ''filter''.
+**'''RMVF_EXSPECIES''' — inverts the case of the [[species]] filter; the calling actor's target is only removed if its species does not match the value passed to ''species''.
+**'''RMVF_EITHER''' — the calling actor's target is removed if either of its class name or [[species]] matches the values passed to ''filter'' and ''species'', respectively.
+*''filter'': the actor class to remove. The calling actor's target is only removed if its class name matches the specified filter class. Default is {{c|"None"}}.
+*''species'': the actor [[species]] to remove. The calling actor's target is only removed if its species matches the specified species filter. Default is {{c|"None"}}.
+
+== Examples ==
+This is a modified imp, whom if summoned or introduced in an area with enemies, 
+will instantly remove any monsters that it attacks, using A_RemoveTarget.
+
+ ACTOR AdminImp : Doomimp
+ {
+  +FRIENDLY
+  +MISSILEMORE
+  +MISSILEEVENMORE
+  States
+  {
+  Melee:
+  Missile:
+    TROO EF 8 A_FaceTarget
+    TROO G 6 A_RemoveTarget (RMVF_EVERYTHING)
+    Goto See
+  }
+ }</text>
+    <sha1>j4vi56zi83i5t8jlgk5wcylbpinoa7u</sha1>
+  </revision>
+</page>

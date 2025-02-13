@@ -1,0 +1,47 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>Classes:HealthBonus</title>
+  <ns>0</ns>
+  <id>2544</id>
+  <revision>
+    <id>39259</id>
+    <parentid>33870</parentid>
+    <timestamp>2015-04-28T20:26:28Z</timestamp>
+    <contributor>
+      <username>Blue Shadow</username>
+      <id>2021</id>
+    </contributor>
+    <minor />
+    <comment>/* DECORATE definition */ Updated</comment>
+    <origin>39259</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="915" sha1="4u8kszuc6ceznej1vg4exx5ptcm8d8s" xml:space="preserve">{{Actor|
+| type = Health
+| name = Health bonus
+| class = HealthBonus
+| game = Doom
+| doomednum = 2014
+| spawnid = 152
+| spawnname = T_HEALTHBONUS 
+}}[[Classes]]: [[Classes:Inventory|Inventory]]&amp;rarr;[[Classes:Health|Health]]&amp;rarr;&lt;u&gt;HealthBonus&lt;/u&gt;
+
+A health bonus is an item in Doom which gives the player one health point. However, unlike [[Classes:Medikit|medikits]] and [[Classes:Stimpack|stimpacks]], the health bonus can go ''over'' the 100 HP limit, up to 200. A related item that has a larger effect is the [[Classes:Soulsphere|soul sphere]].
+
+==== [[DECORATE]] definition ====
+ ACTOR &lt;u&gt;HealthBonus&lt;/u&gt; : {{Class|Health}}
+ {
+   +{{Flag|COUNTITEM}}
+   +{{Flag|INVENTORY.ALWAYSPICKUP}}
+   {{Property|Inventory.Amount}} 1
+   {{Property|Inventory.MaxAmount}} 200
+   {{Property|Inventory.PickupMessage}} "$GOTHTHBONUS" // "Picked up a health bonus."
+   States
+   {
+   Spawn:
+     BON1 ABCDCB 6
+     Loop
+   }
+ }</text>
+    <sha1>4u8kszuc6ceznej1vg4exx5ptcm8d8s</sha1>
+  </revision>
+</page>

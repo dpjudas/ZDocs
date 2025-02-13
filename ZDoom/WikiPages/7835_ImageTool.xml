@@ -1,0 +1,125 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>ImageTool</title>
+  <ns>0</ns>
+  <id>7835</id>
+  <revision>
+    <id>40239</id>
+    <parentid>40234</parentid>
+    <timestamp>2015-06-30T22:09:32Z</timestamp>
+    <contributor>
+      <username>Gez</username>
+      <id>1283</id>
+    </contributor>
+    <minor />
+    <origin>40239</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="6888" sha1="l4ee52zqkx5ovf5jxfkvhas730ysohj" xml:space="preserve">'''ImageTool''' is a generalized image conversion program with support for some special [[ZDoom]] [[image format|graphic formats]]. It can read images saved as ILBM, BMP, or PCX and convert them to ZDoom fonts and images. You can also reverse the conversion to produce a normal graphic file out of a ZDoom font or image, or you can just convert between standard image formats without using a ZDoom format at all.
+
+== Usage ==
+In its simplest use, you provide Imagetool with a source graphic and a target on the command line, and it performs the conversion. It also supports scripting in order to automate multiple conversions.
+
+To just convert a single file, it is probably easiest to not bother with scripting. For instance, to create the console font from the included confont.pcx, you would use the commandline:
+
+    imagetool confont confont.pcx confont.lmp
+
+The second word, confont, tells Imagetool that you want to create a console font. The third word, confont.pcx, is the name of the image file that holds the font data, and the fourth word, confont.lmp is the name of the new file to write to disk.
+
+Similarly, to create the big Doom font from the included bigfont.pcx, you would use the commandline:
+
+    imagetool font bigfont.pcx dbigfont.lmp
+
+In this case, the type of file being created is font instead of confont, because normal fonts have fewer restrictions than console fonts.
+
+The different file types that can be produced are '''confont''', '''font''', '''image''', and '''xhair'''.
+
+===confont===
+This produces a file of type [[FON1]].
+
+The source image for a console font must have 256 characters of identical size arranged in a 16x16 grid. Palette entry 0 indicates transparency, palette entry 1 is the darkest color a character can have, and palette entry 255 is the lightest color. Values in between range between the two. The source image's palette is ignored when the font is created, so you should design the font with a palette like this to best visualize how it will appear in-game.
+
+===font===
+This produces a file of type [[FON2]]. Unlike FON1, this format supports custom palettes and characters of varying widths. You also don't need to supply a full 256 characters and, in fact, cannot do so without scripting.
+
+The source image should have each character surrounded by a box made up of palette entry 255. Like confonts, palette entry 0 indicates transparency, but unlike confonts, all the other 254 colors in the source image's palette are used to colorize the font, so you can use any palette you want when designing the font.
+
+When converting with the command line, the first character must be a space, and the box surrounding it must start in the upper-left corner of the source image. These restrictions are relaxed if you use scripting, which I will discuss later.
+
+You can use this font (or a confont) with a ZDoom hudmessage by executing the ACS command [[SetFont]]("fontname") first. The fontname passed to setfont should be the same as the font's lump name inside a wad. If you use a hudmessage color of {{c|CR_UNTRANSLATED}}, then the font will use the palette you designed it with. Otherwise, it will be recolored to a single hue of differing shades.
+
+===image===
+This produces a file of type [[IMGZ]].
+
+This just an image without any special features. Color 0 indicates transparency, and the source image's palette should match the palette of the game you intend to use the image with. You can use it for crosshairs and status bar graphics but not much else.
+
+===xhair===
+Xhair is identical to image, except it sets the image's origin to the center of the graphic if it doesn't specify its own origin. ILBM is the only supported graphic format that allows for specifying an image's origin, which is why xhair is provided as an alternative to image.
+
+
+You can also write a normal graphic file by using pcx, bmp, or ilbm as the destination type instead of one of the four types listed above.
+
+If you have some graphics that use palette entry 247 to indicate translucency (because most old Doom tools treate 247 that way), you can use the -0 switch on the command line to swap colors 0 and 247 in the source image.
+
+==Scripting==
+To run a script with Imagetool, you start it with the command line
+
+    imagetool script &lt;script file&gt;
+
+&lt;Script file&gt; is a text file you create with Notepad or some other text
+editor and contains a list of commands that get processed in sequence. Each
+command ends with a semicolon. An example script that will create the big
+Doom font is:
+
+    load "bigfont.pcx";
+    font "dbigfont.lmp";
+
+The available commands are:
+
+;transparentcolor &lt;color&gt;;
+:This works like the -0 command line switch, except you can specify any &lt;color&gt; instead of 247. The next image loaded will swap colors 0 and the one specified here.
+
+;load "image";
+:Before doing anything else, you must load an image. This command does that.
+
+;origin (x, y);
+:Sets the image's origin to the coordinate (x, y), overriding any origin that might have been stored with the image. This is only meaningful if you use the xhair or image commands, because those are the only commands that care about image origins.
+
+;image "file";
+:Creates an IMGZ file. If an origin was not previously specified, it will be set to (0, 0).
+
+;xhair "file";
+:Creates an IMGZ file. If an origin was not previously specified, it will be set to the center of the image -- (width/2, height/2).
+
+;confont "file";
+:Creates a FON1 file. The discussion of using confont from the command line also applies here.
+
+;font "file" [shading=type] [optional character ranges] ... ;
+:If you just use font "file"; this command behaves like the font command line described above. You can have more control over the process by specifying optional arguments after the filename.
+
+To change how the font looks when colorized, you can add either
+
+    shading=normal       -or-       shading=console
+
+to the line. For normal shading, the colors used range between a dark and light version of the selected color. For console shading, the colors used range between the selected color and white.
+
+You can include multiple character ranges in a single image by adding them to the line too by writing them as:
+
+    x y start
+
+X and Y are the coordinate of the first character in this range, and start is the first character in this range.
+
+Suppose you have a font that just consists of numbers and uppercase letters, and the numbers start at (0,0) and the letters are at (0,50). You also want them to be shaded using console-style shading instead of normal shading. You could use the following script to create this font:
+
+ load "myfont.bmp";
+ font "myfont.lmp"
+    shading=console
+    0 0 '1'
+    0 50 'A';
+
+==Download link==
+* {{plainlink|[http://zdoom.org/files/utils/imagetool.zip imagetool.zip]}}
+* {{plainlink|[http://zdoom.org/files/utils/imagetool-src.zip imagetool source code]}}
+[[Category:Tools]]</text>
+    <sha1>l4ee52zqkx5ovf5jxfkvhas730ysohj</sha1>
+  </revision>
+</page>

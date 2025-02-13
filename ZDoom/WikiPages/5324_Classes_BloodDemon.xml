@@ -1,0 +1,65 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>Classes:BloodDemon</title>
+  <ns>0</ns>
+  <id>5324</id>
+  <revision>
+    <id>21512</id>
+    <timestamp>2009-04-20T13:37:09Z</timestamp>
+    <contributor>
+      <username>Gez</username>
+      <id>1283</id>
+    </contributor>
+    <comment>New page</comment>
+    <origin>21512</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="919" sha1="i1k99bvduuij12z74n7ipaqzjw9864u" xml:space="preserve">{{Actor|
+| type = Monster
+| name = Blood demon
+| class = BloodDemon
+| game = Skulltag
+| doomednum = 5004
+| spawnid = 156
+| spawnname = T_BLOODDEMON
+}}
+[[Classes]]: {{Class|Demon}}&amp;rarr;&lt;u&gt;BloodDemon&lt;/u&gt;&lt;br&gt;
+
+These sanguine fiends are twice as tough as the ordinary {{Class|Demon}}.
+==== [[DECORATE]] definition ====
+ ACTOR &lt;u&gt;BloodDemon&lt;/u&gt; : {{Class|Demon}} 5004
+ {
+   SpawnID 156
+   Health 300
+   Obituary "$OB_BLOODDEMON_MELEE" // "%o was chomped on by a blood demon."
+   States
+   {
+   Spawn:
+     SRG2 AB 10 [[A_Look]]
+     Loop
+   See:
+     SRG2 AABBCCDD 2 [[A_Chase]]
+     Loop
+   Pain:
+     SRG2 H 2
+     SRG2 H 2 [[A_Pain]]
+     Goto See
+   Melee:
+     SRG2 EF 8 [[A_FaceTarget]]
+     SRG2 G 8 [[A_SargAttack]]
+     Goto See
+   Death:
+     SRG2 I 8
+     SRG2 J 8 [[A_Scream]]
+     SRG2 K 4
+     SRG2 L 4 [[A_NoBlocking]]
+     SRG2 M 4
+     SRG2 N -1
+     Stop
+   Raise:
+     SRG2 NMLKJI 5
+     Goto See
+   }
+ }</text>
+    <sha1>i1k99bvduuij12z74n7ipaqzjw9864u</sha1>
+  </revision>
+</page>

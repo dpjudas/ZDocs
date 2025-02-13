@@ -1,0 +1,72 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>Activate (Line)</title>
+  <ns>0</ns>
+  <id>9675</id>
+  <revision>
+    <id>53062</id>
+    <parentid>51847</parentid>
+    <timestamp>2024-09-05T20:15:36Z</timestamp>
+    <contributor>
+      <username>Jekyll Grim Payne</username>
+      <id>2175</id>
+    </contributor>
+    <comment>/* Parameters */</comment>
+    <origin>53062</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="1728" sha1="bzi51xvk59pzxcy7lr36zxse0rbzxdc" xml:space="preserve">{{ZScriptNote}}
+
+'''[[Structs:Line|Line]]'''
+
+{{c|native bool '''Activate'''(Actor ''activator'', int ''side'', int ''type'')}}
+
+== Usage ==
+Activates the calling linedef.
+
+== Parameters ==
+*{{c|Actor '''activator'''}}
+:The actor that activated the linedef, if any.
+*{{c|int '''side'''}}
+:The side of the line to activate from. If a side of -1 specified, the height of the activator relative to the line will not be checked. {{verification}} Possible sides include:
+:*'''{{c|Line.Front}}''': The front side of the linedef.
+:*'''{{c|Line.Back}}''': The back side of the linedef.
+*{{c|int '''type'''}}
+:The activation type. Multiple can be given, but not all of these are particularly useful. Possible types include:
+{{: Line activation types}}
+
+== Return value ==
+Returns true if the line was successfully activated. False otherwise.
+
+== RemoteActivate() ==
+In addition to ''Activate()'', ZScript also has a ''RemoteActivate()'' function, which works the exact same except for the inclusion of a ''pos'' parameter:
+*''pos'': The Vector3 position to remotely activate the line from, if any. This is useful for linedefs that use range checks to see if they can be activated.
+
+== Examples ==
+This basic function can be added on an monsters' code to make them try to use whatever line last blocked them, unless it has no special.
+&lt;syntaxhighlight lang="csharp"&gt;
+	bool AttemptLineUse ()
+	{
+		if (bNoTrigger) return false;
+		
+		if (BlockingLine &amp;&amp; BlockingLine.special)
+		{
+			if (bCanUseWalls)
+			{
+				BlockingLine.Activate (Self,0,SPAC_MUse);
+				return true;
+			}
+			else if (bCanPushWalls)
+			{
+				BlockingLine.Activate (Self,0,SPAC_MPush);
+				return true;
+			}
+		}
+		
+		return false;
+	}
+&lt;/syntaxhighlight&gt;
+
+[[Category:ZScript]]</text>
+    <sha1>bzi51xvk59pzxcy7lr36zxse0rbzxdc</sha1>
+  </revision>
+</page>

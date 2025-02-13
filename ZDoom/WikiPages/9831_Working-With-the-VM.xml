@@ -1,0 +1,562 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>Working With the VM</title>
+  <ns>0</ns>
+  <id>9831</id>
+  <revision>
+    <id>53259</id>
+    <parentid>52740</parentid>
+    <timestamp>2024-10-11T19:58:18Z</timestamp>
+    <contributor>
+      <username>Boondorl</username>
+      <id>2606</id>
+    </contributor>
+    <minor />
+    <comment>/* Parameters */</comment>
+    <origin>53259</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="42507" sha1="j3r5vglz3zr0dw2wruju6r933oyw7rl" xml:space="preserve">GZDoom's VM is incredibly powerful in the flexibility it offers to front-end scripting. Unlike DECORATE and ACS, it can allow almost the entire functionality of the internal engine to be exposed including direct access to many of its variables and functions. Thanks to the VM's JIT compiler, the speed of it is almost identical to it being written in the engine itself as well. This guide will cover how to export all types of variables and functions to be used in ZScript and the many potential pitfalls that can happen when attempting to do so.
+
+Before writing any engine logic, it's best to consider whether or not the engine needs direct access to it. For instance, some things can be done purely from ZScript which prevents having to recompile translation units. It also better exposes implementation details to modders as opposed to having to access the engine's source code. Some reasons to define logic within the engine itself:
+*Implementation details need to be hidden from ZScript.
+*Certain datatypes cannot be easily exported to ZScript.
+*A function needs access to engine info that ZScript cannot or should not be able to access.
+*Writing it in ZScript would be significantly more challenging.
+For simple logic it may be best to stick to ZScript.
+
+= Variables =
+== Accessing ZScript Variables ==
+Normally working with variables isn't an issue since any exported variable must inherently exist within the engine first. For instance, the radius of an &lt;code&gt;Actor&lt;/code&gt; exists within &lt;code&gt;AActor&lt;/code&gt; itself meaning it can be manipulated directly within the engine. However, sometimes you need access to a variable defined within a ZScript class. Thankfully GZDoom has a fairly simply way of handling this. Every &lt;code&gt;DObject&lt;/code&gt; has access to a function called &lt;code&gt;ScriptVar()&lt;/code&gt; which takes an &lt;code&gt;FName&lt;/code&gt; for the field and a &lt;code&gt;PType&lt;/code&gt; for what type the variable should be (in most cases &lt;code&gt;nullptr&lt;/code&gt; can be passed for this since a specific &lt;code&gt;PType&lt;/code&gt; isn't needed).
+
+In order to access the variable, you'll first need to make sure it has a proper &lt;code&gt;FName&lt;/code&gt; definition. To do this, go to the &lt;code&gt;namedef_custom.h&lt;/code&gt; header and within it, use the '''xx()''' macro to define it. The name you give it should match the variable's name (names are case insensitive so that can be ignored). For instance, if you had a ZScript variable named &lt;code&gt;MyVariable&lt;/code&gt;, your name definition would look like:
+&lt;syntaxhighlight lang = "cpp"&gt;
+xx(MyVariable)
+&lt;/syntaxhighlight&gt;
+A new constant, '''NAME_MyVariable''', should now exist that you can pass in as the name argument. &lt;code&gt;ScriptVar()&lt;/code&gt; itself will return a void pointer to the field so it must be correctly casted to its real datatype. The nature of it being a pointer means any changes to it will be propagated back to ZScript, so care should be taken if only trying to read from it. &lt;code&gt;DObject&lt;/code&gt; offers many wrapper functions to handle getting basic types and casting for you e.g. &lt;code&gt;BoolVar()&lt;/code&gt;, &lt;code&gt;IntVar()&lt;/code&gt;, etc. These only take a name argument since they handle the &lt;code&gt;PType&lt;/code&gt; automatically.
+
+When accessing a variable, the engine will throw an error if it doesn't exist. This means that type checking is still incredibly important which can be done through the &lt;code&gt;IsKindOf()&lt;/code&gt; function. For instance, if we wanted to access  an &lt;code&gt;Inventory&lt;/code&gt;'s owner, we would do the following:
+&lt;syntaxhighlight lang = "cpp"&gt;
+void MyItemFunc(AActor* item)
+{
+    if (item == nullptr || !item-&gt;IsKindOf(NAME_Inventory))
+        return;
+
+    const AActor* owner = item-&gt;PointerVar&lt;AActor&gt;(NAME_Owner);
+    // ...
+}
+&lt;/syntaxhighlight&gt;
+
+== Exporting Variables ==
+Sometimes you want to give your scripts access to an engine value, either so it can be read directly or because a script needs it. Exporting basic datatypes is simple enough, but more complex types have a set of rules that must be followed. For any variable to be exported correctly, its datatype must be exposed to ZScript in some way. For instance, an engine-only struct could not be properly exported and the struct itself must also be exported. GZDoom will refuse to start if it detects that any datatype has not been exported correctly (this is especially important for structs). For instance, if a value is stored as a &lt;code&gt;uint8_t&lt;/code&gt; internally, it must be exported as a &lt;code&gt;uint8&lt;/code&gt; within ZScript. All exported fields must also be denoted by the &lt;code&gt;native&lt;/code&gt; keyword:
+&lt;syntaxhighlight lang = "csharp"&gt;
+native int MyVar;
+&lt;/syntaxhighlight&gt;
+
+There are some basic considerations that must be taken into account when exporting:
+*What scope should these be?
+*What level of read and write access should modders have?
+*Would an API make more sense as opposed to direct access?
+All these questions should be given thought as not everything should be directly exported. Sometimes it's best to hide the implementation details in case it needs to be reworked in the future. For instance, you might export an iterator for a list of objects instead of exporting the list directly, this way the list can be modified internally without impacting how it's used externally, preventing lots of ZScript code breakage. Scoping is important as it can impact future decisions, specifically if networking ever comes into play. When exporting something, consider if it's something the "server" should control (&lt;code&gt;play&lt;/code&gt; scope), if it's something that should be unique to each client (&lt;code&gt;ui&lt;/code&gt; scope), or if either can use it freely (&lt;code&gt;data&lt;/code&gt; scope). The &lt;code&gt;readonly&lt;/code&gt; and &lt;code&gt;internal&lt;/code&gt; ZScript keywords can also be of use for controlling write access to something. Things marked this way can still be freely modified within the engine itself, only ZScript has these limitations imposed.
+
+{{Warning|For all classes and structs defined internally and exported to ZScript, any fields the ZScript version uses must be defined within the internal class/struct and then exported, even if it's only used within ZScript. Fields defined only in the ZScript version will cause a disconnect between the internal and VM class/struct which is not supported. This does not apply to functions or any child classes that only exist within ZScript.}}
+
+=== Basic Types ===
+Most basic datatypes can be directly exported with little issue, only needing to make sure their sizes match (e.g. &lt;code&gt;int16_t&lt;/code&gt; -&gt; &lt;code&gt;int16&lt;/code&gt;, &lt;code&gt;int&lt;/code&gt; -&gt; &lt;code&gt;int&lt;/code&gt;). Structs and &lt;code&gt;DObject&lt;/code&gt;s will need to be exported directly as well in some capacity if access is required. Not every field needs to be exported and it can be limited to only select fields you desire. For instance, if you have two variables, &lt;code&gt;varA&lt;/code&gt; and &lt;code&gt;varB&lt;/code&gt;, you can choose to only export &lt;code&gt;varA&lt;/code&gt;. Below are the common macros for exporting fields:
+*'''DEFINE_FIELD(_EngineClassName, EngineVariable)'''
+:Exports the given engine variable to ZScript. The name must match in ZScript but is case insensitive e.g. if you export &lt;code&gt;varA&lt;/code&gt; the ZScript variable must also be called &lt;code&gt;varA&lt;/code&gt; and located in the given class. The first character of the class name is ignored when it's exported so if you were to export a variable from &lt;code&gt;DThinker&lt;/code&gt; it would expect it to be in the ZScript class &lt;code&gt;Thinker&lt;/code&gt;.
+:*''_EngineClassName''
+::The class/struct the variable resides in. The exported class will be just &lt;code&gt;EngineClassName&lt;/code&gt;.
+:*''EngineVariable''
+::The name of the variable as it appears in the given class.
+*'''DEFINE_FIELD_NAMED(_EngineClassName, EngineVariable, ZScriptVariableName)
+:Works similar to '''DEFINE_FIELD''' except the name of the exported variable can be changed. For instance, if you have variable &lt;code&gt;varA&lt;/code&gt; but want it to be called &lt;code&gt;myVar&lt;/code&gt; within ZScript, this would allow you to do that.
+:*''ZScriptVariableName''
+::The name of the variable as it should appear in ZScript. Your ZScript variable definition must match this name but is case insensitive.
+*'''DEFINE_FIELD_X(ZScriptClassName, EngineClassName, EngineVariable)'''
+:Works similar to '''DEFINE_FIELD''' except the name of the ZScript class can be chosen if they aren't synchronized e.g. &lt;code&gt;side_t&lt;/code&gt; vs &lt;code&gt;Side&lt;/code&gt;.
+:*''ZScriptClassName''
+::The name of the class/struct as it appears in ZScript. Your ZScript definition must match this name but is case insensitive.
+*'''DEFINE_FIELD_NAMED_X(ZScriptClassName, EngineClassName, EngineVariable, ZScriptVariableName)'''
+:A combination of '''DEFINE_FIELD_NAMED''' and '''DEFINE_FIELD_X'''.
+{{Note|&lt;code&gt;TMap&lt;/code&gt; cannot be directly exported. &lt;code&gt;ZSMap&lt;/code&gt; (and by extension &lt;code&gt;ZSMapIterator&lt;/code&gt;) should be used as the datatype if exporting to ZScript is desired.}}
+
+Sometimes you have a variable that acts as a set of bit flags and want to export specific bits as their own variable e.g. &lt;code&gt;bSolid&lt;/code&gt; in ZScript is a bit flag in the internal &lt;code&gt;flags&lt;/code&gt; variable. It's common for all bit variables like this to be prefixed with &lt;code&gt;b&lt;/code&gt; (short for boolean). The following macros allow these to be exported like this:
+*'''DEFINE_FIELD_BIT(_EngineClassName, EngineBitFlagsVariable, ZScriptVariableName, BitValue)'''
+:This has similar rules to '''DEFINE_FIELD_NAMED''' when it comes to naming conventions. The only unique aspect is the bit value to use which is commonly passed as an enum value e.g. &lt;code&gt;STF_FULLBRIGHT&lt;/code&gt;. A direct number can also be used but this is not advised since it's not clear what meaning it has.
+:*''BitValue''
+::The bit the variable should represent in the flags variable.
+*'''DEFINE_FIELD_X_BIT(ZScriptClassName, EngineClassName, EngineBitFlagsVariable, BitValue)'''
+:Cannot be used since its syntax doesn't allow any possible correct exporting of bits.
+
+Some variables are meant to be accessible from anywhere and not through any specific class or struct. Within ZScript's &lt;code&gt;*base.zs&lt;/code&gt; files is a struct named &lt;code&gt;_&lt;/code&gt;. This is where all definitions for global variables should be defined. The following macros export them to this struct:
+*'''DEFINE_GLOBAL(EngineGlobalVariable)'''
+:Exposes the engine variable at a global access level.
+:*''EngineGlobalVariable''
+::The name of the variable to export. This needs to appear exactly the same in ZScript but is case insensitive.
+*'''DEFINE_GLOBAL_NAMED(EngineGlobalVariable, ZScriptVariableName)'''
+:Works similar to '''DEFINE_GLOBAL''' but allows for a custom ZScript variable name.
+:*''ZScriptVariableName''
+::The name as it appears in ZScript. The definition must match this but is case insensitive.
+
+In exceedingly rare cases, an incomplete datatype needs to be exported because of its complexity and an existing datatype works well enough to cover its use case. The only example of this in GZDoom is the &lt;code&gt;TStaticPointedArray&lt;/code&gt; class that stores a sector's lines since it acts similar to a dynamic array. A few macros exist to silence the unmatched size warning that can occur in these instances. These are ''incredibly'' volatile and should be avoided at all costs in favor of properly exporting your datatypes. ''Only'' use these if your datatype is locked down and made &lt;code&gt;readonly&lt;/code&gt;. Never allow direct modifications of these types of variables from ZScript.
+{{Warning|The following macros are only here for documentation purposes and should be avoided in favor of correctly exporting datatypes.}}
+*'''DEFINE_FIELD_UNSIZED(ZScriptClassName, EngineClassName, EngineVariable)'''
+:Works similar to '''DEFINE_FIELD_X'''.
+*'''DEFINE_FIELD_NAMED_UNSIZED(_EngineClassName, EngineVariable, ZScriptVariableName)'''
+:Works similar to '''DEFINE_FIELD_NAMED'''.
+*'''DEFINE_GLOBAL_UNSIZED(EngineGlobalVariable)'''
+:Works similar to '''DEFINE_GLOBAL'''.
+
+=== DObjects and Structs ===
+See [[Creating Objects and Structs]] for actual creation of these datatypes.
+
+Classes and structs have their own unique set of rules. It's important to note that everything defined as a class in ZScript is treated like a &lt;code&gt;DObject&lt;/code&gt;. This means that something can only be defined as a class within it if it's a valid &lt;code&gt;DObject&lt;/code&gt; type. Other complex types, both classes and structs, will need to be exported as a struct. Structs have their own special handling that needs to exist in order to determine their size and alignment. In general, &lt;code&gt;DObject&lt;/code&gt;s are much more powerful as not only can they be used in data structures like dynamic arrays and associative maps, but they can also be created from within ZScript itself. Their cost is that they must be managed by the garbage collector which makes them more expensive overall. Structs are broken down into two different types: native and non-native. Native structs can be used in data structures similar to &lt;code&gt;DObject&lt;/code&gt;s but cannot be created from within ZScript (only the engine can make new instances). Non-native structs can be created from within ZScript like a regular struct but have many limitations such as not being returnable as values and only being able to store them in static arrays. Whether &lt;code&gt;DObject&lt;/code&gt; or struct, which one you choose should come down to what you ultimately think the common use case will be and how locked down you want the type to be.
+
+Similar to variables, the default scope of the class/struct should be considered. For instance, if the ZScript class is defined as &lt;code&gt;play&lt;/code&gt; scope by default, this means most functionality, including creation via &lt;code&gt;new()&lt;/code&gt;, can only be done from within the &lt;code&gt;play&lt;/code&gt; scope. This allows certain datatypes to be locked to specific use cases, something that can be nice if you don't want a world-modifying class to be creatable from the UI. If no scope is given, it's treated as &lt;code&gt;data&lt;/code&gt; scoped. If it's stored as a field in another class/struct, it'll automatically assume the scope of that class/struct.
+
+For &lt;code&gt;DObject&lt;/code&gt;s, they must be defined as a class. These can be given any name desired, but usually it's common to prefix them internally with some value (e.g. &lt;code&gt;D&lt;/code&gt;) and then give it the same name in ZScript minus the prefix.
+&lt;syntaxhighlight lang = "cpp"&gt;
+// In engine.
+class DMyObj : public DObject
+{
+    // ...
+}
+&lt;/syntaxhighlight&gt;
+&lt;syntaxhighlight lang = "csharp"&gt;
+// In ZScript.
+// Inheriting from Object is optional here since all classes inherit from it by default.
+class MyObj native
+{
+    // ...
+}
+&lt;/syntaxhighlight&gt;
+From here, all that needs to be done is using the variable and function export macros correctly.
+
+Structs are more complicated. All structs, regardless if native or non-native, must define their size and alignment info so they can be manipulated in memory correctly. This is found within the &lt;code&gt;thingdef_data.cpp&lt;/code&gt; file within the &lt;code&gt;InitThingdef()&lt;/code&gt; function. The function &lt;code&gt;NewStruct()&lt;/code&gt; creates a new struct datatype to be usable in ZScript and takes the name as it appears in ZScript, a &lt;code&gt;PType&lt;/code&gt; (this should be &lt;code&gt;nullptr&lt;/code&gt; in almost all cases), and whether or not it's native (false by default). It returns a pointer to the newly created &lt;code&gt;PStruct&lt;/code&gt; and from here, its &lt;code&gt;Size&lt;/code&gt; and &lt;code&gt;Align&lt;/code&gt; properties must be set to match the internal struct it represents:
+&lt;syntaxhighlight lang = "cpp"&gt;
+// Non-native struct.
+auto myTypeStruct = NewStruct("MyType", nullptr);
+myTypeStruct-&gt;Size = sizeof(FMyType); // FMyType is the engine class/struct that's being exported.
+myTypeStruct-&gt;Align = alignof(FMyType);
+
+// Native struct.
+auto myNativeTypeStruct = NewStruct("MyNativeType", nullptr, true);
+myNativeTypeStruct-&gt;Size = sizeof(FMyNativeType);
+myNativeTypeStruct-&gt;Align = alignof(FMyNativeType);
+&lt;/syntaxhighlight&gt;
+Within ZScript, they would be defined as follows:
+&lt;syntaxhighlight lang = "csharp"&gt;
+// Non-native struct.
+// Note that this doesn't have the "native" keyword. All exported fields and
+// functions within it will still need this, but the struct definition itself
+// should not unless defined as native.
+struct MyType
+{
+    // ...
+}
+
+// Native struct.
+struct MyNativeType native
+{
+    // ...
+}
+&lt;/syntaxhighlight&gt;
+An edge case exists where an internal field that stores a type defined as a native struct within ZScript gets exported. Normally native structs are handled by reference, but the field itself stores the actual value. In this case, the &lt;code&gt;@&lt;/code&gt; prefix before the datatype can be used to tell ZScript it should use the in-line struct value and not a pointer to that struct. This is needed so that the correct sizing information is used within the field. The field variable will still be passed around and treated as a native struct, however, meaning it can still be stored in data structures and returned.
+&lt;syntaxhighlight lang = "cpp"&gt;
+// In engine.
+class DMyObj : public DObject
+{
+    FMyNativeType MyField;
+    // ...
+}
+&lt;/syntaxhighlight&gt;
+&lt;syntaxhighlight lang = "csharp"&gt;
+// In ZScript.
+class MyObj native
+{
+    native @MyNativeType MyField;
+    // ...
+}
+&lt;/syntaxhighlight&gt;
+
+= Functions =
+== Calling Functions ==
+Offered in the engine are many macros for calling VM-defined functions, including ones defined directly in ZScript. This method is more cumbersome compared to using an internal function directly but is sometimes required, especially in the case of functions defined in ZScript-only classes or virtual functions overridable from ZScript. Care must be taken when calling the macros below as they define their own variables. As such, the safest way to handle them is to put them in their own code block via &lt;code&gt;{ }&lt;/code&gt;:
+&lt;syntaxhighlight lang = "cpp"&gt;
+// Wrong. This will cause duplicate variable definitions within the current scope.
+{
+    IFVIRTUAL(AActor, MyVirtualFunction1)
+    {
+        // ...
+    }
+
+    IFVIRTUAL(AActor, MyVirtualFunction2)
+    {
+        // ...
+    }
+}
+
+// Correct. This avoids possible conflicts.
+{
+    {
+        IFVIRTUAL(AActor, MyVirtualFunction1)
+        {
+            // ...
+        }
+    }
+
+    {
+        IFVIRTUAL(AActor, MyVirtualFunction2)
+        {
+            // ...
+        }
+    }
+}
+&lt;/syntaxhighlight&gt;
+Below are the macros meant for assisting in calling virtual VM functions. This is the most common case since these functions can be overridden from ZScript directly and the correct version needs to be called.
+*'''IFVIRTUALPTR(DObjectPointer, EngineClassName, FunctionName)'''
+:Verifies if a virtual function exists on the given &lt;code&gt;DObject&lt;/code&gt;. The result is stored in a &lt;code&gt;VMFunction&lt;/code&gt; pointer called &lt;code&gt;func&lt;/code&gt; and will only enter the block below it if &lt;code&gt;func&lt;/code&gt; isn't null. In order to speed up future calls, the index of the virtual function is stored in a static &lt;code&gt;unsigned&lt;/code&gt; variable called &lt;code&gt;VIndex&lt;/code&gt;. Another &lt;code&gt;PClass&lt;/code&gt; pointer variable, &lt;code&gt;clss&lt;/code&gt;, is also created which is where the virtual function is pulled from by index.
+:*''DObjectPointer''
+::The &lt;code&gt;DObject&lt;/code&gt; that the function should be checked within.
+:*''EngineClassName''
+::The internal engine class that corresponds to it e.g. &lt;code&gt;AActor&lt;/code&gt;. See '''IFVIRTUALPTRNAME''' for getting ZScript-defined classes.
+:*''FunctionName''
+::The name of the virtual function e.g. &lt;code&gt;SpecialMissileHit&lt;/code&gt;.
+
+*'''IFVIRTUAL(EngineClassName, FunctionName)'''
+:This is the same as '''IFVIRTUALPTR''' but it assumes &lt;code&gt;this&lt;/code&gt; is the &lt;code&gt;DObject&lt;/code&gt; being referred to.
+
+*'''IFVIRTUALPTRNAME(DObjectPointer, NamedClass, FunctionName)'''
+:Sometimes a virtual function from a class defined within ZScript itself is needed. In this case, there is no corresponding internal engine name, but an &lt;code&gt;FName&lt;/code&gt; for it can be generated instead (e.g &lt;code&gt;NAME_Inventory&lt;/code&gt;). Instead of passing the internal class name, you'd pass that &lt;code&gt;FName&lt;/code&gt; constant in its place. All other functionality is the same as '''IFVIRTUALPTR'''.
+
+*'''IFOVERRIDENVIRTUALPTRNAME(DObjectPointer, NamedClass, FunctionName)'''
+:Similar to '''IFVIRTUALPTRNAME''' but the below block of code only gets called if the virtual function was overridden. This is useful for optimizing VM calls with virtual functions that are empty by default as it avoids calling it entirely. An additional static &lt;code&gt;VMFunction&lt;/code&gt; pointer, &lt;code&gt;orig_func&lt;/code&gt;, is created to track the base function definition.
+
+
+Sometimes a function that isn't virtual but is still defined from within ZScript must be called. The following macro assists with this:
+*'''IFVM(ZScriptClassName, FunctionName)'''
+:Checks to see if a given function exists within the ZScript class type. Note that this doesn't take any specific pointer since these functions can't be overridden. If it does exist, it's stored within a static &lt;code&gt;VMFunction&lt;/code&gt; pointer called &lt;code&gt;func&lt;/code&gt;. The block of code below it only executes if &lt;code&gt;func&lt;/code&gt; isn't null.
+:*''ZScriptClassName''
+::The class name as it's defined in ZScript e.g. &lt;code&gt;Actor&lt;/code&gt;.
+:*''FunctionName''
+::The name of the function to look for e.g. &lt;code&gt;ObtainInventory&lt;/code&gt;.
+
+To actually call the functions, you'll need to set up the parameters and return values (see the sections below for more info). &lt;code&gt;VMCall&lt;/code&gt; is the function that actually calls the function. It takes the function to call (&lt;code&gt;func&lt;/code&gt; in the case of using the macros), the parameters, the number of parameters, the return values, and the number of return values. Not every return value needs to be included, but they must be gotten in the order they're returned e.g. if you need the second return value, you'll have to include the first one as well. If a function has no parameters or return values, &lt;code&gt;nullptr&lt;/code&gt; can be passed in its place with a count of 0.
+
+=== Examples ===
+{{Note|When calling a VM function, all of its parameters must be present but return values are optional.}}
+&lt;syntaxhighlight lang = "csharp"&gt;
+// In ZScript.
+virtual int SpecialMissileHit(Actor victim) { /*..*/ }
+&lt;/syntaxhighlight&gt;
+&lt;syntaxhighlight lang = "cpp"&gt;
+// In engine.
+int res = -1;
+IFVIRTUAL(AActor, SpecialMissileHit)
+{
+    // Notice how non-static functions must pass in the "self" pointer as their first argument.
+    VMValue params[] = { this, victim };
+    VMReturn ret[] = { &amp;res };
+
+    VMCall(func, params, 2, ret, 1);
+}
+&lt;/syntaxhighlight&gt;
+&lt;syntaxhighlight lang = "csharp"&gt;
+// In ZScript.
+void ObtainInventory(Actor other) { /*..*/ }
+&lt;/syntaxhighlight&gt;
+&lt;syntaxhighlight lang = "cpp"&gt;
+// In engine.
+IFVM(Actor, ObtainInventory)
+{
+    VMValue params[] = { other, this };
+
+    VMCall(func, params, 2, nullptr, 0);
+}
+&lt;/syntaxhighlight&gt;
+
+== Exporting Functions ==
+Functions are much more centralized to export than variables, but come with their own unique set of challenges. In particular, VM parameters and return values must be kept within certain types to properly fit within its registers. Some datatypes also impose limitations that prevent using the JIT compiler, noticeably slowing down code execution. Most of these situations can be worked around, but must be kept in mind when designing any sort of function meant to be exported to ZScript.
+
+=== Function Definitions ===
+Functions that are exported are broken down into two different variants. The most basic case is as a VM function. This is the slow form of function handling but is kept because not all functions can be defined natively. This one is always guaranteed to work despite its speed, so it serves as a good fallback in those instances. The other case is native functions. When the JIT compiler is enabled (on by default), the native function is called instead of the VM function. This means your VM and native functions must have the exact same parameter order and datatypes. The native function offers a significant performance boost so any VM function you define should have an equivalent native function if possible. Below are the list of datatypes that native functions support:
+*Pointers
+*References
+*void
+*(unsigned) int
+*double
+*bool (not supported as a return value, only a parameter)
+{{Note|For native functions, &lt;code&gt;int&lt;/code&gt; can be used to return a boolean value.}}
+If a native function uses an unsupported datatype (e.g. it returns a &lt;code&gt;bool&lt;/code&gt;), the compiler will give an error alerting you that something went wrong. By default GZDoom will compile any native code on start, giving a warning for any functions that aren't native compatible but couldn't be caught during compile time of the engine. However, if this functionality is disabled, a function will only throw a warning when it's used at least once.
+
+*'''DEFINE_ACTION_FUNCTION_NATIVE(_ZScriptClassName, ZScriptFunctionName, NativeFunctionName)'''
+:The macro for defining native functions. Note that there's a unique behavior present here where the first letter of ''_ZScriptClassName'' is ignored e.g. if a function for &lt;code&gt;DThinker&lt;/code&gt; is defined, the class it exports to will be &lt;code&gt;Thinker&lt;/code&gt; in ZScript. If the engine name and ZScript name don't match at all (e.g. &lt;code&gt;side_t&lt;/code&gt; vs &lt;code&gt;Side&lt;/code&gt;), &lt;code&gt;_&lt;/code&gt; can prefix the class name to act as padding.
+:*''_ZScriptClassName''
+::The name of the class as it appears in ZScript. The first character is ignored by the engine.
+:*''ZScriptFunctionName''
+::The name of the class' function as it appears in ZScript e.g. &lt;code&gt;A_ChangeModel&lt;/code&gt;.
+:*''NativeFunctionName''
+::The name of the internal engine function meant to represent it natively e.g. &lt;code&gt;ChangeModelNative&lt;/code&gt;.
+
+The common way to define a native VM function is to create its native function above it's VM definition as a static function. In this case all the static modifier does is tell the compiler that the function is not available in other translation units in the engine i.e. if it's defined in &lt;code&gt;myfile.cpp&lt;/code&gt;, only &lt;code&gt;myfile.cpp&lt;/code&gt; will have access to it. This is done for organizational reasons as these functions have little reason to be called outside of those specific instances. It's also common to give the native function the same name as its ZScript counterpart, but this is not required.
+&lt;syntaxhighlight lang = "cpp"&gt;
+static void A_MyFunc(/*..*/)
+{
+    // ...
+}
+
+DEFINE_ACTION_FUNCTION_NATIVE(AActor, A_MyFunc, A_MyFunc)
+{
+    // ...
+}
+&lt;/syntaxhighlight&gt;
+
+You can also have the body of your VM function call the native function directly as well if you want to reuse your code instead of creating the same definition twice, but this is also not required.
+
+*'''DEFINE_ACTION_FUNCTION(_ZScriptClassName, ZScriptFunctionName)'''
+*'''DEFINE_ACTION_FUNCTION_NATIVE0(_ZScriptClassName, ZScriptFunctionName, Unused)'''
+:This is a VM-only function and works similar to its native counterpart only it has no native callback. In this case no internal native function needs to be created. This should only be used if a function cannot be supported natively correctly. The alternative macro presented above ('''_NATIVE0''') is used to quickly convert a native function macro to a non-native one. This is nice if you need to only temporarily disable native functionality on a function, otherwise it's identical to '''DEFINE_ACTION_FUNCTION'''.
+
+For any exported function, the ZScript function must appear in the class it was defined under with its exact name and have the &lt;code&gt;native&lt;/code&gt; qualifier. Instead of having a body, it should end with a statement terminator:
+&lt;syntaxhighlight lang = "csharp"&gt;
+native static void A_MyStaticFunc(/*..*/); // Must not have a self pointer. See PARAM_PROLOGUE for more info.
+native void A_MyFunc(/*..*/); // Must have a valid self pointer. See PARAM_SELF(_STRUCT)_PROLOGUE for more info.
+native vararg void A_MyVAFunc(/*..*/, ...); // See PARAM_VA_POINTER for more info.
+native action void A_MyActionFunc(/*..*/); // See PARAM_ACTION_PROLOGUE for more info.
+&lt;/syntaxhighlight&gt;
+
+=== Parameters ===
+Parameters are handled by the &lt;code&gt;VMValue&lt;/code&gt; class. The VM supports a limited set of datatypes and must be kept to the following:
+*(unsigned) int
+*double
+*const FString pointer
+*void pointer
+
+Note that types like &lt;code&gt;DVector4&lt;/code&gt; are not directly supported. These are instead passed in as their floating-point values. For instance, a &lt;code&gt;Vector4&lt;/code&gt; in ZScript would be passed in as four doubles in the order of x, y, z, and w.
+&lt;syntaxhighlight lang = "csharp"&gt;
+// In ZScript.
+native static void MyFunction(Vector4 val);
+&lt;/syntaxhighlight&gt;
+&lt;syntaxhighlight lang = "cpp"&gt;
+// In engine.
+DEFINE_ACTION_FUNCTION_NATIVE(_MyClass, MyFunction, MyFunction)
+{
+    PARAM_PROLOGUE
+    PARAM_FLOAT(x)
+    PARAM_FLOAT(y)
+    PARAM_FLOAT(z)
+    PARAM_FLOAT(w)
+   // ...
+}
+&lt;/syntaxhighlight&gt;
+This rule applies to all vector types and quaternions (quaternions are passed the same as &lt;code&gt;Vector4&lt;/code&gt;). Your native functions should also apply this e.g. &lt;code&gt;double x, double y, ...&lt;/code&gt; instead of &lt;code&gt;DVector_ val&lt;/code&gt;. For native functions specifically, &lt;code&gt;FString&lt;/code&gt;s are passed in as constant references (&lt;code&gt;const FString&amp; param&lt;/code&gt;).
+
+{{Note|ZScript functions with default arguments are purely ZScript-side. They do not have to be defined internally and all arguments will always be passed for a given VM function.}}
+
+Every VM function must start with a &lt;code&gt;self&lt;/code&gt; definition. Functions that don't have &lt;code&gt;self&lt;/code&gt; are considered static and must have the &lt;code&gt;static&lt;/code&gt; keyword in their ZScript function definition.
+*'''PARAM_PROLOGUE'''
+:Defines a function with no &lt;code&gt;self&lt;/code&gt; and is therefore static.
+*'''PARAM_SELF_PROLOGUE(DObjectClassName)'''
+:Sets the first parameter to &lt;code&gt;self&lt;/code&gt; as a &lt;code&gt;DObject&lt;/code&gt; pointer of the given type. This does not need to be an exact match to the class being passed e.g. if the function belongs to &lt;code&gt;Inventory&lt;/code&gt;, using type &lt;code&gt;AActor&lt;/code&gt; is fine. Exact types should only be used if an internal engine definition exists for the class.
+:*''DObjectClassName''
+::The name of the &lt;code&gt;DObject&lt;/code&gt;'s class type as it appears in the engine e.g. &lt;code&gt;AActor&lt;/code&gt;.
+*'''PARAM_SELF_STRUCT_PROLOGUE(EngineClassName)'''
+:This works similar to '''PARAM_SELF_PROLOGUE''' except instead of a &lt;code&gt;DObject&lt;/code&gt; type it holds a pointer to any other given class/struct type. This is needed for any sort of class/struct that isn't a &lt;code&gt;DObject&lt;/code&gt; type.
+*'''PARAM_ACTION_PROLOGUE(AActorClassName)'''
+:This is a unique macro meant for defining any functions that have the &lt;code&gt;action&lt;/code&gt; qualifier in their ZScript definition. It always defines &lt;code&gt;self&lt;/code&gt; as an &lt;code&gt;AActor&lt;/code&gt; pointer and defines two other parameters: &lt;code&gt;stateowner&lt;/code&gt;, an &lt;code&gt;AActor&lt;/code&gt; pointer of the given type, and &lt;code&gt;stateinfo&lt;/code&gt;, a pointer of type &lt;code&gt;FStateParamInfo&lt;/code&gt;, which contains additional data about the context the function is being called from. This should not be used with any other type of function except &lt;code&gt;action&lt;/code&gt; functions.
+:*''AActorClassName''
+::The name of the &lt;code&gt;AActor&lt;/code&gt; class as it appears in the engine. Since every child class of &lt;code&gt;AActor&lt;/code&gt; has been moved to ZScript, this will always be &lt;code&gt;AActor&lt;/code&gt;.
+
+Below is a list of supported parameter types. Note that some of these are simple wrappers e.g. '''PARAM_NAME''' is the same as taking an integer value and casting it as &lt;code&gt;ENamedName&lt;/code&gt;. The parameter order must have the exact same order as the ZScript function definition, both for the VM and native functions.
+*'''PARAM_INT(VariableName)'''
+*'''PARAM_UINT(VariableName)'''
+*'''PARAM_BOOL(VariableName)'''
+*'''PARAM_NAME(VariableName)'''
+:Variable becomes type &lt;code&gt;FName&lt;/code&gt;.
+*'''PARAM_SOUND(VariableName)'''
+:Variable becomes type &lt;code&gt;FSoundID&lt;/code&gt;.
+*'''PARAM_COLOR(VariableName)'''
+:Variable becomes type &lt;code&gt;PalEntry&lt;/code&gt;.
+*'''PARAM_FLOAT(VariableName)'''
+*'''PARAM_ANGLE(VariableName)'''
+:Variable becomes type &lt;code&gt;DAngle&lt;/code&gt;.
+*'''PARAM_FANGLE(VariableName)'''
+:Variable becomes type &lt;code&gt;FAngle&lt;/code&gt;.
+*'''PARAM_STRING(VariableName)'''
+:Const reference to an &lt;code&gt;FString&lt;/code&gt;. This should be used if the passed string is not going to be modified.
+*'''PARAM_STRING_VAL(VariableName)'''
+:Mutable copy of the passed &lt;code&gt;FString&lt;/code&gt;. Use this if any modifications need to occur to the string (these will not be propagated back to the parameter).
+*'''PARAM_STATELABEL(VariableName)'''
+:Stored as the index of the state label.
+*'''PARAM_STATE(VariableName)'''
+:Only usable in non-static &lt;code&gt;Actor&lt;/code&gt; functions. Variable becomes a pointer of type &lt;code&gt;FState&lt;/code&gt; and is gotten from &lt;code&gt;self&lt;/code&gt;.
+*'''PARAM_STATE_ACTION(VariableName)'''
+:Only usable in &lt;code&gt;action&lt;/code&gt; functions. Same as '''PARAM_STATE''' but gets the state from &lt;code&gt;stateowner&lt;/code&gt;.
+*'''PARAM_POINTER(VariableName, ClassType)'''
+:Creates a pointer of the given type. This is only valid for parameters normally passed by reference e.g. structs.
+*'''PARAM_OUTPOINTER(VariableName, ClassType)'''
+:Similar to '''PARAM_POINTER''' but will accept a pointer from any datatype. Useful for direct modification of things normally passed by value e.g. &lt;code&gt;int&lt;/code&gt;. Note that these parameters must have the &lt;code&gt;out&lt;/code&gt; qualifier within ZScript.
+*'''PARAM_POINTERTYPE(VariableName, ClassType)'''
+:The same as '''PARAM_POINTER''' except the type must be explicitly declared as a pointer type i.e. &lt;code&gt;T*&lt;/code&gt; instead of just &lt;code&gt;T&lt;/code&gt;.
+*'''PARAM_OBJECT(VariableName, DObjectType)'''
+:Creates a &lt;code&gt;DObject&lt;/code&gt; pointer of the given type.
+*'''PARAM_CLASS(VariableName, DObjectType)'''
+:Creates a meta class pointer of the given type e.g. a &lt;code&gt;class&lt;Actor&gt;&lt;/code&gt; parameter in ZScript.
+*'''PARAM_POINTER_NOT_NULL(VariableName, ClassType)'''
+:Same as '''PARAM_POINTER''' but throws an error if the pointer is null.
+*'''PARAM_OBJECT_NOT_NULL(VariableName, DObjectType)'''
+:Same as '''PARAM_OBJECT''' but throws an error if the &lt;code&gt;DObject&lt;/code&gt; is null.
+*'''PARAM_CLASS_NOT_NULL(VariableName, DObjectType)'''
+:Same as '''PARAM_CLASS''' but throws an error if the passed class type is null.
+
+Below are a couple macros designed to assist with special cases for parameter handling:
+*'''PARAM_NULLCHECK(Pointer, VariableName)'''
+:Checks if the given pointer is null. If it is, aborts the VM marking it via the passed variable name.
+*'''PARAM_VA_POINTER(VariableName)'''
+:Stores a byte stream to the list of parameters at the end of a variable argument function. This is only for ZScript functions that are declared as &lt;code&gt;vararg&lt;/code&gt;. It can be used to build a &lt;code&gt;VMVa_List&lt;/code&gt; struct that gives proper access to the arguments:
+&lt;syntaxhighlight lang = "cpp"&gt;
+PARAM_VA_POINTER(va_reginfo)
+
+VMVa_List args = { param + [parameter offset], 0, numparam - [parameter offset + 1], va_reginfo + [parameter offset] };
+while (args.curindex &lt; args.numargs)
+{
+    if (args.reginfo[args.curindex] == REGT_INT)
+        self-&gt;DoThingWithInt(args.args[args.curindex++].i);
+    // ...
+}
+&lt;/syntaxhighlight&gt;
+The parameter offset is the position of the '''PARAM_VA_POINTER''' argument (which will always come at the end). For instance, if there are five parameters in total, the offset would be four. The indices in &lt;code&gt;reginfo&lt;/code&gt; store the type of the register and the indices in &lt;code&gt;args&lt;/code&gt; store the actual &lt;code&gt;VMValue&lt;/code&gt;s.
+
+If '''PARAM_ACTION_PROLOGUE''' is used, the following macros can be used to check the context of the function:
+*'''ACTION_CALL_FROM_ACTOR()'''
+:Returns true if the function is being called directly from the &lt;code&gt;Actor&lt;/code&gt;.
+*'''ACTION_CALL_FROM_PSPRITE()'''
+:Returns true if the function is being called from a player's &lt;code&gt;PSprite&lt;/code&gt; (e.g. their weapon).
+*'''ACTION_CALL_FROM_INVENTORY()'''
+:Returns true if the function is being called from an inventory item like &lt;code&gt;CustomInventory&lt;/code&gt;.
+
+Certain parameter types can be accepted by native functions, but not directly. In this case they must be converted from one type to another (usually from an &lt;code&gt;int&lt;/code&gt;). For instance, if a &lt;code&gt;Name&lt;/code&gt; argument is passed from ZScript, its actual type that gets passed is &lt;code&gt;int&lt;/code&gt; since it represents the index of the &lt;code&gt;Name&lt;/code&gt; internally. Below is a table covering the alternative VM parameter types and how to convert to them:
+{| class="wikitable"
+|-
+! Parameter Type !! Desired Type !! Conversion !! Notes
+|-
+| int || FName || FName name = ENamedName(x); || 
+|-
+| int || FSoundID || FSoundID sound = FSoundID::fromInt(x); || 
+|-
+| int || PalEntry || PalEntry color = x; || Converts directly from int to color.
+|-
+| double || DAngle || DAngle ang = DAngle::fromDeg(x); || 
+|-
+| double || FAngle || FAngle ang = FAngle::fromDeg(x); || 
+|-
+| int || FState* || FState* state = StateLabels.GetState(x, self-&gt;GetClass()); || Must be a non-static function from an &lt;code&gt;Actor&lt;/code&gt;. For &lt;code&gt;action&lt;/code&gt; functions, &lt;code&gt;stateowner&lt;/code&gt; should be used instead of &lt;code&gt;self&lt;/code&gt;.
+|}
+For other datatypes like pointers, a pointer of the desired type can be used directly e.g. &lt;code&gt;AActor* self&lt;/code&gt;. Classes like &lt;code&gt;class&lt;Actor&gt;&lt;/code&gt; are passed as a &lt;code&gt;PClass*&lt;/code&gt; type. &lt;/code&gt;StateLabel&lt;/code&gt;s are passed as an &lt;code&gt;int&lt;/code&gt; as they're the index of the &lt;code&gt;FState&lt;/code&gt; within the state table. &lt;code&gt;out&lt;/code&gt; parameters are special in that their values are passed as a pointer instead of directly. As you can tell, this is mainly only useful for primitives since everything else is already passed as a pointer, non-native structs included.
+&lt;syntaxhighlight lang = "csharp"&gt;
+// In ZScript.
+native void Modify(out int x);
+&lt;/syntaxhighlight&gt;
+&lt;syntaxhighlight lang = "cpp"&gt;
+// In engine.
+void Modify(DObject* self, int* x)
+{
+    // ...
+    // This doesn't need to be null checked since it's an argument that's guaranteed to exist.
+    *x = res;
+}
+&lt;/syntaxhighlight&gt;
+&lt;code&gt;vararg&lt;/code&gt; functions don't support native functionality as they rely on the VM to access the passed arguments. They must be defined as exclusively VM functions so they should be used with care due to performance reasons.
+
+=== Return Values ===
+All VM functions must have a return value with the return being the number of values returned by it. If a function has no return value, it should return 0. This does not apply to native functions and they can return &lt;code&gt;void&lt;/code&gt;. The &lt;code&gt;VMReturn&lt;/code&gt; class handles all return types. It supports the following:
+*int pointer
+*double pointer
+*DVector2/3/4 pointer
+*static arrays of size 2/3/4
+*DQuaternion pointer
+*FString pointer
+*(const) void pointer pointer
+Note that not all of the above types have default constructors and the &lt;code&gt;Set*()&lt;/code&gt; functions may have to be used. For VM functions a set of macros are included for returning single values:
+*'''ACTION_RETURN_INT(int)'''
+*'''ACTION_RETURN_BOOL(bool)'''
+*'''ACTION_RETURN_FLOAT(double)'''
+*'''ACTION_RETURN_STRING(FString)'''
+*'''ACTION_RETURN_OBJECT(DObject*)'''
+*'''ACTION_RETURN_POINTER(void*)'''
+*'''ACTION_RETURN_CONST_POINTER(const void*)'''
+:The above two should only be used for types that are normally passed by reference e.g. structs.
+*'''ACTION_RETURN_VEC2(DVector2)'''
+*'''ACTION_RETURN_VEC3(DVector3)'''
+*'''ACTION_RETURN_VEC4(DVector4)'''
+*'''ACTION_RETURN_QUAT(DQuaternion)'''
+*'''ACTION_RETURN_STATE(FState*)'''
+
+For functions in ZScript with multiple arguments e.g. &lt;code&gt;int, double MyFunc()&lt;/code&gt;, there are no macros to assist and argument management must be handled manually. This is fairly simple but requires some checks as not every call will always return every value. The &lt;code&gt;numret&lt;/code&gt; variable denotes how many return values are expected and the &lt;code&gt;ret&lt;/code&gt; pointer stores all the &lt;code&gt;VMReturn&lt;/code&gt;s. A function can have no more than eight return values, but at that point it's better to consider using a struct that stores the return data as a single value. Following the example of two returns, an &lt;code&gt;int&lt;/code&gt; followed by a &lt;code&gt;double&lt;/code&gt;, it would be handled this way:
+&lt;syntaxhighlight lang = "cpp"&gt;
+DEFINE_ACTION_FUNCTION_NATIVE(/*..*/)
+{
+    // ...
+
+    if (numret &gt; 0)
+        ret[0].SetInt(intRes);
+    if (numret &gt; 1)
+        ret[1].SetFloat(floatRes);
+
+    return numret;
+}
+&lt;/syntaxhighlight&gt;
+
+Native functions have special handling both for return types and multi returns. Not every type from a native function can be returned directly. The valid types are &lt;code&gt;int&lt;/code&gt;, &lt;code&gt;double&lt;/code&gt;, and standard pointers passed by reference e.g. &lt;code&gt;DObject&lt;/code&gt;s or structs. For other types like &lt;code&gt;FString&lt;/code&gt; and the vector types, the return result is instead handled as a pointer after all other parameters from the function have been listed. For instance, if you had a function that returns a string, &lt;code&gt;string MyStringFunc(int x)&lt;/code&gt;, it would take the following form:
+&lt;syntaxhighlight lang = "cpp"&gt;
+void MyStringFunc(DObject* self, int x, FString* result)
+{
+    // ...
+    // This doesn't need to be null checked because it's the direct return value.
+    *result = fstringRes;
+}
+&lt;/syntaxhighlight&gt;
+Note how since this isn't a static function, the first argument is always &lt;code&gt;self&lt;/code&gt;. The type should match whatever type the function expects e.g. &lt;code&gt;AActor&lt;/code&gt;. Since &lt;code&gt;FString&lt;/code&gt; cannot be passed back directly it instead gets passed as a pointer at the end. The same applies for &lt;code&gt;DVector2/3/4&lt;/code&gt; and &lt;code&gt;DQuaternion&lt;/code&gt;.
+
+Multiple returns are handled in a similar way where only the first argument is directly returned and the rest are passed as pointers at the end of the parameter list. If the first return value can't be returned directly, it shows up at the start of the list of return values.
+&lt;syntaxhighlight lang = "cpp"&gt;
+int MyFunc(DObject* self, double* res2)
+{
+    // ...
+    // These need to be null checked since they're optional.
+    if (res2 != nullptr)
+        *res2 = floatRes;
+
+    return intRes;
+}
+&lt;/syntaxhighlight&gt;
+
+=== Example ===
+&lt;syntaxhighlight lang = "csharp"&gt;
+// In ZScript.
+class Actor : Thinker native
+{
+    // ...
+    native clearscope string GetName() const;
+    // ...
+}
+&lt;/syntaxhighlight&gt;
+&lt;syntaxhighlight lang = "cpp"&gt;
+// In engine.
+static void GetName(AActor* self, FString* result)
+{
+    *result = self-&gt;player != nullptr ? self-&gt;player-&gt;userinfo-&gt;GetName() : self-&gt;GetTag("");
+}
+
+DEFINE_ACTION_FUNCTION_NATIVE(AActor, GetName, GetName)
+{
+    PARAM_SELF_PROLOGUE(AActor)
+
+    FString result;
+    GetName(self, &amp;result);
+    ACTION_RETURN_STRING(result);
+}
+&lt;/syntaxhighlight&gt;</text>
+    <sha1>j3r5vglz3zr0dw2wruju6r933oyw7rl</sha1>
+  </revision>
+</page>

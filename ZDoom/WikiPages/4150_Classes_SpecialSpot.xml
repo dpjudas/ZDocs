@@ -1,0 +1,38 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>Classes:SpecialSpot</title>
+  <ns>0</ns>
+  <id>4150</id>
+  <revision>
+    <id>35156</id>
+    <parentid>19052</parentid>
+    <timestamp>2012-12-12T20:06:45Z</timestamp>
+    <contributor>
+      <username>Yoshi348</username>
+      <id>2017</id>
+    </contributor>
+    <comment>probability was inverted</comment>
+    <origin>35156</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="1226" sha1="mldpq37xabr2e7evxt1hllcla9hjpt6" xml:space="preserve">{{Actor|
+| type = Internal
+| name = Special spot
+| class = SpecialSpot
+}}[[Classes]]: &lt;u&gt;SpecialSpot&lt;/u&gt;&lt;br&gt;
+&amp;ensp;&amp;rarr;[[Classes:BossSpot|BossSpot]]&lt;br&gt;
+&amp;ensp;&amp;rarr;[[Classes:BossTarget|BossTarget]]&lt;br&gt;
+&amp;ensp;&amp;rarr;[[Classes:MaceSpawner|MaceSpawner]]&lt;br&gt;
+
+The base class used for special map points that must be part of a collection where a single element can be chosen randomly. The [[Classes:BossEye|Icon of Sin]] in [[Doom II]], [[Classes:Sorcerer2|D'Sparil]] and the [[Classes:Mace|firemace]] in [[Heretic]] all use this in different ways.
+:* The Icon of Sin regularly spits [[Classes:SpawnShot|boss cubes]] at a randomly-chosen [[Classes:BossTarget|BossTarget]].
+:* D'Sparil, once his mount is dead, will often teleport to a randomly-chosen [[Classes:BossSpot|BossSpot]]. The more wounded he is, the more likely he'll decide to teleport.
+:* Only one firemace can be present in a level, so it will appear at a randomly-chosen [[Classes:MaceSpawner|MaceSpawner]]. Except in deathmatch, the mace only has a 75% chance of appearing at all.
+
+==== [[DECORATE]] definition ====
+ ACTOR &lt;u&gt;SpecialSpot&lt;/u&gt; native
+ {
+   action native [[A_SpawnSingleItem]](class&lt;Actor&gt; type, int fail_sp = 0, int fail_co = 0, int fail_dm = 0);
+ }</text>
+    <sha1>mldpq37xabr2e7evxt1hllcla9hjpt6</sha1>
+  </revision>
+</page>

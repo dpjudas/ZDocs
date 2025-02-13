@@ -1,0 +1,49 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>PNAMES</title>
+  <ns>0</ns>
+  <id>3228</id>
+  <revision>
+    <id>32195</id>
+    <parentid>32194</parentid>
+    <timestamp>2012-03-22T12:54:31Z</timestamp>
+    <contributor>
+      <username>Gez</username>
+      <id>1283</id>
+    </contributor>
+    <minor />
+    <origin>32195</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="1828" sha1="7zpp5cpj41691z00syo0o0i8wvvmddh" xml:space="preserve">'''PNAMES''' is a lump which corresponds with [[TEXTUREx]] lumps to define a [[texture]]. Patch entries in TEXTUREx entries point to a PNAMES entry by a zero-based index number.
+
+[[Vanilla Doom]] only loads one PNAMES, one TEXTURE1 and one TEXTURE2 lumps. [[ZDoom]] allows cumulative loading; however only one PNAMES lump per archive will be read. Each TEXTUREx lump will refer to the latest PNAMES lump in the same archive, or an archive loaded previously in the loading order. (So for example, loading a single archive containing only a PNAMES lump will not affect the [[IWAD]] textures, although it would in a port keeping the vanilla model of texture loading.)
+==Specification==
+The lump starts with an integer header declaring the number of patches that follow. Each patch is simply declared as a string of eight characters. Shorter names are zero-terminated. The total lump size is therefore equal to {{c|(num_patches * 8) + 4}}.
+{| {{prettytable}}
+!colspan=43|Header
+|-
+!Bytes!!Data type!!Description
+|-
+|0-3||Unsigned 32-bit integer||Number of entries
+|-
+!colspan=3|Entry
+|-
+!Bytes!!Data type!!Description
+|-
+|x+0-x+8||Char[8]||Patch name
+|}
+
+Beware that certain tools not written in a {{wp|Category:C programming language family|C family of computer languages}}, such as [[XWE]], do not understand {{wp|Null-terminated string|null-termination}} and can corrupt the PNAMES lump if there are garbage characters after the null byte, as could happen (and be normally allowed by Doom) with tools written in a C-style language such as [[SLumpEd]].
+
+For this reason, it is advised to make sure that all bytes not used for a short patch name be nulled. Modern editors, such as [[SLADE 3]], make sure to avoid the problem.
+
+==See also==
+*[[Texture]]
+*[[Patch]]
+*[[TEXTUREx]]
+*[[DeePsea]]
+*[[SLADE 3]]
+[[Category:Graphics lumps]]</text>
+    <sha1>7zpp5cpj41691z00syo0o0i8wvvmddh</sha1>
+  </revision>
+</page>

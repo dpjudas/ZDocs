@@ -1,0 +1,361 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>Statements</title>
+  <ns>0</ns>
+  <id>9774</id>
+  <revision>
+    <id>52686</id>
+    <parentid>52685</parentid>
+    <timestamp>2024-05-19T12:41:27Z</timestamp>
+    <contributor>
+      <username>Jekyll Grim Payne</username>
+      <id>2175</id>
+    </contributor>
+    <comment>/* while and do/while */</comment>
+    <origin>52686</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="13050" sha1="gl6zrdxd0y9z6widgfw61de7jiq68v6" xml:space="preserve">This page covers the use of statements in [[ZScript]] and [[DECORATE]] (In DECORATE, they can only be utilized in [[Anonymous functions|'''anonymous functions''']]). Statements can be utilized to handle logic and flow of execution in code blocks. [[Operators (ZScript)|'''Operators''']] can be utilized in statements.
+
+===&lt;code&gt;if&lt;/code&gt; and &lt;code&gt;else&lt;/code&gt;===
+IF/ELSE statements are used to conditionally execute some code. These blocks normally utilize [[Operators_(ZScript)#Logical_operators|logical operators]].
+&lt;syntaxhighlight lang="csharp"&gt;
+int MyFunction()
+{
+  if (&lt;condition&gt;)
+  {
+    // Execute this block if &lt;condition&gt; is true
+  }
+  else
+  {
+    // Otherwise, execute this block
+  }
+}&lt;/syntaxhighlight&gt;
+
+The ELSE block is optional and should not be added if nothing must be done if the condition isn't met; the IF block simply won't be executed in this case. The ELSE block can also be skipped if the preceding IF block ends with a [[#return|'''return''']]:
+
+&lt;syntaxhighlight lang="csharp"&gt;
+int GetActorHealth(Actor who)
+{
+  // If the 'who' pointer is null, returns -1 and stops execution:
+  if (!who)
+  {
+    return -1;
+  }
+  // Otherwise returns the health value of pointer 'who':
+  return who.health;
+}&lt;/syntaxhighlight&gt;
+
+===&lt;code&gt;switch&lt;/code&gt;===
+SWITCH blocks are used to create conditional blocks with multiple possible results. Sometimes, they can be used instead of IF/ELSE blocks. SWITCH blocks can only be applied to integer numbers and names (because they're internally integers), but not strings, pointers or any other types of values.
+
+&lt;syntaxhighlight lang="csharp"&gt;
+// Pass an integer value:
+switch (myIntegerValue)
+{
+// Do this if the value is 0:
+case 0:
+  DoThing1();
+  break;
+// Do this if the value is 1:
+case 1:
+  DoThing2();
+  break;
+// Do this if the value is 3:
+case 3:
+  DoThing3();
+  break;
+}
+// If the value is different, nothing happens
+&lt;/syntaxhighlight&gt;
+
+In a SWITCH block, each CASE block '''must''' end with [[#break|'''break''']], unless a fall-through is desired. If there's no '''break''', the code will just fall through to the next CASE, ''without'' checking the value:
+&lt;syntaxhighlight lang="csharp"&gt;
+switch (myIntegerValue)
+{
+// Do this if the value is 0:
+case 0:
+  DoThing1();
+// Because there's no break, DoThing2()
+// will happen both if the value is 0,
+// and if it's 1:
+case 1:
+  DoThing2();
+  break;
+}
+// If the value is different, nothing happens
+&lt;/syntaxhighlight&gt;
+
+&lt;code&gt;Default&lt;/code&gt; can be used as a sort of "else" block in a SWITCH block: things specified for the &lt;code&gt;default&lt;/code&gt; case will happen if the value isn't equal to any other cases:
+
+&lt;syntaxhighlight lang="csharp"&gt;
+// Pass an integer value:
+switch (myIntegerValue)
+{
+// Do this if the value is 0:
+case 0:
+  DoThing1();
+  break;
+// Do this if the value is 1:
+case 1:
+  DoThing2();
+  break;
+// For all other values, do this:
+default:
+  DoThing3();
+  break;
+}
+&lt;/syntaxhighlight&gt;
+
+Because [[ZScript_variables#Types|names]] are internally numbers, they can also be used in a switch block:
+&lt;syntaxhighlight lang="csharp"&gt;
+switch (actorptr.GetClassName())
+{
+case 'Zombieman':
+  DoThing1();
+  break;
+case 'Shotgunguy':
+  DoThing2();
+  break;
+case 'Chaingunguy':
+  DoThing3();
+  break;
+}
+&lt;/syntaxhighlight&gt;
+
+Note that this only checks for a specific class type. For an inheritance-respecting check, use the [[Operators_(ZScript)#is_.28class_inheritance.29|'''is''']] operator.
+
+===&lt;code&gt;for&lt;/code&gt;===
+FOR creates a loop that will proceed until the condition for termination is no longer valid. The basic syntax of a FOR loop is:
+ for (&lt;initial value&gt;; &lt;value to compare it to&gt;; &lt;what to do with the value at the end of cycle)
+ {
+   // code
+ }
+
+Common example:
+&lt;syntaxhighlight lang="csharp"&gt;
+// i starts at 0 at first; at the end of every cycle
+// it's incremented by 1. As soon as i reaches the
+// value of 10, the loop ends. (The code in it will
+// be executed for the last time when i is 9.)
+for (int i = 0; i &lt; 10; i++)
+{
+  // executes 10 times
+}
+&lt;/syntaxhighlight&gt;
+
+These loops can be terminated early by calling [[#break|'''break''']] anywhere inside the loop, or [[#continue|'''continue''']] to skip the current cycle and go to the next one. Also, calling [[#return|'''return''']] will terminate the whole function, and the loop with it.
+
+Note, like with any [[Operators_(ZScript)#.2B.2B_.28incrementation.29|incrementation]] and [[Operators_(ZScript)#--_.28decrementation.29|decrementation]] operators, the counter value can be changed both before and after comparison:
+&lt;syntaxhighlight lang="csharp"&gt;
+// This works the same way as the example above, however,
+// i never reaches the value of 10; once the code executes
+// for the final time, it checks that incrementing it
+// further would fail the i &lt; 10 condition, so it just ends:
+for (int i = 0; i &lt; 10; ++i)
+{
+  // executes 10 times
+}
+&lt;/syntaxhighlight&gt;
+
+This difference is only relevant if a pre-existing value is used as a counter ([[#Passing existing values|see below]]), and it's meant to be used after the loop as well. In other cases there's no difference.
+
+==== Randomization ====
+If there's a need to execute the loop a random number of times, the initial value must be randomized, not the target value. Common example:
+&lt;syntaxhighlight lang="csharp"&gt;
+// i is set to a value between 7 and 10 at first,
+// then decremented by 1 after every cycle:
+for (int i = random(7, 10); i &gt; 0; i--)
+{
+  // executes between 7 and 10 times
+}
+&lt;/syntaxhighlight&gt;
+This is done because the initial value is set once, whereas the target value, if randomized, will be rolled after every cycle, which is less predictable and more computationally expensive.
+
+==== Passing existing values ====
+The initial value does not have to be declared inside a FOR loop. An existing value can be passed to it and will be modified at every cycle:
+&lt;syntaxhighlight lang="csharp"&gt;
+for (angle; angle &lt; 360; angle++)
+{
+  // Will increase the calling actor's angle by 1
+  // until it becomes equal to 360
+}&lt;/syntaxhighlight&gt;
+
+&lt;syntaxhighlight lang="csharp"&gt;
+for (angle; angle &lt; 360; ++angle)
+{
+  // Executes the same number of time as the example
+  // above, but the final value of angle will not
+  // actually reach 360
+}&lt;/syntaxhighlight&gt;
+
+==== Iterating over arrays ====
+FOR loops are commonly used to iterate over [[ZScript_variables#Arrays|ZScript arrays]]:
+&lt;syntaxhighlight lang="csharp"&gt;
+for (int i = 0; i &lt; myArray.Size(); i++)
+{
+  let arrayItemPointer = myArray[i]; //obtain pointer to the array item in position i
+  if (arrayItemPointer) //null-check the pointer
+  {
+    // do something with the current
+    // item in the array
+  }
+}
+&lt;/syntaxhighlight&gt;
+
+Note, in this case the counter (i) must never be below 0 or equal to or larger than the size of the array. As such, if iterating over the array from the end, the initial value must be 1 smaller than the size, and the final value must be 0, to reach the first item:
+&lt;syntaxhighlight lang="csharp"&gt;
+for (int i = myArray.Size() - 1; i &gt;= 0; i--)
+{
+  let arrayItemPointer = myArray[i]; //obtain pointer to the array item in position i
+  if (arrayItemPointer) //null-check the pointer
+  {
+    // do something with the current
+    // item in the array
+  }
+}
+&lt;/syntaxhighlight&gt;
+
+'''Note''': Iterating over the array from the end must be used if there's a need to call &lt;code&gt;Delete&lt;/code&gt; on specific array items. If this is done while iterating from the start, the counter will jump over the next item because the array size changes.
+
+==== Iterating over linked lists ====
+[[ZScript_data_types#Linked_lists|Linked lists]] are similar to arrays, however they don't utilize indexes. Instead, each pointer of a linked list has a pointer to the next item in said list. A common example of a linked list is an actor's inventory, which contains instances of the {{class|Inventory}} class. Each actor has an &lt;code&gt;Inv&lt;/code&gt; field; in the main actor it pointers to the first {{class|Inventory}} item in their inventory, while in those items their own &lt;code&gt;Inv&lt;/code&gt; pointers point to the next item in the same actor's inventory. So, iterating over it can look as follows:
+&lt;syntaxhighlight lang="csharp"&gt;
+for (let item = &lt;actorpointer&gt;.Inv; item != null; item = item.Inv)
+{
+    // do something with 'item'
+}&lt;/syntaxhighlight&gt;
+Here &lt;code&gt;let item = &lt;actorpointer&gt;.Inv&lt;/code&gt; establishes a pointer to the first item in the actor's inventory, &lt;code&gt;item != null&lt;/code&gt; null-checks the pointer, and &lt;code&gt;item = item.Inv&lt;/code&gt; updates the &lt;code&gt;item&lt;/code&gt; pointer to the next item in that list.
+
+===&lt;code&gt;while&lt;/code&gt; and &lt;code&gt;do&lt;/code&gt;/&lt;code&gt;while&lt;/code&gt;===
+WHILE and DO/WHILE repeatedly execute code until the condition is no longer met. In contrast to FOR loops, they don't autoincrement.
+&lt;syntaxhighlight lang="csharp"&gt;
+while (&lt;condition&gt;)
+{
+  // Executes until condition becomes false
+}
+&lt;/syntaxhighlight&gt;
+
+If a DO block is used before WHILE, the condition will be checked ''after'' the execution:
+&lt;syntaxhighlight lang="csharp"&gt;
+do
+{
+  // Executes first, then checks if the condition below
+  // is still true. If not, breaks the loop.
+} while (&lt;condition&gt;);
+&lt;/syntaxhighlight&gt;
+
+Note that the DO block will be executed at least once, whereas WHILE without DO may be not executed at all if the condition is never met.
+
+These loops can be terminated early by calling [[#break|'''break''']] anywhere inside the loop. Also, calling [[#return|'''return''']] will terminate the whole function, and the loop with it.
+
+===&lt;code&gt;foreach&lt;/code&gt;===
+{{ZScriptNote}}
+A version of the FOR loop that can work with [[Dynamic arrays|dynamic arrays]] and various iterators ({{class|BlockThingsIterator}}, {{class|ThinkerIterator}}, {{class|ActorIterator}}). Provides a more compact way to iterate over arrays or array-like data structures without the need to increment/decrement the value:
+
+&lt;syntaxhighlight lang="csharp"&gt;
+Array&lt;Actor&gt; things;
+foreach (mo : things)
+{
+  if (mo)
+  {
+    // Do something
+  }
+}&lt;/syntaxhighlight&gt;
+
+A FOR-loop version that does the same thing:
+&lt;syntaxhighlight lang="csharp"&gt;
+Array&lt;Actor&gt; things;
+for (int i = 0; i &lt; things.Size(); i++)
+{
+  Actor mo = things[i];
+  if (mo)
+  {
+    // Do something
+  }
+}&lt;/syntaxhighlight&gt;
+
+'''Note:''' When using a &lt;code&gt;foreach&lt;/code&gt; loop, the size of the array cannot change, so &lt;code&gt;Delete&lt;/code&gt;, &lt;code&gt;Clear&lt;/code&gt;, &lt;code&gt;Pop&lt;/code&gt; and similar functions cannot be called on array items. If there's a need to delete items from the array, use a FOR loop and iterate from the end of the array.
+
+Example of a {{class|ThinkerIterator}} that lets you do something with all classes on the map based on {{class|Key}}:
+&lt;syntaxhighlight lang="csharp"&gt;
+foreach (Key keyitem : ThinkerIterator.Create('Key'))
+{
+  // do something
+}&lt;/syntaxhighlight&gt;
+
+The same approach can be used on other iterators.
+
+===&lt;code&gt;break&lt;/code&gt;===
+&lt;code&gt;Break&lt;/code&gt; terminates the execution of [[#for|FOR]], [[#while|DO/WHILE]] and [[#foreach|FOREACH]] loops.
+&lt;syntaxhighlight lang="csharp"&gt;
+while (&lt;condition&gt;)
+{
+  // If condition1 is met, the loop is immediaterly terminated:
+  if (&lt;condition1&gt;)
+  {
+    break;
+  }
+  // Do something
+}&lt;/syntaxhighlight&gt;
+
+===&lt;code&gt;continue&lt;/code&gt;===
+&lt;code&gt;Continue&lt;/code&gt; is an instruction that can be used in [[#for|FOR]], [[#while|DO/WHILE]] and [[#foreach|FOREACH]] loops. It skips the current cycle of the loop and continues to the next one.
+
+&lt;syntaxhighlight lang="csharp"&gt;
+for (int i = 0; i &lt; myArray.Size(); i++)
+{
+  // If myArray[i] item contains a null pointer,
+  // don't do anything and continue to the next
+  // cycle:
+  if (myArray[i] == null)
+  {
+    continue;
+  }
+  // do something with myArray[i]
+}&lt;/syntaxhighlight&gt;
+
+===&lt;code&gt;return&lt;/code&gt;===
+&lt;code&gt;Return&lt;/code&gt; terminates the current function.
+
+In void functions, &lt;code&gt;return&lt;/code&gt; is only necessary if there's a need to cut off the execution early:
+&lt;syntaxhighlight lang="csharp"&gt;
+void MyVoidFunction()
+{
+  if (&lt;termination condition&gt;)
+  {
+    return; //execution stops here
+  }
+  // Otherwise execution continues:
+  &lt;more code&gt;
+  // return is not necessary here
+}&lt;/syntaxhighlight&gt;
+
+If a function is supposed to return a value, that value must be provided:
+&lt;syntaxhighlight lang="csharp"&gt;
+int MyIntegerFunction()
+{
+  &lt;some kind of calculation&gt;
+  return someInteger;
+}&lt;/syntaxhighlight&gt;
+
+If the required return value allows it, multiple conditions can be strung together:
+&lt;syntaxhighlight lang="csharp"&gt;
+bool CheckActorIsAlive(Actor who)
+{
+  // returns true if pointer 'who' isn't null and their 
+  // health is above 0, otherwise returns false:
+  return who != null &amp;&amp; who.health &gt; 0;
+}&lt;/syntaxhighlight&gt;
+
+'''Note:''' &lt;code&gt;return&lt;/code&gt; terminates ''the whole function'', even when it's used inside a loop like a [[#for|FOR]] loop. If you want to only terminate a loop without stopping the execution of the rest of the function, use [[#break|'''break''']] instead. If you want to skip over a cycle in a loop, use [[#continue|'''continue''']].
+
+===See also===
+*[[Operators (ZScript)|ZScript operators]]
+
+[[Category:ZScript]]
+[[Category:ZScript guides]]
+[[Category:Editing concepts‏‎]]
+[[Category:Editing references]]</text>
+    <sha1>gl6zrdxd0y9z6widgfw61de7jiq68v6</sha1>
+  </revision>
+</page>

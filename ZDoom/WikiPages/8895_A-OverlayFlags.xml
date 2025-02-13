@@ -1,0 +1,65 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>A OverlayFlags</title>
+  <ns>0</ns>
+  <id>8895</id>
+  <revision>
+    <id>51895</id>
+    <parentid>51894</parentid>
+    <timestamp>2024-03-02T13:41:10Z</timestamp>
+    <contributor>
+      <username>Jekyll Grim Payne</username>
+      <id>2175</id>
+    </contributor>
+    <minor />
+    <comment>/* Parameters */</comment>
+    <origin>51895</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="3680" sha1="7pw1r327vx36ibodi1uaujs3021c4bs" xml:space="preserve">__NOTOC__{{DISPLAYTITLE: A_OverlayFlags}}
+
+'''{{class|Actor}}'''
+
+{{c|action native void '''A_OverlayFlags''' (int ''layer'', int ''flags'', bool ''set'')}}
+
+== Usage ==
+Modifies an overlay's behavior, adding or subtracting flags.
+
+=== Parameters ===
+*{{c|int '''layer'''}}
+:The number of the {{class|PSprite|PSprite layer}} to modify. This is ''not'' limited to overlays; &lt;code&gt;PSP_WEAPON&lt;/code&gt; can be passed to modify the flags of the main layer.
+*{{c|int '''flags'''}}
+:Flags can be combined using &lt;code&gt;|&lt;/code&gt;:
+:*'''PSPF_ADDWEAPON''' - The overlay will follow the weapon's offsets. Enabled by default. When enabled, [[A_OverlayOffset]]'s X and Y values will be relative to the main weapon layer's offsets. If disabled, allows setting the overlay's offsets independently. (Note, if you disable it, your overlay's sprite will jump 32 units down because it will no longer be synced with the main layer's position, which is (0, 32) by default, while overlays use (0, 0) by default.)
+:*'''PSPF_ADDBOB''' - The overlay will follow the weapon's bobbing. Enabled by default.
+:*'''PSPF_POWDOUBLE''' - The overlay will have its speed doubled if a {{class|PowerDoubleFiringSpeed}}-based powerup is active in the player's inventory.
+:*'''PSPF_CVARFAST''' - The overlay will respect [[CVARs:Configuration#sv_fastweapons|{{c|sv_fastweapons}}]] console variable if enabled.
+:*'''PSPF_FLIP''' - Flips the overlay on the X axis. Affects the visuals (sprite) but not the position.
+:*'''PSPF_MIRROR''' - Flips the offset of the overlay. Affects the position but not the visuals. Use in conjunction with {{c|PSPF_FLIP}} to alter the sprite's handedness. Does not imply {{c|PSPF_FLIP}} by itself.
+:*'''PSPF_ALPHA''' - Enables alpha changing. Note, many renderstyles enforce their own alpha values. To be able to enforce a custom alpha value, use the {{c|PSPF_FORCEALPHA}} flag instead.
+:*'''PSPF_FORCEALPHA''' - Forcefully enables alpha changing regardless of the overlay's renderstyle. {{c|PSPF_ALPHA}} doesn't have to be enabled for this to work.
+:*'''PSPF_RENDERSTYLE''' - Enables [[Renderstyle|renderstyle]] changing via [[A_OverlayRenderstyle]].
+:*'''PSPF_FORCESTYLE''' - Some powerup effects like the [[Classes:BlurSphere|Blursphere]] will set all overlays to the same as the players while in effect, applying its renderstyle on the player as well. Enabling this overrides the effect for the specified layer.
+:*'''PSPF_PLAYERTRANSLATED''' - Translates the overlay according to the same rules as the player's sprite. It uses the {{property|Player.ColorRange}} property for translation (which by default covers the green hues) and translates it according to player's settings in GZDoom. Useful if the sprite is meant to represent player's body, such as legs.
+:*'''PSPF_PIVOTPERCENT''' - When enabled, the [[A_OverlayPivot]]'s XY position is based on a scalar between 0.0 (X: Left, Y: Top) to 1.0 (X: Right, Y: Bottom) of the graphic. Otherwise, the coordinates are based on coordinate offsets in pixels.
+**'''PSPF_INTERPOLATE''' - Enables interpolation constantly for the overlay. For backwards compatibility however, [[A_OverlayOffset]] called in any tic without the add and interpolate flags will temporarily disable interpolation for that tic.
+*{{c|bool '''set'''}}
+:If &lt;code&gt;true&lt;/code&gt;, enables the flags on the layer. If &lt;code&gt;false&lt;/code&gt;, disables them.
+
+== Examples ==
+{{noexamples}}
+== See Also ==
+*[[A_Overlay]]
+*[[A_OverlayOffset]]
+*[[A_OverlayRenderstyle]]
+*[[A_OverlayAlpha]]
+*[[A_WeaponOffset]]
+*[[A_OverlayPivot]]
+*[[A_OverlayPivotAlign]]
+*[[A_OverlayRotate]]
+*[[A_OverlayScale]]
+*[[A_OverlayVertexOffset]]
+
+{{DEFAULTSORT:OverlayFlags}}[[category:Decorate Weapon functions]]</text>
+    <sha1>7pw1r327vx36ibodi1uaujs3021c4bs</sha1>
+  </revision>
+</page>

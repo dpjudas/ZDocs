@@ -1,0 +1,51 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>Distance</title>
+  <ns>0</ns>
+  <id>2717</id>
+  <revision>
+    <id>36687</id>
+    <parentid>34476</parentid>
+    <timestamp>2013-06-09T21:04:56Z</timestamp>
+    <contributor>
+      <username>Gez</username>
+      <id>1283</id>
+    </contributor>
+    <minor />
+    <origin>36687</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="1075" sha1="glew65z59eyc40p1vn7xxxxu7uboa6k" xml:space="preserve">{{DISPLAYTITLE:distance}}
+Here is an ACS representation of a function similar to [[VectorLength]].
+ function int fdistance (int tid1, int tid2)
+ {
+ 	int len;
+ 	int y = getactory(tid1) - getactory(tid2);
+ 	int x = getactorx(tid1) - getactorx(tid2);
+ 	int z = getactorz(tid1) - getactorz(tid2);
+ 
+ 	int ang = vectorangle(x,y);
+ 	if(((ang+0.125)%0.5) &gt; 0.25) len = fixeddiv(y, sin(ang));
+ 	else len = fixeddiv(x, cos(ang));
+ 
+ 	ang = vectorangle(len, z);
+ 	if(((ang+0.125)%0.5) &gt; 0.25) len = fixeddiv(z, sin(ang));
+ 	else len = fixeddiv(len, cos(ang));
+ 
+ 	return len;
+ }
+
+The above function works by rotating the points so they align with an axis. It runs in a constant time and is almost always faster than the more recognizable pythagorean version below:
+ function int distance (int tid1, int tid2)
+ {
+ 	int x, y, z, d;
+ 	x = GetActorX(tid1) - GetActorX(tid2) &gt;&gt; 16; // Convert fixed point to integer
+ 	y = GetActorY(tid1) - GetActorY(tid2) &gt;&gt; 16;
+ 	z = GetActorZ(tid1) - GetActorZ(tid2) &gt;&gt; 16;
+ 	d = sqrt( x*x + y*y + z*z );
+ 	return d;
+ }
+
+[[category:Sample ACS functions]]</text>
+    <sha1>glew65z59eyc40p1vn7xxxxu7uboa6k</sha1>
+  </revision>
+</page>

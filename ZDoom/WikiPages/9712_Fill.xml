@@ -1,0 +1,53 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>Fill</title>
+  <ns>0</ns>
+  <id>9712</id>
+  <revision>
+    <id>53568</id>
+    <parentid>50774</parentid>
+    <timestamp>2024-11-07T11:25:16Z</timestamp>
+    <contributor>
+      <username>Jekyll Grim Payne</username>
+      <id>2175</id>
+    </contributor>
+    <origin>53568</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="1639" sha1="bugu8sws9dhz1qvgghbli0gdvwylbxm" xml:space="preserve">{{note|This is a BaseStatusBar function. For a more general function that can also draw a colorized rectangle but interacts with real resolution, see [[Dim|'''Screen.Dim''']].}}
+
+'''[[Classes:BaseStatusBar|BaseStatusBar]]'''
+
+void '''Fill'''(Color ''col'', double ''x'', double ''y'', double ''w'', double ''h'', int ''flags'' = 0)
+
+==Usage==
+Can be used in a [[Classes:BaseStatusBar|ZScript HUD]] to fill a rectangle with a specific color. Fills a rectangle directed down and to the right from the specified positon.
+
+===Parameters===
+*{{c|color '''col'''}}
+:The color of the fill. Has to be provided as &lt;code&gt;color(a, r, g, b)&lt;/code&gt; where ''a'', ''r'', ''g'', ''b'' are alpha, red, green and blue color components as integers in the 0-255 range.
+*{{c|double '''x'''}}
+:Horizontal starting position.
+*{{c|double '''y'''}}
+:Vertical starting position.
+*{{c|double '''w'''}}
+:Width of the fill rectangle (directed to the right along the X axis).
+*{{c|double '''h'''}}
+:Height of the fill rectangle (directed downward along the Y axis).
+*{{c|int '''flags'''}}
+:{{: BaseStatusBar SCREEN flags}}
+:{{c|DI_ITEM*}} flags have no effect on this function.
+
+== Example ==
+This shows how two &lt;code&gt;Fill()&lt;/code&gt; calls can be used to draw a cross shape at the center of the screen:
+&lt;syntaxhighlight lang="csharp"&gt;
+double crossLength = 8;
+double crossWidth = 2;
+Fill(color(255, 255, 0, 0), -crossWidth * 0.5, -crossLength * 0.5, crossWidth, crossLength, DI_SCREEN_CENTER);
+Fill(color(255, 255, 0, 0), -crossLength * 0.5, -crossWidth * 0.5, crossLength, crossWidth, DI_SCREEN_CENTER);
+&lt;/syntaxhighlight&gt;
+
+[[Category:ZScript]]
+[[Category:BaseStatusBar]]</text>
+    <sha1>bugu8sws9dhz1qvgghbli0gdvwylbxm</sha1>
+  </revision>
+</page>

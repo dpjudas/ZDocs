@@ -1,0 +1,93 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>Classes:PowerFrightener</title>
+  <ns>0</ns>
+  <id>2836</id>
+  <revision>
+    <id>53726</id>
+    <parentid>36549</parentid>
+    <timestamp>2024-11-13T12:19:55Z</timestamp>
+    <contributor>
+      <username>Jekyll Grim Payne</username>
+      <id>2175</id>
+    </contributor>
+    <origin>53726</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="2298" sha1="r8bjdu1nxpbbfte6hx5h2un1ntnuulp" xml:space="preserve">{{actor|
+| type = Power
+| name = Frightener power
+| class = PowerFrightener
+}}[[Classes]]: [[Classes:Inventory|Inventory]]&amp;rarr;[[Classes:Powerup|Powerup]]&amp;rarr;&lt;u&gt;PowerFrightener&lt;/u&gt;&lt;br&gt;
+
+{{: Powerup definition}}
+
+'''PowerFrightener''' "frighters" the enemies of its owner. This means that monsters will run away from the player instead of attacking them.
+
+This powerup's effect is achieved by adding the {{const|CF_FRIGHTENING}} flag to the &lt;code&gt;player.cheats&lt;/code&gt; field of a {{class|PlayerPawn}}, with the rest of the effect being handled internally by GZDoom. This also means that, in contrast to some other powerups, PowerFrightener can only affect {{class|PlayerPawn|players}} and will have no effect if given to an actor that doesn't have a {{struct|PlayerInfo}} struct attached. If given to a [[voodoo doll]], monsters will fear the real {{class|PlayerPawn}}, not the doll.
+
+=== Examples ===
+This is an example of a {{class|PowerupGiver}} that gives PowerFrightener and can be used in Doom (it uses Doom's {{class|BlurSphere}} sprites).
+
+ class TerrorSphere : {{class|PowerupGiver}}
+ {
+   Default
+   {
+     +{{flag|Inventory.COUNTITEM}}
+     +{{flag|Inventory.AUTOACTIVATE}}
+     +{{flag|Inventory.ALWAYSPICKUP}}
+     +{{flag|Inventory.BIGPOWERUP}}
+     {{property|Inventory.MaxAmount}} 0;
+     {{property|Powerup.Type}} 'Frightener';
+     {{property|Powerup.Color}} "GoldMap"
+     {{property|Inventory.PickupMessage}} "The Terrorsphere!"; {{LanguageCodeNote}}
+     {{property|Translation}} "112:127=176:191", "176:191=192:207";
+   }
+   States
+   {
+   Spawn:
+     PINV ABCD 6 Bright;
+     Loop;
+   }
+ }
+
+=== [[ZScript]] definition ===
+{{ZScriptDefinitionNote|actors/inventory/powerups.zs}}
+&lt;syntaxhighlight lang="csharp"&gt;
+class PowerFrightener : Powerup
+{
+	Default
+	{
+		Powerup.Duration -60;
+	}
+	
+	override void InitEffect ()
+	{
+		Super.InitEffect();
+
+		if (Owner== null || Owner.player == null)
+			return;
+
+		Owner.player.cheats |= CF_FRIGHTENING;
+	}
+
+	override void EndEffect ()
+	{
+		Super.EndEffect();
+
+		if (Owner== null || Owner.player == null)
+			return;
+
+		Owner.player.cheats &amp;= ~CF_FRIGHTENING;
+	}
+}
+&lt;/syntaxhighlight&gt;
+
+=== [[DECORATE]] definition ===
+{{DecorateDefinitionNote}}
+ ACTOR &lt;u&gt;PowerFrightener&lt;/u&gt; : {{Class|Powerup}} native
+ {
+   {{Property|Powerup.Duration}} -60
+ }</text>
+    <sha1>r8bjdu1nxpbbfte6hx5h2un1ntnuulp</sha1>
+  </revision>
+</page>

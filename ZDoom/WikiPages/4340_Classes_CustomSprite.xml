@@ -1,0 +1,51 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>Classes:CustomSprite</title>
+  <ns>0</ns>
+  <id>4340</id>
+  <revision>
+    <id>39790</id>
+    <parentid>37010</parentid>
+    <timestamp>2015-05-03T22:57:04Z</timestamp>
+    <contributor>
+      <username>Blue Shadow</username>
+      <id>2021</id>
+    </contributor>
+    <minor />
+    <comment>/* DECORATE definition */ Updated</comment>
+    <origin>39790</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="965" sha1="arq48m6ozwb99uj0cvkvl8p55b7d6m6" xml:space="preserve">{{Actor|
+| type = Internal
+| name = Build sprite viewer
+| class = CustomSprite
+| doomednum = 9988
+}}[[Classes]]: &lt;u&gt;CustomSprite&lt;/u&gt;&lt;br&gt;
+Just an actor to make the Build sprites show up. It doesn't do anything with them other than display them.
+They can be used outside build if the proper texture naming conventions are obeyed. The behavior of this actor is defined by its args:
+
+*arg0, arg1: These define the texture of this actor. The name of the texture is BTILxxxx with xxxx a decimal representation of arg1 * 256 + arg0. The texture may be of any type but should not be defined as a sprite.
+*arg2: X-scaling. 64 means a scale of 1.
+*arg3: Y-scaling. 64 means a scale of 1.
+*arg4: Flags:
+** 0: opaque
+** 2: alpha = 0.33
+** 3: alpha = 0.66
+** 4: Flip horizontally
+** 8: Flip vertically
+
+==== [[DECORATE]] definition ====
+ ACTOR &lt;u&gt;CustomSprite&lt;/u&gt; native
+ {
+   +{{Flag|NOBLOCKMAP}}
+   +{{Flag|NOGRAVITY}}
+   States
+   {
+   Spawn:
+     TNT1 A -1
+     Stop
+   }
+ }</text>
+    <sha1>arq48m6ozwb99uj0cvkvl8p55b7d6m6</sha1>
+  </revision>
+</page>

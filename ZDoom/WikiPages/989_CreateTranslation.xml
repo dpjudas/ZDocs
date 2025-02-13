@@ -1,0 +1,73 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>CreateTranslation</title>
+  <ns>0</ns>
+  <id>989</id>
+  <revision>
+    <id>40835</id>
+    <parentid>37403</parentid>
+    <timestamp>2016-02-06T05:49:38Z</timestamp>
+    <contributor>
+      <username>Jpalomo</username>
+      <id>1715</id>
+    </contributor>
+    <origin>40835</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="3771" sha1="degswzyn7qdb89yh05z7fh3bmd97u6n" xml:space="preserve">void '''CreateTranslation'''(int ''transnumber'', ''a'':''b''=''c'':''d'', ...);&lt;br /&gt;
+void '''CreateTranslation'''(int ''transnumber'', ''a'':''b''=[''red1'',''green1'',''blue1'']:[''red2'',''green2'',''blue2''], ...);
+
+'''CreateTranslation''' creates a new palette translation, and [[Thing_SetTranslation]] causes a thing to use the palette translation you have created. A palette translation is what Doom uses to create the different colored players in multiplayer games. Translations are not remembered across maps, so each map that uses a translation needs to create that translation in a script. You can define up to 65535 different palette translations for each map.
+
+==Creating a translation==
+There are three basic forms for the '''CreateTranslation''' command. In its simplest
+form, you just pass '''CreateTranslation''' a translation number, and it resets it so that no translation occurs. This form looks like &lt;code&gt;CreateTranslation(x);&lt;/code&gt; where ''x'' is some number between 1 and 65536.
+
+In its other two forms, '''CreateTranslation''' can change the translation to actually recolor things. After the translation number, you include the range of palette entries to change followed by the colors to change them to. The colors they get changed to can be either palette entries or RGB values. To remap using palette entries, use &lt;code&gt;CreateTranslation(''x'', ''a'':''b''=''c'':''d'');&lt;/code&gt;. This replaces palette entries ''a''&amp;ndash;''b'' with palette entries ''c''&amp;ndash;''d''. To remap using RGB values, use &lt;code&gt;CreateTranslation(''x'', ''a'':''b''=[''red1'',''green1'',''blue1'']:[''red2'',''green2'',''blue2'']);&lt;/code&gt;. This will replace palette entries ''a''&amp;ndash;''b'' with colors starting at [''red1'',''green1'',''blue1''] and spreading to [''red2'',''green2'',''blue2'']. You can also remap more than one range in a translation by separating them with commas.
+
+Modders can also now define saturated translations with &lt;code&gt;CreateTranslation(''x'',''a'':''b''=%[''red1'',''green1'',''blue1'']:[''red2'',''green2'',''blue2'']);&lt;/code&gt;. The minimum float values for this type of translation are 0.0, while the maximum is 2.0.
+
+==Examples==
+Here are some examples using the standard green range of the Doom palette (indices 112 to 127):
+
+   // This is the standard gray/indigo range
+   CreateTranslation (1, 112:127=96:111);
+
+   // This is a white range
+   CreateTranslation (2, 112:127=80:95);
+
+   // This is the standard brown range
+   CreateTranslation (3, 112:127=64:79);
+
+   // This is a peach range
+   CreateTranslation (4, 112:127=48:63);
+
+   // This is the standard red range
+   CreateTranslation (5, 112:127=32:47);
+
+   // This is a pink range
+   CreateTranslation (6, 112:127=16:31);
+
+   // This is a range from yellow (255,255,0) to black (0,0,0)
+   CreateTranslation (14, 112:127=[255,255,0]:[0,0,0]);
+
+   // This is two ranges in one translation.
+   // The first range creates an ugly suit colored from green to red.
+   // The second makes his skin reddish.
+   CreateTranslation (15, 112:127=[0,255,0]:[255,0,0], 79:48=47:16);
+
+   // This rather lengthy example almost completely recolors the Cyberdemon.
+   // The first three ranges change the Cyberdemon's skin to red.
+   // The next two ranges make his abdomen blue.
+   // Finally, the last two ranges make his muzzle flash blue as well.
+   CreateTranslation (1, 64:79=32:47, 48:63=47:32, 144:151=32:47, 32:47=192:207,
+   168:191=192:207, 224:231=[255, 255, 255]:[128, 128, 255], 208:223=192:207);
+
+==How it's Done==
+Assigning these translations to things is done with [[Thing_SetTranslation]]. It can also be done in [[DECORATE]] with the [[Translation]] tag.
+
+For reference, [[Palette|see here]] for numbered palettes for each supported game.
+
+[[category:ACS Actor functions]]</text>
+    <sha1>degswzyn7qdb89yh05z7fh3bmd97u6n</sha1>
+  </revision>
+</page>

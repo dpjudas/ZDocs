@@ -1,0 +1,195 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>Compatibility options</title>
+  <ns>0</ns>
+  <id>2883</id>
+  <revision>
+    <id>47856</id>
+    <parentid>46119</parentid>
+    <timestamp>2020-09-19T19:25:56Z</timestamp>
+    <contributor>
+      <username>Thekins</username>
+      <id>987</id>
+    </contributor>
+    <comment>/* Map/action behavior */ Added description for compat_pointonline and compat_multiexit</comment>
+    <origin>47856</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="16472" sha1="58uooc49ezcqvfbduaxayzcrykxojwp" xml:space="preserve">__NOTOC__{{menutrail|Main menu|Options menu}}
+[[File:CompatibilityOptions.png|thumb|The gameplay options menu in [[MBF]]'s demo level.]]
+The '''compatibility options''' menu lets you set an overall compatibility mode (or "compatmode") or fine tune each compatibility flag individually. Its [[MENUDEF]] name is {{c|CompatibilityOptions}} and it can be summoned with the {{c|{{CCMD|O|menu_compatibility}}}} console command.
+
+Compatibility options are there to adjust the engine to user preferences when the [[ZDoom]] behavior changed, or to fix maps that exploit bugs in older versions or in the original executables. Note that many maps do not need you to adjust the settings, as ZDoom has an [[automatic compatibility]] feature with a number of known maps. Note also that the scope of compatibility options is not perfect emulation, but merely allow to successfully play a map; for this reason additional features are not disabled when setting the compatmode to "Doom (strict)", nor are limits decreased to their [[vanilla Doom|vanilla]] values.
+
+The most important compatibility flags can be set or cleared in [[MAPINFO]] as well. This allows to create special map definitions that set the needed parameters to play the map properly. If a compatibility flag is set in MAPINFO this setting will override any change through the menu or by altering the [[console variable]]'s value. ''Note that [[Skulltag]] has additional compatility options, see [[Skulltag features]].''
+
+
+*'''{{LE|Compatibility mode|Compatibility Mode|compatmode}}''' (Default/Doom/Doom (strict)/Boom/Boom (strict)/MBF/ZDoom 2.0.63)
+:{{c|{{CVAR|C|compatmode}}}}
+:This allows users to quickly enable a set of options that cater to a particular game engine, overriding all compatibility flags. "Default" turns off all compatibility options, the other choice allow to emulate [[vanilla Doom]], [[Boom]], [[MBF]] or an [[version history|old version]] of [[ZDoom]]. For more detail on which options each setting enables, see [[CVARs:Configuration#Compatibility modes|compatmode]].
+
+=== Actor behavior ===
+
+*'''{{LE|Crushed monsters can be resurrected|compat_corpsegibs}}''' (Yes/No)
+:{{c|{{CVAR|C|compat_corpsegibs}}}} ([[CVAR]] and [[MAPINFO]])
+:If enabled, corpses under a [[vertical door]] or [[crusher]] are changed into gibs, rather than replaced by a {{Class|RealGibs|different actor}}, if they do not have a custom Crush state. This allows an {{Class|Archvile|arch-vile}} or similar monster to resurrect them. By default, actors without a custom Crush state are removed entirely and can therefore not be raised from the dead.
+
+*'''{{LE|Friendly monsters aren't blocked|compat_noblockfriends}}''' (Yes/No)
+:{{c|{{CVAR|C|compat_noblockfriends}}}} ([[CVAR]] and [[MAPINFO]])
+:If enabled, friendly monsters are, like in [[MBF]], not affected by [[linedefs|lines]] with the "block monsters" flag, allowing them to follow the player all around a map. This option does not, however, block them at lines with the "block player" flag.
+
+*'''{{LE|Limit Pain Elementals' Lost Souls|compat_limitpain}}''' (Yes/No)
+:{{c|{{CVAR|C|compat_limitpain}}}} ([[CVAR]] and [[MAPINFO]])
+:[[Vanilla Doom]] prevents a {{Class|PainElemental|pain elemental}} from spawning {{Class|LostSoul|lost souls}} if there are already 21 in the level. This limit has been removed in most source ports but there are maps that require it to work properly. For an example, see {{dw|MAP19: Everything Dies (Hell Revealed)|MAP19 of Hell Revealed}}.
+
+*'''{{LE|Monster movement is affected by effects|compat_mbfmonstermove}}''' (Yes/No)
+:{{c|{{CVAR|C|compat_mbfmonstermove}}}} ([[CVAR]] and [[MAPINFO]])
+:If enabled, monsters are affected by sector friction, wind and {{Class|PointPusher|pusher}}/{{Class|PointPuller|puller}} effects, as they are in [[MBF]]. By default, monsters are not subjected to friction and only affected by wind and pushers/pullers if they have the {{Flag|WINDTHRUST}} flag.
+
+*'''{{LE|Monsters cannot cross dropoffs|compat_crossdropoff}}''' (Yes/No)
+:{{c|{{CVAR|C|compat_crossdropoff}}}} ([[CVAR]] and [[MAPINFO]])
+:The original Doom physics code prevented monsters from being thrown off of ledges that they couldn't step off of voluntarily, even when propelled by an outside force. ZDoom allows monsters to be pushed over these dropoffs by weapons and other forces. This options restores the [[vanilla Doom]] behavior.
+
+*'''{{LE|Monsters get stuck over dropoffs|compat_dropoff}}''' (Yes/No)
+:{{c|{{CVAR|C|compat_dropoff}}}} ([[CVAR]] and [[MAPINFO]])
+:This option disables the logic that allows monsters to move away from positions where they hang over a tall dropoff (e.g. the edge of a lift.) Originally a monster got stuck in such a situation. Normally there shouldn't be any need to revert to the old behavior.
+
+*'''{{LE|Monsters see invisible players|compat_invisibility}}''' (Yes/No)
+:{{c|{{CVAR|C|compat_invisibility}}}} ([[CVAR]] and [[MAPINFO]])
+:This option restores Doom's original behavior where monsters would always wake up when seeing a player who is using an invisibility powerup. ZDoom normally uses a more realistic routine where monsters will usually be unable to see those players.
+
+*'''{{LE|No Minotaur floor flames in water|compat_minotaur}}''' (Yes/No)
+:{{c|{{CVAR|C|compat_minotaur}}}} ([[CVAR]] and [[MAPINFO]])
+:If enabled, {{Class|Minotaur|maulotaurs}} are unable to create their {{Class|MinotaurFX2|floor fire attack}} if their feet are clipped by water, sludge, lava or other terrain effect. Note that the flames can still travel across water; this was on the part of Raven Software's developers as it was a bug found in the original clipping code and not an attempt at realism as some may have believed.
+
+*'''{{LE|Spawn item drops on the floor|compat_notossdrops}}''' (Yes/No)
+:{{c|{{CVAR|C|compat_notossdrops}}}} ([[CVAR]] and [[MAPINFO]])
+:Disables drop item tossing.
+
+=== Dehacked behavior ===
+
+*'''{{LE|DEH health settings like Doom2.exe|compat_dehhealth}}''' (Yes/No)
+:{{c|{{CVAR|C|compat_dehhealth}}}} ([[CVAR]] and [[MAPINFO]])
+:[[Boom]] introduced a [[DeHackEd]] bug which applied the maximum health setting to medikits and stim packs. Originally it was only supposed to affect health bonuses. Many ZDoom maps, however, use it to limit the maximum overall health so an unconditional fix is no longer possible. Use this option to play [[vanilla Doom]]-compatible [[WAD]]s with DEHACKED modifications that change the maximum health value.
+
+*'''{{LE|Original A_Mushroom speed in DEH mods|compat_mushroom}}''' (Yes/No)
+:{{c|{{CVAR|C|compat_mushroom}}}} ([[CVAR]] and [[MAPINFO]])
+:If enabled, when the [[A_Mushroom]] codepointer is called from a state that was modified by a [[DeHackEd]] lump, it uses the original [[MBF]] behavior of the codepointer. This option does not affect states defined in [[DECORATE]].
+
+=== Map/action behavior ===
+
+*'''{{LE|All special lines can block&amp;lt;use&amp;gt;|compat_useblocking}}''' (Yes/No)
+:{{c|{{CVAR|C|compat_useblocking}}}} ([[CVAR]] and [[MAPINFO]])
+:Restores Doom's original behavior of any special line blocking use actions. ZDoom corrects this so that walkover actions or scrolling lines don't block uses.
+
+*'''{{LE|Allow any bossdeath for level special|compat_anybossdeath}}''' (Yes/No)
+:{{c|{{CVAR|C|compat_anybossdeath}}}} ([[CVAR]] and [[MAPINFO]])
+:If enabled, any actor type which calls [[A_BossDeath]] triggers the level's special, even if they are not supposed to. This emulates a pre-Doom v1.9 behavior which is exploited by {{dw|Doomsday_of_UAC|Doomsday of UAC}}.
+
+*'''{{LE|Disable Boom door light effect|compat_nodoorlight}}''' (Yes/No)
+:{{c|{{CVAR|C|compat_nodoorlight}}}} ([[CVAR]] and [[MAPINFO]])
+:Disables the [[Boom]]/[[MBF]] light tag effect for doors. This is to allow maps with incorrectly tagged doors to play properly.
+
+*'''{{LE|Find neighboring light like Doom|compat_light}}''' (Yes/No)
+:{{c|{{CVAR|C|compat_light}}}} ([[CVAR]] and [[MAPINFO]])
+:If enabled, when a light level changes to the highest light level found in neighboring sectors, the search is made only for the first tagged sector, like in Doom.
+
+*'''{{LE|Find shortest textures like Doom|compat_shorttex}}''' (Yes/No)
+:{{c|{{CVAR|C|compat_shorttex}}}} ([[CVAR]] and [[MAPINFO]])
+:Doom treats the first texture in the TEXTURE1 lump as no texture at all. But the function that looks for the shortest texture ignored that and checked texture n°0 as well. This option re-enables this buggy behavior for old WADs that require it.
+
+*'''{{LE|Use buggier stair building|compat_stairs}}''' (Yes/No)
+:{{c|{{CVAR|C|compat_stairs}}}} ([[CVAR]] and [[MAPINFO]])
+:When looking for all tagged sectors to build stairs, Doom.exe resumed the search with the last sector of the current stair, not the one following the starting sector.
+
+*'''{{LE|Use Doom's floor motion behavior|compat_floormove}}''' (Yes/No)
+:{{c|{{CVAR|C|compat_floormove}}}} ([[CVAR]] and [[MAPINFO]])
+:This option undoes a [[Boom]] fix to floor movement logic. If this option is on, a floor may rise through the ceiling, or a ceiling may lower through a floor.
+
+*'''{{LE|Use Doom's point-on-line algorithm|compat_pointonline}}''' (Yes/No)
+:{{c|{{CVAR|C|compat_pointonline}}}} ([[CVAR]] and [[MAPINFO]])
+:Re-enables Doom's original, bugged behaviour for deciding exactly what side of a line a point that sits exactly on a line should be on.
+
+*'''{{LE|Level exit can be triggered more than once|compat_multiexit}}''' (Yes/No)
+:{{c|{{CVAR|C|compat_multiexit}}}} ([[CVAR]] and [[MAPINFO]])
+:Allows level exits to be triggered multiple times. This is required by (and automatically applied to) [[Daedalus: Alien Defense]]'s "Travel Tube" maps to work around some faulty scripting.
+
+=== Physics behavior ===
+
+*'''{{LE|Actors are infinitely tall|compat_nopassover}}''' (Yes/No)
+:{{c|{{CVAR|C|compat_nopassover}}}} ([[CVAR]] and [[MAPINFO]])
+:Doom's collision code treated all actors as infinitely tall, i.e. it was impossible to jump over any solid object. Needless to say, with such a setup 3D bridges and similar effects are impossible to create. You can re-enable this effect with this option but be careful: Enabling it will seriously affect any map that expects proper z-sensitive object collision detection.
+
+*'''{{LE|Boom scrollers are additive|compat_boomscroll}}''' (Yes/No)
+:{{c|{{CVAR|C|compat_boomscroll}}}} ([[CVAR]] and [[MAPINFO]])
+:The texture scrolling specials introduced in [[Boom]] were originally made to stack with each other. Enable this option to restore that behavior.
+
+*'''{{LE|Cannot travel straight NSEW|compat_badangles}}''' (Yes/No)
+:{{c|{{CVAR|C|compat_badangles}}}} ([[CVAR]] and [[MAPINFO]])
+:This option emulates the error in the original engine's sine table by offsetting player angle when spawning or teleporting by one fineangle (approximatively 0.044°), preventing the player from facing directly in a cardinal direction.
+
+*'''{{LE|Enable wall running|compat_wallrun}}''' (Yes/No)
+:{{c|{{CVAR|C|compat_wallrun}}}} ([[CVAR]] only)
+:Re-enables the wallrunning bug. It is not recommended to use this option unless some map absolutely requires it. As it depends on a bug it has serious side effects on the movement code and makes any fast movement become erratic.
+:Additionally, this option reestablish the original sliding code.
+
+*'''{{LE|Raven scrollers use original speed|compat_ravenscroll}}''' (Yes/No)
+:{{c|{{CVAR|C|compat_ravenscroll}}}} ([[CVAR]] and [[MAPINFO]])
+:The scrolling floor specials in [[Heretic]] and [[Hexen]] move the player much faster than the actual texture scrolling speed. Enable this option to restore this effect.
+
+*'''{{LE|Self-referencing sectors don't block shots|Self ref. sectors don't block shots|compat_trace}}''' (Yes/No)
+:{{c|{{CVAR|C|compat_trace}}}} ([[CVAR]] and [[MAPINFO]])
+:Doom's hitscan tracing code ignores all lines with both sides in the same sector. ZDoom's does not. This option reverts to the original but less precise behavior.
+:This option now also covers the original behavior or sight checks for such lines.
+
+*'''{{LE|Use Doom code for hitscan checks|compat_hitscan}}''' (Yes/No)
+:{{c|{{CVAR|C|compat_hitscan}}}} ([[CVAR]])
+:If enabled, the original Doom code for hitscan attacks is used. This reintroduces two bugs which makes hitscan attacks less likely to hit. The first is that it is a monster's cross-section, rather than its bounding box, that is used to check for impact; this makes attacks with a limited range (especially melee attacks) unlikely to hit very wide monsters. The second is the blockmap bug: if an actor crosses [[BLOCKMAP|block]] boundaries and its center is in a different block than the one in which the impact happens, then there is no collision at all, letting attacks pass through it harmlessly. 
+
+*'''{{LE|Use Doom heights for missile clipping|compat_missileclip}}''' (Yes/No)
+:{{c|{{CVAR|C|compat_missileclip}}}} ([[CVAR]] and [[MAPINFO]])
+:If enabled, actors use their original heights for the purposes of projectile collision. This allows for decorations to be pass-through for projectiles as they were originally in Doom while still blocking other actors correctly. Specifically, this affects actors with negative values defined for their ''{{Property|ProjectilePassHeight}}'' [[Actor properties#Collision_and_.27Physics.27|property]].
+
+=== Rendering behavior ===
+
+*'''{{LE|Draw polyobjects like Hexen|compat_polyobj}}''' (Yes/No)
+:{{c|{{CVAR|C|compat_polyobj}}}} ([[CVAR]] and [[MAPINFO]])
+:Uses the old flawed [[polyobject]] system, for maps that relied on its glitches.
+
+*'''{{LE|Ignore Y offsets on masked midtextures|compat_maskedmidtex}}''' (Yes/No)
+:{{c|{{CVAR|C|compat_maskedmidtex}}}} ([[CVAR]] and [[MAPINFO]])
+:This option emulates a vanilla renderer glitch by ignoring the Y locations of patches drawn on two-sided midtextures and instead always drawing them at the top of the texture.
+
+*'''{{LE|Invert sprite sorting|compat_spritesort}}''' (Yes/No)
+:{{c|{{CVAR|C|compat_spritesort}}}} ([[CVAR]] and [[MAPINFO]])
+:If enabled, the original Doom sorting order for overlapping sprites is used.
+
+=== Sound behavior ===
+
+*'''{{LE|Cripple sound for silent BFG trick|compat_soundslots}}''' (Yes/No)
+:{{c|{{CVAR|C|compat_soundslots}}}} ([[CVAR]] only)
+:Use this only if you can't live without the silent BFG trick! This option seriously cripples the sound system so that each actor can only play one sound at once. Note that this will also introduce other sound glitches.
+
+*'''{{LE|Don't let others hear your pickups|compat_silentpickup}}''' (Yes/No)
+:{{c|{{CVAR|C|compat_silentpickup}}}} ([[CVAR]] only)
+:Restores Doom's original behavior to play pickup sounds only for the player that is picking up an item. Obviously this option is only useful in multiplayer games.
+
+*'''{{LE|Instant moving floors are not silent|Inst. moving floors are not silent|compat_silentinstantfloors|compat_silent_instant_floors}}''' (Yes/No)
+:{{c|{{CVAR|C|compat_silentinstantfloors}}}} ([[CVAR]]) and {{c|compat_silent_instant_floors}} ([[MAPINFO]])
+:ZDoom normally disables the stop sound for floors that move instantly from one height to another.  Enable this setting to make the stop sound be played in these special cases.
+
+*'''{{LE|Sector sounds use center as source|compat_sectorsounds}}''' (Yes/No)
+:{{c|{{CVAR|C|compat_sectorsounds}}}} ([[CVAR]] and [[MAPINFO]])
+:Normally when sectors make noise, ZDoom uses the point of that sector which is closest to the listener as the source of the sound. (Ensuring that large sectors make sound all throughout)  Enable this option to make ZDoom revert to the old behavior which caused these sounds to originate from the center of their sector.
+
+*'''{{LE|Sounds stop when actor vanishes|compat_soundcutoff}}''' (Yes/No)
+:{{c|{{CVAR|C|compat_soundcutoff}}}} ([[CVAR]] and [[MAPINFO]])
+:This option cuts a sound off if it lasted more than its source's "life" in the game world.
+
+*'''{{LE|Use original sound target handling|compat_soundtarget}}''' (Yes/No)
+:{{c|{{CVAR|C|compat_soundtarget}}}} ([[CVAR]] and [[MAPINFO]])
+:[[ZDoom]] changed the sound alert handling for monsters in 2.0.90 so that the sound target is no longer preserved by a sector. While this allows more control over the actions taking place in a map it had severe side effects in many maps that spawn monsters while playing. These maps are counting on the monsters being alerted immediately and didn't bother with proper positioning because it didn't matter. This option restores the old alerting method from Doom.exe which was valid up to [[version history|ZDoom 2.0.63a]].
+
+[[Category:Menus]]</text>
+    <sha1>58uooc49ezcqvfbduaxayzcrykxojwp</sha1>
+  </revision>
+</page>

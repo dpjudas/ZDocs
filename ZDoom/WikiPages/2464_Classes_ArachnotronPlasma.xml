@@ -1,0 +1,114 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>Classes:ArachnotronPlasma</title>
+  <ns>0</ns>
+  <id>2464</id>
+  <revision>
+    <id>48910</id>
+    <parentid>48480</parentid>
+    <timestamp>2021-12-27T11:13:57Z</timestamp>
+    <contributor>
+      <username>Jekyll Grim Payne</username>
+      <id>2175</id>
+    </contributor>
+    <comment>updated in accordance with updated ZScriptDefinitionNote template</comment>
+    <origin>48910</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="1684" sha1="edyp0pol0dozltybatfyj2knia6yqjg" xml:space="preserve">{{Actor|
+| type = Explosive
+| name = Arachnotron plasma
+| class = ArachnotronPlasma
+| game = Doom2
+| spawnid = 129
+| spawnname = T_ARACHNOTRONPLASMA
+}}
+[[Classes]]: &lt;u&gt;ArachnotronPlasma&lt;/u&gt;
+
+
+The projectile fired by an [[Classes:Arachnotron|Arachnotron]].
+
+
+==== [[ZScript]] definition ====
+{{ZScriptDefinitionNote|actors/doom/arachnotron.zs}}
+ class ArachnotronPlasma : Actor
+ {
+ 	Default
+ 	{
+ 		{{Property|Radius}} 13;
+ 		{{Property|Height}} 8;
+ 		{{Property|Speed}} 25;
+ 		{{Property|Damage}} 5;
+ 		Projectile;
+ 		+{{Flag|RANDOMIZE}}
+ 		+{{Flag|ZDOOMTRANS}}
+ 		{{Property|RenderStyle}} "Add";
+ 		{{Property|Alpha}} 0.75;
+ 		{{Property|SeeSound}} "baby/attack";
+ 		{{Property|DeathSound}} "baby/shotx";
+ 	}
+ 	States
+ 	{
+ 	Spawn:
+ 		APLS AB 5 BRIGHT;
+ 		Loop;
+ 	Death:
+ 		APBX ABCDE 5 BRIGHT;
+ 		Stop;
+ 	}
+ }
+==== [[DECORATE]] definition ====
+{{DecorateDefinitionNote}}
+
+ ACTOR &lt;u&gt;ArachnotronPlasma&lt;/u&gt;
+ {
+   {{Property|Radius}} 13
+   {{Property|Height}} 8
+   {{Property|Speed}} 25
+   {{Property|Damage}} 5
+   {{Property|Projectile}}
+   +{{Flag|RANDOMIZE}}
+   {{Property|RenderStyle}} Add 
+   {{Property|Alpha}} 0.75
+   {{Property|SeeSound}} "baby/attack"
+   {{Property|DeathSound}} "baby/shotx"
+   States
+   {
+   Spawn:
+     APLS AB 5 Bright
+     Loop
+   Death:
+     APBX ABCDE 5 Bright
+     Stop
+   }
+ }
+
+==== [[ZScript]] definition ====
+ class ArachnotronPlasma : Actor
+ {
+ 	Default
+ 	{
+ 		Radius 13;
+ 		Height 8;
+ 		Speed 25;
+ 		Damage 5;
+ 		Projectile;
+ 		+RANDOMIZE
+ 		+ZDOOMTRANS
+ 		RenderStyle "Add";
+ 		Alpha 0.75;
+ 		SeeSound "baby/attack";
+ 		DeathSound "baby/shotx";
+ 	}
+ 	States
+ 	{
+ 	Spawn:
+ 		APLS AB 5 BRIGHT;
+ 		Loop;
+ 	Death:
+ 		APBX ABCDE 5 BRIGHT;
+ 		Stop;
+ 	}
+ }</text>
+    <sha1>edyp0pol0dozltybatfyj2knia6yqjg</sha1>
+  </revision>
+</page>

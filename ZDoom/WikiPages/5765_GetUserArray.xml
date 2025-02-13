@@ -1,0 +1,49 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>GetUserArray</title>
+  <ns>0</ns>
+  <id>5765</id>
+  <revision>
+    <id>44989</id>
+    <parentid>44479</parentid>
+    <timestamp>2017-04-29T15:32:46Z</timestamp>
+    <contributor>
+      <username>Blue Shadow</username>
+      <id>2021</id>
+    </contributor>
+    <comment>Update</comment>
+    <origin>44989</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="1170" sha1="t003lqzgynaxonekrs9070e3b8p7qg2" xml:space="preserve">__NOTOC__'''GetUserArray''' (int ''tid'', str ''name'', int ''pos'')
+
+== Usage ==
+Retrieves the value of one of the affected actor's [[user array|user]] or native array-bound variables. Native arrays are arrays which are preceded by the keyword {{c|native}} when declared.
+
+=== Parameters ===
+* ''tid'': the [[TID]] of the affected actor. If 0, the script's activator is used.
+* ''name'': the name of the array. Acceptable array types are ''int'', ''double'', ''bool'', ''string'' and ''name''.
+* ''pos'': the position in the array, 0-indexed.
+
+=== Return value ===
+The value stored in the specified position of the array. ''double'' is returned as a [[fixed point number|fixed-point]] value, while ''name'' is returned as a string.
+
+== Examples ==
+This function adds a rank to the specified 'skill' in the activator.
+ function void SetRanks (int skill, int amt)
+ {
+     [[SetUserArray]](0, "user_skills", skill, amt + '''GetUserArray'''(0, "user_skills", skill));
+ }
+
+== See also ==
+* [[A_SetUserArray]]
+* [[A_SetUserArrayFloat]]
+* [[A_SetUserVar]]
+* [[A_SetUserVarFloat]]
+* [[GetUserVariable]]
+* [[SetUserArray]]
+* [[SetUserVariable]]
+
+[[category:ACS Actor functions]]</text>
+    <sha1>t003lqzgynaxonekrs9070e3b8p7qg2</sha1>
+  </revision>
+</page>

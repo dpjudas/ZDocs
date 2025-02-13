@@ -1,0 +1,48 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>MoveFloor</title>
+  <ns>0</ns>
+  <id>9627</id>
+  <revision>
+    <id>49661</id>
+    <parentid>49659</parentid>
+    <timestamp>2022-10-26T17:26:45Z</timestamp>
+    <contributor>
+      <username>Boondorl</username>
+      <id>2606</id>
+    </contributor>
+    <minor />
+    <comment>/* Parameters */</comment>
+    <origin>49661</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="1606" sha1="nrkkwj7hh33fxcwlxmqt8iohrvse4v1" xml:space="preserve">{{ZScriptNote}}
+[[Structs:Sector|Sector]]
+
+native int '''MoveFloor'''(double ''speed'', double ''dest'', int ''crush'', int ''direction'', bool ''hexencrush''[, bool ''instant''])
+
+== Usage ==
+Moves the floor of the Sector along with any attached sectors and Actors in it. This is what ZDoom's raising and lowering floors use to change the map geometry.
+
+'''Note:''' Any movement done this way will not have interpolation. A [[Classes:MovingFloor|MovingFloor]] must be used to get this effect.
+
+=== Parameters ===
+*''speed'' - The amount to move by. This should be positive with ''direction'' determining which way to move.
+*''dest'' - The destination distance from the world origin to cap movement to. Note that this is ''not'' the z position in the map. See [[PointToDist]] for converting a height to a distance.
+*''crush'' - The amount of damage to deal if a damageable Actor blocked its movement. Setting to -1 will stop the floor from continuing to move.
+*''direction'' - The direction to move vertically. 1 is up and -1 is down.
+*''hexencrush'' - If set to true, stop the floor's movement even if ''crush'' isn't -1.
+*''instant'' - If set to true, vertical interpolation for any Actors on the floor is disabled when doing the movement. Default is false.
+
+=== Return value ===
+Returns the result of the floor movement. This can be one of three values:
+*'''Sector.MOVE_OK''' - The floor movement had no issues.
+*'''Sector.MOVE_CRUSHED''' - Something was blocking the floor's movement.
+*'''Sector.MOVE_PASTDEST''' - The floor reached its destination.
+
+== Examples ==
+{{noexamples}}
+
+[[Category:ZScript]]</text>
+    <sha1>nrkkwj7hh33fxcwlxmqt8iohrvse4v1</sha1>
+  </revision>
+</page>

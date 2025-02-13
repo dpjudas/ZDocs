@@ -1,0 +1,118 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>FOR and WHILE loops</title>
+  <ns>0</ns>
+  <id>5279</id>
+  <revision>
+    <id>36757</id>
+    <parentid>36755</parentid>
+    <timestamp>2013-06-14T21:31:38Z</timestamp>
+    <contributor>
+      <username>Gez</username>
+      <id>1283</id>
+    </contributor>
+    <minor />
+    <comment>Article name emphasis with bold instead of upper case</comment>
+    <origin>36757</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="2967" sha1="jtmk582rjszyji31pq29x2120n7q3lh" xml:space="preserve">'''Loops''' can reduce the size of a script dramatically, when an action must be performed repeatedly.
+
+In this script are several sectors, here 1 to X. Of course, X must be replaced with the highest sector ID number.
+Each sector has the [[Floor_Waggle]] special.
+
+This is easily a copy and paste setup, but the sector IDs must then be changed manually.
+The script could be written like this:
+
+ #include "zcommon.acs"
+ SCRIPT 1 {{SType|Open}}
+ {
+      [[Floor_Waggle]] (1, 200, 50, 0, 0);
+      [[delay]] (7);
+      [[Floor_Waggle]] (2, 200, 50, 0, 0);
+      [[delay]] (7);
+      [[Floor_Waggle]] (3, 200, 50, 0, 0);
+      [[delay]] (7);
+ 
+                       |
+                       |
+                       |
+ 
+     [[Floor_Waggle]] (X, 200, 50, 0, 0);
+     [[delay]] (7);
+ }
+
+
+An easier way would be, if a script were to update the sector IDs in a loop.
+Either a FOR loop or a WHILE loop could be used.
+
+===FOR loop===
+
+The for loop can be written in two ways, the difference is how the variable is declared.
+
+ #include "zcommon.acs"
+ SCRIPT 1 {{SType|Open}}
+ {
+     for ( int sid = 1; sid &lt; X; sid++ )  // sid is the sector ID
+     {
+         [[Floor_Waggle]] (sid, 200, 50, 0, 0);
+         [[delay]] (7); 
+     }
+ }
+
+or this
+
+ #include "zcommon.acs"
+ script 1 {{SType|Open}}
+ {
+     int sid = 0;
+ 
+     for ( sid = 1; sid &lt; X; sid++ )  // sid is the sector ID
+     {
+         [[Floor_Waggle]] (sid, 100, 20, 0, 0 );
+         [[delay]] (7);
+     }
+ }
+
+The first part of the for statement (here &lt;tt&gt;sid = 1&lt;/tt&gt;) is executed once before the loop starts running. The third part of the for statement (here &lt;tt&gt;sid++&lt;/tt&gt;) is executed each time during the loop just before it starts over or ends. The second part of the for statement (here &lt;tt&gt;sid &lt; x&lt;/tt&gt;) is the condition that must be true to continue looping.
+
+In this example, the for loop sets sid to 1 (&lt;tt&gt;sid = 1&lt;/tt&gt;) before anything inside the loop executes. After the delay, it increments sid by one (&lt;tt&gt;sid++&lt;/tt&gt;). As long as sid is less than X (&lt;tt&gt;sid &lt; X&lt;/tt&gt;), it will repeat everything inside the braces.
+
+===WHILE loop===
+
+ #include "zcommon.acs"
+ script 1 {{SType|Open}}
+ {
+     int sid = 1;  // sid is the sector ID
+ 
+     while ( sid &lt; X )
+     {
+         [[Floor_Waggle]] (sid, 100, 20, 0, 0);
+         [[delay]] (7);  
+         sid++;
+     }
+ }
+
+In a case like this, the decision to use either the for or the while loop comes down to
+a programmer's preference, because in the for loop all loop control statements are in one place.
+
+===UNTIL loop===
+
+ #include "zcommon.acs"
+ script 1 {{SType|Open}}
+ {
+     int sid = 1;  // sid is the sector ID
+ 
+     until ( sid &gt;= X )
+     {
+         [[Floor_Waggle]] (sid, 100, 20, 0, 0);
+         [[delay]] (7);  
+         sid++;
+     }
+ }
+
+An until loop is the opposite of a while loop. An until loop will continue looping until a condition becomes true, whereas a while loop will continue looping until a condition becomes false.
+
+[[Category:ACS]]</text>
+    <sha1>jtmk582rjszyji31pq29x2120n7q3lh</sha1>
+  </revision>
+</page>

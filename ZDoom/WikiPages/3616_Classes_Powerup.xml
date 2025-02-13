@@ -1,0 +1,330 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>Classes:Powerup</title>
+  <ns>0</ns>
+  <id>3616</id>
+  <revision>
+    <id>53729</id>
+    <parentid>51714</parentid>
+    <timestamp>2024-11-13T12:27:08Z</timestamp>
+    <contributor>
+      <username>Jekyll Grim Payne</username>
+      <id>2175</id>
+    </contributor>
+    <comment>/* Methods */</comment>
+    <origin>53729</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="11459" sha1="kmbf8f9eqykd4c3bgnq3lg7o0ckqkgj" xml:space="preserve">{{Actor|
+| type = Internal
+| name = Power-up
+| class = Powerup
+}}[[Classes]]: {{Class|Inventory}}&amp;rarr;&lt;u&gt;Powerup&lt;/u&gt;&lt;br&gt;
+&amp;ensp;&amp;rarr;{{Class|PowerBuddha}}&lt;br&gt;
+&amp;ensp;&amp;rarr;{{Class|PowerDamage}}&lt;br&gt;
+&amp;ensp;&amp;rarr;{{Class|PowerDoubleFiringSpeed}}&lt;br&gt;
+&amp;ensp;&amp;rarr;{{Class|PowerDrain}}&lt;br&gt;
+&amp;ensp;&amp;rarr;{{Class|PowerFlight}}&lt;br&gt;
+&amp;ensp;&amp;rarr;{{Class|PowerFrightener}}&lt;br&gt;
+&amp;ensp;&amp;rarr;{{Class|PowerHighJump}}&lt;br&gt;
+&amp;ensp;&amp;rarr;{{Class|PowerInfiniteAmmo}}&lt;br&gt;
+&amp;ensp;&amp;rarr;{{Class|PowerInvisibility}}&lt;br&gt;
+&amp;ensp;&amp;ensp;&amp;rarr;{{Class|PowerGhost}}&lt;br&gt;
+&amp;ensp;&amp;ensp;&amp;rarr;{{Class|PowerShadow}}&lt;br&gt;
+&amp;ensp;&amp;rarr;{{Class|PowerInvulnerable}}&lt;br&gt;
+&amp;ensp;&amp;rarr;{{Class|PowerIronFeet}}&lt;br&gt;
+&amp;ensp;&amp;ensp;&amp;rarr;{{Class|PowerMask}}&lt;br&gt;
+&amp;ensp;&amp;rarr;{{Class|PowerLightAmp}}&lt;br&gt;
+&amp;ensp;&amp;ensp;&amp;rarr;{{Class|PowerTorch}}&lt;br&gt;
+&amp;ensp;&amp;rarr;{{Class|PowerMinotaur}}&lt;br&gt;
+&amp;ensp;&amp;rarr;{{Class|PowerMorph}}&lt;br&gt;
+&amp;ensp;&amp;rarr;{{Class|PowerProtection}}&lt;br&gt;
+&amp;ensp;&amp;rarr;{{Class|PowerReflection}}&lt;br&gt;
+&amp;ensp;&amp;rarr;{{Class|PowerRegeneration}}&lt;br&gt;
+&amp;ensp;&amp;rarr;{{Class|PowerScanner}}&lt;br&gt;
+&amp;ensp;&amp;rarr;{{Class|PowerSpeed}}&lt;br&gt;
+&amp;ensp;&amp;rarr;{{Class|PowerStrength}}&lt;br&gt;
+&amp;ensp;&amp;rarr;{{Class|PowerTargeter}}&lt;br&gt;
+&amp;ensp;&amp;rarr;{{Class|PowerTimeFreezer}}&lt;br&gt;
+&amp;ensp;&amp;rarr;{{Class|PowerWeaponLevel2}}&lt;br&gt;
+
+'''Powerups''' are classes that are placed in the player's inventory to tell the game that the player possesses a power. In essense, the Powerup class is a variation of the {{Class|Inventory}} class that comes with a few extra features, such as a timer to keep track of its duration (when the duration runs out, the powerup is removed), as well as &lt;code&gt;InitEffect()&lt;/code&gt; and &lt;code&gt;EndEffect()&lt;/code&gt; [[ZScript virtual functions]] that define what happens to the owner of the powerup when it's attached and detached. The Powerup class is normally used to handle various "powerup" effects, such as invulnerability, invisibility, etc., but can also be utilized to add any kind of timed effect affecting its owner.
+
+In this context, the word "powerup" refers to the power itself, not to the {{Class|PowerupGiver}} item that you pick up in order to get the power. For example in ''[[Doom]]'', the {{Class|RadSuit|radiation suit}} is a powerup ''giver'' and is not itself a powerup; instead it ''gives'' a power, in this case, protection from radiation, whimsically named the "{{Class|PowerIronFeet|iron feet}}" powerup by the programmers who made the game.
+
+In the same way, the word "powerup" has traditionally been used for all kinds of artifacts in the game, but some of them are not actually true powerups nor {{Class|PowerupGiver|powerup givers}}; for example in ''Doom'', the {{Class|soulsphere}} is actually a very powerful form of the {{Class|HealthBonus|health bonus}} item and the gained health is just normal health; however, the {{Class|PowerIronFeet|iron feet}} power that the {{Class|RadSuit|radiation suit}} gives is a true powerup, because the effect lasts over a period of time and stays with the player until it is exhausted.
+
+If a negative duration is given to a powerup subclass, it will be the amount of seconds the power stays active. If a powerup has the {{Flag|INVENTORY.HUBPOWER}} flag, it stays active when moving between levels within a [[hub]]. If a powerup has an {{Property|Inventory.Icon}} property, this icon is displayed on the [[HUD]] while the power is active. (All standard HUDs will place it in the upper-right corner.)
+
+=== Powerup and PowerupGiver ===
+
+Normally, defining a custom powerup requires defining a custom {{Class|PowerupGiver}} first (which functions as a pickup), then defining a powerup (unless one of the default one is used, like {{Class|PowerInvulnerable}}), and then attaching the powerup to its PowerupGiver through the &lt;code&gt;Powerup.Type&lt;/code&gt; property. 
+
+Properties and flags, such as &lt;code&gt;Powerup.duration&lt;/code&gt;, can be defined either in a powerup class or a {{Class|PowerupGiver}} class. If defined in the PowerupGiver, they will be transferred to the powerup itself.
+
+In [[ZScript]], If a powerup carries behavior but does ''not'' exist as a pickup in the world and can only be received through scripts, then the powerup can be given to the player directly, and you don't need to define a PowerupGiver for it. However, if the powerup is meant to exist as an item, then it needs a PowerupGiver. Powerups themselves cannot be placed in the world to function as pickups.
+
+Powerups support these special properties in addition to the basic [[inventory properties]]:
+{{:Powerup properties}}
+
+=== Methods ===
+{{ZScriptNote}}
+All of these methods are virtual and can be overridden to define/add custom behavior.
+{{: Powerup virtual functions}}
+
+Powerups also use the '''[[DoEffect]]''' virtual (defined in {{class|Inventory}}) to apply their looped effects, and the '''[[Tick]]''' virtual to count down their time.
+
+=== [[ZScript]] definition ===
+{{ZScriptDefinitionNote|actors/inventory/powerups.zs#L65}} 
+&lt;syntaxhighlight lang="csharp"&gt;
+class Powerup : Inventory
+{
+	int EffectTics, MaxEffectTics;	
+	color BlendColor;
+	Name Mode;			// Meaning depends on powerup - used for Invulnerability and Invisibility
+	double Strength;		// Meaning depends on powerup - currently used only by Invisibility
+	int Colormap;
+	const SPECIALCOLORMAP_MASK =  0x00b60000;
+
+	property Strength: Strength;
+	property Mode: Mode;
+	
+	// Note, that while this is an inventory flag, it only has meaning on an active powerup.
+	override bool GetNoTeleportFreeze() 
+	{ 
+		return bNoTeleportFreeze; 
+	}
+
+	//===========================================================================
+	//
+	// APowerup :: Tick
+	//
+	//===========================================================================
+
+	override void Tick ()
+	{
+		// Powerups cannot exist outside an inventory
+		if (Owner == NULL)
+		{
+			Destroy ();
+		}
+		if (EffectTics == 0 || (EffectTics &gt; 0 &amp;&amp; --EffectTics == 0))
+		{
+			Destroy ();
+		}
+	}
+
+	//===========================================================================
+	//
+	// APowerup :: HandlePickup
+	//
+	//===========================================================================
+
+	override bool HandlePickup (Inventory item)
+	{
+		if (item.GetClass() == GetClass())
+		{
+			let power = Powerup(item);
+			if (power.EffectTics == 0)
+			{
+				power.bPickupGood = true;
+				return true;
+			}
+			// Color gets transferred if the new item has an effect.
+
+			// Increase the effect's duration.
+			if (power.bAdditiveTime) 
+			{
+				EffectTics += power.EffectTics;
+				MaxEffectTics = Max(EffectTics, MaxEffectTics);
+				BlendColor = power.BlendColor;
+			}
+			// If it's not blinking yet, you can't replenish the power unless the
+			// powerup is required to be picked up.
+			else if (EffectTics &gt; BLINKTHRESHOLD &amp;&amp; !power.bAlwaysPickup)
+			{
+				return true;
+			}
+			// Reset the effect duration.
+			else if (power.EffectTics &gt; EffectTics)
+			{
+				EffectTics = MaxEffectTics = power.EffectTics;
+				BlendColor = power.BlendColor;
+			}
+			power.bPickupGood = true;
+			return true;
+		}
+		return false;
+	}
+
+	//===========================================================================
+	//
+	// APowerup :: CreateCopy
+	//
+	//===========================================================================
+
+	override Inventory CreateCopy (Actor other)
+	{
+		// Get the effective effect time.
+		EffectTics = MaxEffectTics = abs (EffectTics);
+		// Abuse the Owner field to tell the
+		// InitEffect method who started it;
+		// this should be cleared afterwards,
+		// as this powerup instance is not
+		// properly attached to anything yet.
+		Owner = other;
+		// Actually activate the powerup.
+		InitEffect ();
+		// Clear the Owner field, unless it was
+		// changed by the activation, for example,
+		// if this instance is a morph powerup;
+		// the flag tells the caller that the
+		// ownership has changed so that they
+		// can properly handle the situation.
+		if (!bCreateCopyMoved)
+		{
+			Owner = NULL;
+		}
+		// All done.
+		return self;
+	}
+
+	//===========================================================================
+	//
+	// APowerup :: CreateTossable
+	//
+	// Powerups are never droppable, even without IF_UNDROPPABLE set.
+	//
+	//===========================================================================
+
+	override Inventory CreateTossable (int amount)
+	{
+		return NULL;
+	}
+
+	//===========================================================================
+	//
+	// APowerup :: InitEffect
+	//
+	//===========================================================================
+
+	virtual void InitEffect() 
+	{
+		// initialize this only once instead of recalculating repeatedly.
+		Colormap = ((BlendColor &amp; 0xFFFF0000) == SPECIALCOLORMAP_MASK)? BlendColor &amp; 0xffff : PlayerInfo.NOFIXEDCOLORMAP;
+	}
+
+	//===========================================================================
+	//
+	// APowerup :: DoEffect
+	//
+	//===========================================================================
+
+	override void DoEffect ()
+	{
+		if (Owner == NULL || Owner.player == NULL)
+		{
+			return;
+		}
+
+		if (EffectTics &gt; 0)
+		{
+			if (Colormap != PlayerInfo.NOFIXEDCOLORMAP)
+			{
+				if (!isBlinking())
+				{
+					Owner.player.fixedcolormap = Colormap;
+				}
+				else if (Owner.player.fixedcolormap == Colormap)	
+				{
+					// only unset if the fixed colormap comes from this item
+					Owner.player.fixedcolormap = PlayerInfo.NOFIXEDCOLORMAP;
+				}
+			}
+		}
+	}
+
+	//===========================================================================
+	//
+	// APowerup :: EndEffect
+	//
+	//===========================================================================
+
+	virtual void EndEffect ()
+	{
+		if (colormap != PlayerInfo.NOFIXEDCOLORMAP &amp;&amp; Owner &amp;&amp; Owner.player &amp;&amp; Owner.player.fixedcolormap == colormap)
+		{ // only unset if the fixed colormap comes from this item
+			Owner.player.fixedcolormap = PlayerInfo.NOFIXEDCOLORMAP;
+		}
+	}
+
+	//===========================================================================
+	//
+	// APowerup :: Destroy
+	//
+	//===========================================================================
+
+	override void OnDestroy ()
+	{
+		EndEffect ();
+		Super.OnDestroy();
+	}
+
+	//===========================================================================
+	//
+	// APowerup :: GetBlend
+	//
+	//===========================================================================
+
+	override color GetBlend ()
+	{
+		if (Colormap != Player.NOFIXEDCOLORMAP) return 0;
+		if (isBlinking()) return 0;
+		return BlendColor;
+	}
+
+	//===========================================================================
+	//
+	// Inventory :: GetPowerupIcon
+	//
+	// Returns the icon that should be drawn for an active powerup.
+	//
+	//===========================================================================
+
+	virtual clearscope version("2.5") TextureID GetPowerupIcon() const
+	{
+		return Icon;
+	}
+
+	//===========================================================================
+	//
+	// APowerup :: isBlinking 
+	//
+	//===========================================================================
+
+	virtual clearscope bool isBlinking() const
+	{
+		return (EffectTics &lt;= BLINKTHRESHOLD &amp;&amp; (EffectTics &amp; 8) &amp;&amp; !bNoScreenBlink);
+	}
+
+	//===========================================================================
+	//
+	// APowerup :: OwnerDied
+	//
+	// Powerups don't last beyond death.
+	//
+	//===========================================================================
+
+	override void OwnerDied ()
+	{
+		Destroy ();
+	}
+
+	
+}&lt;/syntaxhighlight&gt;
+
+=== [[DECORATE]] definition ===
+{{DecorateDefinitionNote}}
+ ACTOR &lt;u&gt;Powerup&lt;/u&gt; : {{Class|Inventory}} native {}</text>
+    <sha1>kmbf8f9eqykd4c3bgnq3lg7o0ckqkgj</sha1>
+  </revision>
+</page>

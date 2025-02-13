@@ -1,0 +1,71 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>A FireShotgun</title>
+  <ns>0</ns>
+  <id>4872</id>
+  <revision>
+    <id>53781</id>
+    <parentid>52640</parentid>
+    <timestamp>2024-11-19T10:59:07Z</timestamp>
+    <contributor>
+      <username>Jekyll Grim Payne</username>
+      <id>2175</id>
+    </contributor>
+    <minor />
+    <origin>53781</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="1487" sha1="r3yy301k83m0njhw7dkm5zeavbn6nh6" xml:space="preserve">{{BuiltInFunctionNote|A_FireBullets}}
+{{codepointer|Weapon attack}}
+{{doomwiki|A_FireShotgun}}
+
+'''{{class|StateProvider}}'''
+
+{{c|action void '''A_FireShotgun'''()}}
+
+== Usage ==
+Performs Doom's [[Classes:Shotgun|shotgun]] attack, firing seven pellets each dealing 5 * 1d3 damage. This is a shortcut for calling [[A_FireBullets]], [[A_StartSound]] and [[A_GunFlash]] with predetermined hard-coded parameters.
+
+This code is the equivalent of calling A_FireShotgun for 7 tics on the A frame of the SHTG sprite:
+
+ SHTG A 7
+ {
+   [[A_FireBullets]] (5.6, 0, 7, 5);
+   [[A_StartSound]]("weapons/shotgf", CHAN_WEAPON);
+   [[A_GunFlash]]();
+ }
+
+If [[Player_setup#Vertical_Bullet_Spread|vertical bullet spread for weapons]] is enabled, the function applies vertical spread in addition to the horizontal one.
+
+== [[ZScript]] definition ==
+{{ZScriptDefinitionNote|actors/doom/weaponshotgun.zs#L58}}
+&lt;syntaxhighlight lang="csharp"&gt;
+action void A_FireShotgun()
+{
+	if (player == null)
+	{
+		return;
+	}
+
+	A_StartSound ("weapons/shotgf", CHAN_WEAPON);
+	Weapon weap = player.ReadyWeapon;
+	if (weap != null &amp;&amp; invoker == weap &amp;&amp; stateinfo != null &amp;&amp; stateinfo.mStateType == STATE_Psprite)
+	{
+		if (!weap.DepleteAmmo (weap.bAltFire, true))
+			return;
+		
+		player.SetPsprite(PSP_FLASH, weap.FindState('Flash'), true);
+	}
+	player.mo.PlayAttacking2 ();
+
+	double pitch = BulletSlope ();
+
+	for (int i = 0; i &lt; 7; i++)
+	{
+		GunShot (false, "BulletPuff", pitch);
+	}
+}&lt;/syntaxhighlight&gt;
+
+[[Category:StateProvider]]</text>
+    <sha1>r3yy301k83m0njhw7dkm5zeavbn6nh6</sha1>
+  </revision>
+</page>

@@ -1,0 +1,56 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>Classes:ArtiTimeBomb</title>
+  <ns>0</ns>
+  <id>2789</id>
+  <revision>
+    <id>39354</id>
+    <parentid>38880</parentid>
+    <timestamp>2015-04-29T17:29:30Z</timestamp>
+    <contributor>
+      <username>Blue Shadow</username>
+      <id>2021</id>
+    </contributor>
+    <minor />
+    <comment>/* DECORATE definition */ Updated</comment>
+    <origin>39354</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="1144" sha1="5gs2ob1ixnxkoymmay8h44sbh375x7a" xml:space="preserve">{{Actor|
+| type = Artifact
+| name = Delmintalintar's Time Bomb of the Ancients
+| class = ArtiTimeBomb
+| game = Heretic
+| doomednum = 34
+| spawnid = 72
+| spawnname = T_ITEMTIMEBOMB 
+}}[[Classes]]: [[Classes:Inventory|Inventory]]&amp;rarr;&lt;u&gt;ArtiTimeBomb&lt;/u&gt;
+
+The ''time bomb'' is a large hourglass that explodes a few seconds after being used.
+
+==== Using in [[DECORATE]] ====
+When this (or inherited actor) is used it spawns [[Classes:ActivatedTimeBomb|ActivatedTimeBomb]] 24 units in front of the user. The spawned bomb targets the user so that any damage inflicted by [[A_TimeBomb]] is credited to him or her.
+
+
+==== [[DECORATE]] definition ====
+ ACTOR &lt;u&gt;ArtiTimeBomb&lt;/u&gt; : {{Class|Inventory}} native
+ {
+   +{{Flag|COUNTITEM}}
+   +{{Flag|FLOATBOB}}
+   +{{Flag|INVENTORY.PICKUPFLASH}}
+   +{{Flag|INVENTORY.INVBAR}}
+   +{{Flag|INVENTORY.FANCYPICKUPSOUND}}
+   {{Property|Inventory.Icon}} "ARTIFBMB"
+   {{Property|Inventory.PickupSound}} "misc/p_pkup"
+   {{Property|Inventory.PickupMessage}} "$TXT_ARTIFIREBOMB"
+   {{Property|Tag}} "$TAG_ARTIFIREBOMB"
+   {{Property|Inventory.DefMaxAmount}}
+   States
+   {
+   Spawn:
+     FBMB E 350
+     Loop
+   }
+ }</text>
+    <sha1>5gs2ob1ixnxkoymmay8h44sbh375x7a</sha1>
+  </revision>
+</page>

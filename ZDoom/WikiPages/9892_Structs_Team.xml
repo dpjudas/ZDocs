@@ -1,0 +1,48 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>Structs:Team</title>
+  <ns>0</ns>
+  <id>9892</id>
+  <revision>
+    <id>53262</id>
+    <parentid>53007</parentid>
+    <timestamp>2024-10-12T08:51:07Z</timestamp>
+    <contributor>
+      <username>Blue Shadow</username>
+      <id>2021</id>
+    </contributor>
+    <minor />
+    <comment>remove {{new}}</comment>
+    <origin>53262</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="1300" sha1="a90t7xmtw4mlpa1xitcdyn29jsyuhxl" xml:space="preserve">The Team struct stores info and functions pertaining to a [[Team]] in [[Multiplayer#Team_deathmatch|team deathmath]] netgames. Such as its' name.
+
+== Constants ==
+*{{c|'''NOTEAM'''}}
+*: Equals 255. If the teams' index is 255, then that means the player isn't in any team. {{Verification}}
+*{{c|'''MAX'''}}
+*: Equals 16. The max amount of teams GZDoom supports.
+
+== Variables ==
+*{{c|[[String]] '''mName'''}}
+*: The name of the team.
+
+== Methods ==
+*{{c|static bool '''{{LE|IsValid}}'''(uint ''teamIndex'')}}
+*: Returns true if the team is valid based on its' index.
+*{{c|[[ZScript_data_types#Color|Color]] '''{{LE|GetPlayerColor}}'''(int ''Slot'')}}
+*: Gets the player color assigned to the team through [[TEAMINFO]].
+*{{c|int '''{{LE|GetTextColor}}'''()}}
+*: Gets the text color assigned to the team. [[Structs:Font#Font_colors|The color is returned as a CR_ value.]]
+*{{c|[[ZScript_data_types#TextureID|TextureID]] '''{{LE|GetLogo}}'''()}}
+*: Returns the TextureID of the teams' logo.
+*{{c|String '''{{LE|GetLogoName}}'''()}}
+*: Returns the texture name of the logo. {{Verification}}
+*{{c|bool '''{{LE|AllowsCustomPlayerColor}}'''()}}
+*: Returns of this team allows member players to use their own player colors. Instead of forcing the team color on them.
+
+[[Category:ZScript]]
+[[Category:Structs]]</text>
+    <sha1>a90t7xmtw4mlpa1xitcdyn29jsyuhxl</sha1>
+  </revision>
+</page>

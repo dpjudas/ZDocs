@@ -1,0 +1,65 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>SetAmmoCapacity (ACS)</title>
+  <ns>0</ns>
+  <id>1767</id>
+  <revision>
+    <id>52592</id>
+    <parentid>49109</parentid>
+    <timestamp>2024-05-04T12:01:13Z</timestamp>
+    <contributor>
+      <username>Jekyll Grim Payne</username>
+      <id>2175</id>
+    </contributor>
+    <comment>added SameNameNote</comment>
+    <origin>52592</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="2762" sha1="826wv2p7xiwfjqa5en2h5yghzvhq9t8" xml:space="preserve">{{SameNameNote|ACS|ZScript|SetAmmoCapacity (Actor)}}
+
+void '''SetAmmoCapacity'''(str ''typename'', int ''maxamount'');
+
+==Usage==
+
+Sets the maximum amount of a type of ammo the player can carry.  Any item from the list {{Class|Ammo}} is accepted, as well as derived types from Ammo, while any other valid [[Inventory]] item will simply be silently ignored.
+
+==Examples==
+
+An example of backpacks that can be ''stacked'', as in, each backpack increases the max ammo a little:
+
+ bool playerbackpack[8] = { {{const|FALSE}} };
+ 
+ script 1 (void)
+ {
+ 	if (playerbackpack[&lt;b&gt;&lt;/b&gt;[[PlayerNumber]]()])
+ 	{
+ 		if ([[GetAmmoCapacity_(ACS)|GetAmmoCapacity]]("{{class|Clip}}") &lt; 800)
+ 		{
+ 			[[SetAmmoCapacity_(ACS)|SetAmmoCapacity]]("{{class|Clip}}", GetAmmoCapacity("{{class|Clip}}") + 100);
+ 			[[SetAmmoCapacity_(ACS)|SetAmmoCapacity]]("{{class|Shell}}", GetAmmoCapacity("{{class|Shell}}") + 25);
+ 			[[SetAmmoCapacity_(ACS)|SetAmmoCapacity]]("{{class|RocketAmmo}}", GetAmmoCapacity("{{class|RocketAmmo}}") + 25);
+ 			[[SetAmmoCapacity_(ACS)|SetAmmoCapacity]]("{{class|Cell}}", GetAmmoCapacity("{{class|Cell}}") + 75);
+ 		}
+ 	}
+ 	else
+ 		playerbackpack[&lt;b&gt;&lt;/b&gt;[[PlayerNumber]]()] = {{const|TRUE}};
+ }
+ 
+ script 998 {{SType|Enter}}
+ {
+ 	if (GetAmmoCapacity("{{class|Clip}}") &gt; 200)
+ 		playerbackpack[&lt;b&gt;&lt;/b&gt;[[PlayerNumber]]()] = {{const|TRUE}};
+ }
+ 
+ script 999 {{SType|Respawn}}
+ {
+ 	playerbackpack[&lt;b&gt;&lt;/b&gt;[[PlayerNumber]]()] = {{const|FALSE}};
+ }
+
+As the backpack will force a change in the amount of ammo the player has the first time it is picked up, this script records the whether each player has picked up a backpack already. There are eight potential players and by default each has their variable set to FALSE. There are two exceptions, which are handled by scripts 998 and 999. 998 checks if the player has a backpack when entering the level by testing their capacity for bullets. 999 resets the player's variable should they die and therefore lose the backpack.
+
+The actual stacking script is number 1, and should be set as the thing special of every backpack. That is, the backpack should have special number 80 ([[ACS_Execute]]) with parameters (1, 0, 0, 0, 0). The script checks if the player has already picked up a backpack previously to this, and if so, starts incrementing each type of ammo a little. It does this by first checking if the ammo has reached the absolute maximum amount. If not, it adds a little bit on to each. Note that it only checks if “Clip” has reached the maximum amount, but as each value is incremented at the same time, they will all hit their limits at the same time as the “Clip” type. If the player hasn't picked up a backpack before, they have now, so their variable is set to TRUE.
+
+[[category:ACS Actor functions]]</text>
+    <sha1>826wv2p7xiwfjqa5en2h5yghzvhq9t8</sha1>
+  </revision>
+</page>

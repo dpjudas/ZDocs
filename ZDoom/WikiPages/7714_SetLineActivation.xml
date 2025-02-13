@@ -1,0 +1,64 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>SetLineActivation</title>
+  <ns>0</ns>
+  <id>7714</id>
+  <revision>
+    <id>49566</id>
+    <parentid>49379</parentid>
+    <timestamp>2022-09-30T22:01:04Z</timestamp>
+    <contributor>
+      <username>Blue Shadow</username>
+      <id>2021</id>
+    </contributor>
+    <minor />
+    <comment>remove {{new}} tags for 4.8.0</comment>
+    <origin>49566</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="2018" sha1="6r3rt16gytg1ct703m2r1yliio952wn" xml:space="preserve">__NOTOC__void '''SetLineActivation''' (int ''lineid'', int ''activation'' [, int ''repeat''])
+
+==Usage==
+Sets the line activation flags of the line with the specified ID.
+
+===Parameters===
+*''lineid'': The ID of the line of which to set the activation flags.
+*''activation'': The activation flags to set. Multiple flags can be set by using the bitwise OR operator (|) between the constant names:
+**'''SPAC_None''' — No flags.
+**'''SPAC_Cross''' — Activated when crossed by player.
+**'''SPAC_Use''' — Activated when used by player.
+**'''SPAC_MCross''' — Activated when crossed by monster.
+**'''SPAC_Impact''' — Activated when hit by projectile.
+**'''SPAC_Push''' — Activated when bumped by player.
+**'''SPAC_PCross''' — Activated crossed by projectile.
+**'''SPAC_UseThrough''' — Activated when used by player (with pass through).
+**'''SPAC_AnyCross''' — Activated by anything crossing it which does not have the {{Flag|TELEPORT}}.
+**'''SPAC_MUse''' — Activated by monsters using it.
+**'''SPAC_MPush''' — Activated by monsters bumping into it.
+**'''SPAC_UseBack''' — The line can be used from the back side.
+*''repeat'': Whether the line's assigned action special can be activated multiple times or not.
+:{| {{prettytable}}
+!Value!!Result
+|-
+|Greater than 0||Can be activated multiple times
+|-
+|Equal to 0||Can only be activated once
+|-
+|Less than 0||No change
+|}
+:Default is -1.
+
+== Examples ==
+The following line sets the tagged line so it can be activated by bumping into it:
+ [[SetLineActivation]](1, {{const|SPAC_Push}});
+
+Note that the above line also clears all other activation flags, if any, before setting the new flag. If adding a flag without clearing the ones which are already set is what is desired, then using {{c|[[GetLineActivation]]}} is needed:
+ [[SetLineActivation]](1, GetLineActivation(1) | {{const|SPAC_Push}});
+
+
+This line clears all activation flags of the tagged line, if any:
+ [[SetLineActivation]](1, {{const|SPAC_None}});
+
+[[category:ACS Level alteration functions]]</text>
+    <sha1>6r3rt16gytg1ct703m2r1yliio952wn</sha1>
+  </revision>
+</page>

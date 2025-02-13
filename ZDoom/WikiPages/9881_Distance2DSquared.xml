@@ -1,0 +1,60 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>Distance2DSquared</title>
+  <ns>0</ns>
+  <id>9881</id>
+  <revision>
+    <id>52379</id>
+    <parentid>52374</parentid>
+    <timestamp>2024-04-11T13:10:16Z</timestamp>
+    <contributor>
+      <username>Jekyll Grim Payne</username>
+      <id>2175</id>
+    </contributor>
+    <origin>52379</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="1464" sha1="ray8ntgqnddpre498x29tehpnkyttws" xml:space="preserve">{{ZScriptNote}}
+
+'''{{class|Actor}}'''
+
+{{c|native clearscope double '''Distance2DSquared'''(Actor ''other'') const}}
+
+==Usage==
+Returns the '''squared''' 2D distance from the calling actor to ''other'' ([[Stacked sectors|portal]]-aware). Essentially, this is the same as {{c|[[Distance2D]]}}, but {{c|Distance2D}} involves a square root calculation, whereas this version doesn't, making it a little less computationally expensive. As a result, it must be compared to the ''squared'' desired distance (see [[#Examples|examples]]).
+
+To square the desired value, use the [[Operators_(ZScript)#.2A.2A_.28power.29|ZScript power operator]]: &lt;code&gt;**&lt;/code&gt;.
+
+For a 3D version, see {{c|[[Distance3DSquared]]}}.
+
+===Parameters===
+*{{c|Actor '''other'''}}
+:A pointer to the actor we are getting the distance to.
+
+===Return Value===
+*double - the distance on an XY plane to the other actor, squared.
+
+==Examples==
+This Imp will check if the target is under 128 units away in its [[Tick]] override, and if it is, execute code.
+&lt;syntaxhighlight lang="csharp"&gt;
+class WaryImp : DoomImp
+{
+
+    override void Tick() 
+    {
+        Super.Tick();
+        // if we are less than 128 units away:
+        if (target &amp;&amp; Distance2DSquared(target) &lt; 128**2) 
+        {
+            // Code could go here to make the imp less aggressive when the target is close, for example
+        }
+    }
+}&lt;/syntaxhighlight&gt;
+
+== See also ==
+* [[Distance2D]]
+* [[Distance3DSquared]]
+
+[[Category:ZScript]]</text>
+    <sha1>ray8ntgqnddpre498x29tehpnkyttws</sha1>
+  </revision>
+</page>

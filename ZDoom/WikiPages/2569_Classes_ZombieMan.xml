@@ -1,0 +1,152 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>Classes:ZombieMan</title>
+  <ns>0</ns>
+  <id>2569</id>
+  <revision>
+    <id>48920</id>
+    <parentid>48506</parentid>
+    <timestamp>2021-12-27T11:15:44Z</timestamp>
+    <contributor>
+      <username>Jekyll Grim Payne</username>
+      <id>2175</id>
+    </contributor>
+    <comment>updated in accordance with updated ZScriptDefinitionNote template</comment>
+    <origin>48920</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="2878" sha1="4za9t5bi8ix5nw5hyy9fv7szi2souxq" xml:space="preserve">{{Actor|
+| type = Monster
+| name = Former Human
+| class = ZombieMan
+| game = Doom
+| doomednum = 3004
+| thingindex = 2
+| spawnid = 4
+| spawnname = T_ZOMBIE
+}}
+[[Classes]]: {{Class}} &amp;rarr; &lt;u&gt;ZombieMan&lt;/u&gt;&lt;br&gt;
+&amp;ensp;&amp;rarr;{{Class|StealthZombieMan}}&lt;br&gt;
+&amp;ensp;&amp;rarr;{{Class|DeadZombieMan}}
+
+
+The Pistol Zombie, also known as Troopers or Former Humans, are the least threatening monster in Doom. They are very weak, terrible shots, and their weapons are not particularly damaging even in instances when they do hit.
+
+
+==== [[ZScript]] definition ====
+{{ZScriptDefinitionNote|actors/doom/possessed.zs#L2}} 
+ class ZombieMan : Actor
+ {
+ 	Default
+ 	{
+ 		{{Property|Health}} 20;
+ 		{{Property|Radius}} 20;
+ 		{{Property|Height}} 56;
+ 		{{Property|Speed}} 8;
+ 		{{Property|PainChance}} 200;
+ 		{{Property|Monster}};
+ 		+{{Flag|FLOORCLIP}}
+ 		{{Property|SeeSound}} "grunt/sight";
+ 		{{Property|AttackSound}} "grunt/attack";
+ 		{{Property|PainSound}} "grunt/pain";
+ 		{{Property|DeathSound}} "grunt/death";
+ 		{{Property|ActiveSound}} "grunt/active";
+ 		{{Property|Obituary}} "$OB_ZOMBIE";
+ 		{{Property|Tag}} "$FN_ZOMBIE";
+ 		{{Property|DropItem}} "Clip";
+ 	}
+  	States
+ 	{
+ 	Spawn:
+ 		POSS AB 10 [[A_Look]];
+ 		Loop;
+ 	See:
+ 		POSS AABBCCDD 4 [[A_Chase]];
+ 		Loop;
+ 	Missile:
+ 		POSS E 10 [[A_FaceTarget]];
+ 		POSS F 8 [[A_PosAttack]];
+ 		POSS E 8;
+ 		Goto See;
+ 	Pain:
+ 		POSS G 3;
+ 		POSS G 3 [[A_Pain]];
+ 		Goto See;
+ 	Death:
+ 		POSS H 5;
+ 		POSS I 5 [[A_Scream]];
+ 		POSS J 5 [[A_NoBlocking]];
+ 		POSS K 5;
+ 		POSS L -1;
+ 		Stop;
+ 	XDeath:
+ 		POSS M 5;
+ 		POSS N 5 [[A_XScream]];
+ 		POSS O 5 [[A_NoBlocking]];
+ 		POSS PQRST 5;
+ 		POSS U -1;
+ 		Stop;
+ 	Raise:
+ 		POSS K 5;
+ 		POSS JIH 5;
+ 		Goto See;
+ 	}
+ }
+
+==== [[DECORATE]] definition ====
+{{DecorateDefinitionNote}}
+ ACTOR &lt;u&gt;ZombieMan&lt;/u&gt;
+ {
+   {{Property|Health}} 20
+   {{Property|Radius}} 20
+   {{Property|Height}} 56
+   {{Property|Speed}} 8
+   {{Property|PainChance}} 200
+   {{Property|Monster}}
+   +{{Flag|FLOORCLIP}}
+   {{Property|SeeSound}} "grunt/sight"
+   {{Property|AttackSound}} "grunt/attack"
+   {{Property|PainSound}} "grunt/pain"
+   {{Property|DeathSound}} "grunt/death"
+   {{Property|ActiveSound}} "grunt/active"
+   {{Property|Obituary}} "$OB_ZOMBIE" // "%o was killed by a zombieman."
+   {{Property|DropItem}} "{{Class|Clip}}"
+   States
+   {
+   Spawn:
+     POSS AB 10 [[A_Look]]
+     Loop
+   See:
+     POSS AABBCCDD 4 [[A_Chase]]
+     Loop
+   Missile:
+     POSS E 10 [[A_FaceTarget]]
+     POSS F 8 [[A_PosAttack]]
+     POSS E 8
+     Goto See
+   Pain:
+     POSS G 3
+     POSS G 3 [[A_Pain]]
+     Goto See
+   Death:
+     POSS H 5
+     POSS I 5 [[A_Scream]]
+     POSS J 5 [[A_NoBlocking]]
+     POSS K 5
+     POSS L -1
+     Stop
+   XDeath:
+     POSS M 5
+     POSS N 5 [[A_XScream]]
+     POSS O 5 [[A_NoBlocking]]
+     POSS PQRST 5
+     POSS U -1
+     Stop
+   Raise:
+     POSS K 5
+     POSS JIH 5
+     Goto See
+   }
+ }</text>
+    <sha1>4za9t5bi8ix5nw5hyy9fv7szi2souxq</sha1>
+  </revision>
+</page>

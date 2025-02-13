@@ -1,0 +1,430 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>Classes:VisualThinker</title>
+  <ns>0</ns>
+  <id>9760</id>
+  <revision>
+    <id>54155</id>
+    <parentid>54102</parentid>
+    <timestamp>2025-01-29T11:19:21Z</timestamp>
+    <contributor>
+      <username>Inkoalawetrust</username>
+      <id>2604</id>
+    </contributor>
+    <minor />
+    <origin>54155</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="14921" sha1="shuo19zbd228mjldz0565xe8ic8zouq" xml:space="preserve">{{ZScriptNote}}
+'''VisualThinker''' is a class dedicated to rendering special effects that can be used en masse. They serve as a middle ground between [[particles]] and [[Actor]]s with notable differences.
+
+Aside from Actors, VisualThinkers are the only [[Thinker]] class that have rendering associated with them.
+
+=== Advantages ===
+VisualThinkers share almost all the rendering features Actors do, including scaling, rolling, and billboarding/flipping options (XY or Y). They also support semi-stencil coloring without needing to be set to a stencil renderstyle that's adjustable on the fly. 
+
+Like particles, they perform no collisions or physics at all, allowing for them to be used en masse. They are not bound to a limit and do not take up particle slots and last until Destroy() is called.
+
+=== Limitations ===
+* Cannot be created with &lt;code&gt;new&lt;/code&gt; like other Thinkers due to being abstract. A custom inheriting class must be made first.
+
+* VisualThinkers use the mutually exclusive &lt;code&gt;STAT_VISUALTHINKER&lt;/code&gt; stat and cannot be changed for performance reasons.
+:* Likewise, all other thinker types are forbidden from being assigned to &lt;code&gt;STAT_VISUALTHINKER&lt;/code&gt;.
+
+* Models, states, and &lt;code&gt;Default {}&lt;/code&gt; blocks are not supported. Control will primarily be done via overriding Tick().
+
+* Does not perform sprite changing based on angle to the thinker on its own. Meaning that sprites with multiple rotations (POSSA0) don't change based on angle. This is due to supplying a direct image lump instead of a sprite and angle.
+
+== Methods ==
+* {{c|VisualThinker '''[[SpawnVisualThinker|level.SpawnVisualThinker]]''' (Class&lt;VisualThinker&gt; ''type'')}}
+: The most basic spawning function called from the global &lt;code&gt;level&lt;/code&gt; variable. The class must inherit from VisualThinker and must not be VisualThinker itself.
+=== Static ===
+* static VisualThinker '''Spawn'''(Class&lt;VisualThinker&gt; ''type'', TextureID ''tex'', Vector3 ''pos'', Vector3 ''vel'' = (0,0,0), double ''alpha'' = 1.0, int ''flags'' = 0, double ''roll'' = 0.0, Vector2 ''scale'' = (1,1), Vector2 ''offset'' = (0,0), int ''style'' = STYLE_Normal, TranslationID ''trans'' = 0, int ''VisualThinkerFlags'' = 0)
+:Calls [[SpawnVisualThinker|'''level.SpawnVisualThinker(type)''']] if a level is present. Parameters are as follows:
+:*{{c|Class&lt;VisualThinker&gt; ''type''}}: Name of the VisualThinker child class to spawn.
+:*{{c|TextureID ''tex''}}: The {{struct|TextureID}} of the graphic to use.
+:*{{c|Vector3 ''pos''}}: Absolute position coordinates to spawn at.
+:*{{c|Vector3 ''vel''}}: Absolute velocity given to the class upon spawning.
+:*{{c|double ''alpha''}}: Defines opacity. 1.0 is fully visible/opaque, 0.0 is invisible. Default is 1.0.
+:*{{c|int ''flags''}}: See the flags variable below. Default is 0.
+:*{{c|double ''roll''}}: The sprite will start with this much roll applied. Default is 0.
+:*{{c|Vector2 ''scale''}}: Sets the X (horizontal) and Y (vertical) scale. Scaling is treated exactly the same as Actor's. Default is (1,1).
+:*{{c|Vector2 ''offset''}}: Offsets the sprite similar to Actor's &lt;code&gt;SpriteOffset&lt;/code&gt; field. Positive X/Y values offset to the left/up respectively, vice versa for negative. Default is (0,0).
+:*{{c|int ''style''}}: [[Renderstyle]]. Default is STYLE_Normal.
+:*{{c|int ''VisualThinkerFlags''}}: {{moreinfo}}
+
+*{{c|void '''SetTranslation''' (Name ''trans'')}}
+: Sets the thinker's [[Translation|color translation]] as defined in the [[TRNSLATE]] lump. Works similar to the Actor's [[A_SetTranslation]].
+*{{c|void '''SetRenderStyle''' (int ''mode'')}}
+: Sets the thinker's [[Renderstyle]]. Works similar to the Actor's [[A_SetRenderStyle]].
+*{{c|bool '''IsFrozen'''()}}
+: Returns true if the map is frozen and the sprite doesn't have SPF_NOTIMEFREEZE.
+*{{c|protected void '''UpdateSector'''()}} {{git|d94a596}}
+: Updates sector data on the thinker (The current sector and subsector it's in), this function is exposed so that it can still be called in a thinker that totally overrides Tick(). Only necessary to call if the thinker moves at all. Keep in mind ''prev'' will need to be updated as well if Super.Tick() is not called, since this function does not handle interpolation.
+*{{c|protected void '''UpdateSpriteInfo'''()}} {{git|d94a596}}
+: Updates sprite info (The render style and the handling for locally animated graphics). This function is exposed so that it can still be called in a thinker that totally overrides Tick(). Or to be called for visual thinkers every time ''texture'' is changed. If the texture becomes an animation played by [[ANIMDEFS]], no calls after the initial ''texture'' change are necessary as ''texture'' itself remains the same during the animations.
+
+=== Virtual ===
+{{: Thinker virtual functions}}
+
+== Variables ==
+The following variables are available for modification.
+
+*{{c|TextureID '''Texture'''}}
+: The image to render out. This must be valid at all times, or the thinker will be destroyed.
+*{{c|Color '''scolor'''}}
+: Stencil coloring that is applied constantly on all render styles, allowing for unique colorizing effects. Default is white ("FFFFFF" in hexadecimal).
+*{{c|TranslationID '''Translation'''}}
+: Equivalent to Actor's {{property|Translation}}. Changing this should primarily be done with &lt;code&gt;SetTranslation()&lt;/code&gt; above, but transference can be done with simple assignments.
+*{{c|Sector '''cursector'''}}
+: The current {{struct|Sector|sector}} this sprite is in. 
+: '''WARNING:''' Can be &lt;code&gt;null&lt;/code&gt;. Always perform a null check when using this variable.
+*{{c|Vector3 '''pos'''}} 
+: World position of the sprite.
+*{{c|Vector3 '''prev'''}}
+: Previous position of the sprite, used for interpolating between the last position it was at during the previous tick.
+*{{c|Vector3 '''vel'''}}
+: Velocity of the sprite.
+*{{c|Vector2 '''scale'''}}
+: Scale of the sprite. Scaling is identical to [[Actor]]'s.
+*{{c|Vector2 '''offset'''}}
+: The offset of the sprite, identical to [[Actor]]'s &lt;code&gt;SpriteOffset&lt;/code&gt; variable. Positive X/Y offsets the sprite left/up respectively, and vice versa for negative values.
+*{{c|double '''alpha'''}}
+: Opacity of the sprite. 1.0 is fully opaque, 0.0 is invisible.
+*{{c|int16 '''LightLevel'''}}
+: Same variable as Actor's &lt;code&gt;LightLevel&lt;/code&gt;. Defaults to -1, meaning use the sector's light. Any other number between [0, 255] overrides the sector's brightness. 
+*{{c|uint16 '''Flags'''}}
+: These are the same as [[A_SpawnParticleEx]]. Multiple flags can be combined with &lt;code&gt;|&lt;/code&gt;:
+{{: SpawnParticle flags}}
+The SPF_RELPOS, SPF_RELVEL, SPF_RELACCEL SPF_RELANG, SPF_NEGATIVE_FADESTEP flags do nothing on their own. (But could be used for custom VisualThinkers)
+*{{c|int '''VisualThinkerFlags'''}} {{new|4.14.0}}
+: This field stores all the flags that visual thinkers have available, these flags can be accessed with the ''bFlagName'' syntax that actor also use, i.e VTF_ADDLIGHTLEVEL can be accessed as ''bAddLightLevel''.
+:*'''FLIPOFFSETX''' — Flips the thinkers' ''texture'' on the X axis. Without changing the offsets of the graphic.
+:*'''FLIPOFFSETY''' — Ditto, but for the Y axis.
+:*'''XFLIP''' — Flips the sprite on the X axis.
+:*'''YFLIP''' — Flips the sprite on the Y axis.
+:*'''DONTINTERPOLATE''' — Disables interpolation for movement and roll changes over each tick.
+:*'''ADDLIGHTLEVEL''' — LightLevel adds the sector's brightness to its own instead of overriding completely.
+
+== [[ZScript]] definition ==
+{{ZScriptDefinitionNote|visualthinker.zs}}
+&lt;syntaxhighlight lang="csharp"&gt;
+Class VisualThinker : Thinker native
+{
+	native Vector3			Pos,
+							Prev;
+	native FVector3			Vel;
+	native Vector2			Scale,
+							Offset;
+	native float			Roll,
+							PrevRoll,
+							Alpha;
+	native TextureID		Texture;
+	native TranslationID	Translation;
+	native int16			LightLevel;
+	
+	native uint16			Flags;
+	native int				VisualThinkerFlags;
+    
+    FlagDef                 FlipOffsetX :       VisualThinkerFlags, 0;
+    FlagDef                 FlipOffsetY :       VisualThinkerFlags, 1;
+    FlagDef                 XFlip :             VisualThinkerFlags, 2;
+    FlagDef                 YFlip :             VisualThinkerFlags, 3;
+    FlagDef                 DontInterpolate :   VisualThinkerFlags, 4;
+    FlagDef                 AddLightLevel :     VisualThinkerFlags, 5;
+
+	native Color			scolor;
+
+	native Sector			CurSector; // can be null!
+
+	native void SetTranslation(Name trans);
+	native void SetRenderStyle(int mode); // see ERenderStyle
+	native bool IsFrozen();
+
+	static VisualThinker Spawn(Class&lt;VisualThinker&gt; type, TextureID tex, Vector3 pos, Vector3 vel, double alpha = 1.0, int flags = 0,
+						  double roll = 0.0, Vector2 scale = (1,1), Vector2 offset = (0,0), int style = STYLE_Normal, TranslationID trans = 0, int VisualThinkerFlags = 0)
+	{
+		if (!Level)	return null;
+
+		let p = level.SpawnVisualThinker(type);
+		if (p)
+		{
+			p.Texture = tex;
+			p.Pos = pos;
+			p.Vel = vel;
+			p.Alpha = alpha;
+			p.Roll = roll;
+			p.Scale = scale;
+			p.Offset = offset;
+			p.SetRenderStyle(style);
+			p.Translation = trans;
+			p.Flags = flags;
+            p.VisualThinkerFlags = VisualThinkerFlags;
+			p.UpdateSector();
+			p.UpdateSpriteInfo();
+		}
+		return p;
+	}
+}&lt;/syntaxhighlight&gt;
+
+== Examples ==
+&lt;syntaxhighlight lang="csharp"&gt;
+Class emit : Actor
+{
+	TextureID tex;
+	Default
+	{
+		+NOINTERACTION
+		+NOBLOCKMAP
+		+BRIGHT
+		Scale 0.25;
+	}
+	
+	override void PostBeginPlay()
+	{
+		Super.PostBeginPlay();
+		tex = TexMan.CheckForTexture("MISLB0");
+	}
+	
+	States
+	{
+	Spawn:
+		MISL A 1;
+	Looping:
+		MISL A 1
+		{
+			angle = random(0,359);
+			pitch = random(-90,90);
+			Vel3DFromAngle(random(2,6), angle, pitch);
+			let p = Level.SpawnVisualThinker("ZRocketBoom");
+			if (p)
+			{
+				p.Texture = tex;
+				p.pos = pos;
+				p.vel = vel;
+				p.scolor = "FF0000";
+				p.SetRenderStyle(STYLE_Add);
+				p.flags = SPF_ROLL|SPF_FULLBRIGHT;
+				p.roll = random(0,359);
+				p.alpha = 1.0;
+				p.Scale = (1,1);
+			}
+			vel = (0,0,0);
+			
+		}
+		Loop;
+	}
+}
+
+Class ZRocketBoom : VisualThinker
+{
+	double	RollVel;
+			
+	override void PostBeginPlay()
+	{
+		Super.PostBeginPlay();
+		RollVel = frandom(-10.0, 10.0);
+		Alpha = 1.0;
+	}
+	
+	override void Tick()
+	{
+		if (bDESTROYED || IsFrozen())
+			return;
+	
+		Super.Tick();
+		Roll += RollVel;
+		Alpha -= 0.05;
+		if (Alpha &lt;= 0.0)
+			Destroy();
+		
+	}
+}
+
+//==============================================================================
+
+Class spri : Actor
+{
+	Default
+	{
+		+NOINTERACTION
+		+NOBLOCKMAP
+		+INVISIBLE
+		Scale 0.25;
+	}
+	
+	Array&lt;VisualThinker&gt; spr;
+	TextureID tex;
+	
+	void Make(double ox, double oy, double sc = 1.0)
+	{
+		VisualThinker p = Level.SpawnVisualThinker('testoff');
+		if (p)
+		{
+			p.texture = tex;
+			p.pos = pos;
+			p.vel = vel;
+			p.Scale = Scale;
+			p.SetRenderStyle(STYLE_Add);
+			p.flags = SPF_ROLL|SPF_FULLBRIGHT;
+			p.roll = random(0,359);
+			p.Offset = (ox, oy) * sc;
+			spr.Push(p);
+		}
+	}
+	
+	override void PostBeginPlay()
+	{
+		Super.PostBeginPlay();
+		spr.Clear();
+		tex = TexMan.CheckForTexture("MISLB0");
+		double sc = 10.0;
+		Make(0,0);
+		for (int i = 1; i &lt; 5; i++)
+		{
+			Make(i,0,sc);
+		//	Make(-i,0,sc);
+			Make(0,i,sc);
+		//	Make(0,-i,sc);
+		}
+	}
+	
+	override void OnDestroy()
+	{
+		foreach (p : spr)
+			if (p) p.Destroy();
+	}
+}
+
+Class testoff : VisualThinker
+{
+	double RollVel;
+	override void PostBeginPlay()
+	{
+		Super.PostBeginPlay();
+		RollVel = frandom(-10.0, 10.0);
+	}
+	
+	override void Tick()
+	{
+		Roll += RollVel;
+		Super.Tick();
+	}
+}&lt;/syntaxhighlight&gt;
+
+A more elaborate example for using local animations and total tick overrides is as follows. This involves using [[TEXTURES]] and [[ANIMDEFS]] as well.
+First, the ZScript code. The following thinker acts as an explosion manager using the custom spawning function ''SpawnMY()''.
+
+&lt;syntaxhighlight lang="csharp"&gt;
+enum MyAnims
+{
+	MY_MORTAR = 1,
+	MY_FUSION,
+	MY_CONCUSSION,
+	MY_CONCUSS = MY_CONCUSSION,
+	MY_PLASMA,
+	MY_ROCKET,
+	MY_MINE,
+	
+};
+
+Class MyThinker : VisualThinker
+{
+	static MyThinker SpawnMY(MyAnims type, Vector3 pos)
+	{
+		let df = MyThinker(level.SpawnVisualThinker('MyThinker'));
+		if (df)
+		{
+			df.pos = pos;
+			df.SetAnimation(type);
+		}
+		return df;
+	}
+
+	int tics;
+	override void PostBeginPlay()
+	{
+		Flags |= SPF_LOCAL_ANIM|SPF_FULLBRIGHT;
+		Super.PostBeginPlay();
+		Prev = Pos;
+		UpdateSector();
+		UpdateSpriteInfo();
+		tics = 35 * 6;
+	}
+
+	override void Tick()
+	{
+		if (bDESTROYED || IsFrozen()) return;
+		
+		Prev = Pos; // Bookkeeping needed here since Super.Tick() is NOT called.
+		Pos += Vel;
+		if (Prev != Pos)
+			UpdateSector(); // The position has changed, so calling this is needed.
+		
+		// Note how there is no UpdateSpriteInfo() because it's not needed with ANIMDEFS animations - only to set it.
+		// That's handled in the custom function below. Keep in mind the 'texture' var doesn't change when playing animations.
+		
+		if (tics-- &lt; 1)
+			Destroy();
+	}
+	
+	void SetAnimation(MyAnims type)
+	{
+		Switch (type)
+		{
+			String tex = "";
+			Case MY_MORTAR:
+			{	
+				tex = "Graphics/Projectiles/MortarLauncher/Explosion1.png"; 
+				Scale *= 1.5;
+				Offset.Y = 4;
+				break;	
+			}
+			Case MY_FUSION:
+			{	tex = "Graphics/Projectiles/FusionCutter/Explosion1.png"; break;	}
+			Case MY_CONCUSSION:
+			{	
+				tex = "Graphics/Projectiles/ConcussionRifle/Explosion1.png"; 
+				Scale *= 2.0;
+				break;	
+			}
+			Case MY_PLASMA:
+			{	tex = "Graphics/Projectiles/AssaultCannon/PExplosion1.png"; break;	}
+			Case MY_ROCKET:
+			{	tex = "Graphics/Projectiles/AssaultCannon/MExplosion1.png"; break;	}
+			Case MY_MINE:
+			{	tex = "Graphics/Projectiles/Claymore/Explosion1.png"; break;	}
+			Default:	
+			{	Destroy();	return;	}
+		}
+		Flags |= SPF_LOCAL_ANIM;
+		Texture = TexMan.CheckForTexture(tex);
+		tics = 35 * 5;
+		UpdateSpriteInfo();
+	}
+}&lt;/syntaxhighlight&gt;
+
+In [[TEXTURES]] lump, define an empty graphic like this so it can be used in ANIMDEFS:
+ Graphic Optional DFEMPTY, 1, 1 {}
+
+And finally in [[ANIMDEFS]], we have all the graphics that are in their respective folders (which also grants the boon of not needing to name according to the usual sprite convention). The DFEMPTY image defined above is there to ensure the animation is empty, so durations can be tweaked without needing to adjust the expiration timer in the thinker.
+
+&lt;syntaxhighlight lang="csharp"&gt;
+texture "Graphics/Projectiles/ConcussionRifle/Explosion1.png"
+pic "Graphics/Projectiles/ConcussionRifle/Explosion1.png" rand 1 2
+pic "Graphics/Projectiles/ConcussionRifle/Explosion2.png" rand 2 3
+pic "Graphics/Projectiles/ConcussionRifle/Explosion3.png" rand 3 3 
+pic "Graphics/Projectiles/ConcussionRifle/Explosion4.png" rand 3 4
+pic "Graphics/Projectiles/ConcussionRifle/Explosion5.png" rand 3 4
+pic "Graphics/Projectiles/ConcussionRifle/Explosion6.png" rand 4 4
+pic "Graphics/Projectiles/ConcussionRifle/Explosion7.png" rand 4 5
+pic "Graphics/Projectiles/ConcussionRifle/Explosion8.png" rand 4 5
+pic DFEMPTY tics 3500 
+&lt;/syntaxhighlight&gt;
+
+== See also ==
+* [[Classes:Thinker]]
+
+[[Category:ZScript]]</text>
+    <sha1>shuo19zbd228mjldz0565xe8ic8zouq</sha1>
+  </revision>
+</page>

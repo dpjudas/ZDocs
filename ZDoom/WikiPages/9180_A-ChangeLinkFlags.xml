@@ -1,0 +1,31 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>A ChangeLinkFlags</title>
+  <ns>0</ns>
+  <id>9180</id>
+  <revision>
+    <id>48037</id>
+    <parentid>48032</parentid>
+    <timestamp>2020-10-23T07:27:16Z</timestamp>
+    <contributor>
+      <username>Blue Shadow</username>
+      <id>2021</id>
+    </contributor>
+    <minor />
+    <origin>48037</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="974" sha1="rq72lhequ7uiyerpfspbwd6x7jtq2ym" xml:space="preserve">{{codepointer|Status change}}
+void '''A_ChangeLinkFlags''' [(int ''blockmap'' [, int ''sector''])]
+
+== Usage ==
+Changes the {{Flag|NOBLOCKMAP}} and {{Flag|NOSECTOR}} [[Actor flags|flags]]. These flags are special in that they require more to be done than simply setting them. As such, any changes to these flags should be done through this function unless you know how to do it manually via [[UnlinkFromWorld]] and [[LinkToWorld]].
+
+=== Parameters ===
+*''blockmap'': Setting this to true sets the NOBLOCKMAP flag and removes the Actor from the blockmap. Setting this to false will unset the flag and re-add the Actor to the blockmap. Default is FLAG_NO_CHANGE.
+*''sector'': Setting this to true sets the NOSECTOR flag and removes the Actor from its current sector's information (the Actor itself remains where it is). Setting this to false will unset the flag and re-add the Actor to its current sector's information. Default is FLAG_NO_CHANGE.
+
+== Example ==
+{{noexamples}}</text>
+    <sha1>rq72lhequ7uiyerpfspbwd6x7jtq2ym</sha1>
+  </revision>
+</page>

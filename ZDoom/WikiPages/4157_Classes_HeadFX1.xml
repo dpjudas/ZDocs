@@ -1,0 +1,57 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>Classes:HeadFX1</title>
+  <ns>0</ns>
+  <id>4157</id>
+  <revision>
+    <id>39438</id>
+    <parentid>34161</parentid>
+    <timestamp>2015-04-30T21:00:37Z</timestamp>
+    <contributor>
+      <username>Blue Shadow</username>
+      <id>2021</id>
+    </contributor>
+    <minor />
+    <comment>/* DECORATE definition */ Updated</comment>
+    <origin>39438</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="923" sha1="laq0p4ms072y9bb30x8plv0n1yp5wsx" xml:space="preserve">{{Actor|
+| type = Explosive
+| name = Ice ball
+| class = HeadFX1
+| game = Heretic
+| spawnid = 164
+| spawnname = T_IRONLICHBLUESHOT 
+}}[[Classes]]: &lt;u&gt;HeadFX1&lt;/u&gt;&lt;br&gt;
+The large ball of ice hurled by one of the [[Classes:Ironlich|iron lich]]'s [[A_LichAttack|attacks]]. Its native action [[A_LichIceImpact]] spawns eight [[Classes:HeadFX2|ice shards]] all around the impact point at 45° angle intervals.
+
+==== [[DECORATE]] definition ====
+ ACTOR &lt;u&gt;HeadFX1&lt;/u&gt;
+ {
+   {{Property|Radius}} 12
+   {{Property|Height}} 6
+   {{Property|Speed}} 13
+   {{Property|FastSpeed}} 20
+   {{Property|Damage}} 1
+   {{Property|Projectile}}
+   -{{Flag|ACTIVATEIMPACT}}
+   -{{Flag|ACTIVATEPCROSS}}
+   +{{Flag|THRUGHOST}}
+   {{Property|RenderStyle}} Add
+ 
+   action native [[A_LichIceImpact]]();
+ 
+   States
+   {
+   Spawn:
+     FX05 ABC 6 Bright
+     Loop
+   Death:
+     FX05 D 5 Bright [[A_LichIceImpact]]
+     FX05 EFG 5 Bright
+     Stop
+   }
+ }</text>
+    <sha1>laq0p4ms072y9bb30x8plv0n1yp5wsx</sha1>
+  </revision>
+</page>

@@ -1,0 +1,87 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>Classes:Hectebus</title>
+  <ns>0</ns>
+  <id>5326</id>
+  <revision>
+    <id>22259</id>
+    <parentid>21514</parentid>
+    <timestamp>2009-06-01T15:39:56Z</timestamp>
+    <contributor>
+      <username>Gez</username>
+      <id>1283</id>
+    </contributor>
+    <minor />
+    <comment>updated code from 97e alpha build 2179</comment>
+    <origin>22259</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="2065" sha1="51tnqvshmgf07uzayp7j15lqpmj4i4q" xml:space="preserve">{{Actor|
+| type = Monster
+| name = Hectebus
+| class = Hectebus
+| game = Skulltag
+| doomednum = 5007
+| spawnid = 158
+| spawnname = T_HECTEBUS
+}}
+[[Classes]]: {{Class|Fatso}}&amp;rarr;&lt;u&gt;Hectebus&lt;/u&gt;&lt;br&gt;
+
+A dark gray mancubus, with twice as much health and an absurdly-increased rate of firepower.
+==== [[DECORATE]] definition ====
+ ACTOR &lt;u&gt;Hectebus&lt;/u&gt; : {{Class|Fatso}} 5007
+ {
+   SpawnID 158
+   Health 1200
+   PainChance 20
+   Obituary "$OB_HECTEBUS" // "%o was cremated by a hectebus."
+   States
+   {
+   Spawn:
+     HECT AB 15 [[A_Look]]
+     Loop
+   See:
+     HECT AABBCCDDEEFF 4 [[A_Chase]]
+     Loop
+   Pain:
+     HECT J 3
+     HECT J 3 [[A_Pain]]
+     Goto See
+   Missile:
+     //These Next 2 states replace A_FatRaise and A_HectRaise
+     HECT G 0 [[A_PlaySound]]("fatso/raiseguns")
+     HECT G 20 [[A_FaceTarget]]
+     HECT H 0 [[A_CustomMissile]]("{{Class|HectShot}}",28,0,0,1)
+     HECT H 0 [[A_CustomMissile]]("{{Class|HectShot}}",28,0,5.625,1)
+     HECT H 0 [[A_CustomMissile]]("{{Class|HectShot}}",28,0,11.25,1)
+     HECT H 0 [[A_CustomMissile]]("{{Class|HectShot}}",28,0,16.875,1)
+     HECT H 10 Bright
+     HECT IG 5 [[A_FaceTarget]]
+     HECT H 0 [[A_CustomMissile]]("{{Class|HectShot}}",28,0,0,1)
+     HECT H 0 [[A_CustomMissile]]("{{Class|HectShot}}",28,0,-5.625,1)
+     HECT H 0 [[A_CustomMissile]]("{{Class|HectShot}}",28,0,-11.25,1)
+     HECT H 0 [[A_CustomMissile]]("{{Class|HectShot}}",28,0,-16.875,1)
+     HECT H 10 Bright
+     HECT IG 5 [[A_FaceTarget]]
+     HECT H 0 [[A_CustomMissile]]("{{Class|HectShot}}",28,0,-11.25,1)
+     HECT H 0 [[A_CustomMissile]]("{{Class|HectShot}}",28,0,-5.625,1)
+     HECT H 0 [[A_CustomMissile]]("{{Class|HectShot}}",28,0,0,1)
+     HECT H 0 [[A_CustomMissile]]("{{Class|HectShot}}",28,0,5.625,1)
+     HECT H 0 [[A_CustomMissile]]("{{Class|HectShot}}",28,0,11.25,1)
+     HECT H 10 Bright
+     HECT IG 5 [[A_FaceTarget]]
+     Goto See
+   Death:
+     HECT K 6
+     HECT L 6 [[A_Scream]]
+     HECT M 6 [[A_NoBlocking]]
+     HECT NOPQRS 6
+     HECT T -1
+     Stop
+   Raise:
+     HECT RQPONMLK 5
+     Goto See
+   }
+ }</text>
+    <sha1>51tnqvshmgf07uzayp7j15lqpmj4i4q</sha1>
+  </revision>
+</page>

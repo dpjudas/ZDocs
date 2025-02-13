@@ -1,0 +1,51 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>Classes:TeleGlitter1</title>
+  <ns>0</ns>
+  <id>4166</id>
+  <revision>
+    <id>34099</id>
+    <parentid>23738</parentid>
+    <timestamp>2012-09-01T16:57:52Z</timestamp>
+    <contributor>
+      <username>Blue Shadow</username>
+      <id>2021</id>
+    </contributor>
+    <minor />
+    <comment>/* DECORATE definition */</comment>
+    <origin>34099</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="797" sha1="7uw54ltck9oyin7yh7l8xmkgin4davu" xml:space="preserve">{{Actor|
+| type = SFX
+| name = Red teleporter glitter spark
+| class = TeleGlitter1
+| game = Heretic
+}}[[Classes]]: &lt;u&gt;TeleGlitter1&lt;/u&gt;&lt;br /&gt;
+&amp;ensp;&amp;rarr;[[Classes:TeleGlitter2|TeleGlitter2]]&lt;br /&gt;
+A small particle created by a [[Classes:TeleGlitterGenerator1|red glitter generator]]. Its native action [[A_AccTeleGlitter]] increases its vertical speed by +50% when called.
+
+==== [[DECORATE]] definition ====
+ ACTOR &lt;u&gt;TeleGlitter1&lt;/u&gt;
+ {
+   +{{Flag|NOBLOCKMAP}}
+   +{{Flag|NOGRAVITY}}
+   +{{Flag|MISSILE}}
+   {{Property|RenderStyle}} Add
+   {{Property|Damage}} 0
+ 
+   action native [[A_AccTeleGlitter]]();
+ 
+   States
+   {
+   Spawn:
+     TGLT A 2 Bright
+     TGLT B 2 Bright [[A_AccTeleGlitter]]
+     TGLT C 2 Bright
+     TGLT D 2 Bright [[A_AccTeleGlitter]]
+     TGLT E 2 Bright
+     Loop
+   }
+ }</text>
+    <sha1>7uw54ltck9oyin7yh7l8xmkgin4davu</sha1>
+  </revision>
+</page>

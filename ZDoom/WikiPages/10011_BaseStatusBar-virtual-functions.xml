@@ -1,0 +1,91 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>BaseStatusBar virtual functions</title>
+  <ns>0</ns>
+  <id>10011</id>
+  <revision>
+    <id>53888</id>
+    <timestamp>2024-11-25T14:23:51Z</timestamp>
+    <contributor>
+      <username>Jekyll Grim Payne</username>
+      <id>2175</id>
+    </contributor>
+    <comment>Created page with "*{{c|void '''[[Init]]'''()}} :Called when the status bar is first created. Can be used to set up additional functionality.  *{{c|void '''[[Tick]]'''()}} :Called every tic. Can be used to track functionality that should be handled on a consistently timed basis.  *{{c|void '''[[Draw]]'''(int ''state'', double ''TicFrac'')}} :Called every frame. Handles drawing functionality of the HUD.  *{{c|void '''[[ScreenSizeChanged]]'''()}} :Called whenever the screen size changes. Set..."</comment>
+    <origin>53888</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="4082" sha1="o8vrzmqr94em1vyc9tha6w2rjligthz" xml:space="preserve">*{{c|void '''[[Init]]'''()}}
+:Called when the status bar is first created. Can be used to set up additional functionality.
+
+*{{c|void '''[[Tick]]'''()}}
+:Called every tic. Can be used to track functionality that should be handled on a consistently timed basis.
+
+*{{c|void '''[[Draw]]'''(int ''state'', double ''TicFrac'')}}
+:Called every frame. Handles drawing functionality of the HUD.
+
+*{{c|void '''[[ScreenSizeChanged]]'''()}}
+:Called whenever the screen size changes. Sets up the HUD to properly scale with the new resolution.
+
+*{{c|clearscope void '''[[ReceivedWeapon]]'''(Weapon ''weapn'')}}
+:Called when a weapon is picked up for the first time. Signals the mug shot to grin.
+:*{{c|Weapon '''weapn'''}} - The weapon that was picked up.
+
+*{{c|clearscope void '''[[SetMugShotState (BaseStatusBar)|SetMugShotState]]'''(String ''state_name'', bool ''wait_till_done'' {{=}} false, bool ''reset'' {{=}} false)}}
+:Sets the current state of the mug shot.
+
+*{{c|clearscope void '''[[FlashItem]]'''(class&lt;Inventory&gt; ''itemtype'')}}
+:Responsible for the flash that appears in the player's visible inventory when using an item (see: Heretic and Hexen).
+:*{{c|class&lt;Inventory&gt; '''itemtype'''}} - The class type of the item that was used.
+
+*{{c|void '''[[AttachToPlayer]]'''(PlayerInfo ''player'')}}
+:Attaches the HUD to the specified player.
+:*{{c|PlayerInfo '''player'''}} - The {{struct|PlayerInfo}} of the player that the HUD should attach to.
+
+*{{c|void '''[[FlashCrosshair]]'''()}}
+:Responsible for the crosshair size change that can be set when picking up items.
+
+*{{c|void '''[[NewGame]]'''()}}
+:Called whenever a new game is started. Does not include loading a saved game.
+
+*{{c|void '''[[ShowPop]]'''(int popnum)}}
+:Draws a popup box like the character portraits when talking to someone in Strife.
+:*{{c|int '''popnum'''}} - The index of the popup to show.
+
+*{{c|bool '''[[MustDrawLog]]'''(int state)}}
+:Checks to see if a log instead of a popup should be drawn. Returning true tells the game to draw the log.
+:*''state'' - The current state of the HUD.
+
+*{{c|bool '''[[ProcessNotify]]'''(EPrintLevel ''printlevel'', String ''outline'')}}
+:Called when the console receives a notification. If true is returned then the console will not print the notification.
+
+*{{c|void '''[[FlushNotify]]'''()}}
+:Called when the console notifications are cleared.
+
+*{{c|bool '''[[ProcessMidPrint]]'''(Font ''fnt'', String ''msg'', bool ''bold'')}}
+:Called when the console wants to print a HUD message. If true is returned then the console will not automatically create the HUD message.
+:*{{c|Font '''fnt'''}} - The font type to print the message with.
+:*{{c|String '''msg'''}} - The message to be printed.
+:*{{c|bool '''bold'''}} - If true, uses the font's bold text.
+
+*{{c|bool '''[[DrawPaused]]'''(int ''player'')}}
+:{{moreinfo}}
+
+*{{c|bool '''[[DrawChat]]'''(String ''txt'')}}
+:Called when a chat message is to be printed. If true is returned then the game will not execute the default logic for chat printing.
+:*{{c|String '''txt'''}} - The current message to be printed.
+
+*int '''[[GetProtrusion]]'''(double ''scaleratio'') const
+:Called when calculating the height of the status bar when drawing the level name in the auto map. Useful for graphics that extend higher than the status bar itself. Returns the additional height to add to the top of the status bar relative to the resolution of the HUD.
+:*{{c|double '''scaleratio'''}} - The current width ratio of the last line of text to draw of the level name to the width of the HUD.
+
+*{{c|void '''[[DrawMyPos]]'''()}}
+:Called every frame the idmypos cheat is on. Handles drawing the player's current position on the screen.
+
+*{{c|void '''[[DrawAutomapHUD]]'''(double ''ticFrac'')}}
+:Called every frame the automap is active. Handles drawing text based information that's printed while the auto map is open.
+:*{{c|double '''ticfrac'''}} - The percentage of the way to the next tic that the current frame is at. Ranges from 0 to 1.
+
+*{{c|void '''[[DrawPowerups]]'''()}}
+:Called every frame. Handles drawing power up icons if they have one.</text>
+    <sha1>o8vrzmqr94em1vyc9tha6w2rjligthz</sha1>
+  </revision>
+</page>

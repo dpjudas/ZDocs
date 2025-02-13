@@ -1,0 +1,60 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>Classes:DegninOre</title>
+  <ns>0</ns>
+  <id>4824</id>
+  <revision>
+    <id>39983</id>
+    <parentid>35405</parentid>
+    <timestamp>2015-05-17T15:23:32Z</timestamp>
+    <contributor>
+      <username>Blue Shadow</username>
+      <id>2021</id>
+    </contributor>
+    <minor />
+    <comment>/* DECORATE definition */ Updated</comment>
+    <origin>39983</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="1223" sha1="t1kre48jd3vuzm4fqg0ehgx48qyoq66" xml:space="preserve">{{Actor|
+| type = Hazard
+| name = Nugget of degnin ore
+| class = DegninOre
+| game = Strife
+| doomednum = 59
+| convid = 128, 124, 127
+}}[[Classes]]: [[Classes:Inventory|Inventory]]&amp;rarr;&lt;u&gt;DegninOre&lt;/u&gt;&lt;br&gt;
+A large nugget of yellow ore, that explodes when shot. It can be picked up, using it drops it back on the ground. It can be used to prepare traps, or to disable some Strife forcefields.
+==== [[DECORATE]] definition ====
+ ACTOR &lt;u&gt;DegninOre&lt;/u&gt; : {{Class|Inventory}} native
+ {
+   {{Property|Health}} 10
+   {{Property|Radius}} 16
+   {{Property|Height}} 16
+   {{Property|Inventory.MaxAmount}} 10
+   +{{Flag|SOLID}}
+   +{{Flag|SHOOTABLE}}
+   +{{Flag|NOBLOOD}}
+   +{{Flag|FLOORCLIP}}
+   +{{Flag|INCOMBAT}}
+   +{{Flag|INVENTORY.INVBAR}}
+   {{Property|Tag}} "$TAG_DEGNINORE" // "Degnin Ore"
+   {{Property|DeathSound}} "ore/explode"
+   {{Property|Inventory.Icon}} "I_XPRK"
+   {{Property|Inventory.PickupMessage}} "$TXT_DEGNINORE" // "You picked up the Degnin Ore."
+   States
+   {
+   Spawn:
+     XPRK A -1
+     Stop
+   Death:
+     XPRK A 1 [[A_RemoveForceField]]
+     BNG3 A 0 [[A_SetTranslucent]](1, 1)
+     BNG3 A 0 [[A_Scream]]
+     BNG3 A 3 Bright [[A_Explode]](192, 192, 1, 1)
+     BNG3 BCDEFGH 3 Bright
+     Stop
+   }
+ }</text>
+    <sha1>t1kre48jd3vuzm4fqg0ehgx48qyoq66</sha1>
+  </revision>
+</page>

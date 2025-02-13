@@ -1,0 +1,51 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>Inventory properties</title>
+  <ns>0</ns>
+  <id>5091</id>
+  <revision>
+    <id>50715</id>
+    <parentid>44897</parentid>
+    <timestamp>2023-10-07T19:05:37Z</timestamp>
+    <contributor>
+      <username>Jekyll Grim Payne</username>
+      <id>2175</id>
+    </contributor>
+    <comment>Added a note on amount</comment>
+    <origin>50715</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="4043" sha1="fjz6sfg73mydtys4f6a3vcw4hfitvwy" xml:space="preserve">&lt;onlyinclude&gt;The [[Classes:Inventory|Inventory]] base class defines the following properties which are available to all inventory subclasses:
+* '''{{LE|Inventory.Amount}}''' ''value''
+:Sets the amount of inventory items given by this item. Mostly used for item types that give larger quantities.
+:If the item in question is [[Classes:Ammo|ammo]] and was dropped by another actor via [[A_DropItem]] or [[A_NoBlocking]], its amount will be reduced by half by default. This can be changed by modifying the ammo's [[Ammo_properties#Ammo.DropAmount|DropAmount]] property, or the [[MAPINFO/Skill_definition|DropAmmoFactor value in your custom skill definition]].
+* '''{{LE|Inventory.DefMaxAmount}}'''
+:Sets the maximum amount the player can carry of this item to the game's default. That is normally 16 for Heretic and 25 for the other games, but can be changed in [[MAPINFO]] through the GameInfo section.
+* '''{{LE|Inventory.MaxAmount}}''' ''value''
+:Sets the maximum amount the player can carry of this item.
+* '''{{LE|Inventory.InterHubAmount}}''' ''value''
+:Sets the maximum amount the player can keep of this item when traveling between hubs or non-hub levels. The default value of one replicates the original behavior of ''[[Heretic]]''. This property replaces the deprecated {{Flag|INVENTORY.INTERHUBSTRIP}}.
+* '''{{LE|Inventory.Icon}}''' ''sprite''
+:Defines the icon this item uses when displayed in the HUD or status bar.
+* '''{{LE|Inventory.AltHUDIcon}}''' ''sprite''
+:Defines the icon this item uses when displayed in the [[alternate HUD]]. This is of use with keys, weapons, ammunition and [[artifact]]s.
+* '''{{LE|Inventory.PickupMessage}}''' ''message''
+:Defines the message that is printed when the player picks up this item. Strings from the [[LANGUAGE]] lump can be used by passing the string's identifier prefixed with '$'. For {{Class|Health}} items, this can be overriden by the {{Property|Health.LowMessage}} property.
+* '''{{LE|Inventory.PickupSound}}''' ''sound''
+:Defines the sound that is played when a player picks up this item.
+* '''{{LE|Inventory.PickupFlash}}''' ''actor''
+:Defines what actor should appear when the item is picked up; normally this would be used with the [[Classes:PickupFlash|PickupFlash]] actor to make a flash appear as the player picks up the item.  If this is not specified there will be no flash when the item is picked up.
+* '''{{LE|Inventory.UseSound}}''' ''sound''
+:Defines the sound that is played when a player uses this item. The sound is played on the ''item'' [[A_PlaySound#Sound slots|channel]] ({{c|{{const|CHAN_ITEM}}}}) with normal attenuation.
+* '''{{LE|Inventory.RespawnTics}}''' ''value''
+:Defines the time it takes until this item respawns (if respawn is enabled) in 1/35 of a second.
+* '''{{LE|Inventory.GiveQuest}}''' ''value''
+:Also give a quest item for controlling Strife's dialogs when picking up this one. ''value'' can be in the range of [1..31]
+* '''{{LE|Inventory.ForbiddenTo}}''' ''classname''[, ''classname2''[, ''classname3''[, ...]]]
+:Prevents players using one of the listed classes (use actor names, not {{Property|Player.DisplayName}}) from picking up this type of inventory item. Note that unless playing in [[cooperative]] mode, a forbidden player will still try to pickup a {{Class|Weapon}} or {{Class|WeaponPiece}} for ammunition, as in ''[[Hexen]]''. Use an empty string (e.g., &lt;tt&gt;Inventory.ForbiddenTo ""&lt;/tt&gt;) to clear an inventory item of inherited interdictions.
+* '''{{LE|Inventory.RestrictedTo}}''' ''classname''[, ''classname2''[, ''classname3''[, ...]]]
+:Prevents players ''not'' using one of the listed classes (use actor names, not {{Property|Player.DisplayName}}) from picking up this type of inventory item. Note that unless playing in [[cooperative]] mode, a forbidden player will still try to pickup a {{Class|Weapon}} or {{Class|WeaponPiece}} for ammunition, as in ''[[Hexen]]''. Use an empty string (e.g., &lt;tt&gt;Inventory.ForbiddenTo ""&lt;/tt&gt;) to clear an inventory item of inherited restrictions.
+&lt;/onlyinclude&gt;
+[[Category:Editing references]]</text>
+    <sha1>fjz6sfg73mydtys4f6a3vcw4hfitvwy</sha1>
+  </revision>
+</page>

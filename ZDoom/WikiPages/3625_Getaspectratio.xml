@@ -1,0 +1,75 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>Getaspectratio</title>
+  <ns>0</ns>
+  <id>3625</id>
+  <revision>
+    <id>40549</id>
+    <parentid>40547</parentid>
+    <timestamp>2015-12-07T07:11:48Z</timestamp>
+    <contributor>
+      <username>Blzut3</username>
+      <id>413</id>
+    </contributor>
+    <minor />
+    <comment>Optimize away all the FixedMul and FixedDiv. Not sure where the double abs came from (CheckRatio doesn't do it), but can't be bothered to test enough to remove them.</comment>
+    <origin>40549</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="1403" sha1="rqwnrsmvc53u4src80hhwsr7cdqjpnc" xml:space="preserve">{{DISPLAYTITLE:getaspectratio}}
+Returns the aspect ratio of the user's resolution by using nearly the same method ZDoom uses internally.  Requires the [[abs]] function.
+
+ #define ASPECT_4_3 (4.0 / 3)
+ #define ASPECT_5_4 1.25
+ #define ASPECT_16_9 (16.0 / 9)
+ #define ASPECT_16_10 1.6
+ #define ASPECT_17_10 1.7
+ 
+ function int getaspectratio(void)
+ {
+ 	int width = [[GetCVar]]("vid_defwidth");
+ 	int height = [[GetCVar]]("vid_defheight");
+ 	int nowidescreen = [[GetCVar]]("vid_nowidescreen");
+ 	int tft = [[GetCVar]]("vid_tft");
+ 	int aspect = [[GetCVar]]("vid_aspect");
+ 	switch(aspect)
+ 	{
+ 		case 1:	return ASPECT_16_9;
+ 		case 2:	return ASPECT_16_10;
+ 		case 3:	return ASPECT_4_3;
+ 		case 4:	return ASPECT_5_4;
+ 		case 5: return ASPECT_17_10;
+ 	}
+ 	if(nowidescreen)
+ 	{
+ 		if(!tft)
+ 			return ASPECT_4_3;
+ 		if(height * ASPECT_5_4 == width&lt;&lt;16)
+ 			return ASPECT_5_4;
+ 		else
+ 			return ASPECT_4_3;
+ 	}
+ 	if(abs((abs(height * ASPECT_16_9)&gt;&gt;16) - width) &lt; 10)
+ 	{
+ 		return ASPECT_16_9;
+ 	}
+ 	if(abs((abs(height * ASPECT_17_10)&gt;&gt;16) - width) &lt; 10)
+ 	{
+ 		return ASPECT_17_10;
+ 	}
+ 	if(abs((abs(height * ASPECT_16_10)&gt;&gt;16) - width) &lt; 60)
+ 	{
+ 		if((width == 320 &amp;&amp; height == 200) || (width == 640 &amp;&amp; height == 400))
+ 			return ASPECT_4_3;
+ 		return ASPECT_16_10;
+ 	}
+ 	if((height * ASPECT_5_4)&gt;&gt;16 == width &amp;&amp; tft)
+ 	{
+ 		return ASPECT_5_4;
+ 	}
+ 	return ASPECT_4_3;
+ }
+
+[[category:Sample ACS functions]]</text>
+    <sha1>rqwnrsmvc53u4src80hhwsr7cdqjpnc</sha1>
+  </revision>
+</page>

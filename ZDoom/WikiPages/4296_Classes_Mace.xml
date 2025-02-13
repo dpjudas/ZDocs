@@ -1,0 +1,70 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>Classes:Mace</title>
+  <ns>0</ns>
+  <id>4296</id>
+  <revision>
+    <id>39402</id>
+    <parentid>34126</parentid>
+    <timestamp>2015-04-29T17:58:23Z</timestamp>
+    <contributor>
+      <username>Blue Shadow</username>
+      <id>2021</id>
+    </contributor>
+    <minor />
+    <comment>/* DECORATE definition */ Updated</comment>
+    <origin>39402</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="1855" sha1="clemejntqygcwqj9v0pq4samsri7n1i" xml:space="preserve">{{Actor|
+| type = Weapon
+| name = Firemace
+| class = Mace
+| game = Heretic
+| spawnid = 31
+| spawnname = T_MACE
+}}[[Classes]]: [[Classes:Inventory|Inventory]]&amp;rarr;[[Classes:Weapon|Weapon]]&amp;rarr;[[Classes:HereticWeapon|HereticWeapon]]&amp;rarr;&lt;u&gt;Mace&lt;/u&gt;&lt;br&gt;
+&amp;ensp;&amp;rarr;[[Classes:MacePowered|MacePowered]]&lt;br&gt;
+
+The firemace is Heretic's ultimate weapon, and may seem a bit disappointing as long as it isn't coupled with a [[Classes:ArtiTomeOfPower|tome of power]]. It fires a rapid stream of [[Classes:MaceFX2|spheres]] which produce [[Classes:MaceFX3|other spheres]] when bouncing on the ground. While its rate of fire is good, its projectiles are slow and have a limited range, and they harmlessly pass through enemies with the {{flag|GHOST}} flag, or protected by a [[Classes:ArtiInvisibility|shadowsphere]]. 
+
+Contrarily to most other weapons, it cannot be placed directly on a map; instead one or several [[Classes:MaceSpawner|MaceSpawner]] things are placed, and there is a ~75% chance that a firemace will appear on a randomly-selected MaceSpawner.
+==== [[DECORATE]] definition ====
+ ACTOR &lt;u&gt;Mace&lt;/u&gt; : {{Class|HereticWeapon}}
+ {
+   {{Property|Weapon.SelectionOrder}} 1400
+   {{Property|Weapon.AmmoUse}} 1
+   {{Property|Weapon.AmmoGive1}} 50
+   {{Property|Weapon.YAdjust}} 15
+   {{Property|Weapon.AmmoType}} "{{Class|MaceAmmo}}"
+   {{Property|Weapon.SisterWeapon}} "{{Class|MacePowered}}"
+   {{Property|Inventory.PickupMessage}} "$TXT_WPNMACE"
+   {{Property|Tag}} "$TAG_MACE"
+ 
+   action native [[A_FireMacePL1]]();
+ 
+   States
+   {
+   Spawn:
+     WMCE A -1
+     Stop
+   Ready:
+     MACE A 1 [[A_WeaponReady]]
+     Loop
+   Deselect:
+     MACE A 1 [[A_Lower]]
+     Loop
+   Select:
+     MACE A 1 [[A_Raise]]
+     Loop
+   Fire:
+     MACE B 4
+   Hold:
+     MACE CDEF 3 [[A_FireMacePL1]]
+     MACE C 4 [[A_ReFire]]
+     MACE DEFB 4
+     Goto Ready
+   }
+ }</text>
+    <sha1>clemejntqygcwqj9v0pq4samsri7n1i</sha1>
+  </revision>
+</page>

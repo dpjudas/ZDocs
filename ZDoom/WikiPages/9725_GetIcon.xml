@@ -1,0 +1,64 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>GetIcon</title>
+  <ns>0</ns>
+  <id>9725</id>
+  <revision>
+    <id>51889</id>
+    <parentid>50752</parentid>
+    <timestamp>2024-02-29T16:55:04Z</timestamp>
+    <contributor>
+      <username>Jekyll Grim Payne</username>
+      <id>2175</id>
+    </contributor>
+    <minor />
+    <comment>/* Parameters */</comment>
+    <origin>51889</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="1987" sha1="l5rr4t8e212hqzwzzy1rwbe0xibf8n7" xml:space="preserve">__NOTOC__
+[[Classes:BaseStatusBar|'''BaseStatusBar''']]
+
+TextureID, Vector2 '''GetIcon'''(Inventory ''item'', int ''flags'', bool ''showdepleted'' = true)
+
+==Usage==
+Can be used in a [[Classes:BaseStatusBar|ZScript HUD]] to obtain a [[Structs:TextureID|TextureID]] of the specified item's [[Inventory_properties#Inventory.Icon|icon]]. It functions as a more convenient wrapper for [[GetInventoryIcon]].
+
+By default the function will try obtaining a suitable graphic according to the following flow:
+*Get the item's '''Icon'''
+:*If not available, get the item's '''AltIcon'''
+::*If not available, get the item's [[Actor_states#States|Spawn]] state sprite
+:::*If not available and the item is a [[weapon]], get its Ready state sprite
+
+By default the texture will be scaled according to the item's {{property|scale}} property.
+
+This function is internally used by [[DrawInventoryIcon]].
+
+===Parameters===
+*{{c|Inventory '''item'''}}
+:A pointer to an instance of an [[Classes:Inventory|Inventory class]] (for example, obtained via [[FindInventory]]).
+*{{c|int '''flags'''}}
+:Possible flags:
+{{: BaseStatusBar icon flags}}
+*{{c|bool '''showdepleted'''}}
+:If this is false, the function will return a null icon. {{verification}}
+
+==Return values==
+The function has 2 return values:
+*''TextureID'' - the textureID of the icon
+*''vector2'' - the scale of the icon. The icon will be multiplied by the item's {{property|scale}} property, unless {{c|DI_FORCESCALED}} was passed.
+
+==Examples==
+This obtains the icon of the player's currently equipped weapon an draws it at the bottom left corner of the screen:
+&lt;syntaxhighlight lang="csharp"&gt;
+TextureID icon = GetIcon(CPlayer.readyWeapon, 0);
+if (icon.isValid())
+{
+    DrawTexture(icon, (0,0), DI_SCREEN_LEFT_BOTTOM|DI_ITEM_LEFT_BOTTOM);
+}&lt;/syntaxhighlight&gt;
+Note: this example is for educational purposes only. In practice it's not useful because it copies the functionality of [[DrawInventoryIcon]].
+
+[[Category:ZScript]]
+[[Category:BaseStatusBar]]</text>
+    <sha1>l5rr4t8e212hqzwzzy1rwbe0xibf8n7</sha1>
+  </revision>
+</page>

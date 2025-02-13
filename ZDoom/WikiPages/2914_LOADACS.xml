@@ -1,0 +1,54 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>LOADACS</title>
+  <ns>0</ns>
+  <id>2914</id>
+  <revision>
+    <id>54117</id>
+    <parentid>54116</parentid>
+    <timestamp>2025-01-07T11:20:36Z</timestamp>
+    <contributor>
+      <username>Jekyll Grim Payne</username>
+      <id>2175</id>
+    </contributor>
+    <minor />
+    <comment>/* Example */</comment>
+    <origin>54117</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="1784" sha1="i84a89bqe21wv2jn7ng95vb7bshxuq1" xml:space="preserve">LOADACS is a lump which supports automatically loading ACS objects (even for Doom-format maps). 
+
+To use it, compile the ACS files as ordinary [[libraries]] placed between A_START/A_END markers in WADs, or the acs/ directory in PK3s (the [[Namespace|ACS namespace]]). 
+
+Then outside the markers, create a lump called LOADACS. This is just a plain text lump that lists all the library lumps you want to autoload with every map. You can do this with as many scripts as you want, and LOADACS lumps are also cumulative.
+
+'''NB: This is often referred to as ''Global ACS,'' though this is not, and has never been, its true name.'''
+
+{{Warning|text=While scripts will work via LOADACS correctly if the script is missing the "library" header, this will cause all strings and named scripts to conflict with the map's default script. For more information see [[libraries]].}}
+
+== Example ==
+Here's an example of using LOADACS to include compiled ACS lumps which should be in the ACS namespace. First here's the scripts lump:
+
+&lt;syntaxhighlight lang="c"&gt;
+#library "myscript" // Name of the library
+#include "zcommon.acs"
+ 
+script "myscript_Player_Damage" ENTER // A unique name is less likely to conflict with other maps with scripts
+{
+    DamageThing(10); // Damage the player as soon as he spawns. How evil!
+}
+&lt;/syntaxhighlight&gt;
+
+And here is the LOADACS lump after compiling the above.
+&lt;syntaxhighlight lang="c"&gt;
+myscript // The name of the lump.
+&lt;/syntaxhighlight&gt;
+
+If done correctly script will be used in every map, and the player will be damaged. The compiled script lump name does not have to be the same as the library name. The LOADACS lump itself must be found in the [[Namespace|Global Namespace]] (not in the ACS namespace).
+
+== See Also ==
+*[[ACS]]
+
+[[category:ZDoom special lumps]]</text>
+    <sha1>i84a89bqe21wv2jn7ng95vb7bshxuq1</sha1>
+  </revision>
+</page>

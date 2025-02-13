@@ -1,0 +1,93 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>Automap options</title>
+  <ns>0</ns>
+  <id>6596</id>
+  <revision>
+    <id>53202</id>
+    <parentid>46876</parentid>
+    <timestamp>2024-10-03T12:21:34Z</timestamp>
+    <contributor>
+      <username>Blue Shadow</username>
+      <id>2021</id>
+    </contributor>
+    <comment>interaction between "Show map label" option and "Label" MAPINFO property</comment>
+    <origin>53202</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="6465" sha1="kx1t0jfsv2fsf3q1dfcmpx212qbpu4x" xml:space="preserve">{{menutrail|Main menu|Options menu}}
+[[File:AutomapOptions.png|thumb|The automap options menu in [[Final Doom|TNT]].]]
+The '''automap options''' menu controls nearly all [[automap]] settings. Its [[MENUDEF]] name is {{c|AutomapOptions}} and it can be summoned with the {{c|{{CCMD|O|menu_automap}}}} console command.
+*'''{{LE|Map color set}}''' (Custom/Traditional Doom/Traditional Strife/Traditional Raven)
+:{{c|{{CVAR|A|am_colorset}}}}
+:Selects the color set to use in the currently active [[IWAD|game]].
+*'''{{LE|Allow map defined colors}}''' (No/Yes)
+:{{c|{{CVAR|A|am_customcolors}}}}
+:If set to ''Yes'', it uses [[MAPINFO/Automap_definition|mod-defined color settings for the automap]] (if any), thus overriding the end-user's own color settings.
+*'''{{LE|Set custom colors}}'''
+:{{c|{{CCMD|O|menu_mapcolors}}}}
+:Opens a [[Set custom colors|submenu]] allowing to view and change each color of the custom color set.
+*'''{{LE|Customize map controls}}'''
+:Opens a [[Customize map controls|submenu]] similar to the [[customize controls]] menu, but for automap-mode keys.
+
+
+*'''{{LE|Rotate automap}}''' (Off/On/On for overlay only)
+:{{c|{{CVAR|A|am_rotate}}}}
+:Selects whether the automap rotates with the player avatar so that the top is always forward, or stay static with the top corresponding to north. 
+*'''{{LE|Overlay automap}}''' (Off/Overlay+normal/Overlay only)
+:{{c|{{CVAR|A|am_overlay}}}}
+:The normal automap is in its own screen, the overlay automap is displayed above the game window. If "Overlay+normal" is selected, the automap key ("tab" by default) will cycle through overlay automap, normal automap, and no automap.
+*'''{{LE|Follow player}}''' (On/Off)
+:{{c|{{CVAR|A|am_followplayer}}}}
+:This setting controls whether the automap is in follow mode or not.
+
+
+*'''{{LE|Show item counts}}''' (On/Off)
+:{{c|{{CVAR|A|am_showitems}}}}
+:Selects whether a tally of the picked items and total items is displayed in the automap. Items are actors with the {{Flag|COUNTITEM}} flag. Note that if the [[alternate HUD]] is used, tallies will not be displayed in the automap regardless of this setting.
+*'''{{LE|Show monster counts}}''' (On/Off)
+:{{c|{{CVAR|A|am_showmonsters}}}}
+:Selects whether a tally of the killed monsters and total monsters is displayed in the automap. Monsters are actors with the {{Flag|COUNTKILL}} flag. Note that if the [[alternate HUD]] is used, tallies will not be displayed in the automap regardless of this setting.
+*'''{{LE|Show secret counts}}''' (On/Off)
+:{{c|{{CVAR|A|am_showsecrets}}}}
+:Selects whether a tally of the found secrets and total secrets is displayed in the automap. Secrets are generally [[sector]]s marked as secret in the editor (sector type 9 or 1024+x), but it is also possible to have scripted secrets with a {{Class|SecretTrigger}} or actors with the {{Flag|COUNTSECRET}} flag. Note that if the [[alternate HUD]] is used, tallies will not be displayed in the automap regardless of this setting.
+*'''{{LE|Show time elapsed}}''' (On/Off)
+:{{c|{{CVAR|A|am_showtime}}}}
+:Selects whether the time passed in the current level is displayed in the automap.
+*'''{{LE|Show total time elapsed}}''' (On/Off)
+:{{c|{{CVAR|A|am_showtotaltime}}}}
+:Selects whether the time passed in the current session (including all previous levels) is displayed in the automap.
+*'''{{LE|Show secrets on map}}''' (Never/Only when found/Always)
+:{{c|{{CVAR|A|am_map_secrets}}}}
+:Selects whether the border linedefs of secret sectors are drawn in a different color. Setting it to "Always" can be seen as a form of cheating since it often allows to notice secret sectors before they are found.
+*'''{{LE|Show map label}}''' (Never/Always/Not for hubs)
+:{{c|{{CVAR|A|am_showmaplabel}}}}
+:Allows to choose whether the map label (that is to say, the name of the map header lump, such as "E1M1" or "MAP32") is displayed before the map name. The "not for hubs" choice corresponds to the behavior of previous versions of ZDoom, where in sequential levels the Doom behavior of showing the label is used while in [[hub]] levels the Hexen behavior of showing only the map title is used. If a map has its own {{MapProperty|Label|label}} set through [[MAPINFO]], the label is always displayed regardless of this option's setting.
+*'''{{LE|Draw map background}}''' (On/Off)
+:{{c|{{CVAR|A|am_drawmapback}}}}
+:If this is on, and there is an [[AUTOPAGE]] graphics or the level specifies a MapBackground property in its [[map definition]], then this graphic is used as the background for the normal automap.
+*'''{{LE|Show keys (cheat)}}''' (On/Off)
+:{{c|{{CVAR|A|am_showkeys}}}}
+:If this is on, when using the automap cheat to show items (the &lt;tt&gt;am_cheat&lt;/tt&gt; [[console variable]] is set to 2 or 3, e.g. with the iddtiddt or ravmapravmap [[cheat code]]s), then keys are represented by a key-shaped graphic of their color instead of a simple triangle of the pickup color. (A key's color corresponds to the color of the first lock that it can open, as defined in [[LOCKDEFS]]).
+*'''{{LE|Show trigger lines}}''' (Off/All except doors/On)
+:{{c|{{CVAR|A|am_showtriggerlines}}}}
+:If this is set to "All except doors", linedef with a line special (other than a [[:Category:Door specials|door special]]) will be marked with a different color, which can be chosen from the "[[set custom colors]]" submenu (this is unavailable when using a "traditional" color set). Setting this to on, includes door specials.
+*'''{{LE|Show things as sprites}}''' (Off/Front/Animated/Rotated)
+:{{c|{{CVAR|A|am_showthingsprites}}}}
+:Shows actors on the automap as the sprites they represent in-game instead of simple triangles when the {{c|{{CVAR|A|am_cheat}}}} [[console variable]] is set to 2 or 3. ''Front'' shows the front angle of the sprite. ''Animated'' shows the front angle of the sprite with animation. ''Rotated'' shows the actor's sprite with animation and rotation.
+
+
+*'''{{LE|Mark font}}''' (Default/Small/Large/Console)
+:{{c|{{CVAR|A|am_markfont}}}}
+:The [[font]] used for drawing the map marks. ''Default'' uses the AMMNUM(0-9) graphics and is not an actual font. ''Small'', ''Large'' and ''Console'' correspond to SMALLFONT, BIGFONT and CONFONT, respectively.
+*'''{{LE|Mark color}}''' ([[Print]] colors)
+:{{c|{{CVAR|A|am_markcolor}}}}
+:The color in which to draw the [[font]] used for the map marks. This has no effect on the ''Default'' mark font choice as it is not a font.
+
+==See also==
+* [[Automap]]
+* [[CVARs:Automap|Automap console variables]]
+
+[[Category:Menus]]</text>
+    <sha1>kx1t0jfsv2fsf3q1dfcmpx212qbpu4x</sha1>
+  </revision>
+</page>

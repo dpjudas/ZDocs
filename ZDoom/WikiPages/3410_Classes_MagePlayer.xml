@@ -1,0 +1,144 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>Classes:MagePlayer</title>
+  <ns>0</ns>
+  <id>3410</id>
+  <revision>
+    <id>34787</id>
+    <parentid>26137</parentid>
+    <timestamp>2012-10-27T13:55:57Z</timestamp>
+    <contributor>
+      <username>Blue Shadow</username>
+      <id>2021</id>
+    </contributor>
+    <comment>/* DECORATE definition */ Updated.</comment>
+    <origin>34787</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="6815" sha1="g24xrvwiw25slbno948qm4eptpnk3j1" xml:space="preserve">{{Actor|
+| type = Player
+| name = Daedolon
+| class = MagePlayer
+| game = Hexen
+}}{{Class}} &amp;rarr; {{Class|PlayerPawn}} &amp;rarr;&lt;u&gt; MagePlayer&lt;/u&gt;&lt;br&gt;
+
+The Mage is one of the three character classes available for play in Hexen. He's the frailest character, but is totally oriented toward ranged combat. His weapons are:
+* [[Classes:MWeapWand|Sapphire Wand]]: A magic weapon that fires an ultra-fast projectile that can rip through lines of enemies. It deals low damage, but uses no mana and is the only long-range starting weapon in Hexen.
+* [[Classes:MWeapFrost|Frost Shards]]: A spell fueled by [[Classes:Mana1|blue mana]] that launches a cone of icey darts that can freeze an enemy in its tracks. Using this spell upclose acquaints your target with a freezing touch, which is more effect. In a way, similar to its thematic reverse, the [[Classes:ClericPlayer|Cleric]]'s [[Classes:CWeapFlame|Firestorm]].
+* [[Classes:MWeapLightning|Arc of Death]]: This spell uses [[Classes:Mana2|green mana]] to cast out a vertical collumn of lightning that blasts your enemies with impunity. Once hit, the bolt of electicity "sticks" to the target and deals damage continously until the target is killed or the spell dissipates. This attack can travel over cliffs and will continue until it hits a wall or monster.
+* [[Classes:MWeapBloodscourge|Bloodscourge]]: This powerful and sinister magic staff uses [[Classes:Mana3|both mana types]] to throw out three homing magic projectiles that blast through enemies. These magic missiles seek out their own targets and will continue to look for new targets until it hits a wall, floor, or ceiling, which causes it to explode, dealing larget amounts of splash damage. Before using Bloodscourge in combat, the Mage must first assemble it by finding the three relevant [[Classes:MageWeaponPiece|weapon pieces]].
+
+Contrarily to other [[Classes:PlayerPawn|player classes]], the Hexen player classes can not easily use additional weapons. While it is possible in [[KEYCONF]] to change which weapon is associated to which slot, a Mage can still only select these four weapons with the keys bound to weapon slots. (However, the keys bound to next and previous weapon, the &lt;code&gt;use&lt;/code&gt; [[Console Commands|console command]], and the automatic weapon switching when running out of ammo, can still equip another weapon.) A Mage picking up a Cleric or Fighter weapon will only gain ammunitions from them, though it is still possible to give him the illegal weapons with the [[Console Commands|console]], [[ACS]], or [[DECORATE]].
+
+A Mage under the effect of an [[Classes:ArtiInvulnerability|Icon of the Defender]] will reflect incoming projectiles away. He uses the [[Classes:ArtiPoisonBag|fléchettes]] as timebombs, which require cleverness to be used efficiently. When he uses a [[Classes:ArtiHealingRadius|Mystic Ambit Incant]], his nearby allies resplenish their mana.
+
+====Character Summary====
+In a world named Chronos, Daedolon the Mage is the only remaining free member of his order, the Arcanum. All others have been turned into mind-controled slave under the command of the Arcanum's treacherous leader, [[Classes:MageBoss|Menelkir]], who is himself a thrall to the Serpent Rider [[Classes:Korax|Korax]]. Just like his similarly-fated friends [[Classes:FighterPlayer|Baratus the Fighter]] and [[Classes:ClericPlayer|Parias the Cleric]], Daedolon intends to free his world from [[Classes:Korax|Korax]] and the Serpent Rider's hellish hordes by personally eliminating each and everyone of his enemies.
+
+In game, Daedolon appears as a typical fantasy wizard: wearing a hooded robe, an amulet, and a gem-tipped staff. The staff may be meant to be the Sapphire Wand or the Bloodscourge, but doesn't actually look like either.
+
+==== [[DECORATE]] definition ====
+ ACTOR &lt;u&gt;MagePlayer&lt;/u&gt; : {{Class|PlayerPawn}}
+ {
+   {{Property|Health}} 100
+   {{Property|ReactionTime}} 0
+   {{Property|PainChance}} 255
+   {{Property|Radius}} 16
+   {{Property|Height}} 64
+   {{Property|Speed}} 1
+   +{{Flag|NOSKIN}}
+   +{{Flag|NODAMAGETHRUST}}
+   +{{Flag|PLAYERPAWN.NOTHRUSTWHENINVUL|NOTHRUSTWHENINVUL}}
+   {{Property|PainSound}} "PlayerMagePain"
+   {{Property|RadiusDamageFactor}} 0.25
+   {{Property|Player.JumpZ}} 9
+   {{Property|Player.Viewheight}} 48
+   {{Property|Player.SpawnClass}} "Mage"
+   {{Property|Player.DisplayName}} "Mage"
+   {{Property|Player.SoundClass}} "mage"
+   {{Property|Player.ScoreIcon}} "MAGEFACE"
+   {{Property|Player.InvulnerabilityMode}} "Reflective"
+   {{Property|Player.HealRadiusType}} "Mana"
+   {{Property|Player.HexenArmor}} 5, 5, 15, 10, 25
+   {{Property|Player.StartItem}} "{{Class|MWeapWand}}"
+   {{Property|Player.ForwardMove}} 0.88, 0.92
+   {{Property|Player.SideMove}} 0.875, 0.925
+   {{Property|Player.Portrait}} "P_MWALK1"
+   {{Property|Player.WeaponSlot}} 1, {{Class|MWeapWand}}
+   {{Property|Player.WeaponSlot}} 2, {{Class|MWeapFrost}}
+   {{Property|Player.WeaponSlot}} 3, {{Class|MWeapLightning}}
+   {{Property|Player.WeaponSlot}} 4, {{Class|MWeapBloodscourge}}
+   {{Property|Player.FlechetteType}} "{{Class|ArtiPoisonBag2}}"
+ 
+   {{Property|Player.ColorRange}} 146, 163
+   {{Property|Player.ColorSet}}     0, "Blue",          146, 163,     161
+   {{Property|Player.ColorSetFile}} 1, "Red",           "TRANTBL7",  0xB3
+   {{Property|Player.ColorSetFile}} 2, "Gold",          "TRANTBL8",  0x8C
+   {{Property|Player.ColorSetFile}} 3, "Dull Green",    "TRANTBL9",  0x41
+   {{Property|Player.ColorSetFile}} 4, "Green",         "TRANTBLA",  0xC9
+   {{Property|Player.ColorSetFile}} 5, "Gray",          "TRANTBLB",  0x30
+   {{Property|Player.ColorSetFile}} 6, "Brown",         "TRANTBLC",  0x72
+   {{Property|Player.ColorSetFile}} 7, "Purple",        "TRANTBLD",  0xEE
+ 
+   States
+   {
+   Spawn:
+     MAGE A -1
+     Stop
+   See:
+     MAGE ABCD 4
+     Loop
+   Missile:
+   Melee:
+     MAGE EF 8
+     Goto Spawn
+   Pain:
+     MAGE G 4
+     MAGE G 4 [[A_Pain]]
+     Goto Spawn
+   Death:
+     MAGE H 6
+     MAGE I 6 [[A_PlayerScream]]
+     MAGE JK 6
+     MAGE L 6 [[A_NoBlocking]]
+     MAGE M 6
+     MAGE N -1
+     Stop     
+   XDeath:
+     MAGE O 5 [[A_PlayerScream]]
+     MAGE P 5
+     MAGE R 5 [[A_NoBlocking]]
+     MAGE STUVW 5
+     MAGE X -1
+     Stop
+   Ice:
+     MAGE Y 5 [[A_FreezeDeath]]
+     MAGE Y 1 [[A_FreezeDeathChunks]]
+     Wait
+   Burn:
+     FDTH E 5 Bright [[A_PlaySound]]("*burndeath")
+     FDTH F 4 Bright
+     FDTH G 5 Bright
+     FDTH H 4 Bright [[A_PlayerScream]]
+     FDTH I 5 Bright
+     FDTH J 4 Bright
+     FDTH K 5 Bright
+     FDTH L 4 Bright
+     FDTH M 5 Bright
+     FDTH N 4 Bright
+     FDTH O 5 Bright
+     FDTH P 4 Bright
+     FDTH Q 5 Bright
+     FDTH R 4 Bright
+     FDTH S 5 Bright [[A_NoBlocking]]
+     FDTH T 4 Bright
+     FDTH U 5 Bright
+     FDTH V 4 Bright
+     ACLO E 35 [[A_CheckPlayerDone]]
+     Wait
+     ACLO E 8
+     Stop
+   }
+ }</text>
+    <sha1>g24xrvwiw25slbno948qm4eptpnk3j1</sha1>
+  </revision>
+</page>

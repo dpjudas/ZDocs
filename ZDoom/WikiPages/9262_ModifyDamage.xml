@@ -1,0 +1,89 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>ModifyDamage</title>
+  <ns>0</ns>
+  <id>9262</id>
+  <revision>
+    <id>51312</id>
+    <parentid>51309</parentid>
+    <timestamp>2024-01-28T11:27:31Z</timestamp>
+    <contributor>
+      <username>Jekyll Grim Payne</username>
+      <id>2175</id>
+    </contributor>
+    <minor />
+    <comment>/* Parameters */</comment>
+    <origin>51312</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="4040" sha1="ojnbg9g4cdgpkt75iiwnv01usw6zg3o" xml:space="preserve">__NOTOC__
+'''{{class|Inventory}}'''
+
+virtual void '''ModifyDamage'''(int ''damage'', Name ''damageType'', out int ''newdamage'', bool ''passive'', Actor ''inflictor'' = null, Actor ''source'' = null, int ''flags'' = 0)
+
+==Usage==
+Allows {{Class|Inventory|inventory items}} to manipulate the damage their owner receives or deals. It is called when the owner of the item is damaged or deals damage to another actor. 
+There are two modes of operations for this function: ''active'' and ''passive'': 
+* In ''active'' the function modifies the damage dealt by the ''source'' (the owner of the item) to other actors. The function is not called if damage is zero or less.
+* In ''passive'' it modifies the damage received by the owner (with the ''source'' being whoever damaged them). It will not be called if damage is zero or less or if the damage is set up to bypass protection powerups. 
+
+Note that the function is called before {{c|[[AbsorbDamage]]}}, another similar function for damage manipulation.
+
+This function's main usage is with {{Class|Powerup|powerups}} such as [[Classes:PowerProtection|PowerProtection]] and [[Classes:PowerDamage|PowerDamage]], but could be used with any inventory item.
+
+===Parameters===
+*{{c|int '''damage'''}}
+:The amount of damage the attack would deal without modification.
+*{{c|Name '''damageType'''}}
+:The [[Damage type|damage type]] applied to the attack. By default regular attacks use {{c|'Normal'}}, hitscan attacks use {{c|'Hitscan'}}. Otherwise this can be any custom damage type name used in a specific project.
+*{{c|out int '''newdamage'''}}
+:The amount of damage the attack will deal after this function has been called. If nothing is done with this value, &lt;code&gt;damage&lt;/code&gt; will be used unmodified. Note, if the idea is to use this function to obtain data without modifying the damage, calling &lt;code&gt;newdamage = damage&lt;/code&gt; is redundant; it's enough to simply not do anything with &lt;code&gt;newdamage&lt;/code&gt; at all.
+*{{c|bool '''passive'''}}
+:True if the attack is being received by the owner. False if the attack is being dealt by the owner.
+*{{c|Actor '''inflictor'''}}
+:The actor dealing the damage. This is the missile for projectiles and the puff for hitscan attacks. For monster melee attacks this is the same as the source.
+*{{c|Actor '''source'''}}
+:The actor responsible for the inflictor.
+*{{c|int '''flags'''}} - The damage flags to use in the attack:
+{{: ZScript damage flags}}
+:NOTE: While the list of flags is the same as used by [[DamageMobj]], this function, naturally, won't be able to intercept attacks that are specifically set to bypass it, so {{c|DMG_NO_ENHANCE}} in active mode and {{c|DMG_NO_PROTECT}} in passive mode will never be readable.
+
+==Examples==
+An example of ''active'' mode: {{c|{{Class|PowerDamage}}}}.
+ override void '''ModifyDamage''' (int damage, Name damageType, out int newdamage, bool passive, Actor inflictor, Actor source, int flags)
+ {
+     if (!passive &amp;&amp; damage &gt; 0)
+     {
+         newdamage = [[DECORATE expressions|max]](1, [[ApplyDamageFactors]]([[GetClass]](), damageType, damage, damage * 4));
+ 
+         if (Owner != null &amp;&amp; newdamage &gt; damage)
+         {
+             Owner.[[A_StartSound]](ActiveSound, {{const|CHAN_AUTO}}, {{const|CHANF_DEFAULT}}, 1.0, {{const|ATTN_NONE}});
+         }
+     }
+ }
+
+
+An example of ''passive'' mode: {{c|{{Class|PowerProtection}}}}.
+ override void '''ModifyDamage''' (int damage, Name damageType, out int newdamage, bool passive, Actor inflictor, Actor source, int flags)
+ {
+     if (passive &amp;&amp; damage &gt; 0)
+     {
+         newdamage = [[DECORATE expressions|max]](0, [[ApplyDamageFactors]]([[GetClass]](), damageType, damage, damage / 4));
+ 
+         if (Owner != null &amp;&amp; newdamage &lt; damage)
+         {
+             Owner.[[A_StartSound]](ActiveSound, {{const|CHAN_AUTO}}, {{const|CHANF_DEFAULT}}, 1.0, {{const|ATTN_NONE}});
+         }
+     }
+ }
+
+==See also==
+* [[Inventory virtual functions]]
+* [[ZScript virtual functions]]
+
+[[category:ZScript]]
+[[category:ZScript virtual functions]]
+[[Category:Inventory]]</text>
+    <sha1>ojnbg9g4cdgpkt75iiwnv01usw6zg3o</sha1>
+  </revision>
+</page>

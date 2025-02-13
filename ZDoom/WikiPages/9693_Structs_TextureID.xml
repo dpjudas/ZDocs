@@ -1,0 +1,72 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>Structs:TextureID</title>
+  <ns>0</ns>
+  <id>9693</id>
+  <revision>
+    <id>53049</id>
+    <parentid>51780</parentid>
+    <timestamp>2024-09-03T21:49:35Z</timestamp>
+    <contributor>
+      <username>Jekyll Grim Payne</username>
+      <id>2175</id>
+    </contributor>
+    <minor />
+    <comment>/* Existing, null and valid textures */</comment>
+    <origin>53049</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="2658" sha1="5sn6wss0m1ja3vr0zd2ypoq8ohi8ns9" xml:space="preserve">{{ZScriptNote}}
+
+A TextureID is an internal number of a graphic used by GZDoom (contrary to the name, this includes any type of graphic, such as level textures, sprites, and graphics).
+
+The ''TextureID'' [[Structs|struct]] contains methods that can be utilized on TextureID pointers. TextureID of an image can be obtained and manipulated by using the methods defined in the [[Structs:TexMan|TexMan struct]].
+
+== Methods ==
+=== Dynamic ===
+All of these methods are dynamic and must be called on a TextureID pointer.
+
+*{{c|bool '''IsValid'''()}}
+:Returns true if the TextureID is a valid texture that can be rendered. (This means the texture exists and isn't a null texture.)
+*{{c|bool '''IsNull'''()}}
+:Returns true if the TextureID is a null texture. (This means the texture exists but is explicitly defined as null.) 
+*{{c|bool '''Exists'''()}}
+:Returns true if the TextureID is an existing texture (returns true for null textures as well).
+*{{c|void '''SetInvalid'''()}}
+:Marks the TextureID pointer as invalid for future checks.
+*{{c|void '''SetNull'''()}}
+:Marks the TextureID pointer as null for future checks. This is necessary, because something like &lt;code&gt;foo = null&lt;/code&gt; doesn't work on TextureID-type values.
+
+== Existing, null and valid textures ==
+The relation between {{c|IsValid()}}, {{c|IsNull()}} and {{c|Exists()}} checks works as follows:
+{| class="wikitable" style="text-align:center;"
+|- style="text-align:left;"
+! Texture type
+! Exists
+! IsNull
+! IsValid
+|- style="font-style:italic;"
+| style="font-style:normal; text-align:left;" | Non-existent texture
+| style="background-color:#ffccc9;" | false
+| style="background-color:#ffccc9;" | false
+| style="background-color:#ffccc9;" | false
+|-
+| style="text-align:left;" | Null texture
+| style="background-color:#34ff34;" | TRUE
+| style="background-color:#34ff34;" | TRUE
+| style="font-style:italic; background-color:#ffccc9;" | false
+|-
+| style="text-align:left;" | Regular texture
+| style="background-color:#34ff34;" | TRUE
+| style="font-style:italic; background-color:#ffccc9;" | false
+| style="background-color:#34ff34;" | TRUE
+|}
+
+'''Note:'''
+* [[TNT1]] is considered a valid and non-null texture.
+* If an actor whose sprites don't exist are spawned dynamically in the world (via [[Spawn (ZScript)|{{c|Spawn()}}]] or its derivatives), their sprites are dynamically remapped to TNT1 to avoid errors. As a result, calling {{c|IsValid()}} on the results of {{struct|State|{{c|GetSpriteTexture()}}}} will yield a valid, non-null result. Use {{struct|State|{{c|&lt;statepointer&gt;.ValidateSpriteFrame()}}}} to check a state is using an existing sprite.
+
+[[Category:ZScript]]
+[[Category:Structs]]</text>
+    <sha1>5sn6wss0m1ja3vr0zd2ypoq8ohi8ns9</sha1>
+  </revision>
+</page>

@@ -1,0 +1,75 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>Classes:Gauntlets</title>
+  <ns>0</ns>
+  <id>4223</id>
+  <revision>
+    <id>39400</id>
+    <parentid>34122</parentid>
+    <timestamp>2015-04-29T17:57:37Z</timestamp>
+    <contributor>
+      <username>Blue Shadow</username>
+      <id>2021</id>
+    </contributor>
+    <minor />
+    <comment>/* DECORATE definition */ Updated</comment>
+    <origin>39400</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="1697" sha1="ee32okd113ainqywrg917gzaj6bleng" xml:space="preserve">{{Actor|
+| type = Weapon
+| name = Gauntlets of the necromancer
+| class = Gauntlets
+| game = Heretic
+| doomednum = 2005
+| spawnid = 32
+| spawnname = T_GAUNTLETS 
+}}[[Classes]]: [[Classes:Inventory|Inventory]]&amp;rarr;[[Classes:Weapon|Weapon]]&amp;rarr;&lt;u&gt;Gauntlets&lt;/u&gt;&lt;br&gt;
+&amp;ensp;&amp;rarr;[[Classes:GauntletsPowered|GauntletsPowered]]&lt;br&gt;
+
+In Heretic, these are gauntlets worn by the player which fire green lightning while the attack button is held.  The lightning damages enemies within melee range of the player, much like [[Classes:Chainsaw|Doom's chainsaw]] weapon.  When used with the [[Classes:ArtiTomeOfPower|Tome of Power]], the lightning color changes to red and deals more damage.
+
+
+==== [[DECORATE]] definition ====
+ ACTOR &lt;u&gt;Gauntlets&lt;/u&gt; : {{Class|Weapon}}
+ {
+   +{{Flag|BLOODSPLATTER}}
+   {{Property|Weapon.SelectionOrder}} 2300
+   +{{Flag|WEAPON.WIMPY_WEAPON}}
+   +{{Flag|WEAPON.MELEEWEAPON}}
+   {{Property|Weapon.Kickback}} 0
+   {{Property|Weapon.YAdjust}} 15
+   {{Property|Weapon.UpSound}} "weapons/gauntletsactivate"
+   {{Property|Weapon.SisterWeapon}} "{{Class|GauntletsPowered}}"
+   {{Property|Inventory.PickupMessage}} "$TXT_WPNGAUNTLETS"
+   {{Property|Tag}} "$TAG_GAUNTLETS"
+   {{Property|Obituary}} "$OB_MPGAUNTLETS"
+ 
+   action native [[A_GauntletAttack]](int power);
+ 
+   States
+   {
+   Spawn:
+     WGNT A -1
+     Stop
+   Ready:
+     GAUN A 1 [[A_WeaponReady]]
+     Loop
+   Deselect:
+     GAUN A 1 [[A_Lower]]
+     Loop
+   Select:
+     GAUN A 1 [[A_Raise]]
+     Loop
+   Fire:
+     GAUN B 4 [[A_PlayWeaponSound]]("weapons/gauntletsuse")
+     GAUN C 4
+   Hold:
+     GAUN DEF 4 Bright [[A_GauntletAttack]](0)
+     GAUN C 4 [[A_ReFire]]
+     GAUN B 4 [[A_Light0]]
+     Goto Ready
+   }
+ }</text>
+    <sha1>ee32okd113ainqywrg917gzaj6bleng</sha1>
+  </revision>
+</page>

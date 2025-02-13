@@ -1,0 +1,51 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>SetLineTexture</title>
+  <ns>0</ns>
+  <id>985</id>
+  <revision>
+    <id>35840</id>
+    <parentid>30485</parentid>
+    <timestamp>2013-02-11T01:03:23Z</timestamp>
+    <contributor>
+      <username>Deded007</username>
+      <id>1392</id>
+    </contributor>
+    <minor />
+    <comment>formatting</comment>
+    <origin>35840</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="1464" sha1="rmstm1ei19xrd0n4kf3hcj64g8hpv3v" xml:space="preserve">void '''SetLineTexture'''(int ''lineid'', int ''line_side'', int ''sidedef_texture'', str ''texturename'');
+
+== Usage ==
+
+'''SetLineTexture''' will change the specified texture on all lines with the line id number specified (assigned by [[Line_SetIdentification]] or directly in [[UDMF]]). For readability, ''line_side'' and ''sidedef_texture'' have some definitions in zdef.acs:
+
+* '''SIDE_FRONT'''&amp;nbsp;&amp;mdash; front of the linedef (front sidedef)
+* '''SIDE_BACK'''&amp;nbsp;&amp;mdash; back of the linedef (back sidedef)
+
+* '''TEXTURE_TOP'''&amp;nbsp;&amp;mdash; upper texture of sidedef
+* '''TEXTURE_MIDDLE'''&amp;nbsp;&amp;mdash; middle texture of sidedef
+* '''TEXTURE_BOTTOM'''&amp;nbsp;&amp;mdash; lower texture of sidedef
+
+=== Parameters ===
+* ''lineid'': the line id of the lines to change.
+* ''line_side'': the side of the line to change.
+* ''sidedef_texture'': which texture to change.
+* ''texturename'': the texture that will be set on the line. Using {{c|"-"}} means to remove a texture.
+
+== Examples ==
+
+ script 1 (int line1, int line2, int line3)
+ {
+     [[SetLineTexture]](line1, {{const|SIDE_FRONT}}, {{const|TEXTURE_MIDDLE}}, "-"); //remove middle 
+     [[SetLineTexture]](line1, {{const|SIDE_BACK}}, {{const|TEXTURE_MIDDLE}}, "-"); //floating texture
+ 
+     [[SetLineTexture]](line2, {{const|SIDE_BACK}}, {{const|TEXTURE_TOP}}, "BFALL1");
+     [[SetLineTexture]](line3, {{const|SIDE_BACK}}, {{const|TEXTURE_BOTTOM}}, "FOOTEX01");
+ }
+
+[[category:ACS Level alteration functions]]</text>
+    <sha1>rmstm1ei19xrd0n4kf3hcj64g8hpv3v</sha1>
+  </revision>
+</page>

@@ -1,0 +1,63 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>Classes:RealGibs</title>
+  <ns>0</ns>
+  <id>3937</id>
+  <revision>
+    <id>53643</id>
+    <parentid>33930</parentid>
+    <timestamp>2024-11-08T12:18:49Z</timestamp>
+    <contributor>
+      <username>Jekyll Grim Payne</username>
+      <id>2175</id>
+    </contributor>
+    <comment>/* DECORATE definition */</comment>
+    <origin>53643</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="886" sha1="bzmbgvgkbqhv1zi1g7im9abx4lprgsb" xml:space="preserve">{{Actor|
+| type = Gibs
+| name = Pool of crushed gibs
+| class = RealGibs
+}}[[Classes]]: &lt;u&gt;RealGibs&lt;/u&gt;&lt;br&gt;
+&amp;ensp;&amp;rarr;[[Classes:Gibs|Gibs]]
+
+The small pool of blood that replaces a corpse crushed by a crusher or a door.
+
+Sprites for this actor are found in the Doom and Hexen [[IWAD]]s. In Hexen.wad, the sprite is actually named GIBSA0 and is [[Sprite renaming|renamed at load-time]] by ZDoom.
+
+=== [[ZScript]] definition ===
+{{ZScriptDefinitionNote|actors/shared/sharedmisc.zs}}
+&lt;syntaxhighlight lang="cs"&gt;
+class RealGibs : Actor
+{
+	Default
+	{
+		+DROPOFF
+		+CORPSE
+		+NOTELEPORT
+		+DONTGIB
+	}
+	States
+	{
+	Spawn:
+		goto GenericCrush;
+	}
+}
+&lt;/syntaxhighlight&gt;
+=== [[DECORATE]] definition ===
+{{DecorateDefinitionNote}}
+ ACTOR &lt;u&gt;RealGibs&lt;/u&gt;
+ {
+   +{{Flag|DROPOFF}}
+   +{{Flag|CORPSE}}
+   +{{Flag|NOTELEPORT}}
+   +{{Flag|DONTGIB}}
+   States
+   {
+   Spawn:
+     Goto GenericCrush
+   }
+ }</text>
+    <sha1>bzmbgvgkbqhv1zi1g7im9abx4lprgsb</sha1>
+  </revision>
+</page>

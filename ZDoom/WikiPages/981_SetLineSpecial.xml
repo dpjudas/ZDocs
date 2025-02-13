@@ -1,0 +1,64 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>SetLineSpecial</title>
+  <ns>0</ns>
+  <id>981</id>
+  <revision>
+    <id>35849</id>
+    <parentid>30491</parentid>
+    <timestamp>2013-02-11T01:51:48Z</timestamp>
+    <contributor>
+      <username>Deded007</username>
+      <id>1392</id>
+    </contributor>
+    <minor />
+    <comment>formatting, see also</comment>
+    <origin>35849</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="1417" sha1="gvs1ekvo9yiqbd1cdw87rmenxvrx5sx" xml:space="preserve">__NOTOC__
+void '''SetLineSpecial''' (int ''lineid'', int ''special'' [, int ''arg0'' [, int ''arg1'' [, int ''arg2'' [, int ''arg3'' [, int ''arg4'']]]]]);
+
+== Usage ==
+
+'''SetLineSpecial''' will change the special on all lines with the line id number specified (assigned by [[Line_SetIdentification]] or directly in [[UDMF]]).
+
+Using the ZDoom versions of ACC, you can with specify the new special by name instead of number, and you can leave out the arguments you are not interested in. In other words, it is perfectly acceptable to do something like this:
+
+ [[SetLineSpecial]] (1, [[ACS_Execute]], 10);
+
+instead of this:
+
+ [[SetLineSpecial]] (1, 80, 10, 0, 0, 0, 0);
+
+The first version is more readable and less error-prone, so you should always opt for that version of the command instead of using special numbers.
+
+=== Parameters ===
+
+* ''lineid'': id of the line to set.
+* ''special'': [[action special]] to set on the line.
+* ''arg0''-''arg4'': arguments passed to the special when executed.
+
+== Examples ==
+
+This example will be triggered by script 1 and will cause all lines with line id 9 to execute script 10.
+
+ script 1 (void)
+ {
+ 	[[Print]] (s:"setting action");
+ 	[[ActivatorSound]]("misc/chat", 127);
+ 
+ 	[[SetLineSpecial]] (9, [[ACS_Execute]], 10);
+ }
+ 
+ script 10 (void)
+ {
+ 	[[ActivatorSound]]("misc/chat", 127);
+ }
+
+== See also ==
+* [[ClearLineSpecial]]
+
+[[category:ACS Level alteration functions]]</text>
+    <sha1>gvs1ekvo9yiqbd1cdw87rmenxvrx5sx</sha1>
+  </revision>
+</page>

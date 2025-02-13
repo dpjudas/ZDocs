@@ -1,0 +1,104 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>Sidedef</title>
+  <ns>0</ns>
+  <id>1008</id>
+  <revision>
+    <id>40838</id>
+    <parentid>36672</parentid>
+    <timestamp>2016-02-06T05:53:21Z</timestamp>
+    <contributor>
+      <username>Jpalomo</username>
+      <id>1715</id>
+    </contributor>
+    <origin>40838</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="3807" sha1="0tyumq08dykcub9p8ztdvp75i69dwlz" xml:space="preserve">{{doomwiki}}A '''sidedef''' is a structure bound to a [[linedef]] in order to specify for one side of the linedef which [[sector]] to refer to, what [[texture]] to use and where, and how to display and offset that texture. Sidedefs are assigned to linedefs, not the other way around. Just like sector data, sidedef data can be reused for multiple lines or sets of lines. Where a given sidedef's properties are the same as those of another sidedef, either sidedef can be used in either place, and the redundant sidedef can be discarded. This can significantly reduce the filesize of a saved map, and is known as sidedef packing. ZDoom unpacks these sidedefs when maps are loaded, however, presumably for stability purposes.
+
+==Specification==
+{| {{prettytable}}
+!Bytes!!Data type!!Description
+|-
+|0-1||Signed short||X offset
+|-
+|2-3||Signed short||Y offset
+|-
+|4-11||Char[8]||Upper [[texture]]
+|-
+|12-19||Char[8]||Lower texture
+|-
+|20-27||Char[8]||Middle texture
+|-
+|28-29||Unsigned Short||[[Sector]] reference &amp;mdash; this must be correct for sectors to be closed
+|}
+
+==UDMF properties==
+The [[Universal Doom Map Format]] allows to set a number of properties on sidedefs. Unless otherwise specified, default values for integers and float is 0. Boolean values default to "false". They include:
+{| {{prettytable}}
+!Name!!Type!!Description
+|-
+|{{c|alpha}}||float||Translucency of this line, default is 1.0.
+|-
+|{{c|clipmidtex}}||bool||If true, this side's mid textures are clipped to floor and ceiling. Default is to let them "bleed" through floor and ceiling planes. Note that [[OpenGL]] renderers will clip mid textures regardless.
+|-
+|{{c|comment}}||string||A comment. This is ignored by the engine.
+|-
+|{{c|light}}||integer||This side's light level.
+|-
+|{{c|lightabsolute}}||bool||If true, 'light' is an absolute value. Default is relative to the owning [[sector]]'s light level.
+|-
+|{{c|lightfog}}||bool||If true, this side's relative lighting is used even in foggy sectors. Default is to disable relative lighting in foggy sectors.
+|-
+|{{c|nodecals}}||bool||If true, this disables decals on the sidedef.
+|-
+|{{c|nofakecontrast}}||bool||If true, this disables use of [[fake contrast]] on this sidedef (forcing even lighting). Default is to use [[MAPINFO]] and user settings.
+|-
+|{{c|offsetx_bottom}}||float||Additional X offset for lower texture.
+|-
+|{{c|offsetx_mid}}||float||Additional X offset for mid texture.
+|-
+|{{c|offsetx_top}}||float||Additional X offset for upper texture.
+|-
+|{{c|offsetx}}||integer||X offset.
+|-
+|{{c|offsety_bottom}}||float||Additional Y offset for lower texture.
+|-
+|{{c|offsety_mid}}||float||Additional Y offset for mid texture.
+|-
+|{{c|offsety_top}}||float||Additional Y offset for upper texture.
+|-
+|{{c|offsety}}||integer||Y offset.
+|-
+|{{c|scalex_bottom}}||float||X scale for lower texture, Default = 1.0.
+|-
+|{{c|scalex_mid}}||float||X scale for mid texture, Default = 1.0.
+|-
+|{{c|scalex_top}}||float||X scale for upper texture, Default = 1.0.
+|-
+|{{c|scaley_bottom}}||float||Y scale for lower texture, Default = 1.0.
+|-
+|{{c|scaley_mid}}||float||Y scale for mid texture, Default = 1.0.
+|-
+|{{c|scaley_top}}||float||Y scale for upper texture, Default = 1.0.
+|-
+|{{c|sector}}||integer||Sector index. No valid default.
+|-
+|{{c|smoothlighting}}||bool||If true, this forces use of smooth lighting [[fake contrast]]. Default is to use [[MAPINFO]] and user settings.
+|-
+|{{c|texturebottom}}||string||Lower texture. Default = "-" for no texture.
+|-
+|{{c|texturemiddle}}||string||Middle texture. Default = "-" for no texture.
+|-
+|{{c|texturetop}}||string||Upper texture. Default = "-" for no texture.
+|-
+|{{c|wrapmidtex}}||bool||If true, this side's mid textures are wrapped (tiled vertically).
+|}
+
+==See also==
+*[[LINEDEFS]]
+*[[SECTORS]]
+*[[Doomstring]]
+[[Category:Glossary]]</text>
+    <sha1>0tyumq08dykcub9p8ztdvp75i69dwlz</sha1>
+  </revision>
+</page>

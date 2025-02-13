@@ -1,0 +1,88 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>Classes:PowerLightAmp</title>
+  <ns>0</ns>
+  <id>4711</id>
+  <revision>
+    <id>53740</id>
+    <parentid>37555</parentid>
+    <timestamp>2024-11-13T12:56:34Z</timestamp>
+    <contributor>
+      <username>Jekyll Grim Payne</username>
+      <id>2175</id>
+    </contributor>
+    <origin>53740</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="1775" sha1="assbat8fqmcjhpzvcn9ldb6537nn90r" xml:space="preserve">{{actor|
+| type = Power
+| name = Light amplification power
+| class = PowerLightAmp
+}}[[Classes]]: [[Classes:Inventory|Inventory]]&amp;rarr;[[Classes:Powerup|Powerup]]&amp;rarr;&lt;u&gt;PowerLightAmp&lt;/u&gt;&lt;br&gt;
+&amp;ensp;&amp;rarr;[[Classes:PowerTorch|PowerTorch]]&lt;br&gt;
+
+{{: Powerup definition}}
+
+'''PowerLightAmp''' fully illuminates the level. The most basic example of it is Doom's {{Class|Infrared|Light Amplification Goggles}}.
+
+The effect is provided by setting the owner's {{struct|PlayerInfo}} field &lt;code&gt;player.fixedlightlevel&lt;/code&gt; to 1.
+
+=== [[ZScript]] definition ===
+{{ZScriptDefinitionNote|actors/inventory/powerups.zs}}
+&lt;syntaxhighlight lang="csharp"&gt;
+class PowerLightAmp : Powerup
+{
+	Default
+	{
+		Powerup.Duration -120;
+	}
+	
+	//===========================================================================
+	//
+	// APowerLightAmp :: DoEffect
+	//
+	//===========================================================================
+
+	override void DoEffect ()
+	{
+		Super.DoEffect ();
+
+		let player = Owner.player;
+		if (player != NULL &amp;&amp; player.fixedcolormap &lt; PlayerInfo.NUMCOLORMAPS)
+		{
+			if (!isBlinking())
+			{	
+				player.fixedlightlevel = 1;
+			}
+			else
+			{
+				player.fixedlightlevel = -1;
+			}
+		}
+	}
+
+	//===========================================================================
+	//
+	// APowerLightAmp :: EndEffect
+	//
+	//===========================================================================
+
+	override void EndEffect ()
+	{
+		Super.EndEffect();
+		if (Owner != NULL &amp;&amp; Owner.player != NULL &amp;&amp; Owner.player.fixedcolormap &lt; PlayerInfo.NUMCOLORMAPS)
+		{
+			Owner.player.fixedlightlevel = -1;
+		}
+	}
+}
+&lt;/syntaxhighlight&gt;
+
+=== [[DECORATE]] definition ===
+{{DecorateDefinitionNote}}
+ ACTOR &lt;u&gt;PowerLightAmp&lt;/u&gt; : {{Class|Powerup}} native
+ {
+   {{Property|Powerup.Duration}} -120
+ }</text>
+    <sha1>assbat8fqmcjhpzvcn9ldb6537nn90r</sha1>
+  </revision>
+</page>

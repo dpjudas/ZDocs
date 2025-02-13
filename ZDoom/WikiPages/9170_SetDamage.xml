@@ -1,0 +1,46 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>SetDamage</title>
+  <ns>0</ns>
+  <id>9170</id>
+  <revision>
+    <id>54009</id>
+    <parentid>52480</parentid>
+    <timestamp>2024-12-03T18:30:40Z</timestamp>
+    <contributor>
+      <username>Jekyll Grim Payne</username>
+      <id>2175</id>
+    </contributor>
+    <origin>54009</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="836" sha1="cg6z1tea1z8v3pex6eb6stcs82tt4ca" xml:space="preserve">'''{{class|Actor}}'''
+
+{{c|void '''SetDamage''' (int ''dmg'')}}
+
+== Usage ==
+Sets the {{Property|Damage|damage}} of the actor to the specified value. If the actor has its [[DamageFunction|damage set up as an expression]], it is changed to a single value (the value being what is eventually set by the function), and in which case, the actor's damage is randomized like normal. It is not possible to combine this function with [[DamageFunction]].
+
+== Examples ==
+This {{Class|PlasmaBall|plasma projectile}}'s damage increases as it moves along.
+ class CustomPlasmaBall : {{Class|PlasmaBall}}
+ {
+     int user_dmg;
+ 
+     Default
+     {
+         {{Property|Damage}} 0;
+     }
+ 
+     States
+     {
+     Spawn:
+         PLSS AB 6 Bright NoDelay [[SetDamage]](++user_dmg);
+         Loop;
+     }
+ }
+
+[[Category:DECORATE]]
+[[Category:ZScript]]</text>
+    <sha1>cg6z1tea1z8v3pex6eb6stcs82tt4ca</sha1>
+  </revision>
+</page>

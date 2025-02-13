@@ -1,0 +1,121 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>Classes:Shotgun</title>
+  <ns>0</ns>
+  <id>2583</id>
+  <revision>
+    <id>53760</id>
+    <parentid>53759</parentid>
+    <timestamp>2024-11-19T08:56:05Z</timestamp>
+    <contributor>
+      <username>Jekyll Grim Payne</username>
+      <id>2175</id>
+    </contributor>
+    <comment>/* ZScript definition */</comment>
+    <origin>53760</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="2006" sha1="fqoqftgsyu462xih8dw774nrzyvqabv" xml:space="preserve">{{Actor|
+| type = Weapon
+| name = Shotgun
+| class = Shotgun
+| game = Doom
+| doomednum = 2001
+| spawnid = 27
+| spawnname = T_SHOTGUN 
+}}
+[[Classes]]: [[Classes:Inventory|Inventory]]&amp;rarr;[[Classes:Weapon|Weapon]]&amp;rarr;[[Classes:DoomWeapon|DoomWeapon]]&amp;rarr;&lt;u&gt;Shotgun&lt;/u&gt;
+
+
+The shotgun. A hitscan weapon which has a large spread. Uses [[Classes:Shell|shells]] for ammo.
+== [[ZScript]] definition ==
+{{ZScriptDefinitionNote|actors/doom/weaponshotgun.zs}} 
+&lt;syntaxhighlight lang="csharp"&gt;
+class Shotgun : DoomWeapon
+{
+	Default
+	{
+		Weapon.SelectionOrder 1300;
+		Weapon.AmmoUse 1;
+		Weapon.AmmoGive 8;
+		Weapon.AmmoType "Shell";
+		Inventory.PickupMessage "$GOTSHOTGUN";
+		Obituary "$OB_MPSHOTGUN";
+		Tag "$TAG_SHOTGUN";
+	}
+	States
+	{
+	Ready:
+		SHTG A 1 A_WeaponReady;
+		Loop;
+	Deselect:
+		SHTG A 1 A_Lower;
+		Loop;
+	Select:
+		SHTG A 1 A_Raise;
+		Loop;
+	Fire:
+		SHTG A 3;
+		SHTG A 7 A_FireShotgun;
+		SHTG BC 5;
+		SHTG D 4;
+		SHTG CB 5;
+		SHTG A 3;
+		SHTG A 7 A_ReFire;
+		Goto Ready;
+	Flash:
+		SHTF A 4 Bright A_Light1;
+		SHTF B 3 Bright A_Light2;
+		Goto LightDone;
+	Spawn:
+		SHOT A -1;
+		Stop;
+	}
+}
+&lt;/syntaxhighlight&gt;
+
+=== See also ===
+* [[A_FireShotgun]]
+
+== [[DECORATE]] definition ==
+{{DecorateDefinitionNote}}
+ ACTOR &lt;u&gt;Shotgun&lt;/u&gt; : {{Class|DoomWeapon}}
+ {
+   {{Property|Weapon.SelectionOrder}} 1300
+   {{Property|Weapon.AmmoUse}} 1
+   {{Property|Weapon.AmmoGive}} 8
+   {{Property|Weapon.AmmoType}} "{{Class|Shell}}"
+   {{Property|Inventory.PickupMessage}} "$GOTSHOTGUN"
+   {{Property|Obituary}} "$OB_MPSHOTGUN"
+   {{Property|Tag}} "$TAG_SHOTGUN"
+   States
+   {
+   Ready:
+     SHTG A 1 [[A_WeaponReady]]
+     Loop
+   Deselect:
+     SHTG A 1 [[A_Lower]]
+     Loop
+   Select:
+     SHTG A 1 [[A_Raise]]
+     Loop
+   Fire:
+     SHTG A 3
+     SHTG A 7 [[A_FireShotgun]]
+     SHTG BC 5
+     SHTG D 4
+     SHTG CB 5
+     SHTG A 3
+     SHTG A 7 [[A_ReFire]]
+     Goto Ready
+   Flash:
+     SHTF A 4 Bright [[A_Light1]]
+     SHTF B 3 Bright [[A_Light2]]
+     Goto LightDone
+   Spawn:
+     SHOT A -1
+     Stop
+   }
+ }</text>
+    <sha1>fqoqftgsyu462xih8dw774nrzyvqabv</sha1>
+  </revision>
+</page>

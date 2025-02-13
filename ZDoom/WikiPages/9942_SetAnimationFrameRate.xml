@@ -1,0 +1,58 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>SetAnimationFrameRate</title>
+  <ns>0</ns>
+  <id>9942</id>
+  <revision>
+    <id>53014</id>
+    <timestamp>2024-08-24T11:51:50Z</timestamp>
+    <contributor>
+      <username>Jekyll Grim Payne</username>
+      <id>2175</id>
+    </contributor>
+    <comment>Created page with "'''{{class|Actor}}'''  {{c|void '''SetAnimationFrameRate'''(double ''framerate'')}}  == Usage == If the calling actor has a [[MODELDEF|3D model]] attached, is using {{flag|DECOUPLEDANIMATIONS|decoupled animations}} and has an active animation set with [[SetAnimation]], calling this function will change the running animation's framerate.  === Parameters === *{{c|double '''framerate'''}} :The new framerate value. Measured in frames per second, can be fractional.  == Exampl..."</comment>
+    <origin>53014</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="1147" sha1="kajli8q62cug092lz1d4ly1y8ek764m" xml:space="preserve">'''{{class|Actor}}'''
+
+{{c|void '''SetAnimationFrameRate'''(double ''framerate'')}}
+
+== Usage ==
+If the calling actor has a [[MODELDEF|3D model]] attached, is using {{flag|DECOUPLEDANIMATIONS|decoupled animations}} and has an active animation set with [[SetAnimation]], calling this function will change the running animation's framerate.
+
+=== Parameters ===
+*{{c|double '''framerate'''}}
+:The new framerate value. Measured in frames per second, can be fractional.
+
+== Examples ==
+&lt;syntaxhighlight lang="csharp"&gt;
+class PulsingThing : Actor
+{
+  Default
+  {
+    +DECOUPLEDANIMATIONS
+  }
+  States
+  {
+  Spawn:
+    // This actor will start the model's 'idlepulse' animation sequence
+    // as soon as it spawns and play it in a loop. Afterwards the
+    // framerate of the animation will be increased relative to how
+    // little health the actor has left, between 20 and 80 FPS:
+    M000 A 1 NoDelay 
+    {
+      SetAnimation('idlepulse', flags:SAF_LOOP|SAF_NOOVERRIDE);
+      SetAnimationFramerate(clamp(100 - health, 20, 80));
+    }
+    loop;
+  }
+}&lt;/syntaxhighlight&gt;
+
+== See also ==
+* [[MODELDEF]]
+* [[SetAnimationFrameRate]]
+
+[[Category:ZScript]]</text>
+    <sha1>kajli8q62cug092lz1d4ly1y8ek764m</sha1>
+  </revision>
+</page>

@@ -1,0 +1,222 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>Creating new weapons</title>
+  <ns>0</ns>
+  <id>1776</id>
+  <revision>
+    <id>52274</id>
+    <parentid>52198</parentid>
+    <timestamp>2024-04-05T00:06:10Z</timestamp>
+    <contributor>
+      <username>Jekyll Grim Payne</username>
+      <id>2175</id>
+    </contributor>
+    <origin>52274</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="12426" sha1="61a11mokq4gonh27bzu45v8qrpbog7x" xml:space="preserve">{{OutdatedGuide|Creating new weapons (ZScript)}}
+
+While making a custom weapon in [[ZDoom]] is a bit tricky, this guide should help you get on your way.
+
+'''Note:''' This tutorial uses custom sprites, which are not provided. You should provide sprites with these names or adapt the code to use standard sprite names if you want to actually test this code in ZDoom.
+
+== [[DECORATE]] Code ==
+
+A basic weapon in the decorate lump would look like this: 
+
+   ACTOR UberShotgun : {{Class|SuperShotgun}} 20024
+   {
+      {{Property|Weapon.SelectionOrder}} 350
+      {{Property|Inventory.PickupSound}} "misc/usgpickup"
+      {{Property|Weapon.AmmoGive}} 12
+      {{Property|Weapon.AmmoUse}} 4
+      {{Property|Weapon.SlotNumber}} 3
+      {{Property|AttackSound}} "weapons/ubersgf" 
+      States
+      {
+      Spawn: // This state is entered when you drop the weapon.
+         USGP A -1
+         Stop
+      Ready: // This state is entered when you have this weapon selected.
+         USHG A 1 [[A_WeaponReady]]
+         Loop 
+      Deselect: // This state is entered when you deselect the current selected weapon.
+         USHG A 1 [[A_Lower]]
+         Loop 
+      Select: // This state is entered when you select this weapon.
+         USHG A 1 [[A_Raise]]
+         Loop 
+      Fire: // The firing state.
+         USHG A 3
+         USHG A 0 [[A_FireBullets]] (13.4, 9.2, 50, 10, "BulletPuff")
+         USHG A 7 [[A_GunFlash]] // While on fire state it spawns the weapon's flash.
+         USHG B 7
+         USHG C 7 [[A_CheckReload]]
+         USHG D 7 [[A_OpenShotgun2]]
+         USHG E 7
+         USHG F 7 [[A_LoadShotgun2]]
+         USHG G 6
+         USHG H 6 [[A_CloseShotgun2]]
+         USHG A 5 [[A_ReFire]]
+         Goto Ready
+      Flash: // The weapons flash.
+         USGF A 6 [[A_FireBullets]](10,10,15,30,0,1)
+         Stop
+      }
+   }
+
+Now that big chunk of code describes the functions and states of a shotgun. Let's analyse this code.
+
+== Defining an actor == 
+:''See [[DECORATE format specifications]] for more information''
+
+*(ACTOR UberShotgun : SuperShotgun 20024) - Describes the actor that is going to be defined within the following code block.
+The format for this line is:
+ACTOR &lt;ActorName&gt; [: &lt;inheriting actor&gt;] [&lt;DoomEd Number&gt;] [replaces &lt;replaces&gt;]
+So our actor is going to be named "UberShotgun", it will inherit all the properties of the super shotgun ("SuperShotgun"), and its DoomEd Number will be 20024.
+
+'''Note:''' In order to make a weapon, the actor ''always'' has to inherit from [[Classes:Weapon|Weapon]] or another actor that ''does'' inherit from [[Classes:Weapon|Weapon]], such as [[Classes:SuperShotgun|SuperShotgun]].
+
+The brackets ("{ }") define the start and end of the code block. All the information pertaining to this actor ''must'' be within these brackets.
+
+== Actor properties ==
+:''See [[Actor properties]] for a full list''
+
+Next there are various weapon properties, such as the ammo type the weapon uses, and how much it uses with each shot.
+
+*({{Property|Inventory.PickupSound}} "misc/usgpickup") - Tells ZDoom what sound to play when the item is picked up, as be defined in the [[SNDINFO]] lump. 
+
+*({{Property|Weapon.AmmoGive}} 12) - Tells ZDoom how much ammo to give the player when this weapon is picked up. This is NOT the maximum amount of ammo it can hold. 
+
+*({{Property|Weapon.AmmoUse}} 4) - Tells ZDoom how much ammo to use when firing the weapon, provided the use argument in the relevant codepointers is set. 
+
+*({{Property|Weapon.SlotNumber}} 3) - Tells ZDoom that the weapon will occupy slot 3, like the other shotguns. There are other ways to set [[weapon slots]], but this is the simplest by far. 
+
+*({{Property|AttackSound}} "weapons/ubersgf") - Tells ZDoom what sound to play when [[A_FireBullets]] or [[A_CustomPunch]] are called [Has to be defined in the SNDINFO lump]. If the weapon shoots a custom projectile, such as a rocket, the sound played will be the projectile's spawn sound.
+
+*({{Property|Weapon.SelectionOrder}} 350) - Tells ZDoom how much priority this weapon has. So if you run out of ammo, you might switch to the Super Shotgun, rather than the Pistol, because its priority is higher. The lower this value, the higher the priority.
+
+There are other properties you can set here, but they are not all required for every weapon. This weapon [[using inheritance|inherits]] all of its missing properties from the original shotgun. Like the pickup message, if we wanted to define a custom pickup message, then we could put in a line of code that looks like this; 
+
+*({{Property|Inventory.Pickupmessage}} "You got the UBER SHOTGUN!")
+
+Also, notice how this did not define an ammo type. Since this weapon was meant to use the same shells as the other shotguns, inheriting makes it a somewhat shorter process by taking out the unneeded pieces of code that need to be written. 
+
+Read all about these various properties you can set for weapons on the [[Classes:Weapon|Weapon]] and [[Classes:Inventory|Inventory]] pages.
+
+== Actor states ==
+
+The next chunk in the code defines the [[Actor states]] of the weapon. These tell ZDoom what is going on and what to do at certain frames. This removes the previous limitations of DeHacked or Whacked where you couldn't add in more frames, but could only replace the current ones. With this method, you are able to make brand new sequences, to brand new weapons. 
+
+Within a state there is a certain form to be observed.
+
+*To define a state: &lt;State Name&gt;: (Note the colon.)
+*To define a frame: &lt;Sprite&gt; &lt;Frame(s)&gt; &lt;Duration&gt; [&lt;Action&gt;]
+**&lt;Sprite&gt; is the first four letters of the sprite name. ''The sprite names are usually representative of what they are, in this case, the three are: ('''U'''ber '''S'''hot'''g'''un '''P'''ickup), ('''U'''ber '''Sh'''ot'''g'''un), and ('''U'''ber '''S'''hot'''g'''un '''F'''lash).''
+**&lt;Frame&gt; is the letter that follows. If you specify more than one letter, the &lt;Action&gt; and &lt;Duration&gt; will be repeated for every frame (one for each letter).
+**&lt;Duration&gt; is in tics (1/35 seconds).
+**&lt;Action&gt; is an optional [[Action functions|function]] that will be performed by the actor.
+*There are also several special commands you can execute:
+**Loop - Loops the entire state. Not needed if you've already defined -1 as a duration, because it may cause problems.
+**Wait - Loops the last frame until otherwise instructed by a function.
+**Stop - Stops animating the actor. If the last frame defined has a duration of -1, it will be displayed forever. Otherwise, the actor will be removed.
+**Goto &lt;State&gt; [+&lt;Offset&gt;] - Jumps to the specified state. If &lt;Offset&gt; is specified it will skip that many frames from the beginning of the state.
+:::''Note: These functions are '''not''' frames, and will not be counted as part of any [[Action functions#State jumps|jump function]] or a Goto command with an offset.''
+
+Let's analyse the states of our UberShotgun.
+
+=== Spawn state ===
+
+First off is the spawn state: 
+Code: 
+
+   Spawn:
+         USGP A -1
+         Stop
+
+Spawn is the state the weapon will be in when it is spawned as a pickup. This state definition is very simple. The shotgun lying on the ground will display the sprite USGPA until it's picked up by the player.
+
+=== Ready state ===
+
+Next in these series of states is the READY state:
+Code: 
+
+    Ready:
+         USHG A 1 [[A_WeaponReady]] 
+         Loop
+
+This state will be entered when the weapon has been selected. The action [[A_WeaponReady]] tells ZDoom that the weapon is ready, ie. it can fire, be deselected, and freely bob. The sprite, USHGA, is the image of the shotgun when it's not doing anything.
+
+=== Select/Deselect states ===
+
+The next two states are entered when the player selects, or deselects the weapon. Look at the format of the SELECT and DESELECT states: 
+Code: 
+
+   Deselect:
+         USHG A 1 [[A_Lower]]
+         Loop
+      Select:
+         USHG A 1 [[A_Raise]]
+         Loop
+
+By default, when a weapon is selected, its sprite is drawn off the screen. The action [[A_Raise]] moves the sprite up, and by looping the state, the weapon will be moved until its sprite is at the correct vertical position, at which point the game will go to the Ready state. You can also speed up both actions by adding another line '''before''' the current line you have defined for deselect/select, with 0 tic duration. Your code should look like this;
+
+Code: 
+
+   Deselect:
+         TNT1 A 0 [[A_Lower]]
+         USHG A 1 [[A_Lower]]
+         Loop
+      Select:
+         TNT1 A 0 [[A_Raise]]
+         USHG A 1 [[A_Raise]]
+         Loop
+
+When the weapon is now selected/deselected, the animation will be faster.
+
+=== Fire state ===
+
+The Fire state is the state that's entered when the player presses the fire button.
+The firing sequence looks like this: 
+Code: 
+
+   Fire:
+         USHG A 3
+         USHG A 0 [[A_FireBullets]] (13.4, 9.2, 50, 10, "BulletPuff")
+         USHG A 7 [[A_GunFlash]]
+         USHG B 7
+         USHG C 7 [[A_CheckReload]]
+         USHG D 7 [[A_OpenShotgun2]]
+         USHG E 7
+         USHG F 7 [[A_LoadShotgun2]]
+         USHG G 6
+         USHG H 6 [[A_CloseShotgun2]]
+         USHG A 5 [[A_ReFire]]
+         Goto Ready
+
+The first frame shows us the same sprite we saw in the ready state, this will mean that firing is not instant (although it's pretty close). The next frame last 0 tics, this means that frame and the one after it will be executed at the same time. If you ever need two or more actions to happen at the same time, you can use a frame with 0 duration.&lt;br /&gt;&lt;br /&gt;
+The first of these frames uses [[A_FireBullets]], this is what actually shoots the gun. The second frame uses [[A_GunFlash]]. What this means is that the Flash state will be executed '''and run in tandem''' with the Fire state from that point onward.&lt;br /&gt;&lt;br /&gt;
+[[A_CheckReload]] will check if the player still has enough ammo to fire another shot (4 shells in this case), and if they don't, it will switch their weapon to the highest priority available (remember [[Classes:Inventory|Weapon.SelectionOrder]]). This makes sense, because if the player had no ammo left, we wouldn't want them to see the 'reloading' sprites that are coming up next.&lt;br /&gt;&lt;br /&gt;
+The rest of the frames would show the 'reloading' sequence of the shotgun. The 3 [[A_OpenShotgun2|Open]]/[[A_LoadShotgun2|Load]]/[[A_CloseShotgun2|Close]] Shotgun2 actions play the sounds of the shotgun reloading.&lt;br /&gt;&lt;br /&gt;
+The last frame of the sequence has [[A_ReFire]]. This will check if the player still has the fire button held down, and if they do it will jump to the [[Actor states|Hold state]]. If no Hold state exists, it will jump to the Fire state instead.
+:''The hold state may not seem useful at first, but consider if the weapon you were making was a laser cannon. When you first press the fire button, the cannon needs to charge up, and then it shoots the actual laser beam. But you wouldn't want it to shoot the laser for 6 tics and then go back to the charging sequence. Instead you would create a hold state that is exactly like the Fire state but without the charging sequence.''&lt;br /&gt;&lt;br /&gt;
+Finally, at the end of the sequence, we go back to the Ready state so the player can fire again, or switch to another weapon.
+
+=== Flash state ===
+
+The last state in our weapon is the Flash state.
+Code: 
+
+   Flash:
+         USGF A 6 BRIGHT
+         Stop
+ 
+As stated above, this state runs at the same time as the Fire state, because of when we called [[A_GunFlash]].
+The first and only frame of this state has the sprite USGFA, which is an image of the muzzle flash. It also has the 'bright' keyword, this means the sprite will be drawn at full brightness, regardless of the light level of the sector. Having a flash state is not mandatory. Although there are some creative uses for the flash state; you could have 2 different firing sounds or gun flash sprites, and with a combination of [[A_Jump]], [[A_PlaySound]], and the different sprites, you could randomize the firing sound and the muzzle flash that the player sees.
+At the end of the sequence we have a Stop command. We don't need to go back to Ready, because the Fire sequence is running underneath the Flash one, and when the Fire sequence is completed, it will return to the Ready state.
+
+==Conclusion==
+Hopefully you now have a better idea of how to use DECORATE to create a custom weapon. Remember, the best way to learn is by doing, so go try it for yourself!
+[[Category:DECORATE guides]]</text>
+    <sha1>61a11mokq4gonh27bzu45v8qrpbog7x</sha1>
+  </revision>
+</page>

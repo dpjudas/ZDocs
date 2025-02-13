@@ -1,0 +1,52 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>Round</title>
+  <ns>0</ns>
+  <id>3591</id>
+  <revision>
+    <id>48046</id>
+    <parentid>45043</parentid>
+    <timestamp>2020-10-24T12:24:23Z</timestamp>
+    <contributor>
+      <username>Blue Shadow</username>
+      <id>2021</id>
+    </contributor>
+    <minor />
+    <comment>/* Custom function */</comment>
+    <origin>48046</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="1292" sha1="3nevv2gxy9jpq5s2f3z8of7bsfdo56z" xml:space="preserve">__NOTOC__
+fixed '''Round''' (fixed ''value'')
+
+==Usage==
+Rounds the specified value to the nearest whole number.
+
+===Return value===
+The value after rounding, as a fixed-point number.
+
+==Custom function==
+{{note|The following is a non-native implementation of the function, for versions of GZDoom older than 2.4.0.}}
+This function implements rounding. When performing the bitshift operation on a [[fixed point]] number, what you are actually doing is simply cutting off the end of the number, the part that is less than 1. So '''0.5 &gt;&gt; 16''' will return '''0'''. There may be cases where you want to round values of 0.5 or greater to the nearest whole number instead when converting it to an integer, for example placing an absolute location for a hudmessage.
+
+If you need to round a number to the nearest whole but need the resulting number as a [[fixed point]], you can just bitshift it again in the opposite direction using '''round(number) &lt;&lt; 16'''.
+
+ // Returns integer value
+ function int round(int fixedNumber)
+ {
+ 	return (fixedNumber + 0.5) &gt;&gt; 16;
+ }
+Cut off decimal part version
+ // Returns fixed point value
+ function int floor(int fixedNumber)
+ {
+ 	return fixedNumber &amp; 0xFFFF0000;
+ }
+
+==Examples==
+{{noexamples}}
+
+[[category:ACS Math functions]]
+[[category:Sample ACS functions]]</text>
+    <sha1>3nevv2gxy9jpq5s2f3z8of7bsfdo56z</sha1>
+  </revision>
+</page>

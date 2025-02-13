@@ -1,0 +1,163 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>Classes:BaseStatusBar</title>
+  <ns>0</ns>
+  <id>9169</id>
+  <revision>
+    <id>53890</id>
+    <parentid>53589</parentid>
+    <timestamp>2024-11-25T14:24:19Z</timestamp>
+    <contributor>
+      <username>Jekyll Grim Payne</username>
+      <id>2175</id>
+    </contributor>
+    <comment>/* Virtual */</comment>
+    <origin>53890</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="10296" sha1="rdczlske7awjz9u68znr6ao87y6kiby" xml:space="preserve">{{ZScriptNote}}
+
+'''BaseStatusBar''' is the base class that all standard HUDs inherit from. Despite the name, it handles drawing both of statusbar HUDs and fullscreen HUDs. It does ''not'' handle GZDoom's [[Alternate HUD]], however (see {{class|AltHUD}} for creating altHUD replacements). This class can be used to create your own custom HUDs from entirely within ZScript.
+
+The &lt;code&gt;statusbar&lt;/code&gt; [[ZScript global variables|global variable]] contains a pointer to the current HUD. As such, it's possible to use BaseStatusBar drawing functions from an [[Events and handlers|event handler]]'s {{c|RenderOverlay()}}/{{c|RenderUnderlay()}} events, and it's possible to interact with the HUD from play scope by using [[Events_and_handlers#Communicating_with_the_UI|an event handler with an InterfaceProcess override]].
+
+Note, to see your HUD in the game, it MUST be added via the [[MAPINFO/GameInfo_definition|GameInfo block of the MAPINFO lump]] as follows:
+&lt;syntaxhighlight lang="cs"&gt;
+GameInfo
+{
+  StatusBarClass = "MyCustomHUD" //replaces the base HUD
+  AltHUDClass = "MyCustomAltHUD" //replaces the alternative HUD
+}&lt;/syntaxhighlight&gt;
+
+See '''[[ZScript HUDs]]''' for details.
+
+== Constants ==
+*double '''XHAIRSHRINKSIZE''' = 1. / 18
+*double '''XHAIRPICKUPSIZE''' = 2 + XHAIRSHRINKSIZE
+*int '''POWERUPICONSIZE''' = 32
+
+== Fields ==
+*{{c|int '''RelTop'''}}
+:The height of the status bar in pixels. This is based off the resolution defined by HorizontalResolution and VerticalResolution and does not take GZDoom's status bar scaling into account.
+*{{c|int '''HorizontalResolution'''}}
+:Width of the virtual resolution in pixels. If 0 this is 320.
+*{{c|int '''VerticalResolution'''}}
+:Height of the virtual resolution in pixels. If 0 this is 200.
+*{{c|bool '''Centering'''}}
+:Unused
+*{{c|bool '''FixedOrigin'''}}
+:Unused
+*{{c|bool '''CompleteBorder'''}}
+:Controls how the background image is drawn when the view port is smaller than the window resolution. If set to true the image is drawn behind the status bar and not just around the edges.
+*{{c|double '''CrosshairSize'''}}
+:Scalar for the size of the player's crosshair. The CVar ''crosshairgrow'' must be true for this to scale.
+*{{c|double '''Displacement'''}}
+:The size difference (in pixels) between the scaled status bar and the unscaled status bar as a fraction of RelTop. The size difference is based off of HorizontalResolution and VerticalResolution. This value is scaled down by GZDoom's status bar scale.
+:*'''Note:''' If ''hud_aspectscale'' is set to true GZDoom's status bar scale is multiplied by 1.2 for this calculation
+*{{c|PlayerInfo '''CPlayer'''}}
+:The PlayerInfo for the player currently being viewed through. Note that this can change if swapping player views in multiplayer.
+*{{c|bool '''ShowLog'''}}
+:Handles showing subtitles and log text (mainly used in Strife).
+*{{c|Vector2 '''defaultScale'''}}
+:The x and y scale for scaling a HorizontalResolution x VerticalResolution area to best fit the window resolution without any fractional steps.
+*{{c|int '''artiflashTick'''}}
+:Keeps track of drawing the flash sprite when using an item from the inventory bar (mainly used in Heretic and Hexen).
+*{{c|double '''itemFlashFade'''}}
+:Keeps track of the alpha of the flash when using an item (mainly used in Strife).
+*{{c|double '''Alpha'''}}
+:Controls the overall alpha of the HUD.
+*{{c|Vector2 '''drawOffset'''}}
+:X and y offsets for drawing HUD graphics. This is based off of HorizontalResolution and VerticalResolution and not the real window resolution. This is scaled by GZDoom's status bar scaling.
+*{{c|double '''drawClip[4]'''}}
+:Unused
+*{{c|bool '''fullscreenOffsets'''}}
+:If set to true, draws graphics based off the real window resolution instead of the virtual resolution defined by HorizontalResolution and VerticalResolution.
+
+==Methods==
+===[[ZScript virtual functions|Virtual]]===
+{{: BaseStatusBar virtual functions}}
+
+===Static===
+*TextureID, bool '''[[GetInventoryIcon]]'''(Inventory item, int flags)
+*String '''[[FormatNumber]]'''(int number, int minsize = 0, int maxsize = 0, int format = 0, String prefix = "")
+*String '''[[GetGlobalACSString]]'''(int index)
+*String '''[[GetGlobalACSArrayString]]'''(int arrayno, int index)
+*int '''[[GetGlobalACSValue]]'''(int index)
+*int '''[[GetGlobalACSArrayValue]]'''(int arrayno, int index)
+
+=== Non-static ===
+*void '''[[AttachMessage]]'''(HUDMessageBase msg, uint msgid = 0, int layer = HUDMSGLayer_Default)
+*HUDMessageBase '''[[DetachMessage]]'''(HUDMessageBase msg)
+*HUDMessageBase '''[[DetachMessageID]]'''(uint msgid)
+*void '''[[DetachAllMessages]]'''()
+*void '''[[SetSize]]'''(int height, int vwidth, int vheight, int hwidth = -1, int hheight = -1)
+*Vector2 '''[[GetHUDScale]]'''()
+:Returns the scale of the HUD relative to the current resolution.
+*void '''[[BeginStatusBar]]'''(bool forceScaled = false, int resW = -1, int resH = -1, int rel = -1)
+:Creates a virtual canvas for the HUD with the provided size that covers the designated area on the screen (usually used by statusbar-styled HUDs).
+*void '''[[BeginHUD]]'''(double Alpha = 1., bool forcescaled = false, int resW = -1, int resH = -1)
+:Creates a virtual canvas for the HUD with the provided size that covers the whole screen (used by fullscreen HUDs).
+*void '''[[UpdateScreenGeometry]]'''()
+*TextureID '''[[GetMugShot]]'''(int accuracy, int stateflags = MugShot.STANDARD, String default_face = "STF")
+*void '''[[DrawTexture (BaseStatusBar)|DrawTexture]]'''(TextureID texture, Vector2 pos, int flags = 0, double Alpha = 1., Vector2 box = (-1, -1), Vector2 scale = (1, 1), ERenderStyle style = STYLE_Translucent, Color col = 0xffffffff, int translation = 0, double clipwidth = -1)
+:Draws a graphic on the HUD. Takes a {{struct|TextureID}}.
+*void '''[[DrawImage (BaseStatusBar)|DrawImage]]'''(String texture, Vector2 pos, int flags = 0, double Alpha = 1., Vector2 box = (-1, -1), Vector2 scale = (1, 1), ERenderStyle style = STYLE_Translucent, Color col = 0xffffffff, int translation = 0, double clipwidth = -1)
+:Draws a graphic on the HUD. Takes the name of the image (or full path to the image file).
+*void '''[[DrawImageRotated]]'''(String texid, Vector2 pos, int flags, double angle, double alpha = 1, Vector2 scale = (1, 1), ERenderStyle style = STYLE_Translucent, Color col = 0xffffffff, int translation = 0)
+:Draws a graphic that can be rotated.
+*void '''[[DrawInventoryIcon]]'''(Inventory item, Vector2 pos, int flags = 0, double alpha = 1.0, Vector2 boxsize = (-1, -1), Vector2 scale = (1.,1.))
+:Draws the {{property|Icon}} of the given {{class|Inventory}} item.
+*void '''[[DrawString (BaseStatusBar)|DrawString]]'''(HUDFont font, String string, Vector2 pos, int flags = 0, int translation = Font.CR_UNTRANSLATED, double Alpha = 1., int wrapwidth = -1, int linespacing = 4, Vector2 scale = (1, 1))
+:Draws a text string using the given {{class|HUDFont}}.
+*void '''[[DrawHexenArmor]]'''(int armortype, String image, Vector2 pos, int flags = 0, double alpha = 1.0, Vector2 boxsize = (-1, -1), Vector2 scale = (1.,1.))
+:Draws {{class|HexenArmor|Hexen-specific armor}}.
+*void '''[[DrawShader]]'''(int which, Vector2 pos, Vector2 size, int flags = 0, double alpha = 1.)
+*Vector2, int '''[[AdjustPosition]]'''(Vector2 position, int flags, double width, double height)
+*void '''[[DrawGem]]'''(String chain, String gem, int displayvalue, int maxrange, Vector2 pos, int leftpadding, int rightpadding, int chainmod, int flags = 0)
+*void '''[[DrawBar (BaseStatusBar)|DrawBar]]'''(String ongfx, String offgfx, double curval, double maxval, Vector2 position, int border, int vertical, int flags = 0, double alpha 1.0)
+:Draws a horizontal bar.
+*void '''[[DrawInventoryBar (ZScript)|DrawInventoryBar]]'''(InventoryBarState parms, Vector2 position, int numfields, int flags = 0, double bgalpha = 1.)
+:Draws an inventory bar, using the data pulled from the {{class|InventoryBarState|InventoryBarState class}}.
+*double, double, double, double '''[[TransformRect]]'''(double x, double y, double w, double h, int flags = 0)
+*void '''[[Fill]]'''(Color col, double x, double y, double w, double h, int flags = 0)
+:Fills a rectangle of the given width/height at the given area with a solid color.
+*double, double, double, double '''[[StatusbarToRealCoords]]'''(double x, double y = 0, double w = 0, double h = 0)
+*int '''[[GetTopOfStatusBar]]'''()
+*void '''[[SetClipRect (BaseStatusBar)|SetClipRect]]'''(double x, double y, double w, double h, int flags = 0)
+:Creates a  rectangular mask area. Everything drawn afterwards will only be drawn within that area.
+*void '''[[ClearClipRect]]'''()
+:Clears the previously defined clipping rectangle.
+*Inventory '''[[ValidateInvFirst]]'''(int numVisible) const
+:Checks that the player has a valid {{class|Inventory}} item selected in their inventory bar.
+*Ammo, Ammo, int, int '''[[GetCurrentAmmo]]'''() const
+:Gets the {{class|ammo}} pointers and and ammo amounts for the player's current {{class|weapon}}.
+*TextureID, Vector2 '''[[GetIcon]]'''(Inventory item, int flags, bool showdepleted = true)
+:Gets the icon for the given {{class|Inventory}} item.
+*String '''[[GetAmmoTag]]'''(bool secondary = false)
+*String '''[[GetWeaponTag]]'''()
+*String '''[[GetSelectedInventoryTag]]'''()
+*int '''[[GetArmorAmount]]'''()
+*int, int '''[[GetAmount]]'''(class&lt;Inventory&gt; item)
+*int '''[[GetMaxAmount]]'''(class&lt;Inventory&gt; item)
+*int '''[[GetArmorSavePercent]]'''()
+*int '''[[GetAirTime]]'''()
+*int '''[[GetSelectedInventoryAmount]]'''()
+*int '''[[GetKeyCount]]'''()
+*bool '''[[WeaponUsesAmmo]]'''(int ValidModes)
+*bool '''[[isInventoryBarVisible]]'''()
+*bool '''[[CheckAspectRatio]]'''(double min, double max)
+*bool '''[[CheckWeaponSelected]]'''(class&lt;Weapon&gt; weap, bool checksister = true)
+*bool '''[[CheckDisplayName]]'''(String displayname)
+*int '''[[CheckWeaponPiece]]'''(class&lt;Weapon&gt; weap, int piecenum)
+*int '''[[GetWeaponPieceMask]]'''(class&lt;Weapon&gt; weap)
+*bool '''[[WeaponUsesAmmoType]]'''(class&lt;Ammo&gt; ammotype)
+*bool '''[[CheckHealth]]'''(int Amount, bool percentage = false)
+*bool '''[[isInvulnerable]]'''()
+*bool '''[[CheckInventory (BaseStatusBar)|CheckInventory]]'''(class&lt;Inventory&gt; item, int amount = 1)
+*protected void '''[[DoDrawAutomapHUD]]'''(int crdefault, int highlight)
+*int '''[[GetTranslation]]'''() const
+
+[[Category:ZScript]]
+[[Category:BaseStatusBar]]</text>
+    <sha1>rdczlske7awjz9u68znr6ao87y6kiby</sha1>
+  </revision>
+</page>

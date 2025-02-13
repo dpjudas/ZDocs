@@ -1,0 +1,34 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>IsZeroDamage</title>
+  <ns>0</ns>
+  <id>9216</id>
+  <revision>
+    <id>45664</id>
+    <timestamp>2017-10-21T06:57:07Z</timestamp>
+    <contributor>
+      <username>Blue Shadow</username>
+      <id>2021</id>
+    </contributor>
+    <comment>IsZeroDamage</comment>
+    <origin>45664</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="920" sha1="bs05463onycpp66werqmo7cwrhbrubh" xml:space="preserve">bool '''IsZeroDamage''' ()
+
+==Usage==
+Returns ''true'' if the actor's {{Property|Damage|damage}} is zero, otherwise it returns ''false''. For damage values passed as an expression, the function always returns ''false'', regardless of the expression's result. Consider the following cases:
+ {{Property|Damage}} 0                          // Returns ''true''; damage is zero.
+ Damage 20                         // Returns ''false''; damage is non-zero.
+ Damage (0)                        // Returns ''false''; this is an expression, even though the result is zero.
+ Damage (Random(5, 15))            // Returns ''false''; this is an expression.
+ {{Property|DamageFunction}} 0;                 // Returns ''false''; this is an expression, even though the result is zero.
+ DamageFunction Random(1, 10) + 3; // Returns ''false''; this is an expression.
+
+==Examples==
+{{noexamples}}
+
+[[Category:DECORATE]]
+[[Category:ZScript]]</text>
+    <sha1>bs05463onycpp66werqmo7cwrhbrubh</sha1>
+  </revision>
+</page>

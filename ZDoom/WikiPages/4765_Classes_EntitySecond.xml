@@ -1,0 +1,96 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>Classes:EntitySecond</title>
+  <ns>0</ns>
+  <id>4765</id>
+  <revision>
+    <id>39849</id>
+    <parentid>35213</parentid>
+    <timestamp>2015-05-04T22:11:19Z</timestamp>
+    <contributor>
+      <username>Blue Shadow</username>
+      <id>2021</id>
+    </contributor>
+    <minor />
+    <comment>/* DECORATE definition */ Updated</comment>
+    <origin>39849</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="2470" sha1="dr74k3pbm2cwztgsnhpg57u38s3z6r7" xml:space="preserve">{{Actor|
+| type = Monster
+| name = Alien sub-entity
+| class = EntitySecond
+| game = Strife
+| convid = 75
+}}[[Classes]]: [[Classes:SpectralMonster|SpectralMonster]]&amp;rarr;&lt;u&gt;EntitySecond&lt;/u&gt;&lt;br&gt;
+Thought you'd killed the Entity, did you? Think again! Three of these appear when the Entity dies. They are weaker than the Entity, as they use only the first two forms of the Sigil and have less health. If a level contains one or more of these, all of them dying ends the level instantly.
+==== [[DECORATE]] definition ====
+ ACTOR &lt;u&gt;EntitySecond&lt;/u&gt; : {{Class|SpectralMonster}}
+ {
+   {{Property|Health}} 990
+   {{Property|PainChance}} 255
+   {{Property|Speed}} 14
+   {{Property|Radius}} 130
+   {{Property|Height}} 200
+   {{Property|FloatSpeed}} 5
+   {{Property|Mass}} 1000
+   {{Property|Monster}}
+   +{{Flag|SPECIAL}}
+   +{{Flag|NOGRAVITY}}
+   +{{Flag|FLOAT}}
+   +{{Flag|SHADOW}}
+   +{{Flag|NOTDMATCH}}
+   +{{Flag|DONTMORPH}}
+   +{{Flag|NOBLOCKMONST}}
+   +{{Flag|INCOMBAT}}
+   +{{Flag|LOOKALLAROUND}}
+   +{{Flag|SPECTRAL}}
+   +{{Flag|NOICEDEATH}}
+   {{Property|MinMissileChance}} 150
+   {{Property|RenderStyle}} Translucent
+   {{Property|Alpha}} 0.25
+   {{Property|SeeSound}} "alienspectre/sight"
+   {{Property|AttackSound}} "alienspectre/blade"
+   {{Property|PainSound}} "alienspectre/pain"
+   {{Property|DeathSound}} "alienspectre/death"
+   {{Property|ActiveSound}} "alienspectre/active"
+   {{Property|Obituary}} "$OB_ENTITY" // "%o felt the wrath of The One God."
+ 
+   action native [[A_SubEntityDeath]]();
+ 
+   States
+   {
+   Spawn:
+     MNAL R 10 Bright [[A_Look]]
+     Loop
+   See:
+     MNAL R 5 Bright [[A_SentinelBob]]
+     MNAL ST 5 Bright [[A_Chase]]
+     MNAL U 5 Bright [[A_SentinelBob]]
+     MNAL V 5 Bright [[A_Chase]]
+     MNAL W 5 Bright [[A_SentinelBob]]
+     Loop
+   Melee:
+     MNAL S 4 Bright [[A_FaceTarget]]
+     MNAL R 4 Bright [[A_CustomMeleeAttack]](([[DECORATE_expressions#Mathematical_functions|random]][SpectreMelee](0, 255)&amp;9)*5)
+     MNAL T 4 Bright [[A_SentinelBob]]
+     Goto See+1
+   Missile:
+     MNAL W 4 Bright [[A_FaceTarget]]
+     MNAL U 4 Bright [[A_CustomMissile]]("{{Class|SpectralLightningH3}}", 32, 0)
+     MNAL V 4 Bright [[A_SentinelBob]]
+     Goto See+4
+   Pain:
+     MNAL R 2 Bright [[A_Pain]]
+     Goto See
+   Death:
+     MDTH A 3 Bright [[A_Scream]]
+     MDTH B 3 Bright [[A_TossGib]]
+     MDTH C 3 Bright [[A_NoBlocking]]
+     MDTH DEFGHIJKLMN 3 Bright [[A_TossGib]]
+     MDTH O 3 Bright [[A_SubEntityDeath]]
+     Stop
+   }
+ }</text>
+    <sha1>dr74k3pbm2cwztgsnhpg57u38s3z6r7</sha1>
+  </revision>
+</page>

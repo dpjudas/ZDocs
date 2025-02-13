@@ -1,0 +1,37 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>BeginPlay</title>
+  <ns>0</ns>
+  <id>9737</id>
+  <revision>
+    <id>51366</id>
+    <parentid>51146</parentid>
+    <timestamp>2024-01-29T10:40:12Z</timestamp>
+    <contributor>
+      <username>Jekyll Grim Payne</username>
+      <id>2175</id>
+    </contributor>
+    <comment>/* Usage */ It's not defined in Thinker</comment>
+    <origin>51366</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="900" sha1="9dg4az0oemid7os0btxg5f4hmb7wxu3" xml:space="preserve">__NOTOC__
+
+'''[[Classes:Actor|Actor]]'''
+
+{{c|virtual void '''BeginPlay'''()}}
+
+==Usage==
+
+A virtual function used by {{class|Actor|actors}}. It's called right before [[PostBeginPlay]] and before the first [[Tick]] call.
+
+This function can be overridden to perform one-time setups, like giving local variables a value, setting flags and such, before any of that data gets overridden or referenced in the states. In many cases it can be used the same way as &lt;code&gt;PostBeginPlay()&lt;/code&gt;. However, while the actor is guaranteed to exist by the time it's called, its states are not set up, and it may not be correctly positioned in the world. As such, it should not be used for things that rely on the actor's position, such as checking the sector where it's located and such.
+
+==Examples==
+{{noexamples}}
+
+[[Category:ZScript]]
+[[Category:ZScript virtual functions]]
+[[Category:Actor virtual functions]]</text>
+    <sha1>9dg4az0oemid7os0btxg5f4hmb7wxu3</sha1>
+  </revision>
+</page>

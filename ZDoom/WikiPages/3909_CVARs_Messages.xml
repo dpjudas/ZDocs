@@ -1,0 +1,166 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>CVARs:Messages</title>
+  <ns>0</ns>
+  <id>3909</id>
+  <revision>
+    <id>48195</id>
+    <parentid>45942</parentid>
+    <timestamp>2020-12-14T17:20:31Z</timestamp>
+    <contributor>
+      <username>Blue Shadow</username>
+      <id>2021</id>
+    </contributor>
+    <minor />
+    <comment>/* Message colors */ the defaults of these got changed in 4.5.0</comment>
+    <origin>48195</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="7850" sha1="shppddzdvsr6f2ot2nguvvcraup42rw" xml:space="preserve">These CVARs affect the way system, game and chat messages get displayed.
+
+See the [[CVARs]] article for general information on how to access and edit variables.
+__TOC__
+==Message appearance==
+* '''{{LE|con_centernotify}}''' ([[CVARs#boolean|boolean]])
+:Default: false for Doom; true for Heretic and Hexen
+:When true, notify messages at the top of the screen are centered. Otherwise, they are justified against the left margin. 
+
+* '''{{LE|con_ctrl_d}}''' ([[CVARs#string|string]])
+:Default: ""
+:When you press Ctrl-D on a blank line in the [[console]], the [[CCMDs|command]] in this CVAR is executed. For example, if you set con_ctrl_d to "{{CCMD|O|quit}}", then pressing Ctrl-D will quit the game.
+
+* '''{{LE|con_midtime}}''' ([[CVARs#float|float]])
+:Default: 3
+:This is the number of seconds that messages in the middle of the screen will be displayed before they disappear. 
+
+* '''{{LE|con_notablist}}''' ([[CVARs#boolean|boolean]])
+:Default: false
+:When you press tab on the console to complete a command, a list of possible completions will normally be printed the first time you press tab and subsequent presses of tab will cycle through the different completions. By setting this CVAR to true, the list will not be printed and every press of tab will cycle through the possible completions.
+
+* '''{{LE|con_notifylines}}''' ([[CVARs#integer|integer]])
+:Default: 4
+:This is the number of top-screen messages that can be displayed at once.
+
+* '''{{LE|con_notifytime}}''' ([[CVARs#float|float]])
+:Default: 3
+:This is the number of seconds that new messages will stay at the top of the screen before they start scrolling away. 
+
+* '''{{LE|con_scaletext}}''' ([[CVARs#integer|integer]])
+:Default: 0
+:Controls the scaling of the message text:
+:*0 - No scaling is applied.
+:*1 - The message text is scaled to larger sizes depending on the screen resolution so that it stays approximately the same size it would be on a 320x200 screen.
+:*2 - Applies double scaling.
+:*3 - Applies quadruple scaling.
+
+* '''{{LE|longsavemessages}}''' ([[CVARs#boolean|boolean]])
+:Default: true
+:If true, screenshot and game saved messages contain the entire path and filename of the stored file. Set to false to shorten the message to just show the filename.
+
+* '''{{LE|msg}}''' ([[CVARs#integer|integer]])
+:Default: 0
+:This is the minimum message level that you will see. You will not see any messages with a lower priority than this. The different message levels are: {{verification}}
+:*0 - Item pickup 
+:*1 - Obituaries 
+:*2 - Critical messages 
+:*3 - Chat messages 
+:*4 - Chat messages from a teammate
+
+==Message colors==
+The following variables use [[TEXTCOLO]] color values:
+{| {{prettytable}}
+!code!!colspan="2"|color!!code!!colspan="2"|color!!code!!colspan="2"|color!!code!!colspan="2"|color!!code!!colspan="2"|color!!code!!colspan="2"|color!!code!!colspan="2"|color
+|-
+|0||reddish brick||{{color|#CC3333}}||1||tan||{{color|#D2B48C}}||2||gray||{{color|#CCCCCC}}||3||green||{{color|#00CC00}}||4||brown||{{color|#996633}}||5||gold||{{color|#FFCC00}}||6||red||{{color|#FF5566}}
+|-
+|7||blue||{{color|#9999FF}}||8||orange||{{color|#FFAA00}}||9||white||{{color|#DFDFDF}}||10||yellow||{{color|#EEEE33}}||12||black||{{color|#000000}}||13||light blue||{{color|#33EEFF}}||14||cream||{{color|#FFCC99}}
+|-
+|15||olive||{{color|#D1D8A8}}||16||dark green||{{color|#008C00}}||17||dark red||{{color|#800000}}||18||dark brown||{{color|#663333}}||19||purple||{{color|#9966CC}}||20||dark gray||{{color|#808080}}||21||cyan||{{color|#00DDDD}}
+|}
+* '''{{LE|msg0color}}''' ([[CVARs#integer|integer]])
+:Default: 11 (untranslated)
+:This cvar controls the color used to display level 0 ({{Property|Inventory.PickupMessage|item pickup}}) messages.
+
+* '''{{LE|msg1color}}''' ([[CVARs#integer|integer]])
+:Default: 5 ({{color|#FFCC00}} gold)
+:This cvar selects the color used to display level 1 ({{Property|Obituary|obituary}}) messages.
+
+* '''{{LE|msg2color}}''' ([[CVARs#integer|integer]])
+:Default: 2 ({{color|#CCCCCC}} gray)
+:This cvar selects the color used to display level 2 (critical) messages (used by [[Log]], [[A_Log]], and [[A_LogInt]]).
+
+* '''{{LE|msg3color}}''' ([[CVARs#integer|integer]])
+:Default: 3 ({{color|#00CC00}} green)
+:This cvar selects the color used to display level 3 ([[chat]]) messages.
+
+* '''{{LE|msg4color}}''' ([[CVARs#integer|integer]])
+:Default: 3 ({{color|#00CC00}} green)
+:This cvar selects the color used to display level 4 ([[team]] [[chat]]) messages.
+
+* '''{{LE|msgmidcolor}}''' ([[CVARs#integer|integer]])
+:Default: 11 (untranslated)
+:This cvar selects the color used to display messages in the middle of the screen (default color for [[Print]] and [[A_Print]]).
+
+* '''{{LE|msgmidcolor2}}''' ([[CVARs#integer|integer]])
+:Default: 4 ({{color|#996633}} brown)
+:This cvar selects the color used to display messages in the middle of the screen that are sent to everyone (default color for [[PrintBold]] and [[A_PrintBold]]).
+
+==Chatting==
+
+* '''{{LE|chat_substitution}}''' ([[CVARs#boolean|boolean]])
+:Default: false
+:Set this to true if you want to chat using special keywords that will be replaced with appropriate text when your messages are sent. The supported keywords are: 
+:*$health
+::Replaced by your current health. 
+:*$weapon
+::Replaced by the name of your current weapon. 
+:*$armor
+::Replaced by your current armor count. 
+:*$ammocount
+::Replaced by your current ammo count. 
+:*$ammo
+::Replaced by the name of your current ammo. 
+:As an example, if you just started a new game of Doom and have chat substitution turned on, when you send the message "My health is $health, and I am using a $weapon", the message that is actually sent will be "My health is 100, and I am using a Pistol". 
+
+* '''{{LE|chatmacro0|chatmacro}}''' ([[CVARs#string|string]])
+:Default: "No"
+* '''{{LE|chatmacro1}}''' ([[CVARs#string|string]])
+:Default: "I'm ready to kick butt!"
+* '''{{LE|chatmacro2}}''' ([[CVARs#string|string]])
+:Default: "I'm OK."
+* '''{{LE|chatmacro3}}''' ([[CVARs#string|string]])
+:Default: "I'm not looking too good!"
+* '''{{LE|chatmacro4}}''' ([[CVARs#string|string]])
+:Default: "Help!"
+* '''{{LE|chatmacro5}}''' ([[CVARs#string|string]])
+:Default: "You suck!"
+* '''{{LE|chatmacro6}}''' ([[CVARs#string|string]])
+:Default: "Next time, scumbag..."
+* '''{{LE|chatmacro7}}''' ([[CVARs#string|string]])
+:Default: "Come here!"
+* '''{{LE|chatmacro8}}''' ([[CVARs#string|string]])
+:Default: "I'll take care of it."
+* '''{{LE|chatmacro9}}''' ([[CVARs#string|string]])
+:Default: "Yes"
+:These are all strings that can be assigned to hotkeys in chat mode. To use these, enter chat mode and then hold down Alt and press one of the number keys. The string stored in the corresponding chatmacro cvar will be sent as if you had typed it yourself.
+
+==Miscellaneous settings==
+* '''{{LE|showsecretsector}}''' ([[CVARs#boolean|boolean]])
+:Default: false
+:When this variable is true, the sector number of the found secret sector is displayed as part of the found-secret message, in the form {{c|"&lt;secret_message&gt; (Sector #)"}}, where {{c|#}} is the sector number. If the variable is false, however, the message is displayed alone without a reference to the sector number.
+
+* '''{{LE|show_messages}}''' ([[CVARs#boolean|boolean]])
+:Default: true
+:When this variable is true, game messages will be displayed at the top of the screen. Regardless of the state of this cvar, console messages will always be displayed in the [[console]]. If logging is enabled, messages will also be written to disk.
+
+* '''{{LE|show_obituaries}}''' ([[CVARs#boolean|boolean]])
+:Default: true
+:[[Obituaries]] are a [[ZDoom]] feature not present in the original ''[[Doom]]'', ''[[Heretic]]'', ''[[Hexen]]'', and ''[[Strife]]'' games. They can be disabled without disabling the rest of the messages by setting this CVAR to false.
+
+==See also==
+*[[CVARs]]
+*[[CCMDs]]
+
+[[category:ZDoom console]]</text>
+    <sha1>shppddzdvsr6f2ot2nguvvcraup42rw</sha1>
+  </revision>
+</page>

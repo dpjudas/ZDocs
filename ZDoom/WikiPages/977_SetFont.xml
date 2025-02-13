@@ -1,0 +1,75 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>SetFont</title>
+  <ns>0</ns>
+  <id>977</id>
+  <revision>
+    <id>43079</id>
+    <parentid>35841</parentid>
+    <timestamp>2016-08-26T19:32:00Z</timestamp>
+    <contributor>
+      <username>Arookas</username>
+      <id>2066</id>
+    </contributor>
+    <minor />
+    <comment>added note on checkfont</comment>
+    <origin>43079</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="2304" sha1="kdyq9pnhatgt5o2i4i41q4ju90glpx7" xml:space="preserve">void '''SetFont''' (str ''fontlump'');
+
+==Usage==
+
+Sets the current font (within only the script) to ''fontlump'', which is a lump you can make using [[imagetool]]. In addition to anything defined in [[FONTDEFS]], ZDoom has the following available fonts:
+
+;CONFONT:Fixed width, this is the same font used in the console
+;SMALLFONT:The standard small font (shown for between level text). Default.
+;SMALLFONT2:An alternate small font, found only in Strife. In other games, this is an alias to SMALLFONT.
+;BIGFONT:Larger version of the font (used for level names on intermission screens).
+
+Once the font is set, the remaining [[Print]], [[PrintBold]], [[HudMessage]] and [[HudMessageBold]] commands will use that font.
+You may also check if the font exists by using [[CheckFont]].
+
+==Examples==
+
+This example is a rather useful script that displays an objective for all the players, and each objective only appears once ever.
+
+ #define numobjs 4
+ str objs[4] =
+ {"Gain access to the warehouse",
+ "Restart the generator",
+ "Defeat the intruders and\nsecure the warehouse",
+ "Evacuate to the helipad"};
+ 
+ script 255 (int num)
+ {
+ 	if (num &gt;= 1 &amp;&amp; num &lt;= numobjs)
+ 	{
+ 		if (objs[num - 1] != "")
+ 		{
+ 			[[SetFont]]("BIGFONT");
+ 			[[HudMessageBold]](s:"New objective:\n", l:objs[num - 1];
+ 				{{const|HUDMSG_TYPEON}} | {{const|HUDMSG_LOG}}, 0, {{const|CR_TAN}}, 1.5, 0.5, 5.0, 0.01, 1.0);
+ 			objs[num - 1] = "";
+ 		}
+ 	}
+ }
+
+The first block of code sets up the data for the objectives. This can be freely modified. In the script, the first “&lt;tt&gt;if&lt;/tt&gt;” statement checks if the objective number is valid, and the second checks if the objective has not already been shown. Then the font is set to the large intermission font. Finally the objective is displayed and then removed from the list.
+
+It is also interesting to note that in combination with &lt;tt&gt;HudMessage&lt;/tt&gt;, &lt;tt&gt;SetFont&lt;/tt&gt; can be used to display pictures. Simply place an image into your wad and use '''SetFont''' with the image's name. Then create a HudMessage with the letter “A” as the text.
+
+ script 2 (void)
+ {
+ 	[[SetFont]]("PICTURE");
+ 	[[HudMessage]](s:"A"; {{const|HUDMSG_PLAIN}}, 0, {{const|CR_UNTRANSLATED}}, 0.1, 0.8, 3.7);
+ }
+
+== See also ==
+*[[FONTDEFS]]
+*[[Font format]]s
+*[[CheckFont]]
+
+[[category:ACS HUD functions]]</text>
+    <sha1>kdyq9pnhatgt5o2i4i41q4ju90glpx7</sha1>
+  </revision>
+</page>

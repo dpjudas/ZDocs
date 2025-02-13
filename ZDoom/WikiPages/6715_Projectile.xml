@@ -1,0 +1,124 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>Projectile</title>
+  <ns>0</ns>
+  <id>6715</id>
+  <revision>
+    <id>53815</id>
+    <parentid>53436</parentid>
+    <timestamp>2024-11-21T21:00:46Z</timestamp>
+    <contributor>
+      <username>Jekyll Grim Payne</username>
+      <id>2175</id>
+    </contributor>
+    <origin>53815</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="9635" sha1="pi42ku7e89pv89ie0p1yrb6ae327ig7" xml:space="preserve">{{doomwiki}}
+A '''projectile''' is an [[actor]] that is spawned by special projectile-firing functions (such as [[A_FireProjectile]]/[[A_SpawnProjectile]]), after which it begins moving at a specific velocity (which normally remains constant, unless manually modified). On impact with a {{Flag|SHOOTABLE}} actor, the projectile will deal damage according to its {{Property|Damage}} or {{Property|DamageFunction}} property. If the projectile has the {{Flag|RIPPER}} flag, it will be able to pass through actors it deals damage to; otherwise it stops moving upon hitting the first actor. No projectiles can pass through walls. Projectiles also collide with actors that have the {{flag|SOLID}} flag even if they don't have {{flag|SHOOTABLE}}, but in this case said actor won't receive damage (since damage can't be dealt to actors without {{flag|SHOOTABLE}}).
+
+When a projectile collides, it explodes and enters its death state, although technically it is not killed. If the Crash and XDeath states are defined, they may also be entered instead of the Death state, according to the collision type:
+
+{{note|If there's a need to force a projectile to "die" (enter its Death or other suitable state), use the '''[[ExplodeMissile]]''' function. Using &lt;code&gt;goto Death&lt;/code&gt; is not recommended, because this doesn't handle all behavior necessary to consider the projectile "exploded."}}
+{| {{Prettytable}}
+!Collision!!State entered
+|-
+|Wall||Death
+|-
+|Bleeding actor||XDeath
+|-
+|Non-bleeding actor||Crash
+|}
+A non-bleeding actor is an actor with the {{Flag|NOBLOOD}} flag.
+
+Projectiles generally have the {{Property|Projectile}} combo to be a fully-fledged projectile (i.e. to be able to activate projectile line specials, enter its Death state sequence when hitting something, etc.), but the defining flag that makes an actor a projectile is {{Flag|MISSILE}}. Any actor without the MISSILE flag is not a projectile.
+
+Note that the MISSILE flag only defines two explicit behaviors:
+* An actor with this flag will stop (its velocity will be set to 0) and enter Death (or another suitable state sequence) upon hitting something. 
+* This flag is also required to use the {{Property|Bouncetype}} property or any of the related flags ({{Flag|DOOMBOUNCE}}, {{Flag|HEXENBOUNCE}}, etc.). Actors without the MISSILE flag cannot bounce, regardless of any other properties or flags.
+
+The full {{Property|Projectile}} combo implies the following flags:
+* {{flag|NOBLOCKMAP}} - Excludes the actor from [[blockmap]], so that it can't be passively collided with.
+* {{flag|NOGRAVITY}} - Disables gravity. Note, this flag has to be unset after the combo if you want to make a gravity-affected projectile.
+* {{flag|DROPOFF}} - The actor can cross ledges.
+* {{flag|MISSILE}} - The actor stops and enters Death sequence when hitting something. Also allows the actor to recognize bouncing properties and flags.
+* {{flag|ACTIVATEIMPACT}} - The actor activates "projectile hits" line specials.
+* {{flag|ACTIVATEPCROSS}} - The actor activates "projectile crosses" line specials.
+* {{flag|NOTELEPORT}} - The actor can't activate teleport specials.
+* {{flag|BLOODSPLATTER}} - This is set by the combo &lt;u&gt;only in Hexen and Heretic&lt;/u&gt;; in other games it has to be set manually, if desired. With this flag projectiles cause the victims to spawn blood (by default actors don't bleed when hit by projectiles).
+
+{{note|It is acceptable to use the {{flag|MISSILE}} flag on non-projectile actors (such as bouncing debris or gibs) to enable bouncing, HOWEVER the whole {{Property|Projectile}} combo should not be used in this case, since the other behaviors it implies are normally undesirable for bouncing FX actors (such as being able to activate linedef actions and such).}}
+
+[[Category:Glossary]]
+
+==Pointers==
+
+By default projectiles utilize only one [[Actor pointers|pointer]] automatically: &lt;code&gt;target&lt;/code&gt;. Counter-intuitively, the pointer doesn't point to the actor that the projectiles' shooter is attacking but rather to &lt;u&gt;the actor that ''fired'' the projectile&lt;/u&gt; (i.e. a monster that fired it with [[A_SpawnProjectile]] or a player pawn whose weapon fired it with [[A_FireProjectile]]). Projectiles don't get any pointers to their potential victims because they don't need to: they simply damage any actor they collide with while moving.
+
+Seeker projectiles (ones using the {{Flag|SEEKERMISSILE}} flag and [[Action_functions#Missile_movement|seeking functions]]) store the actor they are tracking to their &lt;code&gt;tracer&lt;/code&gt; pointer (the &lt;code&gt;target&lt;/code&gt; pointer however is still used like above).
+
+Having a proper &lt;code&gt;target&lt;/code&gt; pointer is important for various reasons:
+* It lets the shooter get a credit for the kill or damage, which makes sure a proper [[obituary]] is printed, the damaged victim will start hunting the correct actor, [[infighting]] is triggered properly, and such.
+* It ensures proper collision: a projectile can't collide with its shooter, because otherwise it would explode immediately upon firing (since projectiles are actually spawned inside whoever shot them). If the &lt;code&gt;target&lt;/code&gt; pointer isn't assigned correctly, the projectile may be able to collide with its shooter.
+* If the target pointer is not set correctly, [[A_Explode]] will always hurt the shooter, even if the XF_HURTSOURCE flag is not set.
+
+&lt;u&gt;Spawning a projectile in a way that doesn't set the &lt;code&gt;target&lt;/code&gt; pointer should be avoided&lt;/u&gt;. If, for example, [[A_SpawnItemEx]] is used to spawn a projectile, the SXF_SETTARGET flag should be added to set the &lt;code&gt;target&lt;/code&gt; correctly. If a projectile spawns more projectiles mid-flight (e.g. if it's some kind of a cluster bomb), the extra projectiles must have the &lt;code&gt;target&lt;/code&gt; pointer set correctly (again, in case of [[A_SpawnItemEx]] the SXF_TRANSFERPOINTERS flag should be used).
+
+(Note: the {{c|''summon &lt;classname&gt;''}} [[console command]] has special handling for projectiles, where it'll automatically assign the player who used the command as the &lt;code&gt;target&lt;/code&gt; of the projectile.)
+
+Projectiles do get a &lt;code&gt;victim&lt;/code&gt; pointer to the actor they're colliding with (or flying through), but that pointer only exists within the context of the [[SpecialMissileHit]] and [[DoSpecialDamage]] virtual functions. Those functions can be used to modify certain projectile behaviors at the moment when it collides with another actor.
+
+==Speed==
+
+A projectile's {{property|Speed|'''speed'''}} property defines 2 things:
+* How many units away from the center of the actor the projectile will spawn (no more than the actor's {{property|Radius|'''radius'''}} however: projectiles need to spawn within their shooter to make sure they don't spawn inside geometry or other actors)
+* The initial velocity it receives upon spawning
+
+Once a projectile is fired, the ''speed'' property is no longer used directly, and modifying it (directly in [[ZScript]] or via [[A_SetSpeed]]) will have no effect. At this point the projectile is flying with a constant momentum and will do so until it collides with something. Its momentum is tracked in its &lt;code&gt;vel&lt;/code&gt; field. If you wish to change a projectile's velocity mid-flight, you can either use [[A_ScaleVelocity]], or modify its &lt;code&gt;vel&lt;/code&gt; vector in [[ZScript]].
+
+For example, this variation of the [[Classes:Rocket|rocket]] will continuously increase its velocity until it reaches 60:
+&lt;syntaxhighlight lang="csharp"&gt;
+class SpeedingRocket : Rocket
+{	
+	override void Tick()
+	{
+		super.Tick();
+		if (vel.length() &lt; 60)
+		{
+			vel *= 1.05;
+		}
+	}
+}&lt;/syntaxhighlight&gt;
+
+This variation changes its velocity to 60 after 35 tics (1 second) in flight (and also plays its [[Actor_properties#Sound|seesound]], the same sound it plays when fired).
+&lt;syntaxhighlight lang="csharp"&gt;
+class ExtraFuelRocket : Rocket
+{	
+	override void Tick()
+	{
+		super.Tick();
+		if (GetAge() == TICRATE) //will triger once when age is exactly equal to 1 second
+		{
+			A_StartSound(seesound); //play the [[Actor_properties#Sound|seesound]]
+			vel = vel.unit() * 60; //set velocity to 60
+		}
+	}
+}&lt;/syntaxhighlight&gt;
+
+===Very fast projectiles===
+Very high {{property|speed}} values can cause issues with collision, where the projectile may fly through actors or geometry that it would normally collide with. For that purpose, the {{class|FastProjectile}} class exists, which performs collision checks multiple times per [[tic]] to make sure it collides properly. 
+
+In ZDoom the "too fast" speed was considered anything about 60. GZDoom, however, uses much more stable collision logic, so regular projectiles (not based on the FastProjectile class) can have much higher speed values without any collision issues.
+
+Collision issues due to high speed tend to be more obvious if a gravity-affected projectile (one that does not have the {{flag|NOGRAVITY}} flag) is fired inside a [[3D floor]]-based water sector: the way gravity is multiplied underwater can cause weird pitch changes at high speeds.
+
+==Virtual methods==
+These virtual methods are defined in [[Actor]], but their primary use is for projectiles.
+*{{c|int '''[[SpecialMissileHit]]'''(Actor ''victim'')}}
+:Called whenever the projectile is clipping into another actor to determine if it should fly through, collide with it or disappear.
+*{{c|int '''[[SpecialBounceHit]]'''(Actor ''bounceMobj'', Line ''bounceLine'', SecPlane ''bouncePlane'')}}
+:Called for bouncing projectiles when they hit an actor, line or plane (if the flags allow it).
+*{{c|int '''[[DoSpecialDamage]]'''(Actor ''victim'', int ''damage'', Name ''damagetype'')}}
+:Called when a projectile has hit another actor and is about to deal damage.</text>
+    <sha1>pi42ku7e89pv89ie0p1yrb6ae327ig7</sha1>
+  </revision>
+</page>

@@ -1,0 +1,76 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>Classes:ChickenPlayer</title>
+  <ns>0</ns>
+  <id>3561</id>
+  <revision>
+    <id>33474</id>
+    <parentid>17366</parentid>
+    <timestamp>2012-07-16T00:21:01Z</timestamp>
+    <contributor>
+      <username>Crimson Dusk</username>
+      <id>2000</id>
+    </contributor>
+    <comment>/* DECORATE definition */</comment>
+    <origin>33474</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="1751" sha1="3orb66flcp2owcu68h6ncqlmgv55vrb" xml:space="preserve">{{Actor|
+| type = Player
+| name = Chicken
+| class = ChickenPlayer
+| game = Heretic
+}}[[Classes]]: [[Classes:PlayerPawn|PlayerPawn]]&amp;rarr;&lt;u&gt;ChickenPlayer&lt;/u&gt;&lt;br&gt;
+Players hit by a [[Classes:ArtiEgg|morph ovum]] [[Classes:EggFX|shot]] are temporarily turned into this. Upon morphing back to their original shape, their health is reset to the default for their class (usually 100). Using the [[Classes:ArtiTomeOfPower|tome of power]] puts an end to the transformation. Not to be confused with the [[Classes:Chicken|chicken]] class.
+
+==== [[DECORATE]] definition ====
+ ACTOR &lt;u&gt;ChickenPlayer&lt;/u&gt; : [[Classes:PlayerPawn|PlayerPawn]] native
+ {
+   {{property|Health}} 30
+   {{property|ReactionTime}} 0
+   {{property|PainChance}} 255
+   {{property|Radius}} 16
+   {{property|Height}} 24
+   {{property|Speed}} 1
+   {{property|Gravity}} 0.125
+   +{{flag|NOSKIN}}
+   +{{flag|PLAYERPAWN.CANSUPERMORPH|CANSUPERMORPH}}
+   {{property|PainSound}} "chicken/pain"
+   {{property|DeathSound}} "chicken/death"
+   {{property|Player.JumpZ}} 1
+   {{property|Player.ViewHeight|Player.Viewheight}} 21
+   {{property|Player.ForwardMove}} 1.22, 1.22
+   {{property|Player.SideMove}} 1.22, 1.22
+   {{property|Player.SpawnClass}} "Chicken"
+   {{property|Player.SoundClass}} "Chicken"
+   {{property|Player.DisplayName}} "Chicken"
+   {{property|Player.MorphWeapon}} "[[Classes:Beak|Beak]]"
+   -{{flag|PICKUP}}
+   States
+   {
+   Spawn:
+     CHKN A -1
+     Stop
+   See:
+     CHKN ABAB 3
+     Loop
+   Melee:
+   Missile:
+     CHKN C 12
+     Goto Spawn
+   Pain:
+     CHKN D 4 [[A_Feathers]]
+     CHKN C 4 [[A_Pain]]
+     Goto Spawn
+   Death:
+     CHKN E 6 [[A_Scream]]
+     CHKN F 6 [[A_Feathers]]
+     CHKN G 6
+     CHKN H 6 [[A_NoBlocking]]
+     CHKN IJK 6
+     CHKN L -1
+     Stop
+   }
+ }</text>
+    <sha1>3orb66flcp2owcu68h6ncqlmgv55vrb</sha1>
+  </revision>
+</page>

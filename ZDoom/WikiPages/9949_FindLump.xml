@@ -1,0 +1,61 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>FindLump</title>
+  <ns>0</ns>
+  <id>9949</id>
+  <revision>
+    <id>53150</id>
+    <parentid>53147</parentid>
+    <timestamp>2024-09-30T13:24:36Z</timestamp>
+    <contributor>
+      <username>Jekyll Grim Payne</username>
+      <id>2175</id>
+    </contributor>
+    <comment>/* Usage */</comment>
+    <origin>53150</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="1768" sha1="kcgn63ji4yimgyrh4knfbk7miq56pvb" xml:space="preserve">'''{{struct|Wads}}'''
+
+native static int '''FindLump'''(string ''name'', int ''startlump'' = 0, FindLumpNamespace ''ns'' = GlobalNamespace)
+
+== Usage ==
+Finds a [[lump]] in the currently loaded archives and returns its index. The index can then be passed to '''[[ReadLump]]''' to read the contents of the lump.
+
+If a lump with the given name isn't found, returns -1;
+
+=== Parameters ===
+*{{c|String '''name'''}}
+:The name of the lump to find as a string.
+:Note, this can be used to find any arbitrary lump name; it doesn't have to be one of the default lumps.
+*{{c|int '''startlump'''}}
+:The index at which to begin the search. Since multiple lumps with the same name can be loaded at once, each of them will have an index, and that index will need to be incremented if there's a need to find all of them.
+*{{c|FindLumpNamespace '''ns'''}}
+:The namespace to search for. {{moreinfo}} Possible values:
+:*{{c|Wads.GlobalNamespace}}
+:*{{c|Wads.AnyNamespace}}
+
+=== Return values ===
+* int — returns the index of the lump that can then be passed to '''[[ReadLump]]'''. If the given lump is not found, returns &lt;code&gt;-1&lt;/code&gt;.
+
+== Examples ==
+This example shows how to find all currently loaded [[TEXTURES]] lumps and push their contents into a [[Dynamic arrays|dynamic array]]:
+&lt;syntaxhighlight lang="csharp"&gt;
+array&lt;String&gt; allTexturesContents;
+// Find a lump named TEXTURES:
+int lump = Wads.FindLump("TEXTURES", 0);
+// Keep searching until there are no more
+// lumps with this name to be found:
+while (lump != -1)
+{
+    String lumpContents = Wads.ReadLump(lump);
+    allTexturesContents.Push(lumpContents);
+    // Find the next TEXTURES lump if present:
+    lump = Wads.FindLump("TEXTURES", lump + 1);
+}&lt;/syntaxhighlight&gt;
+
+== See also ==
+* [[Structs:Wads]]
+* [[ReadLump]]</text>
+    <sha1>kcgn63ji4yimgyrh4knfbk7miq56pvb</sha1>
+  </revision>
+</page>

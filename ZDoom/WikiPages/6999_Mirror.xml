@@ -1,0 +1,40 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>Mirror</title>
+  <ns>0</ns>
+  <id>6999</id>
+  <revision>
+    <id>49316</id>
+    <parentid>48702</parentid>
+    <timestamp>2022-06-22T08:11:59Z</timestamp>
+    <contributor>
+      <username>Inkoalawetrust</username>
+      <id>2604</id>
+    </contributor>
+    <comment>Added information on the new actor mirror visibility flags.</comment>
+    <origin>49316</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="1879" sha1="q14rjdukqj3pxfyouumt4uj2wifmr1e" xml:space="preserve">'''Mirrors''' can be created on walls in [[ZDoom]] with the [[Line_Mirror]] special.
+
+[[File:HWMirror.png|thumb|right|300px|A mirror in GZDoom 4.X.X with the render mode set to hardware accelerated.]]
+
+[[File:SWMirror.png|thumb|right|300px|A mirror in GZDoom 4.X.X with the render mode set to the Doom software renderer.]]
+
+Note that mirrors have limitations. They can be resource-intensive for the renderer, especially if there are recursive reflections. To improve performance, fake mirrors are sometimes used in maps: the mapper constructs the reflected scene directly and uses a translucent texture as the "mirror". The drawback of this approach is that the "mirrored" scene is not updated in real time, so for example the player will not be able to see himself or enemies in the mirror. Fake mirrors can be used with [[stacked sectors]] to create the illusion of reflective floors in the software renderer.
+
+[[File:MirrorActorFlagsExample.png|thumb|right|300px|An {{class|DoomImp|Imp}} that is not visible on mirrors, and a {{class|Demon}} that is only visible on mirrors.]]
+The visibility of actors on mirrors can also be modified, by using the {{flag|INVISIBLEINMIRRORS}} and {{flag|ONLYVISIBLEINMIRRORS}} flags.
+
+If mirrors cause performance problems in a map, the {{CVAR|R|r_drawmirrors}} can be used to turn them off.
+
+Note that the [[hall of mirrors]] effect is not a glitch actually related to mirrors.
+
+==OpenGL==
+{{OpenGL}}
+
+The OpenGL renderer used in [[GZDoom]] and [[Zandronum]] features enhancements not available in software. Similar to mirrors, true reflective floors or ceilings are also possible with [[Sector_SetPlaneReflection]]. Furthermore, an [[OpenGL_preferences#gl_mirror_envmap|optional environment map]] is applied to mirrors as well, unlike in the software renderer, where the scene is simply reflected.
+
+[[Category:Features]][[Category:Glossary]]</text>
+    <sha1>q14rjdukqj3pxfyouumt4uj2wifmr1e</sha1>
+  </revision>
+</page>

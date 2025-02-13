@@ -1,0 +1,92 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>ZScript actor flags</title>
+  <ns>0</ns>
+  <id>8964</id>
+  <revision>
+    <id>53535</id>
+    <parentid>46955</parentid>
+    <timestamp>2024-11-01T17:11:22Z</timestamp>
+    <contributor>
+      <username>Blue Shadow</username>
+      <id>2021</id>
+    </contributor>
+    <comment>/* Custom flags */ using self as a prefix from 4.13.2</comment>
+    <origin>53535</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="3349" sha1="m4rvy97v6harhfked6qlzqqg3n86vyr" xml:space="preserve">{{ZScriptNote}}
+[[Actor flags]] in [[ZScript]] are handled differently from [[DECORATE]]. [[A_ChangeFlag]] is considered deprecated in ZScript, replaced with a simple boolean system.
+
+Flags within a Default block are treated much the same as DECORATE.
+
+ Default
+ {
+   Projectile;
+   Damage 20;
+   -NOGRAVITY // note that semicolons are optional for flags.
+   +BOUNCEONFLOORS
+ }
+
+To refer to a flag within a function, simply insert a 'b' (for 'boolean') in front of the name of the actor flag. Flags may be changed by directly assigning ''true'', ''false'', or an expression that resolves to either.
+
+ virtual override BeginPlay()
+ {
+   bSOLID = true;
+   bINVULNERABLE = false;
+ }
+
+The only flags which cannot be changed this way are NOSECTOR and NOBLOCKMAP. These require use of a special function, [[A_ChangeLinkFlags]], in order to perform some necessary internal housekeeping.
+
+== Custom flags ==
+ZScript also allows defining custom flags. The syntax for defining the flag is as follows:
+
+ flagdef &lt;FlagName&gt;: &lt;Variable&gt;, &lt;Number&gt;
+
+*''FlagName'': The name of the flag to use.
+*''Variable'': An integer-declared variable used for storing the flags.
+*''Number'': An integer that must be in the range of 0 to 31. Internally, this number is bit-wise shifted to the left (1 &lt;&lt; ''Number'', or 2&lt;sup&gt;''Number''&lt;/sup&gt;).
+
+'''Note:''' When a variable is used as a flag container, modifying it directly may cause unintended side effects and should be avoided. Set the flags to true/false instead.
+
+{{Class|Inventory}}'s flags are all defined this way.
+
+ 	private int ItemFlags;
+ 	flagdef Quiet: ItemFlags, 0;
+ 	flagdef Autoactivate: ItemFlags, 1;
+ 	flagdef Undroppable: ItemFlags, 2;
+ 	flagdef Invbar: ItemFlags, 3;
+ 	flagdef HubPower: ItemFlags, 4;
+ 	flagdef Untossable: ItemFlags, 5;
+ 	flagdef AdditiveTime: ItemFlags, 6;
+ 	flagdef FancyPickupSound: ItemFlags, 7;
+ 	flagdef BigPowerup: ItemFlags, 8;
+ 	flagdef KeepDepleted: ItemFlags, 9;
+ 	flagdef IgnoreSkill: ItemFlags, 10;
+ 	flagdef NoAttenPickupSound: ItemFlags, 11;
+ 	flagdef PersistentPower : ItemFlags, 12;
+ 	flagdef RestrictAbsolutely: ItemFlags, 13;
+ 	flagdef NeverRespawn: ItemFlags, 14;
+ 	flagdef NoScreenFlash: ItemFlags, 15;
+ 	flagdef Tossed: ItemFlags, 16;
+ 	flagdef AlwaysRespawn: ItemFlags, 17;
+ 	flagdef Transfer: ItemFlags, 18;
+ 	flagdef NoTeleportFreeze: ItemFlags, 19;
+ 	flagdef NoScreenBlink: ItemFlags, 20;
+ 	flagdef IsArmor: ItemFlags, 21;
+ 	flagdef IsHealth: ItemFlags, 22;
+ 	flagdef AlwaysPickup: ItemFlags, 23;
+ 	flagdef Unclearable: ItemFlags, 24;
+
+The syntax for setting custom flags is &lt;code&gt;+&lt;DefClassName&gt;.&lt;FlagName&gt;&lt;/code&gt;, where ''DefClassName'' is the base class defining the flags. For the base class only, {{c|self}} can be used instead of ''DefClassName''&lt;sup&gt;{{new|4.13.2}}&lt;/sup&gt;. Classes inheriting from the one defining the flags must use the name of the parent defining the flags. For example, any inventory item, even if they inherit from another Inventory-inheriting class, must use {{c|Inventory}} for the class name.
+
+ +Inventory.ALWAYSPICKUP
+
+The same rules apply when setting or checking a flag, requiring the 'b' before them. The class name itself must not be used. Checking actors with a custom flag is also the same as checking their variables too. See [[ZScript variables]] for more information.
+
+== See also ==
+* [[ZScript]]
+
+[[Category:ZScript guides]]</text>
+    <sha1>m4rvy97v6harhfked6qlzqqg3n86vyr</sha1>
+  </revision>
+</page>

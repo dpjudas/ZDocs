@@ -1,0 +1,42 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>Floor/Ceiling sector translations</title>
+  <ns>0</ns>
+  <id>787</id>
+  <revision>
+    <id>21735</id>
+    <parentid>15933</parentid>
+    <timestamp>2009-05-18T16:28:39Z</timestamp>
+    <contributor>
+      <username>Hirogen2</username>
+      <id>12</id>
+    </contributor>
+    <minor />
+    <comment>remove useless whitespace</comment>
+    <origin>21735</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="2146" sha1="nyy7fthegmp8b6xug7k5duwmhu26axm" xml:space="preserve">This particular trick allows level editors to recolor the floor and ceiling, the floor only, or the ceiling only in a [[sector]] &lt;i&gt;without&lt;/i&gt; coloring any sprites or objects that enter. This essentially means that one flat can be recolored to any color in the Doom [[palette]] for lights, decorations, or simply for the purpose of saving room in a wad if you plan on using 50 different variations of the same flat.
+
+To begin, make a level and mark off a sector away from a wall. Due to the nature of this trick, sectors &lt;i&gt;cannot&lt;/i&gt; touch a wall or an upper/lower texture. Give this sector a tag of 1. We will assume the floor height is 0 and the ceiling height is 128 in this example.
+
+Add the following line of code to your [[scripts]], preferably in an open script:
+
+ [[Sector_SetColor]](1, 255, 255, 255, 255);
+
+This line makes a normally colored sector (with a tag of 1) with maximum saturation. As seen in [[Void]], everything in the sector will appear to be black and white.
+
+Next, make a dummy sector using the same flats as the control sector, and use a Transfer Heights special. If you intend to color only the ceiling, make the floor much lower in the dummy sector (-1024 will do). If you intend to color only the floor, raise the ceiling. In most areas, 1024 or -1024 will do, but if the colored sector is particularly large, the height may need adjusting. If you intend to color both the floor and ceiling, leave the heights the same as the control sector.
+
+If you test the level now, you will see that the floor and ceiling will be colored according to how you set them up, but sprites in the sector will still change color and/or saturation. We will fix this next.
+
+Insert a self-referencing sector into the control sector, and shape it like the control sector (if done improperly, "bleeding" of the color may occur). Give it the same light level and heights as the sector, but make sure it has no sector tag. The sector should now refrain from changing the colors of any objects inside it.
+
+Example wads can be found [http://www.doomworld.com/idgames/index.php?id=12355 here].
+
+== See Also ==
+[[Tutorials]]
+
+[[category:Guides]]</text>
+    <sha1>nyy7fthegmp8b6xug7k5duwmhu26axm</sha1>
+  </revision>
+</page>

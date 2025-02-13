@@ -1,0 +1,158 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>Using user variables in ZScript</title>
+  <ns>0</ns>
+  <id>9540</id>
+  <revision>
+    <id>52424</id>
+    <parentid>52423</parentid>
+    <timestamp>2024-04-13T13:40:33Z</timestamp>
+    <contributor>
+      <username>Jekyll Grim Payne</username>
+      <id>2175</id>
+    </contributor>
+    <minor />
+    <comment>/* Full example */ More whitespace</comment>
+    <origin>52424</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="7317" sha1="2svemd8bvfnaryzj28x7zhxkc884xqv" xml:space="preserve">{{ZScriptNote}}
+{{Note|[[User variable|User variables in DECORATE]] DO NOT appear in the editor when defined, to make a configurable DECORATE actor, [[Making configurable actors in DECORATE|you need to use custom args]].}}
+
+''Guide written by [[User:inkoalawetrust|inkoalawetrust]]''
+
+User variables in ZScript are normal variables, but unlike standard variables, user variables can be changed from a level editor like [[Doom_Builder#Ultimate_Doom_Builder_.28UDB.29|UDB]] or [[SLADE]], allowing mappers to change the behaviour of actors without needing to ever touch the source code of the actor, or having to make multiple [[Using inheritance|inheriting]] subclasses with minor differences between each other.
+
+The example that will be used throughout this guide is a customizable Zombieman variant.
+
+__TOC__
+
+== Before starting ==
+
+Keep in mind that this guide will not cover how to use user variables in code, as they are identical to normal variables in usage, the guide only covers user variable-specific knowledge. Such as how to define them and give them default values.
+
+== Creating a user variable ==
+
+The process of creating a user variable in ZScript is the same as creating normal variables. To make a user variable, you simply have to give it the ''User_'' prefix like shown below:
+
+ {{color|blue|int}} bulletAmount; {{color|green|//Normal variable.}}
+
+ {{color|blue|int}} user_BulletAmount; {{color|green|//User variable.}}
+
+==== Supported user variable types ====
+
+* Integer (int)
+* Floating point (float)
+* Double-precision floating point (double)
+* Boolean (bool)
+* String (String)
+
+You can find more about all the supported ZScript variable types [[ZScript variables|here]].
+
+Note: Floats are the same as Doubles, and both show up as decimal types in the editor.
+
+== Setting a default value to a user variable ==
+
+To give a user variable a default value, in case none is set in the editor. You can set a default value to it in your actors' BeginPlay() or PostBeginPlay() [[ZScript_virtual_functions#Actor|virtuals]]. The values given inside of the virtuals can be overwritten by the editor. Below is an example of how to do this:
+&lt;syntaxhighlight lang="csharp"&gt;
+ 	override Void PostBeginPlay()
+ 	{
+ 		super.PostBeginPlay();
+ 		if (user_Firerate &lt;= 0) user_FireRate = 5;
+ 		if (user_BulletAmount &lt;= 0) bulletAmount = 5;
+ 	}
+&lt;/syntaxhighlight&gt;
+
+== Using user variables in the editor ==
+
+So, you have made your mega awesome actor that has user variables to be able to modify its behaviour, but where are the user variables even at ? Well, the user variables of an actor, if they have any, can be found in the "Custom" tab of the actors' "Edit Thing" window.
+
+[[File:User_variables_tab_new.png|The custom tab, with several user variables available.|none|frame]]
+
+Once you find them, you can change their values around to whatever you want, as long as it is the variables' data type, for example, you can't assign text/strings to an integer variable.
+
+==== Removing/Resetting user variable values ====
+
+To reset the value of a user variable back to nothing in the editor, you need to click on top of the variables' name or stated type, and press the Delete key, NOT backspace.
+
+[[File:User_variable_reset_area.png|none|frame|If you are not sure where that is, it's the area marked in red.]]
+
+== Tips ==
+
+* The contents of the Custom tab are updated only every time the Edit Thing window is opened again, so if you immediately place an actor with user variables in your map, or change the actor you've already placed to one which has some, and they don't appear in the Custom tab, just reopen the window and check again.
+* If you are using GZDoom Builder Bugfix, Boolean user variables will appear as integers due to a bug, you can still change them, to set it to true, just add any numerical value above 0, to set it back to false just change the value back to 0. This is not an issue in Ultimate Doom Builder, which has already fixed this bug.
+
+== Full example ==
+
+Below is an example of a Zombieman-derived actor with new custom behaviour, that uses multiple user variables to be able to modify said behaviour on a per-actor basis. It uses most of the information covered on this guide, and can be used a reference on how to use user variables and what they can be used for.
+
+ {{color|blue|class CustomizableZombieman}} : {{color|blue|Zombieman}}
+ {
+ 	{{color|blue|bool}} user_EnableBurstFire; {{comment|if true, the zombie will shoot in bursts.}}
+ 	{{color|blue|bool}} user_AvoidMelee; {{comment|Makes the zombie avoid melee, as he has no melee attack.}}
+ 	{{color|blue|int}} user_BulletAmount; {{comment|How many bullets to fire at every burst.}}
+ 	{{color|blue|int}} user_Firerate; {{comment|How fast each round is fired, in tics.}}
+ 	{{color|blue|int}} bulletAmount; {{comment|Counts down how many bullets have been fired.}}
+ 
+ 	{{color|blue|Default}}
+ 	{
+ 		{{color|darkgreen|&lt;i&gt;//[[Editor keys|$Title]] Former Human (Customizable)&lt;/i&gt;}}
+ 		{{color|darkgreen|&lt;i&gt;//$Category Monsters&lt;/i&gt;}}
+ 	}
+ 
+ 	{{color|blue|override void}} {{color|green|PostBeginPlay}}()
+ 	{
+ 		{{color|blue|super}}.{{color|green|PostBeginPlay}}();
+ 		{{color|blue|if}} (user_Firerate &lt;= {{color|blue|0}}) user_FireRate = {{color|blue|5}};
+ 		{{color|blue|if}} (user_BulletAmount &lt;= {{color|blue|0}}) bulletAmount = {{color|blue|5}};
+ 	}
+ 
+ 	{{color|blue|override void}} {{color|green|Tick}}()
+ 	{
+ 		{{color|blue|super}}.{{color|green|Tick}}();
+ 		bAvoidMelee = user_AvoidMelee; {{comment|Turn [[Actor flags#AVOIDMELEE|the eponymous flag]] on or off based on the user variables' value.}}
+ 	}
+ 
+ 	{{color|blue|States}}
+ 	{
+ 		Missile:
+ 			TNT1 A {{color|blue|0}} {{color|green|[[A_JumpIf]]}} (user_EnableBurstFire,{{color|green|"CustomMissile"}});
+ 			POSS E {{color|blue|10}} {{color|green|[[A_FaceTarget]]}};
+ 			POSS F {{color|blue|8}} {{color|green|[[A_PosAttack]]}};
+ 			POSS E {{color|blue|8}};
+ 			Goto See;
+ 		CustomMissile:
+ 			POSS E {{color|blue|10}}
+ 			{
+ 				tics = user_Firerate; {{comment|Yes, you can directly change how many tics a frame state lasts, but A_SetTics works too.}}
+ 				{{color|green|[[A_FaceTarget]]}}();
+ 			}
+ 			POSS F {{color|blue|8}}
+ 			{
+ 				tics = user_Firerate;
+ 				{{color|green|[[A_PosAttack]]}}();
+ 			}
+ 			POSS E {{color|blue|8}} {{color|green|[[A_SetTics]]}} (user_Firerate);
+ 			TNT1 A {{color|blue|0}}
+ 			{
+ 				{{comment|if the amount of rounds to fire is left to 0 or less, and the eponymous user variable is set to 1 or above.}}
+ 				if (bulletAmount &lt;= {{color|blue|0}} &amp;&amp; user_BulletAmount &gt;= {{color|blue|1}})
+ 				{
+ 					bulletAmount = user_BulletAmount;
+ 					{{color|blue|Return}} State ({{color|blue|Null}}); {{comment|Leave this state frame and go to the next state (Goto See;).}}
+ 				}
+ 				if (bulletAmount &lt;= {{color|blue|0}} &amp;&amp; user_BulletAmount &lt;= {{color|blue|0}}) {{comment|Default counter amount if no value is given.}}
+ 				{
+ 					bulletAmount = {{color|blue|5}};
+ 					{{color|blue|Return}} State ({{color|blue|Null}});
+ 				}
+ 				{{comment|If bulletAmount is still above 0.}}
+ 				bulletAmount--; {{comment|Decrement}}
+ 				{{color|blue|Return}} A_Jump ({{color|blue|256}},"CustomMissile"); {{comment|And jump back to the start of the state.}}
+ 			}
+ 			Goto See;
+ 	}
+ }
+[[Category:ZScript]] [[Category:ZScript_guides]] [[Category:Editing_concepts]]</text>
+    <sha1>2svemd8bvfnaryzj28x7zhxkc884xqv</sha1>
+  </revision>
+</page>

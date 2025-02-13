@@ -1,0 +1,48 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>Classes:RadSuit</title>
+  <ns>0</ns>
+  <id>2491</id>
+  <revision>
+    <id>39200</id>
+    <parentid>33875</parentid>
+    <timestamp>2015-04-27T17:31:43Z</timestamp>
+    <contributor>
+      <username>Blue Shadow</username>
+      <id>2021</id>
+    </contributor>
+    <minor />
+    <comment>/* DECORATE definition */ Updated</comment>
+    <origin>39200</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="1079" sha1="5rdb0p857lzci1jmnhxmvlcz30u7maj" xml:space="preserve">{{Actor|
+| type = Powerup
+| name = Radiation-shielding suit
+| class = RadSuit
+| game = Doom
+| doomednum = 2025
+| spawnid = 136
+| spawnname = T_IRONFEET 
+}}[[Classes]]: [[Classes:Inventory|Inventory]]&amp;rarr;[[Classes:PowerupGiver|PowerupGiver]]&amp;rarr;&lt;u&gt;RadSuit&lt;/u&gt;
+
+This is the radiation suit powerup from Doom and Doom 2.  It grants the wearer immunity from most damaging sector effects, but may randomly fail to prevent against injury from a sector effect that deals high damage (See [[Classes:PowerIronFeet]] for a full list of sector effects).  The user's screen is tinted green while the powerup is in effect. Effective for 1 minute (2100 tics).
+
+==== [[DECORATE]] definition ====
+ ACTOR &lt;u&gt;RadSuit&lt;/u&gt; : {{Class|PowerupGiver}}
+ {
+   {{Property|Height}} 46
+   +{{Flag|INVENTORY.AUTOACTIVATE}}
+   +{{Flag|INVENTORY.ALWAYSPICKUP}}
+   {{Property|Inventory.MaxAmount}} 0
+   {{Property|Inventory.PickupMessage}} "$GOTSUIT" // "Radiation Shielding Suit"
+   {{Property|Powerup.Type}} "{{Class|PowerIronFeet|IronFeet}}"
+   States
+   {
+   Spawn:
+     SUIT A -1 Bright
+     Stop
+   }
+ }</text>
+    <sha1>5rdb0p857lzci1jmnhxmvlcz30u7maj</sha1>
+  </revision>
+</page>

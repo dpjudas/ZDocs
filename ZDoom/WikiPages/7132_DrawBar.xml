@@ -1,0 +1,33 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>DrawBar</title>
+  <ns>0</ns>
+  <id>7132</id>
+  <revision>
+    <id>46709</id>
+    <parentid>38213</parentid>
+    <timestamp>2019-05-02T15:08:31Z</timestamp>
+    <contributor>
+      <username>Blue Shadow</username>
+      <id>2021</id>
+    </contributor>
+    <comment>Updated the exceptions list</comment>
+    <origin>46709</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="1865" sha1="fcxeyc9gpre6nepuir1yph2jrswv4m3" xml:space="preserve">{{sbarinfo|&lt;fgimage&gt;, &lt;bgimage&gt;, &lt;number&gt;, {horizontal{{!}}vertical}, [flags, ..., ] &lt;x&gt;, &lt;y&gt; [, &lt;border&gt;]}}
+{{warning|The border property is here so that the bar graphics from ''[[Hexen]]'' can be used as-is.  Using this property may cause numerous undesired side effects due the fact that it renders the foreground before the background.  If you are using a background image there is no reason you should ever have to use this property}}
+Draws a bar using a truncated form of {{c|fgimage}} over {{c|bgimage}} (or black if {{c|nullimage}} is used).  Both {{c|fgimage}} and {{c|bgimage}} must be the same size.  Number can be any of the values from [[DrawNumber]] with the exception of Accuracy, ArmorClass, Keys, Monsters, TotalItems, Score, Stamina, TotalSecrets, AmmoCapacity, Ammo1Capacity, Ammo2Capacity, GlobalVar, GlobalArray and IntCvar.
+
+If health or armor is used, you can optionally specify the maximum amount the player can hold:
+;{health|armor} (&lt;max&gt;):If provided with a number, this will be used for the maximum value.
+;{health|armor} (&lt;actorname&gt;):Indicates an {{Class|Inventory}} item which will represent the maximum quantity. The current amount in the player's inventory is used, not the item's {{property|Inventory.MaxAmount|MaxAmount}}, so you must make sure to give them the item in the correct amount. This method has the advantage of allowing the maximum value to change dynamically.
+;{health|armor} &lt;actorname&gt;:Behaves identically to the above, but it is recommended to use the new syntax.
+
+Flags are as follows:
+;reverse:Reverses the direction of the bar. The default direction for a horizontal bar is to left to right; and for vertical it is bottom to top as in ''Hexen''.
+;interpolate(&lt;speed&gt;):Interpolates the value drawn.
+
+If border is supplied then the specified amount of pixels on each side from the foreground will always be drawn.</text>
+    <sha1>fcxeyc9gpre6nepuir1yph2jrswv4m3</sha1>
+  </revision>
+</page>

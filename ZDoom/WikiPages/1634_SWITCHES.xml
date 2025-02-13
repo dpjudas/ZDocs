@@ -1,0 +1,71 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>SWITCHES</title>
+  <ns>0</ns>
+  <id>1634</id>
+  <revision>
+    <id>37521</id>
+    <parentid>34583</parentid>
+    <timestamp>2014-01-07T18:04:49Z</timestamp>
+    <contributor>
+      <username>Gez</username>
+      <id>1283</id>
+    </contributor>
+    <minor />
+    <origin>37521</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="2633" sha1="e0o3as5z17ajfqspkv0ck4laffkvufp" xml:space="preserve">{{doomwiki}}{{Warning|text=This page describes a feature created for Boom that is maintained in ZDoom for backwards-compatibility purposes only. It is not recommended that new projects make use of this feature. Everything that can be done with the SWITCHES lump can be done better and more easily by using [[ANIMDEFS]].}}
+
+The '''SWITCHES''' lump was originally [[Boom]]'s method of defining additional switches. Although some modern editors such as [[SLADE 3]] allow to create and edit this lump directly in binary form, the original method devised by [[TeamTNT]] involved creating a text file and converting it with a small utility called {{c|swantbls}} (''sw''itch and ''an''imation ''t''a''bl''e''s'').
+
+Contrarily to [[ANIMDEFS]], SWITCHES lumps are not cumulative. Only the last one loaded will be used.
+
+==Format==
+SWITCHES is a series of 20 byte entries:
+{| {{prettytable}}
+! Length !! Description 
+|-
+| 9 bytes || Null-terminated name of the "off" texture.
+|-
+| 9 bytes || Null-terminated name of the "on" texture.
+|-
+| valign="top"| 2 bytes || 16 bit int specifying which IWADs this switch works with:
+* 0: terminate SWITCHES list.
+* 1: Shareware.
+* 2: Shareware, [[Doom]].
+* 3: Shareware, Doom, [[Doom II]].
+|}
+The last entry, with a 0 in its final two bytes, is not used.
+
+If a switch is defined while its textures are not present, the [[vanilla Doom|vanilla]] engine will complain, which is why this tiered approach was adopted by [[id Software]] originally, and also why Doom II contains some identical switch definitions that are never used in its maps; they correspond to switches from Doom that were dummied out to prevent errors.
+== Swantbls syntax ==
+The {{c|swantbls}} tool converts a plain text file into an [[ANIMATED]] and SWITCHES lump. The format of the plain text file prior to conversion is as follows (quoth defswani.dat):
+
+ # This file is input for SWANTBLS.EXE, it specifies the switchnames
+ # and animated textures and flats usable with BOOM. The output of
+ # SWANTBLS is two lumps, SWITCHES.LMP and ANIMATED.LMP that should
+ # be inserted in the PWAD as lumps.
+ #
+ #switches usable with each IWAD, 1=SW, 2=registered DOOM, 3=DOOM2
+ [SWITCHES]
+ #epi    texture1        texture2
+ 1       SW1BRCOM        SW2BRCOM
+ ...
+
+ #animated flats, spd is number of frames between changes
+ [FLATS]
+ #spd    last        first
+ 8       NUKAGE3     NUKAGE1
+ ...
+
+ #animated textures, spd is number of frames between changes
+ [TEXTURES]
+ #spd    last        first
+ 8       BLODGR4     BLODGR1
+ ...
+== External links ==
+* {{idgames|id=9463||Boom editing utilities}}, including {{c|swantbls}}.
+[[category:Graphics lumps]]</text>
+    <sha1>e0o3as5z17ajfqspkv0ck4laffkvufp</sha1>
+  </revision>
+</page>

@@ -1,0 +1,95 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>Classes:Rebel</title>
+  <ns>0</ns>
+  <id>4600</id>
+  <revision>
+    <id>40521</id>
+    <parentid>35329</parentid>
+    <timestamp>2015-11-26T22:32:41Z</timestamp>
+    <contributor>
+      <username>Blue Shadow</username>
+      <id>2021</id>
+    </contributor>
+    <minor />
+    <comment>The beacon actually summons Rebel1; see [[A_Beacon]]</comment>
+    <origin>40521</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="1969" sha1="a4o2mp5khezfwr58q3q57dnyjm0m1ty" xml:space="preserve">{{Actor|
+| type = Monster
+| name = Rebel
+| class = Rebel
+| game = Strife
+}}[[Classes]]: [[Classes:StrifeHumanoid|StrifeHumanoid]]&amp;rarr;&lt;u&gt;Rebel&lt;/u&gt;&lt;br&gt;
+&amp;ensp;&amp;rarr;[[Classes:Rebel1|Rebel1]]&lt;br&gt;
+&amp;ensp;&amp;rarr;[[Classes:Rebel2|Rebel2]]&lt;br&gt;
+&amp;ensp;&amp;rarr;[[Classes:Rebel3|Rebel3]]&lt;br&gt;
+&amp;ensp;&amp;rarr;[[Classes:Rebel4|Rebel4]]&lt;br&gt;
+&amp;ensp;&amp;rarr;[[Classes:Rebel5|Rebel5]]&lt;br&gt;
+&amp;ensp;&amp;rarr;[[Classes:Rebel6|Rebel6]]&lt;br&gt;
+Soldiers of The Front, battling the oppressive Order. Similar to {{Class|Acolyte|acolytes}}, but faster and more fragile. They fight on the player's side.
+
+This particular actor is used as a base actor for the other rebel variants.
+==== [[DECORATE]] definition ====
+ ACTOR &lt;u&gt;Rebel&lt;/u&gt; : {{Class|StrifeHumanoid}}
+ {
+   {{Property|Health}} 60
+   {{Property|PainChance}} 250
+   {{Property|Speed}} 8
+   {{Property|Radius}} 20
+   {{Property|Height}} 56
+   {{Property|Monster}}
+   +{{Flag|FRIENDLY}}
+   -{{Flag|COUNTKILL}}
+   +{{Flag|NOSPLASHALERT}}
+   {{Property|MinMissileChance}} 150
+   {{Property|Tag}} "$TAG_REBEL" // "Rebel"
+   {{Property|SeeSound}} "rebel/sight"
+   {{Property|PainSound}} "rebel/pain"
+   {{Property|DeathSound}} "rebel/death"
+   {{Property|ActiveSound}} "rebel/active"
+   {{Property|Obituary}} "$OB_REBEL" // "%o was gunned down by a Rebel."
+   States
+   {
+   Spawn:
+     HMN1 P 5 [[A_Look2]]
+     Loop
+     HMN1 Q 8
+     Loop
+     HMN1 R 8
+     Loop
+     HMN1 ABCDABCD 6 [[A_Wander]]
+     Loop
+   See:
+     HMN1 AABBCCDD 3 [[A_Chase]]
+     Loop
+   Missile:
+     HMN1 E 10 [[A_FaceTarget]]
+     HMN1 F 10 Bright [[A_ShootGun]]
+     HMN1 E 10 [[A_ShootGun]]
+     Goto See
+   Pain:
+     HMN1 O 3
+     HMN1 O 3 [[A_Pain]]
+     Goto See
+   Death:
+     HMN1 G 5
+     HMN1 H 5 [[A_Scream]]
+     HMN1 I 3 [[A_NoBlocking]]
+     HMN1 J 4
+     HMN1 KLM 3
+     HMN1 N -1
+     Stop
+   XDeath:
+     RGIB A 4 [[A_TossGib]]
+     RGIB B 4 [[A_XScream]]
+     RGIB C 3 [[A_NoBlocking]]
+     RGIB DEF 3 [[A_TossGib]]
+     RGIB G 3
+     RGIB H 1400
+     Stop
+   }
+ }</text>
+    <sha1>a4o2mp5khezfwr58q3q57dnyjm0m1ty</sha1>
+  </revision>
+</page>

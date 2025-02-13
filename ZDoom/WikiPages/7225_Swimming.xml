@@ -1,0 +1,47 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>Swimming</title>
+  <ns>0</ns>
+  <id>7225</id>
+  <revision>
+    <id>50019</id>
+    <parentid>32935</parentid>
+    <timestamp>2023-01-02T19:35:57Z</timestamp>
+    <contributor>
+      <username>Inkoalawetrust</username>
+      <id>2604</id>
+    </contributor>
+    <comment>Add info about the WaterDepth variable.</comment>
+    <origin>50019</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="3361" sha1="ta8vqxpphtbdy1vvfobj3m81fo2uu9z" xml:space="preserve">{{doomwiki}}
+'''Swimming''' is a movement type similar to [[flight]] but restricted to [[deep water]] areas. Player movement behaves just as in flight: {{CCMD|P|+moveup}} and {{CCMD|P|+jump}} both propel the player upwards, {{CCMD|P|+movedown}} inversely propels the player downwards. Forward and backward movement likewise take [[free look]] view pitch into account, allowing to scale walls up and down quickly.
+
+The differences with flight is that the player is still subjected to [[gravity]] when idle. As long as the player is moving forward, backward, or sideways, gravity is not applied; however is the player remains motionless in water, gravity starts dragging the player pawn towards the depths. However, the speed increase from gravity is divided by 16 if the player is lightly submersed ({{c|waterlevel}} at 1), by 8 for deeper submersions ({{c|waterlevel}} at 2 or 3). Furthermore, the speed will not accelerate past one sixth of a map unit per [[tic]] for a corpse, and one half map unit per tic for non-corpse actors.
+
+Players swimming for too long risk [[drowning]], depending on the level's [[MAPINFO]] settings.
+
+== WaterLevel ==
+Each actor has a {{c|waterlevel}} variable that can be set at 0, 1, 2 or 3. This originates from [[Boom]] and is used to track immersion in [[deep water]] effects created through [[Transfer_Heights]], though [[ZDoom]] extended it to also work with [[3D floor]]s. This variable can be referenced in [[DECORATE expressions]] as well as in [[ACS]] with [[ACS actor properties|APROP_Waterlevel]].
+:'''0:''' Not submerged at all (e.g. standing on solid ground or on shallow [[TERRAIN]]-based water) 
+:'''1''': Less than half submerged ("ankle deep") 
+:'''2:''' At least half submerged ("waist deep") 
+:'''3:''' Entirely submerged (completely underwater)
+
+Water level is set to 3 if standing in an underwater sector (featuring a {{Class|WaterZone}}), if the water surface is above the top of the actor, or if the actor is a player and the water surface is above the {{Property|Player.ViewHeight|player's view height}}. (So a player that is not entirely submersed can still have {{c|waterlevel}} set to 3 if the player's [[camera]] is under water. This can become relevant as the default player view heights are generally below where it should be judging from the player sprites.) It is set to 2 if the water surface is not above the top of the actor, but still above half the actor's height. It is set to 1 if the water surface is not above half the actor's height, but still above the actor's foot level. Not that footclip from [[TERRAIN]] effects are not taken into account for this computation. Water level is set to 0 in all other cases.
+
+When a player's {{c|waterlevel}} is increased to 3, the "*dive" sound is played on the player pawn's VOICE channel. Inversely, if it is decreased from 3, the "*surface" sound is played, or the "*gasp" sound if the player was drowning before surfacing. If {{c|{{CVAR|S|snd_waterreverb}}}} is true, a [[REVERBS|underwater reverberation effect]] is automatically applied.
+
+== WaterDepth ==
+In addition to the simpler {{c|WaterLevel}} variable. Actors also have a {{c|WaterDepth}} variable, which returns the exact depth the actor is at in map units.
+
+==See also==
+*[[Deep water]]
+*[[3D floor]]
+*[[Transfer_Heights]]
+*{{Class|WaterZone}}
+
+[[Category:Features]][[Category:Glossary]]</text>
+    <sha1>ta8vqxpphtbdy1vvfobj3m81fo2uu9z</sha1>
+  </revision>
+</page>

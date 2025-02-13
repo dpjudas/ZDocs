@@ -1,0 +1,115 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>Classes:Railgun</title>
+  <ns>0</ns>
+  <id>4960</id>
+  <revision>
+    <id>21592</id>
+    <parentid>21589</parentid>
+    <timestamp>2009-05-03T13:02:34Z</timestamp>
+    <contributor>
+      <username>Gez</username>
+      <id>1283</id>
+    </contributor>
+    <minor />
+    <comment>grammar</comment>
+    <origin>21592</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="2384" sha1="qs19lhumtfl99524s8p7fc90rhlpd2c" xml:space="preserve">{{Actor|
+| type = Weapon
+| name = Railgun
+| class = Railgun
+| game = Skulltag
+| doomednum = 5012
+| spawnid = 164
+| spawnname = T_RAILGUN
+}}
+[[Classes]]: [[Classes:Inventory|Inventory]]&amp;rarr;[[Classes:Weapon|Weapon]]&amp;rarr;[[Classes:DoomWeapon|DoomWeapon]]&amp;rarr;&lt;u&gt;Railgun&lt;/u&gt;&lt;br /&gt;
+
+The Railgun is a highly accurate weapon, its shots can damage multiple monsters in a line. Uses plasma cells and shares slot 6 with the {{Class|PlasmaRifle|plasma rifle}}.
+==== [[DECORATE]] definition ====
+ ACTOR &lt;u&gt;Railgun&lt;/u&gt; : [[Classes:DoomWeapon|DoomWeapon]] 5012
+ {
+   SpawnID 164
+   Radius 20
+   Height 16
+   Weapon.Selectionorder 100
+   Weapon.AmmoUse 10
+   Weapon.AmmoGive 40
+   Weapon.AmmoType "[[Classes:Cell|Cell]]"
+   Weapon.SlotNumber 6 // This line isn't in skulltag.pk3, which instead defines the slot directly in {{Class|DoomPlayer}}
+   Inventory.Pickupmessage "$PICKUP_RAILGUN" // "You got the railgun!"
+   Obituary "$OB_RAILGUN" // "%o was railed by %k."
+   States
+   {
+   Ready:
+     RLGG A 1 [[A_WeaponReady]]
+     Loop
+   Deselect:
+     RLGG A 1 [[A_Lower]]
+     Loop
+   Select:
+     RLGG A 1 [[A_Raise]]
+     Loop
+   Fire:
+     RLGG E 12 [[A_FireRailgun]]
+     RLGG F 6 [[A_CheckForReload]](4, "Reloaded")
+     RLGG GHIJK 6
+     RLGG L 6 [[A_ResetReloadCounter]]
+   Reloaded:
+     RLGG A 6
+     RLGG M 0 [[A_ReFire]]
+     Goto Ready
+   Flash:
+     TNT1 A 5 bright [[A_Light1]]
+     TNT1 A 5 bright [[A_Light2]]
+     TNT1 A 0 bright [[A_Light0]]
+     Goto LightDone
+   Spawn:
+     RAIL A -1
+     Stop
+   }
+ }
+
+==== [[Skulltag]] [[DECORATE]] definition ====
+ ACTOR &lt;u&gt;Railgun&lt;/u&gt; : [[Classes:DoomWeapon|DoomWeapon]] 5012
+ {
+   SpawnID 164
+   Radius 20
+   Height 16
+   Weapon.Selectionorder 100
+   Weapon.AmmoUse 10
+   Weapon.AmmoGive 40
+   Weapon.AmmoType "[[Classes:Cell|Cell]]"
+   Inventory.Pickupmessage "$PICKUP_RAILGUN" // "You got the railgun!"
+   Obituary "$OB_RAILGUN" // "%o was railed by %k."
+   States
+   {
+   Ready:
+     RLGG A 1 [[A_WeaponReady]]
+     Loop
+   Deselect:
+     RLGG A 1 [[A_Lower]]
+     Loop
+   Select:
+     RLGG A 1 [[A_Raise]]
+     Loop
+   Fire:
+     RLGG E 12 [[A_FireRailgun]]
+     RLGG F 6 [[A_CheckRailReload]]
+     RLGG GHIJKLA 6
+     RLGG M 0 [[A_ReFire]]
+     Goto Ready
+   Flash:
+     TNT1 A 5 bright [[A_Light1]]
+     TNT1 A 5 bright [[A_Light2]]
+     TNT1 A 0 bright [[A_Light0]]
+     Goto LightDone
+   Spawn:
+     RAIL A -1
+     Stop
+   }
+ }</text>
+    <sha1>qs19lhumtfl99524s8p7fc90rhlpd2c</sha1>
+  </revision>
+</page>

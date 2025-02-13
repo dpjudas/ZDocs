@@ -1,0 +1,46 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>Classes:CentaurSword</title>
+  <ns>0</ns>
+  <id>4349</id>
+  <revision>
+    <id>34206</id>
+    <parentid>17817</parentid>
+    <timestamp>2012-09-05T00:02:02Z</timestamp>
+    <contributor>
+      <username>Blue Shadow</username>
+      <id>2021</id>
+    </contributor>
+    <minor />
+    <comment>/* DECORATE definition */</comment>
+    <origin>34206</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="577" sha1="hni41hy7xdtjde9fo3cx9f3jsm0tvqb" xml:space="preserve">{{Actor|
+| type = Gibs
+| name = Centaur sword
+| class = CentaurSword
+| game = Hexen
+}}[[Classes]]: &lt;u&gt;CentaurSword&lt;/u&gt;&lt;br&gt;
+
+A mundane sword, spawned when a [[Classes:Centaur|centaur]] or [[Classes:CentaurLeader|slaughtaur]] is gibbed. Your own weapons are better. And you can't pick it up anyway.
+==== [[DECORATE]] definition ====
+ ACTOR &lt;u&gt;CentaurSword&lt;/u&gt;
+ {
+   +{{Flag|DROPOFF}}
+   +{{Flag|CORPSE}}
+   +{{Flag|NOTELEPORT}}
+   States
+   {
+   Spawn:
+     CTDP KLMNOPQ 3
+     Goto Spawn+2
+   Crash:
+     CTDP R 4
+     CTDP S 4 [[A_QueueCorpse]]
+     CTDP T -1
+     Stop
+   }
+ }</text>
+    <sha1>hni41hy7xdtjde9fo3cx9f3jsm0tvqb</sha1>
+  </revision>
+</page>

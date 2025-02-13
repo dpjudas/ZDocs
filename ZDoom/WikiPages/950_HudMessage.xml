@@ -1,0 +1,252 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>HudMessage</title>
+  <ns>0</ns>
+  <id>950</id>
+  <revision>
+    <id>48530</id>
+    <parentid>46170</parentid>
+    <timestamp>2021-04-29T06:00:30Z</timestamp>
+    <contributor>
+      <username>Player701</username>
+      <id>1498</id>
+    </contributor>
+    <minor />
+    <comment>Fixed typo, see https://forum.zdoom.org/viewtopic.php?f=122&amp;t=72096</comment>
+    <origin>48530</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="14114" sha1="aty00w63dmrb0vmvl0uwcakvyar80yx" xml:space="preserve">void '''HudMessage''' (''text''; int ''type'', int ''id'', int ''color'', fixed ''x'', fixed ''y'', fixed ''holdTime'' [, fixed ''alpha'']); &lt;br&gt;
+void '''HudMessage''' (''text''; '''HUDMSG_FADEOUT''', int ''id'', int ''color'', fixed ''x'', fixed ''y'', fixed ''holdTime'', '''fixed ''fadetime''''' [, fixed ''alpha'']); &lt;br&gt;
+void '''HudMessage''' (''text''; '''HUDMSG_TYPEON''', int ''id'', int ''color'', fixed ''x'', fixed ''y'', fixed ''holdTime'', '''fixed ''typetime'', fixed ''fadetime''''' [, fixed ''alpha'']); &lt;br&gt;
+void '''HudMessage''' (''text''; '''HUDMSG_FADEINOUT''', int ''id'', int ''color'', fixed ''x'', fixed ''y'', fixed ''holdTime'', '''fixed ''inTime'', fixed ''outTime''''' [, fixed ''alpha'']); &lt;br&gt;
+&lt;br&gt;
+==Usage==
+
+Hudmessage works like [[Print]], except it offers more flexibility. The 'text' parameter is in the Print specification, as used with [[Print]] or [[PrintBold]]. A semicolon separates it from the rest of the function's parameters, because a print specification can build a big string from littler comma-separated parts.
+
+You can also use HudMessage together with [[SetFont]] to [[HudMessage#Displaying images|print images instead of text]].
+
+===Parameters===
+
+* ''Type'' 
+: The type of message to create. Currently, there are 4 different ways to display a message: {{c|HUDMSG_PLAIN}}, {{c|HUDMSG_FADEOUT}}, {{c|HUDMSG_TYPEON}} and {{c|HUDMSG_FADEINOUT}}. Messages types other than {{c|HUDMSG_PLAIN}} also take additional parameters, listed [[#Additional type parameters|below]]. Additionally you can use use various flags, listed [[#Type flags|below]].
+
+*''Id''
+: Id is an identifier for the message. If a message with a non-zero id is displayed, then another with that same id is displayed, the first message will be removed before displaying the second. This is usually used to remove hudmessages manually or "move" them around (using a script). Messages with lower ids will overlap those with higher ids. Negative Ids (-1, -2, -3, etc) will work as well. Acceptable values are '''-2147483648''' to '''2147483647'''.
+
+*''Color'' 
+: The color of the message text. There are a number of predefined colors, listed below.
+:{| {{prettytable}}
+! Color name !! Color !! !! Color name !! Color !! !! Color name !! Color !! Notes
+|-
+|{{color|#000000}} {{c|CR_BLACK}} || {{gradient|19, 19, 19|80, 80, 80}} || ||{{color|#800000}} {{c|CR_DARKRED}} || {{gradient|43, 0, 0|175, 43, 43}} || ||{{color|#FFAA00}} {{c|CR_ORANGE}} || {{gradient|32, 0, 0|255, 128, 0}} || rowspan="9" valign="top"| 
+* {{c|CR_YELLOW}} is meant to replicate the&lt;br/&gt;yellow font in ''[[Heretic]]'' and ''[[Hexen]]'', where&lt;br/&gt;letters have a gray border.
+* {{c|CR_GREY}} and {{c|CR_DARKGREY}} can be used&lt;br/&gt;instead of {{c|CR_GRAY}} and {{c|CR_DARKGRAY}}.
+* To use the font graphics' original colors,&lt;br/&gt;use {{c|CR_UNTRANSLATED}}.
+|-
+|{{color|#9999FF}} {{c|CR_BLUE}} || {{gradient|10, 0, 39|0, 0, 255}} || ||{{color|#D57604}} {{c|CR_FIRE}} || {{gradient|102, 0, 0|255, 255, 0}} || ||{{color|#9966CC}} {{c|CR_PURPLE}} || {{gradient|35, 0, 35|207, 0, 207}}
+|-
+|{{color|#CC3333}} {{c|CR_BRICK}} || {{gradient|71, 0, 0|255, 184, 184}} || ||{{color|#FFCC00}} {{c|CR_GOLD}} || {{gradient|115, 43, 0|255, 255, 115}} || ||{{color|#FF5566}} {{c|CR_RED}} || {{gradient|63, 0, 0|255, 0, 0}}
+|-
+|{{color|#996633}} {{c|CR_BROWN}} || {{gradient|83, 63, 47|191, 167, 143}} || ||{{color|#CCCCCC}} {{c|CR_GRAY}} || {{gradient|39, 39, 39|239, 239, 239}} || ||{{color|#506CFC}} {{c|CR_SAPPHIRE}} || {{gradient|0, 4, 104|80, 236, 252}}
+|-
+|{{color|#FFCC99}} {{c|CR_CREAM}} || {{gradient|207, 131, 83|255, 215, 187}} || ||{{color|#00CC00}} {{c|CR_GREEN}} || {{gradient|11, 23, 7|119, 255, 111}} || ||{{color|#D2B48C}} {{c|CR_TAN}} || {{gradient|51, 43, 19|255, 235, 223}}
+|-
+|{{color|#00DDDD}} {{c|CR_CYAN}} || {{gradient|0, 31, 31|0, 240, 240}} || ||{{color|#7C7C98}} {{c|CR_ICE}} || {{gradient|52, 52, 80|224, 224, 224}} || ||{{color|#236773}} {{c|CR_TEAL}} || {{gradient|0, 31, 31|123, 179, 195}}
+|-
+|{{color|#663333}} {{c|CR_DARKBROWN}} || {{gradient|31, 23, 11|163, 107, 63}} || ||{{color|#33EEFF}} {{c|CR_LIGHTBLUE}} || {{gradient|0, 0, 115|180, 180, 255}} || ||{{color|#DFDFDF}} {{c|CR_WHITE}} || {{gradient|36, 36, 36|255, 255, 255}}
+|-
+|{{color|#808080}} {{c|CR_DARKGRAY}} || {{gradient|35, 35, 35|139, 139, 139}} || ||{{color|#D1D8A8}} {{c|CR_OLIVE}} || {{gradient|47, 55, 31|123, 127, 80}} || ||{{color|#EEEE33}} {{c|CR_YELLOW}} || {{gradient|39, 39, 39|81, 81, 81|32}}{{gradient|120, 73, 24|243, 167, 24|71}}{{gradient|243, 168, 42|252, 208, 67|25}}
+|-
+|{{color|#008C00}} {{c|CR_DARKGREEN}} || {{gradient|11, 23, 7|67, 147, 55}} || || || ||
+|}
+:  You can also specify the color as a string (including custom colors defined in the [[TEXTCOLO|text colors]] lump); if you do so you must also add '''HUDMSG_COLORSTRING''' to the type with a binary OR ( '|' ). For example, if you define a color called 'NeonRainbowSmoothie', you could use it like this:
+:: &lt;tt&gt;hudmessage(s:"test"; HUDMSG_PLAIN | HUDMSG_COLORSTRING, 0, "NeonRainbowSmoothie", 0.5, 0.5, 1.0);&lt;/tt&gt;
+
+*''x'' and ''y''
+: The position of the hudmessage to be rendered on the screen in [[fixed point]] coordinates.
+:
+:
+:You can think of each message being inside a box. The difference between positive and negative values for these parameters is that positive values position the box the message is in on the screen, and negative values position the left/top edge of the box the message is in. 
+:
+ &lt;tt&gt;[0.0, 1.0]: Position between left and right edge valid box locations&lt;/tt&gt;
+ &lt;tt&gt;[-1.0, 0.0): Position between left and right edge of screen&lt;/tt&gt;
+ &lt;tt&gt;(1.0, 2.0]: Same as [0.0,1.0], but center each line inside box&lt;/tt&gt; 
+ &lt;tt&gt;[-2.0, -1.0): Same as [-1.0,0.0), but center each line inside box&lt;/tt&gt; 
+:
+:Valid values for y are:
+:
+ &lt;tt&gt;[ 0.0, 1.0]: Position between top and bottom of valid box locations&lt;/tt&gt;
+ &lt;tt&gt;[-1.0, 0.0): Position between top and bottom edge of screen&lt;/tt&gt;
+
+{{note|text=The coordinate meanings are changed completely after using the [[SetHudSize]] function.  Please see the [[SetHudSize#Coordinate_Behaviour|Coordinate Behavior]] section for instructions on how to position text messages and images after the hud size has been set.}}
+
+*''HoldTime''
+:How many seconds the message stays on screen in [[fixed point]]. Use a floating point number with a decimal to obey actual seconds. If using '''HUDMSG_PLAIN''', a HoldTime of 0 will cause the message to stay forever, or until the same ID is re-used. To get the shortest time possible for the message to stay on the screen (1 [[tic]]), use the formula 1.0 / 35 + 1 (or simply 1873 as an integer).
+
+*''Alpha'' 
+:Optionally, an ''alpha'' value can be specified for the message. This is a [[fixed point]] value ranging from 0 (totally invisible) to 1.0 (totally opaque), defaulting to 1.0 if omitted. Additionally, additive blending is possible by combining one of the four message types using the pipe character "|" with '''HUDMSG_ADDBLEND'''.
+:Note that to effectively use an alpha value, you need to explicitly add the '''HUDMSG_ALPHA''' flag. This is to preserve compatibility with mods predating the addition of the alpha feature but which mistakenly specified additional, then unused, parameters.
+
+===Additional type parameters===
+
+Note that you cannot specify an infinite (0) HoldTime when using any of these message types:
+
+*'''HUDMSG_FADEOUT'''
+:''..., fixed fadetime);''
+:
+:Fadetime is the time, in seconds, that the message takes to fade out after its holdtime is up. 
+
+*'''HUDMSG_TYPEON'''
+:''..., fixed typetime, fixed fadetime);''
+:
+:Typetime is the time, in seconds, that it takes each character of the message to appear on the screen. After every character has been "typed," the message waits for holdtime seconds and then fades out for fadetime seconds. 
+
+*'''HUDMSG_FADEINOUT'''
+:''..., fixed inTime, fixed outTime);''
+:
+:inTime is the time, in seconds, that the message takes to fade in. The message then stays for the duration of its holdTime, then fades out using the duration specified in outTime.
+
+===Type flags===
+The following can be used in conjunction with the other types and flags by using the pipe character "|".
+*'''HUDMSG_ADDBLEND''' 
+:The message is rendered with additive blending. This can be combined with an alpha value.
+
+*'''HUDMSG_LOG'''
+:The message is logged to the console.
+
+*'''HUDMSG_ALPHA''' 
+:The message uses the alpha parameter.
+
+*'''HUDMSG_NOWRAP''' 
+:Wrapping is disabled for this message.
+
+====Visibility flags====
+
+The following can be used in conjunction with one of the four message types above by using the pipe character "|" to determine whether the message is shown depending on the currently active view: 
+
+*'''HUDMSG_NOTWITH3DVIEW'''
+:This message does not appear when the 3D view is active.
+
+*'''HUDMSG_NOTWITHFULLMAP'''
+:This message does not appear when the fullscreen [[automap]] is active.
+
+*'''HUDMSG_NOTWITHOVERLAYMAP'''
+:This message does not appear when the overlay automap is active.
+
+These flags may be combined, so for example: '''HUDMSG_NOTWITHFULLMAP''' | '''HUDMSG_NOTWITHOVERLAYMAP''' would prevent the message from appearing if any form of automap is active.
+
+====HUD layers====
+
+The following can be used in conjunction with one of the four message types above by using the pipe character "|" to determine where the message is rendered when it comes to the [[HUD]] layers: 
+
+*'''HUDMSG_LAYER_OVERHUD'''
+:This is the default and standard behavior. The message appear on top of most HUD elements. This definition is only included for completeness' sake; you do not need to explicitly use it.
+
+*'''HUDMSG_LAYER_UNDERHUD'''
+:The message appears underneath other HUD elements, such as the status bar.
+
+*'''HUDMSG_LAYER_OVERMAP'''
+:The message appears on top of the fullscreen automap.&lt;br&gt;
+&lt;br&gt;
+Combining one of the above with type flags is possible. For instance, '''HUDMSG_NOTWITHFULLMAP''' | '''HUDMSG_NOTWITHOVERLAYMAP''' | '''HUDMSG_LAYER_UNDERHUD''' would render the message under the status bar and only when the 3D view is active.
+
+Note that these are not flags, thus can't be combined with each other, so for example '''HUDMSG_LAYER_UNDERHUD''' | '''HUDMSG_LAYER_OVERHUD''' is not valid.
+
+==Examples==
+
+====Examples of x and y positions====
+
+&lt;ul&gt;
+&lt;li&gt;(0.5,0.0) positions the message at the middle top of the screen. 
+
+&lt;li&gt;(0.0,0.5) positions the message at the middle left of the screen. 
+
+&lt;li&gt;(-0.25,0.0) positions the left edge of the message 1/4 of the way across the screen at the top. 
+
+&lt;li&gt;(1.5,0.5) centers the box on the screen, and also centers each line inside the box. 
+&lt;/ul&gt;
+
+====Example scripts====
+
+This script gives a goal using the standard large font which is seen for the level names. The goal tells the player to destroy a certain number of a certain object. The amount and object type are decided by the parameters to this script; so giving parameters 5 and 0 would tell the player to destroy 5 generators. The text types on to the screen and fades out, and also stays on the console.
+
+ str goals[3] = {"generators", "altars", "teleporters"};
+ 
+ script 10 (int amount, int goaltype)
+ {
+ 	[[SetFont]]("BIGFONT");
+ 	[[HudMessage]](s:"You must find ",
+ 		d:amount, s:" ", l:goals[goaltype],
+ 		s:"\nand destroy them.";
+ 		{{const|HUDMSG_TYPEON}} | {{const|HUDMSG_LOG}}, 0, {{const|CR_TAN}}, 1.5, 0.8, 5.0,
+ 		0.05, 2.0);
+ }
+
+This demonstrates that the message to display can be built of smaller strings and also variables. \n is the new-line character. [[SetFont]] is used to change the font.
+
+Another example is a damage counter, which stays on screen reporting the damage the player has until they are healed.
+
+ script 1 (void)
+ {
+ 	int health = [[GetActorProperty]](0, {{const|APROP_HEALTH}});
+ 	
+ 	while(health &lt; 100)
+ 	{
+ 		[[HudMessage]](s:"You have ",
+ 			d:(100 - health),
+ 			s:" damage!";
+ 		{{const|HUDMSG_PLAIN}}, 1, {{const|CR_RED}}, 0.1, 0.9, 1.0);
+ 		
+ 		[[Delay]](1);
+ 		
+ 		health = [[GetActorProperty]](0, {{const|APROP_HEALTH}});
+ 	}
+ 	
+ 	[[HudMessage]](s:"You are in good health.";
+ 		{{const|HUDMSG_PLAIN}}, 1, {{const|CR_RED}}, 0.1, 0.9, 5.0);
+ }
+
+First this sets the player's health to a variable and loops whilst the health is less than 100 (i.e. whilst they are damaged). The current damage is displayed, before a frame's delay and then checking the health again. After the player is healed (health == 100) the while loop exits and a final message reports that the player is healed.
+
+Note that the messages have an ID number of 1. If they were to lack an ID number, each health message would be written over the previous causing it to look very glitchy. The ID number prevents this from happening.
+
+An example of a moving text:
+
+ script 1 (void)
+ {
+    [[SetFont]]("BIGFONT");
+    
+    // Vary the x coordinate
+    for(int x = 0.0; x &lt; 0.5; x += 0.01)
+    {
+       // Show the message at our x coord
+       [[HudMessage]](s:"You got pommed\nby the appler";
+          0, 1, {{const|CR_TAN}}, x, 0.4, 2.0);
+       // Slight delay
+       [[Delay]](1);
+    }
+    
+    // Display the message once again at the final x coordinate
+    [[HudMessage]](s:"You got pommed\nby the appler";
+       0, 1, {{const|CR_TAN}}, x, 0.4, 2.0);
+ }
+
+This uses a for loop to change the value of x so that it scrolls across the screen. It starts at (0.0, 0.4) which means the text will be placed at the left hand edge, slightly above the center line. It finishes at (0.5, 0.4) which is just above the absolute center of the screen.
+
+====Displaying images====
+
+'''HudMessage''' can be used in conjunction with [[SetFont]] to display graphic lumps.  Pass the name of a graphic lump as a parameter of [[SetFont]], and use '''HudMessage''' with a capital 'A' to display the graphic. It is also worth noting that images displayed will scale if used in conjunction with [[SetHudSize]]. For instance, an image taken with dimensions 320 x 200 will be shrunk in half if [[SetHudSize]] is set to 640 x 400
+
+'''The image lump name must be 8 characters or less'''
+
+ script 02 (void)
+ {
+ 	[[SetFont]]("PICTURE");
+ 	[[HudMessage]](s:"A"; {{const|HUDMSG_PLAIN}}, 0, 0, 0.1, 0.8, 3.7);
+ }
+
+[[category:ACS HUD functions]]</text>
+    <sha1>aty00w63dmrb0vmvl0uwcakvyar80yx</sha1>
+  </revision>
+</page>

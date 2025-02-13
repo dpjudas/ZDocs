@@ -1,0 +1,72 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>Warp (ZScript)</title>
+  <ns>0</ns>
+  <id>9763</id>
+  <revision>
+    <id>51055</id>
+    <timestamp>2023-12-04T13:30:01Z</timestamp>
+    <contributor>
+      <username>Jekyll Grim Payne</username>
+      <id>2175</id>
+    </contributor>
+    <comment>Created page with "{{ZScriptNote}} {{note|Not to be confused with the [[ACS]] function [[Warp]].}} '''[[Classes:Actor|Actor]]'''  native bool '''Warp'''(Actor ''dest'', double ''xofs'' = 0, doub..."</comment>
+    <origin>51055</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="5227" sha1="qqcwj63rfynlv1tjlauaug61wpcewn9" xml:space="preserve">{{ZScriptNote}}
+{{note|Not to be confused with the [[ACS]] function [[Warp]].}}
+'''[[Classes:Actor|Actor]]'''
+
+native bool '''Warp'''(Actor ''dest'', double ''xofs'' = 0, double ''yofs'' = 0, double ''zofs'' = 0, double ''angle'' = 0, int ''flags'' = 0, double ''heightoffset'' = 0, double ''radiusoffset'' = 0, double ''pitch'' = 0)
+
+==Usage==
+Warps the calling actor (by default) to the specified actor pointer. Generally, functions exactly the same way as [[A_Warp]], but takes a [[Using pointers in ZScript|ZScript actor pointer]] rather than a DECORATE AAPTR* pointer. In contrast to [[A_Warp]], however, this cannot perform a state jump.
+
+Note, for simple warping using '''[[SetOrigin]]''' is generaly preferable; '''Warp''' is only really necessary if there's a need to add ''relative'' offsets to the warping position.
+
+===Parameters===
+*{{c|Actor '''dest'''}}
+:An actor pointer to warp the calling actor to.
+*{{c|double '''xofs'''}}
+:How far in front/behind of the &lt;code&gt;dest&lt;/code&gt; actor the warping actor will appear. Positive numbers move the offset point forward, negative move it backward.
+*{{c|double '''yofs'''}}
+:How far to the right/left of the &lt;code&gt;dest&lt;/code&gt; actor the warping actor will appear. Positive numbers move the offset point to the right, negative move it to the left.
+*{{c|double '''zofs'''}}
+:How far above/below the &lt;code&gt;dest&lt;/code&gt; actor the warping actor will appear. Positive numbers move the offset point up, negative move it down. Note that at 0 the warping actor will be placed at the bottom of the &lt;code&gt;dest&lt;/code&gt; actor.
+*{{c|double '''angle'''}}
+:Specifies how far the calling actor's angle will be offset from the &lt;code&gt;dest&lt;/code&gt; actor's angle. At the default value (0) the calling actor's angle will become equal to &lt;code&gt;dest&lt;/code&gt;'s angle. Positive values will offset the calling actor's angle to the right of &lt;code&gt;dest&lt;/code&gt;'s angle, negative will offset it to the left.
+*{{c|int '''flags'''}}
+:Flags that affect the behavior:
+:*{{c|WARPF_ABSOLUTEOFFSET}} — Makes &lt;code&gt;xofs&lt;/code&gt; and &lt;code&gt;yofs&lt;/code&gt; arguments function as absolute offsets along the X/Y axes of the map, ignoring the &lt;code&gt;dest&lt;/code&gt;'s angle.
+:*{{c|WARPF_ABSOLUTEANGLE}} — Use the angle parameter as an absolute value to set the actor's angle to, instead of an offset from &lt;code&gt;dest&lt;/code&gt;'s angle.
+:*{{c|WARPF_ABSOLUTEPOSITION}} — Treat &lt;code&gt;xofs&lt;/code&gt;/&lt;code&gt;yofs&lt;/code&gt;/&lt;code&gt;zofs&lt;/code&gt; arguments as absolute coordinates for the warping actor's position instead of being relative to the &lt;code&gt;dest&lt;/code&gt;'s position. This flag overrides WARPF_ABSOLUTEOFFSET, but can still add the z offset of floorz when used with WARPF_TOFLOOR.
+:*{{c|WARPF_USECALLERANGLE}} — Use the warping actor's angle instead of the warped-to actor's to calculate the &lt;code&gt;xofs&lt;/code&gt;/&lt;code&gt;yofs&lt;/code&gt; offsets. The &lt;code&gt;angle&lt;/code&gt; argument will instead add itself to the warping's angle and cause it to orbit around the &lt;code&gt;dest&lt;/code&gt; actor. The greater the &lt;code&gt;angle&lt;/code&gt; parameter, the faster it will orbit.
+:*{{c|WARPF_NOCHECKPOSITION}} — Blindly accept any resultant position, instead of checking for the warp being a valid movement.
+:*{{c|WARPF_STOP}} — Reduce warping actor's velocity to 0 when the move is completed, similar to [[A_Stop]].
+:*{{c|WARPF_TOFLOOR}} — Makes the &lt;code&gt;zofs&lt;/code&gt; parameter relative to the floor, rather than relative to the &lt;code&gt;dest&lt;/code&gt;'s Z position.
+:*{{c|WARPF_BOB}} — Makes the warping actor copy the &lt;code&gt;dest&lt;/code&gt;'s {{property|FloatBobPhase}} property. This is useful if the destination actor uses {{flag|FLOATBOB}}.
+:*{{c|WARPF_MOVEPTR}} — The &lt;code&gt;dest&lt;/code&gt; will warp to the calling actor rather than vice versa.
+:*{{c|WARPF_COPYVELOCITY}} — Copies the &lt;code&gt;dest&lt;/code&gt; actor's velocity exactly, regardless of how the warping actor is moving.
+:*{{c|WARPF_COPYPITCH}} — Copies the &lt;code&gt;dest&lt;/code&gt; actor's pitch, and then adds the &lt;code&gt;pitch&lt;/code&gt; parameter to it.
+
+:Flags to customize appearance of the warp:
+:*{{c|WARPF_INTERPOLATE}} — Keeps the warping actor's default interpolation data.
+:*{{c|WARPF_WARPINTERPOLATION}} — Modify interpolation data with the vector PlayerNewPosition - PlayerOldPosition. &lt;!-- TODO: what the hell? --&gt;
+:*{{c|WARPF_COPYINTERPOLATION}} — Copies the warped-to actor's interpolation data, allowing the warping actor to mimic it.
+*{{c|double '''heightoffset'''}}
+:Adds the warped-to actor's {{Property|Height|height}} multiplied by &lt;code&gt;heightoffset&lt;/code&gt; to the &lt;code&gt;zofs&lt;/code&gt; parameter. Default is 0.
+*{{c|double '''radiusoffset'''}}
+:Adds the warped-to actor's {{Property|Radius|radius}} multiplied by &lt;code&gt;radiusoffset&lt;/code&gt; to the &lt;code&gt;xofs&lt;/code&gt; and &lt;code&gt;yofs&lt;/code&gt; parameters. Default is 0.
+*{{c|double '''pitch'''}}
+:With {{c|WARPF_COPYPITCH}}, this parameter works exactly as &lt;code&gt;angle&lt;/code&gt;, but with pitch instead. Without {{c|WARPF_COPYPITCH}}, this parameter merely adds to the warping actor's pitch.
+
+===Return values===
+* '''bool''' — Returns &lt;code&gt;true&lt;/code&gt; if the warping succeeded. Warping may fail if the {{c|WARPF_NOCHECKPOSITION}} flag is ''not'' passed and there's no space for the warped actor to move.
+
+==Examples==
+{{noexamples}}
+
+[[Category:ZScript]]</text>
+    <sha1>qqcwj63rfynlv1tjlauaug61wpcewn9</sha1>
+  </revision>
+</page>

@@ -1,0 +1,71 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>Classes:Abaddon</title>
+  <ns>0</ns>
+  <id>5322</id>
+  <revision>
+    <id>31201</id>
+    <parentid>21509</parentid>
+    <timestamp>2011-08-27T05:48:08Z</timestamp>
+    <contributor>
+      <username>Hfc2x</username>
+      <id>1650</id>
+    </contributor>
+    <minor />
+    <origin>31201</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="1222" sha1="pii7544pl4gff4azd64fz4teqhemmwu" xml:space="preserve">{{Actor|
+| type = Monster
+| name = Abaddon
+| class = Abaddon
+| game = Skulltag
+| doomednum = 5015
+| spawnid = 220
+| spawnname = T_ABADDON
+}}
+[[Classes]]: {{Class|Cacodemon}}&amp;rarr;{{Class|Cacolantern}}&amp;rarr;&lt;u&gt;Abaddon&lt;/u&gt;&lt;br&gt;
+
+A dark {{Class|Cacodemon}}, even stronger than the {{Class|Cacolantern}}.
+==== [[DECORATE]] definition ====
+ ACTOR &lt;u&gt;Abaddon&lt;/u&gt; : {{Class|Cacolantern}} 5015
+ {
+   SpawnID 220
+   Health 1200
+   Speed 12
+   PainChance 40
+   Obituary "$OB_ABADDON" // "%o was smitten by an abaddon."
+   HitObituary "$OB_ABADDON_MELEE" // "%o became food for an abaddon."
+   States
+   {
+   Spawn:
+     HED3 A 10 [[A_Look]]
+     Loop
+   See:
+     HED3 A 3 [[A_Chase]]
+     Loop
+   Pain:
+     HED3 E 3
+     HED3 E 3 [[A_Pain]]
+     HED3 F 6
+     Goto See
+   Missile:
+     HED3 BC 5 [[A_FaceTarget]]
+     HED3 D 5 Bright [[A_BasicAttack]] (8, "None", "{{Class|AbaddonBall}}", 32)
+     HED3 BC 5 [[A_FaceTarget]]
+     HED3 D 5 Bright [[A_BasicAttack]] (8, "None", "{{Class|AbaddonBall}}", 32)
+     Goto See
+   Death:
+     HED3 G 8 [[A_NoBlocking]]
+     HED3 H 8 [[A_Scream]]
+     HED3 IJK 8
+     HED3 L -1 [[A_SetFloorClip]]
+     Stop
+   Raise:
+     HED3 L 8 [[A_UnSetFloorClip]]
+     HED3 KJIHG 8
+     Goto See
+   }
+ }</text>
+    <sha1>pii7544pl4gff4azd64fz4teqhemmwu</sha1>
+  </revision>
+</page>

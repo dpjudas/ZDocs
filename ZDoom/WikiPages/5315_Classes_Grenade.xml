@@ -1,0 +1,120 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>Classes:Grenade</title>
+  <ns>0</ns>
+  <id>5315</id>
+  <revision>
+    <id>52323</id>
+    <parentid>39282</parentid>
+    <timestamp>2024-04-09T15:08:14Z</timestamp>
+    <contributor>
+      <username>Jekyll Grim Payne</username>
+      <id>2175</id>
+    </contributor>
+    <origin>52323</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="2361" sha1="69r1fvn11ijk2awpst2hmrso8md34io" xml:space="preserve">{{Actor|
+| type = Explosive
+| name = Grenade
+| class = Grenade
+| game = ZDoom
+| spawnid = 216
+| spawnname = T_GRENADE
+}}[[Classes]]: &lt;u&gt;Grenade&lt;/u&gt;
+
+Bouncing projectile of the {{Class|GrenadeLauncher}}. Contrarily to most projectiles, it is affected by gravity. Previously a Skulltag-exclusive actor, it has been backported for compatibility in development versions as it is used for the default actor of [[A_FireSTGrenade]]. Sounds are not, however, included. Since {{plainlink|[http://zdoom.org/Changelog/1824/files r1824]}}, it also serves as a container for several MBF states related to grenades or explosion.
+
+== [[ZScript]] definition ==
+{{ZScriptDefinitionNote|actors/doom/weaponrlaunch.zs#L86}}
+&lt;syntaxhighlight lang="csharp"&gt;
+class Grenade : Actor
+{
+	Default
+	{
+		Radius 8;
+		Height 8;
+		Speed 25;
+		Damage 20;
+		Projectile;
+		-NOGRAVITY
+		+RANDOMIZE
+		+DEHEXPLOSION
+		+GRENADETRAIL
+		BounceType "Doom";
+		Gravity 0.25;
+		SeeSound "weapons/grenlf";
+		DeathSound "weapons/grenlx";
+		BounceSound "weapons/grbnce";
+		Obituary "$OB_GRENADE";
+		DamageType "Grenade";
+	}
+	States
+	{
+	Spawn:
+		SGRN A 1 Bright;
+		Loop;
+	Death:
+		MISL B 8 Bright A_Explode;
+		MISL C 6 Bright;
+		MISL D 4 Bright;
+		Stop;
+	Grenade:
+		MISL A 1000 A_Die;
+		Wait;
+	Detonate:
+		MISL B 4 A_Scream;
+		MISL C 6 A_Detonate;
+		MISL D 10;
+		Stop;
+	Mushroom:
+		MISL B 8 A_Mushroom;
+		Goto Death+1;
+	}
+}&lt;/syntaxhighlight&gt;
+
+== [[DECORATE]] definition ==
+{{DecorateDefinitionNote}}
+ ACTOR &lt;u&gt;Grenade&lt;/u&gt;
+ {
+   {{Property|Radius}} 8
+   {{Property|Height}} 8
+   {{Property|Speed}} 25
+   {{Property|Damage}} 20
+   {{Property|Projectile}}
+   -{{Flag|NOGRAVITY}}
+   +{{Flag|RANDOMIZE}}
+   +{{Flag|DEHEXPLOSION}}
+   +{{Flag|GRENADETRAIL}}
+   {{Property|BounceType}} "Doom"
+   {{Property|Gravity}} 0.25
+   {{Property|SeeSound}} "weapons/grenlf"
+   {{Property|DeathSound}} "weapons/grenlx"
+   {{Property|BounceSound}} "weapons/grbnce"
+   {{Property|Obituary}} "$OB_GRENADE" // "%o caught %k's grenade."
+   {{Property|DamageType}} Grenade
+   States
+   {
+   Spawn:
+     SGRN A 1 Bright
+     Loop
+   Death:
+     MISL B 8 Bright [[A_Explode]]
+     MISL C 6 Bright
+     MISL D 4 Bright
+     Stop
+   Grenade:
+     MISL A 1000 [[A_Die]]
+     Wait
+   Detonate:
+     MISL B 4 [[A_Scream]]
+     MISL C 6 [[A_Detonate]]
+     MISL D 10
+     Stop
+   Mushroom:
+     MISL B 8 [[A_Mushroom]]
+     Goto Death+1
+   }
+ }</text>
+    <sha1>69r1fvn11ijk2awpst2hmrso8md34io</sha1>
+  </revision>
+</page>

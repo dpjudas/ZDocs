@@ -1,0 +1,45 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>SetShade</title>
+  <ns>0</ns>
+  <id>9219</id>
+  <revision>
+    <id>54156</id>
+    <parentid>45673</parentid>
+    <timestamp>2025-01-29T11:28:00Z</timestamp>
+    <contributor>
+      <username>Inkoalawetrust</username>
+      <id>2604</id>
+    </contributor>
+    <minor />
+    <origin>54156</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="600" sha1="f7rqczq265frdu1xqsxmn9fz9w0ep4g" xml:space="preserve">void '''SetShade''' (color ''col'')
+
+==Usage==
+Sets the {{Property|StencilColor|stencil color}} of the actor.
+
+===Parameters===
+*''col'': The color to set. This can either be a name, like {{c|"Red"}} or a hexadecimal value, like {{c|"FF0000"}}.
+
+==Examples==
+This {{Class|cacodemon}} turns completely red upon death.
+ class Caco : Cacodemon
+ {
+     States
+     {
+     Death:
+         HEAD A 0
+         {
+             [[A_SetRenderStyle]](1.0, {{const|STYLE_Stencil}});
+             '''SetShade'''("FF0000");
+         }
+         Goto Super::Death;
+     }
+ }
+
+[[Category:DECORATE]]
+[[Category:ZScript]]</text>
+    <sha1>f7rqczq265frdu1xqsxmn9fz9w0ep4g</sha1>
+  </revision>
+</page>

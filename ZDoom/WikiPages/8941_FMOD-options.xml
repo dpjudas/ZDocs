@@ -1,0 +1,55 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>FMOD options</title>
+  <ns>0</ns>
+  <id>8941</id>
+  <revision>
+    <id>45237</id>
+    <parentid>43242</parentid>
+    <timestamp>2017-05-05T22:46:22Z</timestamp>
+    <contributor>
+      <username>Gez</username>
+      <id>1283</id>
+    </contributor>
+    <comment>mark as old, recat as old</comment>
+    <origin>45237</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="2564" sha1="aqtgm308bwv5pxkvztorcapevvhsmza" xml:space="preserve">{{Warning|Since GZDoom 3.0, FMOD Ex is no longer available. The following information apply only to old versions and are only kept for historical purposes.}}
+{{menutrail|Main menu|Options menu|Sound options}}
+The '''FMOD options''' menu allowed to change settings exclusive to the [[FMOD Ex]] sound backend. Its [[MENUDEF]] name is {{c|FMODSoundItems}}.
+
+*'''{{LE|Underwater cutoff}}''' (0&amp;mdash;2000, by 50 increments)
+:{{c|{{CVAR|S|snd_waterlp}}}}
+:Sets the underwater low-pass filter cutoff frequency. A value of zero disables the filter entirely.
+*'''{{LE|Output system}}''' (Default/&lt;system-dependent options&gt;/No sound)
+:{{c|{{CVAR|S|snd_output}}}}
+:A number of choices are available, many of which are system-dependent. System-dependent options include:
+:*MacOS: {{wp|Sound_Manager|Sound Manager}}/{{wp|Core_Audio|Core Audio}}
+:*Unix: {{wp|Open_Sound_System|OSS}}/{{wp|Advanced_Linux_Sound_Architecture|ALSA}}/{{wp|Simple_DirectMedia_Layer|SDL}}/{{wp|Enlightened_Sound_Daemon|ESD}}/{{wp|PulseAudio}}
+:*Windows: {{wp|DirectSound}}/{{wp|WASAPI}}/{{wp|Audio_Stream_Input/Output|ASIO}}/{{wp|Windows_3.0#Multimedia_Extensions|WaveOut}}
+:'''Note:''' PulseAudio support for Linux requires to be compiled with [[FMOD Ex]] 4.34 or later.
+*'''{{LE|Output format}}''' (8-bit/16-bit/24-bit/32-bit/32-bit floating point)
+:{{c|{{CVAR|S|snd_output_format}}}}
+:Selects which format is used to output the sound to the audio hardware.
+*'''{{LE|Speaker mode}}''' (Auto/Mono/Stereo/Dolby Prologic Decoder/Quad/5 speakers/5.1 speakers/7.1 speakers)
+:{{c|{{CVAR|S|snd_speakermode}}}}
+:Tells ZDoom how many speakers are available. The default choice is for autodetection. 
+*'''{{LE|Resampler}}''' (No interpolation/Linear/Cubic/Spline)
+:{{c|{{CVAR|S|snd_resampler}}}}
+:Selects how sounds are resampled to the global sample rate.
+*'''{{LE|HRTF filter}}''' (On/Off)
+:{{c|{{CVAR|S|snd_hrtf}}}}
+:Turns the {{wp|Head-related_transfer_function|head-related transfer function}} filter on or off.
+
+
+*'''{{LE|Buffer size|snd_buffersize}}''' (Default/64 samples/128 samples/256 samples/512 samples/1024 samples/2048 samples/4096 samples)
+:{{c|{{CVAR|S|snd_buffersize}}}}
+:Defines how many samples are buffered. If the sample rate is below 44100 Hz, long sound latencies may happen unless the buffer size is decreased. The default size corresponds to 1024 samples.
+*'''{{LE|Buffer count|snd_buffercount}}''' (2&amp;mdash;12 by 1 increments)
+:{{c|{{CVAR|S|snd_buffercount}}}}
+:Defines how many buffers are used. The default number corresponds to 4.
+
+[[Category:Documentation for removed features]]</text>
+    <sha1>aqtgm308bwv5pxkvztorcapevvhsmza</sha1>
+  </revision>
+</page>

@@ -1,0 +1,50 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>GetArmorInfo</title>
+  <ns>0</ns>
+  <id>7742</id>
+  <revision>
+    <id>44250</id>
+    <parentid>41027</parentid>
+    <timestamp>2017-03-20T13:11:46Z</timestamp>
+    <contributor>
+      <username>Gez</username>
+      <id>1283</id>
+    </contributor>
+    <minor />
+    <comment>removing "new" for GZDoom 2.4.0 release</comment>
+    <origin>44250</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="2036" sha1="jdd98qg8b9ndc9ql062ozs1enabdxve" xml:space="preserve">__NOTOC__
+str '''GetArmorInfo''' (int ''infotype'')&lt;br&gt;
+int '''GetArmorInfo''' (int ''infotype'')&lt;br&gt;
+fixed '''GetArmorInfo''' (int ''infotype'')&lt;br&gt;
+
+== Usage ==
+Retrieves the value of the specified ''infotype'' for the currently equipped armor. This function works on [[player]]s only.
+
+=== Parameters ===
+*''infotype'': the armor information to retrieve its value:
+**'''ARMORINFO_CLASSNAME'''
+::The class name of the armor. If the player has no armor, the class name will be {{c|None}}.
+:*'''ARMORINFO_SAVEAMOUNT'''
+::The {{Property|Armor.SaveAmount|save amount}} of the armor if the equipped armor is of the {{Class|BasicArmorPickup}} type, the {{Property|Armor.MaxSaveAmount|max save amount}} if it is of the {{Class|BasicArmorBonus}} type. Do note, however, that if the player is already equipped with some sort of armor, this value could change upon picking up BasicArmorBonus-derived items whose max save amount is higher than whatever value is currently stored for this info type; the higher of the two values will be the one used, and thus returned.
+:*'''ARMORINFO_ACTUALSAVEAMOUNT'''
+::The save amount of the armor if the equipped armor is of the BasicArmorPickup type, the max save amount if it is of the BasicArmorBonus type. Unlike SAVEAMOUNT above, picking up BasicArmorBonus-derived items on top of the current armor does not alter the value returned for this info type in any way.
+:*'''ARMORINFO_SAVEPERCENT'''
+::The {{Property|Armor.SavePercent|save percent}} of the armor.
+:*'''ARMORINFO_MAXABSORB'''
+::The {{Property|Armor.MaxAbsorb|max absorb}} of the armor.
+:*'''ARMORINFO_MAXFULLABSORB'''
+::The {{Property|Armor.MaxFullAbsorb|max full absorb}} of the armor.
+
+=== Return value ===
+Returns the stored value of the specified ''infotype''. For CLASSNAME, the value is returned as a string; for SAVEAMOUNT, ACTUALSAVEAMOUNT, MAXABSORB and MAXFULLABSORB, it is returned as an integer; and for SAVEPERCENT, it is returned as a [[fixed point]] value.
+
+== Examples ==
+
+{{noexamples}}
+[[category:ACS Information functions]]</text>
+    <sha1>jdd98qg8b9ndc9ql062ozs1enabdxve</sha1>
+  </revision>
+</page>

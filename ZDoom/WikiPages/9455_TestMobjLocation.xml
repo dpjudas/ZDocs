@@ -1,0 +1,75 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>TestMobjLocation</title>
+  <ns>0</ns>
+  <id>9455</id>
+  <revision>
+    <id>53694</id>
+    <parentid>53691</parentid>
+    <timestamp>2024-11-12T12:52:51Z</timestamp>
+    <contributor>
+      <username>Jekyll Grim Payne</username>
+      <id>2175</id>
+    </contributor>
+    <comment>/* Examples */</comment>
+    <origin>53694</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="2467" sha1="rbkt9p7xbqzrzqq8qxo3qt65383adpg" xml:space="preserve">{{ZScriptNote}}
+__NOTOC__
+
+'''{{class|Actor}}'''
+
+bool '''TestMobjLocation'''()
+
+== Usage ==
+Checks if the Actor is clipping into actors or geometry at its current position. This can be used to check if a newly spawned actor can actually fit in the place where it was spawned.
+
+Note, this function returns false only when the actor's position is overlapping geometry or other actors. For checking if an actor can ''move'' into a specified position, see '''[[CheckMove]]'''.
+
+{{warning|This function only checks if the actor's collision box ''overlaps'' another actor or level geometry. As a result, if the actor spawns fully in the void (beyond level boundaries) without actually colliding with another actor or geometry, this function will return &lt;code&gt;true&lt;/code&gt;. To fully check if a specific actor position is "valid" (i.e. the actor is not colliding with others ''and'' is within the map), you also need to use [[Structs:LevelLocals#IsPointInLevel|'''level.IsPointInLevel''']].}}
+
+=== Return value ===
+*bool - returns &lt;code&gt;true&lt;/code&gt; if the calling actor has enough space. If the actor is clipping into other actors or geometry, returns &lt;code&gt;false&lt;/code&gt;.
+
+== Examples ==
+This function will spawn a specified monster in front of the calling actor (at the specified distance). If there's no space for the spawned monster, it'll be destroyed and the function will shift the spawn point around the calling actor until it finds a suitable position:
+&lt;syntaxhighlight lang="csharp"&gt;
+void SpawnFriendAround(class&lt;Actor&gt; cls, double distance = 128)
+{
+	// If the spawn position is not valid, we'll rotate
+	// it by 20 degrees until we can't find a suitable one, 
+	// or we finish a full circle:
+	for (double ang = 0; ang &lt; 360; ang += 20)
+	{
+		// Get an offset and rotate it to match the calling actor's
+		// facing direction:
+		Vector2 dir = AngleToVector(self.angle + ang, distance); 
+		// Add it to the actor's current position:
+		Vector3 ppos = Vec3Offset(dir.x, dir.y, 0);
+		// Check if the position is in the void:
+		if (level.IsPointInLevel(ppos) == false)
+		{
+			continue; //in the void - go to next attempt
+		}
+		let mo = Spawn(cls, ppos);
+		if (mo.TestMobjLocation() == true)
+		{
+			break; //success - stop here
+		}
+		else
+		{
+			mo.Destroy(); //didn't fit - destroy the actor
+		}
+	}
+}
+&lt;/syntaxhighlight&gt;
+
+See also [[AngleToVector]], [[Vec3Offset]], [[Structs:LevelLocals#IsPointInLevel|IsPointInLevel]].
+
+== See also ==
+* [[CheckMove]]
+
+[[Category:ZScript]]</text>
+    <sha1>rbkt9p7xbqzrzqq8qxo3qt65383adpg</sha1>
+  </revision>
+</page>

@@ -1,0 +1,81 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>Classes:PowerMorph</title>
+  <ns>0</ns>
+  <id>3617</id>
+  <revision>
+    <id>38166</id>
+    <parentid>38165</parentid>
+    <timestamp>2014-08-20T15:49:04Z</timestamp>
+    <contributor>
+      <username>Hellser</username>
+      <id>1914</id>
+    </contributor>
+    <comment>Removed example link (doesn't work) and has unnecessary text.</comment>
+    <origin>38166</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="2917" sha1="l2w0cyujm0ya90m0os308o29mrfm5wu" xml:space="preserve">{{actor|
+| type = Power
+| name = Transformation power
+| class = PowerMorph
+}}[[Classes]]: [[Classes:Inventory|Inventory]]&amp;rarr;[[Classes:Powerup|Powerup]]&amp;rarr;&lt;u&gt;PowerMorph&lt;/u&gt; &lt;br&gt;
+&amp;ensp;&amp;ensp; [[Hierarchical class list|(more)]]
+
+&lt;u&gt;PowerMorph&lt;/u&gt; is an internal class. An item of this class is placed in the player's inventory while the Morph powerup is effective. When the power is initially given, the player will be morphed into another [[Classes:PlayerPawn|player class]] and will stay that way until the power expires, upon which they will unmorph back into whatever [[Classes:PlayerPawn|player class]] they started out as. This power makes the morphing effect available as a power instead of a curse.
+
+
+==== Using in [[DECORATE]] ====
+The &lt;u&gt;PowerMorph&lt;/u&gt; base class defines the same special properties as the [[Classes:MorphProjectile|MorphProjectile]] class, except for the ''MonsterClass'' property, which doesn't apply to players and the ''Duration'' property, which for powerups is set via the associated [[Classes:PowerupGiver|powerup giver]]. They are summarised here; for full details and additional notes, please refer to the [[Classes:MorphProjectile|MorphProjectile]] class.
+
+:*'''PowerMorph.PlayerClass''' ''classname''
+::Defines what class to morph the player into.
+:*'''PowerMorph.MorphStyle''' ''flags''
+::Defines the behaviour of the morphing effects.
+:*'''PowerMorph.MorphFlash''' ''classname''
+::Defines the effect flash actor to spawn when the player morphs. If omitted, the game's default teleport fog is used.
+:*'''PowerMorph.UnMorphFlash''' ''classname''
+::Defines the effect flash actor to spawn when the player unmorphs. If omitted, the game's default teleport fog is used
+
+'''Example:'''
+
+The example below defines a Morph item that, when activated, turns you into another actor for two minutes; it is modeled after the [[Classes:ArtiPork|Porkelator]].
+
+ ACTOR Kittylator : PowerupGiver 666
+ {
+  ....
+  Inventory.PickupMessage "Thou possesseth the Kittylator!!"  
+  Inventory.PickupSound "world/thunder"
+  ....
+  Powerup.Type Kitty 
+  Powerup.Duration 4200// about 120 seconds
+  +COUNTITEM
+  +FLOATBOB
+  -INVENTORY.AUTOACTIVATE
+  -INVENTORY.ALWAYSPICKUP
+  States
+  {
+   Spawn:
+    KITT A 12
+     ....
+     Loop
+  }
+ }
+
+ ACTOR PowerKitty : PowerMorph
+ {
+  PowerMorph.PlayerClass "LargeBlackCat"
+  PowerMorph.MorphStyle (MRF_FULLHEALTH|MRF_ADDSTAMINA)
+ }
+
+'''Notes:'''
+
+Customisable pickup and weapon switching for morphed players and things like that are being considered on the "to do" list, but may not be possible until DoomScript. You can give a morphed class the +PICKUP actor flag, but this causes a lot of trouble with weapon switching; for full details and additional notes, please refer to the [[Classes:MorphProjectile|MorphProjectile]] class.
+
+==== [[DECORATE]] definition ====
+ ACTOR &lt;u&gt;PowerMorph&lt;/u&gt; : {{Class|Powerup}} native
+ {
+   {{Property|Powerup.Duration}} -40
+ }</text>
+    <sha1>l2w0cyujm0ya90m0os308o29mrfm5wu</sha1>
+  </revision>
+</page>

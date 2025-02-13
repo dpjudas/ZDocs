@@ -1,0 +1,70 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>A JumpIfArmorType</title>
+  <ns>0</ns>
+  <id>5393</id>
+  <revision>
+    <id>42385</id>
+    <parentid>42316</parentid>
+    <timestamp>2016-02-25T18:27:45Z</timestamp>
+    <contributor>
+      <username>Marisa Heit</username>
+      <id>5</id>
+    </contributor>
+    <comment>Add return type</comment>
+    <origin>42385</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="1656" sha1="eg9kf04bwo01bvt9ls2rwng2gtuekb1" xml:space="preserve">{{DISPLAYTITLE:A_JumpIfArmorType}}
+state '''A_JumpIfArmorType''' (string "''armortype''", str "''state''"[, int ''minimum''])
+{{JumpNotice}}
+Checks whether the equipped armor in the actor's inventory is of ''armortype''. If so, the jump is performed. Optionally, a ''minimum'' value can be given, the jump will then be performed only if the armor is of that type and with at least that amount of points.
+
+== Examples ==
+This custom {{Class|ArmorBonus|armor bonus}} can only be picked up if the player has the {{Class|BlueArmor|blue armor}} equipped.
+
+ ACTOR CustomArmorBonus1 : {{Class|CustomInventory}}
+ {
+   {{property|Inventory.PickupMessage}} "$GOTARMBONUS"
+   States
+   {
+   Spawn:
+     BON2 ABCDCB 6
+     Loop
+   Pickup:
+     TNT1 A 0 [[A_JumpIfArmorType]]("{{Class|BlueArmor}}", "GiveArmorBonus")
+     Fail
+   GiveArmorBonus:
+     TNT1 A 0 [[A_GiveInventory]]("{{Class|ArmorBonus}}", 1)
+     Stop
+   }
+ }
+
+== ==
+This armor shard item can only be picked up if the player has the {{Class|GreenArmor|green armor}} equipped and less than 100 points of armor at the same time.
+
+ ACTOR ArmorShard : {{Class|CustomInventory}}
+ {
+   {{property|Inventory.PickupMessage}} "Picked up an armor shard."
+   States
+   {
+   Spawn:
+     BON2 A 6
+     BON2 D 6 Bright
+     Loop
+   Pickup:
+     TNT1 A 0 [[A_JumpIfArmorType]]("{{Class|GreenArmor}}", "NoPickup", 100)
+     TNT1 A 0 [[A_JumpIfArmorType]]("{{Class|GreenArmor}}", "GiveArmorBonus")
+     Fail
+   NoPickup:
+     TNT1 A 0
+     Fail
+   GiveArmorBonus:
+     TNT1 A 0 [[A_GiveInventory]]("{{Class|ArmorBonus}}", 1)
+     Stop
+   }
+ }
+
+[[category:Decorate Jump functions|ArmorType]]{{DEFAULTSORT:JumpIfArmorType}}</text>
+    <sha1>eg9kf04bwo01bvt9ls2rwng2gtuekb1</sha1>
+  </revision>
+</page>

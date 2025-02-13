@@ -1,0 +1,56 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>Classes:StaffPowered</title>
+  <ns>0</ns>
+  <id>4216</id>
+  <revision>
+    <id>39390</id>
+    <parentid>34106</parentid>
+    <timestamp>2015-04-29T17:49:06Z</timestamp>
+    <contributor>
+      <username>Blue Shadow</username>
+      <id>2021</id>
+    </contributor>
+    <minor />
+    <comment>/* DECORATE definition */ Updated</comment>
+    <origin>39390</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="1147" sha1="a51sn42emrvkn23fobvr47c6nrv3opx" xml:space="preserve">{{Actor|
+| type = Weapon
+| name = Tomed staff
+| class = StaffPowered
+| game = Heretic
+}}[[Classes]]: [[Classes:Inventory|Inventory]]&amp;rarr;[[Classes:Weapon|Weapon]]&amp;rarr;[[Classes:HereticWeapon|HereticWeapon]]&amp;rarr;[[Classes:Staff|Staff]]&amp;rarr;&lt;u&gt;StaffPowered&lt;/u&gt;&lt;br&gt;
+[[Classes:HereticPlayer|Corvus]]'s staff under the influence of the [[Classes:ArtiTomeOfPower|tome of power]]. Still useless against ghosts.
+
+==== [[DECORATE]] definition ====
+ ACTOR &lt;u&gt;StaffPowered&lt;/u&gt; : {{Class|Staff}}
+ {
+   {{Property|Weapon.SisterWeapon}} "{{Class|Staff}}"
+   {{Property|Weapon.ReadySound}} "weapons/staffcrackle"
+   +{{Flag|WEAPON.POWERED_UP}}
+   +{{Flag|WEAPON.READYSNDHALF}}
+   +{{Flag|WEAPON.STAFF2_KICKBACK}}
+   {{Property|Obituary}} "$OB_MPPSTAFF"
+   {{Property|Tag}} "$TAG_STAFFP"
+   States
+   {
+   Ready:
+     STFF DEF 4 [[A_WeaponReady]]
+     Loop
+   Deselect:
+     STFF D 1 [[A_Lower]]
+     Loop
+   Select:
+     STFF D 1 [[A_Raise]]
+     Loop
+   Fire:
+     STFF G 6
+     STFF H 8 [[A_StaffAttack]]([[DECORATE_expressions#Mathematical_functions|random]][StaffAttack](18, 81), "{{Class|StaffPuff2}}")
+     STFF G 8 [[A_ReFire]]
+     Goto Ready
+   }
+ }</text>
+    <sha1>a51sn42emrvkn23fobvr47c6nrv3opx</sha1>
+  </revision>
+</page>

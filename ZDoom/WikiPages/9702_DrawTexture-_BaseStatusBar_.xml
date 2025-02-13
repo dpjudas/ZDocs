@@ -1,0 +1,59 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>DrawTexture (BaseStatusBar)</title>
+  <ns>0</ns>
+  <id>9702</id>
+  <revision>
+    <id>53248</id>
+    <parentid>52605</parentid>
+    <timestamp>2024-10-07T22:21:16Z</timestamp>
+    <contributor>
+      <username>Jekyll Grim Payne</username>
+      <id>2175</id>
+    </contributor>
+    <comment>/* Example */</comment>
+    <origin>53248</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="1857" sha1="p1psemukfe7n90gkpyt8bcn2vko7rgc" xml:space="preserve">{{note|This function is for the {{class|BaseStatusBar}} class. For the {{struct|Screen}} function of the same name see '''[[DrawTexture]]'''.}}
+
+[[Classes:BaseStatusBar|'''BaseStatusBar''']]
+
+void '''DrawTexture'''(TextureID ''texture'', Vector2 ''pos'', int ''flags'' = 0, double ''Alpha'' = 1., Vector2 ''box'' = (-1, -1), Vector2 ''scale'' = (1, 1), ERenderStyle ''style'' = STYLE_Translucent, Color ''col'' = 0xffffffff, int ''translation'' = 0, double ''clipwidth'' = -1)
+
+==Usage==
+Can be used in a [[Classes:BaseStatusBar|HUD]] to draw an image. The {{c|texture}} argument takes a [[Structs:TextureID|TextureID]].
+
+===Parameters===
+*TextureID '''texture'''
+:A TextureID pointing to an image. Any type of graphic can be used here (sprites, textures, graphics, [[ANIMDEFS]] definitions, [[TEXTURES]] definitions, etc.), as long as you obtain the ID of that graphic using &lt;code&gt;TexMan.CheckForTexture("imagename")&lt;/code&gt;. See the [[Structs:TexMan|TexMan struct page]] for details.
+:Note, it is possible to use a full file path in the '''CheckForTexture()''' call, for example: &lt;code&gt;TexMan.CheckForTexture("graphics/hud/helmet_outline.png")&lt;/code&gt;
+{{: BaseStatusBar position argument}}
+{{: BaseStatusBar image function arguments}}
+
+== Example ==
+An extremely simple HUD that draws the icon of the currently selected {{class|weapon}} (if any) in the bottom right corner (only if the HUD is in fullscreen mode):
+&lt;syntaxhighlight lang="csharp"&gt;
+class CustomStatusBar : BaseStatusBar
+{
+	override void Draw(int state, double TicFrac)
+	{
+		Super.Draw(state, TicFrac);
+
+		if (state == HUD_Fullscreen)
+		{
+			BeginHUD();
+			Weapon readyweapon = CPlayer.readyweapon;
+			if (readyweapon)
+			{
+				DrawInventoryIcon(readyweapon, (0, 0), DI_SCREEN_RIGHT_BOTTOM|DI_ITEM_RIGHT_BOTTOM);
+			}
+		}
+	}
+}
+&lt;/syntaxhighlight&gt;
+
+[[Category:ZScript]]
+[[Category:BaseStatusBar]]</text>
+    <sha1>p1psemukfe7n90gkpyt8bcn2vko7rgc</sha1>
+  </revision>
+</page>

@@ -1,0 +1,59 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>Classes:PunchDagger</title>
+  <ns>0</ns>
+  <id>4781</id>
+  <revision>
+    <id>40874</id>
+    <parentid>40130</parentid>
+    <timestamp>2016-02-06T06:43:44Z</timestamp>
+    <contributor>
+      <username>Jpalomo</username>
+      <id>1715</id>
+    </contributor>
+    <origin>40874</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="1313" sha1="sh4fhks2se5siecc0wcmx9l21d8x1xl" xml:space="preserve">{{Actor|
+| type = Weapon
+| name = Punch dagger
+| class = PunchDagger
+| game = Strife
+}}[[Classes]]: [[Classes:Inventory|Inventory]]&amp;rarr;[[Classes:Weapon|Weapon]]&amp;rarr;[[Classes:StrifeWeapon|StrifeWeapon]]&amp;rarr;&lt;u&gt;PunchDagger&lt;/u&gt;&lt;br&gt;
+
+The [[Classes:StrifePlayer|Strife Rebel's]] default weapon. This weapon is generally similar to the Doom fist, with the exception that [[Classes:UpgradeStamina|Stamina Upgrades]] increase the damage dealt. One side effect of this function is that the attacked actor will always be placed, unconditionally, into its pain state if it has one.
+
+If the target has a Pain.Dagger state, it will go to this one preferentially to the normal Pain state.
+
+==== [[DECORATE]] definition ====
+ ACTOR &lt;u&gt;PunchDagger&lt;/u&gt; : {{Class|StrifeWeapon}}
+ {
+   {{Property|Weapon.SelectionOrder}} 3900
+   +{{Flag|WEAPON.NOALERT}}
+   {{Property|Obituary}} "$OB_MPPUNCHDAGGER" // "%o was unwittingly backstabbed by %k."
+   {{Property|Tag}} "$TAG_PUNCHDAGGER" // "Dagger"
+ 
+   action native [[A_JabDagger]]();
+ 
+   States
+   {
+   Ready:
+     PNCH A 1 [[A_WeaponReady]]
+     Loop
+   Deselect:
+     PNCH A 1 [[A_Lower]]
+     Loop
+   Select:
+     PNCH A 1 [[A_Raise]]
+     Loop
+   Fire:
+     PNCH B 4
+     PNCH C 4 [[A_JabDagger]]
+     PNCH D 5
+     PNCH C 4
+     PNCH B 5 [[A_ReFire]]
+     Goto Ready
+   }
+ }</text>
+    <sha1>sh4fhks2se5siecc0wcmx9l21d8x1xl</sha1>
+  </revision>
+</page>

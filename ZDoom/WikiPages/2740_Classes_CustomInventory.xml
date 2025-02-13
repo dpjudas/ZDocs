@@ -1,0 +1,151 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>Classes:CustomInventory</title>
+  <ns>0</ns>
+  <id>2740</id>
+  <revision>
+    <id>53783</id>
+    <parentid>50897</parentid>
+    <timestamp>2024-11-19T10:59:20Z</timestamp>
+    <contributor>
+      <username>Jekyll Grim Payne</username>
+      <id>2175</id>
+    </contributor>
+    <minor />
+    <origin>53783</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="7969" sha1="48d5yjiu1n7gmr9nqhgl140ht0u2h2b" xml:space="preserve">{{Actor|
+| type = Internal
+| name = Custom inventory
+| class = CustomInventory
+}}[[Classes]]: [[Classes:Inventory|Inventory]]&amp;rarr;[[Classes:StateProvider|StateProvider]]&amp;rarr;&lt;u&gt;CustomInventory&lt;/u&gt;&lt;br&gt;
+&amp;ensp;&amp;rarr;[[Classes:ArtiBoostMana|ArtiBoostMana]]&lt;br&gt;
+&amp;ensp;&amp;rarr;[[Classes:ArtiEgg|ArtiEgg]]&lt;br&gt;
+&amp;ensp;&amp;rarr;[[Classes:ArtiPork|ArtiPork]]&lt;br&gt;
+&amp;ensp;&amp;rarr;[[Classes:Berserk|Berserk]]&lt;br&gt;
+&amp;ensp;&amp;rarr;[[Classes:Mana3|Mana3]]&lt;br&gt;
+&amp;ensp;&amp;rarr;[[Classes:Megasphere|Megasphere]]&lt;br&gt;
+
+'''CustomInventory''' items are special items that allow some very primitive scripted functionality using its states. The base class CustomInventory is never used directly. It is always the base class for items defined in [[DECORATE]].&lt;br&gt;
+
+'''Note:''' This class is unnecessary in ZScript outside of very specific use cases, like drawing [[Classes:PSprite|Psprite]] layers outside of a [[Classes:Weapon|weapon]]. Custom inventory items in ZScript should instead inherit from [[Classes:Inventory|Inventory]] or one of its other subclasses, and override its virtual functions. CustomInventory was created as a way to work around the lack of a scripting language before ZScript existed, and is full of idiosyncrasies that one must be aware of when using it.
+
+=== [[ZScript]] definition ===
+{{ZScriptDefinitionNote|https://github.com/ZDoom/gzdoom/blob/4d88e82e32ac2ccf876903dd122e85195fdaa0da/wadsrc/static/zscript/actors/inventory/stateprovider.zs#L453}}
+&lt;syntaxhighlight lang="csharp"&gt;
+class CustomInventory : StateProvider
+{
+	Default
+	{
+		DefaultStateUsage SUF_ACTOR|SUF_OVERLAY|SUF_ITEM;
+	}
+	
+	//---------------------------------------------------------------------------
+	//
+	//
+	//---------------------------------------------------------------------------
+
+	// This is only here, because these functions were originally exported on Inventory, despite only working for weapons, so this is here to satisfy some potential old mods having called it through CustomInventory.
+	deprecated("2.3", "must be called from Weapon") action void A_GunFlash(statelabel flash = null, int flags = 0) {}
+	deprecated("2.3", "must be called from Weapon") action void A_Lower() {}
+	deprecated("2.3", "must be called from Weapon") action void A_Raise() {}
+	deprecated("2.3", "must be called from Weapon") action void A_CheckReload() {}
+	deprecated("3.7", "must be called from Weapon") action void A_WeaponReady(int flags = 0) {}	// this was somehow missed in 2.3 ...
+	native bool CallStateChain (Actor actor, State state);
+		
+	//===========================================================================
+	//
+	// ACustomInventory :: SpecialDropAction
+	//
+	//===========================================================================
+
+	override bool SpecialDropAction (Actor dropper)
+	{
+		return CallStateChain (dropper, FindState('Drop'));
+	}
+
+	//===========================================================================
+	//
+	// ACustomInventory :: Use
+	//
+	//===========================================================================
+
+	override bool Use (bool pickup)
+	{
+		return CallStateChain (Owner, FindState('Use'));
+	}
+
+	//===========================================================================
+	//
+	// ACustomInventory :: TryPickup
+	//
+	//===========================================================================
+
+	override bool TryPickup (in out Actor toucher)
+	{
+		let pickupstate = FindState('Pickup');
+		bool useok = CallStateChain (toucher, pickupstate);
+		if ((useok || pickupstate == NULL) &amp;&amp; FindState('Use') != NULL)
+		{
+			useok = Super.TryPickup (toucher);
+		}
+		else if (useok)
+		{
+			GoAwayAndDie();
+		}
+		return useok;
+	}
+}&lt;/syntaxhighlight&gt;
+
+=== [[DECORATE]] definition ===
+{{DecorateDefinitionNote}}
+ ACTOR &lt;u&gt;CustomInventory&lt;/u&gt; : {{Class|Inventory}} native {}
+
+=== Using in DECORATE ===
+&lt;u&gt;CustomInventory&lt;/u&gt; only uses the basic [[Classes:Inventory|Inventory properties]], but defines 3 new states:
+* '''Pickup'''.
+* '''Use'''.
+* '''Drop'''.
+
+{{tip|text=Players, Monsters and pretty much everything else can obtain a CustomInventory and be affected by its Pickup state. Inventory items can also receive CustomInventory items to execute behaviors, given by [[GiveInventory|ACS]] or [[A_RadiusGive|DECORATE]].}}
+
+The behavior is as follows:
+* All code pointers in the '''Pickup''' state sequence are called when the item is being picked up. The sequence is successful when the last called [[Action functions|function]] in the state doesn't return failure explicitly; you can also use [[ACS_ExecuteWithResult]] to set the result from [[ACS]]. Success can be overridden by terminating the state sequence with '''fail''' instead of '''stop'''.
+* [[Actor_states#Anonymous_Functions|Anonymous Functions]] can utilize return ''int'' and return ''bool'' to succeed or fail a custominventory chain. An int of 0 or a false boolean fails a function (and possibly the chain), while any other number succeeds the chain.
+
+{{tip|text=Jumping functions always set success to false.}}
+* If the '''Pickup''' sequence returns successfully the behavior depends on the presence of the '''Use''' state:
+** If there is no '''Use''' state the item will be removed from the map and not be placed in the actor's inventory.
+** If there is a '''Use''' state the item will be placed in the actor's inventory.
+* If the item has a '''Use''' state and is being used by the player the '''Use''' state sequence is called. Failure or success are determined the same way as for the '''Pickup''' state. If the sequence returns successfully the item is removed from the inventory. Note that due to this special behavior, the Use and Pickup states will ignore all frame durations and shouldn't be looped, attempts to do to so may result in the sequence being interrupted by the engine; every frame will execute within the same tic.
+* If the item is being [[A_NoBlocking|dropped]] by a monster the '''Drop''' state sequence will be executed and the item will never be spawned. This is mostly there for special actions that can be taken by Strife conversation scripts. For regular monster [[Action specials|death actions]] there are better and more flexible way to achieve the same.
+
+'''Notes:'''
+* State jumps should use an actual string instead of an offset number to perform the jump to guarantee it does what it's supposed to do for the '''Use''' state&lt;!-- clarify why! --&gt;.
+* To make an item that's able to be picked up ''with conditions'' (excluding the {{property|Inventory.MaxAmount}} property), the inventory item will have to perform a function such as [[A_RailWait]] last in the state, especially after jump functions. The +{{flag|INVENTORY.ALWAYSPICKUP}} flag should not be used in this case, because even if the sequence fails, the item will still disappear. Instead, after all conditions are met, you should perform a function akin to the described above to signify success.
+* '''[[User variable|User variables can be used with some conditions]].'''
+* A jump to the Use state will '''NOT''' be treated the same as the actor actually activating it. For this, the +{{flag|INVENTORY.AUTOACTIVATE}} flag must be present if it's for anything non-player related.
+* CustomInventory items cannot be used to "fetch" variables directly. They can perform jumps based upon the current actor's variables that are defined, and execute DECORATE action functions and ACS scripts accordingly, and they can modify that actor's variables in particular, but nothing else. Once used, the CustomInventory item loses access to its variables, gaining direct access to the owner's variables instead.
+
+== Examples ==
+ actor BigBoost : [[CustomInventory]] 10492
+ {
+   {{property|Inventory.PickupMessage}} "Energy Boost!!!"
+   {{property|Inventory.PickupSound}} "misc/p_pkup"
+   +{{flag|COUNTITEM}}
+   states
+   {
+   Spawn:
+     AWI3 A -1
+     stop
+   Pickup:
+     TNT1 A 0 [[A_GiveInventory]] ("{{Class|Soulsphere}}", 2)
+     TNT1 A 0 [[A_GiveInventory]] ("{{Class|BFG9000}}")
+     stop
+   }
+ }
+
+[[Category:StateProvider]]</text>
+    <sha1>48d5yjiu1n7gmr9nqhgl140ht0u2h2b</sha1>
+  </revision>
+</page>

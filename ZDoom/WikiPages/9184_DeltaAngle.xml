@@ -1,0 +1,45 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>DeltaAngle</title>
+  <ns>0</ns>
+  <id>9184</id>
+  <revision>
+    <id>50844</id>
+    <parentid>47474</parentid>
+    <timestamp>2023-10-17T11:36:20Z</timestamp>
+    <contributor>
+      <username>Jekyll Grim Payne</username>
+      <id>2175</id>
+    </contributor>
+    <origin>50844</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="1206" sha1="716hn93vu0tuw8r7pq7xyh0h3teclw4" xml:space="preserve">{{ZScriptNote}}
+
+'''[[Classes:Actor|Actor]]'''
+
+native clearscope static double '''deltaangle'''(double ang1, double ang2)
+
+== Usage ==
+Used to find the '''relative change''' from one angle to another, because raw actor angles may not always be normalized. For example, the player's [[DECORATE_expressions#Variables|'''angle''' variable]] can return inconsistent results if the player has turned a complete circle.
+
+If you need to check only the difference between the angles regardless of direction, consider [[AbsAngle]] instead.
+
+===Parameters===
+* ''ang1'': The first angle to be compared.
+* ''ang2'': The angle to be subtracted from the first.
+
+===Return Value===
+* The difference between the two angles, normalized to between [-180,180]. Negative values mean ang2 is to the right of ang1, while positive values mean ang2 is to the left of ang1.
+
+== Example ==
+This replicates the [[GetAngle]] functionality with GAF_RELATIVE specified. Keep in mind this accounts for being on one particular side, not both. If both is needed, use [[AbsAngle]] instead.
+ if (target &amp;&amp; deltaangle(angle, [[AngleTo]](target)) &lt; 20)
+
+== See Also ==
+* [[AbsAngle]]
+
+[[Category:ZScript]]
+[[Category:Actor static functions]]</text>
+    <sha1>716hn93vu0tuw8r7pq7xyh0h3teclw4</sha1>
+  </revision>
+</page>

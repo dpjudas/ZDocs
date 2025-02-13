@@ -1,0 +1,57 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>Classes:Beak</title>
+  <ns>0</ns>
+  <id>4247</id>
+  <revision>
+    <id>34013</id>
+    <parentid>17344</parentid>
+    <timestamp>2012-08-29T16:21:32Z</timestamp>
+    <contributor>
+      <username>Blue Shadow</username>
+      <id>2021</id>
+    </contributor>
+    <minor />
+    <comment>/* DECORATE definition */</comment>
+    <origin>34013</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="850" sha1="pwrzkwrsesyua7wm74x3emyryx9ykec" xml:space="preserve">{{Actor|
+| type = Weapon
+| name = Beak
+| class = Beak
+| game = Heretic
+}}[[Classes]]: [[Classes:Weapon|Weapon]]&amp;rarr;&lt;u&gt;Beak&lt;/u&gt;&lt;br&gt;
+&amp;ensp;&amp;rarr;[[Classes:BeakPowered|BeakPowered]]&lt;br&gt;
+The weapon used by players morphed into a [[Classes:ChickenPlayer|chicken]].
+
+==== [[DECORATE]] definition ====
+ ACTOR &lt;u&gt;Beak&lt;/u&gt; : {{Class|Weapon}}
+ {
+   {{Property|Weapon.SelectionOrder}} 10000
+   +{{Flag|WEAPON.DONTBOB}}
+   +{{Flag|WEAPON.MELEEWEAPON}}
+   {{Property|Weapon.YAdjust}} 15
+   {{Property|Weapon.SisterWeapon}} "{{Class|BeakPowered}}"
+ 
+   action native [[A_BeakRaise]]();
+   action native [[A_BeakAttackPL1]]();
+ 
+   States
+   {
+   Ready:
+     BEAK A 1 [[A_WeaponReady]]
+     Loop
+   Deselect:
+     BEAK A 1 [[A_Lower]]
+     Loop
+   Select:
+     BEAK A 1 [[A_BeakRaise]]
+     Loop
+   Fire:
+     BEAK A 18 [[A_BeakAttackPL1]]
+     Goto Ready
+   }
+ }</text>
+    <sha1>pwrzkwrsesyua7wm74x3emyryx9ykec</sha1>
+  </revision>
+</page>

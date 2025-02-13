@@ -1,0 +1,53 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>GetScreenWidth</title>
+  <ns>0</ns>
+  <id>929</id>
+  <revision>
+    <id>37388</id>
+    <parentid>37387</parentid>
+    <timestamp>2013-11-28T00:54:05Z</timestamp>
+    <contributor>
+      <username>Edward850</username>
+      <id>1492</id>
+    </contributor>
+    <minor />
+    <comment>Typo</comment>
+    <origin>37388</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="1240" sha1="jctvkys0wao6xv3h42if8fo7m61cwfk" xml:space="preserve">__NOTOC__
+{{WarnIndeterminate|[[GetScreenWidth]] only knows the resolution of the local session. Information about the resolution of other players in a game or demo does not exist.}}
+int '''GetScreenWidth''' (void)
+
+== Usage ==
+
+Returns the horizontal resolution. For example, if you are playing in 800x600 it will return 800. This is mainly useful for formatting [[HudMessage|hudmessages]] which you want to put in the same position on all screens when using [[SetHudSize]].
+
+=== Return value ===
+
+The horizontal resolution of the screen.
+
+== Examples ==
+
+This script places an ‘@’ symbol at the left hand side of the screen, 100 pixels from the bottom.
+
+ script 1 (void)
+ {
+     int h = [[GetScreenHeight]]();
+     [[SetHudSize]]([[GetScreenWidth]](), h, 1);
+  
+     h = (h - 100) &lt;&lt; 16;
+ 
+     [[HudMessage]](s:"@"; {{const|HUDMSG_PLAIN}}, 1,
+         {{const|CR_BLUE}}, 0.1, h + 0.1, 10.0);
+ }
+
+The application of this is that upon building a custom graphic for a HUD, you may want to position info/health/meters/etc. around the edge of the screen according to some positioning system, without necessarily resizing them. See also the command [[SetFont]].
+
+== See also ==
+* [[GetScreenHeight]]
+
+[[category:ACS Information functions]]</text>
+    <sha1>jctvkys0wao6xv3h42if8fo7m61cwfk</sha1>
+  </revision>
+</page>

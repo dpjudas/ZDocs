@@ -1,0 +1,58 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>Classes:HeadFX3</title>
+  <ns>0</ns>
+  <id>4159</id>
+  <revision>
+    <id>34163</id>
+    <parentid>18647</parentid>
+    <timestamp>2012-09-03T10:12:28Z</timestamp>
+    <contributor>
+      <username>Blue Shadow</username>
+      <id>2021</id>
+    </contributor>
+    <minor />
+    <comment>/* DECORATE definition */</comment>
+    <origin>34163</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="913" sha1="gbyvm5qcn2veajgwx1x13mrrt3c8huu" xml:space="preserve">{{Actor|
+| type = Explosive
+| name = Fireball
+| class = HeadFX3
+| game = Heretic
+}}[[Classes]]: &lt;u&gt;HeadFX3&lt;/u&gt;&lt;br&gt;
+A fireball thrown by one of the [[Classes:Ironlich|iron lich]]'s [[A_LichAttack|attacks]]. The lich actually spits six of them at once, and the native action [[A_LichFireGrow]] makes five of them rise gradually to form a column.
+
+==== [[DECORATE]] definition ====
+ ACTOR &lt;u&gt;HeadFX3&lt;/u&gt;
+ {
+   {{Property|Radius}} 14
+   {{Property|Height}} 12
+   {{Property|Speed}} 10
+   {{Property|FastSpeed}} 18
+   {{Property|Damage}} 5
+   {{Property|Projectile}}
+   +{{Flag|WINDTHRUST}}
+   -{{Flag|ACTIVATEIMPACT}}
+   -{{Flag|ACTIVATEPCROSS}}
+   -{{Flag|NOBLOCKMAP}}
+   {{Property|RenderStyle}} Add
+ 
+   action native [[A_LichFireGrow]]();
+ 
+   States
+   {
+   Spawn:
+     FX06 ABC 4 Bright [[A_LichFireGrow]]
+     Loop
+   NoGrow:
+     FX06 ABC 5 Bright
+     Loop
+   Death:
+     FX06 DEFG 5 Bright
+     Stop
+   }
+ }</text>
+    <sha1>gbyvm5qcn2veajgwx1x13mrrt3c8huu</sha1>
+  </revision>
+</page>

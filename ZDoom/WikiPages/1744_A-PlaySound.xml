@@ -1,0 +1,63 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>A PlaySound</title>
+  <ns>0</ns>
+  <id>1744</id>
+  <revision>
+    <id>52768</id>
+    <parentid>52767</parentid>
+    <timestamp>2024-06-15T12:53:41Z</timestamp>
+    <contributor>
+      <username>Jekyll Grim Payne</username>
+      <id>2175</id>
+    </contributor>
+    <comment>/* Sound slots */</comment>
+    <origin>52768</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="4037" sha1="7tv4fxqjlku2ryloo8to62nynz1ldni" xml:space="preserve">__NOTOC__{{codepointer|Sound}}clearscope void '''A_PlaySound''' [(sound ''whattoplay'' [, int ''slot'' [, double ''volume'' [, bool ''looping'' [, double ''attenuation'' [, bool ''local'' [, double ''pitch'']]]]]])]
+
+
+{{WarnDeprecated|{{c|[[A_StartSound]]}}}}
+== Usage ==
+Plays the specified sound.
+
+=== Parameters ===
+* ''whattoplay'': the desired sound to play. Default is {{c|"weapons/pistol"}}.
+* ''slot'': defines the [[#Sound slots|sound slot]] used for the sound, can be combined with slot flags.
+* ''volume'': the volume of the sound. Default is 1.0.
+* ''looping'': if ''true'', the sounds loops. Looping sounds can be stopped by using {{c|[[A_StopSound]]}} or playing another sound on the same channel. Default is ''false''.
+* ''attenuation'': this is a positive value that specifies how quickly the sound fades with distance from its source. The higher the value the quicker it fades out. The numbers are fairly low. You will notice dramatic drop off of volume with an attenuation value of just 3 or 4 and by the time you use a value of 20 you need to be within around 64 units of the sound source to hear it clearly. The following predefined constants exist: 
+:*'''ATTN_NONE''' — Plays the sound globally at the specified volume, disregarding distance. 
+:*'''ATTN_NORM''' — Uses the close_dist and clipping_dist fields defined in the sound definition. This is the default.
+:*'''ATTN_IDLE''' — Uses DOOM's normal default sound attenuation behavior. 
+:*'''ATTN_STATIC''' — Fades quickly (inaudible from 512 units).
+:For example, if you want to have a sound play at the specified volume regardless of distance (anywhere on the map), use ATTN_NONE.
+* ''local'': If ''true'', the sound is played if the player is either looking out the calling actor's eyes, or the calling actor is the player and the player is looking out the eyes of a non-[[monster]] actor. Also, the sound is played with ATTN_NONE. Default is ''false''.
+* ''pitch'': the sound pitch to play the sound with. Default is 0, which means the engine will use whatever pitch shift (range) is defined in [[SNDINFO]], if any. Standard pitch is 1.0 - lower values will slow down the sound, and higher will speed it up.
+
+== Sound slots ==
+{{c|A_PlaySound}} supports playing sounds on eight sound channels (while {{c|[[A_StartSound]]}} supports more than that), indexed from 0 to 7. Playing a sound on a channel overrides any sound playing on the same channel, except for 0 (aka CHAN_AUTO), which first searches for a free channel, starting from 7 and decreasing until a free channel is found. If none of the channels are free, the sound is played on slot 0, overriding any sound playing there. The following constants can be used for sound slots:
+{{: StartSound channels}}
+These constants can also be represented as numbers, such as: {{c|A_PlaySound("sound/name", 5)}}. The ''slot'' parameter can be further combined (using the | operator) with the following modifier flags:
+* '''CHAN_LISTENERZ''' (8) — Sound is played from the listener's Z-height. {{verification}}
+* '''CHAN_MAYBE_LOCAL''' (16) — Sound is subject to {{c|{{CVAR|C|compat_silentpickup}}}} and will not play if the sound is made by an actor other than the local player's camera when compatibility flag is enabled.
+* '''CHAN_UI''' (32) — Sound is considered an interface sound and is not recorded into savegames.
+* '''CHAN_NOPAUSE''' (64) — Sound is not paused by menus and will play through time-stopping powerup effects.
+* '''CHAN_LOOP''' (256) — Sound loops.
+* '''CHAN_NOSTOP''' (4096) — Do not override the sound that is currently playing on the same channel with this one. This is only the case if both sounds are the same. If they are different, the playing sound is overridden regardless.
+{{note|flag 128 is '''CHAN_AREA''', which is specific to sector sounds and cannot be used with {{c|A_PlaySound}}.}}
+
+== Examples ==
+  ...
+  States
+  {
+  Spawn:
+      BLAH A 5 [[actor states#NoDelay|NoDelay]] [[A_PlaySound]]("play/sound")
+      BLAH BCD 6
+      BLAH E -1
+      Stop
+  ...
+  }</text>
+    <sha1>7tv4fxqjlku2ryloo8to62nynz1ldni</sha1>
+  </revision>
+</page>

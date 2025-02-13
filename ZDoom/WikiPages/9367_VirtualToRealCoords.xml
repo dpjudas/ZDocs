@@ -1,0 +1,50 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>VirtualToRealCoords</title>
+  <ns>0</ns>
+  <id>9367</id>
+  <revision>
+    <id>53591</id>
+    <parentid>53590</parentid>
+    <timestamp>2024-11-08T09:24:37Z</timestamp>
+    <contributor>
+      <username>Jekyll Grim Payne</username>
+      <id>2175</id>
+    </contributor>
+    <origin>53591</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="1538" sha1="aiwvoscbpp6n56v7r19zc50rd4126xa" xml:space="preserve">{{ZScriptNote}}
+__NOTOC__
+
+'''[[Structs:Screen|Screen]]'''
+
+{{c|native static Vector2, Vector2 '''VirtualToRealCoords'''(Vector2 ''pos'', Vector2 ''size'', Vector2 ''vsize'', bool ''vbottom'' }}={{c| false, bool ''handleaspect'' }}={{c| true)}}
+
+== Usage ==
+Used to translates coordinates in a virtual canvas to real screen coordinates. Useful if you want to do something like translate a position in the status bar to an actual location on the screen since the status bar uses scaled coordinates. Coordinates start from the top left of the screen with positive x values shifting to the right and positive y values shifting downward.
+
+=== Parameters ===
+*{{c|Vector2 '''pos'''}}
+:The xy offset of the coordinate in the virtual canvas
+*{{c|Vector2 '''size'''}}
+:The width and height respectively of the bounding box in the virtual canvas
+*{{c|Vector2 '''vsize'''}}
+:the virtual width and virtual height to use respectively for the virtual canvas
+*{{c|bool '''vbottom'''}}
+:Default is false. If true scales the y coordinate based off the bottom of the screen instead of the top. Only used for tall aspect ratios (e.g. 5:4)
+*{{c|bool '''handleaspect'''}}
+:Default is true. If true, uses the current aspect ratio of the screen. Otherwise assumes a 4:3 aspect ratio
+
+=== Return value ===
+Returns two values in this order:
+#Vector2 — The top left coordinate of the box scaled to real screen coordinates
+#Vector2 — The size of the box scaled to real screen coordinates
+
+== Examples ==
+{{noexamples}}
+
+[[Category:ZScript]]
+[[Category:Screen]]</text>
+    <sha1>aiwvoscbpp6n56v7r19zc50rd4126xa</sha1>
+  </revision>
+</page>

@@ -1,0 +1,157 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>PickActor</title>
+  <ns>0</ns>
+  <id>7751</id>
+  <revision>
+    <id>44255</id>
+    <parentid>42865</parentid>
+    <timestamp>2017-03-20T13:13:03Z</timestamp>
+    <contributor>
+      <username>Gez</username>
+      <id>1283</id>
+    </contributor>
+    <minor />
+    <comment>removing "new" for GZDoom 2.4.0 release</comment>
+    <origin>44255</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="7894" sha1="cu0x8xzd2u8jmsfc6k45jos3dpn4jj2" xml:space="preserve">__NOTOC__
+int '''PickActor''' (int ''source'', fixed ''angle'', fixed ''pitch'', fixed ''distance'', int ''tid'' [, int ''actorMask'' [, int ''wallMask'' [, int ''flags'']]])
+
+== Usage ==
+Picks a single actor that is being aimed at, and assigns a {{c|[[TID|tid]]}} to it.
+
+This function is tricky to use correctly; calling it in the straightforward way can cause bugs.  [[#Correct_usage|See below]] for a full example.
+
+Note: Actors with the {{flag|GHOST}} flag are ignored by the ray.
+
+=== Parameters ===
+* ''source'': the {{c|tid}} of the actor that the pick originates from. Use a {{c|tid}} of 0 to use the script's activator as the source.
+* ''angle'': the angle to look at. This is a [[definitions|fixed point angle]] in the range of 0.0 to 1.0.
+* ''pitch'': the pitch to look at. This is a [[definitions|fixed point angle]] in the range of 0.0 to 1.0.
+* ''distance'': the maximum distance to pick actors in.
+* ''tid'': the {{c|tid}} to assign to an actor that is being looked at.
+* ''actorMask'': flags that an actor must have in order for it to be picked. The default is MF_SHOOTABLE. See [[#Actor flags|Actor flags]] for a list of possible flags.
+* ''wallMask'': linedef flags that will block the pick ray. The default is ML_BLOCKEVERYTHING | ML_BLOCKHITSCAN. See [[#Linedef flags|Linedef flags]] for a list of possible flags.
+* ''flags'': The following flags can be combined with the | character between the constant names:
+** '''PICKAF_FORCETID''' — The picked actor is forcibly assigned the specified {{c|tid}}, otherwise it will only be assigned the {{c|tid}} if it does not have one to begin with.
+** '''PICKAF_RETURNTID''' — Instead of using a return value of 1, PickActor will use the actor's {{c|tid}} as the return value.
+
+=== Return value ===
+The function returns {{c|true}} if an actor was picked, {{c|false}} if not. If PICKAF_RETURNTID is specified, the function returns the picked actor's {{c|[[TID|tid]]}}.
+
+== Actor flags ==
+*MF_SPECIAL: The actor can be picked up.
+*MF_SOLID: Set when the actor should be solid (blocking).
+*MF_SHOOTABLE: The actor can be damaged. If it's health goes below 0 it enters its death state.
+*MF_NOSECTOR: Object is not linked into the sector. This makes it invisible and excludes it from certain physics checks.
+*MF_NOBLOCKMAP: The actor is added to the internal blockmap for collision detection purposes.
+*MF_AMBUSH: Monster is set to ambush players.
+*MF_JUSTHIT: Try to attack right back (used in monster AI).
+*MF_JUSTATTACKED: Take at least one step before attacking (used in monster AI).
+*MF_SPAWNCEILING: Actor is spawned hanging from the ceiling as opposed to standing on the floor.
+*MF_NOGRAVITY: Actor is not subject to gravity.
+*MF_DROPOFF: Actor can walk over ledges/taller steps.
+*MF_PICKUP: This actor can pick up items.
+*MF_NOCLIP: Actor is totally excluded from collision detection and can walk through walls etc.
+*MF_INCHASE: Used internally to avoid recursion.
+*MF_FLOAT: Floating actor that can change height at will.
+*MF_TELEPORT: Used when teleporting an actor.
+*MF_MISSILE: Actor is a projectile.
+*MF_DROPPED: Actor always acts as if it was dropped.
+*MF_SHADOW: Actor is nearly invisible and makes monsters trying to target this actor to be inaccurate.
+*MF_NOBLOOD: Actor does not bleed when hurt.
+*MF_CORPSE: Actor is a corpse.
+*MF_INFLOAT: Used internally for floating monsters.
+*MF_INBOUNCE: Used internally by Heretic bouncing missiles.
+*MF_COUNTKILL: Counts toward kill percentage.
+*MF_COUNTITEM: Counts toward item percentage.
+*MF_SKULLFLY: Actor is a charging monster.
+*MF_NOTDMATCH: Actor is not spawned in deathmatch games.
+*MF_SPAWNSOUNDSOURCE: This projectile will play its seesound from the originating actor.
+*MF_FRIENDLY: This monster doesn't target the player. Instead it attacks other monsters.
+*MF_UNMORPHED: This actor is an unmorphed version of something else.
+*MF_NOLIFTDROP: Does not drop when a lift under it lowers.
+*MF_STEALTH: Actor is a stealth monster.
+*MF_ICECORPSE: Actor is a frozen corpse.
+
+== Linedef flags ==
+*ML_BLOCKING: The linedef is solid.
+*ML_BLOCKMONSTERS: The linedef blocks monsters.
+*ML_TWOSIDED: The linedef has two siedes (two sidedefs).
+*ML_DONTPEGTOP: Upper texture unpegged.
+*ML_DONTPEGBOTTOM: Lower texture unpegged.
+*ML_SECRET: Displays on the automap as a one-sided line.
+*ML_SOUNDBLOCK: Stops sound propagation after two of these linedefs have been traversed.
+*ML_DONTDRAW: Prevents this linedef from displaying on the automap.
+*ML_MAPPED: This linedef will be present on the automap from the start of the level.
+*ML_REPEAT_SPECIAL: This linedef's special is repeatable.
+*ML_ADDTRANS: Drawn with additive translucency (internal flag).
+*ML_MONSTERSCANACTIVATE: Monsters can activate this linedef.
+*ML_BLOCK_PLAYERS: This linedef blocks players.
+*ML_BLOCKEVERYTHING: This linedef blocks everything.
+*ML_ZONEBOUNDARY: This linedef indicates a sound zone boundary.
+*ML_RAILING: This linedef uses Strife's railing collision logic.
+*ML_BLOCK_FLOATERS: This linedef blocks floating monsters.
+*ML_CLIP_MIDTEX: This linedef's middle texture is clipped by the ceiling and floor.
+*ML_WRAP_MIDTEX: This linedef's middle texture wraps around.
+*ML_3DMIDTEX: This linedef clips actor movement based on it's middle texture.
+*ML_CHECKSWITCHRANGE: Forces a check to see if the player can really reach a switch.
+*ML_FIRSTSIDEONLY: This linedef will only be activated when crossed from it's front side.
+*ML_BLOCKPROJECTILE: This linedef blocks projectiles.
+*ML_BLOCKUSE: This linedef blocks use actions.
+*ML_BLOCKSIGHT: This linedef blocks actor sight.
+*ML_BLOCKHITSCAN: This linedef blocks hitscan attacks.
+
+== Correct usage ==
+&lt;code&gt;PickActor&lt;/code&gt; has trouble if the chosen actor already has a TID.  By default, it won't change an existing TID, so your code will do nothing.  With &lt;code&gt;PICKAF_FORCETID&lt;/code&gt;, you lose the actor's existing TID, which is likely to break other scripts.  With &lt;code&gt;PICKAF_RETURNTID&lt;/code&gt;, you might get an existing TID that's shared by several other actors.
+
+The only way to be sure is to call &lt;code&gt;PickActor&lt;/code&gt; ''twice'' with the same arguments.
+
+ &lt;nowiki&gt;// Get the existing TID, if there is one.
+// A TID of 0 is the same as not having a TID, so "setting" it to 0 will not
+// change anything's TID.
+int old_tid = PickActor(..., /* tid */ 0, actor_mask, wall_mask, PICKAF_RETURNTID);
+
+// Find a TID that's not currently in use.
+int new_tid = UniqueTID();
+
+// Do the "real" call.  This will return true if an actor was actually found,
+// and also forcibly set its TID.
+if (PickActor(..., /* tid */ new_tid, actor_mask, wall_mask, PICKAF_FORCETID)) {
+    // Do some stuff with the temporary TID.
+    do_some_stuff_with(new_tid);
+    do_some_other_stuff_with(new_tid);
+
+    // When you're done, restore the actor's TID to its original value.
+    Thing_ChangeTID(new_tid, old_tid);
+}&lt;/nowiki&gt;
+
+This works because nothing can move between the two &lt;code&gt;PickActor&lt;/code&gt; calls, as long as they have the same arguments.  While a script is executing, the game state doesn't change and other scripts don't run.
+
+If you need to refer to the found actor later, this approach won't work.  You may need to store the found actor as one of the source's [[Actor pointer|actor pointers]] using [[SetPointer]].
+
+== Examples ==
+This example script, when called from a weapon state, will instantly gib any monster actor under the player's crosshairs.
+
+ Script "InstaGib" (void) {
+ 
+   // Get a unique TID to temporarily use.
+   int tid = [[UniqueTID]]();
+ 
+   // Attempt to pick an actor where the activator is looking at. Ony shootable actors are considered.
+   if (PickActor(0, [[GetActorAngle]](0), [[GetActorPitch]](0), 256.0, tid, MF_SOLID | MF_SHOOTABLE)) {
+ 
+     // Gib the picked actor.
+     [[Thing_Damage2]](tid, 9000, "Melee");
+ 
+     // Reset the now gibbed actor's TID.
+     [[Thing_ChangeTID]](tid, 0);
+   }
+ }
+
+
+[[category:ACS Actor functions]]</text>
+    <sha1>cu0x8xzd2u8jmsfc6k45jos3dpn4jj2</sha1>
+  </revision>
+</page>

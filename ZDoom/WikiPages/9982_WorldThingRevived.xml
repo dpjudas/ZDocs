@@ -1,0 +1,82 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>WorldThingRevived</title>
+  <ns>0</ns>
+  <id>9982</id>
+  <revision>
+    <id>53512</id>
+    <timestamp>2024-11-01T13:32:45Z</timestamp>
+    <contributor>
+      <username>Jekyll Grim Payne</username>
+      <id>2175</id>
+    </contributor>
+    <comment>Created page with "'''{{class|StaticEventHandler}}'''  {{c|void '''WorldThingRevived''' (WorldEvent ''e'')}}  == Usage == An [[Events and handlers|event handler]] virtual function that is called when an [[actor]] that was dead is resurrected (for example, by {{class|ArchVile|Doom's Arch-Vile}}).  === Passed values === This event gets a pointer to the {{struct|WorldEvent}} struct and can read the following from it by preceding the value with &lt;code&gt;e.&lt;/code&gt;: *{{c|Actor '''thing'''}} :Pointe..."</comment>
+    <origin>53512</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="1978" sha1="20fxplt4tf6achvmyuev8jutnwvmrh0" xml:space="preserve">'''{{class|StaticEventHandler}}'''
+
+{{c|void '''WorldThingRevived''' (WorldEvent ''e'')}}
+
+== Usage ==
+An [[Events and handlers|event handler]] virtual function that is called when an [[actor]] that was dead is resurrected (for example, by {{class|ArchVile|Doom's Arch-Vile}}).
+
+=== Passed values ===
+This event gets a pointer to the {{struct|WorldEvent}} struct and can read the following from it by preceding the value with &lt;code&gt;e.&lt;/code&gt;:
+*{{c|Actor '''thing'''}}
+:Pointer to the actor that was resurrected.
+
+== Examples ==
+This event handler puts all bosses in an array (which is globally accessible by finding the event handler with [[Events_and_handlers#Functions|EventHandler.Find()]]), and removes them when they're killed (and re-adds when they're revived):
+&lt;syntaxhighlight lang="cs"&gt;
+class MyEventHandler : EventHandler
+{
+  array&lt;Actor&gt; allBosses;
+
+  override void WorldThingSpawned(WorldEvent e)
+  {
+    // if the actor has the ISMONSTER and BOSS flags,
+    // put it into the array:
+    if (e.thing.bIsMonster &amp;&amp; e.thing.bBoss)
+    {
+      allBosses.Push(e.thing);
+    }
+  }
+  
+  override void WorldThingDied(WorldEvent e)
+  {
+    // when an actor is killed, check if it was in the array,
+    // and if so, remove it from it:
+    int index = allBosses.Find(e.thing);
+    if (index &lt; allBosses.Size())
+    {
+      allBosses.Delete(index);
+    }
+  }
+
+  override void WorldThingRevived(WorldEvent e)
+  {
+    // if the actor is revived, put it into the array again
+    // (just in case, check that it's not yet in the array):
+    if (e.thing.bIsMonster &amp;&amp; e.thing.bBoss &amp;&amp; allBosses.Find(e.thing) == allBosses.Size())
+    {
+      allBosses.Push(e.thing);
+    }
+  }
+}
+
+// Example of reading it from elsewhere in the code:
+let handler = MyEventHandler(EventHandler.Find('MyEventHandler'));
+if (handler)
+{
+  // do something with allBosses.allProjectiles here
+}
+&lt;/syntaxhighlight&gt;
+
+== See also ==
+* [[Events and handlers]]
+
+[[Category:ZScript]]
+[[Category:Event handlers]]</text>
+    <sha1>20fxplt4tf6achvmyuev8jutnwvmrh0</sha1>
+  </revision>
+</page>

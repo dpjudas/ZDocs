@@ -1,0 +1,63 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>TranslucentLine</title>
+  <ns>0</ns>
+  <id>716</id>
+  <revision>
+    <id>44649</id>
+    <parentid>33713</parentid>
+    <timestamp>2017-04-03T16:31:27Z</timestamp>
+    <contributor>
+      <username>Gez</username>
+      <id>1283</id>
+    </contributor>
+    <comment>xlat</comment>
+    <origin>44649</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="2277" sha1="krm6l5i3nr0b9vr8ddxfxvthc3m8pdc" xml:space="preserve">{{Special|208|lineid, amount, additive, moreflags|Renderer}}
+
+{{warning|text=This special is not fully supported by the [[UDMF]] map format. Certain parameters, noted below, have been made obsolete by the ability to directly specify properties within the linedef structure.  These parameters should be set to 0 when using the UDMF format.}}
+
+* ''lineid'': Line ID of lines to make translucent (0 for this line). ''Obsolete in UDMF.''
+* ''amount'': How translucent the line should be. Ranges from 0 to 255.
+* ''additive'': Whether this translucent line should use additive translucency or not (0 = normal, 1 = additive)
+* ''moreflags'': Sets extended lineflags. See [[Line_SetIdentification]] for details. ''Obsolete in UDMF.'' This parameter only has a function when used directly in a map.
+
+Sets the amount of translucency for all matching lines (including itself). If ''lineid'' is 0, it only sets the translucency of the line it is on. Like [[Line_SetIdentification]], this special sets the linedef's id. Amount controls how opaque the line is. 0 is nearly invisible. 255 is opaque. Intermediate values are somewhere in between. 
+
+You can also use this special in an [[ACS]] script to change the translucency for lines whose ids match lineid.
+
+==Examples==
+{{noexamples}}
+
+== Conversions from linedef types ==
+The following Doom map format types can be converted as TranslucentLine:
+{| {{prettytable}}
+!Type!!Conversion!!Trigger
+|-
+|{{icon|Boom}} 260:Translucent Line 66%|| TranslucentLine (lineid, 168) || 
+|-
+|{{icon|Legacy}} 288:Opaque Line || TranslucentLine (lineid, 255, 0) || 
+|-
+|{{icon|Legacy}} 284:Translucent Line 50% || TranslucentLine (lineid, 128, 0) || 
+|-
+|{{icon|Legacy}} 285:Translucent Line 75% || TranslucentLine (lineid, 192, 0) || 
+|-
+|{{icon|Legacy}} 286:Translucent Line 18% || TranslucentLine (lineid, 48, 0) || 
+|-
+|{{icon|Legacy}} 287:Additive Line 50% || TranslucentLine (lineid, 128, 1) || 
+|-
+|{{icon|EDGE}} 409:Translucent Line 80% || TranslucentLine (lineid, 204) || 
+|-
+|{{icon|EDGE}} 410:Translucent Line 60% || TranslucentLine (lineid, 153) || 
+|-
+|{{icon|EDGE}} 411:Translucent Line 40% || TranslucentLine (lineid, 101) || 
+|-
+|{{icon|EDGE}} 412:Translucent Line 20% || TranslucentLine (lineid, 50) || 
+|}
+
+==External links==
+* {{oldref}}</text>
+    <sha1>krm6l5i3nr0b9vr8ddxfxvthc3m8pdc</sha1>
+  </revision>
+</page>

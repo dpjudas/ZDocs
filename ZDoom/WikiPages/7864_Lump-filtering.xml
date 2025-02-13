@@ -1,0 +1,150 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>Lump filtering</title>
+  <ns>0</ns>
+  <id>7864</id>
+  <revision>
+    <id>49681</id>
+    <parentid>48759</parentid>
+    <timestamp>2022-11-05T00:17:57Z</timestamp>
+    <contributor>
+      <username>Blue Shadow</username>
+      <id>2021</id>
+    </contributor>
+    <minor />
+    <origin>49681</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="4462" sha1="cypry1kpw3gpbrivh8tko79ig0598s3" xml:space="preserve">'''Lump filtering''' is a feature for [[PK3|directory-structured archives]] that allows loading of lumps depending on the game or gametype.
+
+The engine makes use of a special {{c|filter/}} directory which houses ''lump filters''. These filters are directories which bear the name of the game or gametype for which to load their contents, and they must follow the directory structure.
+
+When the filters are loaded, they will be renamed to strip out the {{c|filter/&lt;game-or-gametype&gt;/}} part and will be ordered so they take precedence over any lumps not inside a {{c|filter/}} directory. Filters that do not match the criteria, will be ignored.
+
+Filters are not necessarily mutually exclusive. For instance, if there are two filters, one for any Doom-based game and another for ''Doom II: Hell on Earth'', both will be loaded when playing ''Doom II: Hell on Earth'', but only the former filter will be loaded if playing any of the other Doom-based games.
+
+
+{{note|as of [[GZDoom]] 4.1.0, the names of the Doom games filters {{c|doom.doom1}} and {{c|doom.doom2}} are [[Deprecation|deprecated]] in favor of the new names {{c|doom.id.doom1}} and {{c|doom.id.doom2}}, respectively. As such, the old names should neither be used in future projects nor mixed with the new names.}}
+
+==Filter names==
+The following is a listing of game and gametype filter names:
+
+===Game-based===
+* {{c|doom}}
+:Any ''Doom'' game.
+:* {{c|doom.id}}
+::Any commercial ''Doom'' game.
+::* {{c|doom.id.doom2}}
+:::Any ''Doom 2'' game.
+:::* {{c|doom.id.doom2.commercial}}
+::::''Doom 2: Hell on Earth''.
+::::* {{c|doom.id.doom2.commercial.french}}
+:::::''Doom 2: L'Enfer sur Terre''.
+::::* {{c|doom.id.doom2.commercial.xbox}}
+:::::''Doom 2: XBox Edition''.
+:::* {{c|doom.id.doom2.unity}}
+::::''Doom 2: Unity Edition''.
+:::* {{c|doom.id.doom2.bfg}}
+::::''Doom 2: BFG Edition''.
+:::* {{c|doom.id.doom2.plutonia}}
+::::''Final Doom: Plutonia Experiment''.
+::::* {{c|doom.id.doom2.plutonia.unity}}
+:::::''Final Doom: Plutonia Experiment: Unity Edition''.
+:::* {{c|doom.id.doom2.tnt}}
+::::''Final Doom: TNT - Evilution''.
+::::* {{c|doom.id.doom2.tnt.unity}}
+:::::''Final Doom: TNT - Evilution: Unity Edition''.
+:::* {{c|doom.id.wadsmoosh}}
+::::''DOOM: Complete: WadSmoosh''.
+::* {{c|doom.id.doom1}}
+:::Any original ''Doom'' game.
+:::* {{c|doom.id.doom1.registered}}
+::::''Doom Registered''.
+:::* {{c|doom.id.doom1.ultimate}}
+::::''The Ultimate Doom''.
+::::* {{c|doom.id.doom1.ultimate.xbox}}
+:::::''Doom: XBox Edition''.
+:::* {{c|doom.id.doom1.unity}}
+::::''Doom: Unity Edition''.
+:::* {{c|doom.id.doom1.bfg}}
+::::''Doom: BFG Edition''.
+:* {{c|doom.freedoom}}
+::Any ''Freedoom'' game.
+::* {{c|doom.freedoom.demo}}
+:::''Freedoom: Demo Version''.
+::* {{c|doom.freedoom.phase1}}
+:::''Freedoom: Phase 1''.
+::* {{c|doom.freedoom.phase2}}
+:::''Freedoom: Phase 2''.
+::* {{c|doom.freedoom.freedm}}
+:::''FreeDM''
+* {{c|heretic}}
+:Any ''Heretic'' game.
+:* {{c|heretic.heretic}}
+::''Heretic''.
+:* {{c|heretic.shadow}}
+::''Heretic: Shadow of the Serpent Riders''.
+* {{c|blasphemer}}
+:''Blasphemer''.
+* {{c|hexen}}
+:Any ''Hexen'' game.
+:* {{c|hexen.hexen}}
+::''Hexen: Beyond Heretic''.
+:* {{c|hexen.deathkings}}
+::''Hexen: Deathkings of the Dark Citadel''.
+* {{c|strife}}
+:Any ''Strife'' game.
+:* {{c|strife.strife}}
+::''Strife: Quest for the Sigil''.
+:* {{c|strife.veteran}}
+::''Strife: Veteran Edition''.
+* {{c|chex}}
+:Any ''Chex Quest'' game.
+:* {{c|chex.chex1}}
+::''Chex(R) Quest''.
+:* {{c|chex.chex3}}
+::''Chex(R) Quest 3''.
+* {{c|urbanbrawl}}
+:''Action Doom 2: Urban Brawl''.
+* {{c|hacx}}
+:Any ''Hacx'' game.
+:* {{c|hacx.hacx1}}
+::''Hacx: Twitch'n Kill''.
+:* {{c|hacx.hacx2}}
+::''Hacx 2.0''.
+* {{c|harmony}}
+:''Harmony''.
+* {{c|square}}
+:Any ''The Adventures of Square'' game.
+:* {{c|square.squareware}}
+::''The Adventures of Square (Square-ware)''.
+:* {{c|square.square}}
+::''The Adventures of Square''.
+* {{c|delaweare}}
+:''Delaweare''.
+* {{c|woolball}}
+:Any ''Shadow Of The Wool Ball'' game. {{verification}}
+:* {{c|woolball.rotwb}}
+::''Rise Of The Wool Ball''.
+
+===Gametype-based===
+* {{c|game-raven}}
+:Any ''Heretic'' or ''Hexen'' game.
+* {{c|game-doomstrifechex}}
+:Any ''Doom'', ''Strife'' or ''Chex Quest'' game.
+* {{c|game-doomchex}}
+:Any ''Doom'' or ''Chex Quest'' game.
+* {{c|game-doom}}
+:Any ''Doom'' game.
+* {{c|game-heretic}}
+:Any ''Heretic'' game.
+* {{c|game-hexen}}
+:Any ''Hexen'' game.
+* {{c|game-strife}}
+:Any ''Strife'' game.
+* {{c|game-chex}}
+:Any ''Chex Quest'' game.
+
+[[Category:Glossary]]</text>
+    <sha1>cypry1kpw3gpbrivh8tko79ig0598s3</sha1>
+  </revision>
+</page>

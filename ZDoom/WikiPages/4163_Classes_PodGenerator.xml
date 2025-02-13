@@ -1,0 +1,48 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>Classes:PodGenerator</title>
+  <ns>0</ns>
+  <id>4163</id>
+  <revision>
+    <id>39383</id>
+    <parentid>34096</parentid>
+    <timestamp>2015-04-29T17:44:48Z</timestamp>
+    <contributor>
+      <username>Blue Shadow</username>
+      <id>2021</id>
+    </contributor>
+    <minor />
+    <comment>/* DECORATE definition */ Updated</comment>
+    <origin>39383</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="889" sha1="1kbezdhjac64upbl7g2fg6g351dgzdo" xml:space="preserve">{{Actor|
+| type = Map spot
+| name = Pod generator
+| class = PodGenerator
+| game = Heretic
+| doomednum = 43
+| spawnid = 126
+| spawnname = T_PODGENERATOR 
+}}[[Classes]]: &lt;u&gt;PodGenerator&lt;/u&gt;&lt;br&gt;
+Pod generators are invisible actors that constantly try to create more [[Classes:Pod|pods]] around them, stopping only when they have 16 pods they have created themselves currently in existence, or when there is no longer enough room around them to spawn more. A pod created by their native action [[A_MakePod]] will appear in its Grow state rather than its spawn state.
+
+==== [[DECORATE]] definition ====
+ ACTOR &lt;u&gt;PodGenerator&lt;/u&gt;
+ {
+   +{{Flag|NOBLOCKMAP}}
+   +{{Flag|NOSECTOR}}
+   +{{Flag|DONTSPLASH}}
+   {{Property|AttackSound}} "world/podgrow"
+ 
+   action native [[A_MakePod]](class&lt;Actor&gt; podtype = "{{Class|Pod}}");
+ 
+   States
+   {
+   Spawn:
+     TNT1 A 35 [[A_MakePod]]
+     Loop
+   }
+ }</text>
+    <sha1>1kbezdhjac64upbl7g2fg6g351dgzdo</sha1>
+  </revision>
+</page>

@@ -1,0 +1,144 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>Structs:Side</title>
+  <ns>0</ns>
+  <id>9633</id>
+  <revision>
+    <id>51846</id>
+    <parentid>50703</parentid>
+    <timestamp>2024-02-19T12:49:59Z</timestamp>
+    <contributor>
+      <username>Jekyll Grim Payne</username>
+      <id>2175</id>
+    </contributor>
+    <comment>/* Non-static */ formatting, more info</comment>
+    <origin>51846</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="7792" sha1="hbbqwxskzj9u0w8qo13kkbylawu5g5x" xml:space="preserve">Sides store important information about [[Structs:Line|lines]] including their textures for each part (bottom, middle, top), texture offsets, and any colorization they may have. Using sides is needed in order to manipulate how a line appears. Each line has either one or two sides depending on if it has a back sector. They can be gotten from a line's '''sidedef''' array or from level's global '''Sides''' array.
+
+==Fields==
+*''readonly'' Sector '''sector''' - The sector the side faces.
+*''readonly'' Line '''linedef''' - The line the side belongs to.
+*int16 '''Light''' - The brightness level of the side. This is normally relative to the sector it's facing.
+*uint16 '''Flags''' - The flags the line side has:
+**'''Side.WALLF_ABSLIGHTING''' - The brightness of this wall uses the side's light level as an absolute one instead of one relative to the sector it's facing. This will also cause it to ignore fog.
+**'''Side.WALLF_NOAUTODECALS''' - This side of the line doesn't create impact decals.
+**'''Side.WALLF_NOFAKECONTRAST''' - This side doesn't have Doom's [[fake contrast]] applied to it, evenly lighting it regardless of orientation.
+**'''Side.WALLF_SMOOTHLIGHTING''' - Doom's fake contrast is applied linearly along this side based on wall orientation instead of only at fixed values.
+**'''Side.WALLF_CLIP_MIDTEX''' - If the line is two-sided, the texture in the middle part is set to never render below the floor or above the ceiling on this side.
+**'''Side.WALLF_WRAP_MIDTEX''' - If the line is two-sided, the texture in the middle part is set to fill the entire space vertically on this side.
+**'''Side.WALLF_POLYOBJ''' - This side belongs to a [[PolyObjects|polyobject]].
+**'''Side.WALLF_LIGHT_FOG''' - Use this side's brightness level even if the sector it's facing has fog. Normally fog disables this behavior.
+
+==Methods==
+===Non-static===
+Sides have a top, middle and bottom parts which can be retrieved with &lt;code&gt;Side.top&lt;/code&gt;, &lt;code&gt;Side.mid&lt;/code&gt; and &lt;code&gt;Side.bottom&lt;/code&gt; constants respectively.
+
+*{{c|TextureID '''GetTexture'''(int ''which'')}}
+:Returns a {{struct|TextureID}} of the texture at the top/mid/bottom of the sidedef.
+:*{{c|int '''which'''}} — part of the sidedef (&lt;code&gt;Side.top&lt;/code&gt;, &lt;code&gt;Side.mid&lt;/code&gt; or &lt;code&gt;Side.bottom&lt;/code&gt;)
+
+*{{c|void '''SetTexture'''(int ''which'', TextureID ''tex'')}}
+:Changes the texture at the top/mid/bottom of the sidedef to the provided {{struct|TextureID}}. 
+:*{{c|int '''which'''}} — part of the sidedef (&lt;code&gt;Side.top&lt;/code&gt;, &lt;code&gt;Side.mid&lt;/code&gt; or &lt;code&gt;Side.bottom&lt;/code&gt;)
+:*{{c|TextureID '''tex'''}} — the {{struct|TextureID|texture}} to use
+
+*{{c|void '''SetTextureXOffset'''(int ''which'', double ''offset'')}}
+:Changes the X offset of the texture at the top/mid/bottom of the sidedef.
+:*{{c|int '''which'''}} — part of the sidedef (&lt;code&gt;Side.top&lt;/code&gt;, &lt;code&gt;Side.mid&lt;/code&gt; or &lt;code&gt;Side.bottom&lt;/code&gt;)
+:*{{c|double '''offset'''}} — the new offset value
+
+*{{c|double '''GetTextureXOffset'''(int ''which'')}}
+:Returns the X offset of the texture of the specified part of the sidedef (top/mid/bottom) to the &lt;code&gt;offset&lt;/code&gt; value.
+:*{{c|int '''which'''}} — part of the sidedef (&lt;code&gt;Side.top&lt;/code&gt;, &lt;code&gt;Side.mid&lt;/code&gt; or &lt;code&gt;Side.bottom&lt;/code&gt;)
+
+*{{c|void '''AddTextureXOffset'''(int ''which'', double ''delta'')}}
+:Additively changes the X offset of the texture at the top/mid/bottom of the sidedef.
+:*{{c|int '''which'''}} — part of the sidedef (&lt;code&gt;Side.top&lt;/code&gt;, &lt;code&gt;Side.mid&lt;/code&gt; or &lt;code&gt;Side.bottom&lt;/code&gt;)
+:*{{c|double '''delta'''}} — the delta value to add to the offset {{moreinfo}}
+
+*{{c|void '''SetTextureYOffset'''(int ''which'', double ''offset'')}}
+:Changes the Y offset of the texture at the top/mid/bottom of the sidedef.
+:*{{c|int '''which'''}} — part of the sidedef (&lt;code&gt;Side.top&lt;/code&gt;, &lt;code&gt;Side.mid&lt;/code&gt; or &lt;code&gt;Side.bottom&lt;/code&gt;)
+:*{{c|double '''offset'''}} — the new offset value
+
+*{{c|double '''GetTextureYOffset'''(int ''which'')}}
+:Returns the Y offset of the texture of the specified part of the sidedef (top/mid/bottom) to the &lt;code&gt;offset&lt;/code&gt; value.
+:*{{c|int '''which'''}} — part of the sidedef (&lt;code&gt;Side.top&lt;/code&gt;, &lt;code&gt;Side.mid&lt;/code&gt; or &lt;code&gt;Side.bottom&lt;/code&gt;)
+
+*{{c|void '''AddTextureYOffset'''(int ''which'', double ''delta'')}}
+:Additively changes the Y offset of the texture at the top/mid/bottom of the sidedef.
+:*{{c|int '''which'''}} — part of the sidedef (&lt;code&gt;Side.top&lt;/code&gt;, &lt;code&gt;Side.mid&lt;/code&gt; or &lt;code&gt;Side.bottom&lt;/code&gt;)
+:*{{c|double '''delta'''}} — the delta value to add to the offset {{moreinfo}}
+
+*{{c|void '''SetTextureXScale'''(int ''which'', double ''scale'')}}
+:Changes the X scale of the texture at the top/mid/bottom of the sidedef.
+:*{{c|int '''which'''}} — part of the sidedef (&lt;code&gt;Side.top&lt;/code&gt;, &lt;code&gt;Side.mid&lt;/code&gt; or &lt;code&gt;Side.bottom&lt;/code&gt;)
+:*{{c|double '''scale'''}} — the new scale value
+
+*{{c|double '''GetTextureXScale'''(int ''which'')}}
+:Returns the X scale of the texture at the top/mid/bottom of the sidedef.
+:*{{c|int '''which'''}} — part of the sidedef (&lt;code&gt;Side.top&lt;/code&gt;, &lt;code&gt;Side.mid&lt;/code&gt; or &lt;code&gt;Side.bottom&lt;/code&gt;)
+
+*{{c|void '''MultiplyTextureXScale'''(int ''which'', double ''delta'')}}
+:Additively changes the X scale of the texture at the top/mid/bottom of the sidedef.
+:*{{c|int '''which'''}} — part of the sidedef (&lt;code&gt;Side.top&lt;/code&gt;, &lt;code&gt;Side.mid&lt;/code&gt; or &lt;code&gt;Side.bottom&lt;/code&gt;)
+:*{{c|double '''delta'''}} — the delta value to multiply the offset by {{moreinfo}}
+
+*{{c|void '''SetTextureYScale'''(int ''which'', double ''scale'')}}
+:Changes the Y scale of the texture at the top/mid/bottom of the sidedef.
+:*{{c|int '''which'''}} — part of the sidedef (&lt;code&gt;Side.top&lt;/code&gt;, &lt;code&gt;Side.mid&lt;/code&gt; or &lt;code&gt;Side.bottom&lt;/code&gt;)
+:*{{c|double '''scale'''}} — the new scale value
+
+*{{c|double '''GetTextureYScale'''(int ''which'')}}
+:Returns the Y scale of the texture at the top/mid/bottom of the sidedef.
+:*{{c|int '''which'''}} — part of the sidedef (&lt;code&gt;Side.top&lt;/code&gt;, &lt;code&gt;Side.mid&lt;/code&gt; or &lt;code&gt;Side.bottom&lt;/code&gt;)
+
+*{{c|void '''MultiplyTextureYScale'''(int ''which'', double ''delta'')}}
+:Additively changes the Y scale of the texture at the top/mid/bottom of the sidedef.
+:*{{c|int '''which'''}} — part of the sidedef (&lt;code&gt;Side.top&lt;/code&gt;, &lt;code&gt;Side.mid&lt;/code&gt; or &lt;code&gt;Side.bottom&lt;/code&gt;)
+:*{{c|double '''delta'''}} — the delta value to multiply the offset by {{moreinfo}}
+
+*{{c|int '''GetTextureFlags'''(int ''tier'')}}
+:Returns sidedef texture flags at the top/mid/bottom of the sidedef.
+:*{{c|int '''tier'''}} — part of the sidedef (&lt;code&gt;Side.top&lt;/code&gt;, &lt;code&gt;Side.mid&lt;/code&gt; or &lt;code&gt;Side.bottom&lt;/code&gt;)
+:Possible flags:
+:*{{c|NoGradient}}
+:*{{c|FlipGradient}}
+:*{{c|ClampGradient}}
+:*{{c|UseOwnSpecialColors}}
+:*{{c|UseOwnAdditiveColor}}
+
+*{{c|void '''ChangeTextureFlags'''(int ''tier'', int ''And'', int ''Or'')}}
+:Changes sidedef texture flags at the top/mid/bottom of the sidedef.
+:*{{c|int '''tier'''}} — part of the sidedef (&lt;code&gt;Side.top&lt;/code&gt;, &lt;code&gt;Side.mid&lt;/code&gt; or &lt;code&gt;Side.bottom&lt;/code&gt;)
+
+*{{c|void '''SetSpecialColor'''(int ''tier'', int ''position'', Color ''scolor'', bool ''useowncolor'' }}={{c| true)}}
+
+*{{c|Color '''GetAdditiveColor'''(int ''tier'')}}
+
+*{{c|void '''SetAdditiveColor'''(int ''tier'', Color ''color'')}}
+
+*{{c|void '''EnableAdditiveColor'''(int ''tier'', bool ''enable'')}}
+
+*{{c|void '''SetColorization'''(int ''tier'', Name ''cname'')}}
+
+*{{c|Vertex '''V1'''()}}
+
+*{{c|Vertex '''V2'''()}}
+
+*{{c|int '''Index'''()}}
+
+*{{c|int '''GetUDMFInt'''(Name ''nm'')}}
+
+*{{c|double '''GetUDMFFloat'''(Name ''nm'')}}
+
+*string '''GetUDMFString'''(Name ''nm'')
+
+[[Category:ZScript]]
+[[Category:Structs]]
+[[Category:Sector]]
+[[Category:ZScript map data]]</text>
+    <sha1>hbbqwxskzj9u0w8qo13kkbylawu5g5x</sha1>
+  </revision>
+</page>

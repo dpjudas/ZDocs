@@ -1,0 +1,63 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>Compile ZDoom on Raspberry Pi</title>
+  <ns>0</ns>
+  <id>7822</id>
+  <revision>
+    <id>40174</id>
+    <parentid>39209</parentid>
+    <timestamp>2015-05-22T17:23:34Z</timestamp>
+    <contributor>
+      <username>Consigno</username>
+      <id>2174</id>
+    </contributor>
+    <minor />
+    <comment>adding categories</comment>
+    <origin>40174</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="2375" sha1="0c2fvr30wzh1g6cu7xo86nwe9ayoo4f" xml:space="preserve">This tutorial will guide you on the compilation of [[ZDoom]] on the Raspberry Pi and Pi 2 using Raspbian.
+There is no FMOD required for sound, and it supports most "EAX" effects.
+
+Follow all directions in the [[Compile ZDoom on Linux]] article.
+
+You will not have to tell CMake the location of any includes.
+
+==Requirements==
+
+You need:
+
+* Raspberry Pi or Pi 2 with Raspbian Stable
+* All dependencies to compile ZDoom on x86 Debian Linux (excluding GTK2, FMOD, nasm, gxmessage, and libfluidsynth-dev, they are not needed. Fluidsynth installs PulseAudio, which is not supported!)
+* OpenAL dev libraries (libopenal-dev package)
+* SDL2 libraries (see below)
+* libev-dev and libuv-dev packages (NEEDED, else you will not have keyboard support!)
+* gcc 4.8 is required.
+* MPG123 dev libraries (libmpg123-dev)
+* libsndfile dev libraries (libsndfile1-dev)
+ 
+Everything else is provided in the source tree.
+ 
+
+Compiling SDL2 from source ''will not work!'' Use this version at http://malus.exotica.org.uk/~buzz/pi/sdl/ that works with dispmanx and GLES2. To use, install all packages in &lt;code&gt;sdl2/&lt;/code&gt; with the Debian package manager:
+
+&lt;code&gt;sudo dpkg -i DEB_PACKAGE_NAME.deb&lt;/code&gt;
+
+==How to use==
+
+After compiling, copy zdoom and zdoom.pk3 to your doom folder, and run it ''without starting X''. If you log into a DE automatically, log out of it. ZDoom is not currently supported in X11 Mode on the Raspberry Pi due to stability issues.
+ 
+If the game slows down and becomes choppy after sounds play, it is likely OpenAL. To fix this, reduce the number of max sounds in sound options to '''8'''. If this still does not solve the problem, create an &lt;code&gt;.alsoftrc&lt;/code&gt; in your home dir and type:
+
+&lt;code&gt;[alsa]mmap = false&lt;/code&gt;
+
+Please note that the OpenAL branch is very experimental. Do not expect every sound format or sound volume to work.
+
+Performance is comparable to a high-end Pentium III on a RPi 2, but remember that the RPi 2 delivers better multi-threaded performance than the RPi Model B and B+. Model As have not been tested, but are presumed to work. You may overclock, but on the original Raspberry Pi, it is best to compile at '''High''' overclock settings. Turbo overclock settings can cause memory issues on some models when compiling.
+
+== External links ==
+* [https://github.com/rheit/zdoom Git Repository]
+
+[[category:Guides]][[Category:Technical aspects]]</text>
+    <sha1>0c2fvr30wzh1g6cu7xo86nwe9ayoo4f</sha1>
+  </revision>
+</page>

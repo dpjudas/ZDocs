@@ -1,0 +1,56 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>CheckMove</title>
+  <ns>0</ns>
+  <id>9260</id>
+  <revision>
+    <id>53843</id>
+    <parentid>52697</parentid>
+    <timestamp>2024-11-23T11:32:23Z</timestamp>
+    <contributor>
+      <username>Jekyll Grim Payne</username>
+      <id>2175</id>
+    </contributor>
+    <comment>/* Return value */</comment>
+    <origin>53843</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="1514" sha1="ocrq0f6zqireoneom17zoo19mq2aarg" xml:space="preserve">{{ZScriptNote}}
+
+'''{{class|Actor}}'''
+
+bool '''CheckMove'''(Vector2 ''newpos'', int ''flags'', FCheckPosition ''tm'')
+
+==Usage==
+Checks to see if the caller can successfully move to ''newpos'' in the map. Unlike '''[[TryMove]]''', this function will not actually move the caller if the check passes.
+
+===Parameters===
+*{{c|Vector2 '''newpos'''}}
+:The xy location to check. Note that this is absolute and not relative to the caller.
+*{{c|int '''flags'''}}
+:Default is 0. Multiple flags can be combined with &lt;code&gt;|&lt;/code&gt;. The following flags are avaialble:
+:*{{c|PCM_DROPOFF}} — Don't allow moves where the drop off exceeds the caller's {{property|MaxDropOffHeight}}. Actors with {{flag|FLOAT}} or {{flag|DROPOFF}} will ignore this.
+:*{{c|PCM_NOACTORS}} — Ignore any actors that may be blocking the move
+:*{{c|PCM_NOLINES}} — Ignore any [[Structs:Line|lines]] that may be blocking the move
+*{{c|FCheckPositon '''tm'''}}
+:Default is {{c|null}}. A [[Structs:FCheckPosition|'''FCheckPosition struct''']] that will be filled with the relevant information.
+
+===Return value===
+Returns true if the caller could successfully move to ''newpos''.
+
+The function also fills the values of the [[Structs:FCheckPosition|'''FCheckPosition struct''']], which has the following fields:
+{{: Structs:FCheckPosition}}
+
+See the [Structs:FCheckPosition|'''FCheckPosition struct''']] page for all details.
+
+==Examples==
+{{noexamples}}
+
+==See also==
+*[[Structs:FCheckPosition]]
+*[[CheckPosition]]
+*[[TryMove]]
+
+[[category:ZScript]]</text>
+    <sha1>ocrq0f6zqireoneom17zoo19mq2aarg</sha1>
+  </revision>
+</page>

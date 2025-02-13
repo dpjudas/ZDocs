@@ -1,0 +1,111 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>GetDropItems</title>
+  <ns>0</ns>
+  <id>9879</id>
+  <revision>
+    <id>52361</id>
+    <parentid>52357</parentid>
+    <timestamp>2024-04-10T18:11:09Z</timestamp>
+    <contributor>
+      <username>Jekyll Grim Payne</username>
+      <id>2175</id>
+    </contributor>
+    <comment>/* Usage */</comment>
+    <origin>52361</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="2717" sha1="gqn7myyw21zjxvh28hwjv5gnan4wbfb" xml:space="preserve">'''{{class|Actor}}'''
+
+{{c|clearscope DropItem '''GetDropItems'''() const}}
+
+== Usage ==
+Used to retrieve the list of actor's drop items, which can be specified through the {{property|DropItem|DropItem property}}.
+
+Similarly to actor's inventory in general, drop items are stored in a [[ZScript_data_types#Linked_lists|linked list]]. This function retrieves a pointer to the first drop item (represented by a {{struct|DropItem|DropItem struct}}). A [[Statements#for|FOR]] or a [[Statements#while_and_do.2Fwhile|WHILE]] loop can then be used to iterate over all drop items.
+
+=== Return values ===
+Returns a {{c|DropItem}}-type pointer to the first {{struct|DropItem}} in the list.
+
+== Examples ==
+This example is from the {{class|RandomSpawner}} class which uses its {{property|DropItem}} property to define a list of actors it can spawn, with probability weights and amounts. It uses [[GetDropItems]] in its &lt;code&gt;ChooseSpawn&lt;/code&gt; virtual function:
+&lt;syntaxhighlight lang="csharp"&gt;
+[...] // The rest of the code is omitted for brevity
+	virtual Name ChooseSpawn()
+	{
+		DropItem di;   // di will be our drop item list iterator
+		DropItem drop; // while drop stays as the reference point.
+		int n = 0;
+		bool nomonsters = sv_nomonsters || level.nomonsters;
+
+		drop = di = GetDropItems();
+		if (di != null)
+		{
+			while (di != null)
+			{
+				bool shouldSkip = (di.Name == 'None') || (nomonsters &amp;&amp; IsMonster(di));
+				
+				if (!shouldSkip)
+				{
+					int amt = di.Amount;
+					if (amt &lt; 0) amt = 1; // default value is -1, we need a positive value.
+					n += amt; // this is how we can weight the list.
+				}
+
+				di = di.Next;
+			}
+			if (n == 0)
+			{ // Nothing left to spawn. They must have all been monsters, and monsters are disabled.
+				return 'None';
+			}
+			// Then we reset the iterator to the start position...
+			di = drop;
+			// Take a random number...
+			n = random[randomspawn](0, n-1);
+			// And iterate in the array up to the random number chosen.
+			while (n &gt; -1 &amp;&amp; di != null)
+			{
+				if (di.Name != 'None' &amp;&amp;
+					(!nomonsters || !IsMonster(di)))
+				{
+					int amt = di.Amount;
+					if (amt &lt; 0) amt = 1;
+					n -= amt;
+					if ((di.Next != null) &amp;&amp; (n &gt; -1))
+						di = di.Next;
+					else
+						n = -1;
+				}
+				else
+				{
+					di = di.Next;
+				}
+			}
+			if (di == null)
+			{
+				return 'Unknown';
+			}
+			else if (random[randomspawn]() &lt;= di.Probability)	// prob 255 = always spawn, prob 0 = almost never spawn.
+			{
+				return di.Name;
+			}
+			else
+			{
+				return 'None';
+			}
+		}
+		else
+		{
+			return 'None';
+		}
+	}
+[...] // The rest of the code is omitted for brevity
+&lt;/syntaxhighlight&gt;
+
+== See also ==
+* [[Structs:DropItem]]
+* {{property|DropItem|DropItem property}}
+
+[[Category:ZScript]]</text>
+    <sha1>gqn7myyw21zjxvh28hwjv5gnan4wbfb</sha1>
+  </revision>
+</page>

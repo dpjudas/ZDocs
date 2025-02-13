@@ -1,0 +1,156 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>Classes:Health</title>
+  <ns>0</ns>
+  <id>2729</id>
+  <revision>
+    <id>54036</id>
+    <parentid>52179</parentid>
+    <timestamp>2024-12-06T10:48:18Z</timestamp>
+    <contributor>
+      <username>Jekyll Grim Payne</username>
+      <id>2175</id>
+    </contributor>
+    <minor />
+    <origin>54036</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="4272" sha1="ild5guzox65rx7pn36gg3ft4ubu3arc" xml:space="preserve">{{Actor|
+| type = Internal
+| name = Health
+| class = Health
+}}[[Classes]]: {{Class|Inventory}}&amp;rarr;&lt;u&gt;Health&lt;/u&gt;&lt;br&gt;
+&amp;ensp;&amp;rarr;{{Class|CrystalVial}}&lt;br&gt;
+&amp;ensp;&amp;rarr;{{Class|HealthBonus}}&lt;br&gt;
+&amp;ensp;&amp;rarr;{{Class|Medikit}}&lt;br&gt;
+&amp;ensp;&amp;rarr;{{Class|MegasphereHealth}}&lt;br&gt;
+&amp;ensp;&amp;rarr;{{Class|Soulsphere}}&lt;br&gt;
+&amp;ensp;&amp;rarr;{{Class|Stimpack}}&lt;br&gt;
+
+A &lt;u&gt;Health&lt;/u&gt; item adds a certain amount to the player's health points. Items of this type are always effective when picked up. They cannot be placed in the inventory; to have health items in inventory, use {{class|HealthPickup}}.
+&lt;u&gt;Health&lt;/u&gt; is never used directly. This class is only used as a base class for predefined items (like Doom's {{Class|Stimpack}} or for items defined in [[ZScript]]/[[DECORATE]].
+
+{{note|The {{c|Health}} class is a type of item that can be picked up. This is NOT the same entity as an actor's current {{property|health}}—that one is an Actor class variable field, NOT an item.}}
+
+
+== Using in [[ZScript]] and [[DECORATE]] ==
+Health items support all the basic {{Class|Inventory|Inventory properties}}. However, they use a few of them differently:
+
+*'''Inventory.Amount''' ''value''
+:Sets the amount of health this item gives when picked up.
+*'''Inventory.MaxAmount''' ''value''
+:Sets the maximum amount of health you can get with this item. If this is greater than 0, the {{Class|MaxHealth|maximum health points gain}} is added to this to determine the final maximum amount.
+
+In addition they define one new property:
+{{:Health properties}}
+
+== Examples ==
+ class Whiskey : &lt;u&gt;Health&lt;/u&gt;
+ {
+   Default
+   {
+     {{Property|Inventory.PickupMessage}} "You drank some booze.";  {{LanguageCodeNote}}
+     {{Property|Inventory.Amount}} 5;
+     {{Property|Inventory.MaxAmount}} 200;
+     +{{Flag|COUNTITEM}} {{color|darkgreen|//means that the item counts toward item percentage}}
+   }
+   States
+   {
+   Spawn:
+     RWHI A -1;
+     Stop;
+   }
+ }
+
+
+ class DogFood : &lt;u&gt;Health&lt;/u&gt; 10575
+ {
+   Default
+   {
+     {{Property|Inventory.PickupMessage}} "Ate some dog food. Woof!";  {{LanguageCodeNote}}
+     {{Property|Inventory.PickupSound}} "dog/sight";
+     {{Property|Inventory.Amount}} 4;
+     {{Property|Inventory.MaxAmount}} 200;
+     +{{Flag|COUNTITEM}} {{color|darkgreen|//means that the item counts toward item percentage}}
+     +{{Flag|INVENTORY.ALWAYSPICKUP}} {{color|darkgreen|//means the item will be always picked up, even if the actor is already at max health}}
+   }
+   States
+   {
+   Spawn:
+     AWI1 A -1;
+     Stop;
+   }
+ }
+
+== [[ZScript]] definition ==
+{{ZScriptDefinitionNote|actors/inventory/health.zs#L36}}
+&lt;syntaxhighlight lang="csharp"&gt;
+class Health : Inventory
+{
+	transient int PrevHealth;
+	meta int LowHealth;
+	meta String LowHealthMessage;
+	
+	property LowMessage: LowHealth, LowHealthMessage;
+	
+	Default
+	{
+		+INVENTORY.ISHEALTH
+		Inventory.Amount 1;
+		Inventory.MaxAmount 0;
+		Inventory.PickupSound "misc/health_pkup";
+	}
+	
+	//===========================================================================
+	//
+	// AHealth :: PickupMessage
+	//
+	//===========================================================================
+	override String PickupMessage ()
+	{
+		if (PrevHealth &lt; LowHealth)
+		{
+			String message = LowHealthMessage;
+			if (message.Length() != 0)
+			{
+				return message;
+			}
+		}
+		return Super.PickupMessage();
+	}
+
+	//===========================================================================
+	//
+	// TryPickup
+	//
+	//===========================================================================
+
+	override bool TryPickup (in out Actor other)
+	{
+		PrevHealth = other.player != NULL ? other.player.health : other.health;
+
+		// P_GiveBody adds one new feature, applied only if it is possible to pick up negative health:
+		// Negative values are treated as positive percentages, ie Amount -100 means 100% health, ignoring max amount.
+		if (other.GiveBody(Amount, MaxAmount))
+		{
+			GoAwayAndDie();
+			return true;
+		}
+		return false;
+	}
+}&lt;/syntaxhighlight&gt;
+
+== [[DECORATE]] definition ==
+{{DecorateDefinitionNote}}
+ ACTOR &lt;u&gt;Health&lt;/u&gt; : {{Class|Inventory}} native
+ {
+   {{Property|Inventory.Amount}} 1
+   {{Property|Inventory.MaxAmount}} 0
+   {{Property|Inventory.PickupSound}} "misc/health_pkup"
+ }
+
+[[Category:ZScript]]
+[[Category:DECORATE]]
+[[Category:Inventory]]</text>
+    <sha1>ild5guzox65rx7pn36gg3ft4ubu3arc</sha1>
+  </revision>
+</page>

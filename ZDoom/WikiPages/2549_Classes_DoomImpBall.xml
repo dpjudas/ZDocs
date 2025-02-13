@@ -1,0 +1,85 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>Classes:DoomImpBall</title>
+  <ns>0</ns>
+  <id>2549</id>
+  <revision>
+    <id>49048</id>
+    <parentid>48903</parentid>
+    <timestamp>2022-03-12T09:12:48Z</timestamp>
+    <contributor>
+      <username>Deded007</username>
+      <id>1392</id>
+    </contributor>
+    <minor />
+    <comment>code formatting</comment>
+    <origin>49048</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="1344" sha1="1kvoyb6j758ry0jb70i40qbxto0bt56" xml:space="preserve">{{Actor|
+| type = Explosive
+| name = Imp fireball
+| class = DoomImpBall
+| game = Doom
+| spawnid = 10
+| spawnname = T_IMPFIREBALL 
+}}[[Classes]]: &lt;u&gt;DoomImpBall&lt;/u&gt;
+
+
+The fireball thrown by an [[Classes:DoomImp|Imp]].
+==== [[ZScript]] definition ====
+{{ZScriptDefinitionNote|actors/doom/doomimp.zs}}
+ class &lt;u&gt;DoomImpBall&lt;/u&gt; : [[Classes:Actor|Actor]]
+ {
+  Default
+  {
+    {{Property|Radius}} 6;
+    {{Property|Height}} 8;
+    {{Property|Speed}} 10;
+    {{Property|FastSpeed}} 20;
+    {{Property|Damage}} 3;
+    {{Property|Projectile;}}
+    +{{Flag|RANDOMIZE}}
+    +{{Flag|ZDOOMTRANS}}
+    {{Property|RenderStyle}} "Add";
+    {{Property|Alpha}} 1;
+    {{Property|SeeSound}} "imp/attack";
+    {{Property|DeathSound}} "imp/shotx";
+  }
+  States
+  {
+  Spawn:
+    BAL1 AB 4 BRIGHT;
+    Loop;
+  Death:
+    BAL1 CDE 6 BRIGHT;
+    Stop;
+  }
+ }
+==== [[DECORATE]] definition ====
+{{DecorateDefinitionNote}}
+ ACTOR &lt;u&gt;DoomImpBall&lt;/u&gt;
+ {
+   {{Property|Radius}} 6
+   {{Property|Height}} 8
+   {{Property|Speed}} 10
+   {{Property|FastSpeed}} 20
+   {{Property|Damage}} 3
+   {{Property|Projectile}}
+   +{{Flag|RANDOMIZE}}
+   {{Property|RenderStyle}} Add
+   {{Property|Alpha}} 1
+   {{Property|SeeSound}} "imp/attack"
+   {{Property|DeathSound}} "imp/shotx"
+   States
+   {
+   Spawn:
+     BAL1 AB 4 Bright
+     Loop
+   Death:
+     BAL1 CDE 6 Bright
+     Stop
+   }
+ }</text>
+    <sha1>1kvoyb6j758ry0jb70i40qbxto0bt56</sha1>
+  </revision>
+</page>

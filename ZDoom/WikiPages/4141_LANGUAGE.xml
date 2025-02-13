@@ -1,0 +1,380 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>LANGUAGE</title>
+  <ns>0</ns>
+  <id>4141</id>
+  <revision>
+    <id>54181</id>
+    <parentid>54114</parentid>
+    <timestamp>2025-02-03T10:49:39Z</timestamp>
+    <contributor>
+      <username>Jekyll Grim Payne</username>
+      <id>2175</id>
+    </contributor>
+    <comment>/* Language codes */ Added note on Ukrainian</comment>
+    <origin>54181</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="16707" sha1="ndc6ca52laif71abmw0wt374hp4c1dl" xml:space="preserve">The LANGUAGE lump allows modders to store text strings that are meant to be visible to the player and then retrieve them in code (e.g. [[ZScript]], [[ACS]], [[MENUDEF]], [[MAPINFO]]) by using a unique identifier given to each string.
+
+The reasons to have a LANGUAGE lump are:
+* The same text string that has to be reused in multiple places will not have to be typed out manually everywhere. Instead, only the same identifier can be used.
+* Consequently, if there's a need to introduce some kind of a global change to a string, it can be done once in the LANGUAGE lump while keeping the original string ID; it'll be updated in all places that reference that string ID.
+* LANGUAGE makes translations possible: you can attach multiple variations of the string in different languages to the same string ID, and the version that matches the user's chosen language will be used (if available). GZDoom itself comes with multiple languages, and providing translations for projects (especially standalone games) is not uncommon, especially for authors that speak multiple languages themselves.
+
+{{note|Starting GZDoom 4.0.0 the LANGUAGE lump can be defined in a .CSV format, which provides much cleaner and more convenient system for storing and arranging strings. Authors are encouraged to use this format over of the old text format due to its convenience and improved readability, especially if they're using LANGUAGE with the intention of adding translations and/or have a large number of strings. One of the easiest means of utilizing this is creating your LANGUAGE in [[https://docs.google.com/spreadsheets/ Google Sheets]] and then using the built-in feature to export it to CSV. This is how GZDoom's own menus are localized (you can find GZDoom and [[Raze]] strings [[https://docs.google.com/spreadsheets/d/1pvwXEgytkor9SClCiDn4j5AH7FedyXS-ocCbsuQIXDU/edit?usp=sharing in this Google Sheet]].&lt;br&gt;&lt;br&gt;For more information on translation of GZDoom, see '''[[Internationalization]]'''.}}
+
+=Language codes=
+Language codes are placed in the top row in CSV format or as a dedicated header in the text format.
+{{note|Keep in mind that for some of these languages, providing new fonts may be required as the default fonts in [[Doom]], [[Heretic]], [[Hexen]] and [[Strife]] do not cover accented characters or non-Latin characters. See '''[[Unicode font]]''' for details on adding custom fonts.}}
+
+{| class="wikitable" style="font-weight:bold; text-align:center;"
+|- style="font-weight:normal; text-align:left;"
+! Code
+! Description
+|-
+| default
+| style="font-weight:normal; text-align:left;" | The fallback used if no translation in the users language is available, or if the users language is unknown.&lt;br /&gt;If the default isnt available either, the keyword will be displayed directly.
+|-
+| enu
+| style="font-weight:normal; text-align:left;" | English (US)
+|-
+| eng
+| style="font-weight:normal; text-align:left;" | English (UK)
+|-
+| cs
+| style="font-weight:normal; text-align:left;" | Česky (Czech)
+|-
+| de
+| style="font-weight:normal; text-align:left;" | Deutsch (German)
+|-
+| es
+| style="font-weight:normal; text-align:left;" | Español (España) (Castilian Spanish)
+|-
+| esm
+| style="font-weight:normal; text-align:left;" | Español (Latino) (Latin American Spanish)
+|-
+| eo
+| style="font-weight:normal; text-align:left;" | Esperanto
+|-
+| fi
+| style="font-weight:normal; text-align:left;" | Suomi (Finnish)
+|-
+| fr
+| style="font-weight:normal; text-align:left;" | Français (French)
+|-
+| hu
+| style="font-weight:normal; text-align:left;" | Magyar (Hungarian)
+|-
+| it
+| style="font-weight:normal; text-align:left;" | Italiano (Italian)
+|-
+| jp
+| style="font-weight:normal; text-align:left;" | 日本語 (Japanese)
+|-
+| ko
+| style="font-weight:normal; text-align:left;" | 한국어 (Korean)
+|-
+| nl
+| style="font-weight:normal; text-align:left;" | Nederlands (Dutch)
+|-
+| pl
+| style="font-weight:normal; text-align:left;" | Polski (Polish)
+|-
+| ptg
+| style="font-weight:normal; text-align:left;" | Português (European Portuguese)
+|-
+| pt
+| style="font-weight:normal; text-align:left;" | Português do Brasil (Brazilian Portuguese)
+|-
+| ro
+| style="font-weight:normal; text-align:left;" | Română (Romanian)
+|-
+| ru
+| style="font-weight:normal; text-align:left;" | Русский (Russian)
+|-
+| sr
+| style="font-weight:normal; text-align:left;" | Српски (Serbian)
+|-
+| uk
+| style="font-weight:normal; text-align:left;" | Українська (Ukrainian) ''(translation ongoing; not selectable in-game)''
+|}
+
+=Using LANGUAGE=
+==CSV==
+===Format requirements and tips===
+Using a .csv file for the LANGUAGE lump is highly recommended over the old plaintext format. With a CSV you get a clean and clear structure, where localized versions of each string are positioned right next to each other, and the languages are separated by columns. A file like this can be easily viewed and localized, or uploaded into specialized translation software.
+
+&lt;u&gt;The LANGUAGE.csv file '''must''' adhere to the following requirements:&lt;/u&gt;
+*Delimiter: comma
+*Encoding: UTF-8
+*First line (column headers): language codes, as specified above.
+
+'''Note:''' CSV cells support real linebreaks (usually created with a shortcut like Ctrl-Enter) instead of &lt;code&gt;\n&lt;/code&gt;.
+
+A CSV file can be created with [https://www.google.com/sheets Google Sheets]: simply create a sheet with the proper structure, then choose {{c|File &gt; Download &gt; Comma-separated values (.csv, current sheet)}}, then rename the downloaded file to {{c|LANGUAGE.csv}} and put it in your project's folder. Using a Google Sheet is also an easy way to set up collaboration between multiple translators.
+
+Other software that can open and edit a CSV file will also work (such as MS Excel, LibreOffice, etc.). A CSV file can also be viewed as a plain text file with apps like Notepad++, but it's not recommended to edit it this way, since it's very cumbersome.
+
+===Structure===
+This is an example of a few strings from GZDoom's LANGUAGE.csv:
+{| class="wikitable" 
+|- style="font-weight:bold;"
+! default
+! Identifier
+! Remarks
+! eng enc ena enz eni ens enj enb enl ent enw
+! cs
+! da
+! de
+|-
+| Press Y or N.
+| style="text-align:center; vertical-align:middle; font-weight:bold;" | PRESSYN
+| 
+| 
+| Stiskni Y nebo N.
+| Tryk på Y eller N.
+| Drücke Y oder N.
+|-
+| Yes
+| style="text-align:center; vertical-align:middle; font-weight:bold;" | TXT_YES
+| 
+| 
+| Ano
+| Ja
+| Ja
+|-
+| No
+| style="text-align:center; vertical-align:middle; font-weight:bold;" | TXT_NO
+| 
+| 
+| Ne
+| Nej
+| Nein
+|-
+| You can't save if you aren't playing!&lt;br /&gt;&lt;br /&gt;Press a key.
+| style="text-align:center; vertical-align:middle; font-weight:bold;" | SAVEDEAD
+| 
+| 
+| Mimo hru nelze ukládat!&lt;br /&gt;&lt;br /&gt;Stiskni libovolnou klávesu.
+| Du kan ikke gemme, hvis du ikke spiller!&lt;br /&gt;&lt;br /&gt;Tryk på en tast.
+| Du kannst nicht speichern, wenn du nicht spielst.&lt;br /&gt;&lt;br /&gt;Drücke eine Taste
+|}
+
+===Columns===
+The meanings of the columns are as follows:
+*'''{{c|Identifier}}'''
+:This is the column that contains the string ID. This is what you will use in code or other lumps, and GZDoom will retrieve the actual text string associated with it.
+*'''{{c|Remarks}}'''
+:This is a column for internal comments, it will not be visible to the final user. This can be used to leave commments for yourself and/or future translators.
+*'''{{c|Default}}'''
+:This is the "default" language. If there's no translation for the specific language used by the player, text from this column will be used instead.
+
+The other columns in the example above contain [[#Language codes|language codes, as described above]].
+
+Note that the column for various of the English language is empty and only contains "eng enc ena enz eni ens enj enb enl ent enw" (all supported English language codes) in the header. The actual English text is provided in the '''Default''' column, so it's displayed both for all variations of English, and for any languages that may not be supported.
+
+===Duplicate strings===
+A string can also be defined to point to another LANGUAGE string label (not necessarily within the same lump). This can be useful to avoid duplication:
+{| class="wikitable" 
+|- style="font-weight:bold; vertical-align:bottom; background-color:#34ff34;"
+! default
+! identifier
+! remarks
+|- style="vertical-align:bottom;"
+| What a cool string
+| style="background-color:#EFEFEF;" | MYPROJECT_COOL
+| style="background-color:#EFEFEF;" | 
+|-
+| style="vertical-align:bottom;" | $MYPROJECT_COOL
+| style="background-color:#EFEFEF;" | MYPROJECT_COOL2
+| style="vertical-align:bottom; background-color:#EFEFEF;" | This is a duplicate of MYPROJECT_COOL
+|}
+
+This duplication can be set up to work per language. For example, if you want to add several forms for the same word in one language, but they all appear the same in the other language, you could duplicate them in one specific language while writing out different strings in another.
+
+==Classic format==
+The classic format uses the following structure:
+&lt;syntaxhighlight lang="csharp&gt;
+[enu] //language code header
+
+MYSTRINGI_ID1 = "My string 1"; //Note the use of commas and quotation marks
+MYSTRINGI_ID2 = "My string 2";
+&lt;/syntaxhighlight&gt;
+
+===Duplicate strings===
+A string can also be defined to point to another LANGUAGE string label (not necessarily within the same lump). This can be useful to avoid duplication:
+&lt;syntaxhighlight lang="csharp&gt;
+MY_STRING_1 = "String 1 or 2";
+MY_STRING_2 = "$$MY_STRING_1"; // MY_STRING_2 will also resolve to "String 1 or 2"
+&lt;/syntaxhighlight&gt;
+You can define a string only for a specific game by prefixing it with '''$ifgame(gamename)''', where 'gamename' can be any of 'doom', 'heretic', 'hexen', 'strife' or 'chex':
+&lt;syntaxhighlight lang="csharp&gt;
+GAME_STRING = "This will be the text for any game";
+$ifgame(heretic) GAME_STRING = "This will be the text for heretic";
+&lt;/syntaxhighlight&gt;
+
+'''Note:''' In text format duplication requires &lt;code&gt;$$&lt;/code&gt; — two symbols, not one — in contrast to CSV format.
+
+===Linebreaks===
+Strings defined in this lump supports some of [[Print#Escape_sequence|Print's escape sequences]], such as color ('''\c''') and new line ('''\n''').
+
+Strings can also be split into multiple lines. In order for the strings to be split up in game, the new line escape character must be used. Otherwise, they will simply be merged together as one.
+&lt;syntaxhighlight lang="csharp&gt;
+SPLIT_STRING =
+	"This string is split into\n" // NO COMMAS AFTER THE DOUBLE QUOTATIONS.
+	"multiple lines by the\n"
+	"new line escape character.\n"; // Strings are all terminated with a semicolon.
+
+NONSPLIT_STRING =
+	"This string, on the other hand "
+	"is NOT split up because the "
+	"new line escape characters "
+	"are not used. ";
+&lt;/syntaxhighlight&gt;
+
+=Retrieving LANGUAGE strings=
+==In [[ACS]]==
+Strings defined in LANGUAGE can be retrieved in ACS in functions that use string such as [[Print]] and [[HudMessage]]. With the letter 'l' specifier you can retrieve strings defined in LANGUAGE. 
+:e.g.: &lt;code&gt;Print(l:"ALARMWARN");&lt;/code&gt;
+
+==In [[ZScript]]==
+Both in [[ZScript]] and [[DECORATE]] any [[Actor properties|Actor property]] that is meant to contain a player-facing string can be filled with a LANGUAGE identifier, and it'll be resolved automatically:
+&lt;syntaxhighlight lang="csharp"&gt;
+Default
+{
+  Inventory.PickupMessage "$GOTCLIP"; // This will resolve to "Picked up a clip." localized to the user's language
+  ...&lt;/syntaxhighlight&gt;
+This extends to properties like {{Property|Inventory.PickupMessage}}, {{Property|Tag}} and {{property|Obituary}}.
+
+However, in any other place where a [[String]] is created manually, it will not resolve automatically. To resolve it, use '''{{struct|StringTable|StringTable.Localize()}}''':
+&lt;syntaxhighlight lang="csharp"&gt;
+Console.MidPrint(smallfont, Stringtable.Localize("$GOTCLIP"));
+&lt;/syntaxhighlight&gt;
+
+This will set {{c|msg}} to "Picked up a clip." localized, and then print it with {{struct|Console|Console.MidPrint}}. If for some reason GOTCLIP id doesn't exist in the loaded LANGUAGE lump, it will print "$GOTCLIP" literally.
+
+===In [[DECORATE]] {{deprecated}}===
+[[DECORATE]] has no means of localizing strings. Only the above mentioned Actor properties will localize automatically.
+
+==In other text lumps==
+In most other text lumps (such as [[MENUDEF]], [[MAPINFO]], [[SECRETS]], etc.) a LANGUAGE string can be obtained by prefixing it with &lt;code&gt;$&lt;/code&gt;.
+E.g. in [[SECRETS]]:
+ $s36;$SECRETHINT_AMMOCACHE
+
+
+In [[MENUDEF]]:
+&lt;syntaxhighlight lang="csharp"&gt;
+Option "$MYMODOPTION", "mymodcvar", "OnOff"
+&lt;/syntaxhighlight&gt;
+This creates a menu option that retrieves whatever string you have under the {{c|MYMODOPTION}} identifier.
+
+
+In [[MAPINFO]]:
+ map MYMAP name "$HUSTR_MYMAP"
+
+In MAPINFO it's also possible to use the &lt;code&gt;lookup&lt;/code&gt; instruction, without quotation marks or &lt;code&gt;$&lt;/code&gt;:
+ map MYMAP lookup HUSTR_MYMAP
+
+==Obituary assignment==
+LANGUAGE can be used to assign [[Actor_properties#Obituaries|obituaries]] to actors. There are generic and damage-type-specific obituaries. The syntax is as follows:
+ Obituary_{{color|green|&lt;classname&gt;}} = "{{color|darkred|&lt;obituarytext&gt;}}";
+ Obituary_{{color|green|&lt;classname&gt;}}_{{color|green|&lt;damagetype&gt;}} = "{{color|darkred|&lt;obituarytext&gt;}}";
+''classname'' is the class name of the actor, while ''damagetype'' is the MOD (means of death). This is for damage-type-specific obituaries.
+
+The advantage of this method is that it can be used to easily assign obituaries to actors that originally had none, without the need to create modified versions to replace the originals with. It is also the only way to assign damage-type-specific obituaries.
+
+Note that this method of assigning obituaries takes precedence over the obituary actor properties.
+
+=Examples=
+==CSV format==
+This is an example of LANGUAGE.csv containing several strings for a mod:
+{| class="wikitable" style="vertical-align:bottom;"
+|- style="font-weight:bold; background-color:#34ff34;"
+! default
+! identifier
+! remarks
+! pt
+! de
+! esm
+! fr
+|-
+| Flat color
+| style="background-color:#D9D9D9;" | JGPHUD_GENERAL_BACKSTYLE_COLOR
+| style="background-color:#EFEFEF;" | Option for background appearance
+| Cor sólida
+| Füllfarbe
+| Color sólido
+| Couleur uniforme
+|-
+| Texture
+| style="background-color:#D9D9D9;" | JGPHUD_GENERAL_BACKSTYLE_TEXTURE
+| style="background-color:#EFEFEF;" | Option for background appearance
+| Textura
+| Textur
+| Texturizado
+| Texture
+|-
+| HUD background color
+| style="background-color:#D9D9D9;" | JGPHUD_GENERAL_BACKCOL
+| style="background-color:#EFEFEF;" | General background color
+| Cor de fundo
+| Hintergrundfarbe
+| Color de fondo
+| Couleur d’arrière-plan
+|-
+| HUD background opacity
+| style="background-color:#D9D9D9;" | JGPHUD_GENERAL_BACKALPHA
+| style="background-color:#EFEFEF;" | General background opacity
+| Opacidade
+| Hintergrunddeckkraft
+| Opacidad de fondo
+| Opacité de l’arrière-plan
+|-
+| Texture name
+| style="background-color:#D9D9D9;" | JGPHUD_GENERAL_BACKSTYLE_TEXNAME
+| style="background-color:#EFEFEF;" | If the background mode is set to "Texture", this option&lt;br /&gt;will let the player input the name of the texture
+| Nome da textura
+| Texturname
+| Nombre de la textura
+| Nom de la texture
+|}
+==Old format==
+This assigns the {{Class|DoomImp|imp}} a new set of obituaries.
+ Obituary_{{Class|DoomImp}} = "{{color|darkred|%o was turned to ashes by an imp's fireball.}}";
+ Obituary_DoomImp_{{DamageType|Melee}} = "{{color|darkred|%o got clawed in the face by an imp.}}";
+
+This is a generalized example of creating multiple string:
+&lt;syntaxhighlight lang="csharp"&gt;
+[enu default] 
+/* This section is both for American English (enu -&gt; en US) and the default language
+   (used if there are no available translations for the user's own language).        */
+
+S_SUPERWEAPON = "Picked up the ultimate superweapon!";
+NEEDMAUVEKEYD = "You need a mauve key to open this door.";
+NEEDMAUVEKEYO = "You need a mauve key to activate this object.";
+
+[fr]
+/* And now a French translation for the above lines */
+
+S_SUPERWEAPON = "La super-arme ultime !";
+NEEDMAUVEKEYD = "Il vous faut la clef mauve pour ouvrir cette porte.";
+NEEDMAUVEKEYO = "Il vous faut la clef mauve pour actionner cet objet.";
+
+[de]
+/* In German, too */
+S_SUPERWEAPON = "Die maximale Überwaffe !";
+// Oh no, what about the mauve key messages? They don't have a translation!
+// Then they'll just use the English versions above since they're also defined as being the default.
+&lt;/syntaxhighlight&gt;
+
+==See also==
+*The [[CVARs:Configuration#language|language CVAR]] for choosing the language used by the game.
+*[[ACS]]
+*[[ZScript]]
+:*[[Structs:StringTable]] — contains the {{c|Localize}} method
+:*[[String]] — data format specifications and features
+*[[MAPINFO]]
+[[Category:ZDoom special lumps]]</text>
+    <sha1>ndc6ca52laif71abmw0wt374hp4c1dl</sha1>
+  </revision>
+</page>

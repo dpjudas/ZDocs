@@ -1,0 +1,44 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>Adding keysections</title>
+  <ns>0</ns>
+  <id>828</id>
+  <revision>
+    <id>24280</id>
+    <parentid>15330</parentid>
+    <timestamp>2009-09-28T16:32:28Z</timestamp>
+    <contributor>
+      <username>Zhs2</username>
+      <id>1656</id>
+    </contributor>
+    <comment>Spelling, grammar</comment>
+    <origin>24280</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="1893" sha1="acvf2etukya4angfm6wh4f990r1l0aw" xml:space="preserve">The keysection part of the [[KEYCONF]] lump serves the purpose of allowing a wad's author to add new key binds for the player to use, which will be linked to scripted events such as toggling information on screen with the [[Console_commands#puke_.28script_.5Barguments.5D.29|puke]] command.
+
+When making a new keysection, the "addkeysection" command must be used so ZDoom knows to only associate this particular keysection with a particular wad.
+
+The keywords that are associated with this part of the lump are:
+
+* addmenukey - This adds a new object under the menu you have created.
+* bind - This adds the bind to a key.
+* defaultbind - This adds the bind ''only'' if the key is currently unbound ''and'' this item is not already bound to a key.
+* alias - assigns other commands to a single named command.
+
+An example of a KEYCONF which adds a new keysection:
+
+    addkeysection "My Keysection" MySampleKeysection
+    addmenukey "My Key Bind" my_newbind
+    alias my_newbind "puke 255"
+    defaultbind Q my_newbind
+
+This setup makes a new section under the "Customize Controls" area in ZDoom's options called "My Keysection" which will appear at the bottom. An editable command called "My Key Bind" will appear, and if possible will be bound to Q.
+
+When the player presses Q (or any key they have changed this to) it will activate the my_newbind alias, which runs script 255.
+
+The second name after keysection specifies what ini section these keybindings will be saved in. You should make this something related to your project to minimize the risk of using a section that another might project also use. "MySampleKeysection" is therefore a bad name to use when you are actually defining a weapon section, but it suffices for example purposes. If you were using this in a WAD named "The Uvlevian Empire", then "UvlevianEmpire" would be a suitable keysection name.
+
+[[category:KEYCONF guides]]</text>
+    <sha1>acvf2etukya4angfm6wh4f990r1l0aw</sha1>
+  </revision>
+</page>

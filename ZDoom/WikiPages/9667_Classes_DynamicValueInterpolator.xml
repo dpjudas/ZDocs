@@ -1,0 +1,56 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>Classes:DynamicValueInterpolator</title>
+  <ns>0</ns>
+  <id>9667</id>
+  <revision>
+    <id>53077</id>
+    <parentid>53076</parentid>
+    <timestamp>2024-09-12T23:01:28Z</timestamp>
+    <contributor>
+      <username>Jekyll Grim Payne</username>
+      <id>2175</id>
+    </contributor>
+    <minor />
+    <origin>53077</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="2430" sha1="l56vjqrg1y4nq5j2nelqqqzm97q6g21" xml:space="preserve">{{ZScriptNote}}
+
+'''DynamicValueInterpolator''' is a data-scoped class that allows for gradual change of a value, which can be used for something like a health indicator lerping over a few tics instead of changing its value instantly, or a similar effect with a graphical element. It can be used in any scope.
+
+'''DynamicValueInterpolator''' is very similar to '''{{class|LinearValueInterpolator}}'''; the only difference is that it applies easing-in/easing-out effect to interpolation by performing differently-sized steps, whereas '''LinearValueInterpolator''', as implied by its name, interpolates linearly.
+
+Note, both interpolators update every [[tic]] regardless of the scope they were created from, so in UI scope this method will not be particularly smooth, since it'll still be tied to the default 35-tic framerate.
+
+== Fields ==
+*int '''mCurrentValue''' - The current value contained in the interpolator
+*int '''mMinChange''' - The minimum change from from the original value to the target value per interpolator's update
+*int '''mMaxChange''' - The maximum value from from the original value to the target value per interpolator's update
+*double '''mChangeFactor''' - The change factor
+
+== Methods ==
+=== Static ===
+{{c|static '''DynamicValueInterpolator''' Create(int ''startval'', double ''changefactor'', int ''minchange'', int ''maxchange'')}}
+
+This function instantiates a new interpolator. It should be cast to a local field in the HUD (or other UI) class in order to interact with it.
+
+Arguments:
+*int '''startval''' - The original value
+*double '''changefactor''' - The fraction of the amount between the current value and the target value the interpolator should cover per one {{c|Update()}} call
+*int '''minchange''' - The minimum change from from the original value to the target value per interpolator's update
+*int '''maxchange''' - The maximum value from from the original value to the target value per interpolator's update
+
+=== Dynamic ===
+* {{c|void '''Update'''(int ''destvalue'')}}
+:Updates the interpolator, setting a new target value for it to move towards from the current value. The new target value is defined by the '''{{c|destvalue}}''' argument.
+
+* {{c|int '''GetValue'''()}}
+:Returns the current value in the interpolator (contained in the {{c|mCurrentValue}} field).
+
+* {{c|void '''Reset'''(int ''value'')}}
+:Sets the interpolator's current value to '''{{c|value}}'''.
+
+[[Category:ZScript]]</text>
+    <sha1>l56vjqrg1y4nq5j2nelqqqzm97q6g21</sha1>
+  </revision>
+</page>

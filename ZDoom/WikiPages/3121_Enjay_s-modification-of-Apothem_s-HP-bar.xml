@@ -1,0 +1,87 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>Enjay's modification of Apothem's HP bar</title>
+  <ns>0</ns>
+  <id>3121</id>
+  <revision>
+    <id>28522</id>
+    <parentid>15509</parentid>
+    <timestamp>2010-11-19T14:53:31Z</timestamp>
+    <contributor>
+      <username>Gez</username>
+      <id>1283</id>
+    </contributor>
+    <minor />
+    <origin>28522</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="3336" sha1="8vw3dj77k1gm4drwhovxxtlg9pw2ln4" xml:space="preserve">''Tutorial written and coded by Apothem and edited by Enjay''
+==Description==
+This script is a healthbar script for bosses and minibosses.
+
+To use this script replace mtid with the TID of the monster you want the bar to monitor and replace the value of mmaxhp with the max health of the monster you're monitoring.
+
+'''Make sure to replace ENTER with (void) if you dont want the script to activate with the player entering the level.'''
+
+The lumps fillcrit, filldang, fillnorm, and fillcaut are all the filler pics for the bar. Please put these inside the wad outside of any tags. The bar itself, HPMONBAR, is the actual bar pic. also place that inside the wad, but outside of any tags.
+
+Values have been included for 3 common hudsize resolutions. However, the way Zdoom scales these to different screen
+resolutions can lead to minor anomalies if they are not used at their own resolutions.  The 640x480 values seem to do well at most screen resolutions, however.
+
+Uncomment the ones you want to use.  Default is 640x480
+
+==Code==
+&lt;pre&gt;
+#include "zcommon.acs"
+
+int monhp;
+int mtid = 666; //Replace the number here with your monster TID
+int mmaxhp = 4000; //Replace number here with your monster's Max HP
+
+Script 4 ENTER //Replace ENTER with (void) if you want to activate the script
+{              //with a line instead of on level entry.
+int hdisp;
+monhp = getactorproperty(MTID, APROP_Health);
+setfont("NORMAL");
+hdisp = (monhp * 100 / mmaxhp);
+//sethudsize(1024,768,0);  //Sets bar to behave as if it were on a 1024x768 screen
+//sethudsize(800,600,0);  //Sets bar to behave as if it were on a 800x600 screen
+sethudsize(640,480,0);    //Sets bar to behave as if it were on a 640x480 screen
+if (hdisp &lt;= 0)
+hdisp = 0;
+//hudmessage(i:hdisp; 1, 0, CR_WHITE, 512.0, 25.0, 0, 0);  //message is not a fading one - 1024x768 offsets
+//hudmessage(i:hdisp; 1, 0, CR_WHITE, 400.0, 25.0, 0, 0);  //message is not a fading one - 800x600 offsets
+hudmessage(i:hdisp; 1, 0, CR_WHITE, 320.0, 25.0, 0, 0);  //message is not a fading one - 640x480 offsets
+int acounter;
+int bcounter;
+setfont ("MONHPBAR");
+//hudmessagebold(s:"a"; 1, 101, CR_GREEN, 512.0, 25.0, 1); //message is a fading one  - 1024x768 offsets
+//hudmessagebold(s:"a"; 1, 101, CR_GREEN, 400.0, 25.0, 1); //message is a fading one  - 800x600 offsets
+hudmessagebold(s:"a"; 1, 101, CR_GREEN, 320.0, 25.0, 1); //message is a fading one  - 640x480 offsets
+for (acounter = 0; acounter &lt;= hdisp; acounter++)
+{
+if (hdisp &lt;= 0)
+break;
+bcounter = bcounter + 2.0;
+setfont ("FILLNORM"); //By default, the bar shows as a blue bar.
+if (hdisp &lt; 75) //If the hp is at a caution level (75%) Display a yellow bar.
+setfont ("FILLCAUT");
+if (hdisp &lt; 50) //If the hp is at a danger level (50%) Display an orange bar.
+setfont ("FILLDANG");
+if (hdisp &lt; 25) // If the hp is at a critical level (25%) Display a red bar.
+setfont ("FILLCRIT");
+//hudmessagebold(s:"a"; 1, acounter, CR_GREEN, 415.0 + bcounter, 25.0, 1); //message is a fading one - 1024x768 offsets
+//hudmessagebold(s:"a"; 1, acounter, CR_GREEN, 303.0 + bcounter, 25.0, 1); //message is a fading one - 800x600 offsets
+hudmessagebold(s:"a"; 1, acounter, CR_GREEN, 223.0 + bcounter, 25.0, 1); //message is a fading one - 640x480 offsets
+}
+bcounter = 0;
+acounter = 0;
+delay(1);
+restart;
+}
+&lt;/pre&gt;
+==See Also==
+[[Health Point Bar]]
+[[Category:ACS guides]]</text>
+    <sha1>8vw3dj77k1gm4drwhovxxtlg9pw2ln4</sha1>
+  </revision>
+</page>

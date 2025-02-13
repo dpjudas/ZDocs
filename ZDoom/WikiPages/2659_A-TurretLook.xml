@@ -1,0 +1,54 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>A TurretLook</title>
+  <ns>0</ns>
+  <id>2659</id>
+  <revision>
+    <id>36244</id>
+    <parentid>36227</parentid>
+    <timestamp>2013-04-27T07:56:08Z</timestamp>
+    <contributor>
+      <username>Blue Shadow</username>
+      <id>2021</id>
+    </contributor>
+    <minor />
+    <comment>/* Examples */</comment>
+    <origin>36244</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="1274" sha1="pdrwekli6jbsrdwt0kbjab9aols68gk" xml:space="preserve">{{codepointer|Monster AI}}'''A_TurretLook'''
+
+(no parameters)
+
+{{superseded|A_LookEx}}
+
+Looks for players or other attackable actors in the game. This function is similar to [[A_Look]] but it only reacts to sound. Just seeing the player will not wake up a monster using this. This function must be used in the idle states of a monster.
+
+The major difference between [[A_Look2]] and '''A_TurretLook''' is that '''A_TurretLook''' does not do any random state jumps.
+
+== Examples ==
+This is a blind {{Class|DoomImp|imp}}, you can walk right in front of it and it will not see you, though shooting will awaken it, since its spawn state uses [[A_TurretLook]], making it react to sound. Since it is blind, it never directly aims at you unless you trigger its melee state.
+
+ ACTOR BlindImp : {{Class|DoomImp}}
+ { 
+   States
+   {
+   Spawn:
+     TROO AB 10 [[A_TurretLook]]
+     Loop
+   See:
+     TROO AABB 3 [[A_Chase]]
+     TROO CCDD 3 [[A_Wander]]
+     Loop
+   Melee:
+     TROO EF 8 [[A_FaceTarget]]
+     TROO G 6 [[A_CustomComboAttack]]("{{Class|DoomImpBall}}", 32, 3 * [[DECORATE_expressions#Mathematical_functions|random]](1, 8), "imp/melee")
+     Goto See
+   Missile:
+     TROO EF 8
+     TROO G 6 [[A_CustomMissile]]("{{Class|DoomImpBall}}", 20, 0, 0, 2)
+     Goto See
+   }
+ }</text>
+    <sha1>pdrwekli6jbsrdwt0kbjab9aols68gk</sha1>
+  </revision>
+</page>

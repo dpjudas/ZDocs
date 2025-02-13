@@ -1,0 +1,73 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>Structure of a script</title>
+  <ns>0</ns>
+  <id>2904</id>
+  <revision>
+    <id>36006</id>
+    <parentid>34371</parentid>
+    <timestamp>2013-03-01T03:51:08Z</timestamp>
+    <contributor>
+      <username>Deded007</username>
+      <id>1392</id>
+    </contributor>
+    <minor />
+    <comment>links</comment>
+    <origin>36006</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="2438" sha1="hcbfy3nyfk3dtet4gorniuwhyxlfi6r" xml:space="preserve">How to write a script? Let's start with a simple example:
+
+ // My first ACS script
+ 
+ #include "zcommon.acs"
+  
+ script 1 {{SType|Enter}}
+ {
+   [[print]] (s:"Hello world!");
+ }
+
+
+What does this script do? We'll look at each line and explain:
+
+&lt;tt&gt;// My first ACS script&lt;/tt&gt;
+:This is a comment line. Comments doesn't affect the behavior of the script, they serve only as notes or short explanations what the script does. See the [[#Comments|comments section]] below for more info.
+
+&lt;tt&gt;#include "zcommon.acs"&lt;/tt&gt;
+:The #include [[directive]] instructs the compiler to open the given file and process its contents before continuing processing the current file. The file {{c|zcommon.acs}} is a standard file which contains all basic definitions. Basically every script file you make must include that file. (Note: vanilla ''[[Hexen]]'' scripts will include {{c|common.acs}} instead; and some other ports such as [[Vavoom]] may provide a different file such as {{c|vcommon.acs}}.)
+
+&lt;tt&gt;script 1 enter&lt;/tt&gt;
+:This is a beginning of a script definition. The script's identification number is 1 and the enter keyword means that the script is activated by every player on start of a level. Script numbers can be 1-32767. Alternatively, scripts can be [[named script|named]], so the following line would also work:
+:&lt;tt&gt;script "Example script" enter&lt;/tt&gt;
+
+&lt;tt&gt;print (s:"Hello world!");&lt;/tt&gt;
+:This line is an ACS statement. [[Print]] is the name of the [[Built-in ACS functions|built-in function]] that prints a message on screen - this one prints "Hello world!".
+
+===Comments===
+Comments are parts of the source code ignored by the compiler. They simply do nothing. Their purpose is to allow programmers to insert notes or descriptions in the source code.
+
+
+ACS supports 2 styles of comments:
+
+ // line comment
+ /* block comment */
+
+The first one, known as line comment begins where the pair of slash signs (//) begin and end at the end of the same line. The second one, known as block comment starts at /* characters and ends at the first appearance of */ characters.
+
+
+ /* Wow, my second ACS script, now with more comments.
+    As you can see this is a block comment so it can go
+    through
+    more
+    lines */
+ 
+ #include "zcommon.acs"
+ 
+ // This is executed when player enters the level 
+ script "Welcome Player" {{SType|Enter}}
+ {
+   [[print]] (s: "Hello world!");  // Print the sentence "Hello world!" on screen
+ }
+[[Category:ACS guides]]</text>
+    <sha1>hcbfy3nyfk3dtet4gorniuwhyxlfi6r</sha1>
+  </revision>
+</page>

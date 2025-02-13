@@ -1,0 +1,106 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>MorphActor</title>
+  <ns>0</ns>
+  <id>3754</id>
+  <revision>
+    <id>53654</id>
+    <parentid>48082</parentid>
+    <timestamp>2024-11-11T00:21:05Z</timestamp>
+    <contributor>
+      <username>SPZ</username>
+      <id>2640</id>
+    </contributor>
+    <minor />
+    <comment>Added 2nd link</comment>
+    <origin>53654</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="3823" sha1="kv2vgwo7qob0ts4dfmbo3o01gsom8re" xml:space="preserve">__NOTOC__int '''MorphActor''' (int ''tid'' [, str ''playerclass'' [, str ''monsterclass'' [, int ''duration'' [, int ''style'' [, str ''morphflash'' [, str ''unmorphflash'']]]]]])
+
+== Usage ==
+This function and its complement [[UnMorphActor]] give the ACS coder direct access to the engine's morph subsystem, instead of having to strategically place DECORATE items and suchlike.
+
+=== Parameters ===
+*''tid'': The actor(s) to morph. The activator is used if this parameter is zero.
+*''playerclass'': Defines what class to morph a player into. 
+*''monsterclass'': Defines what class to morph a monster into. 
+*''duration'': Defines the duration of the morphing effects. 
+*''style'': Defines the behaviour of the morphing effects.
+*''morphflash'': Defines the effect flash actor to spawn when the player morphs. If omitted, the game's default teleport fog is used. 
+*''unmorphflash'': Defines the effect flash actor to spawn when the player unmorphs. If omitted, the game's default teleport fog is used.
+
+This function does honor the MRF_WHENINVULNERABLE flag when used on a player, provided that player is also the activator of the function.
+
+Except for ''tid'', the parameters are the same special properties defined by the {{Class|MorphProjectile}} class. They are summarised above; for full details and additional notes, please refer to the {{Class|MorphProjectile}} class.
+
+{{note|for versions of [[ACC]] older than 1.58, all optional arguments must be treated as mandatory. Specify 0 for unused integer arguments and "" for unused string arguments.}}
+
+=== Return value ===
+The return value is the number of actors successfully morphed. This also means that for TID = 0, it is also a boolean (0 = failed, 1 = succeeded).
+
+== Examples ==
+The following example assumes that a {{Class|cyberdemon}} with the {{Flag|DONTMORPH}} [[actor flags|actor flag]] disabled has a [[TID]] of one. The function call turns it into a pitiful little puppy demon, so you can kill him with ease!
+
+Note that the {{Class|Demon}}'s DECORATE code is reproduced from gzdoom.pk3 because the engine currently requires that all morphed monsters must inherit the {{Class|MorphedMonster}} class, and multiple [[Using inheritance|inheritance]] is not supported; at the moment, you cannot arbitrarily morph one kind of monster into another.
+ script 1 (void)
+ {
+     [[MorphActor]](1, "", "MorphDemon", 1048576, 0, "", "");
+ }
+
+ actor MorphableCyberDemon : {{Class|Cyberdemon}} replaces Cyberdemon
+ {
+     -{{Flag|DONTMORPH}} // The cyberdemon has this flag set, by default. The flag needs to be cleared so the monster can morph.
+ }
+ 
+ actor MorphDemon : {{Class|MorphedMonster}}
+ {
+     {{Property|Game}} Doom
+     {{Property|Health}} 150
+     {{Property|PainChance}} 180
+     {{Property|Speed}} 10
+     {{Property|Radius}} 30
+     {{Property|Height}} 56
+     {{Property|Mass}} 400
+     {{Property|Monster}}
+     +{{Flag|FLOORCLIP}}
+     {{Property|SeeSound}} "demon/sight"
+     {{Property|AttackSound}} "demon/melee"
+     {{Property|PainSound}} "demon/pain"
+     {{Property|DeathSound}} "demon/death"
+     {{Property|ActiveSound}} "demon/active"
+     {{Property|Obituary}} "%o was killed by a dem... cyberd... well, by something anyway"
+     States
+     {
+     Spawn:
+         SARG AB 10 [[A_Look]]
+         Loop
+     See:
+         SARG AABBCCDD 2 Fast [[A_Chase]]
+         Loop
+     Melee:
+         SARG EF 8 Fast [[A_FaceTarget]]
+         SARG G 8 Fast [[A_SargAttack]]
+         Goto See
+     Pain:
+         SARG H 2 Fast
+         SARG H 2 Fast [[A_Pain]]
+         Goto See
+     Death:
+         SARG I 8
+         SARG J 8 [[A_Scream]]
+         SARG K 4
+         SARG L 4 [[A_NoBlocking]]
+         SARG M 4
+         SARG N -1
+         Stop
+     Raise:
+         SARG N 5
+         SARG MLKJI 5
+         Goto See
+     }
+ }
+
+[[category:ACS Actor functions]]</text>
+    <sha1>kv2vgwo7qob0ts4dfmbo3o01gsom8re</sha1>
+  </revision>
+</page>

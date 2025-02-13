@@ -1,0 +1,74 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>ScoreDoom</title>
+  <ns>0</ns>
+  <id>3983</id>
+  <revision>
+    <id>47543</id>
+    <parentid>25846</parentid>
+    <timestamp>2020-05-03T09:32:23Z</timestamp>
+    <contributor>
+      <username>Gez</username>
+      <id>1283</id>
+    </contributor>
+    <comment>archive dead site</comment>
+    <origin>47543</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="6824" sha1="696qdi88yx1x8dd783qfu1h0xqh8xzh" xml:space="preserve">[[Image:Gameplay2.jpg|thumb|320px|Base ScoreDoom HUD]]
+{{Wad
+| name = ScoreDoom
+| author = BilboHicks
+| port = Custom
+| iwad = Any
+| status = Released
+| link = {{archived link|http://www.scoredoom.com/|ScoreDoom homepage|https://web.archive.org/web/20180521153742/http://scoredoom.com/|archive.org}}
+}}
+
+==Overview==
+ScoreDoom adds an arcade style scoring system to Doom when playing wads, similar to Halo3's campaign [http://en.wikipedia.org/wiki/Halo_3#Campaign meta-game]. Points are scored when shooting/killing monsters, achieving map objectives, finding secrets &amp; map items in the quickest time possible (as well as scoring points in other ways). In single-player, each wad/wad-episode and level will have its own hi-score which can be set. In co-op, each player competes to score the most points on a map, or across a whole wad, where the competing scores are clearly seen. A points-spread stat is also visible to tell players how far behind the leader they are. ScoreDoom supports up to 4 player co-op.
+
+ScoreDoom also, has an add-on pack, which adds well over 150 new monsters, an arcade style announcer, many new powerups and a new weapon to augment the regular Doom menagerie. This content was previously created/made available by other members in the Doom community. This can easily be turned off (see the [[ScoreDoom#Custom Content|Custom Content section]].), so that ScoreDoom can be played with only regular Doom monsters, powerups and weapons.
+
+For more detailed information, including how to host co-op games quickly etc., check out: [http://www.scoredoom.com www.scoredoom.com]
+
+[[Image:SPintermission.jpg|thumb|320px|ScoreDoom Single Player intermission screen. Similar scores shown in co-op intermission screens.]]
+
+==Scoring==
+'''(i) Damage''': Players get points for the amount of damage they inflict on monsters.
+
+'''(ii) Kills''': Players also get bonus points for making a kill which is 10% of the total health of the monster. The Boss Brain gives +5000 points on death.
+
+'''(iii) Secrets''': Finding a secret gives +250 points.
+
+'''(iv) Map Objectives''': In multiplayer, bonus points are given for players who reach certain objectives in the level first. These include: getting to a keycard or skullkey first (+250 points), opening a door with a keycard or skullkey first (+250 points), reaching the level exit first (+250 points), reaching a secret level exit first (+500 points). In cases where a map has more than one door of the same color, the bonus will only be given for the first door encountered. In SP, bonus points are still given for reaching these objectives, since in some wad levels: keys, colored doors and secret level exits can be optional depending on secrets found etc... Additional support has also been given for 'any key' (+250), 'All 3 keys' (+750), and 'All 6 Keys' (+1500) doors.
+
+'''(v) Map Items''': Collecting a map item gives +5 points. Any item counted as a map item in Doom, is one that can always be picked up, and goes towards the Item Count percentages at intermission screens. Items like blue health flasks, armor helmet bonuses, radiation suits, artifact powerups, automap pickups, beserk packs, infrared goggles etc... Not armor suits, health pickups, ammo or weapons.
+
+'''(vi) Par Bonus''': The bonus/penalty to be added depending on how well the player beat the map's ScoreDoom par time. Its based on a percentage of the total points scored so far for the level.
+
+'''(vii) Chain Bonuses''': If a player can kill 4 monsters in a very short time, they will get a small bonus of +30 points, which accumulates up to a +30 point bonus, for every other monster killed after that, just as quickly. If the player can keep the rampage going, they will eventually get a full Chain Bonus of +30 points per monster.
+
+'''(viii) Co-op Death''': There is a -500pt penalty for death in co-op games which come from monsters, environmental hazards or suicide. Death from other players has no penality. Points can never be less than 0. This was added in mind to stop players taking advantage of deliberate suicides, as well as a general penalty. This score does not get applied in SP, since the level is reset on death.
+
+'''(ix) Monster Infighting Deaths and Monster Suicides''': Since monster deaths due to infighting and suicides are ultimately player assisted, there is a small bonus for these deaths too. In SP, it is equal to the kill bonus of the monster (10% of the original health). In Co-op, the current level points leader (*not the total wad score leader on the HUD!*) scores a bonus equal to the creature's kill bonus, whereas every other player scores a fraction of this depending on the ratio of their score for the level to the level points leader score. No player can get less than 1pt, and only the current level points leader will (should!) get the full bonus. The rationale behind this was that the level points leader probably deserves the bigger bonuses, and it also forces the other players to attack more to get in front.
+
+'''(x) Barrels''': Barrels give +5 points when destroyed. 
+
+==Add-On Pack (Custom Content)==
+ScoreDoom, has an add-on pack, which adds well over 150 new monsters, an arcade style announcer, many new powerups and a new weapon to augment the regular Doom menagerie. This content was previously created/made available by other members in the Doom community. The content can be added by placing the sd monsters and sd artifacts wads into the 'skins' subdirectory. Understandably many players will want to play only with regular Doom weapons and monsters. This extra content can easily be turned off so that ScoreDoom can be played with regular doom weapons and monsters:
+
+To remove the custom monsters, remove the SDMONSTERS WAD out of the 'skins' sub-directory. 
+
+To remove the custom powerups remove the SD-ARTIFACTS WAD out of the 'skins' sub-directory. Also you must make sure that in the zdoom-&lt;yourusername&gt;.ini file that the line 'sd_artifcts=true' is set to 'sd_artifacts=false'
+
+To remove the announcer's voice, remove the BBAX16 WAD out of the 'skins' sub-directory.
+
+==Conflicts/Problems with newer ZDoom Wads==
+Do to the sheer amount of re-use of content in the add-on pack, generously shared by the ZDoom community, ScoreDoom's add-on pack custom content can conflict with some newer ZDoom wads &amp; mods. It is recommended to disable ScoreDoom's extra content to play these wads if you get conflict errors. 
+
+Most importantly is that some newer ZDoom wads using weapons utilizing ZDoom's DECORATE  may not register a hit or score, due to the source of the damage being untraceable. This *may* be fixed in a future release. 
+
+ScoreDoom is therefore recommended for any DOOM/DOOM2/BOOM compatible wads, as well as most Legacy wads (which GZDoom 1.0.29 supports) and most ZDoom specific wads (contingent on information above).</text>
+    <sha1>696qdi88yx1x8dd783qfu1h0xqh8xzh</sha1>
+  </revision>
+</page>

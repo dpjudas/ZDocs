@@ -1,0 +1,42 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>A CheckSightOrRange</title>
+  <ns>0</ns>
+  <id>5909</id>
+  <revision>
+    <id>44212</id>
+    <parentid>42416</parentid>
+    <timestamp>2017-03-20T12:55:51Z</timestamp>
+    <contributor>
+      <username>Gez</username>
+      <id>1283</id>
+    </contributor>
+    <minor />
+    <comment>removing "new" for GZDoom 2.4.0 release</comment>
+    <origin>44212</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="1584" sha1="q2fxve9p6ozptuu56r4ol6ddsc6yfrt" xml:space="preserve">{{DISPLAYTITLE:A_CheckSightOrRange}}
+state '''A_CheckSightOrRange''' (float ''distance'', int ''offset'' [, bool ''2d_check''])&lt;br&gt;
+state '''A_CheckSightOrRange''' (float ''distance'', str "''state''" [, bool ''2d_check''])&lt;br&gt;
+
+Jumps if the calling actor is beyond ''distance'' range from all player pawns and there is no possible line of sight between the center of the calling actor and that of any player pawn. In other words, this function continues to the next state in the sequence if either the sight check or the range check were true; and jumps otherwise.
+
+If ''2d_check'' is {{c|true}}, the z-coordinates are not taken into account when calculating the distance, making the distance check 2D-based instead of being 3D-based. Default is {{c|false}}.
+
+This function does not account for whether or not a player is actually ''looking'' at the calling actor or not; as long as there is a ''possible'' line of sight (i.e. at least one player is in a position where they ''could'' see the calling actor if they faced the right direction), no jump will occur. And on the other hand, the jump might happen even though the actor is partially seen by a player.
+
+Note that like [[A_CheckSight]], '''A_CheckSightOrRange''' also counts for actors being viewed through cameras and co-op spy. It does not, however, check if the actor is being viewed through a camera texture.
+
+==Example==
+{{noexamples}}
+
+==See also==
+* [[A_CheckSight]]
+* [[A_CheckRange]]
+* [[A_JumpIfInTargetLOS]]
+* [[A_JumpIfTargetInLOS]]
+
+[[Category:Decorate Special action functions]]{{DEFAULTSORT:CheckSightOrRange}}</text>
+    <sha1>q2fxve9p6ozptuu56r4ol6ddsc6yfrt</sha1>
+  </revision>
+</page>

@@ -1,0 +1,66 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>VectorAngle</title>
+  <ns>0</ns>
+  <id>941</id>
+  <revision>
+    <id>53344</id>
+    <parentid>37551</parentid>
+    <timestamp>2024-10-14T11:09:45Z</timestamp>
+    <contributor>
+      <username>Jekyll Grim Payne</username>
+      <id>2175</id>
+    </contributor>
+    <origin>53344</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="1510" sha1="tttodfhtfzfmuz9cwz4s80n31w3742u" xml:space="preserve">__NOTOC__
+{{note|This page is about an [[ACS]] function. For a [[ZScript]] {{c|atan2}} expression see [[DECORATE_expressions#Trigonometry_functions|'''here''']].}}
+
+fixed '''VectorAngle''' (int ''x'', int ''y'')
+
+== Usage ==
+
+Returns the [[Definitions|fixed point angle]] of the vector (''x'',''y''). Angles are measured from the east and moving counterclockwise.
+
+This function is more commonly known as ''atan2''. To get the value of ''atan(x)'', use &lt;tt&gt;VectorAngle(1.0, x)&lt;/tt&gt;
+
+=== Parameters ===
+
+* ''x'', ''y'': Coordinates of the end point of the vector.
+
+=== Return value ===
+
+[[Definitions|Fixed point angle]] of the vector (''x'',''y'').
+
+== Examples ==
+
+This script will print a little ^ at the bottom of the player's screen pointing at the actor with TID set to 1:
+
+ script 1 [[Script types|ENTER]]
+ {
+     int vang, angle;
+     while({{const|TRUE}})
+     {    
+         vang = [[VectorAngle]] ([[GetActorX]] (1) - [[GetActorX]] (0), [[GetActorY]] (1) - [[GetActorY]] (0));
+         angle = (vang - [[GetActorAngle]] (0) + 1.0) % 1.0;
+ 
+         if (angle &lt; 0.2 || angle &gt; 0.8)
+         {
+             int sx = 320 - (320 * [[Sin]] (angle) / [[Cos]] (angle));
+ 
+             [[SetHudSize]] (640, 480, 0);
+             [[HudMessage]] (s:"^"; {{const|HUDMSG_PLAIN}}, 1, {{const|CR_RED}}, sx * 1.0, 480.2, 0);
+         }
+         else
+         {
+             [[HudMessage]] (s:""; {{const|HUDMSG_PLAIN}}, 1, 0, 0, 0, 0);
+         }
+ 
+         [[Delay]] (1);
+     }
+ }
+
+[[category:ACS Math functions]]</text>
+    <sha1>tttodfhtfzfmuz9cwz4s80n31w3742u</sha1>
+  </revision>
+</page>

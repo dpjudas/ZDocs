@@ -1,0 +1,123 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>ZScript</title>
+  <ns>0</ns>
+  <id>8954</id>
+  <revision>
+    <id>52964</id>
+    <parentid>52769</parentid>
+    <timestamp>2024-08-22T09:58:46Z</timestamp>
+    <contributor>
+      <username>Blue Shadow</username>
+      <id>2021</id>
+    </contributor>
+    <minor />
+    <comment>tag not needed</comment>
+    <origin>52964</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="6456" sha1="mh0dx18tvm63xmyfxul7xe7dm2kli1p" xml:space="preserve">__TOC__
+'''ZScript''' (formerly known as [[DoomScript]]) is a text-based lump used to create classes, structs, menus, and custom functionality for use in [[ZDoom]]. It serves as a full replacement for [[DECORATE]] and a partial replacement for [[SBARINFO]], while supporting all of their methods and features. ZScript is similar to Java and C# in many ways and allows for vastly more advanced control of all gameplay facets (Actors, levels, game modes, etc.) than [[DECORATE]] does, as well as creation of UI (such as {{class|BaseStatusBar|custom HUDs}} and menus).
+
+Similarly to [[DECORATE]], you can include multiple ZScript lumps for processing with either a full or relative path to said lumps. A relative path starts with either {{c|./}} or {{c|../}}:
+
+&lt;syntaxhighlight lang="csharp"&gt;
+// Full path
+#include "ZScript/Const.txt"
+ 
+// Relative paths
+#include "./Items/Health.txt" // Start from the current directory this file is located in
+#include "../Items/Armor.txt" // Start from the parent directory this file is located in
+&lt;/syntaxhighlight&gt;
+
+Due to how ZScript is processed, it is possible to name a file which conflicts with other mods or the internal files. For example, if you have a file in your mod with path {{c|ZScript/Const.txt}}, it will prevent the game from loading this file correctly as ZDoom itself already defines that file within its own {{c|ZScript}} subfolder. To avoid such conflicts, it is recommended to have a subfolder named after your mod, such as:
+
+&lt;syntaxhighlight lang="csharp"&gt;
+#include "MyMod/Const.txt"
+&lt;/syntaxhighlight&gt;
+
+Prior to {{DRDForum|t=7453|GZDoom 2.3.0}}, ZScript had to be enabled manually, with a command-line parameter, but is currently used by default. The last development versions of ZDoom past 2.8.1 required the {{c|-zscript}} command line parameter to enable loading of ZScript lumps.
+
+A full ZScript file is known as a '''translation unit''', akin to the C programming language's definition of the term.
+
+{{Note|All keywords and identifiers in ZScript are case insensitive.}}
+
+=== ZScript features ===
+The following are present since GZDoom 3.0:
+* [[DECORATE]] compatibility (DECORATE classes can inherit from ZScript ones)
+* [[ZScript_data_types#Constants|Constants]]
+* Local and class-scoped [[ZScript_data_types|variables]]
+* Ability to define and manipulate custom actor pointers
+* Custom functions
+* [[ZScript_data_types#Arrays|Arrays]]
+* [[Dynamic arrays]]
+* Map data access (and partial control) (for example, see {{struct|LevelLocals}})
+* [[ZScript menus|Custom menu definition]]
+* {{class|BaseStatusBar|SBARINFO replacement}}
+
+== Load order ==
+For a given file loaded into GZDoom, it will load the file {{c|./zscript.txt}} for a [[Using_ZIPs_as_WAD_replacement|ZIP (PK3) archive]] or the lump {{c|ZSCRIPT}} for a WAD. For more information, see [[Object scopes and versions|the page on file versioning.]]
+
+ZScript is much more relaxed and {{c|include}}s can be done in any order, except for [[ZScript_classes#Extending_Classes|extending classes]].
+
+== Combining ZScript and DECORATE ==
+It is possible to use both DECORATE and ZScript simultaneously. For example, ZScript might be used to create some custom function which is then available to regular DECORATE actors. The ZScript code is processed and compiled before the DECORATE code; this means that DECORATE actors can inherit from ZScript actors, but not vice versa. For references that are only needed at run-time rather than compile-time (such as calling a function to spawn an actor), there is no restriction: a ZScript actor can spawn a DECORATE actor, or vice versa.
+
+This is generally only recommend for cases when a project originally developed in DECORATE is being updated to ZScript. For newer projects, DECORATE should be considered [[Deprecation|deprecated]], and ZScript should be used to define all classes (all DECORATE methods, features and functions can still be used in ZScript in a very similar manner). GZDoom itself no longer uses DECORATE for its own classes.
+
+[[ZScript]] has and will continue to expand with a vast number of features.
+
+== ZScript topics ==
+* [[Coding language differences]]
+* [[ZScript data types]]
+* [[Operators (ZScript)|ZScript operators]]
+* [[Statements (ZScript)|ZScript statements]]
+* [[Object scopes and versions]]
+* [[ZScript classes]]
+* [[Structs]]
+* [[ZScript actor flags]]
+* [[ZScript functions]]
+* [[ZScript actor functions]]
+* [[ZScript virtual functions]]
+* [[ZScript mixins]]
+* [[ZScript custom properties]]
+* [[ZScript global variables]]
+* [[ZScript named arguments]]
+* [[Events and handlers]]
+* [[:Category:Custom action functions|Custom action functions]]
+* [[Controlling dynamic lights]]
+* [[CVar (ZScript)|CVars in ZScript]]
+* [[Associative maps]]
+* [[ZScript special words]]
+
+== Advanced topics ==
+These sections are for advanced users and programmers who want more control over their mods. The best course of action for modders would be to brush up on a programming language like Java or C#. These topics will assume all who read them know how to work with ZScript, preferably most of the above information.
+
+Also consider opening the gzdoom.pk3 with any application that can browse ZIP files. The base file contains all manner of ZScript code which the modder can learn from as examples.
+
+* [[Function pointers]]
+* [[Events and handlers]]
+* [[ZScript menus]]
+* [[ZScript status bars]]
+
+== ZScript guides ==
+* [[Creating non-interactive decorations (ZScript)]]
+* [[Creating new monsters or other complex items (ZScript)]]
+* [[Creating new projectiles (ZScript)]]
+* [[Creating new inventory items (ZScript)]]
+* [[Creating new weapons (ZScript)]]
+* [[Creating interactive decorations]]
+* [[Creating new player classes]]
+* [[Using inheritance]]
+* [[Converting DECORATE code to ZScript]]
+* [[Creating multiplayer-friendly ZScript]]
+* [[Using pointers in ZScript]]
+* [[Using user variables in ZScript]]
+
+== Additional documentation ==
+In case any of the above pages do not answer your questions, Marrub has been working on [https://forum.zdoom.org/viewtopic.php?f=122&amp;t=59770 more detailed and comprehensive documentation] for ZScript's core language and API. This is a work in progress, but will be added to the wiki when complete. Until then, this additional documentation may be found at the following link: https://github.com/marrub--/zscript-doc/blob/master/README.md
+
+
+[[Category:ZScript]][[Category:ZDoom special lumps]][[Category:Editing concepts]][[Category:Features]]</text>
+    <sha1>mh0dx18tvm63xmyfxul7xe7dm2kli1p</sha1>
+  </revision>
+</page>

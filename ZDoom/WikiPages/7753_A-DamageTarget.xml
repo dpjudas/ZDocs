@@ -1,0 +1,62 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>A DamageTarget</title>
+  <ns>0</ns>
+  <id>7753</id>
+  <revision>
+    <id>46968</id>
+    <parentid>45096</parentid>
+    <timestamp>2019-10-18T10:04:32Z</timestamp>
+    <contributor>
+      <username>Blue Shadow</username>
+      <id>2021</id>
+    </contributor>
+    <comment>General update</comment>
+    <origin>46968</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="4540" sha1="hbqj4ix86ry2mq0jqaj3wbqn17rdpkj" xml:space="preserve">{{codepointer|Monster AI}}
+void '''A_DamageTarget''' (int ''amount'' [, name ''damagetype'' [, int ''flags'' [, class&lt;Actor&gt; ''filter'' [, name ''species'' [, int ''src'' [, int ''inflict'']]]]]])
+
+==Usage==
+Damages the calling actor's [[Actor pointer|target]] actor by the specified amount. Negative amounts heal it, instead. This function cannot damage player actors which are under the effect of {{c|{{CCMD|D|god2}}}}, and they still survive with one point of [[health]] if under the effect of {{c|{{CCMD|D|buddha2}}}}.
+
+===Parameters===
+*''amount'': the amount of damage to inflict. Negative amounts heal. An amount of one million or higher is treated specially, and results in killing the actor regardless of [[health]] or any damage modifiers that may be in effect.
+*''damagetype'': the [[Damage types|type of damage]] to inflict. Default is {{c|"{{DamageType|None}}"}}.
+*''flags'': the following flags can be combined using the | character between the constants names:
+**'''DMSS_FOILINVUL''' — the actor is damaged even if it is invulnerable. For this flag to work, an inflictor is required (see ''inflict'' below). This flag is ignored if the actor is a player.
+**'''DMSS_FOILBUDDHA''' — if the damage is enough to kill the actor, it dies even if it is under the effect of ''buddha''. For this flag to work, an inflictor is required (see ''inflict'' below). This flag is ignored if the actor is a player.
+**'''DMSS_NOPROTECT''' — damage bypasses the [[ModifyDamage|damage-modifying capability]] of items in the actor's inventory. A {{Class|PowerProtection|protection powerup}} is an example of such items.
+**'''DMSS_NOFACTOR''' — damage bypasses the the actor's {{Property|DamageFactor|damage factors}}.
+**'''DMSS_AFFECTARMOR''' — damage does not bypass the [[AbsorbDamage|damage-absorbing capability]] of items in the actor's inventory. An [[armor]] is an example of such items.
+**'''DMSS_KILL''' — inflicts an amount of damage which is equal to the sum of the actor's current health and ''amount'', killing the actor under normal conditions. This flag bypasses the actor's damage factors and the damage-absorbing capability (but not the damage-modifying one) of items in the actor's inventory.
+**'''DMSS_EXFILTER''' — inverts the case of the class name filter; the actor is only damaged if its class name does not match the value passed to ''filter''.
+**'''DMSS_EXSPECIES''' — inverts the case of the [[species]] filter; the actor is only damaged if its {{Property|Species|species}} does not match the value passed to ''species''.
+**'''DMSS_EITHER''' — the actor is damaged if either its class name or species matches the values passed to ''filter'' and ''species'', respectively.
+**'''DMSS_INFLICTORDMGTYPE''' — ignores the specified damage type, and instead, uses the {{Property|DamageType|damage type}} of the actor doing the damage (inflictor).
+*''filter'': the actor class to damage. The actor is only damaged if its class name matches the specified class. Default is {{c|null}}&lt;sup&gt;{{Zscriptfeaturesmall}}&lt;/sup&gt;/{{c|"None"}}&lt;sup&gt;{{Decoratefeaturesmall}}&lt;/sup&gt;.
+*''species'': the actor species to damage. The actor is only damaged if its species matches the specified species. Default is {{c|"None"}}.
+*''src'': the actor responsible for the damage (source). This is an [[actor pointer]]. If this is set to {{c|AAPTR_NULL}}, the actor is damaged without a source. Default is {{c|AAPTR_DEFAULT}}, which is the calling actor itself.
+*''inflict'': the actor doing the damage (inflictor). This is an actor pointer. If this is set to {{c|AAPTR_NULL}}, the actor is damaged without an inflictor (note that doing so renders both DMSS_FOILINVUL and DMSS_FOILBUDDHA ineffective). Default is {{c|AAPTR_DEFAULT}}, which is the calling actor itself.
+
+== Examples ==
+Taking advantage of the fact that a [[projectile]]'s target actor is its shooter, this rather weird {{Class|rocket}} damages its shooter, instead of performing a [[A_Explode|radius attack]], if it hits a wall, ceiling or floor.
+ class OddRocket : {{Class|Rocket}}
+ {
+     States
+     {
+     Crash:
+     Death.Extreme:
+         Goto Super::Death; // Use the parent class's own Death state sequence.
+ 
+     Death:
+         MISL B 8 Bright [[A_DamageTarget]](10, flags: {{const|DMSS_AFFECTARMOR}}, src: {{const|AAPTR_TARGET}});
+         MISL C 6 Bright;
+         MISL D 4 Bright;
+         Stop;
+     }
+ }
+Notice how the source of the damage is set as the rocket's target. This means that the shooter is the one responsible for the damage, not the rocket.</text>
+    <sha1>hbqj4ix86ry2mq0jqaj3wbqn17rdpkj</sha1>
+  </revision>
+</page>

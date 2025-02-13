@@ -1,0 +1,44 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>Classes:MusicChanger</title>
+  <ns>0</ns>
+  <id>6026</id>
+  <revision>
+    <id>44218</id>
+    <parentid>41151</parentid>
+    <timestamp>2017-03-20T12:59:24Z</timestamp>
+    <contributor>
+      <username>Gez</username>
+      <id>1283</id>
+    </contributor>
+    <minor />
+    <comment>removing "new" for GZDoom 2.4.0 release</comment>
+    <origin>44218</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="1386" sha1="aj2jojz4z5q0rissyvdrndqy73mzr86" xml:space="preserve">{{Actor|
+| type = Map spot
+| name = Music changer
+| class = MusicChanger
+| doomednum = 14165
+}}
+[[Classes]]: {{Class}} &amp;rarr; {{Class|SectorAction}} &amp;rarr; &lt;u&gt;MusicChanger&lt;/u&gt;&lt;br&gt;
+
+The MusicChanger thing changes the music when triggered by the player entering the sector in which the thing is placed. The [[MUSINFO]] lump is used to associate music lumps to numbers in a given map. The music is changed to that associated to the number indicated by the changer's first parameter. A value of 0 for that parameter always correspond to the level's default music. The music changes only for the player who triggers the MusicChanger actor.
+
+If the music lump is in a mod [[music format]], the second parameter can be used to set the order.
+
+This thing is mostly for compatibility with existing [[PrBoom+]]/[[Risen3D]] maps, as [[ACS]] offers more flexible ways to change music during play.
+
+===Use in a Doom-format map===
+In a map format where things cannot have parameters, DoomEd numbers 14101 to 14164 can be used instead: [[ZDoom]] will translate each such item in the map to a MusicChanger actor whose first parameter is equal to its number minus 14100. (So, 14101 will be interpreted as if it were 14165 with first parameter 1.)
+
+==== [[DECORATE]] definition ====
+ ACTOR &lt;u&gt;MusicChanger&lt;/u&gt; : {{Class|SectorAction}} native {}
+
+==See also==
+*[[MUSINFO]]
+*[[LocalSetMusic]]
+*[[SetMusic]]</text>
+    <sha1>aj2jojz4z5q0rissyvdrndqy73mzr86</sha1>
+  </revision>
+</page>

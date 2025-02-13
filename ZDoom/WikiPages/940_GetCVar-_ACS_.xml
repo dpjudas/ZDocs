@@ -1,0 +1,72 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>GetCVar (ACS)</title>
+  <ns>0</ns>
+  <id>940</id>
+  <revision>
+    <id>52409</id>
+    <parentid>45573</parentid>
+    <timestamp>2024-04-11T21:47:47Z</timestamp>
+    <contributor>
+      <username>Jekyll Grim Payne</username>
+      <id>2175</id>
+    </contributor>
+    <origin>52409</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="1813" sha1="qnvm2jas7odig6ezo1oy1otery7aktu" xml:space="preserve">__NOTOC__
+{{Note|This is for the [[ACS]] function. For the [[DECORATE]] function see [[GetCVar (DECORATE)|'''here''']]. For obtaining and modifying CVars in [[ZScript]], see [[CVar_(ZScript)|'''here''']].}}
+
+int '''GetCVar''' (str ''cvar'')
+
+== Usage ==
+
+Returns the value of a particular cvar.
+
+{{WarnIndeterminate|Using non-playsim CVARs such as {{CVAR|R|screenblocks}} or {{CVAR|C|invertmouse}} will cause indeterminate behavior. Using Server or User variables, either internal or defined via [[CVARINFO]], is however perfectly safe.}}
+
+=== Parameters ===
+
+* ''cvar'': name of a [[CVARs|console variable]] to get the value from.
+
+=== Return value ===
+
+The value of the specified [[CVARs|console variable]]. This is only useful for cvars that can be represented as integers. Also note that you can create your own console variables by using the [[CVARINFO]] lump.
+
+If the [[CVARs|console variable]] is a user CVAR, it will check the activator of the script. To check the user CVAR of a specific player, you can use [[GetUserCVar]].
+
+If no such console variable exists, it will return 0.
+
+== Examples ==
+
+This script will spawn Imps only if {{CVAR|C|sv_nomonsters}} is false:
+ 
+ if (![[GetCVar]] ("{{CVAR|C|sv_nomonsters}}"))
+ {
+     [[SpawnSpot]] ("{{class|DoomImp}}", 66);
+     [[SpawnSpot]] ("{{class|TeleportFog}}", 66);
+ }
+
+One possible use for this is if you are making additions to the HUD, you can check if the player is using the status bar or not and act accordingly:
+
+ int screenblocks = [[GetCVar]] ("{{CVAR|R|screenblocks}}");
+ 
+ if (screenblocks &lt; 10)
+ {
+     // The status bar is visible
+ }
+ else if (screenblocks == 10)
+ {
+     // The fullscreen HUD is visible instead
+ }
+ else
+ {
+     // No HUD of any sort is visible
+ }
+
+== See also ==
+{{CVAR functions}}
+
+[[category:ACS Information functions]]</text>
+    <sha1>qnvm2jas7odig6ezo1oy1otery7aktu</sha1>
+  </revision>
+</page>

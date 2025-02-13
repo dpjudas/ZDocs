@@ -1,0 +1,1014 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>CVARs:Configuration</title>
+  <ns>0</ns>
+  <id>3904</id>
+  <revision>
+    <id>52955</id>
+    <parentid>52489</parentid>
+    <timestamp>2024-08-22T06:25:42Z</timestamp>
+    <contributor>
+      <username>Blue Shadow</username>
+      <id>2021</id>
+    </contributor>
+    <minor />
+    <comment>remove {{new}}</comment>
+    <origin>52955</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="72037" sha1="80y9qmroctekqvmkfzi8bstqgr7vrqo" xml:space="preserve">These CVARs control various aspects of the game's configuration.
+
+See the [[CVARs]] article for general information on how to access and edit variables.
+__TOC__
+==Player settings==
+
+* '''{{LE|autoaim}}''' ([[CVARs#float|float]]) -- {{verification}}
+:Default: 35
+:This represents the minimum vertical distance from an object that the player's sight must be before that object is no longer autoaimed at. Setting this cvar to "0" disables [[autoaim]]ing, while large values such as the default 35 will reproduce the original DOOM behavior of always autoaiming.
+
+* '''{{LE|cl_doautoaim}}''' ([[CVARs#boolean|boolean]])
+:Default: false
+:If set to true, [[autoaim]] does not ignore actors with the {{Flag|NOTAUTOAIMED}} flag.
+
+* '''{{LE|color}}''' ([[CVARs#color|color]])
+:Default: "3f 60 40" {{color|#3f6040}} (Heretic) or "40 cf 00" {{color|#40cf00}} (all other games)
+:This is your player's color. The default varies depending on which game you are playing. This is overridden by a valid value for [[#colorset|colorset]].
+
+* '''{{LE|colorset}}''' ([[CVARs#integer|integer]])
+:Default: 0
+:This is your player's colorset, as defined by the {{Property|Player.ColorSet}} properties of the {{Class|PlayerPawn}} class. Use -1 if you wish to use a [[#color|color]] instead of a colorset. Valid values for the default class range from 0 to 7 in ''{{Class|DoomPlayer|Doom}}'', ''{{Class|ChexPlayer|Chex Quest}}'', ''{{Class|StrifePlayer|Strife}}'', and {{Class|FighterPlayer|all}} {{Class|ClericPlayer|three}} {{Class|MagePlayer|classes}} in ''[[Hexen]]'', but 0 to 9 in ''{{Class|HereticPlayer|Heretic}}''.
+
+* '''{{LE|fviewbob}}''' ([[CVARs#boolean|boolean]])
+:Default: true
+:If set to true, player's view bobs up and down while flying.
+
+* '''{{LE|gender}}''' ([[CVARs#string|string]])
+:Default: "male"
+:This is the gender of your player. Valid values are "male", "female", "neutral" and "object". Anything else will be treated as male. When you die, certain messages will be altered to reflect the gender selected here. Unfortunately, no non-male player sounds are provided with [[ZDoom]], so you will still sound like a man no matter what this CVAR is set to unless you provide your own sounds. 
+
+* '''{{LE|movebob}}''' ([[CVARs#float|float]])
+:Default: 0.25
+:Controls how much the view bobs up and down while you are moving. 0 would be no bob at all. 
+
+* '''{{LE|neverswitchonpickup}}''' ([[CVARs#boolean|boolean]])
+:Default: false
+:When this CVAR is true, you won't automatically switch to a new [[weapon]] when you pick one up. 
+
+* '''{{LE|name}}''' ([[CVARs#string|string]])
+:Default: "Player"
+:This is your [[player]]'s name. This is only really useful in a [[multiplayer]] game, but it can also be set for single player.
+
+* '''{{LE|playerclass}}''' ([[CVARs#string|string]])
+:Default: "Fighter"
+:This is the player's class when playing games with [[player class]]es such as Hexen. It must be set to "Random" or a valid class' {{Property|Player.DisplayName}} property. Note that the [[class selection menu]] will change its value.
+
+* '''{{LE|skin}}''' ([[CVARs#string|string]])
+:Default: "base"
+:This is your player's [[skin]]. "Base" is the name of the regular Doom marine and is always available. Additional skins are contained in wad files that you either load with {{param|-file}} at the command line or [[autoload]] using the [[configuration file|.ini]] or skins directory. 
+
+* '''{{LE|stillbob}}''' ([[CVARs#float|float]])
+:Default: 0
+:Controls the amount of bobbing up and down that occurs when standing still. The default of 0 is no bobbing at all. 
+
+* '''{{LE|sv_disableautohealth}}''' ([[CVARs#boolean|boolean]])
+:Default: false
+:Certain items for ''[[Heretic]]'', ''[[Hexen]]'' and ''[[Strife]]'' have the ability to auto-trigger when the player's [[health]] drops below a certain percentage. Setting this CVAR to true will disable that behavior.
+
+* '''{{LE|sv_smartaim}}''' ([[CVARs#integer|integer]])
+:Default: 0
+:If enabled, the game will attempt to aim only at hostile monsters when [[autoaim]]ing, even if there are shootable decorations or friendly actors closer to the player. The following values are available: 
+:*1 - Target [[monster]]s before shootables. 
+:*2 - Same as 1, but never target friendly monsters. 
+:*3 - Target monsters only.
+
+* '''{{LE|team}}''' ([[CVARs#integer|integer]])
+:Default: 255
+:This is the [[team]] that your player belongs to. It is only meaningful during [[deathmatch]] games. There are eight predefined teams available, though this can be changed with a custom [[TEAMINFO]]:
+:{| {{prettytable}}
+|1||{{color|#0000FF}} Blue||2||{{color|#FF0000}} Red||3||{{color|#00FF00}} Green||4||{{color|#FFFF00}} Gold
+|-
+|5||{{color|#000000}} Black||6||{{color|#FFFFFF}} White||7||{{color|#FF8000}} Orange||8||{{color|#FF00FF}} Purple
+|}
+:Using the default of 255 is special and will automatically assign you to whichever team has fewer players.
+
+* '''{{LE|vertspread}}''' ([[CVARs#boolean|boolean]])
+:Default: false
+:When true, enables vertical bullet spread for weapons, but only if it is {{CVAR|C|sv_novertspread|allowed}}. Weapons which this variable affects are the {{Class|pistol}}, {{Class|shotgun}}, {{Class|chaingun}}, {{Class|GoldWand|elven wand}} and {{Class|Blaster|dragon claw}}.
+
+* '''{{LE|wbobfire}}''' ([[CVARs#float|float]])
+:Default: 0
+:A multiplier for weapon firing bob speed. Lower values slow it down, while higher values speed it up.
+
+* '''{{LE|wbobspeed}}''' ([[CVARs#float|float]])
+:Default: 1.0
+:A multiplier for weapon bob speed. Lower values slow it down, while higher values speed it up.
+
+==Input settings==
+* '''{{LE|cl_run}}''' ([[CVARs#boolean|boolean]])
+:Default: false
+:When non-zero, the game will always treat movement commands as if {{CCMD|P|+speed}} is active.
+
+* '''{{LE|freelook}}''' ([[CVARs#boolean|boolean]])
+:Default: false
+:When true, [[free look|mouse aiming]] will always be on, regardless of the state of {{CCMD|P|+mlook}}.
+
+* '''{{LE|in_mouse}}''' ([[CVARs#integer|integer]]) (Win32 only)
+:Default: 0
+:This cvar selects which method ZDoom will use to read the mouse. Valid values are:
+:*0 - Automatically select a method based on the operating system.
+:*1 - Use normal Win32 API calls (default for Windows NT 4).
+:*2 - Use DirectInput (default for all other Windows if RawInput is not available).
+:*3 - Use RawInput (preferred default for all other Windows)
+
+* '''{{LE|invertmouse}}''' ([[CVARs#boolean|boolean]])
+:Default: false
+:When true, reverses the way mouse movement up and down is interpreted with {{CCMD|P|+mlook}}. Normally, moving the mouse forward will make you look up, and moving it back will make you look down. Setting this CVAR to true changes this behavior so that moving the mouse forward makes you look down, and moving it back makes you look up.
+
+* '''{{LE|invertmousex}}''' ([[CVARs#boolean|boolean]])
+:Default: false
+:When true, reverses the way mouse movement left and right is interpreted.
+
+* '''{{LE|joy_dinput}}''' ([[CVARs#boolean|boolean]]) (Win32 only)
+:Default: true
+:Determines whether ZDoom attempts to detect and use {{wp|DirectInput}} controllers.
+
+* '''{{LE|joy_ps2raw}}''' ([[CVARs#boolean|boolean]]) (Win32 only)
+:Default: true
+:Determines whether ZDoom attempts to detect and use raw {{wp|PlayStation 2}} adapters.
+
+* '''{{LE|joy_xinput}}''' ([[CVARs#boolean|boolean]]) (Win32 only)
+:Default: true
+:Determines whether ZDoom attempts to detect and use {{wp|XInput}} (Xbox 360) controllers.
+
+* '''{{LE|k_allowfullscreentoggle}}''' ([[CVARs#boolean|boolean]]) (Win32 only)
+:Default: true
+:Determines whether the Alt+Enter combination can be used to toggle between full-screen and windowed mode.
+
+* '''{{LE|k_mergekeys}}''' ([[CVARs#boolean|boolean]]) (Win32 only)
+:Default: true
+:Determines whether "identical" keys are merged. This concerns the numeric pad Enter key (merged to regular Enter key), the right Alt key (merged to the left), the right Control key (merged to the left), and the right Shift key (merged to the left).
+
+* '''{{LE|lookspring}}''' ([[CVARs#boolean|boolean]])
+:Default: true
+:When true, all {{CCMD|P|+mlook|-mlook}} commands will also generate {{CCMD|P|centerview}} commands.
+
+* '''{{LE|lookstrafe}}''' ([[CVARs#boolean|boolean]])
+:Default: false
+:When true, moving the mouse left and right will always cause the player to strafe left and right regardless of the state of {{CCMD|P|+strafe}}.
+
+* '''{{LE|m_forward}}''' ([[CVARs#float|float]])
+:Default: 1.0
+:This is the sensitivity of moving forward and backward with the mouse. This is combined with the overall [[#m_sensitivity_y|m_sensitivity_y]].
+
+* '''{{LE|m_hidepointer}}''' ([[CVARs#boolean|boolean]])
+:Default: true
+:When true, the mouse cursor is hidden during normal gameplay (ongoing game with menus and console closed).
+
+* '''{{LE|m_noprescale}}''' ([[CVARs#boolean|boolean]])
+:Default: false
+:Setting this to true will use the raw mouse movements to control mouse input. Normally, the horizontal and vertical axes are multiplied by different scalars before being processed by the input code.
+
+* '''{{LE|m_pitch}}''' ([[CVARs#float|float]])
+:Default: 1.0
+:This is the sensitivity of looking up and down with the mouse. This is combined with the overall [[#m_sensitivity_y|m_sensitivity_y]].
+
+* '''{{LE|m_sensitivity_x}}''' ([[CVARs#float|float]])
+:Default: 4.0
+:The larger this cvar, the more sensitive the game is to all horizontal mouse movements. This is combined with [[#m_side|m_side]] or [[#m_yaw|m_yaw]] as appropriate.
+
+* '''{{LE|m_sensitivity_y}}''' ([[CVARs#float|float]])
+:Default: 2.0
+:The larger this cvar, the more sensitive the game is to all vertical mouse movements. This is combined with [[#m_forward|m_forward]] or [[#m_pitch|m_pitch]] as appropriate.
+
+* '''{{LE|m_show_backbutton}}''' ([[CVARs#integer|integer]])
+:Default: 0
+:Defines where the clickable "Back" button to go up a level while in submenus is displayed. Use -1 to disable the back button entirely, 0 for upper left corner, 1 for upper right corner, 2 for lower left corner, and 3 for lower right corner.
+
+* '''{{LE|m_showinputgrid}}''' ([[CVARs#integer|integer]])
+:Default: 0
+:Controls the display of a clickable [[character input grid]] for text input fields (such as when naming a [[savegame]] or changing your name in the [[player setup]] menu). Valid values are:
+:*-1 - Disables the display of the grid.
+:*0 - Displays the grid only if a controller, such as a mouse or gamepad, is used.
+:*1 or greater - Always displays the grid.
+
+* '''{{LE|m_side}}''' ([[CVARs#float|float]])
+:Default: 2.0
+:This is the sensitivity of strafing left and right with the mouse. This is combined with the overall [[#m_sensitivity_x|m_sensitivity_x]].
+
+* '''{{LE|m_use_mouse}}''' ([[CVARs#integer|integer]])
+:Default: 2
+:Enables or disables the use of the mouse in [[menu]]s. Use 0 to disable the mouse, 1 to enable it in standard mode (automatic selection of hovered items), or 2 to enable it in touchscreen mode (click to select).
+
+* '''{{LE|m_yaw}}''' ([[CVARs#float|float]])
+:Default: 1.0
+:This is the sensitivity of looking left and right with the mouse. This is combined with the overall [[#m_sensitivity_x|m_sensitivity_x]].
+
+* '''{{LE|mouse_capturemode}}''' ([[CVARs#integer|integer]])
+:Default: 1
+:Controls how [[ZDoom]] handles capturing of the mouse cursor when run in windowed mode. When the mouse is not captured, ZDoom is unable to interact with it. The following settings are valid:
+:*0 - Only capture during gameplay. (Not in [[intermission]]s or when the [[menu]] is displayed)
+:*1 - Capture during gameplay and during intermission screens and end game finales.
+:*2 - Always capture.
+:This has no effect when playing in fullscreen mode.
+
+* '''{{LE|norawinput}}''' ([[CVARs#boolean|boolean]])
+:Default: false
+:Set this to true to disable raw input on Windows systems. This can be useful in case of input problems while using a Windows build of ZDoom on a non-Windows platform through a program such as {{wp|Wine_(software)|Wine}}.
+
+* '''{{LE|queryiwad_key}}''' ([[CVARs#string|string]])
+:Default: "shift"
+:Controls which key can force the [[IWAD selection box]] to appear if pressed while ZDoom starts if [[#queryiwad|queryiwad]] is false. It can be either "shift" or "control" ("ctrl" is accepted as an alias of "control"). Any other value will disable its functionality.
+
+* '''{{LE|use_joystick}}''' ([[CVARs#boolean|boolean]])
+:Default: false
+:Set this CVAR to true if you want to use a joystick with [[ZDoom]].
+
+* '''{{LE|use_mouse}}''' ([[CVARs#boolean|boolean]])
+:Default: true
+:When this CVAR is false, [[ZDoom]] will ignore the mouse.
+
+* '''{{LE|smooth_mouse}}''' ([[CVARs#boolean|boolean]])
+:Default: false
+:If set to true, [[ZDoom]] will interpolate the changes in view angles and view pitch (when using the mouse to look to the sides or up and down with [[free look]]) as if the player was using the keyboard. This makes mouse look more fluid and continuous.
+
+== Gameplay options ==
+
+* '''{{LE|sv_singleplayerrespawn}}''' ([[CVARs#boolean|boolean]])
+:Default: false
+:When true, allows respawning after dying in a single player game.
+
+* '''{{LE|allcheats}}''' ([[CVARs#boolean|boolean]])
+:Default: false
+:When true, [[cheat code]]s from all supported games will work in any game.  This in turn allows the user to use, for example, the IDKFA cheat in Hexen, rather than needing to remember the different cheat codes for each game.
+
+* '''{{LE|nocheats}}''' ([[CVARs#boolean|boolean]])
+:Default: false
+:When true, [[cheat code]]s are disabled.
+
+* '''{{LE|infighting}}''' ([[CVARs#integer|integer]])
+:Default: 0
+:Determines what behavior enemies will use when deciding whether to [[infight]] with each other. The following values are valid:
+:*-1 - [[Monster]]s never infight.
+:*&amp;nbsp;0 - Enables normal infighting: Monsters do not fight other monsters of their own kind unless they use bullet attacks.
+:*&amp;nbsp;1 - All monsters can infight, even members of the same [[species]].
+
+* '''{{LE|forcewater}}''' ([[CVARs#boolean|boolean]])
+:Default: false
+:When set to true, all [[Boom]]-style [[deep water]] will be swimmable. This is not the default, because the effect used to produce it can be used for more than just deep water (although water is probably its most common use).
+
+* '''{{LE|skill|gameskill}}''' ([[CVARs#integer|integer]])
+:Default: 2
+:This variable contains the game skill, ranging from 0 to 15 inclusive. Changes to this CVAR only take effect when a new level is loaded. Internally, this console variable is called {{c|gameskill}}.
+
+* '''{{LE|splashfactor}}''' ([[CVARs#float|float]])
+:Default:  1.0
+:This controls the amount of damage players receive when they fire a {{class|rocket}} and it explodes right next to them. It applies only to the player who fires the rocket; all others receive normal damage. A value of 0.5 would apply only half damage to the player. A value of 2.0 would apply double damage. Other values are similar. Useful mostly for people who like to rocket jump and don't like dying if they don't have 100% health and a lot of armor.
+
+* '''{{LE|sv_aircontrol}}''' ([[CVARs#float|float]])
+:Default:  0.00390625
+:Sets the amount of control you have while in the air. 1 is the same control you have while on normal ground. 0 is no control at all &amp;mdash; the original ''[[Doom]]'' setting &amp;mdash; you have to wait until you land before you can change direction. The default value is very close to the standard ''Doom'' value but still large enough to allow you to stand next to a ledge and jump onto it. This value also affects air [[friction]], which is proportional to the amount of control.
+:Given the formula used by [[ZDoom]], you can replicate ''[[Strife]]'''s vanilla air control by using a value of 0.00684527763.
+:'''Note:''' [[Skulltag]] ignores this value unless its [[Skulltag_features#Compatibility_flags|compat_limited_airmovement]] flag is set. The default behavior in that port corresponds to an aircontrol value of 0.25, though air friction still uses the CVAR value.
+
+* '''{{LE|sv_cheats}}''' ([[CVARs#boolean|boolean]])
+:Default: false
+:When true, [[cheat]]s will be allowed in Nightmare difficulty and [[skill definition|other skill levels]] with the "disablecheats" property, as well as network games; however, prior to [[GZDoom version history#4.9.0|GZDoom 4.9.0]], changes to this CVAR did not take effect until a new game was started (or a [[savegame]] was loaded). This was to prevent the host in a [[multiplayer]] game from setting the CVAR just long enough to allow himself to activate a cheat code.
+
+* '''{{LE|sv_corpsequeuesize}}''' ([[CVARs#integer|integer]])
+:Default: 64
+:Defines the number of corpses that can be on the map at once in a ''[[Hexen]]'' game. Set to -1 to disable corpse queueing (all corpses will stay forever). Corpse queueing has to be set per actor by calling [[A_QueueCorpse]] in the death state sequence.
+
+* '''{{LE|sv_disableautohealth}}''' ([[CVARs#boolean|boolean]])
+:Default: false
+
+* '''{{LE|sv_dropstyle}}''' ([[CVARs#integer|integer]])
+:Default: 0
+:Determines how items are dropped. A value of 0 corresponds to game default, 1 to ''[[Doom]]'' style, and 2 to ''[[Strife]]'' style. Type 2 generally sends item further away than type 1. This is irrelevant when [[#compat_notossdrop|compat_notossdrop]] is set.
+
+* '''{{LE|sv_fastweapons}}''' ([[CVARs#integer|integer]])
+:Default: 0
+:Increases the speed of your [[weapon]]s. Setting this to 2 makes weapons even faster. Note: Keep in mind that some custom weapons use special state handling (such as reloading) and using this may cause the game to crash. 
+
+* '''{{LE|sv_gravity}}''' ([[CVARs#float|float]])
+:Default: 800.0
+:This is the overall gravity of the entire level. 800 is normal gravity. Gravity affects falling speed, and therefore [[falling damage]].
+
+* '''{{LE|sv_unlimited_pickup}}''' ([[CVARs#boolean|boolean]])
+:Default: false
+:If enabled, the player is allowed to pick up ammo past the normal maximum amount for that ammo type.  This can be useful for testing the balance of a map.
+
+* '''{{LE|turbo}}''' ([[CVARs#float|float]]) - {{verification}}
+:Default: 100
+:This cvar affects how quickly the [[player]] moves. A value of 100 will cause the player to move at normal speed, 200 will cause the player to move at 200% of normal speed, 50 will cause the player to move at 50% of normal speed, etc. Valid values range from 10 to 255.
+
+* '''{{LE|var_friction}}''' ([[CVARs#boolean|boolean]])
+:Default: true
+:When set to false, normal friction is applied to the player in all cases. Otherwise, the amount of friction applied is determined by the sector  the player is in.
+
+* '''{{LE|var_pushers}}''' ([[CVARs#boolean|boolean]])
+:Default: true
+:When set to false, disables the [[Boom]] {{Class|PointPusher|push}}/{{Class|PointPuller|pull}} wind effects.
+
+== Compatibility options ==
+
+These options disable or alter [[ZDoom]]-specific features to allow for correct behavior when older maps utilized bugs or certain features that were later changed.  These should generally be left at the defaults unless the PWAD you're playing requires that they be set or otherwise does not behave as it should.
+
+Note that ZDoom features [[automatic compatibility]] with a number of mods; if a map requires special handling and is not yet featured on the automatic compatibility list; you should suggest support for it on the {{forum|forums|view=forum|f=15}}.
+
+''See also: [[Compatibility options]]''
+
+=== Compatibility modes ===
+Rather than selecting compatibility options one-by-one, a compatibility mode can be chosen with the following console variable, which will automatically select the appropriate options. Other options can be selected afterwards; but changing the compatmode always reset all compat CVARs to their default value for the chosen compatibility mode.
+
+* '''{{LE|compatmode}}''' ([[CVARs#integer|integer]])
+: Default: 0
+: When used, this CVAR enables certain combinations of the below compatibility options based on typical configurations.  The available options are:
+:: 0 - Default; All compatibility options are turned off.
+:: 1 - Doom; Enables a set of options that should allow nearly all maps made for [[vanilla Doom]] to work in ZDoom:
+::: [[#compat_crossdropoff|crossdropoff]], [[#compat_dehhealth|dehhealth]], [[#compat_light|light]], [[#compat_missileclip|missileclip]], [[#compat_nodoorlight|nodoorlight]], [[#compat_shorttex|shorttex]], [[#compat_soundtarget|soundtarget]], [[#compat_spritesort|spritesort]], [[#compat_stairs|stairs]], [[#compat_trace|trace]], [[#compat_useblocking|useblocking]], [[#compat_floormove|floormove]], [[#compat_maskedmidtex|maskedmidtex]]
+:: 2 - Doom (Strict); Sets all of the above options and also sets these:
+::: [[#compat_corpsegibs|corpsegibs]], [[#compat_hitscan|hitscan]], [[#compat_invisibility|invisibility]], [[#compat_limitpain|limitpain]], [[#compat_nopassover|nopassover]], [[#compat_notossdrop|notossdrop]], [[#compat_wallrun|wallrun]]
+:: 3 - Boom; Allows maps made specifically for [[Boom]] to function correctly by enabling the following options:
+::: [[#compat_boomscroll|boomscroll]], [[#compat_missileclip|missileclip]], [[#compat_soundtarget|soundtarget]], [[#compat_trace|trace]], [[#compat_maskedmidtex|maskedmidtex]]
+:: 4 - ZDoom 2.0.63; Sets the two following options to be true, restoring the behavior of [[version history#2.0.63|version 2.0.63]]:
+::: [[#compat_light|light]], [[#compat_soundtarget|soundtarget]]
+:: 5 - MBF; As Boom above, but also sets these for closer imitation of [[MBF]] behavior:
+::: [[#compat_mushroom|mushroom]], [[#compat_mbfmonstermove|mbfmonstermove]], [[#compat_noblockfriends|noblockfriends]], [[#compat_maskedmidtex|maskedmidtex]]
+:: 6 - Boom (Strict); As Boom above, but also sets these:
+::: [[#compat_corpsegibs|corpsegibs]], [[#compat_hitscan|hitscan]], [[#compat_invisibility|invisibility]], [[#compat_nopassover|nopassover]], [[#compat_notossdrop|notossdrop]], [[#compat_wallrun|wallrun]], [[#compat_maskedmidtex|maskedmidtex]]
+: Note that changing this CVAR will overwrite all of the other compatibility CVARs that had been previously set. Any CVARs not present in the associated list above will be set to off. However, future changes to the other CVARs will override this one's setting.  Note also that aside from setting these flags, there is no other special behavior at work here. This does not enable any kind of "emulation mode" and is not guaranteed to work 100% of the time. Finally, since the aim is purely to be able to play correctly certain maps in ZDoom, this should not be used to test the compatibility of a map with a different engine than ZDoom. If a map plays correctly in ZDoom using the "Boom (Strict)" mode, it does not mean that it will necessarily work with any other Boom-compatible port.
+
+=== Compatibility variables ===
+
+* '''{{LE|compat_anybossdeath}}''' ([[CVARs#boolean|boolean]])
+: Default: false
+: Early versions of Doom executed the level's special action whenever the last monster of a kind that called [[A_BossDeath]] died. This allowed to have several different bosses on the same map, and have the special action repeated as many times, a fact that was used notably by {{dw|Doomsday_of_UAC|Doomsday of UAC}} to free a {{Class|Cyberdemon}} once all {{Class|BaronOfHell|Barons of Hell}} were defeated, and to make a {{Class|RedSkull|red skull key}} accessible once the Cyberdemon was slain. Id Software considered this behavior a bug and fixed it, breaking this level.
+
+*'''{{LE|compat_badangles}}''' ([[CVARs#boolean|boolean]])
+: Default: false
+:This option emulates the error in the original engine's sine table by offsetting player angle when spawning or teleporting by one fineangle (approximatively 0.044°), preventing the player from facing directly in a cardinal direction.
+
+* '''{{LE|compat_boomscroll}}''' ([[CVARs#boolean|boolean]])
+: Default: false
+: [[Boom]]'s texture scrolling specials were designed to stack with each other and with Doom's default scroll types, however ZDoom does not use this additive behavior. Enable this option to use Boom's method and allow them to stack with each other.
+
+* '''{{LE|compat_corpsegibs}}''' ([[CVARs#boolean|boolean]])
+: Default: false
+: Doom originally changed the state of an actor's corpse to the "crushed gibs" state if they were ground by a closing door, raising elevator, crusher, or similar effect. This behavior later led to a bug with the skin code in ZDoom as when a player's corpse was crushed, only its sprite's letter was changed, not the full sprite name, meaning that a crushed player corpse looked like a standing player. To solve the problem, the fix at the time was to remove the corpse and spawn in its place a {{Class|RealGibs|gibs actor}}, and this in turn led to the result that {{Class|Archvile|arch-viles}} or similar monsters could no longer raise the monsters whose corpses had been crushed. Enabling this option to restore the original Doom behavior of changing the actor's state instead of replacing the actor. Note that player corpses are not affected, and any actor with a custom Crush state will use it in all cases.
+
+* '''{{LE|compat_crossdropoff}}''' ([[CVARs#boolean|boolean]])
+: Default: false
+: Doom's physics code prevented enemies from being pushed off of ledges that are greater than the monster's ''maxstepheight'' property. ZDoom normally allows monsters to be pushed over these dropoffs by outside force. If enabled, this CVAR restores the original Doom behavior.
+
+* '''{{LE|compat_dehhealth}}''' ([[CVARs#boolean|boolean]])
+: Default: false
+: Boom introduced a known bug that caused [[DeHackEd]]'s max health value to affect {{Class|Stimpack|stimpacks}} and {{Class|Medikit|medikits}} in addition to health bonuses. ZDoom retains that same bug to allow maps to define a new maximum health value for players to remain compatible. To restore the original (correct) Doom behavior, enable this option.
+
+* '''{{LE|compat_dropoff}}''' ([[CVARs#boolean|boolean]])
+: Default: false
+: Originally, monsters using Doom's AI could get stuck if they were pushed onto a ledge and would be unable to move. ZDoom adds code that specifically checks for such a situation and finds a valid direction for the monster to move away from the ledge. This option disables that new movement code and allows monsters to remain stuck.
+
+* '''{{LE|compat_explode1}}''' ([[CVARs#boolean|boolean]])
+: Default: false
+: If enabled, no vertical thrust is applied from receiving explosion (splash) damage.
+
+* '''{{LE|compat_explode2}}''' ([[CVARs#boolean|boolean]])
+: Default: false
+: If enabled, explosion (splash) damage uses the original non-z-aware code.
+
+* '''{{LE|compat_floormove}}''' ([[CVARs#boolean|boolean]])
+: Default: false
+:[[Vanilla Doom]] allows floors to move up past their ceilings, and ceilings to move down past their floors. ZDoom adopted a [[Boom]] fix to prevents this from happening. This compatibility option allows to turn off this fix.
+
+* '''{{LE|compat_hitscan}}''' ([[CVARs#boolean|boolean]])
+: Default: false
+: ZDoom fixed a couple of bugs in the [[hitscan]] trace routines, which had the effect of making hitscan attacks more efficient overall as in the original code they would sometimes "magically" miss. The first is that it is a monster's cross-section, rather than its bounding box, that is used to check for impact; this makes attacks with a limited range (especially [[player]] melee attacks) unlikely to hit very wide monsters. The second is the blockmap bug: if an actor crosses [[BLOCKMAP|block]] boundaries and its center is in a different block than the one in which the impact happens, then there is no collision at all, letting attacks pass through it harmlessly. If enabled, this option restores the original, flawed behavior.
+
+* '''{{LE|compat_invisibility}}''' ([[CVARs#boolean|boolean]])
+: Default: false
+: Enemies in ZDoom will not normally wake up when they "see" a player who is using an invisibility powerup. Enable this option to restore Doom's original behavior where enemies would always wake up in these circumstances.
+
+* '''{{LE|compat_light}}''' ([[CVARs#boolean|boolean]])
+: Default: false
+: Doom had a logical bug in its algorithm to search for the highest light level in neighboring sectors, which prevented it from looking past the first tagged sector's neighbors. This bug was fixed in [[Boom]], and later ZDoom adopted the fix as well. If enabled, this option uses the Doom behavior rather than the corrected Boom one.
+
+* '''{{LE|compat_limitpain}}''' ([[CVARs#boolean|boolean]])
+: Default: false
+: Enables Doom's default behavior where [[Classes:PainElemental|pain elementals]] are now allowed to spawn new [[Classes:LostSoul|lost souls]] if there are already more than twenty on the map.  Some older WADs took advantage of this limitation to create traps or ambushes where several Pain Elementals threaten the player but at first are unable to attack until the player grabs a powerup or otherwise triggers an action which kills enough Lost Souls to allow them to begin spawning more.
+
+*'''{{LE|compat_maskedmidtex}}''' ([[CVARs#boolean|boolean]])
+: Default: false
+: This option emulates a vanilla renderer glitch by ignoring the Y locations of patches drawn on two-sided midtextures and instead always drawing them at the top of the texture.
+
+* '''{{LE|compat_mbfmonstermove}}''' ([[CVARs#boolean|boolean]])
+: Default: false
+: [[Boom]] introduced sector friction and {{Class|PointPusher|pusher}}/{{Class|PointPuller|puller}} effects, and [[MBF]] subjected monsters to them. ZDoom, by default, does not, as the AI is unaware of such effects and incapable of coping up with them. Use this option to enable the MBF behavior. This does not affect "conveyor belt" effects.
+
+* '''{{LE|compat_minotaur}}''' ([[CVARs#boolean|boolean]])
+: Default: false
+: Heretic introduced two new elements to the Doom engine: [[floor clipping]] to simulate actors wading through shallow water (or other liquids), and floor-hugging projectiles. The combination of the two, however, was not properly tested. When a {{Class|Minotaur|maulotaur}} had its feet clipped by terrain and used its {{Class|MinotaurFX2|floor-hugging attack}}, the missiles were created below the floor, and were instantly destroyed as a result. Enabling this option prevents minotaurs from successfully creating their floor flames if their feet are clipped. Other floor-hugging projectiles are not affected.
+
+*'''{{LE|compat_missileclip}}'''
+: Default: false
+:If enabled, actors use their original heights for the purposes of projectile collision. This allows for decorations to be pass-through for [[projectile]]s as they were originally in ''[[Doom]]'' while still blocking other actors correctly. Specifically, this affects actors with negative values defined for their {{Property|ProjectilePassHeight}} property.
+
+* '''{{LE|compat_multiexit}}''' ([[CVARs#boolean|boolean]])
+: Default: false
+: {{moreinfo}}
+
+* '''{{LE|compat_mushroom}}''' ([[CVARs#boolean|boolean]])
+: Default: false
+: Doom originally calculated a missile's velocity on the X and Y axes based on its {{Property|Speed}} property, and then added a Z velocity to reach the point aimed at. In other words, the horizontal velocity was the same regardless of the angle, meaning that the higher you aimed, the faster the projectile actually was overall. Since ZDoom allows, through [[freelook]], to aim much higher or much lower than is normally possible in Doom, the effect at steep angles looked visibly bugged and the formula was changed to derive all three components of the actor's velocity from its angle and pitch. However, [[MBF]] introduced a codepointer, [[A_Mushroom]], that aimed projectiles at very steep angles, and the new ZDoom formula caused the effects of A_Mushroom to be very different in ZDoom compared to MBF. Enable this option to let A_Mushroom use the old formula when called from a state that was modified by [[DeHackEd]].
+
+* '''{{LE|compat_noblockfriends}}''' ([[CVARs#boolean|boolean]])
+: Default: false
+: Friendly monsters are still [[monster]]s, and therefore blocked by monster-blocking lines. This can severely limit their utility, as for example a friendly monster summoned at the start of {{dw|MAP01:_Entryway_(Doom_II)|MAP01: Entryway}} in [[Doom II]] will be unable to climb the steps of the triangle stairway. To counter this, [[MBF]] allowed any friendly monster to pass through monster-blocking lines. Enable this option to do the same.
+
+* '''{{LE|compat_nodoorlight}}''' ([[CVARs#boolean|boolean]])
+: Default: false
+: Boom (and ZDoom) add the ability to specify tagged sectors whose light level changes as a matching-tagged door is opened and closed. However, some older maps with incorrectly-tagged doors may inadvertently trigger this effect. Enable this option to prevent the light change from occuring in these instances.
+
+* '''{{LE|compat_nopassover}}''' ([[CVARs#boolean|boolean]])
+: Default: false
+: Doom did not allow one actor to pass over the top of another; in fact, all actors were considered to be infinitely tall for the purposes of collision-detection with each other.  ZDoom and other advanced ports change this so that objects can realistically move over or under each other. Enable this option to revert to Doom's original behavior.
+
+* '''{{LE|compat_notossdrops}}''' ([[CVARs#boolean|boolean]])
+: Default: false
+: When monsters are killed in ZDoom, any items they drop are "tossed" into the air and then drop to the ground before coming to rest. Enable this option to restore the original behavior and make dropped items appear already on the floor.
+
+* '''{{LE|compat_pointonline}}''' ([[CVARs#boolean|boolean]])
+: Default: false
+: {{moreinfo}}
+
+*'''{{LE|compat_polyobj}}''' ([[CVARs#boolean|boolean]])
+: Default: false
+: Uses the old flawed [[polyobject]] system, for maps that relied on its glitches.
+
+* '''{{LE|compat_ravenscroll}}''' ([[CVARs#boolean|boolean]])
+: Default: false
+: ''[[Heretic]]'' and ''[[Hexen]]'' floor scrollers had the odd effect of visibly moving the floor texture at a slower rate than the player was carried. ZDoom corrects this glitch. The original effect can be restored by enabling this compatibility option.
+
+* '''{{LE|compat_sectorsounds}}''' ([[CVARs#boolean|boolean]])
+: Default: false
+: Doom and older versions of ZDoom considered the center of a sector to be the original point of any sounds that sector makes. In certain cases, this could cause the sound position to be inaccurate or players to hear a directional sound while standing within the sector that is generating it. This has since been fixed to where players hear the sound coming from the point of the sector nearest to them, ensuring an equal level of sound throughout the sector. This option will restore the older, less accurate sound behavior.
+
+* '''{{LE|compat_shorttex}}''' ([[CVARs#boolean|boolean]])
+: Default: false
+: If enabled, Doom includes the first [[texture]] (normally treated as ''null'') when determining move distance for specials that act upon the shortest surrounding texture (e.g. [[Floor_RaiseByTexture]]).
+
+* '''{{LE|compat_silentinstantfloors}}''' ([[CVARs#boolean|boolean]])
+: Default: false
+: If a sector moves instantly from one height to another, ZDoom will normally prevent any associated movement sounds from playing. This option re-enables the original Doom behavior where only the stop sound would be played in this cases.
+
+* '''{{LE|compat_silentpickup}}''' ([[CVARs#boolean|boolean]])
+: Default: false
+: In Doom, other players in a [[multiplayer]] match were not able to hear each other pick up [[item]]s or [[weapon]]s (the pickup sounds only played for the local player). ZDoom changes this so that players can hear other players' pickups. Enable this option to restore the original behavior.
+
+* '''{{LE|compat_soundcutoff}}''' ([[CVARs#boolean|boolean]])
+: Default: false
+: If enabled, a playing sound gets cut off if its source no longer exists in the game world.
+
+* '''{{LE|compat_soundslots}}''' ([[CVARs#boolean|boolean]])
+: Default: false
+: If enabled, players will only be allowed to emit one sound at a time. This Doom behavior can be exploited in multiplayer matches to mask certain sound effects (most notably the BFG firing sound) from other players. Note that this compatibility option heavily cripples ZDoom's sound system to achieve this effect and so players need to be aware of potential side-effects if they opt to enable this behavior.
+
+* '''{{LE|compat_soundtarget}}''' ([[CVARs#boolean|boolean]])
+: Default: false
+: Doom and [[version history|older versions of ZDoom]] (up to 2.0.63a) used a sector flag to determine when monsters in each sector had heard the player. Since the flag never got reset once activated, monsters spawned into the map at a later time could wake up immediately without having to actually see or hear the player. Newer versions of ZDoom use a more realistic method by which enemies spawned into the map begin dormant and must be woken up in the usual way. However, certain older maps may rely on the original behavior and so enemies which are supposed to wake up immediately may remain dormant. Enable this option to restore the original functionality.
+
+* '''{{LE|compat_spritesort}}''' ([[CVARs#boolean|boolean]])
+: Default: false
+: ZDoom normally does not display overlapping sprites in the same order they were in Doom. Certain mods use overlapping sprites to achieve certain types of special effects, combining two different decorations into seemingly a single one. However, some mods require the original Doom order to work as intended, and others require the inverted ZDoom order. This compatibility option, if enabled, restores the original Doom order for sprite sorting.
+
+* '''{{LE|compat_stairs}}''' ([[CVARs#boolean|boolean]])
+: Default: false
+: If enabled, Doom's buggier stair-building code is used for the line specials that build stairs.  See also the [[:Category:Stairs specials|stair specials]] articles.
+
+* '''{{LE|compat_trace}}''' ([[CVARs#boolean|boolean]])
+: Default: false
+: Doom ignored lines which had both sides in the same sector when determining whether a [[hitscan]] attack will pass through. ZDoom uses a more accurate routine which takes these lines into account. Enable this option to restore Doom's less accurate method.
+
+* '''{{LE|compat_useblocking}}''' ([[CVARs#boolean|boolean]])
+: Default: false
+: Doom contained a limitation where any line with a [[special]] (even one that does not activate anything when used) would intercept the player's use action and would not allow any lines behind it to trigger. By default ZDoom allows all lines within the player's reach to be triggered at once. Enable this option to restore the original behavior.
+
+* '''{{LE|compat_wallrun}}''' ([[CVARs#boolean|boolean]])
+: Default: false
+: Doom's collision-detection and movement routines were very basic and contained several known bugs that could be exploited to allow things that weren't originally intended. One of these was the ability to move extremely fast along walls oriented at a certain angle on the map. ZDoom's movement code fixes most of these issues, so it is no longer possible to use the "wall-running" cheat. A few maps however may have been designed with it in mind and become impossible to play without it, so this option is available in those cases. However, this heavily cripples ZDoom's movement code and re-introduces a number of bugs and inaccuracies. It is recommended to only use this option if absolutely necessary to complete the map.
+
+* '''{{LE|compatflags}}''' ([[CVARs#integer|integer]])
+: Default: 0
+: This variable is a representation of 32 [[compatibility options]] as a single value. It includes [[#compat_shorttex|shorttex]], [[#compat_stairs|stairs]], [[#compat_limitpain|limitpain]], [[#compat_silentpickup|silentpickup]], [[#compat_nopassover|nopassover]], [[#compat_soundslots|soundslots]], [[#compat_wallrun|wallrun]], [[#compat_notossdrops|notossdrops]], [[#compat_useblocking|useblocking]], [[#compat_nodoorlight|nodoorlight]], [[#compat_ravenscroll|ravenscroll]], [[#compat_soundtarget|soundtarget]], [[#compat_dehhealth|dehhealth]], [[#compat_trace|trace]], [[#compat_dropoff|dropoff]], [[#compat_boomscroll|boomscroll]], [[#compat_invisibility|invisibility]], [[#compat_silentinstantfloors|silentinstantfloors]], [[#compat_sectorsounds|sectorsounds]], [[#compat_missileclip|missileclip]], [[#compat_crossdropoff|crossdropoff]], [[#compat_anybossdeath|anybossdeath]], [[#compat_minotaur|minotaur]], [[#compat_mushroom|mushroom]], [[#compat_mbfmonstermove|mbfmonstermove]], [[#compat_corpsegibs|corpsegibs]], [[#compat_noblockfriends|noblockfriends]], [[#compat_spritesort|spritesort]], [[#compat_hitscan|hitscan]], [[#compat_light|light]], [[#compat_polyobj|polyobj]], and [[#compat_maskedmidtex|maskedmidtex]], in this order.
+
+* '''{{LE|compatflags2}}''' ([[CVARs#integer|integer]])
+: Default: 0
+: This variable is a representation of up to 32 [[compatibility options]] as a single value. It currently only includes [[#compat_badangles|badangles]], [[#compat_floormove|floormove]], [[#compat_soundcutoff|soundcutoff]], [[#compat_pointonline|pointonline]], and [[#compat_multiexit|multiexit]], in this order.
+
+==Multiplayer and bot settings==
+
+* '''{{LE|alwaysapplydmflags}}''' ([[CVARs#boolean|boolean]])
+:Default: false
+:Normally, some dmflags are only used in deathmatch. If alwaysapplydmflags is 1, then they will also be used in single-player and co-op games. See also: [[#dmflags|dmflags]].
+
+* '''{{LE|bot_allowspy}}''' ([[CVARs#boolean|boolean]])
+:Default: false
+:Allows you to [[spying|see through the eyes]] of [[bot]]s during [[deathmatch]] games.
+
+* '''{{LE|bot_next_color}}''' ([[CVARs#integer|integer]])
+:Default: 11
+:A number representing the color of the next bot to be spawned. Possible values range from 0 to 11, 11 meaning that the bot will use its own color as defined in zcajun/bots.cfg.
+:{| {{prettytable}}
+|0||{{color|#40cf00}}Green||3||{{color|#8f0000}}Deep Red||6||{{color|#bf0000}}Red||9||{{color|#ffff00}}Yellow
+|-
+|1||{{color|#b0b0b0}}Gray||4||{{color|#ffffff}}White||7||{{color|#0000ff}}Blue||10||{{color|#cfdf90}}Bleached Bone
+|-
+|2||{{color|#505060}}Indigo||5||{{color|#ffaf3f}}Bright Brown||8||{{color|#00007f}}Dark Blue||11||''use bot's own color''
+|}
+
+* '''{{LE|bot_observer}}''' ([[CVARs#boolean|boolean]])
+:Default: false
+:When set to 1, the player will experience minimal interaction with the world, and [[bot]]s will ignore him. Does not work in netgames.
+
+* '''{{LE|cl_bbannounce}}''' ([[CVARs#boolean|boolean]])
+:Default: false
+:When true, enables the [[Bloodbath announcer]] for deathmatch games. The Bloodbath announcer is "The Voice" from Monolith Software's ''[[Blood]]''. To hear the announcer, you need to load ''Blood'''s sounds.rff either at the command line or through one of [[zdoom.ini]]'s [*.Autoload] sections. You can get this file either from the demo or full version of ''Blood''. If you don't have sounds.rff, you can still see the announcer's messages even though you won't hear anything. 
+
+* '''{{LE|cl_noprediction}}''' ([[CVARs#boolean|boolean]])
+:Default: false
+:In order to provide more responsive network play, [[ZDoom]] normally uses player prediction so that you can move immediately without waiting to receive packets from the other machines in the game. ''[[Doom]]'' did not have prediction, and if you don't like it, you can turn it off by setting this CVAR to true.
+
+* '''{{LE|cl_predict_specials}}''' ([[CVARs#boolean|boolean]])
+:Default: true
+:When true, this will allow player prediction to run specific line specials, such as silent teleports (used for fake room-over-room).
+
+* '''{{LE|cl_showmultikills}}''' ([[CVARs#boolean|boolean]])
+:Default: true
+:If this is true the game will display ''Unreal Tournament''-style messages when a player makes several kills in a short period of time. 
+
+* '''{{LE|cl_showsprees}}''' ([[CVARs#boolean|boolean]])
+:Default: true
+:If this is true the game will display ''Unreal Tournament''-style messages when a player is on a killing spree. (Earning several kills without being killed himself.)
+
+* '''{{LE|deathmatch}}''' ([[CVARs#integer|integer]])
+:Default: 0
+:When true, [[deathmatch]] rules are used for the game. When the game is started with -altdeath or -deathmatch, this cvar is automatically set to true.
+
+* '''{{LE|dmflags}}''' ([[CVARs#integer|integer]])
+:Default: 0
+:Stores the status of various gameplay settings that primarily apply to [[multiplayer]] games.  See the [[DMFlags]] article for details.
+
+* '''{{LE|dmflags2}}''' ([[CVARs#integer|integer]])
+:Default: 0
+:Stores the status of various gameplay settings that primarily apply to [[multiplayer]] games.  See the [[DMFlags]] article for details.
+
+* '''{{LE|dmflags3}}''' ([[CVARs#integer|integer]])
+:Default: 0
+:Stores the status of various gameplay settings that primarily apply to [[multiplayer]] games.  See the [[DMFlags]] article for details.
+
+* '''{{LE|fraglimit}}''' ([[CVARs#integer|integer]])
+:Default: 0
+:If the [[fraglimit]] is non-zero, the game will automatically advance to the next level once anyone gets this many [[frag]]s. ([[Deathmatch]] only.) See also: [[#timelimit|timelimit]].
+
+* '''{{LE|net_extratic}}''' ([[CVARs#integer|integer]])
+:Default: 0
+:Controls the method of how extra tics are sent. 0 is none, 1 is 1 (implied by [[Command_line_parameters#-extratic|-extratic]]), and 2 will add all tics that are yet to have an acknowledgment.
+
+* '''{{LE|net_ticbalance}}''' ([[CVARs#boolean|boolean]])
+:Default: false
+:If switched on, all nodes will attempt to send messages in advance to match when they would receive eachothers. In a 2 player game, this has the effect of halving network latency. This only functions in P2P games. Packet Server will ignore this option.
+
+* '''{{LE|teamdamage}}''' ([[CVARs#float|float]])
+:Default: 0.0
+:Controls how much damage players can do to their teammates. This is multiplied to the normal damage done, so a value of 0 means that players cannot hurt their teammates. A value of 1 means that players deal full damage to their teammates. You can also set this to values greater than 1 to deal extra punishment to your teammates.
+
+* '''{{LE|teamplay}}''' ([[CVARs#boolean|boolean]])
+:Default: false
+:When set to true, players will be recognized by [[team]]. Otherwise, everyone is treated as if they are not on a team regardless of the settings of their [[#team|team]] CVARs. Useful primarily for the friendy fire avoidance [[#dmflag|dmflags]] and {{CCMD|M|say_team}} command.
+
+* '''{{LE|timelimit}}''' ([[CVARs#float|float]])
+:Default: 0.0
+:When the time limit is non-zero, the game will automatically advance to the next level after this many minutes have elapsed. (deathmatch only.) See also: fraglimit.
+
+* '''{{LE|wi_autoadvance}}''' ([[CVARs#integer|integer]])
+:Default: 0
+:If greater then 0, the intermission will automatically advance regardless of {{c|NOAUTOSTARTMAP}} in an [[intermission script]], the value of {{CVAR|R|wi_noautostartmap}}, or if somebody is not ready in the stats screen. The value is a count of seconds. This only has an effect in [[multiplayer]].
+
+=== DM Flags ===
+These console variables affect the [[DMFlags]] and therefore modify either [[#dmflags|dmflags]], [[#dmflags2|dmflags2]] or [[#dmflags3|dmflags3]] when they are changed.
+
+* '''{{LE|sv_allowcrouch}}''' ([[CVARs#boolean|boolean]])
+:Default: false
+:Set this to true to explicitly allow [[crouching]], even if the map's definition in [[MAPINFO]] disables it. If false, crouching is still possible if it isn't forbidden by the map. This can be overridden by [[#sv_nocrouch|sv_nocrouch]], and both variables at once can be manipulated with [[#sv_crouch|sv_crouch]].
+
+* '''{{LE|sv_allowfreelook}}''' ([[CVARs#boolean|boolean]])
+:Default: false
+:Set this to true to explicitly allow [[Free_look|freelooking]], even if the map's definition in [[MAPINFO]] disables it. If false, freelooking is still possible if it isn't forbidden by the map. This can be overridden by [[#sv_nofreelook|sv_nofreelook]], and both variables at once can be manipulated with [[#sv_freelook|sv_freelook]].
+
+* '''{{LE|sv_allowjump}}''' ([[CVARs#boolean|boolean]])
+:Default: false
+:Set this to true to explicitly allow [[jumping]], even if the map's definition in [[MAPINFO]] disables it. If false, jumping is still possible if it isn't forbidden by the map. This can be overridden by [[#sv_nojump|sv_nojump]], and both variables at once can be manipulated with [[#sv_jump|sv_jump]].
+
+* '''{{LE|sv_barrelrespawn}}''' ([[CVARs#boolean|boolean]])
+:Default: false
+:When true, {{Class|ExplosiveBarrel|barrels}} will eventually respawn after they are [[A_BarrelDestroy|destroyed]]. Changing this to true in the middle of a game will not affect barrels that have already been destroyed.
+:This variable requires [[#alwaysapplydmflags|alwaysapplydmflags]] to have an effect outside of [[deathmatch]] mode! {{deprecated}}
+
+* '''{{LE|sv_chasecam}}''' ([[CVARs#boolean|boolean]])
+:Default: false
+:If this is true, it permits to use the [[chasecam]] even if [[#sv_cheats|sv_cheats]] is off.
+
+* '''{{LE|sv_coophalveammo}}''' ([[CVARs#boolean|boolean]])
+:Default: false
+:If on, players in [[cooperative]] mode respawn with half the ammo they had when they died (but not less than the normal starting amount).
+
+* '''{{LE|sv_cooploseammo}}''' ([[CVARs#boolean|boolean]])
+:Default: false
+:If on, a respawning player's ammo counts are reset to normal starting conditions in [[cooperative]] mode.
+
+* '''{{LE|sv_cooplosearmor}}''' ([[CVARs#boolean|boolean]])
+:Default: false
+:If on, a respawning player's armor is reset to normal starting conditions in [[cooperative]] mode.
+
+* '''{{LE|sv_cooploseinventory}}''' ([[CVARs#boolean|boolean]])
+:Default: false
+:If on, a respawning player's inventory (including ammo, armor, keys, powerups, and weapons) is reset to normal starting conditions in [[cooperative]] mode.
+
+* '''{{LE|sv_cooplosekeys}}''' ([[CVARs#boolean|boolean]])
+:Default: false
+:If on, a respawning player's keys are reset to normal starting conditions in [[cooperative]] mode.
+
+* '''{{LE|sv_cooplosepowerups}}''' ([[CVARs#boolean|boolean]])
+:Default: false
+:If on, a respawning player's powerups are reset to normal starting conditions in [[cooperative]] mode.
+
+* '''{{LE|sv_cooploseweapons}}''' ([[CVARs#boolean|boolean]])
+:Default: false
+:If on, a respawning player's weapons are reset to normal starting conditions in [[cooperative]] mode.
+
+* '''{{LE|sv_coopsharekeys}}''' ([[CVARs#boolean|boolean]])
+:Default: false
+:If on, keys and other core items will be given to all players in [[cooperative]] mode when one player picks them up.
+
+* '''{{LE|sv_noplayerclip}}''' ([[CVARs#boolean|boolean]])
+:Default: false
+:If on, players in [[cooperative]] will be able to move through each other.
+
+* '''{{LE|sv_localitems}}''' ([[CVARs#boolean|boolean]])
+:Default: false
+:If on, when players in [[cooperative]] pick up items, they receive a client-side copy of the item instead of having the world pickup move into their inventory.
+
+* '''{{LE|sv_nolocaldrops}}''' ([[CVARs#boolean|boolean]])
+:Default: false
+:If on, when a player drops an item in [[cooperative]], that item will never be picked up as a client-side item (whoever picks it up will receive the item fully).
+
+* '''{{LE|sv_nocoopitems}}''' ([[CVARs#boolean|boolean]])
+:Default: false
+:If on, cooperative-only items will not spawn in [[cooperative]].
+
+* '''{{LE|sv_nocoopthings}}''' ([[CVARs#boolean|boolean]])
+:Default: false
+:If on, cooperative-only actors will not spawn in [[cooperative]].
+
+* '''{{LE|sv_rememberlastweapon}}''' ([[CVARs#boolean|boolean]])
+:Default: false
+:If on, the last used weapon will be selected instead of switching to the best new weapon when players respawn in [[cooperatives]].
+
+* '''{{LE|sv_pistolstart}}''' ([[CVARs#boolean|boolean]])
+:Default: false
+:If on, players will start each map in [[cooperatives]] only with their starting weapons.
+
+* '''{{LE|sv_crouch}}''' ([[CVARs#integer|integer]])
+:Default: 0
+:This combines [[#sv_nocrouch|sv_nocrouch]] and [[#sv_allowcrouch|sv_allowcrouch]] in a single variable. Possible values are 0 (default), 1 (force disallowing) and 2 (force allowing).
+
+* '''{{LE|sv_degeneration}}''' ([[CVARs#boolean|boolean]])
+:Default: false
+:If on, a player's health above the normal maximum will decrease every second until it falls back to said normal maximum. Health degeneration is normally one point per second, but if the player's health is less than five points above the maximum, it will snap back instantly.
+
+* '''{{LE|sv_disallowspying}}''' ([[CVARs#boolean|boolean]])
+:Default: false
+:If this variable is on, [[spying]] is not permitted.
+
+* '''{{LE|sv_disallowsuicide}}''' ([[CVARs#boolean|boolean]])
+:Default: false
+:If on, forbids to use the {{CCMD|D|kill}} command to commit suicide.
+
+* '''{{LE|sv_dontcheckammo}}''' ([[CVARs#boolean|boolean]])
+:Default: false
+:If true, weapon switching does not check that enough ammo is actually available.
+
+* '''{{LE|sv_doubleammo}}''' ([[CVARs#boolean|boolean]])
+:Default: false
+:If true, ammo pickups provide twice as much ammo as normal. (The actual multiplier can be modified by the DoubleAmmoFactor property of [[MAPINFO/Skill definition|custom skills]].)
+
+* '''{{LE|sv_falldamage}}''' ([[CVARs#boolean|boolean]])
+:Default: false
+:If true, and [[#sv_oldfalldamage|sv_oldfalldamage]] is false, ''[[Hexen]]''-style [[falling damage]] is enforced. If both it and oldfallingdamage are true, then ''[[Strife]]''-style falling damage is enforced.
+
+* '''{{LE|sv_fallingdamage}}''' ([[CVARs#integer|integer]])
+:Default: 0
+:Combines both [[#sv_falldamage|sv_falldamage]] and [[#sv_oldfalldamage|sv_oldfalldamage]] in a single variable. Possible values are 0 (no [[falling damage]]), 1 (''[[Hexen]]'' falling damage), 2 ([[ZDoom]] falling damage), and 3 (''[[Strife]]'' falling damage).
+
+* '''{{LE|sv_fastmonsters}}''' ([[CVARs#boolean|boolean]])
+:Default: false
+:If true, monsters are more aggressive, and both they and projectiles use their {{Property|FastSpeed}} property instead of their speed; as if a skill with the FastMonsters property was used. This is automatically set if using the -fast [[command line parameter]].
+
+* '''{{LE|sv_forcerespawn}}''' ([[CVARs#boolean|boolean]])
+:Default: false
+:When true, players will respawn automatically after they die.
+:This variable requires [[#alwaysapplydmflags|alwaysapplydmflags]] to have an effect outside of [[deathmatch]] mode!
+
+* '''{{LE|sv_freelook}}''' ([[CVARs#integer|integer]])
+:Default: 0
+:This combines [[#sv_nofreelook|sv_nofreelook]] and [[#sv_allowfreelook|sv_allowfreelook]] in a single variable. Possible values are 0 (default), 1 (force disallowing) and 2 (force allowing).
+
+* '''{{LE|sv_infiniteammo}}''' ([[CVARs#boolean|boolean]])
+:Default: false
+:When true, firing a weapon will not use any ammo.
+
+* '''{{LE|sv_infiniteinventory}}''' ([[CVARs#boolean|boolean]])
+:Default: false
+:When true, using an inventory item will not expend it.
+
+* '''{{LE|sv_instantreaction}}''' ([[CVARs#boolean|boolean]])
+:Default: false
+:When true, [[monster]]s are immediately allowed to perform their first ranged attack since spawning without having to take a few steps first.
+
+* '''{{LE|sv_itemrespawn}}''' ([[CVARs#boolean|boolean]])
+:Default: false
+:When true, items will respawn after they have been picked up.
+
+* '''{{LE|sv_jump}}''' ([[CVARs#integer|integer]])
+:Default: 0
+:This combines [[#sv_nojump|sv_nojump]] and [[#sv_allowjump|sv_allowjump]] in a single variable. Possible values are 0 (default), 1 (force disallowing) and 2 (force allowing).
+
+* '''{{LE|sv_keepfrags}}''' ([[CVARs#boolean|boolean]])
+:Default: false
+:If true, the [[frag]] count for each player is not reset in between levels.
+:This variable requires [[#alwaysapplydmflags|alwaysapplydmflags]] to have an effect outside of [[deathmatch]] mode!
+
+* '''{{LE|sv_killallmonsters}}''' ([[CVARs#boolean|boolean]])
+:If true, exiting the level is not possible as long as there remain monsters (with the {{Flag|COUNTKILL}} flag) alive.
+:Default: false
+
+* '''{{LE|sv_killbossmonst}}''' ([[CVARs#boolean|boolean]])
+:If true, all monsters spawned by a {{Class|BossEye}} will be killed when a {{Class|BossBrain}} is killed.
+:Default: false
+
+* '''{{LE|sv_losefrag}}''' ([[CVARs#boolean|boolean]])
+:Default: false
+:If true, a player's [[frag]] count is decreased each time this player is killed.
+
+* '''{{LE|sv_monsterrespawn}}''' ([[CVARs#boolean|boolean]])
+:Default: false
+:When true, monsters will respawn after they have been killed.
+
+* '''{{LE|sv_noarmor}}''' ([[CVARs#boolean|boolean]])
+:Default: false
+:When true, no {{Class|armor}} will be spawned on the next map loaded. (This also includes the {{Class|megasphere}}.)
+:This variable requires [[#alwaysapplydmflags|alwaysapplydmflags]] to have an effect outside of [[deathmatch]] mode!
+
+* '''{{LE|sv_noautoaim}}''' ([[CVARs#boolean|boolean]])
+:Default: false
+:If true, [[autoaim]] is disabled for all players.
+
+* '''{{LE|sv_noautomap}}''' ([[CVARs#boolean|boolean]])
+:Default: false
+:If true, [[automap]] is disabled for all players.
+
+* '''{{LE|sv_noautomapallies}}''' ([[CVARs#boolean|boolean]])
+:Default: false
+:If true, allied players (in [[cooperative]] or [[team deathmatch]] games) are not shown on the [[automap]].
+
+* '''{{LE|sv_nobfgaim}}''' ([[CVARs#boolean|boolean]])
+:Default: false
+:When set to 1, prevents manual aiming of the {{Class|BFG9000}}. It will still aim up or down if you shoot it at something, but you will not be able to, for instance, shoot it at the ground to quickly generate tracer damage by looking down.
+
+* '''{{LE|sv_nocountendmonst}}''' ([[CVARs#boolean|boolean]])
+:Default: false
+:If true, [[monster]]s spawned in a sector of [[sector special|type]] {{c|dDamage_End}} are not tallied for the kill statistics at the end of the level.
+
+* '''{{LE|sv_nocrouch}}''' ([[CVARs#boolean|boolean]])
+:Default: false
+:Set this to true to explicitly forbid crouching, even if the map's definition in [[MAPINFO]] enables crouching. This also override sv_allowcrouch. If false, crouching can still be disallowed if the map forbids it.
+
+* '''{{LE|sv_noexit}}''' ([[CVARs#boolean|boolean]])
+:Default: false
+:This variable requires [[#alwaysapplydmflags|alwaysapplydmflags]] to have an effect outside of [[deathmatch]] mode!
+
+* '''{{LE|sv_nofov}}''' ([[CVARs#boolean|boolean]])
+:Default: false
+:When true, only the arbitrator will be able to set the horizontal field-of-view with the {{CCMD|D|fov}} command, and the arbitrator's [[FOV]] will be used for all players.
+
+* '''{{LE|sv_nofreelook}}''' ([[CVARs#boolean|boolean]])
+:Default: false
+:When true, disables [[free look|looking up and down]] and forces the players to view straight ahead.
+
+* '''{{LE|sv_nohealth}}''' ([[CVARs#boolean|boolean]])
+:Default: false
+:When true, no {{Class|health}} items will be spawned on the next map loaded. (This also includes the {{Class|berserk}} and the {{Class|megasphere}}.)
+:This variable requires [[#alwaysapplydmflags|alwaysapplydmflags]] to have an effect outside of [[deathmatch]] mode!
+
+* '''{{LE|sv_noitems}}''' ([[CVARs#boolean|boolean]])
+:Default: false
+:When true, no powerups or artifacts will be spawned on the next map loaded. ('''''This actually has no effect at all!'''')
+:This variable requires [[#alwaysapplydmflags|alwaysapplydmflags]] to have an effect outside of [[deathmatch]] mode!
+
+* '''{{LE|sv_nojump}}''' ([[CVARs#boolean|boolean]])
+:Default: false
+:Set this to true to explicitly forbid jumping, even if the map's definition in [[MAPINFO]] enables jumping. This also override sv_allowjump. If false, jumping can still be disallowed if the map forbids it.
+
+* '''{{LE|sv_nomonsters}}''' ([[CVARs#boolean|boolean]])
+:Default: false
+:When true, no monsters will be spawned on the next map loaded. This is automatically set if using the -nomonsters [[command line parameter]].
+
+* '''{{LE|sv_norespawn}}''' ([[CVARs#boolean|boolean]])
+:Default: false
+:IF true, dead players are not allowed to respawn.
+
+* '''{{LE|sv_noteamswitch}}''' ([[CVARs#boolean|boolean]])
+:Default: false
+:If true, players are not allowed to change [[team]] during a game.
+:This variable requires [[#alwaysapplydmflags|alwaysapplydmflags]] to have an effect outside of [[deathmatch]] mode!
+
+* '''{{LE|sv_novertspread}}''' ([[CVARs#boolean|boolean]])
+:Default: false
+:If true, {{CVAR|C|vertspread|vertical bullet spread for weapons}} is not allowed, thus disabled.
+:Note that weapons which have vertical bullet spread as part of their original behavior, such as the {{Class|SuperShotgun|super shotgun}}, are unaffected by this variable.
+
+* '''{{LE|sv_noweaponspawn}}''' ([[CVARs#boolean|boolean]])
+:Default: false
+:If true, weapons that are flagged to appear only in multiplayer are not spawned when playing in [[cooperative]] mode.
+
+* '''{{LE|sv_oldfalldamage}}''' ([[CVARs#boolean|boolean]])
+:Default: false
+:If true, and [[#sv_falldamage|sv_falldamage]] is false, old [[ZDoom]]-style [[falling damage]] is enforced. If both it and fallingdamage are true, then ''[[Strife]]''-style falling damage is enforced.
+
+* '''{{LE|sv_respawnprotect}}''' ([[CVARs#boolean|boolean]])
+:Default: false
+:When true, players will be invulnerable for two second after spawning.
+:This variable requires [[#alwaysapplydmflags|alwaysapplydmflags]] to have an effect outside of [[deathmatch]] mode!
+
+* '''{{LE|sv_respawnsuper}}''' ([[CVARs#boolean|boolean]])
+:Default: false
+:When true, items with the {{Flag|INVENTORY.BIGPOWERUP}} flag such as ''[[Doom]]'''s {{Class|InvulnerabilitySphere|invulnerability sphere}} and {{Class|BlurSphere|blur sphere}} will be able to respawn like regular items.
+
+* '''{{LE|sv_samelevel}}''' ([[CVARs#boolean|boolean]])
+:Default: false
+:When true, the only way to go to a different level is with the {{CCMD|D|changemap}} command.
+
+* '''{{LE|sv_samespawnspot}}''' ([[CVARs#boolean|boolean]])
+:Default: false
+:If true, players killed in [[cooperative]] mode respawn in the same place they died.
+
+* '''{{LE|sv_spawnfarthest}}''' ([[CVARs#boolean|boolean]])
+:Default: false
+:When true, players will be spawned as far as possible from any other players.
+
+* '''{{LE|sv_weapondrop}}''' ([[CVARs#boolean|boolean]])
+:Default: false
+:When true, players will drop their weapons when they die.
+
+* '''{{LE|sv_weaponstay}}''' ([[CVARs#boolean|boolean]])
+:Default: false
+:When true, {{Class|weapon}}s will not disappear when a player picks them up. This does not apply to weapons dropped by [[monster]]s or other players.
+:This variable requires [[#alwaysapplydmflags|alwaysapplydmflags]] to have an effect outside of [[deathmatch]] mode!
+
+==File storage==
+
+* '''{{LE|autosavecount}}''' ([[CVARs#integer|integer]])
+:Default: 4
+:This cvar determines how many autosave slots are used. 
+
+* '''{{LE|autosavenum}}''' (read-only)
+:This cvar keeps track of the number used for the next automatic [[savegame|save]] and is updated each time an automatic save is made. You cannot change it from the console. 
+
+* '''{{LE|demo_compress}}''' ([[CVARs#boolean|boolean]])
+:Default: true
+:If this CVAR is true demos will be compressed so that they take up less space on disk. 
+
+* '''{{LE|disableautosave}}''' ([[CVARs#integer|integer]])
+:Default: 0
+:Controls how frequently the game automatically [[savegame|saves]] for you. The possible settings are: 
+:*0 - Autosave whenever you enter a new level and [[Autosave|whenever the level requests it]]. (Default)
+:*1 - Autosave only when the level requests it.
+:*2 - Never autosave.
+
+* '''{{LE|gl_cachenodes}}''' ([[CVARs#boolean|boolean]])
+:Default: true
+:When [[GL node]]s are generated, if building them took more time (in seconds) than [[#gl_cachetime|gl_cachetime]], the nodes will be saved on disk to be retrieved the next time the same level (identified by its {{wp|MD5}} hash) is loaded.
+:Cached nodes are stored in %LOCALAPPDATA%/zdoom/cache on Windows Vista and newer, in a zdoom/cache subdirectory of the program directory in older Windows, and in ~/.zdoom/cache on Unix systems. {{moreinfo|anybody knows about the Mac folder? I can't tell from system calls.}} They can be deleted by running the {{CCMD|O|clearnodecache}} command.
+
+* '''{{LE|gl_cachetime}}''' ([[CVARs#float|float]])
+:Default: 0.6
+:Determines the minimum length, in seconds, that [[GL node]]s generation must take to trigger node caching. Ignored if [[#gl_cachenodes|gl_cachenodes]] is false.
+
+* '''{{LE|nofilecompression}}''' ([[CVARs#boolean|boolean]])
+:Default: false
+:This is a debugging CVAR used to disable all file compression. It should generally be left set to false.
+
+* '''{{LE|png_gamma}}''' ([[CVARs#float|float]])
+:Default: 0
+:Controls the gamma level stored in the {{c|gAMA}} chunk of [[PNG]] [[screenshot]]s. If this is 0, then your current gamma setting will be used. Since a lot of software ignores the gAMA chunk, it might not seem to have any effect.
+
+* '''{{LE|png_level}}''' ([[CVARs#integer|integer]])
+:Default: 5
+:This is the level of compression to use for PNG screenshots. 0 is no compression at all, 1 is minimal compression (fastest), 9 is maximum compression (slowest), and intermediate values offer intermediate compression. 5 offers a decent trade-off between file size and compression time. An uncompressed image will not necessarily save faster than a compressed image, because the extra time needed to write out a complete uncompressed image may be longer than the time required to compress the image. If you need to create screenshots as quickly as possible, consider setting screenshot_type to "pcx". 
+
+* '''{{LE|save_dir}}''' ([[CVARs#string|string]])
+:Default: ""
+:If this CVAR is not empty, it will be interpreted as the path where [[savegame]]s will be written and read. By default, it uses the current working directory. Either an absolute path or a path relative to the current working directory can be used. The {{param|-savedir}} [[command line parameters|parameter]] overrides it.
+
+* '''{{LE|saveloadconfirmation}}''' ([[CVARs#boolean|boolean]])
+:Default: true
+:Setting this to false will disable confirmation dialogs when performing {{CCMD|O|quicksave}} and {{CCMD|O|quickload}}.
+
+* '''{{LE|savestatistics}}''' ([[CVARs#integer|integer]])
+:Default: 0
+:If this CVAR is set to 1, ZDoom will save gameplay statistics to a file pointed to by the [[#statfile|statfile]] CVAR. Statistics saved include monsters killed, secrets found, and time passed. Other values have no effect.
+
+* '''{{LE|screenshot_dir}}''' ([[CVARs#string|string]])
+:Default: ""
+:This is the directory where [[screenshot]]s will be saved if you do not provide a filename to the {{CCMD|D|screenshot}} command. If this is unspecified (i.e. you  leave it at its default), screenshots will be saved to the current working directory. Either an absolute path or a path relative to the current working directory can be used. The {{param|-shotdir}} [[command line parameters|parameter]] overrides it.
+
+* '''{{LE|screenshot_quiet}}''' ([[CVARs#boolean|boolean]])
+:Default: false
+:Setting this to true will suppress the [[message]]s informing you what file a screenshot was saved to. 
+
+* '''{{LE|screenshot_type}}''' ([[CVARs#string|string]])
+:Default: "png"
+:Determines the type of [[screenshot]]s that will be saved. This can be either "png" or "pcx". [[PNG]] screenshots typically take up about half the space of pcx screenshots. PCX screenshots have the advantage that they require less time to create so are most useful for rapid screenshot generation. 
+
+* '''{{LE|statfile}}''' ([[CVARs#string|string]])
+:Default: zdoomstat.txt
+:Name of the text file used to store statistics if [[#savestatistics|savestatistics]] is set to 1. It can include a path before the file name; if the path is not absolute, it will be relative to the current working directory.
+
+* '''{{LE|storesavepic}}''' ([[CVARs#boolean|boolean]])
+:Default: true
+:Setting this to false will produce smaller [[savegame]]s (by about 14k typically) by not storing a screenshot inside the savegame.
+
+==Miscellaneous settings==
+* '''{{LE|cl_waitforsave}}''' ([[CVARs#boolean|boolean]])
+:Default: true
+:Pauses the game timer when a save starts, preventing the network buffer from trying to compensate for slow saves.
+
+* '''{{LE|defaultiwad}}''' ([[CVARs#string|string]])
+:Default: ""
+:Name of the [[IWAD]] to preselect in the [[IWAD selection box]] or to load directly if [[#queryiwad|queryiwad]] is false. This is automatically set to the loaded IWAD each time ZDoom is started.
+
+* '''{{LE|dimamount}}''' ([[CVARs#float|float]])
+:Default: -1.0
+:Controls how much the game screen is "dimmed" to the dim color when in menu mode. A value of 0 doesn't change the screen at all, while a value of 1 obscures it entirely behind the dim color. A negative value means to use the [[GameInfo definition|GameInfo key]] value instead.
+:Each supported game archives its own version of this CVAR, so for example changing it in ''[[Doom]]'' will not affect ''[[Heretic]]'' and the rest.
+
+* '''{{LE|dimcolor}}''' ([[CVARs#color|color]])
+:Default: "FF D7 00" {{color|#FFD700}} (''[[Doom]]'', ''[[Strife]]'') or "00 00 FF" {{color|#0000FF}} (''[[Chex Quest]]'', ''[[Heretic]]'', ''[[Hexen]]'')
+:The color to which the screen is dimmed when in menu mode.
+:Each supported game archives its own version of this CVAR, so for example changing it in ''Doom'' will not affect ''Heretic'' and the rest.
+
+* '''{{LE|language}}''' ([[CVARs#string|string]])
+:Default: "auto"
+:Determines the language used by [[ZDoom]]. If it is "auto" or unknown, the settings in the Regional Settings control panel will be used to determine an appropriate language. Set this to "enu" if you want to use the standard U.S. English messages. See [[LANGUAGE]] for a list of language codes.
+
+* '''{{LE|menu_screenratios}}''' ([[CVARs#integer|integer]])
+:Default: -1
+:Selects which screen ratios are shown in the [[set video mode]] menu. The default value of -1 displays all available modes. Other possible values are 0 to filter only 4:3 aspect ratios, 1 for 16:9, 2 for 16:10, and 3 for 17:10.
+
+* '''{{LE|genblockmap}}''' ([[CVARs#boolean|boolean]])
+:Default: false
+:Set this to true to force the game to ignore the [[blockmap]] saved with a [[map]] and always generate it from scratch, whether it needs to be generated or not.
+
+* '''{{LE|genglnodes}}''' ([[CVARs#boolean|boolean]])
+:Default: false
+:When set to true, [[GL node|GL-friendly nodes]] will be generated and used in  place of whatever BSP tree was saved with the map. You must also set [[#gennodes|gennodes]] or {{CVAR|A|am_textured}} to true for this cvar to have any effect.
+
+* '''{{LE|gennodes}}''' ([[CVARs#boolean|boolean]])
+:Default: false
+:Set this to true if you want the game to ignore the BSP tree saved with a map and always build a new one. A value of true for gennodes also implies a true value for genblockmap.
+
+* '''{{LE|m_quickexit}}''' ([[CVARs#boolean|boolean]])
+:Default: false
+:When set to true, the game closes immediately when quitting from the [[quit menu]], without asking for confirmation or playing a quit sound.
+
+* '''{{LE|queryiwad}}''' ([[CVARs#boolean|boolean]]) 
+:Default: true
+:When [[ZDoom]] finds more than one game [[IWAD]], the [[#defaultiwad|defaultiwad]] is not set or does not contain a valid name, and you have not used the -iwad [[command line parameters|parameter]], it will normally display an [[IWAD selection box]] to ask you to select which one you want to play with. Set this to false, and the first IWAD found will automatically be used.
+
+* '''{{LE|showendoom}}''' ([[CVARs#integer|integer]])
+:Default: 1
+:Controls whether the [[ENDOOM]] [[lump]] is shown upon exiting [[ZDoom]]. This is a text lump that was displayed just before quitting to DOS in the original game. If this is on, ZDoom will emulate the display of this lump in a window after ZDoom closes.  The following settings are valid:
+:*0 - Never show the ENDOOM lump.
+:*1 - The ENDOOM lump will always be displayed.
+:*2 - The ENDOOM lump will only be displayed if it has been modified from the original version by a PWAD.
+
+* '''{{LE|strictdecorate}}''' ([[CVARs#boolean|boolean]])
+:Default: false
+:If this is set to ''true'', any [[DECORATE]] error that had to be demoted to a warning for backwards compatibility will be treated as an actual error.
+
+==See also==
+* [[CVARs]]
+* [[CCMDs]]
+
+[[category:ZDoom console]]</text>
+    <sha1>80y9qmroctekqvmkfzi8bstqgr7vrqo</sha1>
+  </revision>
+</page>

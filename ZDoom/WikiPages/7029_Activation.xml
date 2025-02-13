@@ -1,0 +1,72 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>Activation</title>
+  <ns>0</ns>
+  <id>7029</id>
+  <revision>
+    <id>54094</id>
+    <parentid>54093</parentid>
+    <timestamp>2024-12-26T11:38:48Z</timestamp>
+    <contributor>
+      <username>Jekyll Grim Payne</username>
+      <id>2175</id>
+    </contributor>
+    <comment>/* See also */</comment>
+    <origin>54094</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="5636" sha1="nijukh9h9aen19phzvlqr7n143zay1f" xml:space="preserve">'''Activation''' and '''deactivation''' are actions that can happen to any [[actor]]. These allow to provide a higher degree of interactivity with things on the map.
+
+There are many different aspects that to activation/deactivation. Depending on how and where it's done, activation/deactivation can be used to execute a [[special]] attached to the actor, set/unset the {{flag|DORMANT|DORMANT flag}} on it, or simply set its [[Actor states|state]] to the '''Activate''' or '''Deactivate''' state sequences.
+
+==[[ACS]]==
+If [[Thing_Activate]] or [[Thing_Deactivate]] are called in [[ACS]], each actor with the specified [[TID]] will be activated/deactivated. In ACS terms this implies the following:
+*The actor's [[Activate|Activate()]]/[[Deactivate|Deactivate()]] [[ZScript virtual functions]] will be called. They will always be called this way, regardless of how the [[#Activaion property|activation property]] is set up. By default, these functions don't do anything and can be overridden to add custom behavior.
+*If the actor is a [[Actor_properties#Flag_combos|monster]] who is alive (health is above 0) or an [[ice corpse]], the {{flag|DORMANT}} flag will be set/unset on it.
+*If the actor's {{property|Activation}} field was set to {{c|THINGSPEC_Switch}}, then upon activation {{c|THINGSPECI_Deactivate}} will be added, and upon deactivation, {{c|THINGSPECI_Activate}} will be added to the field. This is done so that the opposite action can be performed.
+
+Nothing else is implied by these functions by default. For example, if &lt;code&gt;Thing_Activate&lt;/code&gt;/&lt;code&gt;Thing_Deactivate&lt;/code&gt; is called on a ''non''-monster actor that doesn't have any special behavior added to its [[Activate|Activate()]]/[[Deactivate|Deactivate()]] virtuals, nothing will happen at all.
+
+==[[ZScript]]==
+[[Activate|'''Activate()''']] and [[Deactivate|'''Deactivate()''']] are [[Actor virtual functions]] that can be both called directly to "activate"/"deactivate" an actor, or be overridden on an actor to determine what it does when activated. By default, these functions don't do anything. Some actors, like [[SwitchableDecoration]], override these functions to do something, and they can be freely used in custom actors. However, if there's a need to create an interactive decoration, it's recommend to use the '''[[Used]]''' virtual instead, which is much easier to set up.
+
+These functions can be called by the following means:
+*Calling them directly on a pointer to an actor instance, e.g. &lt;code&gt;target.Activate()&lt;/code&gt;, in [[ZScript]].
+*Calling [[Thing_Activate]]/[[Thing_Deactivate]] on that actor in [[ACS]]. Note that the [[#ACS|rules described above]] still apply in this case (for example, if the actor is a monster, the {{flag|DORMANT}} flag will be set/unset on it on top).
+
+An actor actor can also call its [[Activate|Activate()]]/[[Deactivate|Deactivate()]] functions with the help of the {{flag|USESPECIAL}} flag (player can activate it by pressing Use next to it) or the {{flag|BUMPSPECIAL}} flag (player can activate it by bumping into it), ''as long as'' the following conditions are also met:
+*The actor's {{property|Activation}} property must contain one of the following: {{c|THINGSPEC_Activate}} (can activate once), or {{c|THINGSPEC_Deactivate}} (can deactivate once), or {{c|THINGSPEC_Switch}} (will activate/deactivate interchangeably any number of times);
+*The actor must also have the {{flag|SOLID}} flag set, because pressing Use and bumping into the actor is based on collision, which is disabled without this flag.
+
+==Actor specials==
+The execution of the actor's [[special]] is tangenially related to the concept of activation/deactivation, but is not directly implied by it. Calling [[Thing_Activate]]/[[Thing_Deactivate]] in ACS or [[Activate|Activate()]]/[[Deactivate|Deactivate()]] in ZScript does ''not'' execute the actor's special.
+
+There are only three possible cases when the actor's [[special]] is executed:
+*When the actor is killed. This is the default behavior.
+*When the actor has {{flag|USESPECIAL}} and {{flag|SOLID}}, and the player presses Use next to it.
+*When the actor has {{flag|BUMPSPECIAL}} and {{flag|SOLID}}, and the player bumps into it.
+
+If the actor's special ''is'' executed, then we can observe some overlap between that and the the concept of activation/deactivation: the flags defined in the actor's {{property|Activation}} property come into play.
+
+==Activation property==
+The {{property|Activation}} property governs the conditions for activation/deactivation. The values of that property govern two mostly unrelated aspects:
+*First of all, they govern how the actor's [[special]] is executed. (As described [[#Actor specials|earlier]], there are only 3 possible cases when that happens.)
+*Three of those flags (specifically, {{c|THINGSPEC_Activate}}, {{c|THINGSPEC_Deactivate}} and {{c|THINGSPEC_Switch}}) allow the actor to call its [[Activate|Activate()]]/[[Deactivate|Deactivate()]] in addition to executing its special.
+
+'''The values of this field don't interact with the [[#ACS|ACS functions]] at all'''. The ACS functions can still set or unset the {{flag|DORMANT}} flag on the actor (if it's a living monster) and ''forcefully'' call [[Activate|Activate()]]/[[Deactivate|Deactivate()]] but do nothing else by default.
+
+The following flags are available (multiple flags can be combined with &lt;code&gt;|&lt;/code&gt; between them):
+{{: Thing activation flags}}
+
+==See also==
+* [[Activate]]
+* [[Deactivate]]
+* [[Used]]
+* [[Thing_Activate]]
+* [[Thing_Deactivate]]
+* {{property|Activation|Activation property}}
+* [[Actor virtual functions]]
+
+[[Category:Glossary]][[Category:Game concepts]]</text>
+    <sha1>nijukh9h9aen19phzvlqr7n143zay1f</sha1>
+  </revision>
+</page>

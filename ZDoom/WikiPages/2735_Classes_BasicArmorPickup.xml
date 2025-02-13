@@ -1,0 +1,213 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>Classes:BasicArmorPickup</title>
+  <ns>0</ns>
+  <id>2735</id>
+  <revision>
+    <id>52773</id>
+    <parentid>52186</parentid>
+    <timestamp>2024-06-18T20:33:12Z</timestamp>
+    <contributor>
+      <username>JediMB</username>
+      <id>2639</id>
+    </contributor>
+    <minor />
+    <comment>Fixed incorrectly formatted link</comment>
+    <origin>52773</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="7592" sha1="d8vj5z60eabe4rdm505nt0t312m67xt" xml:space="preserve">{{Actor|
+| type = Internal
+| name = Basic armor pickup
+| class = BasicArmorPickup
+}}[[Classes]]: [[Classes:Inventory|Inventory]]&amp;rarr;[[Classes:Armor|Armor]]&amp;rarr;&lt;u&gt;BasicArmorPickup&lt;/u&gt;&lt;br&gt;
+&amp;ensp;&amp;rarr;[[Classes:BlueArmor|BlueArmor]]&lt;br&gt;
+&amp;ensp;&amp;rarr;[[Classes:EnchantedShield|EnchantedShield]]&lt;br&gt;
+&amp;ensp;&amp;rarr;[[Classes:GreenArmor|GreenArmor]]&lt;br&gt;
+&amp;ensp;&amp;rarr;[[Classes:LeatherArmor|LeatherArmor]]&lt;br&gt;
+&amp;ensp;&amp;rarr;[[Classes:MetalArmor|MetalArmor]]&lt;br&gt;
+&amp;ensp;&amp;rarr;[[Classes:SilverShield|SilverShield]]
+
+
+&lt;u&gt;BasicArmorPickup&lt;/u&gt;s are armor items that replace any existing armor with themselves if the player's armor points are less than this item provides. The base class &lt;u&gt;BasicArmorPickup&lt;/u&gt; is never used directly. It is always the base class for predefined items (like Doom's {{class|GreenArmor}}) or for items defined in [[ZScript]]/[[DECORATE]]. &lt;u&gt;BasicArmorPickup&lt;/u&gt; items can be placed in the inventory. If that is done they will activate automatically when the previous armor has worn off.
+
+&lt;u&gt;BasicArmorPickup&lt;/u&gt; sets the {{flag|Inventory.AUTOACTIVATE}} flag by default. However, if you want to define an item that doesn't automatically activate you can clear this flag again.
+
+== Using in [[ZScript]] and [[DECORATE]] ==
+&lt;u&gt;BasicArmorPickup&lt;/u&gt;s use the basic [[Classes:Inventory|Inventory properties]] to define their behavior as inventory items. They also define a few new properties to define their behavior as armor.
+{{:BasicArmorPickup properties}}
+
+In addition, the '''{{Property|DamageFactor}}''' property can be used to make protective armors (or potentially, cursed armors). The armor first absorbs damage normally, as determined by its '''SavePercent''', '''MaxAbsorb''' and '''MaxFullAbsorb''' properties, and the damage factor is applied to the remaining damage. In doing so, the damage factor does not protect the armor itself, but only the wearer.
+
+== Examples ==
+This armor will absorb the first 50 damage dealt at 100%, and will absorb 75% of the remaining damage done:
+
+ class RedArmor : &lt;u&gt;BasicArmorPickup&lt;/u&gt;
+ {
+   Default
+   {
+     {{property|Inventory.PickupMessage}} "Picked up the HyperArmor!"; {{LanguageCodeNote}}
+     {{property|Inventory.Icon}} "ARM5A0";
+     {{property|Armor.SaveAmount}} 300;
+     {{property|Armor.SavePercent}} 75;
+     {{property|Armor.MaxFullAbsorb}} 50;
+   }
+   States
+   {
+   Spawn:
+     ARM5 A 6;
+     ARM5 B 7 bright;
+     loop;
+   }
+ }
+
+For example, if the player wearing this had 300% armor and 100% health, and was hit with an attack totalling 70 damage, the armor would take the first 50, leaving 20 left.  Of that 20, the armor would take an additional 15 damage, and the player would take only 5 damage.  After the attack, he would have 235% armor and 95% health left.
+
+This armor will absorb at a 50% rate, but will only absorb up to 25 damage per tic:
+
+ class WeakArmor : &lt;u&gt;BasicArmorPickup&lt;/u&gt;
+ {
+   Default
+   {
+     {{property|Inventory.PickupMessage}} "Picked up some mediocre armor."; {{LanguageCodeNote}}
+     {{property|Inventory.Icon}} "ARM7A0";
+     {{property|Armor.SaveAmount}} 75;
+     {{property|Armor.SavePercent}} 50;
+     {{property|Armor.MaxAbsorb}} 25;
+   }
+   states
+   {
+   Spawn:
+     ARM7 A 6
+     ARM7 B 7 bright
+     loop
+   }
+ }
+
+For example, if the player wearing this had 75% armor and 100% health, and was hit with an attack totalling 70 damage, the armor would absorb 25 and the player would take the remaining 45 damage.  After such an attack he would have 50% armor and 55% health.
+
+If, however, he were to take only 30 damage, the armor would absorb 50% of it (15) and the health would take the other 15; even though the armor didn't reach its maxabsorb value, the savepercent is only 50.
+
+ class PyroArmor : &lt;u&gt;BasicArmorPickup&lt;/u&gt;
+ {
+   Default
+   {
+     {{property|Inventory.PickupMessage}} "Picked up a fire-resistant armor."; {{LanguageCodeNote}}
+     {{property|Inventory.Icon}} "ARM9A0";
+     {{property|DamageFactor}} 'Fire', 0.0;
+     {{property|Armor.SaveAmount}} 150;
+     {{property|Armor.SavePercent}} 75;
+   }
+ }
+
+For example, if the player wearing wearing this had 150% armor and 100% health, and was hit by an attack inflicting 80 fire damage, the armor would absorb 75% of the damage normally (so 60 points), and since the remaining 20 points of damage are of the "fire" type against which it protects completely, the player would lose no health.  After the attack, he would therefore have 90% armor and 100% health. A second identical attack would leave him with armor 30% and health 100%; and after a third attack the armor would be entirely depleted absorbing the first 30 points of damage and would no longer protect him against the 50 remaining points of the attack, he would thus be left with armor 0% and health 50%.
+
+== [[ZScript]] definition ==
+{{ZScriptDefinitionNote|actors/inventory/armor.zs#L380}}
+&lt;syntaxhighlight lang="csharp"&gt;
+class BasicArmorPickup : Armor
+{
+
+	double SavePercent;
+	int MaxAbsorb;
+	int MaxFullAbsorb;
+	int SaveAmount;
+
+	property prefix: Armor;
+	property SaveAmount : SaveAmount;
+	property SavePercent: SavePercent;
+	property MaxAbsorb: MaxAbsorb;
+	property MaxFullAbsorb: MaxFullAbsorb;
+
+	Default
+	{
+		+Inventory.AUTOACTIVATE;
+		Inventory.MaxAmount 0;
+	}
+	
+	//===========================================================================
+	//
+	// ABasicArmorPickup :: CreateCopy
+	//
+	//===========================================================================
+
+	override Inventory CreateCopy (Actor other)
+	{
+		let copy = BasicArmorPickup(Super.CreateCopy (other));
+		copy.SavePercent = SavePercent;
+		copy.SaveAmount = SaveAmount;
+		copy.MaxAbsorb = MaxAbsorb;
+		copy.MaxFullAbsorb = MaxFullAbsorb;
+
+		return copy;
+	}
+	
+	//===========================================================================
+	//
+	// ABasicArmorPickup :: Use
+	//
+	// Either gives you new armor or replaces the armor you already have (if
+	// the SaveAmount is greater than the amount of armor you own). When the
+	// item is auto-activated, it will only be activated if its max amount is 0
+	// or if you have no armor active already.
+	//
+	//===========================================================================
+
+	override bool Use (bool pickup)
+	{
+		int SaveAmount = GetSaveAmount();
+		let armor = BasicArmor(Owner.FindInventory("BasicArmor"));
+
+		// This should really never happen but let's be prepared for a broken inventory.
+		if (armor == null)
+		{
+			armor = BasicArmor(Spawn("BasicArmor"));
+			armor.BecomeItem ();
+			Owner.AddInventory (armor);
+		}
+		else
+		{
+			// If you already have more armor than this item gives you, you can't
+			// use it.
+			if (armor.Amount &gt;= SaveAmount + armor.BonusCount)
+			{
+				return false;
+			}
+			// Don't use it if you're picking it up and already have some.
+			if (pickup &amp;&amp; armor.Amount &gt; 0 &amp;&amp; MaxAmount &gt; 0)
+			{
+				return false;
+			}
+		}
+		
+		armor.SavePercent = clamp(SavePercent, 0, 100) / 100;
+		armor.Amount = SaveAmount + armor.BonusCount;
+		armor.MaxAmount = SaveAmount;
+		armor.Icon = Icon;
+		armor.MaxAbsorb = MaxAbsorb;
+		armor.MaxFullAbsorb = MaxFullAbsorb;
+		armor.ArmorType = GetClassName();
+		armor.ActualSaveAmount = SaveAmount;
+		return true;
+	}
+	
+	override void SetGiveAmount(Actor receiver, int amount, bool bycheat)
+	{
+		SaveAmount *= amount;
+	}
+	
+	int GetSaveAmount ()
+	{
+		return !bIgnoreSkill ? int(SaveAmount * G_SkillPropertyFloat(SKILLP_ArmorFactor)) : SaveAmount;
+	}
+}&lt;/syntaxhighlight&gt;
+
+== [[DECORATE]] definition ==
+{{DecorateDefinitionNote}}
+ ACTOR &lt;u&gt;BasicArmorPickup&lt;/u&gt; : {{Class|Armor}} native
+ {
+   +{{Flag|INVENTORY.AUTOACTIVATE}}
+   {{Property|Inventory.MaxAmount}} 0
+ }</text>
+    <sha1>d8vj5z60eabe4rdm505nt0t312m67xt</sha1>
+  </revision>
+</page>

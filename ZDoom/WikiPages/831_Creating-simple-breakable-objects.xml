@@ -1,0 +1,63 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>Creating simple breakable objects</title>
+  <ns>0</ns>
+  <id>831</id>
+  <revision>
+    <id>21701</id>
+    <parentid>15296</parentid>
+    <timestamp>2009-05-17T20:41:13Z</timestamp>
+    <contributor>
+      <username>Gez</username>
+      <id>1283</id>
+    </contributor>
+    <minor />
+    <comment>msg</comment>
+    <origin>21701</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="2049" sha1="6rvgn2seutn8yycxbfwfcihio0xfbxi" xml:space="preserve">{{WarnDeprecated|the modern [[DECORATE]] format}}
+
+In addition to the normal commands that can be used with normal [[Creating simple decorations|decoration]] items, there are a few more that can be added to make the scenery breakable in the old [[The old DECORATE format|DECORATE format]]. Using this, you can recreate the destroyable trees that Hexen uses, and even add burn or freeze frames. 
+
+* DeathFrames - Like frames, but gets played when the actor dies. 
+* IceDeathFrames - Like DeathFrames, except it is used when the actor freezes to death. 
+* BurnDeathFrames - Like DeathFrames, except it is used when the actor burns to death. 
+* GenericIceDeath - Like IceDeathFrames, except you don't specify any frames here. The game will create a generic ice death for you. 
+* BurnsAway - If you include this, then the thing disappears after it finishes the BurnDeathFrames animation. Otherwise, it stays at the last frame in the sequence. 
+* DiesAway - Like BurnsAway, but it applies to normal DeathFrames instead. 
+* DeathHeight - How tall the actor is after a normal death. 
+* SolidOnDeath - Include this, and the actor will stick block you after it dies. Useful with DeathHeight. 
+* BurnHeight - How tall the actor is after a burning death. 
+* SolidOnBurn - Include this, and the actor will still block you after it burns to death. Useful with BurnHeight. 
+* DeathSound - Sound the actor makes during a normal death. 
+* BurnDeathSound - Sound the actor makes during a burning death. 
+* Health - The actor's initial health. 
+
+An example follows (for use in Hexen.wad): 
+
+    breakable FooTree
+    {
+        Sprite TRDT
+        Frames A
+        DeathFrames "BCDEFG"
+        GenericIceDeath
+        BurnDeathFrames "H*I*J*K*L*M*N*OPQ"
+        BurnDeathSound TreeExplode
+        BurnHeight 20
+        SolidOnBurn
+        SolidOnDeath
+        DeathHeight 20
+        DeathSound BishopDeath
+        Solid
+        Radius 15
+        Height 180
+        Health 70
+        Mass 700000
+        NoBlood
+        BurnsAway
+    }
+
+[[category:Old Decorate format]]</text>
+    <sha1>6rvgn2seutn8yycxbfwfcihio0xfbxi</sha1>
+  </revision>
+</page>

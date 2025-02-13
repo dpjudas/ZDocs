@@ -1,0 +1,54 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>AngleTo</title>
+  <ns>0</ns>
+  <id>9678</id>
+  <revision>
+    <id>52894</id>
+    <parentid>52893</parentid>
+    <timestamp>2024-08-15T13:52:06Z</timestamp>
+    <contributor>
+      <username>Jekyll Grim Payne</username>
+      <id>2175</id>
+    </contributor>
+    <comment>/* Example */</comment>
+    <origin>52894</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="1096" sha1="foz6e5hgr48t6w8a9ysfauro2vqxu5w" xml:space="preserve">{{ZScriptNote}}
+'''{{class|Actor}}'''
+
+clearscope double '''AngleTo'''(Actor ''target'', bool ''absolute'' = false) ''const''
+
+== Usage ==
+Returns the angle from the caller to the ''target'' actor.
+
+=== Parameters ===
+*{{c|Actor '''target'''}}
+:The actor to return the angle to.
+*{{c|bool '''absolute'''}}
+:If the function should not account for static portals. Default is false.
+
+=== Return value ===
+The absolute angle that faces in the ''target'' actors' direction.
+
+== Example ==
+This simple function can be used to make a monster ONLY shoot if it will hit its' target. It uses [[AngleTo]] and '''[[PitchTo]]''' to give an angle and pitch to '''[[LineTrace]]''' that fires the raycast at the targets' direction.
+&lt;syntaxhighlight lang = "csharp"&gt;
+	bool A_OnlyHitTarget()
+	{
+		if (!target) return false;
+		FLineTraceData LOF;
+		double AimPitch = PitchTo (target, height*0.5, target.height*0.5);
+		LineTrace (AngleTo (target), INT.MAX, AimPitch, TRF_SOLIDACTORS, height*0.5, data:LOF);
+		return (LOF.HitActor == target) 
+	}
+
+&lt;/syntaxhighlight&gt;
+
+== See also ==
+* [[PitchTo]]
+
+[[Category:ZScript]]</text>
+    <sha1>foz6e5hgr48t6w8a9ysfauro2vqxu5w</sha1>
+  </revision>
+</page>

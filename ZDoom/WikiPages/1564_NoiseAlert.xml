@@ -1,0 +1,53 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>NoiseAlert</title>
+  <ns>0</ns>
+  <id>1564</id>
+  <revision>
+    <id>45919</id>
+    <parentid>44618</parentid>
+    <timestamp>2018-02-25T04:58:22Z</timestamp>
+    <contributor>
+      <username>Kappes Buur</username>
+      <id>88</id>
+    </contributor>
+    <comment>updated link to example pwad</comment>
+    <origin>45919</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="1584" sha1="d01p6u5day5xluu3lb2wfdad2g1mt2t" xml:space="preserve">{{Special|173|target_tid, emitter_tid|Miscellaneous}}
+* ''target_tid'': Target (usually player). If 0, refers to the activator of the script.
+* ''emitter_tid'': Thing that emits alert noise. If 0, refers to the activator of the script.
+
+This special alerts monsters of a target's presence. You can specify both the object which is doing this alert and the target which the monsters should attack. If both parameters are 0, the special's activator is both emitter and target.
+
+Which monsters are woken up is determined in a similar way to the player shooting: lines with the ''block sounds'' flag and sectors with 0 height will not allow the imaginary sound to travel past them. Note that if the monster's {{flag|AMBUSH}} flag is set, it will not wake up immediately; the monster will wait until it has a line of sight with the player, which is the normal behavior of the ''ambush'' flag.
+
+== Examples ==
+
+ // Alerts monsters near thing with assigned tag = 667
+ // to the player's presence.
+ script 1 (void)
+ {
+   NoiseAlert(0, 667);
+ }
+
+ // Alerts monsters near thing with assigned tag = 667
+ // to the presence of another actor with tag 668 (may
+ // or may not be a player).
+ script 2 (void)
+ {
+   NoiseAlert(668, 667);
+ }
+
+== Conversions from linedef types ==
+The following Doom map format types can be converted as NoiseAlert:
+{| {{prettytable}}
+!Type!!Conversion!!Trigger
+|{{icon|Strife}} 150:WR Raise Alarm || NoiseAlert (0, 0) || Player Cross, Repeatable
+|}
+
+== External links ==
+*[http://www.mediafire.com/file/fz4o4ajlri8hdpo/173_DiH.zip Example map (Doom 2 in Hexen format) ]</text>
+    <sha1>d01p6u5day5xluu3lb2wfdad2g1mt2t</sha1>
+  </revision>
+</page>

@@ -1,0 +1,85 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>GetSpriteTexture</title>
+  <ns>0</ns>
+  <id>9944</id>
+  <revision>
+    <id>54107</id>
+    <parentid>54004</parentid>
+    <timestamp>2025-01-01T13:40:27Z</timestamp>
+    <contributor>
+      <username>Jekyll Grim Payne</username>
+      <id>2175</id>
+    </contributor>
+    <comment>/* Usage */</comment>
+    <origin>54107</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="5517" sha1="au9rdvnhh17wbh7xegrma86tsxhjb6s" xml:space="preserve">'''{{struct|State}}'''
+
+TextureID, bool, Vector2 '''GetSpriteTexture'''(int ''rotation'', int ''skin'' = 0, Vector2 ''scale'' = (0,0), int ''spritenum'' = -1, int ''framenum'' = -1)
+
+==Usage==
+A {{struct|State}} struct function that can be called on a {{struct|State|state}} pointer to return the {{struct|TextureID}} of the [[sprite]] associated with that state. (Also returns some additionall information about the sprite.)
+
+At the moment, this is the ''only'' way to convert a '''SpriteID''' to a '''TextureID''', because direct conversion/casting between those types is not allowed.
+
+===Parameters===
+*{{c|int '''rotation'''}}
+:A value from 0 to 16 to account for sprite rotations (which support up to 16 angles), with 0 meaning "front", 8 meaning "back" and so on.
+*{{c|int '''skin'''}}
+:An ID to the player [[skin]] it's supposed to find. Such as if you're trying to rip a sprite from a player while also accounting for any skin they might have on. The ID can be found by either calling GetSkin() from a [[PlayerInfo]] instance. Or checking the [[ZScript global variables|global PlayerSkins array]]. 0 by default, which means that any potential skins are totally ignored.
+*{{c|Vector2 '''scale'''}}
+:Vestigial. Does nothing. Actor sprites are scaled according to the Actor's {{property|Scale}} value, which is readable directly as the &lt;code&gt;scale&lt;/code&gt; actor field.
+*{{c|int '''spritenum'''}}
+:If non-negative, this will accept another SpriteID which can be obtained with [[GetSpriteIndex]]. If used, the function disregards the state it's being called on and obtains a TextureID for the explicitly provided SpriteID.
+*{{c|int '''framenum'''}}
+:If non-negative, the function will returns the sprite with the given frame letter instead of using the frame letter explicitly associated with the calling state. (0 means frame letter A, 1 means B, and so on.)
+
+Note: If both ''spritenum'' and ''framenum'' are used, the function becomes essentially a static method that can be used to convert ''any'' SpriteID  to a TextureID. It still requires a state to be called on, but the state becomes irrelevant, i.e. literally any actor state can be used. For example:
+&lt;syntaxhighlight lang="csharp"&gt;
+let def = GetDefaultByType('Actor');
+TextureID = def.spawnstate.GetSpriteTexture(0, spritenum: GetSpriteIndex("POSS"), framenum: 0);&lt;/syntaxhighlight&gt;
+The code above will explicitly obtain the TextureID for the image POSSA1. We use the base Actor class just to have a state it can be called on, but the state in this case is not relevant. Functionally, this is identical to calling [[Structs:TexMan#CheckForTexture|{{c|TexMan.CheckForTexture("POSSA1")}}]], the only difference being that you don't need to worry about figuring out the rotation number (which can be 0 or greater depending on whether the sprite in question has rotations or not). It is also more performant, than CheckForTexture.
+
+===Return values===
+* ''TextureID''
+:The sprite graphic that is in the state the function was called from. If a ''skin'' was passed, the corresponding skin graphic for that state, if any, will be returned.
+:'''{{color|red|Warning:}}''' Normally, to check if the sprite texture obtained by this function is valid, you would call [[Structs:TextureID#Dynamic|{{c|IsValid()}}]] on the obtained TextureID pointer. However, note that [[TNT1]] is ''also'' considered valid. This is important, because when an actor's code is loaded but the sprites for that actor aren't, they are automatically remapped to TNT1 by the engine, and as a result {{c|GetSpriteTexture()}} will obtain a "valid" texture, even though there are no sprites for the actor. For cases like this, you will need to manually check &lt;code&gt;if (""..&lt;actor state pointer&gt;.sprite != "TNT1")&lt;/code&gt; to make sure the sprite associated with a given state isn't TNT1.
+* ''bool''
+:Returns if the particular [[Sprite#Mirroring|sprite graphic is meant to be mirrored]].
+* ''Vector2''
+:Returns the scale of the sprite graphic. THIS IS ONLY USEFUL FOR VALID SKIN SPRITES, normal sprites do not have any custom scale attached to them for this to return!
+
+== Examples ==
+States are available in static context with [[GetDefaultByType]], so this function doesn't require an actor instance to exist. For example, this is valid:
+&lt;syntaxhighlight lang="csharp"&gt;
+state s = GetDefaultByType('Cacodemon').spawnstate;
+TextureID stex = s.GetSpriteTexture(8);
+// stex now contains a TextureID for the HEADA5 sprite
+&lt;/syntaxhighlight&gt;
+(Note, &lt;code&gt;spawnstate&lt;/code&gt; is an Actor field that contains a pointer to the first state in the actor's Spawn state sequence.)
+
+
+Below is a slightly expanded example, demonstrating how a function could be created to obtain the TextureID of the first {{struct|State|state}} in an actor's state sequence:
+&lt;syntaxhighlight lang="csharp"&gt;
+static TextureID GetStateTextureByType(class&lt;Actor&gt; type, StateLabel label)
+{
+	TextureID tex;
+	tex.SetNull(); //set this to null right away, so we can return a null texture if conditions aren't valid
+
+	let def = Actor.GetDefaultByType(type); //try obtaining the defaults of the specified class
+	if (!def) return tex;
+
+	State st = def.FindState(label); //try finding a state by the provided state label
+	if (!st) return tex;
+
+	return st.GetSpriteTexture(0); //return the texture of a state
+}&lt;/syntaxhighlight&gt;
+The above function can then be called, for example, as &lt;code&gt;GetStateTextureByType('Cacodemon', "Death")&lt;/code&gt; — this will obtain HEADG1 as a TextureID.
+
+(See also [[GetDefaultByType]])
+
+[[Category:ZScript]]</text>
+    <sha1>au9rdvnhh17wbh7xegrma86tsxhjb6s</sha1>
+  </revision>
+</page>

@@ -1,0 +1,49 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>Damage types</title>
+  <ns>0</ns>
+  <id>5404</id>
+  <revision>
+    <id>52403</id>
+    <parentid>52402</parentid>
+    <timestamp>2024-04-11T17:19:00Z</timestamp>
+    <contributor>
+      <username>Jekyll Grim Payne</username>
+      <id>2175</id>
+    </contributor>
+    <minor />
+    <origin>52403</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="2297" sha1="4zqsubs396sx0l5811yde9qp7s1smxr" xml:space="preserve">A damage type is a text string that can link a specific source of damage (like a [[Projectile|projectile]] or a [[Puff|puff]]) to specific behaviors.
+
+While [[Predefined damage types|some damage types are predefined]], when it comes to creating new ones, there are practically no limitations on how many damage types an author can define or how they should be named.
+
+For details on creating custom damage types, see [[Custom damage types (ZScript)|'''Custom damage types''']].
+
+=== Defining damage types ===
+Damage types can be defined as follows:
+*In actors, using their '''{{property|DamageType}}''' property. This is normally done in [[Projectile|projectiles]] or [[Puff|puffs]]. For example, &lt;code&gt;DamageType 'Fire'&lt;/code&gt; will define the actor's damage type. 
+*They can also be defined globally in '''[[MAPINFO/Damage type definition|MAPINFO]]'''.
+
+&lt;u&gt;Simply defining damage types doesn't create any behaviors on its own&lt;/u&gt;. However, damage types can be bound to '''damage factors'''. Damage factors can modify the amount of damage a specific actor ''receives'' from a specific damage source.
+
+=== Defining damage factors ===
+Damage factors can be defined as follows:
+*In actors, using their '''{{property|DamageFactor}}''' property. This is normally done in [[Monster|monsters]]. For example, &lt;code&gt;DamageFactor 'Fire', 2.0&lt;/code&gt; will make the actor receive 200% damage from any source that has &lt;code&gt;DamageType 'Fire'&lt;/code&gt; attached to it.
+*They can also be defined globally in '''[[MAPINFO/Damage type definition|MAPINFO]]'''.
+
+In addition to that, custom Pain and Death [[Actor states]] can be defined that will be used by the actor if it's damaged by a specific damage type (note, the actor's {{property|DamageFactor}} does not have to be defined for this to work, as long as it's not 0 for this specific damage type). For example, if you add a '''Pain.Fire''' state sequence to your actor, it will be used instead of the default '''Pain''' when it's hit by an actor with &lt;code&gt;DamageType 'Fire'&lt;/code&gt;.
+
+=== See also ===
+* [[Predefined damage types]]
+* [[Custom damage types (ZScript)|Custom damage types]].
+* [[MAPINFO/Damage type definition]]
+* [[ApplyDamageFactor]]
+* [[ApplyDamageFactors]]
+* [[ModifyDamage]]
+* [[DamageMobj]]
+
+[[Category:Technical aspects]][[Category:Glossary]]</text>
+    <sha1>4zqsubs396sx0l5811yde9qp7s1smxr</sha1>
+  </revision>
+</page>

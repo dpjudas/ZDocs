@@ -1,0 +1,52 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>Frozen death</title>
+  <ns>0</ns>
+  <id>7213</id>
+  <revision>
+    <id>32508</id>
+    <parentid>32504</parentid>
+    <timestamp>2012-04-28T21:21:47Z</timestamp>
+    <contributor>
+      <username>Gez</username>
+      <id>1283</id>
+    </contributor>
+    <minor />
+    <comment>/* See also */ A_IceSetTics</comment>
+    <origin>32508</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="3002" sha1="ibmybwin4ud08bniye7i0kr6zg8nuwb" xml:space="preserve">The '''frozen death''' is an effect originating from ''[[Hexen]]''. [[Player]]s and [[monster]]s in that game have a dedicated {{c|Ice}} [[state]], which is reached when they are killed by a [[weapon]], [[projectile]] or [[puff]] using the {{c|Ice}} [[damage type]].
+
+[[ZDoom]] generalized the effect with a {{c|GenericFreezeDeath}} used by [[actor]]s without their own {{c|Ice}} state. To do so, the [[A_GenericFreezeDeath]] codepointer, which gives the frozen actor the prebuild "ice" [[translation]]. 
+
+Both A_GenericFreezeDeath and [[A_FreezeDeath]] turn the victim into an ice corpse. An ice corpse gains the following flags: {{Flag|CANPASS}}, {{Flag|ICECORPSE}}, {{Flag|NOBLOOD}}, {{Flag|PUSHABLE}}, {{Flag|SHOOTABLE}}, {{Flag|SLIDESONWALLS}}, {{Flag|SOLID}} and {{Flag|TELESTOMP}}. The [[fuzz]] or [[stealth]] effect is also removed, and the victim's [[special]] is executed.
+
+A falling actor turned into an ice corpse will never enter the Crash state. In addition, ice corpses can be [[A_Blast|blasted]], while regular corpses cannot.
+
+Ice corpses are shattered into {{Class|IceChunk}}s by the [[A_FreezeDeathChunks]] function if they call it while being perfectly motionless (all velocities are NULL). To make sure that this happens eventually, every ice death state should end with a looping call to A_FreezeDeathChunks.
+
+Certain situations are meant to trigger instant shattering, and they do this by setting the ice corpse's velocities to zero as well as changing its [[tic]] count before the next state change to 1. These situations include:
+*Being crushed by [[sector]] movement, such as a closing door.
+*Landing on a floor with a falling velocity greater than eight map units per tic.
+*Receiving any amount of damage, unless the [[damage type]] is {{c|Ice}}.
+
+If a player pawn dies a frozen death, a blue [[palette flash]] is used on the screen. When the player's ice corpse shatters, one of the ice chunks will be an {{Class|IceChunkHead}}, carrying the player's [[camera]]. Once the player corpse has shattered, the {{CCMD|D|resurrect}} cheat will no longer work.
+
+'''Note:''' Since the effect originates from ''Hexen'', it does not exist, by default, in ''[[Heretic]]''. The {{Class|Ironlich|iron lich}}'s {{Class|HeadFX1|ice missiles}} and {{Class|HeadFX2|ice shards}} do not inflict ice damage. Of the standard actors, ice damage is used by the {{Class|IceGuy|wendigo}}, its own {{Class|IceGuyFX|ice missiles}} and {{Class|IceGuyFX2|ice shards}}, the {{Class|MagePlayer|mage}}'s {{Class|MWeapFrost|''frost shards'' spell}} with its {{Class|FrostMissile|missile}} and {{Class|IceShard|shards}}.
+
+==See also==
+* [[A_FireConePL1]]
+* [[A_FreezeDeath]]
+* [[A_FreezeDeathChunks]]
+* [[A_GenericFreezeDeath]]
+* [[A_IceGuyDie]]
+* [[A_IceGuyMissileExplode]]
+* [[A_IceSetTics]]
+* [[A_ShedShard]]
+* [[Damage types]]
+* {{Class|IceGuy}}, {{Class|IceGuyFX}}, {{Class|IceGuyFX2}}
+* {{Class|MWeapFrost}}, {{Class|FrostMissile}}, {{Class|IceShard}}
+[[Category:Features]][[Category:Technical aspects]]</text>
+    <sha1>ibmybwin4ud08bniye7i0kr6zg8nuwb</sha1>
+  </revision>
+</page>

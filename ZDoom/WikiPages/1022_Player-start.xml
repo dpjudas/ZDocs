@@ -1,0 +1,42 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>Player start</title>
+  <ns>0</ns>
+  <id>1022</id>
+  <revision>
+    <id>40288</id>
+    <parentid>28526</parentid>
+    <timestamp>2015-08-03T09:16:35Z</timestamp>
+    <contributor>
+      <username>Gez</username>
+      <id>1283</id>
+    </contributor>
+    <comment>completed article a bit</comment>
+    <origin>40288</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="2913" sha1="qsb1vhahmndajranvtmh4ymzm7shrrw" xml:space="preserve">A '''player start''' is something one must place at some point in any map in order to play it. There are three types of player starts:
+* [[Single player]] and [[cooperative]] starts, where each player number has its own player start type
+* [[Deathmatch]] player starts, where a single player start type is used by all players
+* [[Team game]] player starts, where each team has a single player start type
+
+Player starts behave slightly differently from other [[thing]]s. First, the [[player class]] does not depend on the player start type, so the {{c|replaces}} keyword does not work for player classes. Secondly, for historical reasons, the physics of where a player spawns in the game differ from how any other actor spawns, unless using special keywords in a [[MAPINFO]] [[map definition]].
+* In single player and cooperative mode, there can be only one player start per player. In case of multiple player 1 starts, only one will be used to spawn the player pawn, while the others will spawn {{dw|voodoo doll}}s. This behavior can be changed with the {{c|RandomPlayerStarts}} keyword, in which case players will spawn at one of the available player starts, randomly chosen.
+* In the original games, player starts ignored skill filters, preventing one from using different starting locations depending on difficulties (this could be worked around by forcing the player to go through a teleporter, since teleport destinations are filtered normally). This behavior can be changed with the {{c|FilterStarts}} keyword, letting you accomplish things like starting a player off after an ammo cache with a one-way door keeping them from it, or letting a player start off already past a difficult puzzle.
+* The height at which a player spawns normally depends only on  surrounding geometry, and several old maps would be technically broken if player spawn altitude was handled in the same way as other actors. Because of that, a player start's Z height is normally ignored. This behavior can be changed with the {{c|UsePlayerStartZ}} keyword, allowing to put a player start far above the ground and have effects like starting a level by having the player fall in, or simply putting the player start above a [[3D floor]].
+
+The [[editor number]]s for player starts are normally:
+* Player #1: 1
+* Player #2: 2
+* Player #3: 3
+* Player #4: 4
+* Player #5: 5 ([[Strife]]), 9100 ([[Hexen]]), 4001 (other games)
+* Player #6: 6 (Strife), 9101 (Hexen), 4002 (other games)
+* Player #7: 7 (Strife), 9102 (Hexen), 4003 (other games)
+* Player #8: 8 (Strife), 9103 (Hexen), 4004 (other games)
+* Deathmatch player start: 11
+* Team game player starts: so far ZDoom only supports team deathmatch and uses normal deathmatch starts for this mode, but [[Zandronum]] allows defining team start numbers through [[TEAMINFO]] and the {{dw|CTF Standard|commmunity standard}} is to use 5080 and 5081 for the first two teams.
+
+[[Category:Glossary]]</text>
+    <sha1>qsb1vhahmndajranvtmh4ymzm7shrrw</sha1>
+  </revision>
+</page>

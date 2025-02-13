@@ -1,0 +1,31 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>Thing activation flags</title>
+  <ns>0</ns>
+  <id>9781</id>
+  <revision>
+    <id>51389</id>
+    <parentid>51384</parentid>
+    <timestamp>2024-01-29T20:09:09Z</timestamp>
+    <contributor>
+      <username>Jekyll Grim Payne</username>
+      <id>2175</id>
+    </contributor>
+    <origin>51389</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="2413" sha1="536gc15sui4fksdvj6w2bgr3s3lnx01" xml:space="preserve">:* {{c|THINGSPEC_Default}} — default behavior. This allows the actor to execute its [[special]] by being killed, used (with the {{flag|USESPECIAL}} flag) or bumped (with the {{flag|BUMPSPECIAL}} flag). The trigger (bumper/user/killer) is considered the activator, and only players can trigger this actor. 
+:* {{c|THINGSPEC_ThingActs}} — the actor itself is considered the activator. 
+:* {{c|THINGSPEC_TriggerActs}} — the trigger is considered the activator. This is the default behavior except for specials activated upon the thing's death in maps with the {{c|{{MapProperty|ActivateOwnDeathSpecials}}}} level flag. This flag overrides the [[MAPINFO]] flag.
+:* {{c|THINGSPEC_ThingTargets}} — the actor changes its {{c|target}} field to the activator when triggered.
+:* {{c|THINGSPEC_TriggerTargets}} — the activator changes its {{c|target}} field to this actor when it triggers it.
+:* {{c|THINGSPEC_MonsterTrigger}} — monsters are allowed to trigger this actor.
+:* {{c|THINGSPEC_MissileTrigger}} — missiles are allowed to trigger this actor.
+:* {{c|THINGSPEC_ClearSpecial}} — the actor's [[special]] is cleared after execution.
+:* {{c|THINGSPEC_NoDeathSpecial}} — the actor's [[special]] will not execute on death. (This means that it can only be executed by the player provided the actor has {{flag|USESPECIAL}} or {{flag|BUMPSPECIAL}}.)
+:* {{c|THINGSPEC_Activate}} — same as {{c|THINGSPEC_Default}} but in addition to that, if the actor is triggered by the player via {{flag|USESPECIAL}} or {{flag|BUMPSPECIAL}}, the actor will call its [[Activate]] ZScript virtual (only once).
+:* {{c|THINGSPEC_Deactivate}} — same as {{c|THINGSPEC_Default}} but in addition to that, if the actor is triggered by the player via {{flag|USESPECIAL}} or {{flag|BUMPSPECIAL}}, the actor will call its [[Deactivate]] ZScript virtual (only once).
+:* {{c|THINGSPEC_Switch}} — same as {{c|THINGSPEC_Default}} but in addition to that, if the actor is triggered by the player via {{flag|USESPECIAL}} or {{flag|BUMPSPECIAL}}, the actor will alternate between calling its [[Activate]] and [[Deactivate]] virtuals when triggered. By default, it will call [[Activate]] the first time it's triggered, but if this is used in conjunction with {{c|THINGSPEC_Deactivate}}, it will call [[Deactivate]] first instead.
+:Note, for the USESPECIAL/BUMPSPECIAL flags to be effective, the actor also needs the {{flag|SOLID}} flag.</text>
+    <sha1>536gc15sui4fksdvj6w2bgr3s3lnx01</sha1>
+  </revision>
+</page>

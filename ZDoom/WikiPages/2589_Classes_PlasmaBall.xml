@@ -1,0 +1,88 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>Classes:PlasmaBall</title>
+  <ns>0</ns>
+  <id>2589</id>
+  <revision>
+    <id>48909</id>
+    <parentid>48493</parentid>
+    <timestamp>2021-12-27T11:13:37Z</timestamp>
+    <contributor>
+      <username>Jekyll Grim Payne</username>
+      <id>2175</id>
+    </contributor>
+    <comment>updated in accordance with updated ZScriptDefinitionNote template</comment>
+    <origin>48909</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="1559" sha1="mx5y8suhfw6c59lecn7lsgr4hd5k6nu" xml:space="preserve">{{Actor|
+| type = Explosive
+| name = Plasma rifle bolt
+| class = PlasmaBall
+| game = Doom
+| spawnid = 51
+| spawnname = T_PLASMABOLT 
+}}[[Classes]]: &lt;u&gt;PlasmaBall&lt;/u&gt;&lt;br&gt;
+&amp;nbsp;&amp;rarr;{{Class|PlasmaBall1}}&lt;br&gt;
+&amp;nbsp;&amp;nbsp;&amp;rarr;{{Class|PlasmaBall2}}&lt;br&gt;
+
+A blue projectile fired from the player's [[Classes:PlasmaRifle|Plasma Rifle]].
+
+==== [[ZScript]] definition ====
+{{ZScriptDefinitionNote|actors/doom/weaponplasma.zs#L44}}
+ class PlasmaBall : Actor
+ {
+ 	Default
+ 	{
+ 		{{Property|Radius}} 13;
+ 		{{Property|Height}} 8;
+ 		{{Property|Speed}} 25;
+  		{{Property|Damage}} 5;
+ 		{{Property|Projectile}};
+ 		+{{Flag|RANDOMIZE}}
+ 		+{{Flag|ZDOOMTRANS}}
+ 		{{Property|RenderStyle}} "Add";
+ 		{{Property|Alpha}} 0.75;
+ 		{{Property|SeeSound}} "weapons/plasmaf";
+ 		{{Property|DeathSound}} "weapons/plasmax";
+ 		{{Property|Obituary}} "$OB_MPPLASMARIFLE";
+ 	}
+ 	States
+ 	{
+  	Spawn:
+ 		PLSS AB 6 Bright;
+ 		Loop;
+ 	Death:
+ 		PLSE ABCDE 4 Bright;
+ 		Stop;
+ 	}
+ }
+
+==== [[DECORATE]] definition ====
+{{DecorateDefinitionNote}}
+ ACTOR &lt;u&gt;PlasmaBall&lt;/u&gt;
+ {
+   {{Property|Radius}} 13
+   {{Property|Height}} 8
+   {{Property|Speed}} 25
+   {{Property|Damage}} 5
+   {{Property|Projectile}}
+   +{{Flag|RANDOMIZE}}
+   +{{Flag|ZDOOMTRANS}}
+   {{Property|RenderStyle}} Add
+   {{Property|Alpha}} 0.75
+   {{Property|SeeSound}} "weapons/plasmaf"
+   {{Property|DeathSound}} "weapons/plasmax"
+   {{Property|Obituary}} "$OB_MPPLASMARIFLE" // "%o was melted by %k's plasma gun."
+   States
+   {
+   Spawn:
+     PLSS AB 6 Bright
+     Loop
+   Death:
+     PLSE ABCDE 4 Bright
+     Stop
+   }
+ }</text>
+    <sha1>mx5y8suhfw6c59lecn7lsgr4hd5k6nu</sha1>
+  </revision>
+</page>

@@ -1,0 +1,56 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>Carrying sector</title>
+  <ns>0</ns>
+  <id>7400</id>
+  <revision>
+    <id>33086</id>
+    <parentid>32801</parentid>
+    <timestamp>2012-06-12T13:06:07Z</timestamp>
+    <contributor>
+      <username>Gez</username>
+      <id>1283</id>
+    </contributor>
+    <minor />
+    <comment>Note about Raven scrollers</comment>
+    <origin>33086</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="3744" sha1="5cdg49pffhhotiu9t24onnrptzozfer" xml:space="preserve">{{doomwiki}}
+'''Carrying sectors''' are [[sector]]s which move [[thing]]s present in them. [[ZDoom]] supports several different types of carrying sectors, originating from the multiple [[IWAD|games]] it supports as well as from compatibility measures with [[Boom]].
+
+There exist two broad categories:
+* '''Current''' also called '''conveyor belts''': a floor carrying actors standing on it; usually the floor texture is scrolling in the same direction.
+* '''Wind''' also called '''pushers''' or '''pullers''': a floor carrying actors present inside it, including flying or floating actors. Constant wind does not apply to actors that are [[underwater]] (with [[waterlevel]] set to 3); point-based wind ignores deep water.
+
+'''Note:''' Raven scrollers (sector types 84 and 201&amp;mdash;244) only carry players standing on the ground. Other actors are unaffected. This is because their effect is only checked in the function called when players stand in a special sector.
+
+The following [[sector type]]s provide wind or current effects:
+*40&amp;mdash;51: Wind in the four cardinal directions and three levels of strength. They only affect players and actors with the {{Flag|WINDTHRUST}} flag. Originate from ''[[Heretic]]''.
+*84: Current to the East. An oddity from ''Heretic'', this has a different speed from any of the other Raven scrollers, and also features lava damage and fast strobing lights.
+*118: Current. Used by ''[[Strife]]'', orientation and strength of the current depend on the sector's [[tag]] value.
+*201&amp;mdash;224: Current. Provide three levels of strength in the eight cardinal and ordinal directions. Textures scroll. Originate from ''[[Hexen]]''.
+*225&amp;mdash;229: Current to the East. Provide five levels of strength. Originate from ''Heretic''.
+*230&amp;mdash;244: Current. Provide five levels of strength in the North, South and West directions. Contrarily to the Eastwards current, they do not scroll, a limitation from ''Heretic''.
+*4096: Wind. A sector flag derived from [[Boom]], this enables {{Class|PointPusher}} and {{Class|PointPuller}} effects in the sector if it is set.
+
+The following [[action specials]] allow to set wind or current in [[tag]]ged sectors:
+* [[Scroll_Floor]]
+* [[Sector_CopyScroller]]
+* [[Sector_SetCurrent]]
+* [[Sector_SetWind]]
+
+Wind defined with Sector_SetWind instead of one of the ''Heretic'' sector types above will only work if the affected sectors have the "wind" flag set. This wind affects flying or falling actors in full force, and actors standing on the ground at half force. Actors within deep water are unaffected.
+
+Current defined with Sector_SetCurrent instead of of the sector types above do not affect actors flying or falling above the surface, but have full forces for actors on the floor or underwater.
+
+Scrollers defined with Scroll_Floor will behave as current. They have no effect on actors with the {{Flag|NOGRAVITY}} flag which are not underwater (even if they do touch the surface). Otherwise, the force is applied fully.
+
+If [[compatibility options#compat_boomscroll|compat_boomscroll]] is set, currents defined through Scroll_Floor are cumulatively applied to non-player actors at their boundaries. Normally, ZDoom averages out the influences of each scroller which affects a given actor, instead of simply adding them all up.
+
+If [[compatibility options#compat_mbfmonstermove|compat_mbfmonstermove]] is set, wind and current will affect "sentient" actors (living actors with a "See" state) as well as shootable actors, even if they do not have the WINDTHRUST flag.
+
+If [[Compatibility options#compat_ravenscroll|compat_ravenscroll]] is set, the ''Heretic'' and ''Hexen'' current effects will carry player actors faster than the texture scrolls.
+[[Category:Technical aspects]]</text>
+    <sha1>5cdg49pffhhotiu9t24onnrptzozfer</sha1>
+  </revision>
+</page>

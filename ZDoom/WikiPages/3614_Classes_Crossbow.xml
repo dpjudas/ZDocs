@@ -1,0 +1,68 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>Classes:Crossbow</title>
+  <ns>0</ns>
+  <id>3614</id>
+  <revision>
+    <id>39395</id>
+    <parentid>34115</parentid>
+    <timestamp>2015-04-29T17:51:24Z</timestamp>
+    <contributor>
+      <username>Blue Shadow</username>
+      <id>2021</id>
+    </contributor>
+    <minor />
+    <comment>/* DECORATE definition */ Updated</comment>
+    <origin>39395</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="1326" sha1="izhsi3vtc83ccih5ykmfdao7ivlxreq" xml:space="preserve">{{Actor|
+| type = Weapon
+| name = Ethereal crossbow
+| class = Crossbow
+| game = Heretic
+| doomednum = 2001
+| spawnid = 27
+| spawnname = T_CROSSBOW 
+}}[[Classes]]: [[Classes:Inventory|Inventory]]&amp;rarr;[[Classes:Weapon|Weapon]]&amp;rarr;[[Classes:HereticWeapon|HereticWeapon]]&amp;rarr;&lt;u&gt;Crossbow&lt;/u&gt;&lt;br&gt;
+&amp;ensp;&amp;rarr;[[Classes:CrossbowPowered|CrossbowPowered]]&lt;br&gt;
+This weapon fires one [[Classes:CrossbowFX1|large energy projectile]] and two [[Classes:CrossbowFX3|smaller ones]] in a fixed spread. 
+
+==== [[DECORATE]] definition ====
+ ACTOR &lt;u&gt;Crossbow&lt;/u&gt; : {{Class|HereticWeapon}}
+ {
+   {{Property|Weapon.SelectionOrder}} 800
+   {{Property|Weapon.AmmoUse}} 1
+   {{Property|Weapon.AmmoGive}} 10
+   {{Property|Weapon.AmmoType}} "{{Class|CrossbowAmmo}}"
+   {{Property|Weapon.SisterWeapon}} "{{Class|CrossbowPowered}}"
+   {{Property|Weapon.YAdjust}} 15
+   {{Property|Inventory.PickupMessage}} "$TXT_WPNCROSSBOW"
+   {{Property|Tag}} "$TAG_CROSSBOW"
+ 
+   action native [[A_FireCrossbowPL1]]();
+ 
+   States
+   {
+   Spawn:
+     WBOW A -1
+     Stop
+   Ready:
+     CRBW AAAAAABBBBBBCCCCCC 1 [[A_WeaponReady]]
+     Loop
+   Deselect:
+     CRBW A 1 [[A_Lower]]
+     Loop
+   Select:
+     CRBW A 1 [[A_Raise]]
+     Loop
+   Fire:
+     CRBW D 6 [[A_FireCrossbowPL1]]
+     CRBW EFGH 3
+     CRBW AB 4
+     CRBW C 5 [[A_ReFire]]
+     Goto Ready
+   }
+ }</text>
+    <sha1>izhsi3vtc83ccih5ykmfdao7ivlxreq</sha1>
+  </revision>
+</page>

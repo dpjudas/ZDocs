@@ -1,0 +1,61 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>Classes:ScoreItem</title>
+  <ns>0</ns>
+  <id>5581</id>
+  <revision>
+    <id>52603</id>
+    <parentid>36525</parentid>
+    <timestamp>2024-05-06T08:32:22Z</timestamp>
+    <contributor>
+      <username>Jekyll Grim Payne</username>
+      <id>2175</id>
+    </contributor>
+    <origin>52603</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="1336" sha1="4h95mw948r0dq3x7hi5o9fggiktnc5b" xml:space="preserve">{{Actor|
+| type = Internal
+| name = Score item
+| class = ScoreItem
+}}
+[[Classes]]: {{Class|Inventory}}&amp;rarr;&lt;u&gt;ScoreItem&lt;/u&gt;&lt;br&gt;
+&amp;nbsp;&amp;rarr;{{Class|EvilSceptre}}&lt;br&gt;
+&amp;nbsp;&amp;rarr;{{Class|UnholyBible}}&lt;br&gt;
+
+A '''score item''' is a simple item that, when picked up, add its ''amount'' property to the player's ''[[score]]'' property and is destroyed. The item does not actually go into the player's inventory.
+
+The ''score'' property is not used for anything by default. It is left to modders to do something with it if so they want. However, score items can be used to make items that count for the "level completed" tally without having any other effect, similar to the bonus items in the press-release beta version of Doom.
+
+== [[ZScript]] definition ==
+{{ZScriptDefinitionNote|actors/inventory/inv_misc.zs#L7}}
+&lt;syntaxhighlight lang="csharp"&gt;
+class ScoreItem : Inventory
+{
+	Default
+	{
+		Height 10;
+		+COUNTITEM
+		Inventory.Amount 1;
+		+Inventory.ALWAYSPICKUP
+	}
+	
+	override bool TryPickup (in out Actor toucher)
+	{
+		toucher.Score += Amount;
+		GoAwayAndDie();
+		return true;
+	}
+}&lt;/syntaxhighlight&gt;
+
+== [[DECORATE]] definition ==
+{{DecorateDefinitionNote}}
+ ACTOR &lt;u&gt;ScoreItem&lt;/u&gt; : {{Class|Inventory}} native
+ {
+   {{Property|Height}} 10
+   +{{Flag|COUNTITEM}}
+   {{Property|Inventory.Amount}} 1
+   +{{Flag|INVENTORY.ALWAYSPICKUP}}
+ }</text>
+    <sha1>4h95mw948r0dq3x7hi5o9fggiktnc5b</sha1>
+  </revision>
+</page>

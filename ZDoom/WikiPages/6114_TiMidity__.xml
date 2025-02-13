@@ -1,0 +1,51 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>TiMidity++</title>
+  <ns>0</ns>
+  <id>6114</id>
+  <revision>
+    <id>46986</id>
+    <parentid>45990</parentid>
+    <timestamp>2019-10-25T11:57:03Z</timestamp>
+    <contributor>
+      <username>Gez</username>
+      <id>1283</id>
+    </contributor>
+    <comment>updating a bit</comment>
+    <origin>46986</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="2335" sha1="eg4v2r1eg15x6kmwh1ym9ljjpw94w67" xml:space="preserve">{{doomwiki|TiMidity}}
+'''{{wp|TiMidity++}}''' is a [[software synthesizer]] capable of using a wide variety of [[sound fonts|sound fonts]]. It is one of the options offered by [[ZDoom]] for [[MIDI]] playback.
+
+==Setting up TiMidity++==
+TiMidity++ uses the {{c|{{CVAR|S|timidity_config}}}} console variable to point out to any of the following:
+* An SF2 [[sound font]] file
+* A ZIP file containing a configuration file called {{c|timidity.cfg}} and a collection of GUS patches
+* A TiMidity or GUS configuration file
+The default value of "gzdoom" makes it use GZDoom's default soundfont, so changing this is only necessary if you want to use a different sound font or patch set.
+
+===In ZDoom===
+{{note|Starting from [[GZDoom version history#3.3.0|GZDoom 3.3.0]], TiMidity++ is now an internal MIDI player. This information below is now outdated.}}
+TiMidity++ is an external program, so setting it up is a bit more complicated than for the other MIDI devices.
+* First, you will need to download {{plainlink|[http://www.zdoom.org/files/timidity4zdoom2.zip TiMidity for ZDoom]}} and extract it in an appropriate directory, for example a timidity/ subdirectory in your ZDoom installation.
+* Then, edit the timidity.cfg file which is in the directory where you installed TiMidity for ZDoom. You need to tell it where to find your sound font. Two options are possible:
+:* An actual soundfont: use two lines, first {{c|dir &lt;path-to-soundfont&gt;}}, then {{c|soundfont &lt;soundfont-file&gt;}}
+:* A collection of patches: use two lines, first {{c|dir &lt;path-to-patches&gt;}}, then {{c|source &lt;patch-config-file-name.cfg&gt;}}
+* Finally, ZDoom needs to be told where TiMidity can be found. Use the {{c|{{CVAR|O|timidity_exe}}}} console variable to point to the TiMidity for ZDoom binary.
+Once that is done, set TiMidity++ as the MIDI device in the [[sound options]] menu.
+
+==Advantages and drawbacks==
+* TiMidity++ can load more types of sound font formats than the other synthesizers offered by ZDoom
+* Although it ignores certain features of the SF2 format and load them as if they were a collection of GUS patches, it is more resistant to errors than [[FluidSynth]]
+* It uses relatively little CPU power
+
+==See also==
+* [[Sound options]]
+* [[Sound fonts]]
+
+==Thread links==
+* {{Forum|t=86|Original release thread of TiMidity4ZDoom}}
+[[Category:Audio systems]]</text>
+    <sha1>eg4v2r1eg15x6kmwh1ym9ljjpw94w67</sha1>
+  </revision>
+</page>

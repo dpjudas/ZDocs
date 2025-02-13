@@ -1,0 +1,42 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>CheckSight (ZScript)</title>
+  <ns>0</ns>
+  <id>9396</id>
+  <revision>
+    <id>52147</id>
+    <parentid>47825</parentid>
+    <timestamp>2024-03-31T18:18:35Z</timestamp>
+    <contributor>
+      <username>Jekyll Grim Payne</username>
+      <id>2175</id>
+    </contributor>
+    <origin>52147</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="1040" sha1="6ik8swych3vydm4qtenr29ci72ruzp2" xml:space="preserve">{{SameNameNote|ZScript|ACS|CheckSight}}
+__NOTOC__
+
+native bool '''CheckSight'''(Actor target[, int flags])
+
+== Usage ==
+Checks to see if there's line of sight to the target. This function is portal aware. Internally this is what A_Look uses to determine whether a monster has seen a player.
+
+=== Parameters ===
+*''target'' - The Actor to check line of sight to
+*''flags'' - Default is 0
+:*'''SF_IGNOREVISIBILITY''' - Check line of sight even if the Actor has the INVISIBLE flag or has a RenderStyle of None
+:*'''SF_SEEPASTSHOOTABLELINES''' - Shootable lines that are set to block everything won't stop the line of sight check. Requires SF_SEEPASTBLOCKEVERYTHING to be useful
+:*'''SF_SEEPASTBLOCKEVERYTHING''' - Non-shootable lines that are set to block everything won't stop the line of sight check
+:*'''SF_IGNOREWATERBOUNDARY''' - See through 3D sectors that are meant to emulate deep water
+
+=== Return value ===
+Returns true if the target is in line of sight. Returns false otherwise.
+
+== Examples ==
+{{noexamples}}
+
+
+[[Category:ZScript]]</text>
+    <sha1>6ik8swych3vydm4qtenr29ci72ruzp2</sha1>
+  </revision>
+</page>

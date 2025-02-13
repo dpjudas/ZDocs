@@ -1,0 +1,353 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>Sprite</title>
+  <ns>0</ns>
+  <id>1034</id>
+  <revision>
+    <id>54222</id>
+    <parentid>54005</parentid>
+    <timestamp>2025-02-11T00:06:45Z</timestamp>
+    <contributor>
+      <username>Gez</username>
+      <id>1283</id>
+    </contributor>
+    <minor />
+    <comment>makes more sense to have the "mirroring vs. no mirroring" illustration inside the mirroring paragraph, IMO</comment>
+    <origin>54222</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="17540" sha1="lj9ex87os7ujna1f98ku8mz988dcvbp" xml:space="preserve">{{doomwiki}}In Doom, a '''sprite''' is a series of images that can be used to display an animation of an [[actor]]. [[ZDoom]] allows authors to easily add or change sprites with a [[PWAD]].
+
+== Sprite files ==
+=== Placement in the archive ===
+In a [[PK3]], sprites must be placed in the {{c|/sprites/}} folder. You can sort them into deeper subfolders (such as {{c|sprites/weapons/}}, {{c|sprites/items}}, etc.), but be wary that each sprite file still requires a unique name.
+
+In a [[WAD]] file, sprites must be placed between S_START and S_END markers. However, nowadays it's highly recommended to ''not'' use WADs for asset storage and reserve that format for maps. [[PK3]] is a much more preferable option for storing assets.
+
+Like all graphics, sprites can either be used directly, or through a [[TEXTURES]] definition. Using [[TEXTURES]], you can create composite sprites out of several images, and you can also store the sprite's offsets (described below) in the TEXTURES file, rather than in the image file itself. If you want to go this way, note the following:
+# Sprites that are meant to be used through TEXTURES only will need to be placed under {{c|/patches/}}.
+# The name of the TEXTURE's ''definition'' must adhere to the naming rules (described below). For example, &lt;code&gt;sprite SPRTA0, 128, 128&lt;/code&gt; is a valid definition.
+# It is recommended that the name of the actual ''file'' is different from the name of its TEXTURES definition. For example:
+
+Path to file: ''{{c|/patches/weapon/pSWRDA0.png}}''
+
+TEXTURES definition:
+&lt;syntaxhighlight lang="cs"&gt;
+Sprite SWRDA0, 128, 64
+{
+  Offset 21, 64
+  Patch "pSWRDA0", 0, 0
+}&lt;/syntaxhighlight&gt;
+This creates a sprite SWRDA0, with offsets 21, 64, and it uses the image called pSWRDA0 as its graphic. 
+
+Note, if you use long file names (over 8 characters), the Patch instruction will need a full path, e.g. "patches/weapon/patch_SWRDA0.png".
+
+You can find more information about creating virtual images on the '''[[TEXTURES]]''' page.
+
+=== Image formats ===
+ZDoom supports a large number of '''[[Image format|image formats]]'''. Vanilla Doom used a specific paletted format, but using it for ZDoom/GZDoom-specific projects is unnecessary. The most commonly used image format for sprites is PNG.
+
+PNG can be both paletted and truecolor. You can palettize PNG either using your image editing program, or in [[SLADE]]. To palettize an image in SLADE, right click on it and choose ''Graphic &gt; Convert to...'', then pick the desired palette in the ''Convert to'' field and click ''Convert''.
+
+Truecolor PNGs are fully supported and not limited to the game's [[PLAYPAL]]. However, note that applying [[Translation|color translation]] to an actor (e.g. with [[A_SetTranslation]]) will first crush all of its sprites to the PLAYPAL, and there is no way to revert that dynamically. To prevent an actor from being translated, using the '''{{flag|NOTRANSLATION}}''' flag might be a good idea.
+
+=== Image offsets ===
+{{warning|Sprites always need offsets! If you skip this step and try attaching sprites to an actor, they will end up underground (because this is how sprites are placed with their default offsets of 0,0).}}
+Offsets are typically set using [[SLADE]]. Here's what you need to know about the offsets:
+*Offsets are typically stored in the image file itself but cannot be viewed by image-editing software like Photoshop.
+*If you set offsets at some point, but then edited the image in an external program, like Photoshop, most of the time its offsets will be reset to 0, 0, and you'll have to set them manually again.
+*The only images that require offsets are sprites and Doom statusbar graphics. Level textures, fullscreen HUD/UI graphics and such don't need offsets.
+*Offsets can also be set in [[TEXTURES]], as shown above. If you use your sprites through TEXTURES rather than directly, it's recommended to offset them in TEXTURES as well: this way these offsets will be stored separately from the file, and you'll be able to freely edit the file with external graphics editor, without causing the offsets to be wiped.
+
+Offsets can be modified as follows:
+[[File:SLADE_offsets.jpg|thumb]]
+*Navigate to the image in SLADE and left-click on it. You will see the image on the right.
+*In the view window, you'll see the '''Offsets''' field in the bottom left area.
+*To the right of the Offsets field you'll also see the dropdown list with options called "Auto", "Graphic", "Sprite" and "HUD". When offsetting sprites for an in-world actor, use "Sprite". For on-screen weapon sprites, use "HUD".
+*Left-click on the image and hold to drag it around.
+*Click the small floppy disk Save icon in the top left corner of the view window to save changes.
+
+If your sprite is defined through TEXTURES, the approach is exactly the same, except you first need to double-click the TEXTURES file to open its visual editor. From there, select your virtual sprites and offset them as needed.
+{{note|When offseting a graphic defined in TEXTURES, make sure you click and drag ''outside of the image bounds'', otherwise you'll be dragging the patch inside the virtual image, not the image itself!}}
+
+You can also mass-set offsets. Hold Shift or Control to select multiple images, then right click ''&gt; Graphic &gt; Modify Gfx offsets''. This offers the following options:
+*'''Automatic Offsets''': offsets the graphic automatically, offering several options. For in-world actors, choose "Monster". This can be a good choice for quickly setting offsets, but you'll likely need to fix them manually afterwards.
+*'''Set Offsets''': This will let you input the offsets manually, and they will be applied to all selected images. Note, if you select the ''Relative'' checkbox, the values you input will be added on top of existing offsets rather than overwrite them.
+
+=== Image resolution ===
+In vanilla Doom and in ZDoom by default 1 pixel = 1 map unit. So, if an actor is 64 map units tall, its sprite will likely be roughtly 64 pixels tall. Similarly, as 128x128 mu wall in vanilla Doom will have a 128x128px texture on it.
+
+However, ZDoom/GZDoom allows scaling sprites (and any other image). In an actor, you can use its '''{{property|Scale}}''' property to scale all of its sprites. For example, if you have a 64x128 sprite that you want to scale down to 50%, use {{c|Scale 0.5}} in your actor's [[ZScript]] definition. This method allows you to use higher-resolution sprites than in vanilla Doom, since their physical size will be scaled down in-game. Note, using very high resolution images as sprites is not recommended, since this can result in overconsumption of VRAM. If you're planning a high-fidelity actor with hundreds of animation frames, using [[MODELDEF|a 3D model]] might be a better choice.
+
+If you're using your sprites through [[TEXTURES]], you can also scale them there.
+
+Note, sprites, as everything else, are affected by '''[[Aspect ratio correction]]'''.
+
+== Naming rules ==
+=== Name formatting ===
+Sprite image names have to following this format:
+
+  NNNNA#[A#]
+
+where '''NNNN''' is the base name for the sprite, '''A''' is the frame letter a letter specifying the frame , and '''#''' specifies the angle.
+
+The rules are as follows:
+# Base name: a sequence of 4 characters that can include numbers and letters. Cannot include spaces. In the original Doom all actors had to use one base name for their sprite (for example, all sprites of the {{class|Zombieman}} start with POSS), but this limitation doesn't exist in ZDoom.
+# Frame letter: any letter. Also supports the characters '''[''', '''\''' and ''']''', but many authors choose not to use them to keep frames as letters.
+# Angle: if the sprite has no rotations, this must be '''0'''. If the sprite has 8 rotations, this must be a number between 1 and 8. If the sprite has 16 rotations, it's a number between 1-9 for the first 9 angles, then a letter from A to G for the rest. See [[#Angles|Angles]] below for details. '''All rotations must be provided''', otherwise ZDoom will not launch.
+
+If a sprite is angled, the minimum number of images is 5, which means 8 angles, 3 of which are done through mirroring. See [[#Mirroring|Mirroring]] for details.
+
+===Frames===
+
+You can have 29 frames of animation for any one sprite name, one for each letter of the alphabet plus '''[''', '''\''' or ''']'''. For example '''POSSA1''' is the first walking frame of the zombie trooper, '''POSSG1''' is the pain frame (the animations themselves can be controlled with [[DeHackEd|DEHACKED]] or [[DECORATE]] ).
+
+If using the '''\''' frame in a [[Using_ZIPs_as_WAD_replacement|PK3 archive format]], note that the file name for the sprite must use a caret ('''^''') instead of a backslash ('''\'''). The backslash character is still used in [[DECORATE]], however.
+
+If you require additional frames beyond [\], you can simply create a new sprite name. For instance, after using POSS]0, it would make sense to use POS2A0.
+
+Sprites can also be defined in [[TEXTURES]].
+
+===Angles===
+Generally, items and decorations have only one angle, denoted by a 0 (zero) after their frame letter. E.g. &lt;b&gt;BON1A0&lt;/b&gt; will be used to represent the health bonus no matter which angle you are looking at it from. Moving actors such as monsters and players typically have eight rotations in the original games. [[ZDoom]] however allows you to have up to 16 rotations for each sprite. Here is a table that shows what character to use for each angle:
+&lt;css&gt;table.wikitable th.inner { background-color: #d3a7e5; }  table.wikitable th.middle { background-color: #c1edfd; }  table.wikitable th.outer { background-color: #b6fda2; }&lt;/css&gt;
+{| {{prettytable}}
+!rowspan="2"|Sprite angle keys&lt;br/&gt;for each amount&lt;br/&gt;of rotations!!class="outer"|4&lt;br/&gt;135°!!class="outer"|C&lt;br/&gt;157.5°!!class="outer"|5&lt;br/&gt;180°!!class="outer"|D&lt;br/&gt;202.5°!!class="outer"|6&lt;br/&gt;225°
+|-
+!class="outer"|B&lt;br/&gt;112.5°!!class="middle"|4!!class="middle"|5!!class="middle"|6!!class="outer"|E&lt;br/&gt;247.5°
+|-
+!class="inner"|Inner ring:&lt;br/&gt;No rotation!!class="outer"|3&lt;br/&gt;90°!!class="middle"|3!!class="inner"|0!!class="middle"|7!!class="outer"|7&lt;br/&gt;270°
+|-
+!class="middle"|Middle ring:&lt;br/&gt;8 rotations!!class="outer"|A&lt;br/&gt;67.5°!!class="middle"|2!!class="middle"|1!!class="middle"|8!!class="outer"|F&lt;br/&gt;292.5°
+|-
+!class="outer"|Outer ring:&lt;br/&gt;16 rotations!!class="outer"|2&lt;br/&gt;45°!!class="outer"|9&lt;br/&gt;22.5°!!class="outer"|1&lt;br/&gt;0°!!class="outer"|G&lt;br/&gt;337.5°!!class="outer"|8&lt;br/&gt;315°
+|}
+
+So, with default naming, '''POSSA1''' represents {{class|Zombieman}} viewed from the front, A5 is from the back, A3 is from the left side, A7 is from the right side. Note that in Doom most monsters use [[#Mirroring|mirroring]], so for example the Zombieman uses sprite POSSA3A7 which shows him from the left side and is automatically mirrored to be used from the right side.
+
+In 16-sided sprites '''POSSA9''' would represent the Zombieman at an angle of 22.5 degrees, '''POSSAA''' would be at an angle of a 67.5 degrees, etc.
+
+===Mirroring===
+
+Every sprite image can have one alternative mirrored position. Simply add another frame letter and angle notation after the first in the image name. For example, for &lt;b&gt;POSSA2A8&lt;/b&gt;, the actual image with this name will be flipped to show the trooper from the 315 degree angle.
+
+Note that positioning of the frame's "original" and the mirror is important. The frame not being mirrored goes first, along with the number.
+
+If for example, a sprite's 90 degree angle is facing to the right, it should be named like '''POSSA7A3'''. Otherwise, if it's facing to the left, it should be '''POSSA3A7'''. This is because the first side defined (in this case, the 270 degree frame known as 'angle 7') is destined to be the "original" sprite, which the engine will then mirror if another frame is defined after that one.
+
+It's also possible to change sprite frame references to mimic, for example, a character's right leg going forward and stepping down with '''POSSA8C2''', so actors can be more precise, even if it's not exactly the same. This can be used to help with flow, such as a big monster's walking cycle.
+
+[[File:SLADE_Monster_Angles.jpg]]
+
+== Special names ==
+There are three "reserved" sprite names that have specific effects.
+;&lt;tt&gt;TNT1 A&lt;/tt&gt;
+:Originally introduced by [[TeamTNT]] in [[Boom]], TNT1 is an invisible sprite. The frame letter is irrelevant, though "A" is generally used. Even if graphics are provided (for example, a TNT1A0 lump), it will remain invisible. For actors needing to be invisible, use TNT1. The details about this dummy sprite are covered [[TNT1|'''here''']].
+;&lt;tt&gt;---- A&lt;/tt&gt;
+:This sprite is interpreted as "keep previous sprite". The frame letter is irrelevant, though "A" is generally used. An example is the GenericFreezeDeath state in {{Class|Actor}}.
+;&lt;tt&gt;#### #&lt;/tt&gt;
+:This sprite is interpreted as ----, but with the difference that it allows overriding selectively either the sprite or the letter, or both. Using #### for the sprite means "keep previous sprite" and using # for the letter means "keep previous letter". An example is the GenericFreezeDeath state in {{Class|Actor}}.
+
+To be parsed correctly in [[DECORATE]] rather than [[ZScript]], the &lt;tt&gt;----&lt;/tt&gt;, &lt;tt&gt;####&lt;/tt&gt; and &lt;tt&gt;#&lt;/tt&gt; names must be placed within quotes (e.g., &lt;tt&gt;"----" A -1&lt;/tt&gt;). They also must not be used for the first frame of an actor, as the lack of a sprite will cause the Missing Actor object to be spawned instead (dark red sign with a yellow exclamation point).
+
+Actors spawned with [[A_SpawnItemEx]] can utilize SXF_TRANSFERSPRITEFRAME, allowing use of the two preserving names above for the first frame of the initializing actor. This only works with A_SpawnItemEx, and should not be attempted with anything else.
+
+==Conflicting sprite names==
+
+ZDoom supports ''[[Doom]]''/''[[Doom II]]'', ''[[Heretic]]'', ''[[Hexen]]'', and ''[[Strife]]''.  Enemies or items from any of these games can be brought into any other game.  However, this brings to light the fact that some sprites have the same name in one game as another sprite in another game.  For example, the ''Doom'' {{Class|Cacodemon}} uses sprites named HEAD*, but the ''Heretic'' {{Class|Ironlich|Iron Lich}} uses the same name.  To avoid conflicts and allow all sprites to coexist peacefully, a change was made to ZDoom which changes the name of the sprite ZDoom will look for, so long as it is looking at a PWAD. (That way the original IWADs will still work unchanged.)
+
+Sprites are renamed as follows: 
+====Heretic.wad====
+{| class="wikitable" style="font-family:Arial, Helvetica, sans-serif !important;"
+|- style="font-weight:bold;"
+! Original name
+! Renamed to
+! Comment
+|-
+| BLOD
+| BLUD
+| This makes it the same as Doom's blood sprite
+|-
+| HEAD
+| LICH
+| Avoid conflicts with {{class|Cacodemon}}'s sprites
+|}
+
+====Hexen.wad====
+{| class="wikitable" 
+|- style="font-weight:bold; font-family:Arial, Helvetica, sans-serif !important;"
+! Original name
+! Renamed to
+! Comment
+|- style="font-family:Arial, Helvetica, sans-serif !important;"
+| ARM1
+| AR_1
+| 
+|- style="font-family:Arial, Helvetica, sans-serif !important;"
+| ARM2
+| AR_2
+| 
+|- style="font-family:Arial, Helvetica, sans-serif !important;"
+| ARM3
+| AR_3
+| 
+|- style="font-family:Arial, Helvetica, sans-serif !important;"
+| ARM4
+| AR_4
+| 
+|- style="font-family:Arial, Helvetica, sans-serif !important;"
+| BARL
+| ZBAR
+| 
+|- style="font-family:Arial, Helvetica, sans-serif !important;"
+| BLOD
+| BLUD
+| This makes it the same as Doom's blood sprite
+|- style="font-family:Arial, Helvetica, sans-serif !important;"
+| CAND
+| BCAN
+| 
+|- style="font-family:Arial, Helvetica, sans-serif !important;"
+| EGGM
+| PRKM
+| 
+|- style="font-family:Arial, Helvetica, sans-serif !important;"
+| GIBS
+| POL5
+| This makes it the same as Doom's gib sprite
+|-
+| ROCK
+| ROKK
+| 
+|-
+| SUIT
+| ZSUI
+| 
+|-
+| TRE1
+| ZTRE
+| 
+|-
+| TRE2
+| TRES
+| 
+|-
+| WATR
+| HWAT
+| 
+|-
+| MNTRF
+| MNTRU
+| rowspan="6" | These lines make the minotaur attack frames&lt;br /&gt;the same as in Heretic to avoid having to&lt;br /&gt;patch the actor itself.
+|-
+| MNTRG
+| MNTRV
+|-
+| MNTRH
+| MNTRW
+|-
+| MNTRI
+| MNTRX
+|-
+| MNTRJ
+| MNTRY
+|-
+| MNTRK
+| MNTRZ
+|-
+| ARTIINVU
+| ARTIDEFN
+| rowspan="2" | This separates it from Heretic's&lt;br /&gt;invulnerability item
+|-
+| INVU
+| DEFN
+|}
+
+====Strife1.wad====
+{| class="wikitable" 
+|- style="font-weight:bold; text-align:center; vertical-align:middle;"
+! Original name
+! Renamed to
+! Comment
+|- style="vertical-align:middle;"
+| ARM1
+| ARM3
+| 
+|- style="vertical-align:middle;"
+| ARM2
+| ARM4
+| 
+|- style="vertical-align:middle;"
+| BAR1
+| BARC
+| 
+|- style="vertical-align:middle;"
+| BARL
+| BBAR
+| 
+|- style="vertical-align:middle;"
+| BLST
+| MAUL
+| 
+|- style="vertical-align:middle;"
+| BLOD
+| BLUD
+| This makes it the same as Doom's blood sprite
+|- style="vertical-align:middle;"
+| CNDL
+| KNDL
+| 
+|- style="vertical-align:middle;"
+| LOGG
+| LOGW
+| 
+|- style="vertical-align:middle;"
+| MISL
+| SMIS
+| 
+|- style="vertical-align:middle;"
+| PMAP
+| SMAP
+| 
+|- style="vertical-align:middle;"
+| POT1
+| MPOT
+| 
+|- style="vertical-align:middle;"
+| SHRD
+| SHAR
+| 
+|- style="vertical-align:middle;"
+| SHT2
+| MPUF
+| 
+|-
+| SPID
+| STLK
+| 
+|-
+| TLMP
+| TECH
+| 
+|-
+| TRE1
+| TRET
+| 
+|-
+| TRCH
+| TRHL
+| 
+|-
+| VASE
+| VAZE
+| 
+|}
+
+The upshot of this is that if you want to include custom Iron Lich graphics, you will now use the new sprite, LICH*, rather than HEAD*.  If you then wanted to include Cacodemon graphics, you could safely add HEAD* graphics and there will be no conflicts.
+
+==See also==
+*[[Creating new sprite graphics]]
+*[[TNT1]]
+[[Category:Technical aspects]]</text>
+    <sha1>lj9ex87os7ujna1f98ku8mz988dcvbp</sha1>
+  </revision>
+</page>

@@ -1,0 +1,58 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>FloorAndCeiling LowerRaise</title>
+  <ns>0</ns>
+  <id>647</id>
+  <revision>
+    <id>44674</id>
+    <parentid>33506</parentid>
+    <timestamp>2017-04-03T19:17:42Z</timestamp>
+    <contributor>
+      <username>Gez</username>
+      <id>1283</id>
+    </contributor>
+    <comment>xlat</comment>
+    <origin>44674</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="3098" sha1="8qqbb3b95mkgpry1xyphzdm726agbbj" xml:space="preserve">{{DISPLAYTITLE:FloorAndCeiling_LowerRaise}}
+{{Special|251|tag, fspeed, cspeed, boomemu|Floor and Ceiling}}
+* ''tag'': Tag of affected sector 
+* ''fspeed'': Speed to move the floor 
+* ''cspeed'': Speed to move the ceiling
+* ''boomemu'': Whether the function should emulate a [[Boom]] bug where only either the floor or the ceiling moved, but not both. Set it to 1998 if you want the Boom bug.
+
+Lowers the sector's floor to the lowest surrounding floor and raises its ceiling to the highest surrounding ceiling.
+
+== Examples ==
+{{noexamples}}
+
+== Conversions from linedef types ==
+The following Doom map format types can be converted as FloorAndCeiling_LowerRaise:
+{| {{prettytable}}
+!Type!!Conversion!!Trigger
+|-
+|{{icon|Boom}} 151:WR Ceil Up To Highest Ceil || FloorAndCeiling_LowerRaise (tag, {{xlat|F_SLOW}}, {{xlat|C_SLOW}}) || Player Cross, Repeatable
+|-
+|{{icon|Boom}} 166:S1 Ceil Up To Highest Ceil || FloorAndCeiling_LowerRaise (tag, {{xlat|F_SLOW}}, {{xlat|C_SLOW}}, 1998) || Player Use
+|-
+|{{icon|Boom}} 186:SR Ceil Up To Highest Ceil || FloorAndCeiling_LowerRaise (tag, {{xlat|F_SLOW}}, {{xlat|C_SLOW}}, 1998) || Player Use, Repeatable
+|}
+
+== Technical details ==
+The Boom bug is caused by the use of the boolean operator &lt;nowiki&gt;||&lt;/nowiki&gt; instead of the bitwise operator &lt;nowiki&gt;|&lt;/nowiki&gt; in the logic used for linedef types 166 and 186, for example:&lt;pre&gt;
+ // Raise ceiling, Lower floor
+ // 186 SR EV_DoCeiling(raiseToHighest), EV_DoFloor(lowerFloortoLowest)
+ if (EV_DoCeiling(line, raiseToHighest) ||
+     EV_DoFloor(line, lowerFloorToLowest))
+   P_ChangeSwitchTexture(line,1);
+ break;&lt;/pre&gt;
+In boolean mode, C uses a form of lazy evaluation: (a &lt;nowiki&gt;||&lt;/nowiki&gt; b) is true if either a or b are true, so if a is true, there is no need to evaluate b as well: whether it's true or not is irrelevant as the entire expression will be true anyway. Inversely, if a is false, then and only then will b be evaluated, because then the expression is true if b is true, and false otherwise. On the other hand, the bitwise operation is created by combining the values of both a and b, which are treated as numbers rather than as boolean values, so both a and b will be evaluated all the time.
+
+Because of the confusion between both operators, Boom will not call EV_DoFloor() in this function unless the call to EV_DoCeiling returned a failure. So in Boom, this function will only move the ceiling, or the floor if the ceiling was blocked, or neither if both were blocked; but it will never move both planes at the same time contrarily to what was originally intended.
+
+ZDoom fixed this bug, but naturally some existing Boom maps were designed around it and the corrected behavior may expose or create problems in these maps that were never caught by playtesting on the bugged engine.
+
+The value of 1998 (Boom's year of publication) to flag the special as demanding Boom's behavior was chosen as being unlikely to have been set by error or mistake to a normal linedef in a [[UDMF]] map and impossible on a [[Hexen format]] map, contrarily to using a boolean logic such as "any non-null value".</text>
+    <sha1>8qqbb3b95mkgpry1xyphzdm726agbbj</sha1>
+  </revision>
+</page>

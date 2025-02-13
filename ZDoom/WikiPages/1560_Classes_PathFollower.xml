@@ -1,0 +1,51 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>Classes:PathFollower</title>
+  <ns>0</ns>
+  <id>1560</id>
+  <revision>
+    <id>39764</id>
+    <parentid>36992</parentid>
+    <timestamp>2015-05-03T22:43:37Z</timestamp>
+    <contributor>
+      <username>Blue Shadow</username>
+      <id>2021</id>
+    </contributor>
+    <minor />
+    <comment>/* DECORATE definition */ Updated</comment>
+    <origin>39764</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="1651" sha1="9mtmzbmp0apy9avgwc1ty9kyq95q5yv" xml:space="preserve">{{Actor|
+| type = Script thing
+| name = Path follower
+| class = PathFollower
+| doomednum = 9071
+}}[[Classes]]: &lt;u&gt;PathFollower&lt;/u&gt;&lt;br&gt;
+&amp;ensp;&amp;rarr;[[Classes:ActorMover|ActorMover]]&lt;br&gt;
+&amp;ensp;&amp;rarr;[[Classes:MovingCamera|MovingCamera]]&lt;br&gt;
+
+A path follower is an invisible thing that follows a path of [[Classes:InterpolationPoint|interpolation points]] and can provide something for a camera to aim it if you want the camera to follow a path with a complicated aiming sequence.
+
+The path follower takes three parameters:
+
+:1. low byte: low byte of tid of first interpolation point in path.
+:2. high byte: high byte of tid of first interpolation point in path.
+:3. options: (Add any of the following values; i.e. for options 2 and 4, this parameter would be 6):
+::* 1: path is linear instead of curved.
+::* 2: Camera will adjust its angle to match those of the points it passes.
+::* 4: Camera will adjust its pitch to match those of the points it passes.
+::* 8: When used with 2 and/or 4, the camera faces in the direction of movement instead of the direction the interpolation points are facing. 
+
+Use the [[Thing_Activate]] special to start the path follower. The [[Thing_Activate]] takes a single parameter, the tid of the thing to activate.  To stop a path follower use [[Thing_Deactivate]]. [[Thing_Deactivate]] takes one parameter, the tid of the thing to deactivate. If the camera is restarted using [[Thing_Activate]], it will automatically start at the beginning of the path.
+
+==== [[DECORATE]] definition ====
+ ACTOR &lt;u&gt;PathFollower&lt;/u&gt; native
+ {
+   +{{Flag|NOBLOCKMAP}}
+   +{{Flag|NOSECTOR}}
+   +{{Flag|NOGRAVITY}}
+   +{{Flag|DONTSPLASH}}
+ }</text>
+    <sha1>9mtmzbmp0apy9avgwc1ty9kyq95q5yv</sha1>
+  </revision>
+</page>

@@ -1,0 +1,70 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>A CustomRailgun</title>
+  <ns>0</ns>
+  <id>2681</id>
+  <revision>
+    <id>53914</id>
+    <parentid>52331</parentid>
+    <timestamp>2024-11-27T10:13:05Z</timestamp>
+    <contributor>
+      <username>Jekyll Grim Payne</username>
+      <id>2175</id>
+    </contributor>
+    <origin>53914</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="5392" sha1="a0ua1e8il2czmpjw48on48uz3evyucb" xml:space="preserve">{{Outdated page}}
+
+{{codepointer|Generic Attack}}
+void '''A_CustomRailgun''' (int ''damage'' [, int ''spawnofs_xy'' [, color ''color1'' [, color ''color2'' [, int ''flags'' [, int ''aim'' [, double ''maxdiff'' [, class&lt;Actor&gt; ''pufftype'' [, double ''spread_xy'' [, double ''spread_z'' [, double ''range'' [, int ''duration'' [, double ''sparsity'' [, double ''driftspeed'' [, class&lt;Actor&gt; ''spawnclass'' [, double ''spawnofs_z'' [, int ''spiraloffset'' [, int ''limit'' [, double ''veleffect'']]]]]]]]]]]]]]]]]])
+
+==Usage==
+A customizable [[railgun]] attack for [[monster]]s.
+
+=== Parameters ===
+* ''damage'': The damage to inflict; this can be a fixed value or an expression.
+* ''spawnofs_xy'': The horizontal offset (from the actor's center) where the railgun will emerge from.  Negative values shift the beam to the actor's left, positive values shift it right. Default is 0.
+* ''color1'': The color of the [[particle]]s that form the spiral "ring" of the beam. This can be in the form of a {{c|RRGGBB}} string or a string holding a color defined in the [[X11R6RGB]] lump. If the string is invalid, the particles will be black. '''None''' (without quotes) in [[DECORATE]] or '''""''' in [[ZScript]] will make the ring invisible. A value of 0, which is treated specially, draws the the particles in one of four shades of blue, picked randomly. Default is 0.
+* ''color2'': The color of the particles that form the central "core" of the beam. This can be in the form of a {{c|RRGGBB}} string or a string holding a color defined in the [[X11R6RGB]] lump. If the string is invalid, the particles will be black. '''None''' (without quotes) in DECORATE or '''""''' in ZScript will make the core invisible. A value of 0, which is treated specially, draws the particles in one of three shades of gray, picked randomly. Default is 0.
+* ''flags'': The following flags can be combined by using the | character between the constant names:
+** '''RGF_SILENT'''&amp;nbsp;&amp;mdash; Silent: The railgun will not play an attack sound when firing.
+** '''RGF_NOPIERCING'''&amp;nbsp;&amp;mdash; Not piercing: The railgun will stop at the first enemy hit, rather than passing through.
+** '''RGF_EXPLICITANGLE'''&amp;nbsp;&amp;mdash; Explicit angle: The spread parameters are taken as explicit angles rather than maximum random amplitude.
+** '''RGF_FULLBRIGHT'''&amp;nbsp;&amp;mdash; Full bright: Rail particles will be rendered at maximum brightness, ignoring sector lighting.
+** '''RGF_CENTERZ'''&amp;nbsp;&amp;mdash; Center z: Prevent the railgun from using the actor's attack z-offset ({{Property|Player.AttackZOffset}} for players or a hard-coded +8 for everything else).
+** '''RGF_NORANDOMPUFFZ'''&amp;nbsp;&amp;mdash; No random puff Z: Disables the random z-offset of spawned puffs.
+* ''aim'' determines which aiming mode to use:
+**'''0''': The monster shoots in the direction it is looking (default).
+**'''1''': The monster aims at its target.
+**'''2''': The monster aims at and takes the target's horizontal velocity into account.
+* ''maxdiff'': This is used to make the rail more jagged, or lightning-like, with higher numbers. Default is 0 (straight).
+* ''pufftype'': The puff actor to use. See the '''[[Puff]]''' page for details on when the puff will actually appear or play it sound. Note, even if the puff doesn't appear visually, it will still be used for applying custom damagetypes and other properties. Default is {{c|"{{Class|BulletPuff}}"}}.
+* ''spread_xy'': Maximum angle of random horizontal spread. Default is 0.
+* ''spread_z'': Maximum angle of random vertical spread. Default is 0.
+* ''range'': Maximum distance (in map units, as fixed-point) the rail shot will travel before vanishing. Default is 0, which uses the default value of 8192 as the range.
+* ''duration'': Lifetime of spawned particles, in tics. Default is 0, which uses the default value of 35 as the duration.
+* ''sparsity'': Distance between individial particles. Implemented as a multiplier. Default is 1.0.
+* ''driftspeed'': Speed at which particles "drift" away from their initial spawn point. Implemented as a multiplier. Default is 1.0.
+* ''spawnclass'': Actor to spawn in place of trail particles. If non-null, the specified actor will be spaced ''sparsity'' units apart instead of the usual trail. It will also inherit the pitch of the shooter and track the owner, allowing for explosive trails to not hurt the owner. Particle-specific properties such as ''duration'', ''driftspeed'', and rail color are ignored in such a case. Default is "{{c|None}}".
+* ''spawnofs_z'': The vertical offset (from the actor's center) where the railgun will emerge from. Negative values shift the beam down, positive values shift it up. Default is 0.
+*''spiraloffset'': the angle from which the outer ring starts spiraling. Default is 270.
+*''limit'': Sets the maximum number of actors to pierce through, if they are applicable for damaging. Default is 0 (no limit is set).
+*''veleffect'': Customizes the inaccuracy induced by a moving target. Default is 3.
+
+== Examples ==
+This {{Class|arachnotron}} uses a rail attack which deals 65 points of damage and has a white core and a blue ring.
+
+ ACTOR RailArachnotron : {{Class|Arachnotron}}
+ {
+   States
+   {
+   Missile:
+     BSPI A 17 Bright [[A_FaceTarget]]
+     BSPI G 4 Bright [[A_CustomRailgun]](65, 0, "Blue", "White") // Equivalent to [[A_CustomRailgun]](65, 0, "0000FF", "FFFFFF")
+     BSPI H 4 Bright
+     Goto See
+   }
+ }</text>
+    <sha1>a0ua1e8il2czmpjw48on48uz3evyucb</sha1>
+  </revision>
+</page>

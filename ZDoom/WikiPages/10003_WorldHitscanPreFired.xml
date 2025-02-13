@@ -1,0 +1,102 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>WorldHitscanPreFired</title>
+  <ns>0</ns>
+  <id>10003</id>
+  <revision>
+    <id>54086</id>
+    <parentid>54084</parentid>
+    <timestamp>2024-12-23T12:28:16Z</timestamp>
+    <contributor>
+      <username>Jekyll Grim Payne</username>
+      <id>2175</id>
+    </contributor>
+    <comment>/* Usage */</comment>
+    <origin>54086</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="4972" sha1="rres57023dy9w3nw0ta12n157tlb22w" xml:space="preserve">'''{{class|StaticEventHandler}}'''
+
+{{c|bool '''WorldHitscanPreFired''' (WorldEvent ''e'')}} {{new|4.14.0}}
+
+== Usage ==
+An [[Events and handlers|event handler]] virtual function that is called before a [[hitscan|hitscan attack]] is fired in the level. This event can be used to block hitscan attacks from happening and potentially replace them with something else, such as [[projectile|projectiles]].
+
+'''Note:''' This event is triggered by "bullet" hitscan attack function, such as [[LineAttack (ZScript)|{{c|LineAttack()}}]] or any of its derivatives. However, it's NOT triggered by "railgun" functions such as [[RailAttack|{{c|RailAttack()}}]]; for a similar railgun-related function see [[WorldRailgunPreFired|{{c|'''World''Railgun''PreFired'''}}]].
+
+=== Passed values ===
+This event gets a pointer to the {{struct|WorldEvent}} struct, and can read certain fields from it preceding the value with &lt;code&gt;e.&lt;/code&gt;. Since this event was designed to be hooked into hitscan attack functions, the fields are mostly the same as the arguments of hitscan-firing functions such as {{c|[[LineAttack (ZScript)|LineAttack]]}} or {{c|[[A_FireBullets]]}}, and the values passed to those fields are passed directly ''from'' those attack functions:
+*{{c|Actor '''thing'''}}
+:A pointer to the actor who fired the attack.
+*{{c|angle '''AttackAngle'''}}
+:The ''absolute'' horizontal angle offset at which the attack was fired, as passed from the attack function. To convert this to a ''relative'' angle, subtract &lt;code&gt;e.thing.angle&lt;/code&gt; from this value.
+*{{c|angle '''AttackPitch'''}}
+:The vertical angle offset at which the attack was fired, as passed from the attack function.
+*{{c|double '''AttackDistance'''}}
+:The maximum range of the the attack, as passed from the attack function. For reference, player attacks by default use {{const|PLAYERMISSILERANGE}} (8192) and monster attacks use {{const|MISSILERANGE}} (2048), but all hitscan functions allow specifying a custom distance.
+*{{c|int '''damage'''}}
+:The damage the hitscan attack should deal. Note, this is the value ''after'' all randomization has been applied to it by the function, if any (for example, by default {{c|[[A_FireBullets]]}} multiplies its damage by {{c|random(1, 3)}}), but ''before'' any other special handling, such as [[damage types]], the puff calling its [[DoSpecialDamage]] and such.
+*{{c|Name '''damageType'''}}
+:The [[damage type]] applied to the attack (either through its arguments or a custom [[puff]]).
+*{{c|int '''AttackLineFlags'''}}
+:The flags passed from the attack function. These are the same as the [[LineAttack (ZScript)|{{c|LineAttack()}}]] flags:
+{{: LAF flags}}
+*{{c|class&lt;Actor&gt; '''AttackPuffType'''}}
+:The [[puff]] class used by the attack.
+*{{c|double '''AttackZ'''}}
+:Vertical offset of the attack from the shooter's origin. Corresponds to the {{c|offsetz}} argument of [[LineAttack (ZScript)|{{c|LineAttack()}}]].
+*{{c|double '''AttackOffsetForward'''}}
+:Forward offset of the attack from the shooter's origin. Corresponds to the {{c|offsetforward}} argument of [[LineAttack (ZScript)|{{c|LineAttack()}}]].
+*{{c|double '''AttackOffsetSide'''}}
+:Side offset of the attack from the shooter's origin. Corresponds to the {{c|offsetside}} argument of [[LineAttack (ZScript)|{{c|LineAttack()}}]].
+
+=== Return value ===
+*''bool'' — returning &lt;code&gt;true&lt;/code&gt; will block the attack from happening (note, this will not prevent anything else that might normally be tied to the attack, such as ammo consumption, sounds, etc.). By default returns &lt;code&gt;false&lt;/code&gt;.
+
+== Examples ==
+This event handler will replace all hitscan attacks by {{class|PlasmaBall}} projectiles. Note, it uses slightly different handling depending on whether the shooter was a player or a monster:
+&lt;syntaxhighlight lang="cs"&gt;
+class HitscanOverrideHandler : EventHandler
+{
+	override bool WorldHitscanPreFired(WorldEvent e)
+	{
+		// If the shooter is a player, use SpawnPlayerMissile.
+		// Modify the player's pitch temporarily to implement
+		// attack pitch (just like A_FireProjectile does it),
+		// and pass the other values to their respective arguments:
+		if (e.thing.player)
+		{
+			double savedPitch = e.thing.pitch;
+			e.thing.pitch = e.AttackPitch;
+			e.thing.SpawnPlayerMissile('Plasmaball',
+				angle: e.AttackAngle,
+				x: e.AttackOffsetSide,
+				z: e.AttackZ);
+			e.thing.pitch = savedPitch;
+		}
+		// For monsters, just pass values to A_SpawnProjectile.
+		// CMD_AIMDIRECTION is required here to prevent the
+		// function from automatically aiming at the monster's
+		// current target. Note, we also need to subtract
+		// e.thing.angle from e.AttackAngle, since the latter is
+		// absolute:
+		else
+		{
+			e.thing.A_SpawnProjectile('Plasmaball',
+				angle: e.AttackAngle - e.thing.angle,
+				pitch: e.AttackPitch,
+				flags: CMF_AIMDIRECTION);
+		}
+		return true;
+	}
+}
+&lt;/syntaxhighlight&gt;
+
+== See also ==
+* [[WorldHitscanFired]]
+* [[Events and handlers]]
+
+[[Category:ZScript]]
+[[Category:Event handlers]]</text>
+    <sha1>rres57023dy9w3nw0ta12n157tlb22w</sha1>
+  </revision>
+</page>

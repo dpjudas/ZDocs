@@ -1,0 +1,40 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>A Look2</title>
+  <ns>0</ns>
+  <id>2657</id>
+  <revision>
+    <id>35060</id>
+    <parentid>34303</parentid>
+    <timestamp>2012-12-01T20:29:48Z</timestamp>
+    <contributor>
+      <username>Deded007</username>
+      <id>1392</id>
+    </contributor>
+    <minor />
+    <comment>/* Examples */ Links, templates</comment>
+    <origin>35060</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="936" sha1="lsl2s9u6nvtd6ysox89uvqf4pu5nu2u" xml:space="preserve">{{codepointer|Monster AI}}'''A_Look2'''
+
+(no parameters)
+
+
+Looks for players or other attackable actors in the game. This function is similar to [[A_Look]] but it only reacts to sound. Just seeing the player will not wake up a monster using this. This function must be used in the idle states of a monster.
+
+The three states after this function call are reserved. You '''must''' include these states because the function jumps to the states following the call. '''A_Look2''' calls them randomly to animate actors using this function. The third of these states is only called when the '''{{flag|STANDSTILL}}''' flag is not set.
+
+If you do not need that, [[A_TurretLook]] is the better solution.
+
+== Examples ==
+
+Some of [[Strife]]'s actors use this to check for gunfire. Here is code taken from the {{Class|Peasant}}.
+
+ Spawn:
+ 	PEAS A 10 '''A_Look2'''
+ 	Loop
+
+As you can see it is very similar to the [[A_Look#Examples|A_Look example]].</text>
+    <sha1>lsl2s9u6nvtd6ysox89uvqf4pu5nu2u</sha1>
+  </revision>
+</page>

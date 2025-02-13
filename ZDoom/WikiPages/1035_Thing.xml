@@ -1,0 +1,240 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>Thing</title>
+  <ns>0</ns>
+  <id>1035</id>
+  <revision>
+    <id>47813</id>
+    <parentid>46109</parentid>
+    <timestamp>2020-09-01T04:58:30Z</timestamp>
+    <contributor>
+      <username>NeuralStunner</username>
+      <id>1665</id>
+    </contributor>
+    <minor />
+    <comment>/* Spawn flags */ Not because it is EASY, but because it is HARD</comment>
+    <origin>47813</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="11287" sha1="4y230bramo3o4lckb87o7bzmnsxszui" xml:space="preserve">{{doomwiki}}
+In Doom, '''things''' are used to represent players, monsters, pick-ups, and projectiles. Inside the game, these are known as actors. There are three ways to get an actor into your map. Most things are [[actor]]s, so the names are often used interchangeably. A few things, however, are not actors, such as [[player start]] points.
+
+==Referencing things==
+[[DoomEd numbers]] are the numbers used in the editor to represent an actor. When the map is loaded, an actor that corresponds to that number will be spawned at the location of that map thing. Although many actors have DoomEd numbers, not all of them do. For instance, a blue key card has a DoomEd number, but a rocket flying through the air does not.
+
+[[Spawn numbers]] are the numbers used by specials such as [[Thing_Spawn]] to spawn actors in the game once the user has started playing the map. Although DoomEd numbers and spawn numbers both describe actors, they are not interchangeable&amp;mdash;you must not use a spawn number on a map thing, and you must not use a DoomEd number for instance as a Thing_Spawn parameter.
+
+[[classes|Actor Names]] are the actual names each actor has internally (to test these you may want to try out the '''summon''' [[console commands|console command]]).  These are used with the functions [[SpawnSpot]] and [[Spawn]] which allow you to spawn any actor available with [[Thing_Spawn]] and also all other actors (though some actors aren't meant to be spawned) such as cameras, scenery or whatever you might require.
+
+If you create a new actor with the [[DECORATE]] lump, you can specify both the spawn number (SpawnID), and the DoomEd number (DoomEdNum).  The name you give the new [[DECORATE]] item is also its actor name, so you can also spawn it using that.
+
+There is also a third set of numbers used to represent actors that is only important for [[DeHackEd]] and similar. These numbers correspond to the order the actors were defined in the vanilla exe. They have no meaning outside of ZDoom's [[DEHSUPP|DeHackEd loader]] and as a result are not a property. In ''[[Strife]]'', they were used to identify actor classes in conversations, but ZDoom turned these into the {{Property|ConversationID}} property because identical actors had different numbers in the different versions of Strife available.
+
+==Specification (Doom format)==
+{| {{prettytable}}
+!Bytes!!Data type!!Description!!Notes
+|-
+|0-1||Signed short||X position||
+|-
+|2-3||Signed short||Y position||
+|-
+|4-5||Unsigned short||Angle||0=East, 45=NE, 90=North 135=NW, 180=West, 225=SW, 270=South
+|-
+|6-7||Unsigned short||Type||See the list of [[standard editor numbers]]
+|-
+|8-9||Unsigned Short||Spawn flags||
+|}
+
+==Specification (Hexen format)==
+{| {{prettytable}}
+!Bytes!!Data type!!Description!!Notes
+|-
+|0-1||Unsigned short||[[Thing ID]]||This value is used for scripts and specials
+|-
+|2-3||Signed short||X position||
+|-
+|4-5||Signed short||Y position||
+|-
+|6-7||Signed short||Z position||
+|-
+|8-9||Unsigned short||Angle||0=East, 45=NE, 90=North 135=NW, 180=West, 225=SW, 270=South
+|-
+|10-11||Unsigned short||Type||See the list of [[standard editor numbers]]
+|-
+|12-13||Unsigned short||Spawn flags||
+|-
+|14||Unsigned byte||[[Action special]]||An action to be executed when this thing is destroyed or picked up
+|-
+|15||Unsigned byte||Action argument 1||
+|-
+|16||Unsigned byte||Action argument 2||
+|-
+|17||Unsigned byte||Action argument 3||
+|-
+|18||Unsigned byte||Action argument 4||
+|-
+|19||Unsigned byte||Action argument 5||
+|}
+
+==Spawn flags==
+There are several conflicts in the flag list, depending on game. [[Map translator]]s are used to define how values are associated to flags in a binary map. [[UDMF]] allows to solve these conflicts by not using a bitfield array but instead referring to each flag by name. Several flags are only available in this [[map format]].
+
+{| {{PrettySortable}}
+!Flag!!Z-Bit!!Z-Hex!!D-Bit!!D-Hex!!S-Bit!!S-Hex!!Description!![[UDMF]] name
+|-
+|EASY||0||0x0001||0||0x0001||0||0x0001||Thing is spawned on skills #1 and #2 ||&lt;tt&gt;skill1&lt;/tt&gt; + &lt;tt&gt;skill2&lt;/tt&gt;
+|-
+|MEDIUM||1||0x0002||1||0x0002||1||0x0002||Thing is spawned on skill #3||&lt;tt&gt;skill3&lt;/tt&gt;
+|-
+|HARD||2||0x0004||2||0x0004||2||0x0004||Thing is spawned on skills #4 and #5||&lt;tt&gt;skill4&lt;/tt&gt; + &lt;tt&gt;skill5&lt;/tt&gt;
+|-
+|AMBUSH||3||0x0008||3||0x0008||5||0x0020||Thing is lying in ambush ({{flag|AMBUSH}} flag is set)||&lt;tt&gt;ambush&lt;/tt&gt;
+|-
+|DORMANT||4||0x0010|| || || || ||Thing is {{flag|DORMANT}} until activated||&lt;tt&gt;dormant&lt;/tt&gt;
+|-
+|FIGHTER||5||0x0020|| || || || ||Thing is spawned when player class #1 is present||&lt;tt&gt;class1&lt;/tt&gt;
+|-
+|CLERIC||6||0x0040|| || || || ||Thing is spawned when player class #2 is present||&lt;tt&gt;class2&lt;/tt&gt;
+|-
+|MAGE||7||0x0080|| || || || ||Thing is spawned when player class #3 is present||&lt;tt&gt;class3&lt;/tt&gt;
+|-
+|SINGLE||8||0x0100|| || || || ||Thing appears in single-player games||&lt;tt&gt;single&lt;/tt&gt;
+|-
+|COOPERATIVE||9||0x0200|| || || || ||Thing appears in cooperative games||&lt;tt&gt;coop&lt;/tt&gt;
+|-
+|DEATHMATCH||10||0x0400|| || || || ||Thing appears in deathmatch games||&lt;tt&gt;dm&lt;/tt&gt;
+|-
+|SHADOW||11||0x0800|| || ||8||0x0100||Thing is 25% translucent||&lt;tt&gt;translucent&lt;/tt&gt;
+|-
+|ALTSHADOW||12||0x1000|| || ||9||0x0200||Thing is invisible||&lt;tt&gt;invisible&lt;/tt&gt;
+|-
+|FRIENDLY||13||0x2000|| || ||6||0x0040||This is a |{{Flag|FRIENDLY}} monster using [[Strife]] logic||&lt;tt&gt;strifeally&lt;/tt&gt;
+|-
+|STANDSTILL||14||0x4000|| || ||3||0x0008||Thing stands still (only useful for specific Strife monsters or friendlies)||&lt;tt&gt;standing&lt;/tt&gt;
+|-
+|SECRET|| || || || || || ||Thing is a [[secret]] pickup||&lt;tt&gt;countsecret&lt;/tt&gt;
+&lt;!-- |-
+|NOINFIGHTING|| || || || || || ||Thing does not infight -- no reference to it, dead code?||&lt;tt&gt;???&lt;/tt&gt; --&gt;
+|-
+|NOTSINGLE|| || ||4||0x0010||4||0x0010||Thing does not appear in single player
+|-
+|NOTDEATHMATCH|| || ||5||0x0020|| || ||Thing does not appear in single deathmatch
+|-
+|NOTCOOPERATIVE|| || ||6||0x0040|| || ||Thing does not appear in cooperative
+|-
+|FRIEND|| || ||6||0x0040|| || ||Thing is a friendly monster using [[MBF]] logic (remapped to FRIENDLY)||friend
+|-
+|BADEDITORCHECK|| || ||8||0x0100|| || ||Thing was placed in a map editor that sets undefined flags||
+|-
+| || || || || || || ||Thing is spawned on skill #1||skill1
+|-
+| || || || || || || ||Thing is spawned on skill #2||skill2
+|-
+| || || || || || || ||Thing is spawned on skill #4||skill4
+|-
+| || || || || || || ||Thing is spawned on skill #5||skill5
+|-
+| || || || || || || ||Thing is spawned on skill #6||skill6
+|-
+| || || || || || || ||Thing is spawned on skill #7||skill7
+|-
+| || || || || || || ||Thing is spawned on skill #8||skill8
+|-
+| || || || || || || ||Thing is spawned on skill #9||skill9
+|-
+| || || || || || || ||Thing is spawned on skill #10||skill10
+|-
+| || || || || || || ||Thing is spawned on skill #11||skill11
+|-
+| || || || || || || ||Thing is spawned on skill #12||skill12
+|-
+| || || || || || || ||Thing is spawned on skill #13||skill13
+|-
+| || || || || || || ||Thing is spawned on skill #14||skill14
+|-
+| || || || || || || ||Thing is spawned on skill #15||skill15
+|-
+| || || || || || || ||Thing is spawned on skill #16||skill16
+|-
+| || || || || || || ||Thing is spawned when player class #4 is present||class4
+|-
+| || || || || || || ||Thing is spawned when player class #5 is present||class5
+|-
+| || || || || || || ||Thing is spawned when player class #6 is present||class6
+|-
+| || || || || || || ||Thing is spawned when player class #7 is present||class7
+|-
+| || || || || || || ||Thing is spawned when player class #8 is present||class8
+|-
+| || || || || || || ||Thing is spawned when player class #9 is present||class9
+|-
+| || || || || || || ||Thing is spawned when player class #10 is present||class10
+|-
+| || || || || || || ||Thing is spawned when player class #11 is present||class11
+|-
+| || || || || || || ||Thing is spawned when player class #12 is present||class12
+|-
+| || || || || || || ||Thing is spawned when player class #13 is present||class13
+|-
+| || || || || || || ||Thing is spawned when player class #14 is present||class14
+|-
+| || || || || || || ||Thing is spawned when player class #15 is present||class15
+|-
+| || || || || || || ||Thing is spawned when player class #16 is present||class16
+|}
+
+==UDMF properties==
+In addition to the UDMF-exclusive spawn flags above, the following properties can only be used on a thing in UDMF mode. Unless otherwise specified, default values for integers and float is 0, and {{c|false}} for booleans. They include:
+{| {{prettytable}}
+!Name!!Type!!Description
+|-
+|{{c|alpha}}||float||Sets the actor's {{Property|Alpha|translucency}}. It is only applicable to {{c|Translucent}}, {{c|Add}}, {{c|Subtract}} and {{c|TranslucentStencil}} render styles. Default is 1.0.
+|-
+|{{c|arg0str}}||string||Gives a string value to the first argument. This is used for [[named script]]s and [[Hexen breakable items]].
+|-
+|{{c|arg1str}}||string||Gives a string value to the second argument. This is used by certain [[:Category:Thing specials|Thing spawning specials]].
+|-
+|{{c|conversation}}||integer||Assigns a [[ZDoom Strife Dialog Format|conversation]] ID to the thing. This corresponds to the {{c|id}} property of a conversation, allowing for dialogue trees specific to a given thing rather than to an entire actor class.
+|-
+|{{c|fillcolor}}||integer||Sets the actor's {{Property|StencilColor|fillcolor}}, which is used by the {{c|Stencil}} and {{c|TranslucentStencil}} render styles, as {{c|RRGGBB}} value.
+|-
+|{{c|floatbobphase}}||integer||Sets the actors's {{Property|FloatBobPhase|floatbobphase}}. Valid phase values are in the 0-63 range. Setting this to -1 will use the actor's own value for the property. Default is -1.
+|-
+|{{c|friendlyseeblocks}}||integer||Sets the actor's {{Property|FriendlySeeBlocks|friendlyseeblocks}}. If this is set to 0 or less, the actor's default for this property as defined in its actor definition is used instead. Default is -1.
+|-
+|{{c|gravity}}||float||Sets the actor's [[gravity]]. Positive values are multiplied with the class' {{Property|Gravity|gravity property}} value, negative values are used as their absolute. Default is 1.0.
+|-
+|{{c|health}}||float||Sets the actor's [[health]]. Positive values are multiplied with the class's {{c|{{Property|Health}}}} property and negative values are used as their absolute. If the value is set to 0, the actor spawns dead (useful for resurrectable monster corpses) Default is 1.0.
+|-
+|{{c|pitch}}||integer||Sets the actor's pitch in degrees (useful for [[model]]s).
+|-
+|{{c|renderstyle}}||string||Sets the actor's {{Property|RenderStyle|render style}}, overriding the class's default. Possible values can be:
+*{{c|Normal}}
+*{{c|None}}
+*{{c|Add}} or {{c|Additive}}
+*{{c|Subtract}} or {{c|Subtractive}}
+*{{c|Stencil}}
+*{{c|AddStencil}}
+*{{c|TranslucentStencil}}
+*{{c|Translucent}}
+*{{c|Fuzzy}}
+*{{c|OptFuzzy}}
+*{{c|Soultrans}}
+*{{c|Shaded}}
+*{{c|AddShaded}}
+*{{c|Shadow}}
+Default value is an empty string for no change.
+|-
+|{{c|roll}}||integer||Sets the actor's roll in degrees (useful for [[model]]s).
+|-
+|{{c|scale}}||float||Sets the actor's vertical and horizontal scaling.
+|-
+|{{c|scalex}}||float||Sets the actor's vertical scaling.
+|-
+|{{c|scaley}}||float||Sets the actor's horizontal scaling.
+|-
+|{{c|score}}||integer||Sets the actor's [[score]], overriding the class's default.
+|}
+[[Category:Glossary]]</text>
+    <sha1>4y230bramo3o4lckb87o7bzmnsxszui</sha1>
+  </revision>
+</page>

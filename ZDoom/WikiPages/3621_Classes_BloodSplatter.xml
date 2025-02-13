@@ -1,0 +1,78 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>Classes:BloodSplatter</title>
+  <ns>0</ns>
+  <id>3621</id>
+  <revision>
+    <id>53642</id>
+    <parentid>32814</parentid>
+    <timestamp>2024-11-08T12:18:02Z</timestamp>
+    <contributor>
+      <username>Jekyll Grim Payne</username>
+      <id>2175</id>
+    </contributor>
+    <comment>/* DECORATE definition */</comment>
+    <origin>53642</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="1429" sha1="988hos5b260w4bln81lmo1oo5rmbgpk" xml:space="preserve">{{Actor|
+| type = Gibs
+| name = Blood splatter
+| class = BloodSplatter
+}}[[Classes]]: &lt;u&gt;BloodSplatter&lt;/u&gt;
+
+The blood splatter that is spawned instead of the Blood actor when an actor is hit and is able to bleed and the inflicting weapon or projectile has the +{{Flag|BLOODSPLATTER}} flag; all the predefined Heretic and Hexen projectiles have this flag implicitly set by the engine and many of the weapons, such as the [[Classes:CWeapMace|Mace of Contrition]] and [[Classes:FWeapHammer|Hammer of Retribution]], set it explicitly. In [[IWAD]]s other than [[Doom]]'s, the blood sprites are actually named BLOD* and are [[Sprite renaming|renamed at load-time]] by ZDoom.
+
+=== [[ZScript]] definition ===
+{{ZScriptDefinitionNote|actors/shared/blood.zs}}
+&lt;syntaxhighlight lang="cs"&gt;
+class BloodSplatter : Actor
+{
+	Default
+	{
+		Radius 2;
+		Height 4;
+		+NOBLOCKMAP
+		+MISSILE
+		+DROPOFF
+		+NOTELEPORT
+		+CANNOTPUSH
+		+ALLOWPARTICLES
+		Mass 5;
+	}
+	States
+	{
+	Spawn:
+		BLUD CBA 8;
+		Stop;
+	Death:
+		BLUD A 6;
+		Stop;
+	}
+}
+&lt;/syntaxhighlight&gt;
+=== [[DECORATE]] definition ===
+{{DecorateDefinitionNote}}
+ ACTOR &lt;u&gt;BloodSplatter&lt;/u&gt;
+ {
+   {{Property|Radius}} 2
+   {{Property|Height}} 4
+   +{{Flag|NOBLOCKMAP}}
+   +{{Flag|MISSILE}}
+   +{{Flag|DROPOFF}}
+   +{{Flag|NOTELEPORT}}
+   +{{Flag|CANNOTPUSH}}
+   +{{Flag|ALLOWPARTICLES}}
+   {{Property|Mass}} 5
+   States
+   {
+   Spawn:
+     BLUD CBA 8
+     Stop
+   Death:
+     BLUD A 6
+     Stop
+   }
+ }</text>
+    <sha1>988hos5b260w4bln81lmo1oo5rmbgpk</sha1>
+  </revision>
+</page>

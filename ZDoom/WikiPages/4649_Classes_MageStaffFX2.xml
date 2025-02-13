@@ -1,0 +1,55 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>Classes:MageStaffFX2</title>
+  <ns>0</ns>
+  <id>4649</id>
+  <revision>
+    <id>34791</id>
+    <parentid>24500</parentid>
+    <timestamp>2012-10-27T14:15:36Z</timestamp>
+    <contributor>
+      <username>Blue Shadow</username>
+      <id>2021</id>
+    </contributor>
+    <comment>/* DECORATE definition */ Updated.</comment>
+    <origin>34791</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="808" sha1="feyijwdvuyesbbl3x1yqpn3a0ia8w6i" xml:space="preserve">{{Actor|
+| type = Explosive
+| name = Bloodscourge shot
+| class = MageStaffFX2
+| game = Hexen
+}}[[Classes]]: &lt;u&gt;MageStaffFX2&lt;/u&gt;&lt;br&gt;
+{{desc}}
+==== [[DECORATE]] definition ====
+ ACTOR &lt;u&gt;MageStaffFX2&lt;/u&gt; native
+ {
+   {{Property|Speed}} 17
+   {{Property|Height}} 8
+   {{Property|Damage}} 4
+   {{Property|DamageType}} "Fire"
+   {{Property|Projectile}}
+   +{{Flag|SEEKERMISSILE}}
+   +{{Flag|SCREENSEEKER}}
+   +{{Flag|EXTREMEDEATH}}
+   {{Property|DeathSound}} "MageStaffExplode"
+   {{Property|Obituary}} "$OB_MPMWEAPBLOODSCOURGE"
+ 
+   action native [[A_MStaffTrack]]();
+ 
+   States
+   {
+   Spawn:
+     MSP2 ABCD 2 Bright [[A_MStaffTrack]]
+     Loop
+   Death:
+     MSP2 E 4 Bright [[A_SetTranslucent]](1, 1)
+     MSP2 F 5 Bright [[A_Explode]](80, 192, 0)
+     MSP2 GH 5 Bright
+     MSP2 I 4 Bright
+     Stop
+   }
+ }</text>
+    <sha1>feyijwdvuyesbbl3x1yqpn3a0ia8w6i</sha1>
+  </revision>
+</page>

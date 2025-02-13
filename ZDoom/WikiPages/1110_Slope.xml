@@ -1,0 +1,93 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>Slope</title>
+  <ns>0</ns>
+  <id>1110</id>
+  <revision>
+    <id>44119</id>
+    <parentid>41053</parentid>
+    <timestamp>2017-03-20T11:11:17Z</timestamp>
+    <contributor>
+      <username>Gez</username>
+      <id>1283</id>
+    </contributor>
+    <minor />
+    <comment>removing "new" for GZDoom 2.4.0 release</comment>
+    <origin>44119</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="7280" sha1="1lzhyg2t2q9bt0hq6c75spn94am5azu" xml:space="preserve">'''Slopes''' were added to ZDoom back in the 1.23 beta days. Originally the only way to create a sloped sector was with the [[Plane_Align]] special.  However, new ways were added involving the use of special slope things.
+
+==Plane_Align==
+
+'''181:[[Plane_Align]]''' is fairly simple to use once you get the hang of it.  It takes two arguments: floor sector and ceiling sector. For both, a value of 1 means "front sector", a value of 2 means "back sector", and a value of 0 means "none". It requires to be two-sided to work, with the back sector different from the front.
+
+So, let's say you have two sectors adjacent to one another, one with a floor height of 64, the other with a floor height of 0 and the linedef's front side is facing the sector with a floor height of 0.  If you give that line a [[Plane_Align]] special with the first argument 1 (for the front) then the sector with floor height of 0 will be sloped upwards to meet the floor with a height of 64.  If you were to put in an argument of 2 instead of 1, then the sector with floor height of 64 would be sloped down to meet the sector with a height of 0.  Once you get the hang of it, it's actually very simple.
+
+The second argument works in the exact same way (1 for front, 2 for back) except the sloping is applied to the ceiling.  Play around with it for a while, try to make things like arches or sloped railings next to stairs until you fully understand it.
+
+==Plane_Copy==
+
+'''118:[[Plane_Copy]]''' is quite simple as well. If you have already defined a slope in a sector, and you want to share it in another sector, then you can simply copy it. The first two arguments concern the front sector, for the floor and ceiling respectively. If an argument is non-zero, then the slope from the first sector with that tag will be copied for the equivalent plane in the front sector.
+
+The last three arguments are only valid if the line has a back sector as well. The third and fourth work just like the first and second, but concern the back sector's floor and ceiling respectively instead. Again, they take for argument a tag.
+
+The last argument allows to share a slope across the line. A value of 1 or 2 copies the floor slope from the front to the back, or vice-versa. A value of 4 or 8 copies the ceiling slope in the same way. It is possible to combine a floor and a ceiling value.
+
+==Slope things==
+
+Once you've mastered [[Plane_Align]] you may become aware that, even though it adds a whole new dimension to Doom editing, it still has limits.  For instance what if you want to slope the same sector two ways (slope it from low to high but also tilt it to the side a bit, perhaps making a pipe that goes upwards)?  Or what if you have a sloped ceiling but you put a new sector within it (for a floor platform or similar)?  Then there's no way to match the ceiling slope to the surrounding sector.  The slope things will solve your problems.
+
+For all following things, the first editor number correspond to a floor slope, and the second to a ceiling slope.
+
+;1500/1501 &amp;mdash; Vavoom slope things
+:They are used to describe a slope. They work together with the line of the sector in which they are placed having Arg1 equal to the thing's TID number. The plane is defined with 3 points - the thing's position and the line ending vertexes at the sector's floor or ceiling height. This method of setting up slopes originates from [[Vavoom]], hence the name.
+
+;1504/1505 &amp;mdash; Vertex height things
+:They can be used to define explicit heights at each vertex for triangular sectors. This is especially useful for terrain generation. The thing's z-position is used as the absolute height of each touching triangular sector at a vertex. These things have to be placed at the same position as the vertex they are supposed to affect. Please note that these things have no effect on sectors with more than 3 touching vertices. In [[UDMF]] maps, these things are redundant as vertices can have their floor height and ceiling height set directly in the editor.
+
+;9500/9501 &amp;mdash; Line slope things
+:They take a single argument, a line id. These can be placed anywhere (they don't need to be in the sector you want sloped) and will slope a sector starting at the specified line id and slope the sector up or down to the thing based on its Z height.  Only the sector on the side of the line facing the thing will be sloped.
+
+;9502/9503 &amp;mdash; Sector tilt things
+:They are useful if you just want to make a simple slope without bothering with any action specials. These also take a single argument, the angle of the tilt. The first argument is relative to 90 which means no slope (90 degrees from the vertical), so the further from 90 a value is the more sloped a sector will be. The angle of the thing also determines the direction of the slope, and the floor or ceiling height will be adjusted so it passes through the thing (based on the Z height relative to the floor/ceiling height). You'll need to play around with thing positions and values a bit, but, as with [[Plane_Align]], once you get the hang of it, it will become fairly easy to use.
+
+;9510/9511 &amp;mdash; Slope copy things
+:They take one argument, a sector tag. This will easily fix the latter problem mentioned above. Simply tag a sector and then place one of these in the sector you want to copy the slope of the tagged sector and ZDoom will do the rest. Very simple, but also quite effective.
+
+==UDMF==
+
+[[UDMF]] has two ways to create slopes directly.
+
+Vertices can be given explicit floor and ceiling heights with the {{c|zfloor}} and {{c|zceiling}} properties.  This works exactly like vertex height things: it only applies to triangular sectors, and if only some of the vertices have a height given, the others will use the "native" height of the sector.
+
+Sectors can also be given plane equations of the form ''ax + by + cz + d = 0'' directly, using the properties {{c|floorplane_a}}, {{c|floorplane_b}}, {{c|floorplane_c}}, and {{c|floorplane_d}} (or their {{c|ceiling}} counterparts).  This is the least human-friendly way to specify a slope by far, and is most likely useful in editors.
+
+==Finally==
+
+Slopes are set up in this order:
+
+# UDMF sector plane equations
+# [[Plane_Align]], in line order
+# Line slope things, sector tilt things, and Vavoom slope things, in thing order and all in the same pass
+# Slope copy things
+# Vertex height things and UDMF vertex heights (note that a vertex height thing will overwrite a UDMF prop)
+# [[Plane_Copy]]
+
+If two mechanisms target the same sector, the earlier one will be applied, then the later one will overwrite it.  Note that in some cases, the earlier one may affect the later one — for example, a [[Plane_Align]] may change the height of a sector tilt thing which applies later.
+
+Keep in mind that all slopes are processed during map initialization.  You may still raise and lower a sloped sector, but the actual slope cannot be changed dynamically.
+
+== See also ==
+* [[Using slopes]]
+* [[Sector_Set3dFloor]]
+
+== Forum threads ==
+* {{Forum|t=28383|AI traversing slopes}}
+
+== External links ==
+* {{plainlink|[http://www.zdoom.org/files/examples/slopes2.zip Example WAD]}}
+* {{plainlink|[https://github.com/biwa/3dfloormode/releases 3D plugin by boris]}}
+[[Category:Features]][[Category:Glossary]]</text>
+    <sha1>1lzhyg2t2q9bt0hq6c75spn94am5azu</sha1>
+  </revision>
+</page>

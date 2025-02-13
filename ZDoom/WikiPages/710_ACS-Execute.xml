@@ -1,0 +1,73 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>ACS Execute</title>
+  <ns>0</ns>
+  <id>710</id>
+  <revision>
+    <id>38920</id>
+    <parentid>35682</parentid>
+    <timestamp>2015-02-28T19:46:22Z</timestamp>
+    <contributor>
+      <username>Crimson Dusk</username>
+      <id>2000</id>
+    </contributor>
+    <minor />
+    <origin>38920</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="2953" sha1="iufw68o9lei2ay4klez2nk3vmsuz4tz" xml:space="preserve">{{DISPLAYTITLE:ACS_Execute}}
+{{Special|80|script, map, s_arg1, s_arg2, s_arg3|ACS|Execute}}
+
+* ''script'': Script number to execute 
+* ''map'': Map which contains the script 
+* ''s_arg1'': First argument passed to the script 
+* ''s_arg2'': Second argument passed to the script 
+* ''s_arg3'': Third argument passed to the script 
+
+==Usage==
+
+Executes the specified script. A map value of zero indicates that the script is on the current map. If the script is on a different map, then the execution of the script will be delayed until the player enters the map that contains it. Only one copy of a script can be running at a time when started with this special. Use [[ACS_ExecuteAlways]] to run multiple copies of the same script at the same time (note that those cannot be suspended or terminated, however).
+
+If the specified script was previously executed but then suspended, then execution will begin at the point immediately after where it was suspended instead of starting over again at the beginning.
+
+==Examples==
+
+This special is one of the most commonly used when editing for ZDoom. Although it is almost always used as special on a line or thing, it does have some uses when called from another script.
+
+This script is for a first level (say, MAP01), and it opens an ammo cache on the following level (MAP02) depending on the skill level and the player's health.
+
+ script 10 (void)
+ {
+ 	int health = [[GetActorProperty]](0, {{const|APROP_HEALTH}});
+ 
+ 	if ([[GameSkill]]() &lt; {{const|SKILL_HARD}} &amp;&amp; health &lt;= 100)
+ 	{
+ 		[[Print]](s:"Look for an ammo cache\n
+ 			in the next area!");
+ 		
+ 		[[ACS_Execute]](5, 2, 0, 0, 0);
+ 	}
+ 	else
+ 		[[Print]](s:"This switch appears to\n
+ 			have no function...");
+ }
+
+The first line stores the player's health in a variable called ''health''. Note that a [[TID]] of 0 usually refers to the activator of the script, which more often than not is the player. The ''if'' statement checks that the player is playing on normal skill or easier, and has 100 or less health. These are the properties for the cache opening. If they fit the requirements, it tells them and sets the script to execute on the following map. If they do not, it leaves them with a mysterious and annoying message.
+
+The following script opens the cache on the next level:
+
+ script 5 (void)
+ {
+ 	[[Ceiling_RaiseByValue]](17, 20, 96);
+ }
+
+This script simply raises the ceiling of sector tagged 17 by 96 units at speed 20. This is a very specific script but as the previous script is also specific it does not matter.
+
+The two maps in question need to be part of the same cluster for this to work. All Chex, Doom and Heretic episodes have their own clusters, and the Doom 2 and Final Doom maps are divided in clusters based on the intermission texts: MAP01&amp;ndash;MAP06, MAP07&amp;ndash;MAP11, MAP12&amp;ndash;MAP20, MAP21&amp;ndash;MAP30, MAP31, MAP32. Clusters can be defined with [[MAPINFO]] lumps.
+
+==External links==
+* {{oldref}}
+
+{{script functions}}</text>
+    <sha1>iufw68o9lei2ay4klez2nk3vmsuz4tz</sha1>
+  </revision>
+</page>

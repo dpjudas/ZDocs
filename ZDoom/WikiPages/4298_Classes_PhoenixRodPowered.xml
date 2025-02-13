@@ -1,0 +1,53 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>Classes:PhoenixRodPowered</title>
+  <ns>0</ns>
+  <id>4298</id>
+  <revision>
+    <id>39416</id>
+    <parentid>34148</parentid>
+    <timestamp>2015-04-29T18:05:58Z</timestamp>
+    <contributor>
+      <username>Blue Shadow</username>
+      <id>2021</id>
+    </contributor>
+    <minor />
+    <comment>/* DECORATE definition */ Updated</comment>
+    <origin>39416</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="1139" sha1="0spzjffnsypkp7bqswy3cdct9jw14eo" xml:space="preserve">{{Actor|
+| type = Weapon
+| name = Tomed phoenix rod
+| class = PhoenixRodPowered
+| game = Heretic
+}}[[Classes]]: [[Classes:Inventory|Inventory]]&amp;rarr;[[Classes:Weapon|Weapon]]&amp;rarr;[[Classes:PhoenixRod|PhoenixRod]]&amp;rarr;&lt;u&gt;PhoenixRodPowered&lt;/u&gt;
+
+When the [[Classes:ArtiTomeOfPower|tome of power]] is activated, the [[Classes:PhoenixRod|phoenix rod]] fires a short-range, continuous stream of [[Classes:PhoenixFX2|flames]]. Be careful not to refire on a close enemy after the tome has run out of time, though.
+==== [[DECORATE]] definition ====
+ ACTOR &lt;u&gt;PhoenixRodPowered&lt;/u&gt; : {{Class|PhoenixRod}} native
+ {
+   +{{Flag|WEAPON.POWERED_UP}}
+   +{{Flag|WEAPON.MELEEWEAPON}}
+   {{Property|Weapon.SisterWeapon}} "{{Class|PhoenixRod}}"
+   {{Property|Weapon.AmmoGive}} 0
+   {{Property|Tag}} "$TAG_PHOENIxRODP"
+ 
+   action native [[A_InitPhoenixPL2]]();
+   action native [[A_FirePhoenixPL2]]();
+   action native [[A_ShutdownPhoenixPL2]]();
+ 
+   States
+   {
+   Fire:
+     PHNX B 3 [[A_InitPhoenixPL2]]
+   Hold:
+     PHNX C 1 [[A_FirePhoenixPL2]]
+     PHNX B 4 [[A_ReFire]]
+   Powerdown:
+     PHNX B 4 [[A_ShutdownPhoenixPL2]]
+     Goto Ready
+   }
+ }</text>
+    <sha1>0spzjffnsypkp7bqswy3cdct9jw14eo</sha1>
+  </revision>
+</page>

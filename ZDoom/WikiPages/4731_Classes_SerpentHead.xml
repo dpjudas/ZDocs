@@ -1,0 +1,47 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>Classes:SerpentHead</title>
+  <ns>0</ns>
+  <id>4731</id>
+  <revision>
+    <id>34907</id>
+    <parentid>34906</parentid>
+    <timestamp>2012-11-11T02:26:41Z</timestamp>
+    <contributor>
+      <username>Blue Shadow</username>
+      <id>2021</id>
+    </contributor>
+    <comment>Added a description</comment>
+    <origin>34907</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="569" sha1="kwswy6atdv9sdcm5shutcce9c1mzsst" xml:space="preserve">{{Actor|
+| type = Gibs
+| name = Stalker head
+| class = SerpentHead
+| game = Hexen
+}}[[Classes]]: &lt;u&gt;SerpentHead&lt;/u&gt;&lt;br&gt;
+
+The head of a {{Class|Serpent|stalker}} or a {{Class|SerpentLeader|stalker leader}}. It is spawned when gibbed.
+==== [[DECORATE]] definition ====
+ ACTOR &lt;u&gt;SerpentHead&lt;/u&gt;
+ {
+   {{Property|Radius}} 5
+   {{Property|Height}} 10
+   {{Property|Gravity}} 0.125
+   +{{Flag|NOBLOCKMAP}}
+ 
+   action native [[A_SerpentHeadCheck]]();
+ 
+   States
+   {
+   Spawn:
+     SSXD IJKLMNOP 4 [[A_SerpentHeadCheck]]
+     Loop
+   Death:
+     SSXD S -1
+     Loop
+   }
+ }</text>
+    <sha1>kwswy6atdv9sdcm5shutcce9c1mzsst</sha1>
+  </revision>
+</page>

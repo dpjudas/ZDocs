@@ -1,0 +1,143 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>Classes:ClericPlayer</title>
+  <ns>0</ns>
+  <id>3409</id>
+  <revision>
+    <id>37566</id>
+    <parentid>34535</parentid>
+    <timestamp>2014-01-25T16:07:01Z</timestamp>
+    <contributor>
+      <username>Mallo</username>
+      <id>2023</id>
+    </contributor>
+    <minor />
+    <comment>Fixed link</comment>
+    <origin>37566</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="7404" sha1="nmyysascn02q7q897ecb5rxd7581ds4" xml:space="preserve">{{Actor|
+| type = Player
+| name = Parias
+| class = ClericPlayer
+| game = Hexen
+}}{{Class}} &amp;rarr; {{Class|PlayerPawn}} &amp;rarr;&lt;u&gt; ClericPlayer&lt;/u&gt;&lt;br&gt;
+
+The Cleric is one of the three character classes available for play in Hexen. He's the middle-ground between the Fighter's emphasis on melee and the Mage's emphasis on distance; and often thought of as the strongest character. His weapons are:
+* [[Classes:CWeapMace|Mace of contrition]]: The starting weapon for the Cleric. This melee weapon requires repeated beatings to bring down most monsters.
+* [[Classes:CWeapStaff|Serpent staff]]: This magic weapon uses [[Classes:Mana1|blue mana]] to spit out twin spiraling spheres of venom and deals significantly more damage than the mace. Using the Serpent Staff feeds on your enemies' blood, converting it to health for you. This weapon behaves slightly differently depending on rather it's used against players or monsters. Monsters instantly takes full damage from the missiles, while players take a lower amount of initial damage and then are poisoned, taking continous damage over time, eventually adding up to the same damage as a monster would take.
+* [[Classes:CWeapFlame|Firestorm]]: This spell uses [[Classes:Mana2|green mana]] to hurl a ultra-fast projectile that, on contact, summons a gout of flame to consume your enemies from below. Depending on the monsters health, this spells has a added effect. Monsters with low (30?) health or remaining health will simply take the damage from the initial missile. Monsters with more than that will cause a ring of circling flames to erupt from around him. Anything that comes in contact with these flames cause them to explode, dealing normal and splash damage. Bigger monsters tend to take more damage from this weapon, since they hit most, if not all, the circling flames. Unlike the other ranged weapons, the Firestorm has a limited range.
+* [[Classes:CWeapWraithverge|Wraithverge]]: This holy relic uses [[Classes:Mana3|both mana types]] to summon a swarm of hungry spirits that ravage groups of enemies. Having the ability to rip through monsters as well as travel through walls, these spirits can kill otherwise unreachable monsters. Unlike other weapons, the Wraithverge can kill enemies even if they're invulnerable. Before using Wraithverge in combat, the Cleric must first assemble it by finding the three relevant [[Classes:ClericWeaponPiece|weapon pieces]].
+
+Contrarily to other [[Classes:PlayerPawn|player classes]], the Hexen player classes can not easily use additional weapons. While it is possible in [[KEYCONF]] to change which weapon is associated to which slot, a Cleric can still only select these four weapons with the keys bound to weapon slots. (However, the keys bound to next and previous weapon, the &lt;code&gt;use&lt;/code&gt; [[Console Commands|console command]], and the automatic weapon switching when running out of ammo, can still equip another weapon.) A Cleric picking up a Fighter or Mage weapon will only gain ammunitions from them, though it is still possible to give him the illegal weapons with the [[Console Commands|console]], [[ACS]], or [[DECORATE]].
+
+When under the effect of an [[Classes:ArtiInvulnerability2|Icon of the Defender]], a Cleric will phase in and out of sight. He uses the [[Classes:ArtiPoisonBag|fléchettes]] to release poison clouds that are extremely effective when strategically placed, and the easiest way to get rid of enemies with invulnerability powers like the [[Classes:Centaur|Centaurs]] and [[Classes:Heresiarch|Heresiarchs]]. When he uses a [[Classes:ArtiHealingRadius|Mystic Ambit Incant]], his nearby allies regain health.
+
+====Character Summary====
+In a world named Chronos, Parias the Cleric is the only remaining free member of his order, the Church. All others have been turned into mind-controled slave under the command of the Church's treacherous leader, [[Classes:ClericBoss|Traductus]], who is himself a thrall to the Serpent Rider [[Classes:Korax|Korax]]. Just like his similarly-fated friends [[Classes:FighterPlayer|Baratus the Fighter]] and [[Classes:MagePlayer|Daedolon the Mage]], Parias intends to free his world from [[Classes:Korax|Korax]] and the Serpent Rider's hellish hordes by personally eliminating each and everyone of his enemies.
+
+In game, Parias appears as a typical fantasy crusader: with an armor, a cloak, and a horned helmet. He's pictured wielding the mace of contrition. 
+
+==== [[DECORATE]] definition ====
+ ACTOR &lt;u&gt;ClericPlayer&lt;/u&gt; : {{Class|PlayerPawn}}
+ {
+   {{Property|Health}} 100
+   {{Property|ReactionTime}} 0
+   {{Property|PainChance}} 255
+   {{Property|Radius}} 16
+   {{Property|Height}} 64
+   {{Property|Speed}} 1
+   +{{Flag|NOSKIN}}
+   +{{Flag|NODAMAGETHRUST}}
+   +{{Flag|PLAYERPAWN.NOTHRUSTWHENINVUL|NOTHRUSTWHENINVUL}}
+   {{Property|PainSound}} "PlayerClericPain"
+   {{Property|RadiusDamageFactor}} 0.25
+   {{Property|Player.JumpZ}} 9
+   {{Property|Player.Viewheight}} 48
+   {{Property|Player.SpawnClass}} "Cleric"
+   {{Property|Player.DisplayName}} "Cleric"
+   {{Property|Player.SoundClass}} "cleric"
+   {{Property|Player.ScoreIcon}} "CLERFACE"
+   {{Property|Player.InvulnerabilityMode}} "Ghost"
+   {{Property|Player.HealRadiusType}} "Health"
+   {{Property|Player.HexenArmor}} 10, 10, 25, 5, 20
+   {{Property|Player.StartItem}} "{{Class|CWeapMace}}"
+   {{Property|Player.Portrait}} "P_CWALK1"
+   {{Property|Player.WeaponSlot}} 1, {{Class|CWeapMace}}
+   {{Property|Player.WeaponSlot}} 2, {{Class|CWeapStaff}}
+   {{Property|Player.WeaponSlot}} 3, {{Class|CWeapFlame}}
+   {{Property|Player.WeaponSlot}} 4, {{Class|CWeapWraithverge}}
+   {{Property|Player.FlechetteType}} "{{Class|ArtiPoisonBag1}}"
+ 
+   {{Property|Player.ColorRange}} 146, 163
+   {{Property|Player.ColorSet}}     0, "Blue",          146, 163,    161
+   {{Property|Player.ColorSetFile}} 1, "Red",           "TRANTBL7",  0xB3
+   {{Property|Player.ColorSetFile}} 2, "Gold",          "TRANTBL8",  0x8C
+   {{Property|Player.ColorSetFile}} 3, "Dull Green",    "TRANTBL9",  0x41
+   {{Property|Player.ColorSetFile}} 4, "Green",         "TRANTBLA",  0xC9
+   {{Property|Player.ColorSetFile}} 5, "Gray",          "TRANTBLB",  0x30
+   {{Property|Player.ColorSetFile}} 6, "Brown",         "TRANTBLC",  0x72
+   {{Property|Player.ColorSetFile}} 7, "Purple",        "TRANTBLD",  0xEE
+ 
+   States
+   {
+   Spawn:
+     CLER A -1
+     Stop
+   See:
+     CLER ABCD 4
+     Loop
+   Pain:
+     CLER H 4
+     CLER H 4 [[A_Pain]]
+     Goto Spawn
+   Missile:
+   Melee:
+     CLER EFG 6
+     Goto Spawn
+   Death:
+     CLER I 6
+     CLER J 6 [[A_PlayerScream]]
+     CLER KL 6
+     CLER M 6 [[A_NoBlocking]]
+     CLER NOP 6
+     CLER Q -1
+     Stop     
+   XDeath:
+     CLER R 5 [[A_PlayerScream]]
+     CLER S 5
+     CLER T 5 [[A_NoBlocking]]
+     CLER UVWXYZ 5
+     CLER [ -1
+     Stop
+   Ice:
+     CLER "\" 5 [[A_FreezeDeath]]
+     CLER "\" 1 [[A_FreezeDeathChunks]]
+     Wait
+   Burn:
+     FDTH C 5 Bright [[A_PlaySound]]("*burndeath")
+     FDTH D 4 Bright
+     FDTH G 5 Bright
+     FDTH H 4 Bright [[A_PlayerScream]]
+     FDTH I 5 Bright
+     FDTH J 4 Bright
+     FDTH K 5 Bright
+     FDTH L 4 Bright
+     FDTH M 5 Bright
+     FDTH N 4 Bright
+     FDTH O 5 Bright
+     FDTH P 4 Bright
+     FDTH Q 5 Bright
+     FDTH R 4 Bright
+     FDTH S 5 Bright [[A_NoBlocking]]
+     FDTH T 4 Bright
+     FDTH U 5 Bright
+     FDTH V 4 Bright
+     ACLO E 35 [[A_CheckPlayerDone]]
+     Wait
+     ACLO E 8
+     Stop
+   }
+ }</text>
+    <sha1>nmyysascn02q7q897ecb5rxd7581ds4</sha1>
+  </revision>
+</page>

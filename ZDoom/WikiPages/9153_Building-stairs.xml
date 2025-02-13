@@ -1,0 +1,74 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>Building stairs</title>
+  <ns>0</ns>
+  <id>9153</id>
+  <revision>
+    <id>47281</id>
+    <parentid>47280</parentid>
+    <timestamp>2020-04-09T16:14:43Z</timestamp>
+    <contributor>
+      <username>Gez</username>
+      <id>1283</id>
+    </contributor>
+    <comment>add link to demo thread</comment>
+    <origin>47281</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="4196" sha1="ska0ikmuqujr3dom17qtbzsfj2dr9e9" xml:space="preserve">'''Building stairs''' is a common effect in Doom engine games where a flat surface gets broken into smaller parts which are raised or lowered to regular intervals. There are several different stair builders available in ZDoom.
+
+Stair builders are distinguished by three elements:
+* Construction method: Doom or Hexen. Doom stairs propagate depending on linedef orientations; Hexen stairs propagate according to sector effects.
+* Direction: up or down. The stairs can raise to reach a higher level, or lower to open a path to a lower level.
+* Speed: synchronized or not. Since each step has its own height to reach, they can move at different speed to all reach their target altitude at the same time, or they can move at the same speed and stop moving one after another.
+
+All stair builders use the following parameters:
+* ''tag'': Tag of first sector in staircase
+* ''speed'': How quickly the steps rise, in map units per [[octic]]
+* ''height'': Height of each step, in map units
+* ''reset'': Tics until the stairs return to their original heights (0 if never)
+
+In addition, non-synchronized builders have an additional argument, inserted between ''height'' and ''reset'':
+* ''delay'': Number of [[tics]] the staircase waits between steps
+The Generic stair builder does not have a delay parameter, however it has in its place another parameter to control its behavior:
+* ''flags'': controls direction and ignorance of floor textures
+
+For synchronized builders, the ''speed'' parameter applies to the first step only, subsequent steps going faster so as to arrive at the same time.
+
+== Doom stairs ==
+Doom stairs are built with any of the following specials:
+* [[Stairs_BuildDownDoom]]
+* [[Stairs_BuildDownDoomSync]]
+* [[Stairs_BuildUpDoomCrush]]
+* [[Stairs_BuildUpDoom]]
+* [[Stairs_BuildUpDoomSync]]
+
+The key to using Doom-style stairs is to remember how each step needs to have a line which has its front side on the current step, and its back side on the next step. All lines serving as border between a step and a sector not part of the stairs should have their back side to the step to prevent unwanted propagation. Remember also that texture changes stop stairs propagation.
+
+=== Boom stairs ===
+Boom stairs are constructed like Doom stairs. They are built with the following special:
+* [[Generic_Stairs]]
+
+They behave as non-synchronized Doom stairs; however if ''flag'' is set to 2 or 3, they will propagate even across texture changes. The first time they are activated, they will build down if ''flag'' is 0 or 2, or up if ''flag'' is 1 or 3. If the builder can be activated repeatedly, it will alternate between building up and down with each activation.
+
+== Hexen stairs ==
+Hexen stairs are built with any of the following specials:
+* [[Stairs_BuildDown]]
+* [[Stairs_BuildDownSync]]
+* [[Stairs_BuildUp]]
+* [[Stairs_BuildUpSync]]
+
+Hexen stairs propagate by alternating between both stair special sectors: if the current step is type 26, the next step is an adjacent sector of type 27 that is not already processed as part of the stair; and inversely if the current step is of type 27, the next is of type 26. There is no need for keeping the same floor texture on each step.
+
+== Advanced stair effects ==
+The stair sectors do not need to be directly in the playable area. Instead, they can be hidden control sectors. Examples of possible uses:
+* With [[linked sectors]], it is possible to get rid of restrictions such as no texture changes in Doom stairs or no sector type (other than the stair specials) for Hexen stairs. The steps in the playable area also do no longer need to be contiguous, though this effect can also be achieved by joining sectors. Linked sectors can also allow to move the ceiling at the same time.
+* With [[3D floors]] and linked sectors, it is possible to have stairs made of moving 3D platforms instead of pillars connected to the floor.
+* A same stairway can be targeted by several different stair builders. They can start at the same point, or at opposite points. If both propagation methods are used, the same stairway can work with both Doom and Hexen stair builders.
+
+==Forum links==
+* {{Forum|f=39&amp;t=55911|Stair builders demo map}}
+
+[[Category:Guides]]</text>
+    <sha1>ska0ikmuqujr3dom17qtbzsfj2dr9e9</sha1>
+  </revision>
+</page>

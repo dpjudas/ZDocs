@@ -1,0 +1,60 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>Classes:Spark</title>
+  <ns>0</ns>
+  <id>4331</id>
+  <revision>
+    <id>52729</id>
+    <parentid>39812</parentid>
+    <timestamp>2024-05-30T15:12:06Z</timestamp>
+    <contributor>
+      <username>Jekyll Grim Payne</username>
+      <id>2175</id>
+    </contributor>
+    <origin>52729</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="1142" sha1="9h9e0ao42965vfz4qcdjkuy271glqx7" xml:space="preserve">{{Actor|
+| type = SFX
+| name = Spark generator
+| class = Spark
+| doomednum = 9026
+}}[[Classes]]: &lt;u&gt;Spark&lt;/u&gt;
+
+A spark generator creates spark when activated. The number of sparks created can be set as its first argument; by default it is 32. Its angle is the direction in which the sparks will be thrown.
+
+The function this class uses internally, &lt;code&gt;DrawSplash&lt;/code&gt;, is defined in the C++ part of the engine. However, a custom version of a similar effect can easily be replicated with [[SpawnParticle (ZScript)|SpawnParticle]].
+
+== [[ZScript]] definition ==
+{{ZScriptDefinitionNote|actors/shared/spark.zs}}
+
+&lt;syntaxhighlight lang="csharp"&gt;
+class Spark : Actor
+{
+	default
+	{
+		+NOSECTOR
+		+NOBLOCKMAP
+		+NOGRAVITY
+		+DONTSPLASH
+	}
+	
+	override void Activate (Actor activator)
+	{
+		Super.Activate (activator);
+		DrawSplash (args[0] ? args[0] : 32, Angle, 1);
+		A_StartSound ("world/spark", CHAN_AUTO, CHANF_DEFAULT, 1, ATTN_STATIC);
+	}
+}&lt;/syntaxhighlight&gt;
+
+== [[DECORATE]] definition ==
+{{DecorateDefinitionNote}}
+ ACTOR &lt;u&gt;Spark&lt;/u&gt; native
+ {
+   +{{Flag|NOSECTOR}}
+   +{{Flag|NOBLOCKMAP}}
+   +{{Flag|NOGRAVITY}}
+   +{{Flag|DONTSPLASH}}
+ }</text>
+    <sha1>9h9e0ao42965vfz4qcdjkuy271glqx7</sha1>
+  </revision>
+</page>

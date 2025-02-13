@@ -1,0 +1,62 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>Classes:ArtiPoisonBagGiver</title>
+  <ns>0</ns>
+  <id>7125</id>
+  <revision>
+    <id>53614</id>
+    <parentid>35703</parentid>
+    <timestamp>2024-11-08T11:48:15Z</timestamp>
+    <contributor>
+      <username>Jekyll Grim Payne</username>
+      <id>2175</id>
+    </contributor>
+    <origin>53614</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="1474" sha1="h0ndnbeul83313719y1s05cg1jf01mv" xml:space="preserve">{{Actor|
+| type = Artifact
+| name = Generic giver fléchette
+| class = ArtiPoisonBagGiver
+}}[[Classes]]: {{Class|Inventory}}&amp;rarr;{{Class|ArtiPoisonBag}}&amp;rarr;&lt;u&gt;ArtiPoisonBagGiver&lt;/u&gt;&lt;br&gt;
+
+A generic {{Class|ArtiPoisonBag|fléchette}} class from which to derive custom actors to create new types of fléchettes. When used, the fléchette will add to the player's inventory an inventory item corresponding to its {{Property|MissileType}}. This can be combined with {{Class|CustomInventory}} items as the missile type to achieve many sorts of powerful effects.
+
+To assign a flechette type to a player class, use the {{Property|Player.FlechetteType}} property in the code for the player class.
+
+=== [[ZScript]] definition ===
+{{ZScriptDefinitionNote|actors/hexen/flechette.zs#L371}}
+&lt;syntaxhighlight lang="cs"&gt;
+class ArtiPoisonBagGiver : ArtiPoisonBag
+{
+	Default
+	{
+		Inventory.Icon "ARTIPSB4";
+	}
+	
+	override bool Use (bool pickup)
+	{
+		Class&lt;Actor&gt; missiletype = MissileName;
+		if (missiletype != null)
+		{
+			Actor mo = Spawn (missiletype, Owner.Pos, ALLOW_REPLACE);
+			if (mo != null)
+			{
+				Inventory inv = Inventory(mo);
+				if (inv &amp;&amp; inv.CallTryPickup(Owner)) return true;
+				mo.Destroy();	// Destroy if not inventory or couldn't be picked up
+			}
+		}
+		return false;
+	}
+	
+}
+&lt;/syntaxhighlight&gt;
+=== [[DECORATE]] definition ===
+{{DecorateDefinitionNote}}
+ ACTOR &lt;u&gt;ArtiPoisonBagGiver&lt;/u&gt; : {{Class|ArtiPoisonBag}} native
+ {
+   {{Property|Inventory.Icon}} "ARTIPSB4"
+ }</text>
+    <sha1>h0ndnbeul83313719y1s05cg1jf01mv</sha1>
+  </revision>
+</page>

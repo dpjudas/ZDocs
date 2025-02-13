@@ -1,0 +1,76 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>AimTarget</title>
+  <ns>0</ns>
+  <id>9586</id>
+  <revision>
+    <id>54028</id>
+    <parentid>54022</parentid>
+    <timestamp>2024-12-05T12:30:03Z</timestamp>
+    <contributor>
+      <username>Jekyll Grim Payne</username>
+      <id>2175</id>
+    </contributor>
+    <comment>/* Examples */</comment>
+    <origin>54028</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="1815" sha1="5ptc0u55p5dg3wowje5rlohoz78t3fj" xml:space="preserve">'''{{class|Actor}}'''
+
+{{c|Actor '''AimTarget''' ()}}
+
+== Usage ==
+Finds another actor in the direction the calling actor is facing. This function is also used by [[A_Mushroom]] and [[A_JumpIfCloser]].
+
+=== Return value ===
+*''Actor'' — a pointer to the actor that was found by the function; if nothing was found, returns {{c|null}}.
+
+== Examples ==
+This {{class|Pistol}}-derived class has a special alt fire that prints out the class name of the of the actor in front of the player to the console, if any.
+
+ class ScannerPistol : {{class|Pistol}}
+ {
+ 	Actor FoundActor; {{comment|Pointer to the actor that was found.}}
+ 
+ 	[[Actor states|States]]
+ 	{
+ 	AltFire:
+ 		PISG A 16
+ 		{
+ 			[[Actor_pointer#ZScript|invoker]].FoundActor = AimTarget(); {{comment|Set the actor found by AimTarget() as the FoundActor.}}
+ 			
+ 			if ([[Actor_pointer#ZScript|invoker]].FoundActor)
+ 			{
+ 				[[A_StartSound]] ("{{color|darkred|Misc/Chat}}",{{const|CHAN_WEAPON}},{{const|CHANF_OVERLAP}});
+ 				[[Structs:Console#Methods|Console.Printf]] ("{{color|darkred|There is a %s in front of you.}}", invoker.FoundActor.[[GetClassName]]());
+ 				[[Actor_pointer#ZScript|invoker]].FoundActor = null; {{comment|Remove pointer for the next AltFire.}}
+ 			}
+ 			else
+ 			{
+ 				[[A_StartSound]] ("{{color|darkred|Misc/Chat}}",{{const|CHAN_WEAPON}},{{const|CHANF_OVERLAP}});
+ 				[[Structs:Console#Methods|Console.Printf]] ("{{color|darkred|No actor was found!}}");
+ 			}
+ 		}
+ 		Goto Ready;
+ 	}
+ }
+
+== [[ZScript]] definition ==
+{{ZScriptDefinitionNote|actors/actor.zs}}
+&lt;syntaxhighlight lang="csharp"&gt;
+	Actor AimTarget()
+	{
+		FTranslatedLineTarget t;
+		BulletSlope(t, ALF_PORTALRESTRICT);
+		return t.linetarget;
+	}
+&lt;/syntaxhighlight&gt;
+
+== See also ==
+* [[LineTrace]]
+* [[BulletSlope]]
+* {{struct|FTranslatedLineTarget}}
+
+[[Category:ZScript]]</text>
+    <sha1>5ptc0u55p5dg3wowje5rlohoz78t3fj</sha1>
+  </revision>
+</page>

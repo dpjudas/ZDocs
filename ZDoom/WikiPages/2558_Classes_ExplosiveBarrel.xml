@@ -1,0 +1,102 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>Classes:ExplosiveBarrel</title>
+  <ns>0</ns>
+  <id>2558</id>
+  <revision>
+    <id>52581</id>
+    <parentid>39270</parentid>
+    <timestamp>2024-05-03T15:09:50Z</timestamp>
+    <contributor>
+      <username>Jekyll Grim Payne</username>
+      <id>2175</id>
+    </contributor>
+    <origin>52581</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="1832" sha1="3eyshd0fv032qiw6r47sumyi3dc82y9" xml:space="preserve">{{Actor|
+| type = Hazard
+| name = Explosive barrel
+| class = ExplosiveBarrel
+| game = Doom
+| doomednum = 2035
+| spawnid = 125
+| spawnname = T_BARREL
+}}[[Classes]]: &lt;u&gt;ExplosiveBarrel&lt;/u&gt;
+
+A barrel full of green goop that can be destroyed, causing explosive damage.  Several barrels near each other can be used to create large chain-reactions, as shown in the Doom 2 map "Barrels O' Fun".  Barrels will respawn in multiplayer games if the [[CVARs|sv_barrelrespawn]] CVAR is set.
+
+== [[ZScript]] definition ==
+{{ZScriptDefinitionNote|actors/doom/doommisc.zs#L3}}
+&lt;syntaxhighlight lang="csharp"&gt;
+class ExplosiveBarrel : Actor
+{
+	Default
+	{
+		Health 20;
+		Radius 10;
+		Height 42;
+		+SOLID
+		+SHOOTABLE
+		+NOBLOOD
+		+ACTIVATEMCROSS
+		+DONTGIB
+		+NOICEDEATH
+		+OLDRADIUSDMG
+		DeathSound "world/barrelx";
+		Obituary "$OB_BARREL";
+	}
+	States
+	{
+	Spawn:
+		BAR1 AB 6;
+		Loop;
+	Death:
+		BEXP A 5 BRIGHT;
+		BEXP B 5 BRIGHT A_Scream;
+		BEXP C 5 BRIGHT;
+		BEXP D 10 BRIGHT A_Explode;
+		BEXP E 10 BRIGHT;
+		TNT1 A 1050 BRIGHT A_BarrelDestroy;
+		TNT1 A 5 A_Respawn;
+		Wait;
+	}
+}&lt;/syntaxhighlight&gt;
+
+== [[DECORATE]] definition ==
+{{DecorateDefinitionNote}}
+ ACTOR &lt;u&gt;ExplosiveBarrel&lt;/u&gt;
+ {
+   {{Property|Health}} 20
+   {{Property|Radius}} 10
+   {{Property|Height}} 42
+   +{{Flag|SOLID}}
+   +{{Flag|SHOOTABLE}}
+   +{{Flag|NOBLOOD}}
+   +{{Flag|ACTIVATEMCROSS}}
+   +{{Flag|DONTGIB}}
+   +{{Flag|NOICEDEATH}}
+   +{{Flag|OLDRADIUSDMG}}
+   {{Property|DeathSound}} "world/barrelx"
+   {{Property|Obituary}} "$OB_BARREL" // "%o went boom."
+   States
+   {
+   Spawn:
+     BAR1 AB 6
+     Loop
+   Death:
+     BEXP A 5 Bright
+     BEXP B 5 Bright [[A_Scream]]
+     BEXP C 5 Bright
+     BEXP D 5 Bright [[A_Explode]]
+     BEXP E 10 Bright
+     TNT1 A 1050 Bright [[A_BarrelDestroy]]
+     TNT1 A 5 [[A_Respawn]]
+     Wait
+   }
+ }
+
+== See also ==
+* [[A_BarrelDestroy]]</text>
+    <sha1>3eyshd0fv032qiw6r47sumyi3dc82y9</sha1>
+  </revision>
+</page>

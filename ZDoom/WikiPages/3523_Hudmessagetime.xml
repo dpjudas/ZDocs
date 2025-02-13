@@ -1,0 +1,56 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>Hudmessagetime</title>
+  <ns>0</ns>
+  <id>3523</id>
+  <revision>
+    <id>36032</id>
+    <parentid>30301</parentid>
+    <timestamp>2013-03-03T23:09:12Z</timestamp>
+    <contributor>
+      <username>Deded007</username>
+      <id>1392</id>
+    </contributor>
+    <minor />
+    <comment>links, templates, clean up</comment>
+    <origin>36032</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="1348" sha1="41u9anruvllrx2ul3ewe5q5id7bghax" xml:space="preserve">{{DISPLAYTITLE:hudmessagetime}}
+
+This function is used to find how long a given hud message will take to finish displaying.  It is designed to be called within a [[delay]] function immediately after the hud message command. (See examples)
+
+ #define TICUNIT         35.725
+ function int HudMessageTime(int type, int length, int typetime, int staytime, int fadetime)
+ {
+    Switch(type)
+    {
+    Case {{const|HUDMSG_PLAIN}}:
+       return [[FixedMul]](staytime, TICUNIT) &gt;&gt; 16;
+    Case {{const|HUDMSG_FADEOUT}}:
+       return [[FixedMul]](staytime + fadetime, TICUNIT) &gt;&gt; 16;
+    Case {{const|HUDMSG_TYPEON}}:
+       return [[FixedMul]]([[FixedMul]](typetime, length &lt;&lt; 16) + staytime + fadetime, TICUNIT) &gt;&gt; 16;
+    Case {{const|HUDMSG_FADEINOUT}}:
+       return [[FixedMul]](typetime + staytime + fadetime, TICUNIT) &gt;&gt; 16;
+    }
+    return 0;
+ }
+
+==Examples==
+
+This example loops through an array of text strings, displaying each and waiting until it is finished before moving on to the next one.
+
+ script 1 {{SType|Enter}} {
+      [[delay]](35);
+ 
+      for (int i=0; i&lt;10; i++) {
+           [[HudMessage]](s:Strings[i]; {{const|HUDMSG_TYPEON}}, 0, {{const|CR_RED}}, 1.5, 0.8, 2.0, 0.1, 0.5);
+ 
+           [[delay]]([[hudmessagetime]]({{const|HUDMSG_TYPEON}}, [[strlen]](Strings[i]), 0.1, 2.0, 0.5);
+      }
+ }
+
+[[category:Sample ACS functions]]</text>
+    <sha1>41u9anruvllrx2ul3ewe5q5id7bghax</sha1>
+  </revision>
+</page>

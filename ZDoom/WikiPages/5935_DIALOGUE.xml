@@ -1,0 +1,78 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>DIALOGUE</title>
+  <ns>0</ns>
+  <id>5935</id>
+  <revision>
+    <id>37834</id>
+    <parentid>34470</parentid>
+    <timestamp>2014-04-01T21:37:57Z</timestamp>
+    <contributor>
+      <username>Blzut3</username>
+      <id>413</id>
+    </contributor>
+    <minor />
+    <origin>37834</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="4932" sha1="4dy9e49lsz87orlwshnslqmfx361ktp" xml:space="preserve">A '''DIALOGUE''' lump holds Strife conversation data in a [[UDMF]] map. In binary [[map format]]s, this data is held outside of the map lumps, in a SCRIPTxx or DIALOGxx lump placed in the general namespace instead, where xx matches the number of a MAPxx map. For this reason, Strife conversations are only possible in maps named using the MAPxx convention; whereas in UDMF the name of the map is irrelevant.
+
+Conversation scripts written in [[USDF]] do not need to be compiled to be accepted by ZDoom. Those written in [[ZSDF]] cannot be compiled at all. Compiled lumps are called DIALOGUE (UDMF) or SCRIPTxx (binary formats), text lumps are called DIALOGUE (UDMF) or DIALOGxx (binary formats). For readability, DIALOGUE is also used here as the generic name of these lumps in the rest of this article.
+
+A compiled DIALOGUE lump contains a number of conversation nodes which are all exactly the same size: 1516 bytes. (Note: conversation nodes in the Strife teasers are a bit shorter: 1488 bytes. However there is no reason to create teaser-format conversations, since loading additional content is disabled when playing a non-complete version of a game.)
+
+A text-based DIALOGUE lump must follow either the [[USDF]] specifications, or its [[ZSDF|ZDoom variant]]. They are detailed in their own articles.
+
+== Binary format ==
+The following structure corresponds to a Strife node. Multi-byte values are little-endian. A null string is one whose first byte is 0x00.
+{| {{prettytable}}
+! colspan="4" | Speech
+|-
+!Offset !! Length !! Name !! Content
+|-
+|0x0000 || 4 || speaker || An unsigned value corresponding to the talker's {{Property|ConversationID}}.
+|-
+|0x0004 || 4 || droptype || A signed value corresponding to the {{Property|ConversationID}} of an item that the talker will drop if killed. This is not the same as the {{Property|DropItem}} property. A negative value means no item is dropped.
+|-
+|0x0008 || 4*3 || itemcheck[3] || Three signed values to the {{Property|ConversationID}} of items that, if they are in the player's inventory, will provoke the conversation to jump to a different node instead of this one. A negative value means no items can trigger this jump.
+|-
+|0x0014 || 4 || link || A signed value corresponding to the node to which the conversation must jump if at least one of the itemchecks is successful.
+|-
+|0x0018 || 1*16 || name[16] || A string corresponding to the talker's displayed name, if any. The default value if the string is null is the actor's {{Property|Tag}}, and if that property is not defined, "Person" will be used instead.
+|-
+|0x0028 || 1*8 || sound[8] || A string corresponding to the sound name of the text's sound lump, if any. It must be declared in [[SNDINFO]] as svox/xxx, where xxx is the name contained in this string. Any sound in the voices [[namespace]] satisfies this requirement.
+|-
+|0x0030 || 1*8 || backdrop[8] || A string corresponding to a picture lump to display as the backdrop for the conversation. If not found, no picture is used.
+|-
+|0x0038 || 1*320 || dialogue[320] || A string corresponding to what the talker says.
+|-
+|0x0178 || 228*5 || responses[5] || five response structures defining the possible choices:
+|-
+! colspan="4" | Response
+|-
+!Offset !! Length !! Name !! Content
+|-
+|x+0x00 || 4 || givetype || A signed value corresponding to the {{Property|ConversationID}} of an item that the talker will give if this reply is chosen and successful. A negative value means no item is given.
+|-
+|x+0x04 || 4*3 || item[3] || Three signed values corresponding to the {{Property|ConversationID}} of items the player must have in his inventory for the reply to be successful if chosen. The first value, if not null, is reserved for gold.
+|-
+|x+0x10 || 4*3 || count[3] || Three signed values corresponding to the minimum amount of the items that the player must have in inventory. Again, the first is reserved for gold.
+|-
+|x+0x1C || 1*32 || choice[32] || A string corresponding to the text the player says if choosing this reply. A null string means no message. If both this and link are null, the reply is entirely ignored. If the first count value is positive, " for &lt;count&gt;" is automatically appended to the string.
+|-
+|x+0x3C || 1*80 || yes[80] || A string displayed if the reply is successfully chosen.
+|-
+|x+0x8C || 4 || link || A signed value corresponding to the node to which this reply leads. A value of zero means that the conversation stops. If both this and choice are null, the reply is entirely ignored.
+|-
+|x+0x90 || 4 || log || An unsigned value corresponding to the ID of the message that will be recorded in the log if the reply is successfully chosen, printing the content of the LOG&lt;number&gt; lump and playing the VOC&lt;number&gt; sound. See also [[SendToCommunicator]].
+|-
+|x+0x94 || 1*80 || no[80] || A string displayed if the reply is unsuccessfully chosen.
+|}
+
+== See also ==
+* [[Universal Strife Dialog Format]]
+* [[KSSC]]
+
+[[Category:Map lumps]]</text>
+    <sha1>4dy9e49lsz87orlwshnslqmfx361ktp</sha1>
+  </revision>
+</page>

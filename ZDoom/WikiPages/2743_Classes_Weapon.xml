@@ -1,0 +1,242 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>Classes:Weapon</title>
+  <ns>0</ns>
+  <id>2743</id>
+  <revision>
+    <id>50896</id>
+    <parentid>50880</parentid>
+    <timestamp>2023-10-26T14:57:06Z</timestamp>
+    <contributor>
+      <username>Jekyll Grim Payne</username>
+      <id>2175</id>
+    </contributor>
+    <minor />
+    <comment>/* Weapon states */</comment>
+    <origin>50896</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="11842" sha1="oh8wpl2bzxpz82kly469vat2ro3fmvr" xml:space="preserve">{{Actor|
+| type = Internal
+| name = Weapon
+| class = Weapon
+}}[[Classes]]: [[Classes:Inventory|Inventory]]&amp;rarr;[[Classes:StateProvider|StateProvider]]&amp;rarr;&lt;u&gt;Weapon&lt;/u&gt;&lt;br&gt;
+&amp;ensp;&amp;rarr;[[Classes:Beak|Beak]]&lt;br&gt;
+&amp;ensp;&amp;rarr;[[Classes:Chainsaw|Chainsaw]]&lt;br&gt;
+&amp;ensp;&amp;rarr;[[Classes:ClericWeapon|ClericWeapon]]&lt;br&gt;
+&amp;ensp;&amp;rarr;[[Classes:DoomWeapon|DoomWeapon]]&lt;br&gt;
+&amp;ensp;&amp;rarr;[[Classes:FighterWeapon|FighterWeapon]]&lt;br&gt;
+&amp;ensp;&amp;rarr;[[Classes:Fist|Fist]]&lt;br&gt;
+&amp;ensp;&amp;rarr;[[Classes:HereticWeapon|HereticWeapon]]&lt;br&gt;
+&amp;ensp;&amp;rarr;[[Classes:MageWeapon|MageWeapon]]&lt;br&gt;
+&amp;ensp;&amp;rarr;[[Classes:PhoenixRod|PhoenixRod]]&lt;br&gt;
+&amp;ensp;&amp;rarr;[[Classes:Sigil|Sigil]]&lt;br&gt;
+&amp;ensp;&amp;rarr;[[Classes:Snout|Snout]]&lt;br&gt;
+&amp;ensp;&amp;rarr;[[Classes:StrifeWeapon|StrifeWeapon]]&lt;br&gt;
+
+[[Classes:Weapon|Weapon]] is the base class for all weapons in the game. Weapons are the most complex of all inventory items due to their nature or requiring additional animation states.
+
+Like with normal inventory items, an actor can have more than one sample of a weapon in its inventory.
+
+Do not forget weapon icons! Even though they are not used by the default HUDs for Doom, Heretic and Hexen, ZDoom uses them for [[Strife]]'s HUD and for the [[alternate HUD]]. Custom HUDs can also require them.
+
+{{note|a weapon which has an invalid or nonexistent [[sprite]] for the first [[state]] in its Ready state sequence cannot be obtained.}}
+{{Warning|do not execute any code right after removing the currently selected weapon from within its own actor definition during the same [[tic]], since that code would be operating without a caller (the weapon itself) and would cause the engine to abort with an error.}}
+
+== Using in [[DECORATE]] and [[ZScript]] ==
+=== Weapon flags and properties ===
+The {{Property|DropItem}} property operates differently on weapons. When the {{CVAR|C|sv_weapondrop}} [[console variable]] is enabled, if a dying player was using a weapon which has a DropItem list, the items from this list will be spawned instead of the weapon. This is to allow using scripted pickups instead of spawning a weapon directly; for example in multiplayer if several player classes use the "same" weapon in different ways, which are represented as different weapon actors.
+
+In addition to some of the basic [[Classes:Inventory|Inventory properties]], weapons support the following:
+{{:Weapon properties}}
+
+Weapons also define new flags (''note:'' The ''WEAPON.'' prefix is optional in DECORATE but not optional in [[ZScript]]):
+
+{{:Weapon flags}}
+
+=== Weapon [[Actor states|states]] ===
+Weapons also require additional states to define the HUD weapon animation:
+
+*'''Ready'''
+:Defines the weapon's ready sequence. This is where [[A_WeaponReady]] is normally called to make the weapon ready for firing and deselecting.
+*'''Deselect'''
+:Defines a weapons lowering sequence. It must lower the weapon to the bottom of the screen and should not do any other actions. Requires calling [[A_Lower]] for that to happen.
+*'''Select'''
+:Defines a weapons raising sequence. It must raise the weapon to the normal firing height and should not do any other actions. Normally, this is achieved by calling [[A_Raise]], but it's possible to raise the weapon sprite by any means, including [[A_WeaponOffset]]/[[A_OverlayOffset]], the {{c|offset}} keyword, or setting the offsets directly on the {{c|PSP_WEAPON}} [[Classes:PSprite|PSprite]]. Note that ready height for the weapon is 32, which can also be accessed in ZScript using a global constant '''WEAPONTOP'''.
+:If the sprite isn't raised with any of the above outlined methods and the weapon enters the Ready state sequence, then it'll be instantly set to the default position of (0, 32) by its first [[A_WeaponReady]] call.
+*'''Fire'''
+*'''AltFire'''
+:Defines the primary and secondary firing sequence. Entered when the player presses primary and secondary fire buttons.
+*'''Hold'''
+*'''AltHold'''
+:These define the refiring loop. [[A_ReFire]] jumps to these states when it determines that the weapon should continue firing. If these states are not defined, [[A_ReFire]] will loop back to the beginning of the '''Fire'''/'''AltFire''' states. However, if a weapon [[Using inheritance|inherits]] from an existing weapon these states will be defined and might need to be overridden!
+*'''Flash'''
+*'''AltFlash'''
+:Defines the flash state. Flash animations run parallel to the normal firing animation and are triggered by calling [[A_GunFlash]].
+*'''Reload'''
+:Defines the Reload state. Can be entered if '''A_WeaponReady''' is called with ''WRF_ALLOWRELOAD'' flag and the player presses the Reload button.
+:There's no default reloading logic, implementing it is up to the modder. One of the common methods involves defining the "magazine" ammo as {{c|ammotype1}} and the "reserve" ammo as {{c|ammotype2}}, and then taking reserve ammo and giving magazine ammo to handle reloading.
+*'''Zoom'''
+:Defines the Zoom sequence. Can be entered if '''A_WeaponReady''' is called with ''WRF_ALLOWZOOM'' flag and the player presses the Zoom button.
+:There's no default zoom logic, implementing it is up to the modder. [[A_ZoomFactor]] is commonly used for implementing that logic.
+*'''User1'''
+*'''User2'''
+*'''User3'''
+*'''User4'''
+:Defines the four user states. The engine provides no default implementation for these, and there are keybinds available to trigger them, just like zoom and reload (specifically, the +user1, +user2, +user3 and +user4). Also like Reload and Zoom sequences, they must be enabled via '''A_WeaponReady''' using WRF_ALLOWUSER# flags where # is the number.
+*'''DeadLowered'''
+:Upon the player's death and after their weapon has completely lowered, this state, if present, is entered.
+*'''Lightdone'''
+:This state sequence is defined in the base Weapon class and does not need to be redefined. By default it calls [[A_Light0]] and destroys the calling layer. This state sequence is normally entered at the end of the Flash/AltFlash states: they normally increase the map's light level with [[A_Light1]] and other similar functions, then move to Lightdone to return the light level to normal and disappear. However, using it isn't obligatory; it's also possible to call {{c|A_Light0}} and then ''stop'' manually.
+
+=== Weapon offsets ===
+Weapon sprites can be offset dynamically, those offsets are added on top of the sprites' offsets. The offsets consist of ''x'' and ''y'' values which correspond to horizontal and vertical offsets:
+*'''x''' sets the weapon sprite's horizontal offset across the screen. 0 means the weapon is centered, positive values shift the weapon to the right, and negative values shift the weapon to the left.
+*'''y''' sets the weapon sprite's vertical offset down the screen. Positive values shift the weapon down, negative values shift it up. Note that the default ''y'' value of a ready weapon is not 0, as one might think, but actually 32 (in ZScript it can also be accessed via the global constant '''WEAPONTOP'''). [[A_Overlay|Overlays]], however, use 0 by default (see below).
+
+There are several ways to modify the offsets:
+
+1. The '''[[offset]]''' keyword that can be placed right after '''bright''' (if present) and just before the function call. The keyword requires two parameters, ''x'' and ''y'', in parentheses:
+ OFFG A 5 bright offset (24, 35) [[A_GunFlash]]
+
+2. The [[A_WeaponOffset]] function. It's a regular function call, not a keyword, however, it's a lot more flexible since it allows modifying the values additively.
+
+3. The [[A_OverlayOffset]] function. It works the same way as '''A_WeaponOffset''', except it allows specifying the layer, so it can be used for overlays that are meant to be moved independently from the main weapon layer. Note, by default overlays will follow the main layer's offsets, and their default offsets are ''(0, 0)'' (as opposed to the main layer's ''(0, 32)''). Adding offsets will move the overlay relative to the main layer. However, if the [[A_OverlayFlags|''PSPF_ADDWEAPON'' overlay flag]] is set to false for an overlay, it'll be possible to set its offsets completely independently from the main layer, and it will no longer follow the main layer's position. (Note, as soon as you do that, your overlay's sprite will jump 32 units down because it will no longer be synced with the main layer's position, which, as mentioned, is ''(0, 32)'' by default).
+
+See also [[Creating new weapons]].
+
+== Weapon methods ==
+=== Virtual ===
+{{: Weapon virtual functions}}
+=== Action functions ===
+{{: Weapon functions}}
+=== Static ===
+*{{c|static void}} '''DoReadyWeaponToSwitch''' (PlayerInfo player, bool switchable)
+:Readies a weapon for switching. Used by A_WeaponReady.
+*{{c|static void}} '''DoReadyWeaponDisableSwitch''' (PlayerInfo player, int disable)
+:Disables a weapon's ability to switch to another weapon. Used by A_WeaponReady.
+*{{c|static void}} '''DoReadyWeaponToFire''' (PlayerPawn pawn, bool prim, bool alt)
+:Readies a weapon for attacking. Used by A_WeaponReady.
+*{{c|static void}} '''DoReadyWeaponToBob''' (PlayerInfo player)
+:Allows the weapon to bob. Used by A_WeaponReady.
+*{{c|static int}} '''GetButtonStateFlags'''(int flags)
+
+== Examples ==
+=== [[ZScript]] ===
+''Note'': [[DoomEdNum|DoomEdNums]] must be specified via [[MAPINFO]] when using ZScript.
+ class Karabiner98K : [[Classes:Weapon|Weapon]]
+ {
+ 	Default
+ 	{
+ 		Attacksound "wolf/karabiner";
+ 		Decal "BulletChip";
+ 		Inventory.pickupsound "misc/w_pkup";
+ 		Inventory.pickupmessage "You got the Karabiner 98K!";
+ 		Inventory.icon "KARWA0";
+ 		Weapon.selectionorder 400;
+ 		Weapon.ammotype "Magazine";
+ 		Weapon.ammogive 20;
+ 		Weapon.ammouse 2;
+ 	}
+ 	States
+ 	{
+ 	Spawn:
+ 		KARW A -1;
+ 		stop;
+ 	Ready:
+ 		KARA A 1 [[A_WeaponReady]];
+ 		loop;
+ 	Deselect:
+ 		KARA A 1 [[A_Lower]];
+ 		loop;
+ 	Select:
+ 		KARA A 1 [[A_Raise]];
+ 		loop;
+ 	Fire:
+ 		KARA A 4;
+ 		KARA I 5 
+ 		{
+ 			[[A_FireBullets]](6, 0, 16, 5);
+ 			[[A_GunFlash]]();
+ 		}
+ 		KARA J 4;
+ 		KARA H 8 [[A_StartSound]] ("karabiner/close");
+ 		KARA A 5 [[A_ReFire]];
+ 		goto Ready;
+ 	Flash:
+ 		KARA I 5 bright [[A_Light1]];
+ 		KARA J 4 bright [[A_Light2]];
+ 		goto Lightdone;
+ 	}
+ }
+
+=== [[DECORATE]] ===
+ actor Karabiner98K : [[Classes:Weapon|Weapon]] 10287
+ {
+   Attacksound "wolf/karabiner"
+   Decal BulletChip
+   Inventory.pickupsound "misc/w_pkup"
+   Inventory.pickupmessage "You got the Karabiner 98K!"
+   Inventory.icon "KARWA0"
+   Weapon.selectionorder 400
+   Weapon.ammotype Magazine
+   Weapon.ammogive 20
+   Weapon.ammouse 2
+   States
+   {
+   Spawn:
+     KARW A -1
+     stop
+   Ready:
+     KARA A 1 [[A_WeaponReady]]
+     loop
+   Deselect:
+     KARA A 1 [[A_Lower]]
+     loop
+   Select:
+     KARA A 1 [[A_Raise]]
+     loop
+   Fire:
+     KARA A 4
+     TNT1 A 0 [[A_GunFlash]]
+     KARA I 5 [[A_FireBullets]] (6, 0, 16, 5, "[[Classes:BulletPuff|BulletPuff]]")
+     KARA J 4
+     KARA H 8 [[A_StartSound]] ("karabiner/close")
+     KARA A 5 [[A_ReFire]]
+     goto Ready
+   Flash:
+     KARA I 5 bright [[A_Light1]]
+     KARA J 4 bright [[A_Light2]]
+     goto Lightdone
+   }
+ }
+
+== Base class definition ==
+=== [[ZScript]] definition ===
+The ZScript definition is very long and its full version can be found [https://github.com/coelckers/gzdoom/blob/master/wadsrc/static/zscript/actors/inventory/weapons.zs on GZDoom github].
+
+=== [[DECORATE]] definition ===
+{{DecorateDefinitionNote}}
+ ACTOR &lt;u&gt;Weapon&lt;/u&gt; : {{Class|Inventory}} native
+ {
+   {{Property|Inventory.PickupSound}} "misc/w_pkup"
+   {{Property|Weapon.DefaultKickback}}
+   {{Property|Weapon.BobSpeed}} 1.0
+   {{Property|Weapon.BobRangeX}} 1.0
+   {{Property|Weapon.BobRangeY}} 1.0
+   +{{Flag|WEAPONSPAWN}}
+   States
+   {
+   LightDone:
+     SHTG E 0 [[A_Light0]]
+     Stop
+   }
+   
+   action native [[A_ZoomFactor]](float scale = 1, int flags = 0);
+   const int ZOOM_INSTANT = 1;
+   const int ZOOM_NOSCALETURNING = 2;
+   
+   action native [[A_SetCrosshair]](int xhair);
+ }</text>
+    <sha1>oh8wpl2bzxpz82kly469vat2ro3fmvr</sha1>
+  </revision>
+</page>

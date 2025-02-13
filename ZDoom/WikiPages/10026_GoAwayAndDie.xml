@@ -1,0 +1,53 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>GoAwayAndDie</title>
+  <ns>0</ns>
+  <id>10026</id>
+  <revision>
+    <id>54035</id>
+    <parentid>54029</parentid>
+    <timestamp>2024-12-06T10:41:02Z</timestamp>
+    <contributor>
+      <username>Jekyll Grim Payne</username>
+      <id>2175</id>
+    </contributor>
+    <comment>/* Examples */</comment>
+    <origin>54035</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="999" sha1="gzqe66ar1fv5fcovaqn60pwahmqpcth" xml:space="preserve">'''{{class|Inventory}}'''
+
+{{c|protected void '''GoAwayAndDie''' ()}}
+
+== Usage ==
+Unlinks the calling item from world and destroys it with a delay by putting it in its HoldAndDestroy [[Actor states|state]] (this state is defined in the base Inventory class).
+
+The above only happens if the item's {{c|[[GoAway]]}} call returns true, signaling that this item is not supposed to respawn.
+
+== [[ZScript]] definition ==
+{{ZScriptDefinitionNote|actors/inventory/inventory.zs}}
+&lt;syntaxhighlight lang="csharp&gt;
+	protected void GoAwayAndDie ()
+	{
+		if (!GoAway ())
+		{
+			bSpecial = false;
+			if (!bNoBlockmap || !bNoSector)	// make sure that the item no longer interacts with the world for the short rest of its life.
+			{
+				A_ChangeLinkFlags(1, 1);
+			}
+			SetStateLabel("HoldAndDestroy");
+		}
+	}
+&lt;/syntaxhighlight&gt;
+== Examples ==
+See the '''[[TryPickup#ZScript_definition|TryPickup]]''' chain, for example.
+
+== See also ==
+* [[GoAway]]
+* {{class|Inventory}}
+
+[[Category:ZScript]]
+[[Category:Inventory]]</text>
+    <sha1>gzqe66ar1fv5fcovaqn60pwahmqpcth</sha1>
+  </revision>
+</page>

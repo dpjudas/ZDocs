@@ -1,0 +1,46 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>A CheckForReload</title>
+  <ns>0</ns>
+  <id>3893</id>
+  <revision>
+    <id>53794</id>
+    <parentid>50884</parentid>
+    <timestamp>2024-11-19T11:12:58Z</timestamp>
+    <contributor>
+      <username>Jekyll Grim Payne</username>
+      <id>2175</id>
+    </contributor>
+    <origin>53794</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="1075" sha1="5itmo4f6558h2kucqw25585hkj8gr3r" xml:space="preserve">'''[[Classes:StateProvider|StateProvider]]'''
+
+{{c|action state '''A_CheckForReload'''(int ''count'', statelabel ''jump'', bool ''dontincrement'' {{=}} false)}}
+
+== Usage ==
+Jumps to the specified state if the function has not been called ''counter'' times. This action is part of a generalized version of Skulltag's [[A_CheckRailReload]] and may not be particularly useful for creating complex reloading systems in weapons.
+
+=== Parameters ===
+*{{c|int '''count'''}}
+:How many times this function should be called for the jump to happen.
+*{{c|statelabel '''jump'''}}
+:[[StateLabel|Name of the state sequence]] to jump to.
+*{{c|bool '''dontincrement'''}} 
+:If &lt;code&gt;true&lt;/code&gt; (default is false), then the reload counter isn't increased by a call to this function. 
+
+== Examples ==
+Here's an example from the railgun's Fire state sequence using the function:
+
+  Fire:
+    RLGG E 12 [[A_FireRailgun]];
+    RLGG F 6 A_CheckForReload(4, "Reloaded");
+    RLGG GHIJK 6;
+    RLGG L 6 [[A_ResetReloadCounter]];
+
+== See also ==
+* [[A_ResetReloadCounter]]
+
+[[Category:StateProvider]]</text>
+    <sha1>5itmo4f6558h2kucqw25585hkj8gr3r</sha1>
+  </revision>
+</page>

@@ -1,0 +1,55 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>Sector links with Static Init</title>
+  <ns>0</ns>
+  <id>3600</id>
+  <revision>
+    <id>38477</id>
+    <parentid>32932</parentid>
+    <timestamp>2014-11-04T09:25:11Z</timestamp>
+    <contributor>
+      <username>Gez</username>
+      <id>1283</id>
+    </contributor>
+    <comment>interwiki link to external information</comment>
+    <origin>38477</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="1924" sha1="dsvm4ze4s15z1k1856m4or4v1aywq3z" xml:space="preserve">{{DISPLAYTITLE:Sector links with Static_Init}}
+
+[[Sector_SetLink]] uses sector tags to link [[sector]]s together. However, so as to support (through a [[map translator]]) the [[Eternity Engine]] method of '''attached sectors''', it is also possible to define [[linked sectors]] with [[Static_Init]] for lines. The method used by Eternity is explained by needing to remain within the limits of the Doom [[map format]], in which [[linedef]]s can have only one argument, which serves both as its own ID, as well as to [[tag]] the sector it refers to.
+
+To marks the linedef's front sector to be the control sector, the form is the following:
+ Static_Init(lineid, 3, plane, 0)
+:''lineid'' is the id of the lines whose front sector must be linked.
+:''3'' is the constant to use for this type of initialization.
+:''plane'' determines which plane is the control: is 0 for the floor, and 1 for the ceiling.
+:''0'' marks the line as being a control line (by default).
+
+To mark the linedef's front sector as being attached to the control plane, the form is the following:
+ Static_Init(0, 3, 0, movetype)
+:The first parameter is ignored there and may as well be zero.
+:''3'' must remain 3, of course.
+:The second parameter is also ignored there and may as well be zero.
+:''movetype'' is, as explained on the Sector_SetLink page, either 1, 5, 2, 10, or a combination of those values.
+
+To sum up, the Eternity type correspond therefore to these parameters:
+{| {{prettytable}}
+|379:Attach_SetCeilingControl||Static_Init(tag, 3, 1)
+|-
+|380:Attach_SetFloorControl||Static_Init(tag, 3, 0)
+|-
+|381:Attach_FloorToControl||Static_Init(0, 3, 0, 1)
+|-
+|382:Attach_CeilingToControl||Static_Init(0, 3, 0, 2)
+|-
+|383:Attach_MirrorFloorToControl||Static_Init(0, 3, 0, 5)
+|-
+|384:Attach_MirrorCeilingToControl||Static_Init(0, 3, 0, 10)
+|}
+
+==External links==
+* [[eternity:Attached surface linedef types|Eternity's attached sectors]]
+[[Category:Guides]]</text>
+    <sha1>dsvm4ze4s15z1k1856m4or4v1aywq3z</sha1>
+  </revision>
+</page>

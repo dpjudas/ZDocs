@@ -1,0 +1,46 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>Classes:BlueArmorForMegasphere</title>
+  <ns>0</ns>
+  <id>4347</id>
+  <revision>
+    <id>53613</id>
+    <parentid>33858</parentid>
+    <timestamp>2024-11-08T11:47:00Z</timestamp>
+    <contributor>
+      <username>Jekyll Grim Payne</username>
+      <id>2175</id>
+    </contributor>
+    <origin>53613</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="1112" sha1="s3osxpxx5opsjmm57tlpdtgc6pxmyib" xml:space="preserve">{{Actor|
+| type = Armor
+| name = Megasphere armor
+| class = BlueArmorForMegasphere
+}}[[Classes]]: [[Classes:Inventory|Inventory]]&amp;rarr;[[Classes:Armor|Armor]]&amp;rarr;[[Classes:BasicArmorPickup|BasicArmorPickup]]&amp;rarr;[[Classes:BlueArmor|BlueArmor]]&amp;rarr;&lt;u&gt;BlueArmorForMegasphere&lt;/u&gt;
+
+This class exists only to prevent [[DeHackEd]] patches from modifying a [[Classes:Megasphere|megasphere]]'s armor values along with the [[Classes:BlueArmor|BlueArmor]]. It is not used directly but is given by a [[Classes:Megasphere|Megasphere]] along with the [[Classes:MegasphereHealth|MegasphereHealth]] class.
+
+=== [[ZScript]] definition ===
+{{ZScriptDefinitionNote|actors/doom/doomartifacts.zs#L59}}
+&lt;syntaxhighlight lang="cs"&gt;
+// DeHackEd can only modify the blue armor's type, not the megasphere's.
+class BlueArmorForMegasphere : BlueArmor
+{
+	Default
+	{
+		Armor.SavePercent 50;
+		Armor.SaveAmount 200;
+	}
+}
+&lt;/syntaxhighlight&gt;
+=== [[DECORATE]] definition ===
+{{DecorateDefinitionNote}}
+ ACTOR &lt;u&gt;BlueArmorForMegasphere&lt;/u&gt; : {{Class|BlueArmor}}
+ {
+   {{Property|Armor.SavePercent}} 50
+   {{Property|Armor.SaveAmount}} 200
+ }</text>
+    <sha1>s3osxpxx5opsjmm57tlpdtgc6pxmyib</sha1>
+  </revision>
+</page>

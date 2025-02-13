@@ -1,0 +1,32 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>A FirePhoenixPL2</title>
+  <ns>0</ns>
+  <id>5646</id>
+  <revision>
+    <id>24371</id>
+    <parentid>24369</parentid>
+    <timestamp>2009-09-29T19:42:42Z</timestamp>
+    <contributor>
+      <username>Gez</username>
+      <id>1283</id>
+    </contributor>
+    <minor />
+    <origin>24371</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="1467" sha1="2rwhom8vlef3kr0ig050t8aj0tr6uuq" xml:space="preserve">{{DISPLAYTITLE:A_FirePhoenixPL2}}
+'''A_FirePhoenixPL2'''&lt;br&gt;
+(''no parameter'')&lt;br&gt;
+
+Decreases the player's readied {{Class|PhoenixRod}}'s &lt;tt&gt;FlameCount&lt;/tt&gt; field by 1. If this counter reaches 0, the weapon is set to its Powerdown state, the player stops playing sound on its WEAPON channel, and the weapon leaves "refire" status. The codepointer then does nothing else. The counter must have been previously set to a positive evalue by [[A_InitPhoenixPL2]].
+
+Otherwise, fires a {{Class|PhoenixFX2}} at 26 units up from the player's feet and at a point randomly within 2 units on both horizontal axes from the player's center. The player's horizontal velocities are added to the flame, transferring the player's momentum. The projectile is also given a trajectory that follows an upward slope. The sound "weapons/phoenixpowshoot" starts being looped on the WEAPON channel unless the player is holding fire (in which case it was presumably already started by the initial shot) or another sound is already being played on that channel.
+
+This function does not actually drain ammo; this is instead done by [[A_ShutdownPhoenixPL2]].
+
+This codepointer relies on the player's readied weapon having a &lt;tt&gt;FlameCount&lt;/tt&gt; field and for this reason is restricted to {{Class|PhoenixRodPowered}} and derived classes.
+
+[[Category:Decorate Heretic functions]] [[Category:Decorate Weapon attack functions]] [[Category:Decorate Restricted functions]]{{DEFAULTSORT:FirePhoenixPL2}}</text>
+    <sha1>2rwhom8vlef3kr0ig050t8aj0tr6uuq</sha1>
+  </revision>
+</page>

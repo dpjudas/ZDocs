@@ -1,0 +1,73 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>Classes:MWeapBloodscourge</title>
+  <ns>0</ns>
+  <id>4647</id>
+  <revision>
+    <id>39658</id>
+    <parentid>34790</parentid>
+    <timestamp>2015-05-02T21:24:47Z</timestamp>
+    <contributor>
+      <username>Blue Shadow</username>
+      <id>2021</id>
+    </contributor>
+    <minor />
+    <comment>/* DECORATE definition */ Updated</comment>
+    <origin>39658</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="1732" sha1="4yrknmnu7bnxvy3bp1xxigysvho5rs1" xml:space="preserve">{{Actor|
+| type = Weapon
+| name = Bloodscourge
+| class = MWeapBloodscourge
+| game = Hexen
+}}[[Classes]]: [[Classes:Inventory|Inventory]]&amp;rarr;[[Classes:Weapon|Weapon]]&amp;rarr;[[Classes:MageWeapon|MageWeapon]]&amp;rarr;&lt;u&gt;MWeapBloodscourge&lt;/u&gt;&lt;br&gt;
+The [[Classes:MagePlayer|Mage]]'s ultimate weapon, the Bloodscourge fires homing projectiles. It uses 15 green and blue mana per shot.
+==== [[DECORATE]] definition ====
+ ACTOR &lt;u&gt;MWeapBloodscourge&lt;/u&gt; : {{Class|MageWeapon}} native
+ {
+   {{Property|Health}} 3
+   {{Property|Weapon.SelectionOrder}} 3100
+   {{Property|Weapon.AmmoUse1}} 15
+   {{Property|Weapon.AmmoUse2}} 15
+   {{Property|Weapon.AmmoGive1}} 20
+   {{Property|Weapon.AmmoGive2}} 20
+   {{Property|Weapon.KickBack}} 150
+   {{Property|Weapon.YAdjust}} 20
+   {{Property|Weapon.AmmoType1}} "{{Class|Mana1}}"
+   {{Property|Weapon.AmmoType2}} "{{Class|Mana2}}"
+   +{{Flag|WEAPON.PRIMARY_USES_BOTH}}
+   +{{Flag|INVENTORY.NOATTENPICKUPSOUND}}
+   {{Property|Inventory.PickupMessage}} "$TXT_WEAPON_M4" // "BLOODSCOURGE ASSEMBLED"
+   {{Property|Inventory.PickupSound}} "WeaponBuild"
+   {{Property|Tag}} "$TAG_MWEAPBLOODSCOURGE"
+ 
+   action native [[A_MStaffAttack]]();
+   action native [[A_MStaffPalette]]();
+ 
+   States
+   {
+   Spawn:
+     TNT1 A -1
+     Stop
+   Select:
+     MSTF A 1 [[A_Raise]]
+     Loop
+   Deselect:
+     MSTF A 1 [[A_Lower]]
+     Loop
+   Ready:
+     MSTF AAAAAABBBBBBCCCCCCDDDDDDEEEEEEFFFFF 1 [[A_WeaponReady]]
+     Loop
+   Fire:
+     MSTF G 4 [[Offset]](0, 40)
+     MSTF H 4 Bright [[Offset]](0, 48) [[A_MStaffAttack]]
+     MSTF H 2 Bright [[Offset]](0, 48) [[A_MStaffPalette]]
+     MSTF II 2 [[Offset]](0, 48) [[A_MStaffPalette]]
+     MSTF I 1 [[Offset]](0, 40)
+     MSTF J 5 [[Offset]](0, 36)
+     Goto Ready
+   }
+ }</text>
+    <sha1>4yrknmnu7bnxvy3bp1xxigysvho5rs1</sha1>
+  </revision>
+</page>

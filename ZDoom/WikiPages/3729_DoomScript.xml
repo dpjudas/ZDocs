@@ -1,0 +1,78 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>DoomScript</title>
+  <ns>0</ns>
+  <id>3729</id>
+  <revision>
+    <id>51047</id>
+    <parentid>44868</parentid>
+    <timestamp>2023-11-24T07:40:17Z</timestamp>
+    <contributor>
+      <username>Gez</username>
+      <id>1283</id>
+    </contributor>
+    <origin>51047</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="6878" sha1="b9s8n14tt0zhzi3o1btnnna9nsa4g29" xml:space="preserve">'''DoomScript''' is a (non-existent) powerful Doom scripting language that [[Randy Heit]] announced on the 20th July, 1999. It was supposedly going to be the answer to [[ACS]]'s inflexibility, and was planned for [[ZDoom]] 1.19. However it never made it into that release or into any future releases, and ACS continued to expand. As time passed, DoomScript received a series of delays. Eventually, people began to realize that it was not going to happen for a long while.
+
+When feature requests were turned down because [[DECORATE]] or ACS were incapable of doing what the requester requires, they were tagged as "WFDS", which stands for "Wait For DoomScript". This practice ceased after the introduction of [[ZScript]], which effectively allows all that DoomScript promised and more.
+
+== Development ==
+=== DECORATE ===
+In August 2002 the [[DECORATE]] lump was [[the old DECORATE format|first introduced]]. It has since undergone a long process of gradual enhancement, starting with the introduction of the new format in February 2006 and culminating in August 2008 with the successful removal of all actor definitions from the executable. As a result, one aim of DoomScript, the class-oriented method of defining new actors, is now a feature of DECORATE.
+
+=== Lua ===
+On the 25th of May 2007 Randy made a public announcement that he was considering to bring his idea of a better scripting language back. Instead of using the UnrealScript method he had planned almost eight years earlier, he brought the forum's attention to the scripting language he was thinking of using, which was [http://lua-users.org/wiki/ Lua]. The community had mixed opinions on the language, but eventually after a long discussion it was decided that Lua wasn't the best choice for the future DoomScript, and the wait for DoomScript continued.
+
+=== Virtual machine ===
+In April 2009, Randy started putting his work on a virtual machine on the SVN ({{plainlink|[http://zdoom.org/Changelog/1517/files r1517]}}), proving that there is work being done on DoomScript. In September the same year, a "Scripting" branch, independent from the virtual machine prototype, appeared as well ({{plainlink|[http://zdoom.org/Changelog/1841/files r1841]}}).
+
+=== First public testing ===
+On the 26th of October 2012, the scripting branch reached a point where it was opened to general test. The aim was to check whether the many changes to the underlying architecture broke existing games and mods.
+
+=== Recent developments ===
+On January 7, 2015, Randy implemented the ability to execute multiple action functions in one frame with the use of braces ({{plainlink|[http://zdoom.org/Changelog/7d0faa5/files 7d0faa5]}}). This was then expanded upon to include if-else statements which can execute anything except for jumping functions, which must be done outside of the statements. ({{plainlink|[http://zdoom.org/Changelog/649875b/files 649875b]}}).&lt;br&gt;
+
+On February 4, 2016, Randy officially merged the scripting branch into the master branch shortly after tagging the 2.8.0 release candidate. While it was not exactly the scripting that was desired, it brings many C-style enhancements and abilities.&lt;br&gt;
+
+On February 10, 2016, the developers have stabilized the latest development branch.
+
+On October 7, 2016, Graf Zahl announced the name change to ZScript along with the renewal of development.
+
+On October 16, 2016, Graf Zahl posted {{forum|f=15&amp;t=53837#p946680|a few goals for ZScript}}, such as deprecation of DECORATE.
+
+On March 19, 2017, stable [[GZDoom]] 2.4.0 and [[QZDoom]] 1.3.0.1 are released with [[ZScript]].
+
+== Original announcement ==
+The following is a quote from Randy's post from 1999:
+
+{{cquote|'''So what is DoomScript?'''
+I'm hesitant to go into much detail at this point, but I will say that it is not DDF. DDF and DoomScript serve similar purposes, but they go about very different ways of accomplishing them. DDF is in many ways just a different way of representing the same data (and then some) that could be manipulated with DeHackEd. DoomScript is a full-fledged object-oriented scripting language and represents a radically different approach to Doom editing. (That said, I hope I didn't scare anybody away who was interested in it. If you can figure out ACS or DDF, you shouldn't have much trouble with DoomScript. And if you know UnrealScript, you should feel right at home.)
+  
+DoomScript represents different game elements as "objects." New objects can be created by "extending" existing ones. Suppose you want to add a new monster, and there is already a monster that is similar to what you want. Instead of creating an entirely new monster from scratch, you can take the existing monster and extend it so that it behaves the way you want it to. I'll have some concrete examples of this once DoomScript is actually ready.
+  
+At one point, I was considering integrating the DoomScript compiler with ZDoom itself. Instead, I have decided to keep it a separate program like the QuakeC compiler, qcc. There are several advantages to this approach:
+
+* Smaller file sizes. Compiled code will almost always be many times smaller than the source code it came from. As an example, the ZDoom source is around four megabytes uncompressed, not including any of the support libraries, yet the executable is only about 730k.
+* Smaller executable. The DoomScript compiler is already over 100k, and it's not even fully functional yet. I prefer not to increase the game's size so drastically when the majority of users won't even use DoomScript directly.
+* Faster loading times. Compiling takes time. Better to spend the time compiling once than each and every time you start the game.
+ 
+The only advantage I can see to putting the compiler into ZDoom directly is that mod authors wouldn't need to manually recompile any changes they make, and even that can be got around by using a batch file to launch the game.
+ 
+A DDF-&gt;DoomScript converter will be available so that people can both see how something done in DDF relates to something done in DoomScript, and also so that DDF mods will work with ZDoom. A DeHackEd-&gt;DoomScript converter might also be made, although doing anything with DeHackEd outside the original doom.exe is very problematic, and it might not be realistically possible to convert it to DoomScript with an automatic tool.
+ 
+Initially, ZDoom will come with DoomScript code that implements the Doom game. Later, I plan to also have Heretic and Hexen implemented. Maybe I will also convert SailorScout's Check[sic] Quest patch to DoomScript.
+}}
+
+== External Links ==
+*{{forum|First announcement of DoomScript|t=43}}
+*{{forum|Lua thread|f=3|t=13782}}
+*{{forum|Scripting branch testing|t=34392}}
+*{{forum|ZScript Discussion|t=53850}}
+*[https://github.com/rheit/zdoom/tree/scripting Scripting branch]
+*[https://github.com/rheit/zdoom/tree/zscript ZScript branch]
+
+[[Category:Nostalgia]]</text>
+    <sha1>b9s8n14tt0zhzi3o1btnnna9nsa4g29</sha1>
+  </revision>
+</page>

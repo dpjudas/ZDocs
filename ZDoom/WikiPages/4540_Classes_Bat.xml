@@ -1,0 +1,52 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>Classes:Bat</title>
+  <ns>0</ns>
+  <id>4540</id>
+  <revision>
+    <id>34189</id>
+    <parentid>26035</parentid>
+    <timestamp>2012-09-04T17:34:50Z</timestamp>
+    <contributor>
+      <username>Blue Shadow</username>
+      <id>2021</id>
+    </contributor>
+    <minor />
+    <comment>/* DECORATE definition */</comment>
+    <origin>34189</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="594" sha1="96cb3t4ly9cj98fdsrto85i5lfe3all" xml:space="preserve">{{Actor|
+| type = SFX
+| name = Bat
+| class = Bat
+| game = Hexen
+}}[[Classes]]: &lt;u&gt;Bat&lt;/u&gt;&lt;br&gt;
+The Hexen bat is not a monster, but merely a decorative effect. Such bats are spawned by a {{Class|BatSpawner}}.
+
+==== [[DECORATE]] definition ====
+ ACTOR &lt;u&gt;Bat&lt;/u&gt;
+ {
+   {{Property|Speed}} 5
+   {{Property|Radius}} 3
+   {{Property|Height}} 3
+   +{{Flag|NOBLOCKMAP}}
+   +{{Flag|NOGRAVITY}}
+   +{{Flag|MISSILE}}
+   +{{Flag|NOTELEPORT}}
+   +{{Flag|CANPASS}}
+ 
+   action native [[A_BatMove]]();
+ 
+   States
+   {
+   Spawn:
+     ABAT ABC 2 [[A_BatMove]]
+     Loop
+   Death:
+     ABAT A 2
+     Stop
+   }
+ }</text>
+    <sha1>96cb3t4ly9cj98fdsrto85i5lfe3all</sha1>
+  </revision>
+</page>

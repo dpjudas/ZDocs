@@ -1,0 +1,54 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>Classes:FlameSmall</title>
+  <ns>0</ns>
+  <id>4364</id>
+  <revision>
+    <id>39497</id>
+    <parentid>34552</parentid>
+    <timestamp>2015-04-30T21:35:40Z</timestamp>
+    <contributor>
+      <username>Blue Shadow</username>
+      <id>2021</id>
+    </contributor>
+    <minor />
+    <comment>/* DECORATE definition */ Updated</comment>
+    <origin>39497</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="788" sha1="0n8xopgkpefyr32djueqneoxxaoiwuq" xml:space="preserve">{{Actor|
+| type = Light source
+| name = Small flame
+| class = FlameSmall
+| game = Hexen
+| doomednum = 10501
+| spawnid = 97
+| spawnname = T_PERMSMALLFLAME 
+}}[[Classes]]: [[Classes:SwitchableDecoration|SwitchableDecoration]]&amp;rarr;&lt;u&gt;FlameSmall&lt;/u&gt;&lt;br&gt;
+&amp;ensp;&amp;rarr;[[Classes:FlameSmall2|FlameSmall2]]&lt;br&gt;
+{{desc}}
+==== [[DECORATE]] definition ====
+ ACTOR &lt;u&gt;FlameSmall&lt;/u&gt; : {{Class|SwitchableDecoration}}
+ {
+   +{{Flag|NOTELEPORT}}
+   +{{Flag|INVISIBLE}}
+   {{Property|Radius}} 15
+   {{Property|RenderStyle}} Add
+   States
+   {
+   Active:
+     FFSM A 0 Bright [[A_PlaySound]]("Ignite")
+   Spawn:
+     FFSM A 3 Bright
+     FFSM A 3 Bright [[A_UnHideThing]]
+     FFSM ABCDE 3 Bright
+     Goto Spawn+2
+   Inactive:
+     FFSM A 2
+     FFSM B 2 [[A_HideThing]]
+     FFSM C 200
+     Wait
+   }
+ }</text>
+    <sha1>0n8xopgkpefyr32djueqneoxxaoiwuq</sha1>
+  </revision>
+</page>

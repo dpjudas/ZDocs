@@ -1,0 +1,66 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>RadiusAttack</title>
+  <ns>0</ns>
+  <id>9917</id>
+  <revision>
+    <id>53306</id>
+    <parentid>53167</parentid>
+    <timestamp>2024-10-12T10:47:44Z</timestamp>
+    <contributor>
+      <username>Blue Shadow</username>
+      <id>2021</id>
+    </contributor>
+    <minor />
+    <comment>{{git}} -&gt; {{new}} for 4.13.0</comment>
+    <origin>53306</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="2734" sha1="2hapvczjozrn30j3rb4nsedscg8mt0s" xml:space="preserve">{{ZScriptNote}}
+
+'''{{class|Actor}}'''
+
+native int '''RadiusAttack'''(Actor ''bombsource'', int ''bombdamage'', double ''bombdistance'', Name ''bombmod'' = 'none', int ''flags'' = RADF_HURTSOURCE, double ''fulldamagedistance'' = 0.0, name ''species'' = "None")
+
+== Usage ==
+Performs a radius attack, dealing damage and/or thrusting the victims. This is used internally by '''[[A_Explode]]''', '''[[A_Detonate]]''' and '''[[A_RadiusThrust]]'''.
+
+=== Parameters ===
+*{{c|Actor '''bombsource'''}}
+:Pointer to the actor that should be considered the source of the attack (the shooter). When calling in projectiles, use &lt;code&gt;target&lt;/code&gt;.
+*{{c|int '''bombdamage'''}}
+:Damage to deal.
+*{{c|double '''bombdistance'''}}
+:The radius of the attack.
+*{{c|Name '''bombmod''}}
+:[[Damage type]] of the attack. Default is 'none'.
+*{{c|int '''flags'''}}
+:Flags use by the attack. These are NOT the same as flags used by [[A_Explode]], but their meanings are largely similar. Multiple flags can be combined with &lt;code&gt;|&lt;/code&gt;:
+:*{{c|RADF_HURTSOURCE}} — '''Set by default'''. The attack will hurt the ''bombsource'' actor (same as {{c|XF_HURTSOURCE}} in [[A_Explode]]).
+:*{{c|RADF_NOIMPACTDAMAGE}} — victims will not receive impact damage when colliding with something after being pushed by the explosion
+:*{{c|RADF_SOURCEISSPOT}} — the calling actor is considered to be the source (same as {{c|XF_NOTMISSILE}} in [[A_Explode]])
+:*{{c|RADF_NODAMAGE}} — deal no damage, only thrust the victims (same as {{c|RTF_NOIMPACTDAMAGE}} in [[A_RadiusThrust]]))
+:*{{c|RADF_THRUSTZ}} — apply thrust to the victims' vertical velocity, not only horizontal (same as {{c|RTF_THRUSTZ}} in [[A_RadiusThrust]]))
+:*{{c|RADF_OLDRADIUSDAMAGE}} — {{moreinfo}}
+:*{{c|RADF_THRUSTLESS}} — deal damage but don't thrust (same as {{c|XF_THRUSTLESS}} in {{c|A_Explode}})
+:*{{c|RADF_NOALLIES}} — don't affect the allies of the ''bombsource'' actor
+:*{{c|RADF_CIRCULAR}} — changes the shape of the explosion from the vanilla cuboid shape into a spherical shape (same as {{c|XF_CIRCULAR}} in [[A_Explode]])
+:*{{c|RADF_CIRCULARTHRUST}} — Blast actors away with more physically accurate momentum. When enabled, RADF_THRUSTZ is ignored. {{new|4.13.0}} 
+*{{c|double '''fulldamagedistance'''}}
+:The area within which full damage is inflicted. Beyond that area the damage will be subjected to linear falloff, tapering off at full ''bombdistance''.
+*{{c|name '''species'''}}
+:If not &lt;code&gt;'none'&lt;/code&gt;, only actors whose {{property|Species}} matches this name will be affected.
+
+=== Return values ===
+*int — returns the number of actors affected by the attack.
+
+== Examples ==
+{{noexamples}}
+
+== See also ==
+* [[A_Explode]]
+* [[A_RadiusThrust]]
+
+[[Category:ZScript]]</text>
+    <sha1>2hapvczjozrn30j3rb4nsedscg8mt0s</sha1>
+  </revision>
+</page>

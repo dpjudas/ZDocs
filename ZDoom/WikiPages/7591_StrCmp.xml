@@ -1,0 +1,53 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>StrCmp</title>
+  <ns>0</ns>
+  <id>7591</id>
+  <revision>
+    <id>40904</id>
+    <parentid>36848</parentid>
+    <timestamp>2016-02-06T06:58:30Z</timestamp>
+    <contributor>
+      <username>Jpalomo</username>
+      <id>1715</id>
+    </contributor>
+    <origin>40904</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="1431" sha1="bo1xgd096ls1dxqkg02zgrsjyvt7uhl" xml:space="preserve">__NOTOC__
+
+int '''StrCmp''' (str ''string1'', str ''string2''[, int ''maxcomparenum'']);&lt;br /&gt;
+int '''StrIcmp''' (str ''string1'', str ''string2''[, int ''maxcomparenum'']);
+
+==Usage==
+Compares the two strings passed in arguments ''string1'' and ''string2'' character by character. If ''maxcomparenum'' is specified, it only compares up to ''maxcomparenum'' characters of each string.
+
+[[StrIcmp]] is a case-insensitive version of [[StrCmp]].
+
+==Parameters==
+*''string1'': The string to compare ''string2'' with.
+*''string2'': The string to compare ''string1'' with.
+*''maxcomparenum'': The maximum number of characters of each string to compare.
+
+==Return Value==
+0 if the two strings or a portion of each string up to the ''maxcomparenum''-th character are equal&lt;br /&gt;
+a positive value if the first character that does not match has a greater value in string1&lt;br /&gt;
+a negative value if the first character that does not match has a greater value in string2
+
+==Example==
+
+These examples are illustrative, you will need to put the function into right context and you will want to process the return value.
+
+ str s1 = "BFGBall";
+ str s2 = "BFGExtra";
+ 
+ StrCmp(s1, "BFGBall"); //returns 0
+ StrCmp(s1, s2); //returns a positive value
+ StrCmp(s2, s1); //returns a negative value
+ StrCmp(s1, s2, 3); //returns 0
+ StrCmp(s1, "bfgball"); //returns a positive value
+ StrICmp(s1, "bfgball"); //returns 0
+
+[[category:ACS String operations]]</text>
+    <sha1>bo1xgd096ls1dxqkg02zgrsjyvt7uhl</sha1>
+  </revision>
+</page>

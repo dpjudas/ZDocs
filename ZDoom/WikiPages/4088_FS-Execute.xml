@@ -1,0 +1,67 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>FS Execute</title>
+  <ns>0</ns>
+  <id>4088</id>
+  <revision>
+    <id>44608</id>
+    <parentid>32385</parentid>
+    <timestamp>2017-04-02T18:14:03Z</timestamp>
+    <contributor>
+      <username>Gez</username>
+      <id>1283</id>
+    </contributor>
+    <comment>xlat</comment>
+    <origin>44608</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="1598" sha1="s5v2eqh7c2fn1q72pg00gsm6qy4f8el" xml:space="preserve">{{DISPLAYTITLE:FS_Execute}}
+&lt;br&gt;
+{{WarnCompatFeature|port=[[Doom Legacy]]}}
+{{Special|158|int scriptnumber, side, keynum, message|Miscellaneous|Execute}}
+
+Executes a [[FraggleScript]] script. 
+* ''scriptnumber'': Number of the script to run.
+* ''side'': on a two-sided linedef, determines if it can be activated from the front side.
+* ''keynum'': The number of the key required for activation, as defined in [[LOCKDEFS]].
+* ''message'': The type of message given if the player lacks the needed key.
+
+Sides:
+* 0: Can be activated from both side
+* 1: Can only be activated from the front side
+
+Keynums:
+:See [[key types]] for the list of default key numbers, and [[LOCKDEFS]] to define your own.
+
+Messages:
+* 0: Displays a “you need X key to open this door” message
+* 1: Displays a “you need X key to activate this object” message
+
+==Examples==
+{{noexamples}}
+
+== Conversions from linedef types ==
+The following Doom map format types can be converted as FS_Execute:
+{| {{prettytable}}
+!Type!!Conversion!!Trigger
+|-
+|{{icon|Legacy}} 270 || FS_Execute (tag) || Player Cross, Repeatable
+|-
+|{{icon|Legacy}} 273 || FS_Execute (tag, 1) || Player Cross, Repeatable
+|-
+|{{icon|Legacy}} 274 || FS_Execute (tag) || Player Cross
+|-
+|{{icon|Legacy}} 275 || FS_Execute (tag, 1) || Player Cross
+|-
+|{{icon|Legacy}} 276 || FS_Execute (tag) || Player Use, Repeatable
+|-
+|{{icon|Legacy}} 277 || FS_Execute (tag) || Player Use
+|-
+|{{icon|Legacy}} 278 || FS_Execute (tag) || Attack Hit, Missile Cross, Repeatable
+|-
+|{{icon|Legacy}} 279 || FS_Execute (tag) || Attack Hit, Missile Cross
+|}
+
+{{script functions}}</text>
+    <sha1>s5v2eqh7c2fn1q72pg00gsm6qy4f8el</sha1>
+  </revision>
+</page>

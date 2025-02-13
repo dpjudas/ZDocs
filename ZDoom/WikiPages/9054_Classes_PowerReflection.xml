@@ -1,0 +1,93 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>Classes:PowerReflection</title>
+  <ns>0</ns>
+  <id>9054</id>
+  <revision>
+    <id>45370</id>
+    <parentid>45190</parentid>
+    <timestamp>2017-05-31T18:56:12Z</timestamp>
+    <contributor>
+      <username>Blue Shadow</username>
+      <id>2021</id>
+    </contributor>
+    <minor />
+    <comment>Remove {{new}}</comment>
+    <origin>45370</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="3295" sha1="bbuiex0l5zvc54gcfh2rq2kjj1uuhxx" xml:space="preserve">{{actor|
+| type = Power
+| name = Damage reflection power 
+| class = PowerReflection
+}}[[Classes]]: {{Class|Inventory}}&amp;rarr;{{Class|Powerup}}&amp;rarr;&lt;u&gt;PowerReflection&lt;/u&gt;&lt;br&gt;
+&amp;ensp;&amp;ensp; [[Hierarchical class list|(more)]]
+
+&lt;u&gt;PowerReflection&lt;/u&gt; is an internal class. An item of this class is placed in the player's inventory while the damage reflection powerup is in effect.
+
+While in effect, if the player receives damage, the source of damage also receives damage. The reflect damage is calculated by multiplying it with the powerup's generic (type-less) damage factor. The result is then multiplied by the damage factor which matches the attack's [[damage type]], if any. If multiple powerups of this type are in the inventory, the one with the maximum efficiency for the damage type received gets picked. If the damage type of the attack is {{c|Reflection}} or the source of damage is the player themselves, the powerup has no effect, and as a result, the source does not receive any reflect damage. In case of reflect damage, the type of damage the source receives is {{c|Reflection}}. Non-players do not benefit from this powerup.
+
+The {{c|Powerup.Strength}} property, which acts as a multiplier, determines how much of the received damage to reflect regardless of damage factors. The rest of the damage, if any, is then subjected to the damage factor calculations detailed above. In addition, if the {{c|PowerReflection.ReflectType}} property is present, the type of the reflected damage is the same as the one the player received from the attack, otherwise it is {{c|Reflection}}. In the case of multiple powerups of this type, the one which reflects the most damage is also the one which determines the type of the reflected damage.
+
+
+Like all other {{Class|powerup}}s, items of this class are never used directly. Instead you have to create a new item that inherits from {{Class|PowerupGiver}} to give it to the player.
+
+==== [[ZScript]] definition ====
+ class &lt;u&gt;PowerReflection&lt;/u&gt; : {{Class|Powerup}}
+ {
+     bool ReflectType;
+     property ReflectType : ReflectType;
+ 
+     Default
+     {
+         {{Property|Powerup.Duration}} -60;
+         {{Property|DamageFactor}} 0.5;
+     }
+ }
+
+== Examples ==
+Quarter of a fire-based attack's damage is reflected back on the source as damage.
+ class PowerReflectionA : PowerReflection
+ {
+     Default
+     {
+         DamageFactor 1.0;
+         DamageFactor "Fire", 0.25;
+     }
+ }
+
+
+Assume an ice-based attack with damage of 50. If both of these powerups are in the player's inventory, {{c|PowerReflectionB}} gets picked when reflecting the damage, as it is the one which yields the most damage.
+ class PowerReflectionA : PowerReflection
+ {
+     Default
+     {
+         // 50 * 1.0 * 2.0 = 100
+         DamageFactor 1.0;
+         DamageFactor "Ice", 2.0;
+     }
+ }
+ 
+ class PowerReflectionB : PowerReflection
+ {
+     Default
+     {
+         // 50 * 5.0 * 0.5 = 125; this one reflects the most damage, so it gets picked.
+         DamageFactor 5.0;
+         DamageFactor "Ice", 0.5;
+     }
+ }
+
+
+This powerup reflects 80% of the damage off-hand, plus 30% of the rest of it.
+ class PowerReflectionA : PowerReflection
+ {
+     Default
+     {
+         Powerup.Strength 0.8;
+         PowerReflection.ReflectType;
+         DamageFactor 0.3;
+     }
+ }</text>
+    <sha1>bbuiex0l5zvc54gcfh2rq2kjj1uuhxx</sha1>
+  </revision>
+</page>

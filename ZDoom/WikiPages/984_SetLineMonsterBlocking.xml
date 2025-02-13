@@ -1,0 +1,47 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>SetLineMonsterBlocking</title>
+  <ns>0</ns>
+  <id>984</id>
+  <revision>
+    <id>35854</id>
+    <parentid>22931</parentid>
+    <timestamp>2013-02-11T02:06:49Z</timestamp>
+    <contributor>
+      <username>Deded007</username>
+      <id>1392</id>
+    </contributor>
+    <minor />
+    <comment>formatting, see also</comment>
+    <origin>35854</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="984" sha1="ei8ez3n21gmanvk0p2rxfeditosx1ac" xml:space="preserve">{{WarnDeprecated|[[Line_SetBlocking]]}} __NOTOC__
+void '''SetLineMonsterBlocking'''(int ''lineid'', int ''setting'');
+
+== Usage ==
+
+Sets blocking for '''''monsters only'''''.
+
+=== Parameters ===
+
+* ''lineid'': id of the line to set.
+* ''setting'': this has two settings, 0 for off and 1 for on. For readability, you should use ON or OFF which are defined as 1 and 0 (respectively) in zdefs.acs.
+
+== Examples ==
+This example will set all lines with the id of 1 to block monsters until some catastrophic thing happens five minutes into the map which allows the monsters to penetrate those lines.
+
+ script 1 {{SType|Open}}
+ {
+    [[SetLineMonsterBlocking]](1, {{const|ON}});
+    [[delay]](35 * 60 * 5);
+    [[SetLineMonsterBlocking]](1, {{const|OFF}});
+    [[HudMessageBold]](s:"ZOMG!  The monsters can break through now!!!";
+        {{const|HUDMSG_FADEOUT}}, 1, {{const|CR_RED}}, 0.5, 0.5, 3.0, 1.0);
+ }
+
+== See also ==
+* [[Line_SetBlocking]]
+[[category:ACS Level alteration functions]]</text>
+    <sha1>ei8ez3n21gmanvk0p2rxfeditosx1ac</sha1>
+  </revision>
+</page>

@@ -1,0 +1,47 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>Classes:IceChunkHead</title>
+  <ns>0</ns>
+  <id>4703</id>
+  <revision>
+    <id>36481</id>
+    <parentid>30463</parentid>
+    <timestamp>2013-05-17T15:02:11Z</timestamp>
+    <contributor>
+      <username>Blue Shadow</username>
+      <id>2021</id>
+    </contributor>
+    <minor />
+    <comment>/* DECORATE definition */</comment>
+    <origin>36481</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="665" sha1="tmttog27tt6v8qcc9sbek3vvysmd5rt" xml:space="preserve">{{Actor|
+| type = Gibs
+| name = Frozen head
+| class = IceChunkHead
+| game = Hexen
+}}[[Classes]]: [[Classes:PlayerPawn|PlayerPawn]]&amp;rarr;[[Classes:PlayerChunk|PlayerChunk]]&amp;rarr;&lt;u&gt;IceChunkHead&lt;/u&gt;&lt;br&gt;
+{{desc}}
+Behaves much like the gibbed player's head in Hexen.
+It is usable in all games.
+==== [[DECORATE]] definition ====
+ ACTOR &lt;u&gt;IceChunkHead&lt;/u&gt; : {{Class|PlayerChunk}}
+ {
+   {{Property|Radius}} 3
+   {{Property|Height}} 4
+   {{Property|Mass}} 5
+   {{Property|Gravity}} 0.125
+   {{Property|DamageType}} {{DamageType|Ice}}
+   +{{Flag|DROPOFF}}
+   +{{Flag|CANNOTPUSH}}
+   States
+   {
+   Spawn:
+     ICEC A 0
+     ICEC A 10 [[A_CheckPlayerDone]]
+     Wait
+   }
+ }</text>
+    <sha1>tmttog27tt6v8qcc9sbek3vvysmd5rt</sha1>
+  </revision>
+</page>

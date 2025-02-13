@@ -1,0 +1,77 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>IsActorPlayingSound</title>
+  <ns>0</ns>
+  <id>9990</id>
+  <revision>
+    <id>53838</id>
+    <parentid>53837</parentid>
+    <timestamp>2024-11-22T15:53:54Z</timestamp>
+    <contributor>
+      <username>Jekyll Grim Payne</username>
+      <id>2175</id>
+    </contributor>
+    <minor />
+    <origin>53838</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="2048" sha1="hme3odznt91bor9a0dlpkl47vbksss0" xml:space="preserve">__NOTOC__{{codepointer|Sound}}
+
+'''{{class|Actor}}'''
+
+{{c|bool '''IsActorPlayingSound''' (int ''channel'', Sound ''snd'' {{=}} -1)}}
+
+==Usage==
+Check if the calling actor is playing a sound on a specific channel.
+
+===Parameters===
+*{{c|int '''channel'''}}
+:The channel ID to check if it's playing any audio. This can be one of the following:
+{{:StartSound channels}}
+:Also, any other numeric channel is supported as well.
+*{{c|Sound '''snd'''}}
+:The [[SNDINFO]] name of the sound sound to check for. If this is -1 (which is the default value), the function will check if ''any'' sound is playing on the specified channel.
+
+===Return value===
+*''bool'' — Returns &lt;code&gt;true&lt;/code&gt; if the sound is playing on the given channel.
+
+== Examples ==
+This is an example of a custom monster that has a charging attack, and for the first few tics of its attack animation it plays a looped sound. Normally this sound is stopped with a [[A_StopSound]] call further down the Missile state sequence, but note that the monster's attack can be interrupted before that (for example, if the monster is killed or its Pain state is triggered). With this in mind, it has a [[Tick|{{c|Tick()}}]] override where the looped sound will be stopped if it's currently playing but the monster is dead or not in its Missile state anymore:
+
+&lt;syntaxhighlight lang="csharp"&gt;
+class MyMonster : Actor
+{
+	... //omitted for brevity
+
+	override void Tick()
+	{
+		Super.Tick();
+		// If the looped sound is playing, but the monster is dead
+		// or not in its Missile state sequence anymore, stop the
+		// looped sound:
+		if (IsActorPlayingSound(CHAN_BODY,"mymonster/charge/loop") &amp;&amp; (health &lt;= 0 || !InStateSequence(curstate, MissileState)))
+		{
+			A_StopSound(CHAN_BODY);
+		}
+	}
+
+	States {
+	Missile:
+		TNT1 A 0 A_StartSound("mymonster/charge/loop", flags:CHANF_LOOPING);
+		SPRT AAAAAAAA 1 A_FaceTarget();
+		SPRT B 5 
+		{
+			A_StopSound(CHAN_BODY);
+			A_FireProjectile("BFGBall");
+		}
+		SPRT CDE 7;
+		goto See;
+	}
+}
+&lt;/syntaxhighlight&gt;
+
+(See also [[InStateSequence]])
+
+[[Category:ZScript]]</text>
+    <sha1>hme3odznt91bor9a0dlpkl47vbksss0</sha1>
+  </revision>
+</page>

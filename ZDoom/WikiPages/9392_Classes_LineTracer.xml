@@ -1,0 +1,181 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>Classes:LineTracer</title>
+  <ns>0</ns>
+  <id>9392</id>
+  <revision>
+    <id>54091</id>
+    <parentid>54061</parentid>
+    <timestamp>2024-12-24T10:14:53Z</timestamp>
+    <contributor>
+      <username>Jekyll Grim Payne</username>
+      <id>2175</id>
+    </contributor>
+    <comment>/* Fields */ Moved a bunch of fields. None of these are in LineTracer, they're all in TraceResults</comment>
+    <origin>54091</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="9787" sha1="h6zoom95tkv39v9qwuaqeswvdzpje04" xml:space="preserve">{{ZScriptNote}}
+
+{{class|LineTracer}} is a class that allows for custom ray tracing (aka [[hitscan]]) behavior. It uses the same tracing technique that [[LineTrace]] and [[LineAttack]] use, but with some notable differences:
+* LineTracer acts similar to a ''projectile'' rather than a hitscan. This means that rather than obtaining a specific point, it actually passes through the map, reading its blockmap. This allows for custom collision logic and passing through multiple actors and geometry.
+* LineTracer is [[Object scopes and versions|data-scoped]], in contrast to LineTrace, which is play-scoped. This allows it to be instantiated from any scope, for example, firing it from a {{class|BaseStatusBar|HUD}} to obtain some blockmap data(of course, in this case it won't be able to perform play-scoped changes, like dealing damage).
+
+If there's no need to pass through geometry or actors, [[LineTrace]] should be used instead because it's easier to set up.
+
+{{note|LineTracer is not able to detect actors that aren't a part of the blockmap due to having the {{flag|NOBLOCKMAP}} flag.}}
+
+== Setting up ==
+Setting up a LineTracer requires several steps:
+# First, a custom class based on '''LineTracer''' must be created. You can add custom fields to that class, as usual. Note, LineTracer is not an Actor, so it can't use Actor flags or the Default block.
+# Override [[#Virtual|'''TraceCallBack()''']] in this new class to add custom collision rules and manipulate data as necessary.
+# To fire the LineTracer, use [[New|'''New()''']] to instantiate it and [[#Non-static|'''Trace()''']] to fire it.
+
+== Fields ==
+The following fields are defined in the LineTracer class and can be read both inside its '''TraceCallBack''' call, and if you have a pointer to a LineTracer instance:
+*{{c|@TraceResults '''Results'''}}
+:A pointer to the [[#TraceResults|'''TraceResults''' struct]] that contains information pertaining to what caused the trace to call '''TraceCallback'''.
+
+=== TraceResults ===
+A pointer to this struct is contained in the LineTracer's '''results''' field, as described above. This struct is normally read in a '''TraceCallBack''' override. Its fields can not only be read, but also modified to allow custom results. The following fields are available:
+*{{c|ETraceResult '''HitType'''}}
+:What the trace hit, if anything. Can be one of the following:
+:*TRACE_HitNone
+:*TRACE_HitFloor
+:*TRACE_HitCeiling
+:*TRACE_HitWall
+:*TRACE_HitActor
+:*TRACE_CrossingPortal (requires portal reporting flag in Trace to be set)
+:*TRACE_HasHitSky (requires hitting sky flag in Trace to be set)
+*{{c|Sector '''HitSector'''}}
+:The {{struct|Sector|sector}} where the trace called '''TraceCallback()'''
+*{{c|TextureID '''HitTexture'''}}
+:The {{struct|TextureID|texture}} of the surface that got hit, if any
+*{{c|Vector3 '''HitPos'''}}
+:The absolute map coordinates where the trace called '''TraceCallback()'''
+*{{c|Vector3 '''HitVector'''}}
+:The direction the trace was traveling
+*{{c|F3DFloor '''ffloor'''}}
+:The {{struct|F3DFloor|3D floor}} that got hit, if any.
+*{{c|Vector3 '''SrcFromTarget'''}}
+:The starting position of the trace
+*{{c|double '''SrcAngleFromTarget'''}}
+:The angle of &lt;code&gt;HitVector&lt;/code&gt;
+*{{c|double '''Distance'''}}
+:The distance from the starting point the trace has traveled
+*{{c|double '''Fraction'''}}
+:The fraction of the total distance the trace has traveled
+*{{c|Actor '''HitActor'''}}
+:The {{class|Actor}} that was hit, if any
+*{{c|Line '''HitLine'''}}
+:The {{struct|Line|Line}} that was hit, if any
+*{{c|uint '''Side'''}}
+:Which {{struct|Side|side of the line}} that was hit, if any. Can be one of the following:
+:*{{c|Line.front}}
+:*{{c|Line.back}}
+*{{c|uint '''Tier'''}}
+:Which part of the {{struct|Line|line}} was hit, if any. Can be one of the following:
+:*{{c|TIER_Middle}}
+:*{{c|TIER_Upper}}
+:*{{c|TIER_Lower}}
+:*{{c|TIER_FFloor}} (hit a line connected to a 3D floor)
+*{{c|bool '''unlinked'''}}
+:&lt;code&gt;True&lt;/code&gt; if the trace passed through a portal that was not linked
+*{{c|Sector '''CrossedWater'''}}
+:The sector the trace hit that contained Boom-style deep water, if any
+*{{c|Vector3 '''CrossedWaterPos'''}}
+:The absolute map coordinates where the trace hit CrossedWater
+*{{c|Sector '''Crossed3DWater'''}}
+:The sector the trace hit that contained 3D floor-style deep water, if any
+*{{c|Vector3 '''Crossed3DWaterPos'''}}
+:The absolute map coordinates where the trace hit Crossed3DWater
+
+== Methods ==
+=== Non-static ===
+:{{c|bool '''Trace'''(vector3 ''start'', Sector ''sec'', vector3 ''direction'', double ''maxDist'', ETraceFlags ''traceFlags'', uint ''wallMask'' {{=}} 0xFFFFFFFF, bool ''ignoreAllActors'' {{=}} false, Actor ''ignore'' {{=}} null)}}
+
+This is the primary method for spawning and "firing" a LineTracer. Once you've instantiated a LineTracer with '''New''', this function can be called on a pointer to the LineTracer to launch it. The function has the following parameters:
+*{{c|vector3 '''start'''}} - The starting location of the trace. This is an absolute map coordinate
+*{{c|Sector '''sec'''}} - The sector that the trace is starting from. If LineTracer is meant to be "fired" from an actor, pass that actor's &lt;code&gt;cursector&lt;/code&gt; field here.
+*{{c|vector3 '''direction'''}} - A 3D vector that points in the direction the trace should start traveling
+*{{c|double '''maxDist'''}} - How far the trace should travel before it terminates. Use &lt;code&gt;PLAYERMISSILERANGE&lt;/code&gt; for player's standard hitscan distance (4096 units).
+*{{c|ETraceFlags '''traceFlags'''}} - Modifies the behavior of the trace. The following flags are available:
+:*'''TRACE_NoSky''' - Hitting the sky sets the &lt;code&gt;HitType&lt;/code&gt; to &lt;code&gt;TRACE_HitNone&lt;/code&gt;
+:*'''TRACE_PortalRestrict''' - Cannot travel through portals that are not linked
+:*'''TRACE_ReportPortals''' - Update Results to accurately reflect traveling through a portal. '''TraceCallback''' is called with a &lt;code&gt;HitType&lt;/code&gt; of &lt;code&gt;TRACE_CrossingPortal&lt;/code&gt; when traveling through one
+:*'''TRACE_HitSky''' - Hitting the sky sets the &lt;code&gt;HitType&lt;/code&gt; to &lt;code&gt;TRACE_HasHitSky&lt;/code&gt;
+Extra arguments were added in GZDoom 4.12:
+*{{c|uint '''wallMask'''}} — This field accepts {{struct|Line|Line}} flags. If the default value (0xFFFFFFFF) is used, &lt;code&gt;results.HitType&lt;/code&gt; will be set to &lt;code&gt;TRACE_HitWall&lt;/code&gt; each time LineTracer crosses *any* line (including non-blocking sector boundaries). Otherwise, only lines with the provided flags will set it to &lt;code&gt;TRACE_HitWall&lt;/code&gt;. Pass &lt;code&gt;0&lt;/code&gt; if you only want to detect one-sided lines and exclude everything else.
+*{{c|bool '''ignoreAllActors'''}} — If &lt;code&gt;true&lt;/code&gt;, all actors will set &lt;code&gt;HitType&lt;/code&gt; to &lt;code&gt;TRACE_HitNone&lt;/code&gt;.
+*{{c|Actor '''ignore'''}} — A pointer to an actor that will be ignored by the LineTracer.
+
+'''Return value''': returns &lt;code&gt;true&lt;/code&gt; if LineTracer's &lt;code&gt;results.HitType&lt;/code&gt; is ''not'' &lt;code&gt;TRACE_HitNone&lt;/code&gt;. Returns &lt;code&gt;false&lt;/code&gt; otherwise.
+
+Note: this function only returns a bool, which is not the same as the return value of '''TraceCallBack'''. The latter's return value must be read with &lt;code&gt;&lt;pointer to LineTracer&gt;.results.HitType&lt;/code&gt;.
+
+=== Virtual ===
+:{{c|ETraceStatus '''TraceCallback'''()}}
+This is called during a trace when any Actor in the blockmap is hit, any line is hit, or any plane is hit. This can also be called when crossing portals if set to do so. Custom logic handling for what happens when something is hit happens in this function. Generally Results' HitType is looked at to determine what should be examined in the results.
+
+'''Return value''': returns the status of the trace. The function can be overridden to set the return value manually after passing custom conditions. The status is used to determine whether to keep going or terminate the trace at that spot. Can be one of the following values:
+*'''TRACE_Stop''' - Terminates the trace at its current spot, returning the results from the current hit
+*'''TRACE_Continue''' - Tells the trace to keep going. If nothing else is hit along the way, the results from the current hit will be returned
+*'''TRACE_Skip''' - Similar to TRACE_Continue but will not return the results from the current hit
+*'''TRACE_Abort''' - Similar to TRACE_Stop but will not return the results from the current hit
+
+Note: if not overridden, this function returns &lt;code&gt;TRACE_Stop&lt;/code&gt; by default, causing it to stop at the first collision.
+
+== Examples ==
+&lt;syntaxhighlight lang="csharp"&gt;
+// This is meant to be a custom Weapon function that instantiates a custom LineTracer:
+action void A_FindGhosts()
+{
+    // Create the tracer
+    let tracer = new('GhostFinder');
+    if (!tracer)
+    {
+        return;
+    }
+
+    // Get the current direction the player is looking
+    Vector3 dir = (AngleToVector(angle, cos(pitch)), -sin(pitch));
+
+    // Set the starting point to the player's eye level:
+    Vector3 start = (pos.xy, player.viewz);
+
+    tracer.Trace(start, CurSector, dir, PLAYERMISSILERANGE, 0);
+    if (tracer.bHitGhost)
+    {
+        console.printf("Ahhh! A spooky ghost!");
+    }
+}
+
+// This is our custom LineTracer:
+class GhostFinder : LineTracer
+{
+    bool bHitGhost; //custom flag
+
+    // This is where we'll examine the results to check for ghosts
+    override ETraceStatus TraceCallback()
+    {
+        // Check if we hit an actor. If so, does it have the ghost flag?
+        if (results.HitType == TRACE_HitActor &amp;&amp; results.HitActor.bGhost)
+        {
+            bHitGhost = true;
+
+            // Tell the trace to terminate
+            return TRACE_Stop;
+        }
+
+        // If we didn't hit an actor or it doesn't have the ghost flag, ignore it and keep going
+        return TRACE_Skip;
+    }
+}
+&lt;/syntaxhighlight&gt;
+
+== See also ==
+* [[LineTrace]]
+
+[[Category:ZScript]]</text>
+    <sha1>h6zoom95tkv39v9qwuaqeswvdzpje04</sha1>
+  </revision>
+</page>

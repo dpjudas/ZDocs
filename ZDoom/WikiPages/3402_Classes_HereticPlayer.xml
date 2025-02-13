@@ -1,0 +1,139 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>Classes:HereticPlayer</title>
+  <ns>0</ns>
+  <id>3402</id>
+  <revision>
+    <id>26138</id>
+    <parentid>22314</parentid>
+    <timestamp>2010-03-06T12:16:10Z</timestamp>
+    <contributor>
+      <username>Gez</username>
+      <id>1283</id>
+    </contributor>
+    <comment>r2193 update</comment>
+    <origin>26138</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="4363" sha1="jnsu2xdh18qwd13rs64nq0om9a148nf" xml:space="preserve">{{Actor|
+| type = Player
+| name = Corvus
+| class = HereticPlayer
+| game = Heretic
+}}[[Classes]]: {{Class}} &amp;rarr; {{Class|PlayerPawn}} &amp;rarr; &lt;u&gt;HereticPlayer&lt;/u&gt;&lt;br&gt;
+
+====Character Summary====
+The hero of Heretic, Corvus is a member of the tribe of Sidhe Elves on the world of Parthoris. After the massacre of the Sidhe at the hands of [[Classes:Sorcerer2|D'Sparil]]'s minions, most of the survivors fled into hiding. Only Corvus set forth in search of vengeance, taking only a [[Classes:Staff|staff]] and an [[Classes:GoldWand|elven wand]] to combat his foes. 
+
+After the events of Heretic, he is lost in the "Outer Worlds" for an undisclosed amount of time, some believe to be several decades or even several hundred years. Corvus finally returns to Silverspring in Heretic II, only to learn that a threat greater than D'Sparil has already begun to cause the denizens of the world to go mad one by one... 
+
+His name is derived from ''Corvus Corax'', which is the scientific name for the Common Raven. 
+
+Additionally, Corvus' appearance is different between both games. In the first game, he appears as a cloaked man wielding a staff, and looks a lot more mysterious, while in Heretic II, he has a thin, but toned build, and does not wear any upper clothing or a cloak. His staff also now has a blade on the end, like a polearm.
+
+==== [[DECORATE]] Definition ====
+
+ ACTOR &lt;u&gt;HereticPlayer&lt;/u&gt; : {{Class|PlayerPawn}}
+ {
+   {{Property|Health}} 100
+   {{Property|Radius}} 16
+   {{Property|Height}} 56
+   {{Property|Mass}} 100
+   {{Property|PainChance}} 255
+   {{Property|Speed}} 1
+   {{Property|Player.DisplayName}} "Corvus"
+   {{Property|Player.StartItem}} "{{Class|GoldWand}}"
+   {{Property|Player.StartItem}} "{{Class|Staff}}"
+   {{Property|Player.StartItem}} "{{Class|GoldWandAmmo}}", 50
+   {{Property|Player.WeaponSlot}} 1, {{Class|Staff}}, {{Class|Gauntlets}}
+   {{Property|Player.WeaponSlot}} 2, {{Class|GoldWand}}
+   {{Property|Player.WeaponSlot}} 3, {{Class|Crossbow}}
+   {{Property|Player.WeaponSlot}} 4, {{Class|Blaster}}
+   {{Property|Player.WeaponSlot}} 5, {{Class|SkullRod}}
+   {{Property|Player.WeaponSlot}} 6, {{Class|PhoenixRod}}
+   {{Property|Player.WeaponSlot}} 7, {{Class|Mace}}
+   {{Property|Player.ColorRange}} 225, 240
+   {{Property|Player.ColorSet}} 0, "Green",         225, 240,  238
+   {{Property|Player.ColorSet}} 1, "Yellow",        114, 129,  127
+   {{Property|Player.ColorSet}} 2, "Red",           145, 160,  158
+   {{Property|Player.ColorSet}} 3, "Blue",          190, 205,  203
+   // [[Doom Legacy]] additions
+   {{Property|Player.ColorSet}} 4, "Brown",          67,  82,   80
+   {{Property|Player.ColorSet}} 5, "Light Gray",      9,  24,   22
+   {{Property|Player.ColorSet}} 6, "Light Brown",    74,  89,   87
+   {{Property|Player.ColorSet}} 7, "Light Red",     150, 165,  163
+   {{Property|Player.ColorSet}} 8, "Light Blue",    192, 207,  205
+   {{Property|Player.ColorSet}} 9, "Beige",          95, 110,  108
+ 
+   States
+   {
+   Spawn:
+     PLAY A -1
+     Stop
+   See:
+     PLAY ABCD 4
+     Loop
+   Melee:
+   Missile:
+     PLAY F 6 BRIGHT
+     PLAY E 12
+     Goto Spawn
+   Pain:
+     PLAY G 4
+     PLAY G 4 [[A_Pain]]
+     Goto Spawn
+   Death:
+     PLAY H 6 [[A_PlayerSkinCheck]]("AltSkinDeath")
+     PLAY I 6 [[A_PlayerScream]]
+     PLAY JK 6
+     PLAY L 6 [[A_NoBlocking]]
+     PLAY MNO 6
+     PLAY P -1
+     Stop
+   XDeath:
+     PLAY Q 0 [[A_PlayerSkinCheck]]("AltSkinXDeath")
+     PLAY Q 5 [[A_PlayerScream]]
+     PLAY R 0 [[A_NoBlocking]]
+     PLAY R 5 [[A_SkullPop]]
+     PLAY STUVWX 5
+     PLAY Y -1
+     Stop
+   Burn:
+     FDTH A 5 BRIGHT [[A_PlaySound]]("*burndeath")
+     FDTH B 4 BRIGHT
+     FDTH C 5 BRIGHT
+     FDTH D 4 BRIGHT [[A_PlayerScream]]
+     FDTH E 5 BRIGHT
+     FDTH F 4 BRIGHT
+     FDTH G 5 BRIGHT [[A_PlaySound]]("*burndeath")
+     FDTH H 4 BRIGHT
+     FDTH I 5 BRIGHT
+     FDTH J 4 BRIGHT
+     FDTH K 5 BRIGHT
+     FDTH L 4 BRIGHT
+     FDTH M 5 BRIGHT
+     FDTH N 4 BRIGHT
+     FDTH O 5 BRIGHT [[A_NoBlocking]]
+     FDTH P 4 BRIGHT
+     FDTH Q 5 BRIGHT
+     FDTH R 4 BRIGHT
+     ACLO E 35 [[A_CheckPlayerDone]]
+     Wait
+   AltSkinDeath:	
+     PLAY H 10
+     PLAY I 10 [[A_PlayerScream]]
+     PLAY J 10 [[A_NoBlocking]]
+     PLAY KLM 10
+     PLAY N -1
+     Stop
+   AltSkinXDeath:
+     PLAY O 5
+     PLAY P 5 [[A_XScream]]
+     PLAY Q 5 [[A_NoBlocking]]
+     PLAY RSTUV 5
+     PLAY W -1
+     Stop
+   }
+ }</text>
+    <sha1>jnsu2xdh18qwd13rs64nq0om9a148nf</sha1>
+  </revision>
+</page>

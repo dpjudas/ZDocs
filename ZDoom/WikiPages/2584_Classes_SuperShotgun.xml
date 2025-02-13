@@ -1,0 +1,185 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>Classes:SuperShotgun</title>
+  <ns>0</ns>
+  <id>2584</id>
+  <revision>
+    <id>49977</id>
+    <parentid>39279</parentid>
+    <timestamp>2022-12-16T20:53:00Z</timestamp>
+    <contributor>
+      <username>Jekyll Grim Payne</username>
+      <id>2175</id>
+    </contributor>
+    <comment>added zscript definition</comment>
+    <origin>49977</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="3857" sha1="o75cxhq1g4bfihzh36xm05hbchroqed" xml:space="preserve">{{Actor|
+| type = Weapon
+| name = Super shotgun
+| class = SuperShotgun
+| game = Doom2
+| doomednum = 82
+| spawnid = 33
+| spawnname = T_SUPERSHOTGUN 
+}}
+[[Classes]]: [[Classes:Inventory|Inventory]]&amp;rarr;[[Classes:Weapon|Weapon]]&amp;rarr;[[Classes:DoomWeapon|DoomWeapon]]&amp;rarr;&lt;u&gt;SuperShotgun&lt;/u&gt;
+
+
+The super shotgun. Also known as the double-barreled shotgun. A powerful hitscan weapon with a large spread. Uses {{Class|Shell|shells}} for ammo. This is the only weapon to not appear in the original [[Doom]].
+==== [[ZScript]] definition ====
+{{ZScriptDefinitionNote|actors/doom/weaponssg.zs}} 
+&lt;syntaxhighlight lang="csharp"&gt;
+class SuperShotgun : DoomWeapon
+{
+	Default
+	{
+		Weapon.SelectionOrder 400;
+		Weapon.AmmoUse 2;
+		Weapon.AmmoGive 8;
+		Weapon.AmmoType "Shell";
+		Inventory.PickupMessage "$GOTSHOTGUN2";
+		Obituary "$OB_MPSSHOTGUN";
+		Tag "$TAG_SUPERSHOTGUN";
+	}
+	States
+	{
+	Ready:
+		SHT2 A 1 A_WeaponReady;
+		Loop;
+	Deselect:
+		SHT2 A 1 A_Lower;
+		Loop;
+	Select:
+		SHT2 A 1 A_Raise;
+		Loop;
+	Fire:
+		SHT2 A 3;
+		SHT2 A 7 A_FireShotgun2;
+		SHT2 B 7;
+		SHT2 C 7 A_CheckReload;
+		SHT2 D 7 A_OpenShotgun2;
+		SHT2 E 7;
+		SHT2 F 7 A_LoadShotgun2;
+		SHT2 G 6;
+		SHT2 H 6 A_CloseShotgun2;
+		SHT2 A 5 A_ReFire;
+		Goto Ready;
+	// unused states
+		SHT2 B 7;
+		SHT2 A 3;
+		Goto Deselect;
+	Flash:
+		SHT2 I 4 Bright A_Light1;
+		SHT2 J 3 Bright A_Light2;
+		Goto LightDone;
+	Spawn:
+		SGN2 A -1;
+		Stop;
+	}
+}
+
+extend class StateProvider
+{
+	action void A_FireShotgun2()
+	{
+		if (player == null)
+		{
+			return;
+		}
+
+		A_StartSound ("weapons/sshotf", CHAN_WEAPON);
+		Weapon weap = player.ReadyWeapon;
+		if (weap != null &amp;&amp; invoker == weap &amp;&amp; stateinfo != null &amp;&amp; stateinfo.mStateType == STATE_Psprite)
+		{
+			if (!weap.DepleteAmmo (weap.bAltFire, true, 2))
+				return;
+			
+			player.SetPsprite(PSP_FLASH, weap.FindState('Flash'), true);
+		}
+		player.mo.PlayAttacking2 ();
+
+		double pitch = BulletSlope ();
+			
+		for (int i = 0 ; i &lt; 20 ; i++)
+		{
+			int damage = 5 * random[FireSG2](1, 3);
+			double ang = angle + Random2[FireSG2]() * (11.25 / 256);
+
+			// Doom adjusts the bullet slope by shifting a random number [-255,255]
+			// left 5 places. At 2048 units away, this means the vertical position
+			// of the shot can deviate as much as 255 units from nominal. So using
+			// some simple trigonometry, that means the vertical angle of the shot
+			// can deviate by as many as ~7.097 degrees.
+
+			LineAttack (ang, PLAYERMISSILERANGE, pitch + Random2[FireSG2]() * (7.097 / 256), damage, 'Hitscan', "BulletPuff");
+		}
+	}
+
+
+	action void A_OpenShotgun2() 
+	{ 
+		A_StartSound("weapons/sshoto", CHAN_WEAPON); 
+	}
+	
+	action void A_LoadShotgun2() 
+	{ 
+		A_StartSound("weapons/sshotl", CHAN_WEAPON); 
+	}
+	
+	action void A_CloseShotgun2() 
+	{ 
+		A_StartSound("weapons/sshotc", CHAN_WEAPON);
+		A_Refire();
+	}
+}&lt;/syntaxhighlight&gt;
+==== [[DECORATE]] definition ====
+{{DecorateDefinitionNote}}
+ ACTOR &lt;u&gt;SuperShotgun&lt;/u&gt; : {{Class|DoomWeapon}}
+ {
+   {{Property|Weapon.SelectionOrder}} 400
+   {{Property|Weapon.AmmoUse}} 2
+   {{Property|Weapon.AmmoGive}} 8
+   {{Property|Weapon.AmmoType}} "{{Class|Shell}}"
+   {{Property|Inventory.PickupMessage}} "$GOTSHOTGUN2"
+   {{Property|Obituary}} "$OB_MPSSHOTGUN"
+   {{Property|Tag}} "$TAG_SUPERSHOTGUN"
+   States
+   {
+   Ready:
+     SHT2 A 1 [[A_WeaponReady]]
+     Loop
+   Deselect:
+     SHT2 A 1 [[A_Lower]]
+     Loop
+   Select:
+     SHT2 A 1 [[A_Raise]]
+     Loop
+   Fire:
+     SHT2 A 3
+     SHT2 A 7 [[A_FireShotgun2]]
+     SHT2 B 7
+     SHT2 C 7 [[A_CheckReload]]
+     SHT2 D 7 [[A_OpenShotgun2]]
+     SHT2 E 7
+     SHT2 F 7 [[A_LoadShotgun2]]
+     SHT2 G 6
+     SHT2 H 6 [[A_CloseShotgun2]]
+     SHT2 A 5 [[A_ReFire]]
+     Goto Ready
+     // unused states
+     SHT2 B 7
+     SHT2 A 3
+     Goto Deselect
+   Flash:
+     SHT2 I 4 Bright [[A_Light1]]
+     SHT2 J 3 Bright [[A_Light2]]
+     Goto LightDone
+   Spawn:
+     SGN2 A -1
+     Stop
+   }
+ }</text>
+    <sha1>o75cxhq1g4bfihzh36xm05hbchroqed</sha1>
+  </revision>
+</page>

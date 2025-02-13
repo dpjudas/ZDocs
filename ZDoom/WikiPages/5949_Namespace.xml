@@ -1,0 +1,95 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>Namespace</title>
+  <ns>0</ns>
+  <id>5949</id>
+  <revision>
+    <id>43828</id>
+    <parentid>43223</parentid>
+    <timestamp>2017-02-10T11:29:49Z</timestamp>
+    <contributor>
+      <username>AlienOverlord</username>
+      <id>2103</id>
+    </contributor>
+    <origin>43828</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="3530" sha1="o55qe3db91icg4pi7g856cfl9mq3lyy" xml:space="preserve">[[ZDoom]] organizes the lumps in several '''namespaces''' which correspond to different types of lumps. This allows to avoid conflicts if several lumps have the same name, but one is, for example, a texture while the other is a sound.
+
+Lumps belong to a namespace or another depending on where they are in the archive. The [[archive format]] matters: in sequential archives (such as WAD files), they are delimited by marker lumps; in hierarchized archives, they are in a specific directory.
+
+ZDoom uses the following lump namespaces:
+
+{| {{Prettytable}}
+! Namespace !! Markers !! Directory !! Notes
+|-
+| Global || Outside of markers || / (Root directory) ||
+|-
+| [[Sprite]]s || S_ or SS_ || /Sprites/ || Lumps are added to the Sprite image type.
+|-
+| [[Flat]]s	 || F_ or FF_ || /Flats/ || Lumps are added to the Flat image type.
+|-
+| Colormaps || C_ || /Colormaps/ || Optional
+|-
+| [[ACS]] [[Libraries]] || A_ || /ACS/ ||
+|-
+| [[Texture]]s || TX_, HI_ || /Textures/, /Hires/ || Lumps are added to the Override image type.
+|-
+| [[Blood]] RAW || N/A || N/A || Files with the .RAW extension in a RFF archive.
+|-
+| [[Blood]] SFX || N/A || N/A || Files with the .SFX extension in a RFF archive.
+|-
+| [[Blood]] misc || N/A || N/A || Apparently unused
+|-
+| [[Strife]] voices || V_ || /Voices/ || Lumps are automatically assigned svox/&lt;lumpname&gt; as a [[SNDINFO]] logical name allowing them to be referenced directly in [[DIALOGUE]] scripts.
+|-
+| Hi-Res || HI_ || /HiRes/ ||
+|-
+| Sounds || No specific markers || /Sounds/ ||
+|-
+| [[Patch]]es || No specific markers || /Patches/ || Lumps are added to the Wall Patch image type. While not used by the engine, P_ or PP_ markers are often used anyway.
+|-
+| Graphics || No specific markers || /Graphics/ || Lumps are added to the Misc Patch image type. The Doom alpha and beta used the L_ marker here.
+|-
+| Music || No specific markers || /Music/ ||
+|-
+| [[Skin]] || N/A || N/A || All lumps in an archive containing a [[S_SKIN]] lump are placed in a namespace specific to that skin.
+|-
+| [[Voxel]]s || VX_ || /Voxels/ ||
+|}
+
+There is also a sort of equivalent of namespaces for images. The texture manager uses the following types:
+{| {{Prettytable}}
+! Name !! Description !! Namespace !! [[TEXTURES]] keyword
+|-
+| Any || Graphics that do not fit into any other category. || N/A || N/A
+|-
+| Wall || These have priority over flats when applied on a sidedef. || N/A || WallTexture
+|-
+| Flat || These have priority over walls when applied on a floor or ceiling. || Flats || Flat
+|-
+| Sprite || Needs to be of the form NAME''fa'' or NAME''fafa'', see [[sprite]] for more information. || Sprites || Sprite
+|-
+| Wall Patch || The building bricks of composite textures created through [[TEXTUREx]] or [[TEXTURES]]. || Patches || N/A
+|-
+| Build || See [[Build tiles]] for more information. || N/A || N/A
+|-
+| Skin Sprite || These have priority over sprites for players using the corresponding skin. || Skin || N/A
+|-
+| Decal || They are defined in [[DECALDEF]] || N/A || N/A
+|-
+| Misc Patch || Miscellaneous graphics || Graphics || Graphic
+|-
+| Font Character || See [[font format]]s for more information. || N/A || N/A
+|-
+| Override || Has priority on both flats and walls. || Textures || Texture
+|-
+| Autopage || [[Automap]] background. || N/A || N/A
+|-
+| Null || An "empty" texture that is never displayed (e.g., TNT1A0). || N/A || N/A
+|-
+| FirstDefined || The first texture defined in a [[TEXTUREx]] lump (e.g., {{dw|AASTINKY}}). || N/A || N/A
+|}
+[[Category:Glossary]][[Category:Technical aspects]]</text>
+    <sha1>o55qe3db91icg4pi7g856cfl9mq3lyy</sha1>
+  </revision>
+</page>

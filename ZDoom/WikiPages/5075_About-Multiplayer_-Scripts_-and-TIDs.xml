@@ -1,0 +1,44 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>About Multiplayer, Scripts, and TIDs</title>
+  <ns>0</ns>
+  <id>5075</id>
+  <revision>
+    <id>36001</id>
+    <parentid>31261</parentid>
+    <timestamp>2013-03-01T03:23:24Z</timestamp>
+    <contributor>
+      <username>Deded007</username>
+      <id>1392</id>
+    </contributor>
+    <minor />
+    <comment>links</comment>
+    <origin>36001</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="1524" sha1="mhqeablcedcba4hp3c1zbkgeoki83uh" xml:space="preserve">There are some obvious, and some non-obvious things about players and scripts that must be noted for many multiplayer mods. Some of these also apply to singleplayer games when the allowrespawn [[MAPINFO]] flag is set.
+
+===Enter===
+All ENTER scripts are run the first time a player spawns in the game. If a player joins during a game, expect an ENTER script to run. Commonly you want to give all players at the start of the game a unique tid; this is best accomplished with the following:
+ #define PLAYER_TID_START 300
+ 
+ script 90 {{SType|Enter}}
+ {
+   [[Thing_ChangeTID]](0,PLAYER_TID_START+[[PlayerNumber]]());
+ }
+An ENTER script does not necessarily stop when the player dies or respawns.
+
+===Respawning===
+When a player respawns, the new player spawn inherits all scripts and actions activated by the player, but it does not inherit the tid. The body still remains behind with the tid. In most cases you don't want this to happen; you want the new living player to be the only one with this new tid. Use the following code:
+ script 91 {{SType|Respawn}}
+ {
+   // Make sure our old dead body doesn't still have our tid
+   [[Thing_ChangeTID]](PLAYER_TID_START+[[PlayerNumber]](),0);
+   [[Thing_ChangeTID]](0,PLAYER_TID_START+[[PlayerNumber]]());
+ }
+
+===Disconnecting===
+When a player disconnects, all scripts activated by the player stop (normally, the world "inherits" scripts activated by an actor being removed). Players all retain their original player numbers (as returned by [[PlayerNumber]]).
+[[Category:ACS guides]]</text>
+    <sha1>mhqeablcedcba4hp3c1zbkgeoki83uh</sha1>
+  </revision>
+</page>

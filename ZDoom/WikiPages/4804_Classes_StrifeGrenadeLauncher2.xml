@@ -1,0 +1,62 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>Classes:StrifeGrenadeLauncher2</title>
+  <ns>0</ns>
+  <id>4804</id>
+  <revision>
+    <id>40146</id>
+    <parentid>36471</parentid>
+    <timestamp>2015-05-22T07:01:45Z</timestamp>
+    <contributor>
+      <username>Blue Shadow</username>
+      <id>2021</id>
+    </contributor>
+    <minor />
+    <comment>/* DECORATE definition */ Updated</comment>
+    <origin>40146</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="1485" sha1="d8xuo6rq9n0a944jteo6tbhuul4hax3" xml:space="preserve">{{Actor|
+| type = Weapon
+| name = Dual grenade launcher
+| class = StrifeGrenadeLauncher2
+| game = Strife
+}}[[Classes]]: [[Classes:Inventory|Inventory]]&amp;rarr;[[Classes:Weapon|Weapon]]&amp;rarr;[[Classes:StrifeWeapon|StrifeWeapon]]&amp;rarr;[[Classes:StrifeGrenadeLauncher|StrifeGrenadeLauncher]]&amp;rarr;&lt;u&gt;StrifeGrenadeLauncher2&lt;/u&gt;&lt;br&gt;
+This mode of the [[Classes:StrifeGrenadeLauncher|Grenade Launcher]] fires [[Classes:PhosphorousGrenade|Phosphorous Grenades]], which burst into a pillar of erratically-moving flame for about 45 seconds.
+==== [[DECORATE]] definition ====
+ ACTOR &lt;u&gt;StrifeGrenadeLauncher2&lt;/u&gt; : {{Class|StrifeGrenadeLauncher}}
+ {
+   {{Property|Weapon.SelectionOrder}} 3200
+   {{Property|Weapon.AmmoUse1}} 1
+   {{Property|Weapon.AmmoGive1}} 0
+   {{Property|Weapon.AmmoType1}} "{{Class|PhosphorusGrenadeRounds}}"
+   {{Property|Weapon.SisterWeapon}} "{{Class|StrifeGrenadeLauncher}}"
+   {{Property|Tag}} "$TAG_GLAUNCHER2" // "Grenade Launcher"
+   States
+   {
+   Ready:
+     GREN D 1 [[A_WeaponReady]]
+     Loop
+   Deselect:
+     GREN D 1 [[A_Lower]]
+     Loop
+   Select:
+     GREN D 1 [[A_Raise]]
+     Loop
+   Fire:
+     GREN D 5 [[A_FireGrenade]]("{{Class|PhosphorousGrenade}}", -90, "Flash")
+     GREN E 10
+     GREN D 5 [[A_FireGrenade]]("{{Class|PhosphorousGrenade}}", 90, "Flash2")
+     GREN F 10
+     GREN A 0 [[A_ReFire]]
+     Goto Ready
+   Flash:
+     GREF C 5 Bright [[A_Light1]]
+     Goto LightDone
+   Flash2:
+     GREF D 5 Bright [[A_Light2]]
+     Goto LightDone
+   }
+ }</text>
+    <sha1>d8xuo6rq9n0a944jteo6tbhuul4hax3</sha1>
+  </revision>
+</page>

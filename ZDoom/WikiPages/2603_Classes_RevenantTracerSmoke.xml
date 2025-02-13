@@ -1,0 +1,66 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>Classes:RevenantTracerSmoke</title>
+  <ns>0</ns>
+  <id>2603</id>
+  <revision>
+    <id>48900</id>
+    <parentid>48495</parentid>
+    <timestamp>2021-12-27T11:12:34Z</timestamp>
+    <contributor>
+      <username>Jekyll Grim Payne</username>
+      <id>2175</id>
+    </contributor>
+    <comment>updated in accordance with updated ZScriptDefinitionNote template</comment>
+    <origin>48900</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="1060" sha1="p2u4hk8rqc7p94ak1vwxdycbol0mbtp" xml:space="preserve">{{Actor|
+| type = Explosive
+| name = Revenant homing missile trail
+| class = RevenantTracerSmoke
+| game = Doom2
+}}[[Classes]]: &lt;u&gt;RevenantTracerSmoke&lt;/u&gt;
+
+
+The trail of smoke left by a [[Classes:RevenantTracer|Revenant Tracer]]. This is almost the same as a [[Classes:BulletPuff|Bullet Puff]]. Remember that the trail is only displayed when the Revenant's Seeker is currently targeting an actor.
+
+==== [[ZScript]] definition ====
+{{ZScriptDefinitionNote|actors/doom/revenant.zs#L103}}
+ class RevenantTracerSmoke : Actor
+ {
+ 	Default
+ 	{
+ 		+{{Flag|NOBLOCKMAP}}
+ 		+{{Flag|NOGRAVITY}}
+ 		+{{Flag|NOTELEPORT}}
+ 		+{{Flag|ZDOOMTRANS}}
+ 		{{Property|RenderStyle}} "Translucent";
+ 		{{Property|Alpha}} 0.5;
+ 	}
+ 	States
+ 	{	
+ 	Spawn:
+ 		PUFF ABABC 4;
+ 		Stop;
+ 	}
+ }
+
+==== [[DECORATE]] definition ====
+{{DecorateDefinitionNote}}
+ ACTOR &lt;u&gt;RevenantTracerSmoke&lt;/u&gt;
+ {
+   +{{Flag|NOBLOCKMAP}}
+   +{{Flag|NOGRAVITY}}
+   +{{Flag|NOTELEPORT}}
+   {{Property|RenderStyle}} Translucent 
+   {{Property|Alpha}} 0.5
+   States
+   {	
+   Spawn:
+     PUFF ABABC 4
+     Stop
+   }
+ }</text>
+    <sha1>p2u4hk8rqc7p94ak1vwxdycbol0mbtp</sha1>
+  </revision>
+</page>

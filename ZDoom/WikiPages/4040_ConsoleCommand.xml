@@ -1,0 +1,65 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>ConsoleCommand</title>
+  <ns>0</ns>
+  <id>4040</id>
+  <revision>
+    <id>37404</id>
+    <parentid>36332</parentid>
+    <timestamp>2013-11-30T08:36:52Z</timestamp>
+    <contributor>
+      <username>Esum</username>
+      <id>2010</id>
+    </contributor>
+    <comment>Uptdated</comment>
+    <origin>37404</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="1690" sha1="qvyr38ark8fb83swo08pqiqlc0hj4f9" xml:space="preserve">{{STFeature}}
+
+void '''ConsoleCommand''' (str ''console command'')
+
+==Usage==
+ConsoleCommand causes the player who activated the script to execute a [[Console|console]] command as if he/she dropped the console and typed in the specified command. This can be used to change [[CVARs|user settings]] and execute [[CCMDs|commands]] only available from the console. It cannot execute more then one command per call though.
+
+The following [[CCMDs|commands]] may not be used with '''ConsoleCommand'''.
+
+*unbindall
+*unbind
+*bind
+*quit
+*exit
+*logfile
+*alias (including any alias commands)
+*screenshot
+*dumpmap
+*say
+*say_team
+*sv_banfile
+*sv_banexcemptionfile
+*sv_adminlistfile
+*error
+*error_fatal
+*crashout
+
+==Example==
+This example changes the player's [[FOV]] to 30 temporarily to zoom in on something.
+
+ script 6 (void)
+ {
+ print(s:"Hey look at that thing in the distance!");
+ Delay(20);
+ ConsoleCommand("fov 30");
+ Delay(300);
+ ConsoleCommand("fov 90");
+ print(s:"Isn't that amazing?!");
+ }
+
+==Declined implementation==
+ConsoleCommand has often (7 times at least) been requested to be implemented into [[ZDoom]]. However it has been declined by the developers due to security risks. Because ConsoleCommand gives map authors access to the player's settings, it could easily be abused. An example would be a script that changes various [[CVARs]], overwriting the user settings.
+
+'''For this reason, do NOT request this feature again!'''
+
+A much better approach is to look at what you are attempting to do through the use of scripted console commands. Can the same thing be done with existing features? If not, then you may suggest a dedicated feature that would remove the need for ConsoleCommand.</text>
+    <sha1>qvyr38ark8fb83swo08pqiqlc0hj4f9</sha1>
+  </revision>
+</page>

@@ -1,0 +1,106 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>Classes:FighterBoss</title>
+  <ns>0</ns>
+  <id>4534</id>
+  <revision>
+    <id>39480</id>
+    <parentid>34511</parentid>
+    <timestamp>2015-04-30T21:25:45Z</timestamp>
+    <contributor>
+      <username>Blue Shadow</username>
+      <id>2021</id>
+    </contributor>
+    <minor />
+    <comment>/* DECORATE definition */ Updated</comment>
+    <origin>39480</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="2042" sha1="qzb10zkr3xrx7t11evjrnfdix1262k6" xml:space="preserve">{{Actor|
+| type = Monster
+| name = Zedek
+| class = FighterBoss
+| game = Hexen
+| doomednum = 10100
+}}[[Classes]]: &lt;u&gt;FighterBoss&lt;/u&gt;&lt;br&gt;
+Zedek is one of the three penultimate bosses of Hexen. Marshal of the Legion, Zedek now serves [[Classes:Korax|Korax]] as a zombified warrior. He wields the [[Classes:FWeapQuietus|Quietus]], and like his fellow class bosses has erratic movement, making him tricky to hit.
+==== [[DECORATE]] definition ====
+ ACTOR &lt;u&gt;FighterBoss&lt;/u&gt;
+ {
+   {{Property|Health}} 800
+   {{Property|PainChance}} 50
+   {{Property|Speed}} 25
+   {{Property|Radius}} 16
+   {{Property|Height}} 64
+   {{Property|Monster}}
+   +{{Flag|FLOORCLIP}}
+   +{{Flag|TELESTOMP}}
+   +{{Flag|DONTMORPH}}
+   {{Property|PainSound}} "PlayerFighterPain"
+   {{Property|DeathSound}} "PlayerFighterCrazyDeath"
+   {{Property|Obituary}} "$OB_FBOSS"
+ 
+   action native [[A_FighterAttack]]();
+ 
+   States
+   {
+   Spawn:
+     PLAY A 2
+     PLAY A 3 [[A_ClassBossHealth]]
+     PLAY A 5 [[A_Look]]
+     Wait
+   See:
+     PLAY ABCD 4 [[A_FastChase]]
+     Loop
+   Pain:
+     PLAY G 4
+     PLAY G 4 [[A_Pain]]
+     Goto See
+   Melee:
+   Missile:
+     PLAY E 8 [[A_FaceTarget]]
+     PLAY F 8 [[A_FighterAttack]]
+     Goto See
+   Death:
+     PLAY H 6
+     PLAY I 6 [[A_Scream]]
+     PLAY JK 6
+     PLAY L 6 [[A_NoBlocking]]
+     PLAY M 6
+     PLAY N -1
+     Stop
+   XDeath:
+     PLAY O 5 [[A_Scream]]
+     PLAY P 5 [[A_SkullPop]]
+     PLAY R 5 [[A_NoBlocking]]
+     PLAY STUV 5
+     PLAY W -1
+     Stop
+   Ice:
+     PLAY X 5 [[A_FreezeDeath]]
+     PLAY X 1 [[A_FreezeDeathChunks]]
+     Wait
+   Burn:
+     FDTH A 5 Bright [[A_PlaySound]]("PlayerFighterBurnDeath")
+     FDTH B 4 Bright
+     FDTH G 5 Bright
+     FDTH H 4 Bright [[A_Scream]]
+     FDTH I 5 Bright
+     FDTH J 4 Bright
+     FDTH K 5 Bright
+     FDTH L 4 Bright
+     FDTH M 5 Bright
+     FDTH N 4 Bright
+     FDTH O 5 Bright
+     FDTH P 4 Bright
+     FDTH Q 5 Bright
+     FDTH R 4 Bright
+     FDTH S 5 Bright [[A_NoBlocking]]
+     FDTH T 4 Bright
+     FDTH U 5 Bright
+     FDTH V 4 Bright
+     Stop
+   }
+ }</text>
+    <sha1>qzb10zkr3xrx7t11evjrnfdix1262k6</sha1>
+  </revision>
+</page>

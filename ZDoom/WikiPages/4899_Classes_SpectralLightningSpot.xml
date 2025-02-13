@@ -1,0 +1,50 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>Classes:SpectralLightningSpot</title>
+  <ns>0</ns>
+  <id>4899</id>
+  <revision>
+    <id>42984</id>
+    <parentid>42983</parentid>
+    <timestamp>2016-08-13T18:33:01Z</timestamp>
+    <contributor>
+      <username>LordMisfit</username>
+      <id>1752</id>
+    </contributor>
+    <minor />
+    <origin>42984</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="1405" sha1="9jr0szdnni33qozmyupby0a4l4sj3re" xml:space="preserve">{{Actor|
+| type = Explosive
+| name = Spectral lightning spot
+| class = SpectralLightningSpot
+| game = Strife
+| convid = 88
+}}[[Classes]]: [[Classes:SpectralLightningBase|SpectralLightningBase]]&amp;rarr;[[Classes:SpectralLightningDeath1|SpectralLightningDeath1]]&amp;rarr;&lt;u&gt;SpectralLightningSpot&lt;/u&gt;&lt;br&gt;
+
+The spot-beacon created by the [[Classes:StrifePlayer|Player]] using [[Classes:Sigil1|Sigil 1]], the [[Classes:AlienSpectre1|first Spectre]], [[Classes:EntityBoss|the Entity]], and their [[Classes:EntitySecond|Sub Entities]]. This beacon moves around in random directions every few tics, spawning either [[Classes:SpectralLightningV1|SpectralLightningV1]] (strong) or [[Classes:SpectralLightningV1|SpectralLightningV2]] (weak) around it at close to ceiling level that drop straight down on whatever's unlucky enough to be standing there. The spot fades out after about 8 seconds of activity.
+==== [[DECORATE]] definition ====
+ ACTOR &lt;u&gt;SpectralLightningSpot&lt;/u&gt; : {{Class|SpectralLightningDeath1}}
+ {
+   {{Property|Speed}} 18
+   {{Property|ReactionTime}} 70
+   +{{Flag|NOBLOCKMAP}}
+   +{{Flag|NOBLOCKMONST}}
+   +{{Flag|NODROPOFF}}
+   {{Property|RenderStyle}} Translucent
+   {{Property|Alpha}} 0.6
+ 
+   action native [[A_SpectralLightning]]();
+ 
+   States
+   {
+   Spawn:
+     ZAP5 A 4 Bright [[A_Countdown]]
+     ZAP5 B 4 Bright [[A_SpectralLightning]]
+     ZAP5 CD 4 Bright [[A_Countdown]]
+     Loop
+   }
+ }</text>
+    <sha1>9jr0szdnni33qozmyupby0a4l4sj3re</sha1>
+  </revision>
+</page>

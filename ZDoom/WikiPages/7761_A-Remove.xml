@@ -1,0 +1,41 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>A Remove</title>
+  <ns>0</ns>
+  <id>7761</id>
+  <revision>
+    <id>51978</id>
+    <parentid>44265</parentid>
+    <timestamp>2024-03-16T17:13:46Z</timestamp>
+    <contributor>
+      <username>Jekyll Grim Payne</username>
+      <id>2175</id>
+    </contributor>
+    <comment>/* Parameters */</comment>
+    <origin>51978</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="1883" sha1="7p35kmou5ywb0z7z2050bebr6i889my" xml:space="preserve">{{codepointer|Monster AI}}
+'''A_Remove''' (int ''pointer'' [, int ''flags'' [, string ''filter'' [, string ''species'']]])
+
+==Usage==
+Removes an actor based upon which [[actor pointer]] is chosen and the flags.
+
+=== Parameters ===
+*''pointer'': the following actor pointers are valid:
+**A [[Actor_pointer#DECORATE_.26_ACS|DECORATE actor pointer]].
+*''flags'': multiple flags can be combined with &lt;code&gt;|&lt;/code&gt;. The following flags are available:
+**'''RMVF_MISSILES''' - Allows removal of missiles associated with the pointer.
+**'''RMVF_NOMONSTERS''' - The function will not remove monsters and simply skip them. By default, before the introduction of assigning masters to missiles, similar functions would only work on monsters. To ensure consistency, only monsters are allowed for removal by default.
+**'''RMVF_MISC''' - Allows removal of things that are neither missile nor monster.
+**'''RMVF_EVERYTHING''' - Overrides all other flags. Disables discrimination and removes the actor of any type regardless of what it is.
+**'''RMVF_EXFILTER''' — inverts the case of the class name filter; the pointed to actor is only removed if its class name does not match the value passed to ''filter''.
+**'''RMVF_EXSPECIES''' — inverts the case of the [[species]] filter; the pointed to actor is only removed if its species does not match the value passed to ''species''.
+**'''RMVF_EITHER''' — the pointed to actor is removed if either of its class name or [[species]] matches the values passed to ''filter'' and ''species'', respectively.
+*''filter'': the actor class to remove. The pointed to actor is only removed if its class name matches the specified filter class. Default is {{c|"None"}}.
+*''species'': the actor [[species]] to remove. The pointed to actor is only removed if its species matches the specified species filter. Default is {{c|"None"}}.
+
+== Examples ==
+{{noexamples}}</text>
+    <sha1>7p35kmou5ywb0z7z2050bebr6i889my</sha1>
+  </revision>
+</page>

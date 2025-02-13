@@ -1,0 +1,42 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>Structs:StringTable</title>
+  <ns>0</ns>
+  <id>9803</id>
+  <revision>
+    <id>51505</id>
+    <parentid>51491</parentid>
+    <timestamp>2024-02-02T10:23:39Z</timestamp>
+    <contributor>
+      <username>Jekyll Grim Payne</username>
+      <id>2175</id>
+    </contributor>
+    <origin>51505</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="1403" sha1="3ajoow41ek47dcz7lzbi0hsf7cz5l24" xml:space="preserve">The StringTable struct interacts with [[String|string]] tables that are set up with the [[LANGUAGE]] lump.
+
+== Methods ==
+=== Static ===
+* {{c|native String '''Localize'''(String val, bool prefixed}} = {{c|true)}}
+:Localizes the provided string &lt;code&gt;val&lt;/code&gt;.
+:If &lt;code&gt;prefixed&lt;/code&gt; is true, the code assumes that the &lt;code&gt;$&lt;/code&gt; character is already a part of the string (such as "$PICKUP_PISTOL_DROPPED"). If it's set to false, the &lt;code&gt;$&lt;/code&gt; character will be added into the string. Leave it at true if you don't know beforehand if the string you're localizing is an explicit string or a [[LANGUAGE]] reference.
+
+== Examples ==
+This will pull the localized version of the {{class|Pistol|Pistol's}} {{property|PickupMessage}} ("Picked up a Pistol" in English):
+&lt;syntaxhighlight lang="csharp"&gt;
+Console.PrintF(StringTable.Localize("$PICKUP_PISTOL_DROPPED");
+&lt;/syntaxhighlight&gt;
+
+This [[PickupMessage]] override, when inserted into an {{class|Inventory}} item, will print a formatted string, consisting of the item's regular {{property|PickupMessage}}, followed by an amount picked up in parentheses. For example, in case of a {{class|Clip}}, this would print: "Picked up a Clip (+10)":
+&lt;syntaxhighlight lang="csharp"&gt;
+override string PickupMessage()
+{
+	return String.Format("%s (+%d)", StringTable.Localize(pickupMsg), amount);
+}&lt;/syntaxhighlight&gt;
+
+
+[[Category:ZScript]]
+[[Category:Structs]]</text>
+    <sha1>3ajoow41ek47dcz7lzbi0hsf7cz5l24</sha1>
+  </revision>
+</page>

@@ -1,0 +1,74 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>Classes:StrifeGrenadeLauncher</title>
+  <ns>0</ns>
+  <id>4803</id>
+  <revision>
+    <id>42604</id>
+    <parentid>40145</parentid>
+    <timestamp>2016-04-09T07:32:42Z</timestamp>
+    <contributor>
+      <username>Blue Shadow</username>
+      <id>2021</id>
+    </contributor>
+    <minor />
+    <comment>/* DECORATE definition */</comment>
+    <origin>42604</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="1762" sha1="eg5ou19kxjxy0b6ev4hvrimng9cgl7t" xml:space="preserve">{{Actor|
+| type = Weapon
+| name = Dual grenade launcher
+| class = StrifeGrenadeLauncher
+| game = Strife
+| doomednum = 154
+| convid = 195, 189, 193
+}}[[Classes]]: [[Classes:Inventory|Inventory]]&amp;rarr;[[Classes:Weapon|Weapon]]&amp;rarr;[[Classes:StrifeWeapon|StrifeWeapon]]&amp;rarr;&lt;u&gt;StrifeGrenadeLauncher&lt;/u&gt;&lt;br&gt;
+&amp;ensp;&amp;rarr;[[Classes:StrifeGrenadeLauncher2|StrifeGrenadeLauncher2]]&lt;br&gt;
+A double barreled grenade launcher, with two modes of fire. This mode fires [[Classes:HEGrenade|Explosive Grenades]], which do exactly that after three or four bounces.
+==== [[DECORATE]] definition ====
+ ACTOR &lt;u&gt;StrifeGrenadeLauncher&lt;/u&gt; : {{Class|StrifeWeapon}}
+ {
+   +{{Flag|FLOORCLIP}}
+   {{Property|Weapon.SelectionOrder}} 2400
+   {{Property|Weapon.AmmoUse1}} 1
+   {{Property|Weapon.AmmoGive1}} 12
+   {{Property|Weapon.AmmoType1}} "{{Class|HEGrenadeRounds}}"
+   {{Property|Weapon.SisterWeapon}} "{{Class|StrifeGrenadeLauncher2}}"
+   {{Property|Inventory.Icon}} "GRNDA0"
+   {{Property|Tag}} "$TAG_GLAUNCHER1" // "Grenade Launcher"
+   {{Property|Inventory.PickupMessage}} "$TXT_GLAUNCHER" // "You picked up the Grenade launcher."
+ 
+   action native [[A_FireGrenade]](class&lt;Actor&gt; grenadetype, float angleofs, state flash);
+ 
+   States
+   {
+   Spawn:
+     GRND A -1
+     Stop
+   Ready:
+     GREN A 1 [[A_WeaponReady]]
+     Loop
+   Deselect:
+     GREN A 1 [[A_Lower]]
+     Loop
+   Select:
+     GREN A 1 [[A_Raise]]
+     Loop
+   Fire:
+     GREN A 5 [[A_FireGrenade]]("{{Class|HEGrenade}}", -90, "Flash")
+     GREN B 10
+     GREN A 5 [[A_FireGrenade]]("{{Class|HEGrenade}}", 90, "Flash2")
+     GREN C 10
+     GREN A 0 [[A_ReFire]]
+     Goto Ready
+   Flash:
+     GREF A 5 Bright [[A_Light1]]
+     Goto LightDone
+   Flash2:
+     GREF B 5 Bright [[A_Light2]]
+     Goto LightDone
+   }
+ }</text>
+    <sha1>eg5ou19kxjxy0b6ev4hvrimng9cgl7t</sha1>
+  </revision>
+</page>

@@ -1,0 +1,55 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>Classes:ArtiBoostMana</title>
+  <ns>0</ns>
+  <id>3392</id>
+  <revision>
+    <id>39663</id>
+    <parentid>37369</parentid>
+    <timestamp>2015-05-02T21:27:25Z</timestamp>
+    <contributor>
+      <username>Blue Shadow</username>
+      <id>2021</id>
+    </contributor>
+    <minor />
+    <comment>/* DECORATE definition */ Updated</comment>
+    <origin>39663</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="1370" sha1="843p0nl2i49fm8ejfohxkl3a3dxv4pi" xml:space="preserve">{{Actor|
+| type = Artifact
+| name = Krater of might
+| class = ArtiBoostMana
+| game = Hexen
+| doomednum = 8003
+| spawnid = 26
+| spawnname = T_ITEMBOOSTMANA 
+}}[[Classes]]: [[Classes:Inventory|Inventory]]&amp;rarr;[[Classes:CustomInventory|CustomInventory]]&amp;rarr;&lt;u&gt;ArtiBoostMana&lt;/u&gt;&lt;br&gt;
+The Krater of Might is a gray chalice with a black rune containing a purple liquid. Using it refills the player's mana pools to full capacity. It could be considered the replacement for the [[Classes:BagOfHolding|bag of holding]], which is missing in Hexen: instead of directly increasing the maximum carrying capacity for ammunitions, it allows to carry a full ammo refill.
+==== [[DECORATE]] definition ====
+ ACTOR &lt;u&gt;ArtiBoostMana&lt;/u&gt; : {{Class|CustomInventory}}
+ {
+   +{{Flag|FLOATBOB}}
+   +{{Flag|NOGRAVITY}}
+   +{{Flag|COUNTITEM}}
+   +{{Flag|INVENTORY.INVBAR}}
+   +{{Flag|INVENTORY.PICKUPFLASH}}
+   +{{Flag|INVENTORY.FANCYPICKUPSOUND}}
+   {{Property|Inventory.DefMaxAmount}}
+   {{Property|Inventory.Icon}} "ARTIBMAN"
+   {{Property|Inventory.PickupSound}} "misc/p_pkup"
+   {{Property|Inventory.PickupMessage}} "$TXT_ARTIBOOSTMANA" // "KRATER OF MIGHT"
+   {{Property|Tag}} "$TAG_ARTIBOOSTMANA"
+   States
+   {
+   Spawn:
+     BMAN A -1
+     Stop
+   Use:
+     TNT1 A 0 [[A_GiveInventory]]("{{Class|Mana1}}", 200)
+     TNT1 A 0 [[A_GiveInventory]]("{{Class|Mana2}}", 200)
+     Stop
+   }
+ }</text>
+    <sha1>843p0nl2i49fm8ejfohxkl3a3dxv4pi</sha1>
+  </revision>
+</page>

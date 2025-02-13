@@ -1,0 +1,146 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>CCMDs:Customization</title>
+  <ns>0</ns>
+  <id>3920</id>
+  <revision>
+    <id>52477</id>
+    <parentid>52476</parentid>
+    <timestamp>2024-04-18T23:11:47Z</timestamp>
+    <contributor>
+      <username>Jekyll Grim Payne</username>
+      <id>2175</id>
+    </contributor>
+    <minor />
+    <comment>Reverted edits by [[Special:Contributions/Jekyll Grim Payne|Jekyll Grim Payne]] ([[User talk:Jekyll Grim Payne|talk]]) to last revision by [[User:Boondorl|Boondorl]]</comment>
+    <origin>49961</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="9168" sha1="198ogpvmczz7sgi5mx8lsexpw11xeb0" xml:space="preserve">These [[CCMDs|console commands]] can be used to customize the configuration of the game.
+
+See the [[CCMDs]] article for general information on how to use commands.
+
+
+__TOC__
+
+==Custom keys and commands==
+
+These commands can be used by a WAD author in a [[KEYCONF]] lump to create customized functions that appear and are configurable in the user's options menu.
+
+* '''{{LE|addkeysection}}''' &lt;menu heading&gt; &lt;ini section&gt;
+:This command does two things. First, it adds a new heading to the controls menu using the ''menu heading'' parameter. You can use the addmenukey command to add your own custom keys beneath this heading. Second, it loads all the bindings from the corresponding ''ini section'' in the user's ini file. You can use this command multiple times to create different sections in the menu and ini for different sets of commands. If you use a menu heading that was already added to the menu, new controls added with addmenukey will appear at the end of that section, but the bindings will not be reloaded from the ini.
+
+* '''{{LE|addmenukey}}''' &lt;description&gt; &lt;command&gt;
+:Adds a new control to the controls menu. ''description'' is the name of this control in the menu, and ''command'' is a console command or alias to be executed when the control is pressed. New controls are added to the last section specified with addkeysection. 
+
+* '''{{LE|defaultbind}}''' &lt;key&gt; &lt;command&gt;
+:Binds ''command'' to the key if and only if ''key'' is not already bound and there are no keys already bound to ''command''. This can be useful in [[KEYCONF]] lumps to create a default binding for a command without overwriting the user's preference.
+
+* '''{{LE|addslot}}''' &lt;slot&gt; &lt;weapon&gt;
+:Adds a single weapon to the list of weapons in a weapon slot.  This allows a user to select a custom weapon from a PWAD using their normal weapon selection keys.
+
+* '''{{LE|addslotdefault}}''' &lt;slot&gt; &lt;weapon&gt;
+:Adds a single weapon to the list of weapons in a weapon slot, but only if that weapon is not already in a slot. If the weapon is already present in a slot (either the slot specified to addslotdefault or some other slot), then this command does nothing. When used inside a [[KEYCONF]] lump, this command  must be preceded by a {{CCMD|C|weaponsection}} command.
+
+* '''{{LE|setslot}}''' &lt;slot&gt; [&lt;weapon1&gt; [&lt;weapon2&gt; [...]]] {{deprecated}}
+:Clears the given weapon slot entirely, then fill it with the given weapons. If no slot is specified and no slots are given, the command prints to the console how the slots are currently filled. As of ZDoom 2.3.0, this has been deprecated and new ways of adding weapon slots are available, such as the {{Property|Player.WeaponSlot}} or {{Property|Weapon.SlotNumber}} property.
+
+* '''{{LE|weaponsection}}''' &lt;ini section&gt;
+:This command is similar to {{CCMD|C|addkeysection}}. Upon execution, it loads all the weapon slot assignments from the corresponding section in [[zdoom.ini]]. When you quit the game, the weapon slots will also be stored in the specified section in zdoom.ini instead of their standard location so that they do not overwrite the player's normal weapon assignments.
+
+==Command macros==
+
+* '''{{LE|alias}}''' [name] [command string]
+:If specified with no parameters, alias will display a list of all currently defined aliases. If only ''command'' is specified, it will be removed from the list of aliases. If ''command string'' is also specified, it will be added to the list of aliases as a new command. For example, to create a new alias to kill the monsters on the level, you can use the command: 
+::&lt;pre&gt;alias massacre "kill monsters"&lt;/pre&gt;
+:Then you can use the newly created massacre command to kill all the monsters on the level. You can use ; to add more commands:
+::&lt;pre&gt;alias weirdness "kill monsters; Give all; Summon doomimp"&lt;/pre&gt;
+:That would kill all monsters, give you all invertory and summon an imp. You can use wait (tics) to put a delay between commands. Example:
+::&lt;pre&gt;alias "kill monsters; Give all; wait 10; Summon doomimp"&lt;/pre&gt;
+:Which would kill all the monsters, give all, wait 10 tics and then summon an imp. Also if you run out of space for the alias you can link to another alias. You can easily change your alias by editing your [[zdoom.ini]] file.
+:For setting up an alias that both activates on press and release, use +/- before the alias name and bind the key to the + version:
+ alias +customcommand "event DoCommand"
+ alias -customcommand "event DoCommand"
+:This can be used to set up special behavior for a button so long as it's held.
+
+* '''{{LE|clearaliases}}'''
+:Erases all existing console aliases.
+
+* '''{{LE|echo}}''' &lt;string&gt;
+:Prints ''string'' to the console. 
+
+* '''{{LE|print}}''' &lt;string&gt;
+:Prints a named string to the console. These are the strings you can edit with a bex patch. 
+
+* '''{{LE|printinv}}'''
+:Prints your current inventory to the console. 
+
+* '''{{LE|atexit}}''' [command]
+:If you specify a command, it will be added to a list of console commands to execute when the user quits the game. Commands are executed in the reverse order that they were added in. If you do not specify any arguments to atexit, then it will list the current set of commands that will execute when you quit. 
+
+* '''{{LE|exec}}''' &lt;file&gt;
+:Executes a series of commands stored in the script-file as if they had been typed in at the console directly. 
+
+* '''{{LE|pullin}}''' &lt;wadfile&gt;
+:Loads a wadfile at startup. This command is only valid inside .cfg files that have been executed at startup.
+
+==[[CVARs|CVAR]] control==
+User CVARS from [[CVARINFO]] can be manipulated by these commands.
+
+* '''{{LE|set}}''' &lt;CVAR&gt; &lt;value&gt;
+:Sets ''CVAR'' to ''value''. If ''CVAR'' does not exist, it will be created. 
+
+* '''{{LE|archivecvar}}''' &lt;CVAR&gt;
+:When you create a custom CVAR with the set command, it will not normally be saved in the [[configuration file|ini]]. You can use archivecvar after creating the CVAR to indicate that the custom CVAR's value should persist even after you quit. This command is ill advised for non-archived user cvars, as it may cause side effects such as scripts running improperly.
+
+* '''{{LE|unset}}''' &lt;CVAR&gt;
+:Undefines a user-created CVAR.
+
+* '''{{LE|get}}''' &lt;CVAR&gt;
+:Displays the value of ''CVAR''. This is redundant because typing the name of the CVAR alone at the console will accomplish the same thing.
+
+==Bindings==
+
+* '''{{LE|bind}}''' [key] [command]
+:If no parameters are specified, the entire list of bound keys will be printed to the console. If only ''key'' is specified, the binding for that specific key will be printed. If both ''key'' and ''command'' are specified, ''command'' will be bound to ''key''. 
+
+* '''{{LE|doublebind}}''' [key] [command]
+:This command works just like bind, except it controls the action that occurs when a key is double-clicked. If a key does not have a doublebinding, then double-clicking it has the same result as pressing it twice. Otherwise, the first press will execute the normal command set with bind, and the second press of the double-click will execute the command set with doublebind. 
+
+* '''{{LE|mapbind}}''' [key] [command]
+:This command works just like bind, except it controls the action that occurs when the automap is displayed. (Panning controls are ineffective on the overlay map.) A list of automap-specific controls may be found [[Customize_map_controls|here]].
+
+* '''{{LE|rebind}}''' &lt;command&gt;
+:Changes the binding for the key that caused the rebind command to execute. For obvious reasons, this command cannot be used directly from the console.
+:For example, this command will cause the first press of b to echo "setting 1" to the console. All future presses of b will echo "setting 2" instead.:
+::&lt;pre&gt;bind b "echo setting 1; rebind \"echo setting 2\""&lt;/pre&gt;
+
+* '''{{LE|unbind}}''' &lt;key&gt;
+:Removes a binding from the specified key. 
+
+* '''{{LE|undoublebind}}''' &lt;key&gt;
+:Removes a doublebinding from the specified key. 
+
+* '''{{LE|unmapbind}}''' &lt;key&gt;
+:Removes a mapbinding from the specified key. 
+
+* '''{{LE|unbindall}}'''
+:Removes all bindings and doublebindings from every key. To restore the default bindings, you can use the binddefaults command. ''Caution: there is no way to restore any custom bindings after issuing this command except by retyping each bind command or using the controls setup menu.''
+
+* '''{{LE|binddefaults}}'''
+:Binds all keys to their default commands. This will not unbind any keys that do not have any default bindings, so if you want to properly restore the default controls, you need to use unbindall first.
+
+==Player classes==
+* '''{{LE|addplayerclass}}''' &lt;[[player class]]&gt; [nomenu]
+:Adds the given [[player class]] to the [[Class selection menu|available player classes]]. If the "nomenu" keyword is added, the class will be available only in the [[player setup]], and not shown as an option on the [[class selection menu]].
+
+* '''{{LE|clearplayerclasses}}'''
+:Removes all [[player class]]es from the list of [[Class selection menu|available player classes]] when starting a [[new game menu|new game]] or changing the [[player setup]]. You should always follow with calls to {{CCMD|C|addplayerclass}}.
+
+==See also==
+*[[CVARs]]
+*[[CCMDs]]
+
+[[category:ZDoom console]]</text>
+    <sha1>198ogpvmczz7sgi5mx8lsexpw11xeb0</sha1>
+  </revision>
+</page>

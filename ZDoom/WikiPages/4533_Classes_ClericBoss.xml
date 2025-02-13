@@ -1,0 +1,106 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>Classes:ClericBoss</title>
+  <ns>0</ns>
+  <id>4533</id>
+  <revision>
+    <id>39464</id>
+    <parentid>34207</parentid>
+    <timestamp>2015-04-30T21:14:56Z</timestamp>
+    <contributor>
+      <username>Blue Shadow</username>
+      <id>2021</id>
+    </contributor>
+    <minor />
+    <comment>/* DECORATE definition */ Updated</comment>
+    <origin>39464</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="2126" sha1="kw5tjs91boosmnonjiaodjgq5yezazm" xml:space="preserve">{{Actor|
+| type = Monster
+| name = Traductus
+| class = ClericBoss
+| game = Hexen
+| doomednum = 10101
+}}[[Classes]]: &lt;u&gt;ClericBoss&lt;/u&gt;&lt;br&gt;
+Traductus is one of the three penultimate bosses of Hexen. The Grand Patriarch of the Church, he has sided with [[Classes:Korax|Korax]] in return for eternal life. His erratic movement makes him difficult to hit, and for that matter his fully-assembled [[Classes:CWeapWraithverge|Wraithverge]] makes it difficult to ''live'' long enough to hit him.
+==== [[DECORATE]] definition ====
+ ACTOR &lt;u&gt;ClericBoss&lt;/u&gt;
+ {
+   {{Property|Health}} 800
+   {{Property|PainChance}} 50
+   {{Property|Speed}} 25
+   {{Property|Radius}} 16
+   {{Property|Height}} 64
+   {{Property|Monster}}
+   +{{Flag|FLOORCLIP}}
+   +{{Flag|TELESTOMP}}
+   +{{Flag|DONTMORPH}}
+   {{Property|PainSound}} "PlayerClericPain"
+   {{Property|DeathSound}} "PlayerClericCrazyDeath"
+   {{Property|Obituary}} "$OBCBOSS"
+ 
+   action native [[A_ClericAttack]]();
+ 
+   States
+   {
+   Spawn:
+     CLER A 2
+     CLER A 3 [[A_ClassBossHealth]]
+     CLER A 5 [[A_Look]]
+     Wait
+   See:
+     CLER ABCD 4 [[A_FastChase]]
+     Loop
+   Pain:
+     CLER H 4
+     CLER H 4 [[A_Pain]]
+     Goto See
+   Melee:
+   Missile:
+     CLER EF 8 [[A_FaceTarget]]
+     CLER G 10 [[A_ClericAttack]]
+     Goto See
+   Death:
+     CLER I 6
+     CLER K 6 [[A_Scream]]
+     CLER LL 6
+     CLER M 6 [[A_NoBlocking]]
+     CLER NOP 6
+     CLER Q -1
+     Stop
+   XDeath:
+     CLER R 5 [[A_Scream]]
+     CLER S 5
+     CLER T 5 [[A_NoBlocking]]
+     CLER UVWXYZ 5
+     CLER "[" -1
+     Stop
+   Ice:
+     CLER "\" 5 [[A_FreezeDeath]]
+     CLER "\" 1 [[A_FreezeDeathChunks]]
+     Wait
+   Burn:
+     CLER C 5 Bright [[A_PlaySound]]("PlayerClericBurnDeath")
+     FDTH D 4 Bright 
+     FDTH G 5 Bright 
+     FDTH H 4 Bright [[A_Scream]]
+     FDTH I 5 Bright 
+     FDTH J 4 Bright 
+     FDTH K 5 Bright 
+     FDTH L 4 Bright 
+     FDTH M 5 Bright 
+     FDTH N 4 Bright 
+     FDTH O 5 Bright 
+     FDTH P 4 Bright 
+     FDTH Q 5 Bright 
+     FDTH R 4 Bright 
+     FDTH S 5 Bright [[A_NoBlocking]]
+     FDTH T 4 Bright 
+     FDTH U 5 Bright 
+     FDTH V 4 Bright 
+     Stop
+   }
+ }</text>
+    <sha1>kw5tjs91boosmnonjiaodjgq5yezazm</sha1>
+  </revision>
+</page>

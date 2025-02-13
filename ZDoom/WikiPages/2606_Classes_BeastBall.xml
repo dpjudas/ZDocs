@@ -1,0 +1,58 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>Classes:BeastBall</title>
+  <ns>0</ns>
+  <id>2606</id>
+  <revision>
+    <id>39326</id>
+    <parentid>34154</parentid>
+    <timestamp>2015-04-29T17:14:04Z</timestamp>
+    <contributor>
+      <username>Blue Shadow</username>
+      <id>2021</id>
+    </contributor>
+    <minor />
+    <comment>/* DECORATE definition */ Updated</comment>
+    <origin>39326</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="1109" sha1="0klvrsz7q9mfxz13plrroj89qtn0aa9" xml:space="preserve">{{Actor|
+| type = Explosive
+| name = Weredragon fireball
+| class = BeastBall
+| game = Heretic
+| spawnid = 120
+| spawnname = T_BEASTBALL 
+}}[[Classes]]: &lt;u&gt;BeastBall&lt;/u&gt;
+
+The smoking projectile belched forth by [[Classes:Beast|Weredragons]].
+
+==== [[DECORATE]] definition ====
+ ACTOR &lt;u&gt;BeastBall&lt;/u&gt;
+ {
+   {{Property|Radius}} 9
+   {{Property|Height}} 8
+   {{Property|Speed}} 12
+   {{Property|FastSpeed}} 20
+   {{Property|Damage}} 4
+   {{Property|Projectile}}
+   -{{Flag|ACTIVATEIMPACT}}
+   -{{Flag|ACTIVATEPCROSS}}
+   -{{Flag|NOBLOCKMAP}}
+   +{{Flag|WINDTHRUST}}
+   +{{Flag|SPAWNSOUNDSOURCE}}
+   {{Property|RenderStyle}} Add
+   {{Property|SeeSound}} "beast/attack"
+   States
+   {
+   Spawn:
+     FRB1 AABBCC 2 [[A_SpawnItemEx]]("{{Class|Puffy}}", [[DECORATE_expressions#Mathematical_functions|random2]][BeastPuff]()*0.015625, [[DECORATE_expressions#Mathematical_functions|random2]][BeastPuff]()*0.015625,
+                                 [[DECORATE_expressions#Mathematical_functions|random2]][BeastPuff]()*0.015625, 0, 0, 0, 0, SXF_ABSOLUTEPOSITION, 64)
+     Loop
+   Death:
+     FRB1 DEFGH 4
+     Stop
+   }
+ }</text>
+    <sha1>0klvrsz7q9mfxz13plrroj89qtn0aa9</sha1>
+  </revision>
+</page>

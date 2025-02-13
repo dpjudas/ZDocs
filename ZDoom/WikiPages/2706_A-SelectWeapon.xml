@@ -1,0 +1,70 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>A SelectWeapon</title>
+  <ns>0</ns>
+  <id>2706</id>
+  <revision>
+    <id>47025</id>
+    <parentid>45023</parentid>
+    <timestamp>2019-11-17T23:01:14Z</timestamp>
+    <contributor>
+      <username>Blue Shadow</username>
+      <id>2021</id>
+    </contributor>
+    <minor />
+    <origin>47025</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="2148" sha1="gy016vldvriyr1p47x38oo30igepqvn" xml:space="preserve">__NOTOC__{{codepointer|Inventory}}bool '''A_SelectWeapon''' (class&lt;Weapon&gt; ''whichweapon'' [, int ''flags''])
+
+==Usage==
+Selects the specified weapon type as the calling player's current weapon.
+
+===Parameters===
+*''whichweapon'': the class name of the weapon to switch to. Unless the SWF_SELECTPRIORITY flag is passed, this has to be a valid weapon and the weapon must be present in the player's inventory for the switch to happen. The function will be carried out whether or not the weapon to switch to has ammo.
+*''flags'': Default is 0.
+**'''SWF_SELECTPRIORITY''' — if the specified weapon is either invalid or does not exist in the inventory and this flag is set, the function switches to the highest priority weapon the player has, in the same vein as running out of ammo.
+
+=== Return value ===
+The function returns ''true'' if the weapon switch happens, otherwise it returns ''false''.
+
+== Examples ==
+This {{Class|Berserk|berserk pack}} uses [[A_SelectWeapon]] to change to a new unarmed attack which replaces the {{Class|fist}}.
+
+ actor NewBerserk : {{Class|Berserk}}
+ {
+     States
+     {
+     Pickup:
+         TNT1 A 0 [[A_GiveInventory]]("{{Class|PowerStrength}}") 
+         TNT1 A 0 [[HealThing]](100)
+         TNT1 A 0 [[A_SelectWeapon]]("KoolFist")
+         Stop
+     } 
+ }
+
+
+This rather odd item, when picked up, tries to switch the player's weapon to the {{Class|BFG9000}}. If the weapon exists in the player's inventory, the switch happens and the player receives 40 points of {{Class|Cell|energy cells}}. If, however, the switch fails, i.e the player does not have the weapon, the player gets damage by half of his or her health.
+ actor OddArtifact : {{Class|Megasphere}}
+ {
+     {{Property|Inventory.PickupMessage}} "Oddsphere!"
+ 
+     States
+     {
+     Pickup:
+         TNT1 A 0
+         { // See [[anonymous functions]].
+             if ([[A_SelectWeapon]]("{{Class|BFG9000}}"))
+             {
+                 [[A_GiveInventory]]("{{Class|Cell}}", 40);
+             }
+             else
+             {
+                 [[A_DamageSelf]]([[DECORATE expressions|health]] / 2);
+             }
+         }
+         Stop
+     }
+ }</text>
+    <sha1>gy016vldvriyr1p47x38oo30igepqvn</sha1>
+  </revision>
+</page>

@@ -1,0 +1,344 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>Creating Objects and Structs</title>
+  <ns>0</ns>
+  <id>9832</id>
+  <revision>
+    <id>51812</id>
+    <parentid>51810</parentid>
+    <timestamp>2024-02-16T23:28:21Z</timestamp>
+    <contributor>
+      <username>Boondorl</username>
+      <id>2606</id>
+    </contributor>
+    <minor />
+    <comment>/* DObject Definitions */</comment>
+    <origin>51812</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="27895" sha1="fl4ndj2k25hwc30eszkg4roblp909zl" xml:space="preserve">Commonly when building new functionality for GZDoom it's desired to have it exportable to ZScript in some way, be it new classes or structs. This guide will cover the many details of creating new &lt;code&gt;DObject&lt;/code&gt; types and structs modders can use and the nuances that come with their internal behaviors. Since they largely don't follow the standard construction and destruction rules of C++, this can make them prone to memory leaks and corruption if not handled correctly. This guide won't cover how to actually export these types once created. For exporting to ZScript, see [[Working With the VM]].
+
+= DObjects =
+&lt;code&gt;DObject&lt;/code&gt; (or just &lt;code&gt;Object&lt;/code&gt; as it's called in ZScript) is the building block for all classes within ZScript and is ultimately the most powerful form of custom datatype. It has no limitations on what can be done with it so it makes for a good default type if you're not sure on what your use cases will be. They're simple to export but have extra set up that must be performed so that they can be tracked by the VM correctly. They're also managed by the garbage collector meaning extra care has to be taken with how references to them are tracked so that they aren't accidentally destroyed.
+
+Some benefits of using &lt;code&gt;DObject&lt;/code&gt;s:
+*Easy to export.
+*Can be stored in ZScript's data structures like dynamic arrays and associative maps and can be returned directly by methods.
+*Are automatically managed by the VM.
+*Have a &lt;code&gt;PClass&lt;/code&gt; definition meaning they can be type checked properly even if not defined within the engine.
+*Have a simple interface for interacting with ZScript data.
+
+Some downsides:
+*Have extra initial set up compared to standard classes/structs.
+*Must be instantiated with &lt;code&gt;new()&lt;/code&gt; within ZScript instead of being created on the stack automatically like with non-native structs.
+*Have performance overhead since they're garbage collected.
+*Must have a default constructor with no arguments unless they're defined as abstract.
+
+== Creating ==
+=== DObject Definitions ===
+The first thing that must be done to create new &lt;code&gt;DObject&lt;/code&gt; types is naturally inheriting from &lt;code&gt;DObject&lt;/code&gt;. It's common to prefix engine &lt;code&gt;DObject&lt;/code&gt;s with a &lt;code&gt;D&lt;/code&gt; and then give the ZScript class the same name minus the prefix. This makes exporting simpler as when doing so on certain macros, the first character of the name is ignored. After inheriting from &lt;code&gt;DObject&lt;/code&gt;, a few macros must be used to notify the engine what kind of class it is. This can be used to impose certain limitations on how it can be used in ZScript. For instance, a class can be marked as abstract internally which will disallow creation of it from within ZScript, even without the presence of the &lt;code&gt;abstract&lt;/code&gt; keyword in its ZScript definition.
+
+The following macros are designed to go in the definition body of a &lt;code&gt;DObject&lt;/code&gt;:
+*'''DECLARE_CLASS(DObjectClass, ParentDObjectClass)'''
+:A simple &lt;code&gt;DObject&lt;/code&gt; declarator. Handles setting up registration info the engine will need for the &lt;code&gt;DObject&lt;/code&gt;.
+:*''DObjectClass''
+::The name of the &lt;code&gt;DObject&lt;/code&gt; class the macro is within.
+:*''ParentDObjectClass''
+::The name of the &lt;code&gt;DObject&lt;/code&gt; class the class the macro is within inherits from.
+*'''DECLARE_ABSTRACT_CLASS(DObjectClass, ParentDObjectClass)'''
+:Similar to '''DECLARE_CLASS''' except the &lt;code&gt;DObject&lt;/code&gt; cannot be created through a &lt;code&gt;PClass&lt;/code&gt;'s &lt;code&gt;CreateNew()&lt;/code&gt; function. It can still be instantiated directly through &lt;code&gt;Create()&lt;/code&gt;, however. Useful for &lt;code&gt;DObject&lt;/code&gt;s that only the engine should be able to create (e.g. it requires internal information that couldn't be set up properly within ZScript such as iterators).
+{{Note|Caution should be used with allowing ZScript classes to inherit from internal abstract classes. If they contain any complex datatypes e.g. &lt;code&gt;TArray&lt;/code&gt; these will not be instantiated correctly when a child class is &lt;code&gt;new()&lt;/code&gt;'d from within ZScript. For any internal classes with these datatypes, the ZScript definition should be sealed to make sure it cannot be inherited from.}}
+*'''DECLARE_CLASS_WITH_META(DObjectClass, ParentDObjectClass, MetaClassType)'''
+:Similar to '''DECLARE_CLASS''' except a custom &lt;code&gt;PClass&lt;/code&gt; type can be used. Note that this is very limited in scope and should be largely avoided. Custom &lt;code&gt;PClass&lt;/code&gt; types exist through undefined behavior and it's highly recommended to only use the default type to manage everything. This is mainly only here for &lt;code&gt;AActor&lt;/code&gt;.
+:*''MetaClassType''
+::The custom &lt;code&gt;PClass&lt;/code&gt; type to use.
+*'''DECLARE_ABSTRACT_CLASS_WITH_META(DObjectClass, ParentDObjectClass, MetaClassType)'''
+:A combination of '''DECLARE_ABSTRACT_CLASS''' and '''DECLARE_CLASS_WITH_META'''.
+{{Warning|Custom MetaClass macros are only here for documentation purposes. These should not be used for any future &lt;code&gt;DObject&lt;/code&gt;s.}}
+*'''HAS_OBJECT_POINTERS'''
+:This macro is special in that if your &lt;code&gt;DObject&lt;/code&gt; stores any pointers to other &lt;code&gt;DObject&lt;/code&gt;s of any kind, the class must be set up to store their offsets and automatically mark them for the garbage collector.
+&lt;syntaxhighlight lang = "cpp"&gt;
+class DMyObj : public DObject
+{
+    DECLARE_CLASS(DMyObj, DObject)
+    HAS_OBJECT_POINTERS // Since ObjField stores a DObject pointer, we have to set up its offset information.
+
+    TObjPtr&lt;DObject*&gt; ObjField; // TObjPtr&lt;T&gt; will be covered in more detail later.
+    // ...
+}
+&lt;/syntaxhighlight&gt;
+The next set of macros are used to finish implementing the &lt;code&gt;DObject&lt;/code&gt; class within its main translation unit:
+*'''IMPLEMENT_CLASS(DObjectClass, IsAbstract, HasPointers)'''
+:Handles finishing up all the registration info for the class that was defined with '''DECLARE_CLASS'''.
+:*''DObjectClass''
+::The corresponding &lt;code&gt;DObject&lt;/code&gt; class that was declared within its class definition.
+:*''IsAbstract''
+::If true, the class was declared as abstract.
+:*''HasPointers''
+::If true, the class holds pointers to other &lt;code&gt;DObject&lt;/code&gt;s.
+*'''IMPLEMENT_POINTERS_START(DObjectClass)'''
+:If your &lt;code&gt;DObject&lt;/code&gt; was set to have other &lt;code&gt;DObject&lt;/code&gt; pointers, this is the start of marking those fields. This must be used after '''IMPLEMENT_CLASS''' and only if it had any &lt;code&gt;DObject&lt;/code&gt; pointers. This list tells the &lt;code&gt;Object&lt;/code&gt; which pointers should be marked when the garbage collector is checking to see if references to &lt;code&gt;DObject&lt;/code&gt;s exist.
+:*''DObjectClass''
+::The corresponding &lt;code&gt;DObject&lt;/code&gt; class that contains the pointers.
+*'''IMPLEMENT_POINTER(DObjectPointerField)
+:Marks a given &lt;code&gt;DObject&lt;/code&gt; pointer so that its offset can be set correctly. This must be used after '''IMPLEMENT_POINTERS_START'''.
+:*''DObjectPointerField''
+::The field to set the offset of.
+*'''IMPLEMENT_POINTERS_END'''
+:The closing macro after all &lt;code&gt;DObject&lt;/code&gt; pointers have been defined. This must be used after setting all pointers via '''IMPLEMENT_POINTER'''.
+&lt;syntaxhighlight lang = "cpp"&gt;
+IMPLEMENT_CLASS(DMyObj, false, true)
+IMPLEMENT_POINTERS_START(DMyObj)
+    IMPLEMENT_POINTER(ObjField)
+IMPLEMENT_POINTERS_END
+&lt;/syntaxhighlight&gt;
+
+A few macros exist for getting the &lt;code&gt;PClass&lt;/code&gt; pointer of a specific &lt;code&gt;DObject&lt;/code&gt; after it's been defined. These are useful for functions that need a &lt;code&gt;PClass&lt;/code&gt; passed to them since they can't accept a C++ class type. It can also be useful for instantiating &lt;code&gt;DObject&lt;/code&gt;s of a certain type via its &lt;code&gt;PClass&lt;/code&gt;.
+*'''RUNTIME_CLASS_CASTLESS(DObjectClass)'''
+:Returns the &lt;code&gt;PClass&lt;/code&gt; pointer of the given &lt;code&gt;DObject&lt;/code&gt; class type.
+:*''DObjectClass''
+::The engine class to get the &lt;code&gt;PClass&lt;/code&gt; pointer of.
+*'''RUNTIME_CLASS(DObjectClass)'''
+:Similar to '''RUNTIME_CLASS_CASTLESS''' except it returns the &lt;code&gt;PClass&lt;/code&gt; pointer casted as the &lt;code&gt;DObject&lt;/code&gt; type's &lt;code&gt;MetaClass&lt;/code&gt; type. This is largely only relevant for &lt;code&gt;AActor&lt;/code&gt;.
+
+=== Constructing and Destructing ===
+&lt;code&gt;DObject&lt;/code&gt;s must always have a default constructor with no arguments since within ZScript they're instantiated through &lt;code&gt;PClass&lt;/code&gt;es (these cannot pass arguments when constructing). Any specialized constructor can only be used when calling &lt;code&gt;Create()&lt;/code&gt; directly which largely limits the scope of these to abstract &lt;code&gt;DObject&lt;/code&gt;s. Creation of &lt;code&gt;DObject&lt;/code&gt;s should happen through the following methods:
+*&lt;code&gt;T* Create&lt;T&gt;(Args&amp;&amp;... args)&lt;/code&gt;
+:Creates a &lt;code&gt;DObject&lt;/code&gt; of type &lt;code&gt;T&lt;/code&gt; and returns a pointer to it. This handles the bare minimum for creating a new &lt;code&gt;DObject&lt;/code&gt;. It takes a variable amount of arguments of any type that get passed to its constructor when creating.
+*&lt;code&gt;DObject* PClass::CreateNew()&lt;/code&gt;
+:If you have a pointer to a specific &lt;code&gt;PClass&lt;/code&gt;, you should instantiate a &lt;code&gt;DObject&lt;/code&gt; from it via this method since it also sets the &lt;code&gt;DObject&lt;/code&gt;'s defaults. It returns a pointer to the newly created &lt;code&gt;DObject&lt;/code&gt;. This is the same method that the &lt;code&gt;new()&lt;/code&gt; operator in ZScript uses.
+
+Destructing is much more volatile since a &lt;code&gt;DObject&lt;/code&gt;'s destructor is never directly called. This has a cascading effect in that none of its fields have their destructors called either. Instead, the garbage collector wipes its memory on the spot. This means any complex datatype that holds its own memory (e.g. &lt;code&gt;TArray&lt;/code&gt;) will not free that memory unless it's manually cleared before destroying. &lt;code&gt;DObject&lt;/code&gt; has a special virtual function, &lt;code&gt;OnDestroy()&lt;/code&gt;, for handling this case. Here any memory freeing can be handled before the &lt;code&gt;DObject&lt;/code&gt; is actually removed from memory. As a side effect of this behavior, having custom destructors on &lt;code&gt;DObject&lt;/code&gt;s should not be done. All destruction behavior should instead go in &lt;code&gt;OnDestroy()&lt;/code&gt;.
+{{Note|If not inheriting directly from &lt;code&gt;DObject&lt;/code&gt;, always call the parent's &lt;code&gt;OnDestroy()&lt;/code&gt; function. This can be done through &lt;code&gt;Super::OnDestroy()&lt;/code&gt;.}}
+&lt;syntaxhighlight lang = "cpp"&gt;
+class DMyObj : public DObject
+{
+    // ...
+    void OnDestroy() override;
+
+    TArray&lt;T&gt; MyInternalArray;
+    // ...
+}
+
+// Instantiating.
+DMyObj* obj = Create&lt;DMyObj&gt;(); // Direct.
+
+PClass* cls = RUNTIME_CLASS_CASTLESS(DMyObj);
+DMyObj* obj = (DMyObj*)cls-&gt;CreateNew(); // Through class type.
+
+// Destroying.
+void DMyObj::OnDestroy()
+{
+    MyInternalArray.Reset();
+}
+&lt;/syntaxhighlight&gt;
+Datatypes that must be manually cleared:
+*TArray
+*TMap
+*FString
+*Any datatype that manages its own heap-allocated memory.
+{{Note|This also applies to nested types e.g. if a field is a custom struct with an internal &lt;code&gt;TArray&lt;/code&gt;, the &lt;code&gt;TArray&lt;/code&gt; in that struct needs to be reset. This simplest way to handle this is to have a &lt;code&gt;Reset()&lt;/code&gt; function within any datatype that needs to do this.}}
+
+== Marking Within the Garbage Collector ==
+Most fields will not need to be marked as they're tied to the &lt;code&gt;DObject&lt;/code&gt; itself, but sometimes a field must contain pointers to another &lt;code&gt;DObject&lt;/code&gt; that's handled by the garbage collector. The garbage collector works by checking if anything references a given &lt;code&gt;DObject&lt;/code&gt; on a given GC frame and if not, destroys it. The '''IMPLEMENT_POINTER''' macros set up an automated way to handle these, but a unique issue still arises. For basic pointers, this is where the &lt;code&gt;TObPtr&lt;T&gt;&lt;/code&gt; type comes into play. If a &lt;code&gt;DObject&lt;/code&gt; is set to be destroyed, this container will automatically null the reference upon trying to access it. This is important since &lt;code&gt;DObject&lt;/code&gt;s marked for destruction are not immediately wiped from memory (this happens in chunks within the garbage collector) so standard pointers to it can briefly remain valid before this happens. As such, any standard pointer should be set to &lt;code&gt;nullptr&lt;/code&gt; immediately after calling the pointed &lt;code&gt;DObject&lt;/code&gt;'s &lt;code&gt;Destroy()&lt;/code&gt; method, similar to if it had been freed.
+&lt;syntaxhighlight lang = "cpp"&gt;
+TObjPtr&lt;DMyObj*&gt; MyObjField; // Note that T must be specified as a pointer explicitly.
+&lt;/syntaxhighlight&gt;
+{{Note|A &lt;code&gt;DObject&lt;/code&gt;'s destruction status can be checked via &lt;code&gt;obj-&gt;ObjectFlags &amp; OF_EuthanizeMe&lt;/code&gt;.}}
+
+More complex datatypes like &lt;code&gt;TArray&lt;/code&gt; have no automated marking methods, however, since there's no way to allow it internally. Their pointers must be marked manually to avoid their contents being destroyed on accident. This is what the &lt;code&gt;PropagateMark()&lt;/code&gt; virtual function is for. This is called when the garbage collector is looking to see if any valid references to a specific &lt;code&gt;DObject&lt;/code&gt; exists. The &lt;code&gt;GC::Mark()&lt;/code&gt; method is what actually marks a pointer as a valid reference.
+{{Note|The parent method should always be called via &lt;code&gt;Super::PropagateMark()&lt;/code&gt;.}}
+&lt;syntaxhighlight lang = "cpp"&gt;
+class DMyObj : public DObject
+{
+    // ...
+    size_t PropagateMark() override;
+
+    TArray&lt;DObject*&gt; MyObjects;
+    // ...
+}
+
+// The return value here can be largely ignored as it's simply an estimate of the size of the object for
+// purposes of checking propagation limits. Often the size of the DObject itself is enough.
+size_t DMyObj::PropagateMark()
+{
+    for (auto&amp; obj : MyObjects)
+        GC::Mark(obj);
+
+    return Super::PropagateMark();
+}
+&lt;/syntaxhighlight&gt;
+
+== Serializing ==
+Most people will probably want their data to be saved to a save file. Any field defined in ZScript that's not marked as &lt;code&gt;transient&lt;/code&gt; will automatically be saved, but this is not true for fields defined internally (including those that are exported). Instead, they must be serialized manually by taking a &lt;code&gt;DObject&lt;/code&gt;'s fields, writing their values into the save file, and when loading, reading from that file and resetting the fields to the saved values. When loading from a save file, every piece of data has to be recreated from scratch to match the state the game was in when it was saved. This has some interesting implications such as the fact that how the data is serialized is entirely up to the engine coder when writing the logic. Certain fields can also be purposely left out if you don't want them to be saved e.g. a piece of data that can be reconstructed from other serialized data. All serializing, both loading and saving, is done from a single virtual function: &lt;code&gt;void Serialize(FSerializer&amp; arc)&lt;/code&gt;. &lt;code&gt;arc&lt;/code&gt; is the serializing class that handles writing out to and reading in from save files. This style of organization is done to keep both reading and writing operations in one place to help aid in catching any possible discrepancies between the two. In general, not all of a &lt;code&gt;DObject&lt;/code&gt;'s fields need to be saved but all of its non-transient fields should be set upon loading, otherwise data loss occurs.
+
+The serializer makes use of the &lt;code&gt;()&lt;/code&gt; operator to quickly read and write values. Underlying this is a &lt;code&gt;Serialize()&lt;/code&gt; function that takes four arguments: a reference to the serializer itself, the key for the value, a reference to the value itself, and a pointer to a default value. Its return value is a reference to the passed in serializer so that the &lt;code&gt;()&lt;/code&gt; operator can be chained. The &lt;code&gt;()&lt;/code&gt; operator itself only accepts a key and its value (the default value is often left as &lt;code&gt;nullptr&lt;/code&gt;). Each datatype that isn't defined will need a new &lt;code&gt;Serialize()&lt;/code&gt; function for it to be written and read. For instance, for &lt;code&gt;int&lt;/code&gt; values this serialize function exists:
+&lt;syntaxhighlight lang = "cpp"&gt;
+FSerializer&amp; Serialize(FSerializer&amp; arc, const char* key, int32_t&amp; value, int32_t* defval);
+&lt;/syntaxhighlight&gt;
+which allows an &lt;code&gt;int&lt;/code&gt; to be passed in to the &lt;code&gt;()&lt;/code&gt; operator:
+&lt;syntaxhighlight lang = "cpp"&gt;
+arc("myintfield", MyIntField);
+&lt;/syntaxhighlight&gt;
+{{Note|Native structs have a unique definition in that their &lt;code&gt;Serialize()&lt;/code&gt; functions also start with &lt;code&gt;template&lt;&gt;&lt;/code&gt;. This is needed for properly reading when their handlers are set up. See the section on Structs for more info.}}
+When writing to the save file, the serializer will store &lt;code&gt;MyIntField&lt;/code&gt; with the key &lt;code&gt;"myintfield"&lt;/code&gt;. When reading from the save file, it searches for the key &lt;code&gt;"myintfield"&lt;/code&gt; and stores its value in &lt;code&gt;MyIntField&lt;/code&gt;.
+
+If a datatype doesn't have its own &lt;code&gt;Serialize()&lt;/code&gt; function yet, a new one will have to be created. For core engine datatypes it's common to declare these function definitions within &lt;code&gt;serializer.h&lt;/code&gt;, but types specific to Doom engine games should go in &lt;code&gt;serializer_doom.h&lt;/code&gt;. The actual body of the functions should go in the corresponding &lt;code&gt;*.cpp&lt;/code&gt; file of the same name. GZDoom's save file format is JSON-based so it uses key-value pairs, objects, and arrays.
+{{Note|Custom reading and writing functionality must be done within the above translation units as these behaviors are intentionally locked down outside of them. This means custom datatype functionality cannot be built directly into a &lt;code&gt;DObject&lt;/code&gt;'s &lt;code&gt;Serialize()&lt;/code&gt; virtual unless the datatype itself is not what's being serialized.}}
+Some functions in &lt;code&gt;FSerializer&lt;/code&gt; have a dual purpose when reading vs writing:
+{| class="wikitable"
+|-
+! Function !! Parameter !! Return !! Reading !! Writing
+|-
+| isReading || - || True if currently reading from the save file. || - || -
+|-
+| isWriting || - || True if currently writing to the save file. || - || -
+|-
+| BeginObject || Key for JSON object. || If the JSON object was successfully found when reading. || Searches for a JSON object with the given key. || Creates a new JSON object with the given key.
+|-
+| EndObject || - || - || Stops reading from the currently opened JSON object. || Stops writing to the currently opened JSON object.
+|-
+| HasObject || Key for JSON object. || If the JSON object was found. || Checks to see if a given JSON object exists. || -
+|-
+| BeginArray || Key for JSON array. || If the JSON array was successfully found when reading. || Searches for a JSON array with the given key. || Creates a new JSON array with the given key.
+|-
+| ArraySize || - || Number of items in the JSON array. || Gets the number of items in the currently opened JSON array. || -
+|-
+| EndArray || - || - || Stops reading from the currently opened JSON array. || Stops writing to the currently opened JSON array.
+|-
+| GetSize || Key for the JSON array. || Number of items in the JSON array. || Gets the number of items in the given JSON array. || -
+|-
+| GetKey || - || The key of the current iteration point in the JSON object. || Iterates through all the keys in a currently opened JSON object. Its value is stored in &lt;code&gt;arc.r-&gt;mKeyValue&lt;/code&gt;. || -
+|-
+| WriteKey || Key for a new key-value pair. || - || - || If within a JSON object, creates a new key. Its value can be written with &lt;code&gt;arc.w-&gt;*(T value)&lt;/code&gt;.
+|}
+{{Note|Every JSON array and object that's opened must also be closed.}}
+Applications of the serializer's reader and writer objects is limited but potent. They will be necessary to use directly for correctly reading from and writing to the save file. They are stored in the serializer's &lt;code&gt;r&lt;/code&gt; and &lt;code&gt;w&lt;/code&gt; fields respectively.
+
+&lt;code&gt;FReader&lt;/code&gt;:
+*rapidjson::Value* '''FindKey'''(const char* ''key'')
+:If in a JSON object, retrieves the value of the passed key. If in a JSON array, ''key'' is ignored and all of the array's values are iterated through instead.
+
+&lt;code&gt;FWriter&lt;/code&gt;:
+*void '''Null'''()
+:Writes an empty value for the current key.
+*void '''StringU'''(const char* ''value'', bool ''encode'')
+:Writes a potential unicode string value for the current key. If ''encode'' is set, converts the string to unicode before writing.
+*void '''String'''(const char* ''value'')
+:Write a string value for the current key.
+*void '''Bool'''(bool ''value'')
+:Writes a boolean value for the current key. Note that this is not the same as writing an integer.
+*void '''Int'''(int32_t ''value'')
+:Writes a 32-bit integer value for the current key.
+*void '''Int64'''(int64_t ''value'')
+:Writes a 64-bit integer value for the current key.
+*void '''Uint'''(uint32_t ''value'')
+:Writes a 32-bit unsigned integer value for the current key.
+*void '''Uint64'''(int64_t ''value'')
+:Writes a 64-bit unsigned integer value for the current key. Note that this is not the same thing as writing a 64-bit integer despite the value type.
+*void '''Double'''(double ''value'')
+:Writes a double precision floating-point value for the current key.
+
+&lt;code&gt;rapidjson::Value&lt;/code&gt; has corresponding &lt;code&gt;Is*()&lt;/code&gt; and &lt;code&gt;Get*()&lt;/code&gt; functions for all of the above types (minus &lt;code&gt;StringU&lt;/code&gt;). It also has the following additional functions for generalized checks:
+*bool '''IsTrue'''()
+*bool '''IsFalse'''()
+*bool '''IsNumber'''()
+{{Note|Similar to &lt;code&gt;PropagateMark()&lt;/code&gt;, the parent serialize function should always be called via &lt;code&gt;Super::Serialize()&lt;/code&gt;.}}
+&lt;syntaxhighlight lang = "cpp"&gt;
+class DMyObj : public DObject
+{
+    // ...
+    int MyInt;
+    double MyDouble;
+    FString MyString;
+
+    void Serialize(FSerializer&amp; arc) override;
+    // ...
+}
+
+void DMyObj::Serialize(FSerializer&amp; arc)
+{
+    Super::Serialize(arc);
+
+    arc("myint", MyInt)
+       ("mydouble", MyDouble)
+       ("mystring", MyString);
+}
+&lt;/syntaxhighlight&gt;
+
+== Thinkers ==
+&lt;code&gt;DThinker&lt;/code&gt; is a child class of &lt;code&gt;DObject&lt;/code&gt; that has its own unique handling. Their only method of being instantiated properly is through the level they should be spawned within since they're inherently tied to that level. As such, the methods for creating &lt;code&gt;DObject&lt;/code&gt;s do not apply to it. &lt;code&gt;primaryLevel&lt;/code&gt; holds the current level the game is on and for the time being this is the only level that can be accessed correctly during play. Its two methods for instantiating are:
+*&lt;code&gt;DThinker* FLeveLocals::CreateThinker(PClass* cls, int statnum = STAT_DEFAULT)&lt;/code&gt;
+:The core internal function for creating a new thinker within the level. This handles setting up important spawning information and linking the &lt;code&gt;DThinker&lt;/code&gt; into the &lt;code&gt;DThinker&lt;/code&gt; list. It also handles putting it within the correct stat num which determines thinking order and whether or not it should think at all. Returns a pointer to the newly created &lt;code&gt;DThinker&lt;/code&gt;.
+:*''cls''
+::The type of &lt;code&gt;DThinker&lt;/code&gt; to spawn. Can be gotten through '''RUNTIME_CLASS(T)'''.
+:*''statnum''
+::What category in the list it should be linked into. Most things are put into '''STAT_DEFAULT''' unless they have a reason to be elsewhere.
+*&lt;code&gt;T* FLeveLocals::CreateThinker&lt;T&gt;(Args&amp;&amp;... args)&lt;/code&gt;
+:A wrapper function for creating a new &lt;code&gt;DThinker&lt;/code&gt; and calling its &lt;code&gt;Construct()&lt;/code&gt; function. This is ''not'' a constructor but rather a regular function called Construct. It accepts a variable amount of arguments of any type to be passed into &lt;code&gt;Construct()&lt;/code&gt;. Its stat num is also gotten through &lt;code&gt;T::DEFAULT_STAT&lt;/code&gt;. Returns a pointer to the newly created &lt;code&gt;DThinker&lt;/code&gt;.
+{{Note|&lt;code&gt;Construct()&lt;/code&gt; is not a virtual function. The above function should only be called if you have a custom &lt;code&gt;Construct()&lt;/code&gt; method that needs to be called to set up any extra information on creation.}}
+{{Note|The default value for &lt;code&gt;DThinker::DEFAULT_STAT&lt;/code&gt; is '''STAT_DEFAULT'''. By adding a new constant to your own class, this will override that if you use the above function to create your &lt;code&gt;DThinker&lt;/code&gt;.}}
+All other &lt;code&gt;DObject&lt;/code&gt; rules about destructing, marking, and serializing apply the same to &lt;code&gt;DThinker&lt;/code&gt;s.
+&lt;syntaxhighlight lang = "cpp"&gt;
+// Simple example.
+class DMySimpleThinker : public DThinker
+{
+    // ...
+}
+
+// Instantiating.
+// Spawns a new DMySimpleThinker in stat num STAT_DEFAULT.
+DMySimpleThinker* thinker = (DMySimpleThinker*)primaryLevel-&gt;CreateThinker(RUNTIME_CLASS(DMySimpleThinker));
+&lt;/syntaxhighlight&gt;
+&lt;syntaxhighlight lang = "cpp"&gt;
+// Complex example.
+class DMyThinker : public DThinker
+{
+    // ...
+    int _myInt;
+public:
+    static const int DEFAULT_STAT = STAT_MYSTAT;
+    void Construct(int myInt);
+    // ...
+}
+
+void DMyThinker::Construct(int myInt)
+{
+    _myInt = myInt;
+}
+
+// Instantiating.
+// Spawns a new DMyThinker in stat num STAT_MYSTAT with a _myInt value of intValue.
+DMyThinker* thinker = primaryLevel-&gt;CreateThinker&lt;DMyThinker&gt;(intValue);
+&lt;/syntaxhighlight&gt;
+
+= Structs =
+While structs have overall less set up, they come with their own set of limitations due to not having access to the common &lt;code&gt;DObject&lt;/code&gt; functions. For native structs, memory management is manual since it's handled entirely by the engine instead of the VM (this also means their constructors and destructors work like normal). For non-native structs, though, complex types (e.g. &lt;code&gt;TArray&lt;/code&gt;) should be exported. If a complex type isn't exported within a non-native struct, it has no way of freeing the memory the complex type holds and it can cause a leak. &lt;code&gt;DObject&lt;/code&gt; pointers exhibit similar behavior. For non-native structs, they will be correctly marked by the garbage collector so long as those fields are exported. Internal-only &lt;code&gt;DObject&lt;/code&gt; pointer fields for both native and non-native structs should be avoided as they have no means of marking these for the garbage collector. This means that these objects can become freed suddenly at any point and there's little in the way of verifying it from the pointer as &lt;code&gt;TObjPtr&lt;T&gt;&lt;/code&gt; cannot be used.
+
+== Serializing ==
+With non-native structs all exported fields will be automatically serialized. Native structs have a unique issue, though, in that they're stored within the VM as a pointer but cannot be saved that way. Naturally these structs will not have access to the &lt;code&gt;Serialize()&lt;/code&gt; virtual so they must set up their own handlers for serializing themselves. This can be done within &lt;code&gt;thingdef_data.cpp&lt;/code&gt; in the native struct's definition within &lt;code&gt;InitThingdef()&lt;/code&gt;. After the native struct is defined, &lt;code&gt;NewPointer()&lt;/code&gt; can be called. It takes the &lt;code&gt;PStruct&lt;/code&gt; pointer returned from &lt;code&gt;NewStruct&lt;/code&gt;. From here you can call &lt;code&gt;InstallHandlers()&lt;/code&gt; on the pointer it returns and give it two lambda expressions: the first is the serialize function for writing and the second is the serialize function for reading.
+&lt;syntaxhighlight lang = "cpp"&gt;
+// Writing.
+[](FSerializer&amp; arc, const char* key, const void *addr)
+// Reading.
+[](FSerializer&amp; arc, const char* key, void *addr)
+&lt;/syntaxhighlight&gt;
+&lt;code&gt;addr&lt;/code&gt; in this case is a pointer to the actual class/struct instance. It must be correctly casted to its proper datatype when passing to the serialize functions. This means each class/struct should have its own &lt;code&gt;Serialize()&lt;/code&gt; variant similar to the datatypes like &lt;code&gt;int32_t&lt;/code&gt;. Each of these function definitions should include a &lt;code&gt;template&lt;&gt;&lt;/code&gt; at the beginning of them.
+&lt;syntaxhighlight lang = "cpp"&gt;
+auto myNativeStruct = NewStruct("MyNativeStruct", nullptr, true);
+myNativeStruct-&gt;Size = sizeof(FMyNativeStruct);
+myNativeStruct-&gt;Align = alignof(FMyNativeStruct);
+NewPointer(myNativeStruct)-&gt;InstallHandlers(
+    [](FSerializer&amp; arc, const char* key, const void* addr)
+    {
+        arc(key, *(FMyNativeStruct**)addr);
+    },
+    [](FSerializer&amp; arc, const char* key, void* addr)
+    {
+        Serialize&lt;FMyNativeStruct&gt;(arc, key, *(FMyNativeStruct**)addr, nullptr); // Note that when reading the template structure is used.
+        return true;
+    }
+);
+&lt;/syntaxhighlight&gt;</text>
+    <sha1>fl4ndj2k25hwc30eszkg4roblp909zl</sha1>
+  </revision>
+</page>

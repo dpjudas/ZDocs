@@ -1,0 +1,143 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>ZScript functions</title>
+  <ns>0</ns>
+  <id>9186</id>
+  <revision>
+    <id>53574</id>
+    <parentid>53573</parentid>
+    <timestamp>2024-11-07T11:34:18Z</timestamp>
+    <contributor>
+      <username>Jekyll Grim Payne</username>
+      <id>2175</id>
+    </contributor>
+    <comment>/* Referencing */</comment>
+    <origin>53574</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="6824" sha1="ahactqchl4n8v3q0jcl7ryrpwm69azt" xml:space="preserve">{{ZScriptNote}}
+
+Functions are created similarly to how they are made in many different programming languages.
+
+&lt;syntaxhighlight lang="csharp"&gt;
+int MyFunction(int MyNumber, int Another)
+{
+	return MyNumber + Another;
+}
+&lt;/syntaxhighlight&gt;
+'''PERFORMANCE NOTE:''' Functions are useful, and should be used for clean code, especially code that is redundant as this will overall help performance and readability. If you do encounter slowdown, worry about getting the correct results first before optimizing. In very old versions of GZDoom, function calls could seriously harm performance, but with the addition of the JIT and the overhaul of the ZScript calling convention, this is not the case anymore. '''If you're having issues with performance, the problem will almost always lie in the code, rather than being due to function call overhead.'''
+
+Using the console command
+
+&lt;syntaxhighlight lang="csharp"&gt;
+stat vm
+&lt;/syntaxhighlight&gt;
+is helpful for seeing performance/benchmarking of ZScript in general.
+
+== Multiple Returns ==
+Functions are capable of returning multiple variables at once. All it needs is the return types defined with a comma between each, and for the return statement to also contain the ideal variables like such:
+
+&lt;syntaxhighlight lang="csharp"&gt;
+// Returns two ints and a bool.
+int, int, bool MyFunction(int MyNumber, int Another)
+{
+	return MyNumber, Another, true;
+}
+&lt;/syntaxhighlight&gt;
+The call to the function does not require all assignments to be filled, only up to the necessary one on the right. Note that an actual non-constant variable of the appropriate type is required for each.
+
+&lt;syntaxhighlight lang="csharp"&gt;
+// If only the second return is desired (where 'b' is), the previous (left) variables need a temporary assignment. Anything after does not.
+int a, b;
+[a, b] = MyFunction(1, 2);
+&lt;/syntaxhighlight&gt;
+
+The {{c|let}} keyword can also be used with multiple returns:
+&lt;syntaxhighlight lang="csharp"&gt;
+let [num1, num2, mybool] = MyFunction(1, 2); //types for return values will be set automatically, even if they're different types
+&lt;/syntaxhighlight&gt;
+
+== Referencing ==
+As described with [[ZScript special words]], 'in' and/or 'out' can be used to specify sending in a variable for direct modification. This is especially useful if passing [[structs]] around, which can alleviate the problem of having so many parameters, and modifying variables of things that otherwise cannot be returned (such as structs themselves).
+A simple struct must be defined though:
+&lt;syntaxhighlight lang="csharp"&gt;
+Struct MyStruct
+{
+	int a, b;
+}
+&lt;/syntaxhighlight&gt;
+With the struct defined, simply pass it in like this:
+&lt;syntaxhighlight lang="csharp"&gt;
+void ChangeStructNumbers (in out MyStruct strct)
+{
+	strct.a = 1;
+	strct.b = 2;
+}
+&lt;/syntaxhighlight&gt;
+
+== Function types ==
+=== Static ===
+The &lt;code&gt;static&lt;/code&gt; keyword marks a function as not being tied to any particular instance of a class or struct. They can be called directly by using the class/struct name followed by the name of the function. Be warned that static functions will not have access to any fields within that class/struct. If field access is required, consider making it non-static or passing a reference to an object that has those fields.
+&lt;syntaxhighlight lang="csharp"&gt;
+class MyClass
+{
+    static void MyStaticFunction() {}
+}
+
+MyClass.MyStaticFunction(); // how to invoke the method
+&lt;/syntaxhighlight&gt;
+A common example of a static function in ZScript is [[Spawn (ZScript)|{{c|Spawn()}}]]: when called outside of an Actor class, it must be called as &lt;code&gt;Actor.Spawn&lt;/code&gt;.
+
+=== Action ===
+The &lt;code&gt;action&lt;/code&gt; modifier is specifically for non-static Actor functions that are callable from [[Classes:PSprite|PSprites]]. Since PSprites are not Actors, the way they pass information to a State's function is different. This is done by passing the State's owner as the &lt;code&gt;invoker&lt;/code&gt; while the player themselves is passed as the &lt;code&gt;self&lt;/code&gt; pointer. A &lt;code&gt;stateInfo&lt;/code&gt; pointer is also passed that contains information about the State the function was called from. For regular Actors this modifier does nothing and shouldn't be used.
+&lt;syntaxhighlight lang="csharp"&gt;
+action void MyWeaponFunction() {}
+&lt;/syntaxhighlight&gt;
+For all intents and purposes, this modifier is only useful for classes that inherit from {{class|StateProvider}} (namely, {{class|Weapon}} and {{class|CustomInventory}}), specifically for functions that are called directly in a state, much like the generic Weapon functions such as [[A_WeaponReady]], [[A_FireBullets]] and others. 
+
+At the same time, not ''all'' weapon functions are action functions. For example, [[DepleteAmmo]] is never called in a state directly, and is not an action function, so, when called from a weapon state or from another action function, it must be called as &lt;code&gt;invoker.DepleteAmmo&lt;/code&gt;.
+
+=== Virtual ===
+The &lt;code&gt;virtual&lt;/code&gt; keyword allows child classes to override a non-static function defined in a parent class. This can allow for custom behavior of an object even if only knowing its base type. The &lt;code&gt;override&lt;/code&gt; keyword is used in place of &lt;code&gt;virtual&lt;/code&gt; when overriding it from a child. The function's signature must match one-to-one with the parent's function excluding parameter names. While technically parameters with default arguments can be left out in the override, this is done for future compatibility should a virtual function gain more parameters. Any parameters left out will be inaccessible to the override. Default parameters cannot be defined in an override. A child's function will completely override the function of its parents. To avoid this behavior, the &lt;code&gt;super&lt;/code&gt; keyword can be used.
+&lt;syntaxhighlight lang="csharp"&gt;
+class A
+{
+    virtual void MyFunction(int arg1, int arg2 = 0) // arg2 has a default argument
+    {
+        DoThing(arg1, arg2);
+    }
+}
+
+class B : A
+{
+    override void MyFunction(int arg1, int arg2) // arg2 doesn't have a default in the override
+    {
+        super.MyFunction(arg1, arg2); // make sure to still call A's function
+
+        DoMoreThings(arg1, arg2);
+    }
+}
+&lt;/syntaxhighlight&gt;
+
+ZScript classes come with a large number of virtual functions, see [[ZScript virtual functions]].
+
+== Limits ==
+While in practice this should never be an issue, functions in ZScript do have a maximum number of resources available for use, and this must be kept in mind when designing them:
+
+* 32767 integer constants
+* 32767 string constants
+* 32767 float constants
+* 32767 address constants (this includes all function addresses, RNGs or other native resources being referenced.)
+* 256 integer registers
+* 256 floating point registers
+* 256 string registers
+* 256 address registers
+
+== See also ==
+* [[ZScript actor functions]]
+* [[ZScript virtual functions]]
+* [[Action functions]]
+
+[[Category:ZScript]]</text>
+    <sha1>ahactqchl4n8v3q0jcl7ryrpwm69azt</sha1>
+  </revision>
+</page>

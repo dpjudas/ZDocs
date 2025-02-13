@@ -1,0 +1,116 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>ThingCount</title>
+  <ns>0</ns>
+  <id>932</id>
+  <revision>
+    <id>35771</id>
+    <parentid>31096</parentid>
+    <timestamp>2013-02-10T08:01:05Z</timestamp>
+    <contributor>
+      <username>Deded007</username>
+      <id>1392</id>
+    </contributor>
+    <minor />
+    <comment>formatting</comment>
+    <origin>35771</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="3645" sha1="0tbrwmxk1grlcm01dwc7lx7xuqpxyoy" xml:space="preserve">int '''ThingCount''' (int ''type'', int ''tid'')
+
+==Usage==
+
+'''ThingCount''' counts all things specified on the map. You may specify a type of monster via [[spawn numbers]], a specific [[TID]], or both (monsters with a specific TID).
+
+'''ThingCount''' will not count dead monsters, even though their things still exist and can be used, for instance, by [[SpawnSpot]].
+
+Note that for this function to count a specific type of actor, it will need to have a [[spawn number]] assigned. If you need to count actors without a SpawnID, use the alternative [[ThingCountName]] function instead.
+
+If the ''type'' parameter is T_NONE, '''ThingCount''' will count all actors with the given TID, regardless of their type. Inversely, if the ''tid'' parameter is 0, it will count all actors of the given type, regardless of TID.
+
+==Examples==
+
+For example let's say you have a map with 10 enemies:
+
+Imp - tid 5&lt;br&gt;
+Imp - tid 5&lt;br&gt;
+Imp - tid 0&lt;br&gt;
+Baron - tid 5&lt;br&gt;
+Baron - tid 5&lt;br&gt;
+Baron - tid 4&lt;br&gt;
+Baron - tid 0&lt;br&gt;
+Demon - tid 5&lt;br&gt;
+Demon - tid 4&lt;br&gt;
+Demon - tid 0&lt;br&gt;
+
+Here are some example values:&lt;br&gt;
+
+&lt;tt&gt;ThingCount(T_IMP, 0)&lt;/tt&gt; = 3&lt;br&gt;
+&lt;tt&gt;ThingCount(T_BARON, 0)&lt;/tt&gt; = 4&lt;br&gt;
+&lt;tt&gt;ThingCount(T_DEMON, 0)&lt;/tt&gt; = 3&lt;br&gt;
+&lt;tt&gt;ThingCount(T_NONE, 5)&lt;/tt&gt; = 5&lt;br&gt;
+&lt;tt&gt;ThingCount(T_NONE, 4)&lt;/tt&gt; = 2&lt;br&gt;
+&lt;tt&gt;ThingCount(T_IMP, 5)&lt;/tt&gt; = 2&lt;br&gt;
+&lt;tt&gt;ThingCount(T_DEMON, 4)&lt;/tt&gt; = 1&lt;br&gt;
+&lt;tt&gt;ThingCount(T_NONE, 0)&lt;/tt&gt; = 10&lt;br&gt;
+&lt;tt&gt;ThingCount(T_IMP, 4)&lt;/tt&gt; = 0&lt;br&gt;
+
+
+----
+
+This script simulates the behavior of E1M8. It waits for all the Barons with tag 10 to be defeated. Once they are, it lowers a sector tagged 15 to the lowest adjacent floor.
+
+ script 1 OPEN
+ {
+ 	While([[ThingCount]]({{const|T_BARON}}, 10) &gt; 0)
+ 		[[Delay]](35);
+ 	
+ 	[[Floor_LowerToLowest]](15, 20);
+ }
+
+This script is open so it's run from the start of the map. Alternatively it could be modified to run upon crossing a line and made more general. The while loop just keeps executing the delay command whilst there are still Barons on the level. The reason for this is there is no need for the script to check every single frame whether the barons are dead. It delays so that it checks only once per second, which might speed things up a very small amount. Once all the Barons die, the while loop stops and the floor gets lowered.
+
+----
+
+This script shows that '''ThingCount''' can be used effectively with [[Spawn]] and [[SpawnSpot]], as both of these allow you to add a TID to the spawned thing. It takes the TID of a teleporter spot as its parameter.
+
+ script 1 (int teletid)
+ {
+ 	[[SpawnSpot]]("{{class|Revenant}}", teletid, 100, 0);
+ 	
+ 	While([[ThingCount]]({{const|T_REVENANT}}, 100) &gt; 0)
+ 		[[Delay]](35);
+ 	
+ 	[[Print]](s:"You have beaten the revenant!");
+ }
+
+First it spawns a {{class|Revenant}} with a (hopefully) unique tid of 100. Afterwards it delays whilst the revenant is still alive. Once the revenant is dead, it shows the player they have beaten it (as if they wouldn't know).
+
+----
+
+This script displays a counter of how many of a group monsters you must defeat before you have won. It takes a parameter, which is the TID of the group of monsters
+
+ script 5 (int armytid)
+ {
+ 	[[Thing_Hate]](armytid, 0, 0);
+ 	
+ 	While ([[ThingCount]](0, armytid) &gt; 0)
+ 	{
+ 		[[HudMessage]](s:"Defeat ", d:[[ThingCount]](0, armytid), s:" more monsters!";
+ 			{{const|HUDMSG_PLAIN}}, 1, {{const|CR_RED}}, 0.5, 0.9, 2.0);
+ 		
+ 		[[Delay]](35);	
+ 	}
+ 	
+ 	[[HudMessage]](s:"Victory!";
+ 		{{const|HUDMSG_PLAIN}}, 1, {{const|CR_GOLD}}, 0.5, 0.9, 2.0);
+ }
+
+This demonstrates the usefulness of using a monster type of 0.
+
+==See also==
+*[[ThingCountName]]
+
+[[category:ACS Information functions]]</text>
+    <sha1>0tbrwmxk1grlcm01dwc7lx7xuqpxyoy</sha1>
+  </revision>
+</page>

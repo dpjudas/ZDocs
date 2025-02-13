@@ -1,0 +1,51 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>SetActorAngle</title>
+  <ns>0</ns>
+  <id>1848</id>
+  <revision>
+    <id>36012</id>
+    <parentid>21858</parentid>
+    <timestamp>2013-03-01T04:06:51Z</timestamp>
+    <contributor>
+      <username>Deded007</username>
+      <id>1392</id>
+    </contributor>
+    <minor />
+    <comment>links, templates, clean up</comment>
+    <origin>36012</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="772" sha1="3gov9q9qkx9t29uzsyyv8kiquay3yqu" xml:space="preserve">void '''SetActorAngle''' (int ''tid'', fixed ''angle'')
+
+Sets the actor's angle.
+
+Use a value for the angle from 0.0 to 1.0.
+
+* ''tid'': [[TID]] of thing.
+* ''angle'': Angle to set. This is a [[definitions|fixed point angle]].
+
+This works to set the facing of monsters, players, or any other actor.
+
+*North = 0.25
+*West = 0.5 
+*South = 0.75 
+*East = 1.0
+
+== Example ==
+
+This irritating script spins the player round and round for a while when it is activated.
+
+ script 1 (int spintime)
+ {
+     while (spintime-- &gt; 0)
+     {
+         [[SetActorAngle]] (100, [[GetActorAngle]] (100) - 0.02);
+         [[Delay]] (1);
+         [[print]](s:"You spin me right round, baby right round like a record, baby right round, round, round");
+     }
+ }
+ 	
+[[category:ACS Actor functions]]</text>
+    <sha1>3gov9q9qkx9t29uzsyyv8kiquay3yqu</sha1>
+  </revision>
+</page>

@@ -1,0 +1,46 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>Classes:AlienSpectre2</title>
+  <ns>0</ns>
+  <id>4758</id>
+  <revision>
+    <id>39828</id>
+    <parentid>35190</parentid>
+    <timestamp>2015-05-04T22:00:33Z</timestamp>
+    <contributor>
+      <username>Blue Shadow</username>
+      <id>2021</id>
+    </contributor>
+    <minor />
+    <comment>/* DECORATE definition */ Updated</comment>
+    <origin>39828</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="786" sha1="obl2udvbmzjsbndo9m4eo8at867xpsl" xml:space="preserve">{{Actor|
+| type = Monster
+| name = The Bishop's spectre
+| class = AlienSpectre2
+| game = Strife
+| doomednum = 75
+| convid = 70
+}}[[Classes]]: [[Classes:SpectralMonster|SpectralMonster]]&amp;rarr;[[Classes:AlienSpectre1|AlienSpectre1]]&amp;rarr;&lt;u&gt;AlienSpectre2&lt;/u&gt;&lt;br&gt;
+
+The spectre possesing the {{Class|StrifeBishop|Bishop}}. It can only be hurt by the {{Class|sigil}} and fires {{Class|sigil2}} blasts.
+==== [[DECORATE]] definition ====
+ ACTOR &lt;u&gt;AlienSpectre2&lt;/u&gt; : {{Class|AlienSpectre1}}
+ {
+   {{Property|Health}} 1200
+   {{Property|PainChance}} 50
+   {{Property|Radius}} 24
+   {{Property|DropItem}} "{{Class|Sigil2}}"
+   States
+   {
+   Missile:
+     ALN1 F 4 [[A_FaceTarget]]
+     ALN1 I 4 [[A_CustomMissile]]("{{Class|SpectralLightningH3}}", 32, 0)
+     ALN1 E 4
+     Goto See+10
+   }
+ }</text>
+    <sha1>obl2udvbmzjsbndo9m4eo8at867xpsl</sha1>
+  </revision>
+</page>

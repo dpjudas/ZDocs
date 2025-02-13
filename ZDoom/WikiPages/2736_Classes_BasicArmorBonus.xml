@@ -1,0 +1,217 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>Classes:BasicArmorBonus</title>
+  <ns>0</ns>
+  <id>2736</id>
+  <revision>
+    <id>52187</id>
+    <parentid>51707</parentid>
+    <timestamp>2024-04-02T12:10:12Z</timestamp>
+    <contributor>
+      <username>Jekyll Grim Payne</username>
+      <id>2175</id>
+    </contributor>
+    <minor />
+    <comment>/* DECORATE */</comment>
+    <origin>52187</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="6331" sha1="577jii1vrawzyqmscgfwxc67q7fnh95" xml:space="preserve">{{Actor|
+| type = Internal
+| name = Basic armor bonus
+| class = BasicArmorBonus
+}}[[Classes]]: [[Classes:Inventory|Inventory]]&amp;rarr;[[Classes:Armor|Armor]]&amp;rarr;&lt;u&gt;BasicArmorBonus&lt;/u&gt;&lt;br&gt;
+&amp;ensp;&amp;rarr;[[Classes:ArmorBonus|ArmorBonus]]
+
+
+&lt;u&gt;BasicArmorBonus&lt;/u&gt; are armor items that add points to the player's current armor. The base class &lt;u&gt;BasicArmorBonus&lt;/u&gt; is never used directly. It is always the base class for predefined items (like Doom's [[Classes:ArmorBonus|armor bonus]]) or for items defined in [[DECORATE]].
+
+The purpose of this class is to increase the player's current armor. To do this, upon being picked up, &lt;u&gt;BasicArmorBonus&lt;/u&gt; finds an instance of the {{class|BasicArmor}} class in the player's inventory and increases its amount, without modifying any other values (such as  {{c|savePercent}}, {{c|icon}} or others) that determine the actual effectiveness of the armor. In practical terms, this means that &lt;u&gt;BasicArmorBonus&lt;/u&gt; ''adds to existing armor'' without modifying it, and doesn't give any armor on its own. The only exception is when the player doesn't have any armor yet: only in this case will &lt;u&gt;BasicArmorBonus&lt;/u&gt; utilize its own {{c|SavePercent}} value and "give" the player some armor.
+
+&lt;u&gt;BasicArmorBonus&lt;/u&gt; sets the  {{flag|INVENTORY.ALWAYSPICKUP}} flag by default, but it can be unset, so that your armor bonuses don't get picked up if the player already has the maximum aount of armor.
+
+&lt;u&gt;BasicArmorBonus&lt;/u&gt; also uses the {{flag|INVENTORY.AUTOACTIVATE}} flag, bcause its main behavior is tied to its [[Use]] override. Unsetting this flag will let the bonuses be placed in the player's inventory so that they can be used manually later.
+
+== Using in [[DECORATE]] and [[ZScript]] ==
+&lt;u&gt;BasicArmorBonus&lt;/u&gt; uses the basic [[Classes:Inventory|Inventory properties]] to define their behavior as inventory items. They also define a few new properties to define their behavior as armor.
+
+{{:BasicArmorBonus properties}}
+
+== Examples ==
+=== [[ZScript]] ===
+ class DoubleArmorBonus : &lt;u&gt;BasicArmorBonus&lt;/u&gt;
+ {
+   Default
+   {
+     {{property|Armor.MaxSaveAmount}} 250;
+     {{property|Armor.SavePercent}} 50;
+     {{property|Armor.SaveAmount}} 2;
+     {{property|Inventory.Icon}} "ABO2A0";
+   }
+   [[Actor states|States]]
+   {
+   Spawn:
+     ABO2 AB 3;
+     ABO2 C 6;
+     ABO2 B 3;
+     loop;
+   }
+ }
+
+=== [[DECORATE]] {{deprecated}} ===
+''BasicMaxArmorBonus'' (Skulltag Imported)
+
+ actor &lt;u&gt;MaxArmorBonus&lt;/u&gt; : [[Classes:BasicArmorBonus|BasicArmorBonus]] 2015
+ {
+   spawnid 176
+   radius 20
+   height 16
+   inventory.pickupmessage "Picked up a max armor bonus."
+   inventory.icon "ARM1A0"
+   armor.savepercent 33.33333
+   armor.saveamount 1
+   armor.maxsaveamount 200
+   armor.maxbonus 1
+   armor.maxbonusmax 50
+   +COUNTITEM
+   +INVENTORY.ALWAYSPICKUP
+   states
+   {
+   Spawn:
+     BON2 ABCDCB 6
+     loop
+   }
+ }
+
+== [[ZScript]] definition ==
+{{ZScriptDefinitionNote|actors/inventory/armor.zs#L217C1-L333C2}}
+&lt;syntaxhighlight lang="csharp"&gt;
+class BasicArmorBonus : Armor 
+{
+	double SavePercent;	// The default, for when you don't already have armor
+	int MaxSaveAmount;
+	int MaxAbsorb;
+	int MaxFullAbsorb;
+	int SaveAmount;
+	int BonusCount;
+	int BonusMax;
+	
+	property prefix: Armor;
+	property MaxSaveAmount: MaxSaveAmount;
+	property SaveAmount : SaveAmount;
+	property SavePercent: SavePercent;
+	property MaxAbsorb: MaxAbsorb;
+	property MaxFullAbsorb: MaxFullAbsorb;
+	property MaxBonus: BonusCount;
+	property MaxBonusMax: BonusMax;
+
+	Default
+	{
+		+Inventory.AUTOACTIVATE
+		+Inventory.ALWAYSPICKUP
+		Inventory.MaxAmount 0;
+		Armor.SavePercent 33.335;
+	}
+	
+	//===========================================================================
+	//
+	// ABasicArmorBonus :: CreateCopy
+	//
+	//===========================================================================
+
+	override Inventory CreateCopy (Actor other)
+	{
+		let copy = BasicArmorBonus(Super.CreateCopy (other));
+		copy.SavePercent = SavePercent;
+		copy.SaveAmount = SaveAmount;
+		copy.MaxSaveAmount = MaxSaveAmount;
+		copy.BonusCount = BonusCount;
+		copy.BonusMax = BonusMax;
+		copy.MaxAbsorb = MaxAbsorb;
+		copy.MaxFullAbsorb = MaxFullAbsorb;
+
+		return copy;
+	}
+
+	//===========================================================================
+	//
+	// ABasicArmorBonus :: Use
+	//
+	// Tries to add to the amount of BasicArmor a player has.
+	//
+	//===========================================================================
+
+	override bool Use (bool pickup)
+	{
+		let armor = BasicArmor(Owner.FindInventory("BasicArmor"));
+		bool result = false;
+
+		// This should really never happen but let's be prepared for a broken inventory.
+		if (armor == null)
+		{
+			armor = BasicArmor(Spawn("BasicArmor"));
+			armor.BecomeItem ();
+			armor.Amount = 0;
+			armor.MaxAmount = MaxSaveAmount;
+			Owner.AddInventory (armor);
+		}
+
+		if (BonusCount &gt; 0 &amp;&amp; armor.BonusCount &lt; BonusMax)
+		{
+			armor.BonusCount = min(armor.BonusCount + BonusCount, BonusMax);
+			result = true;
+		}
+
+		int saveAmount = min(GetSaveAmount(), MaxSaveAmount);
+
+		if (saveAmount &lt;= 0)
+		{ // If it can't give you anything, it's as good as used.
+			return BonusCount &gt; 0 ? result : true;
+		}
+
+		// If you already have more armor than this item can give you, you can't
+		// use it.
+		if (armor.Amount &gt;= MaxSaveAmount + armor.BonusCount)
+		{
+			return result;
+		}
+
+		if (armor.Amount &lt;= 0)
+		{ // Should never be less than 0, but might as well check anyway
+			armor.Amount = 0;
+			armor.Icon = Icon;
+			armor.SavePercent = clamp(SavePercent, 0, 100) / 100;
+			armor.MaxAbsorb = MaxAbsorb;
+			armor.ArmorType = GetClassName();
+			armor.MaxFullAbsorb = MaxFullAbsorb;
+			armor.ActualSaveAmount = MaxSaveAmount;
+		}
+
+		armor.Amount = min(armor.Amount + saveAmount, MaxSaveAmount + armor.BonusCount);
+		armor.MaxAmount = max(armor.MaxAmount, MaxSaveAmount);
+		return true;
+	}
+
+	
+	override void SetGiveAmount(Actor receiver, int amount, bool bycheat)
+	{
+		SaveAmount *= amount;
+	}
+
+	int GetSaveAmount ()
+	{
+		return !bIgnoreSkill ? int(SaveAmount * G_SkillPropertyFloat(SKILLP_ArmorFactor)) : SaveAmount;
+	}
+}&lt;/syntaxhighlight&gt;
+
+== [[DECORATE]] definition ==
+{{DecorateDefinitionNote}}
+ ACTOR &lt;u&gt;BasicArmorBonus&lt;/u&gt; : {{Class|Armor}} native
+ {
+   +{{Flag|INVENTORY.AUTOACTIVATE}}
+   +{{Flag|INVENTORY.ALWAYSPICKUP}}
+   {{Property|Inventory.MaxAmount}} 0
+   {{Property|Armor.SavePercent}} 33.335
+ }</text>
+    <sha1>577jii1vrawzyqmscgfwxc67q7fnh95</sha1>
+  </revision>
+</page>

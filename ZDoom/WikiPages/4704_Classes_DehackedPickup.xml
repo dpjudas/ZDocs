@@ -1,0 +1,133 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>Classes:DehackedPickup</title>
+  <ns>0</ns>
+  <id>4704</id>
+  <revision>
+    <id>53655</id>
+    <parentid>53650</parentid>
+    <timestamp>2024-11-11T11:11:01Z</timestamp>
+    <contributor>
+      <username>Jekyll Grim Payne</username>
+      <id>2175</id>
+    </contributor>
+    <origin>53655</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="2858" sha1="r4d8jw5urw75mwq1xer9trau6q6crna" xml:space="preserve">{{Actor|
+| type = Internal
+| name = DeHackEd pickup
+| class = DehackedPickup
+}}[[Classes]]: [[Classes:Inventory|Inventory]]&amp;rarr;&lt;u&gt;DehackedPickup&lt;/u&gt;&lt;br&gt;
+
+DehackedPickup is a class used to emulate Doom's original behavior of determining a pickup's type by its sprite. This class is never used by mods directly; GZDoom makes use of it automatically when detecting an {{class|Inventory}} item modified by [[DEHACKED]].
+
+The real item that should be given is determined with a special private function, {{c|DetermineType()}}, which is invoked in DehackedPickup's {{c|[[TryPickup]]}} override.
+
+=== [[ZScript]] definition ===
+{{ZScriptDefinitionNote|actors/inventory/inventory.zs}}
+&lt;syntaxhighlight lang="csharp"&gt;
+class DehackedPickup : Inventory
+{
+	Inventory RealPickup;
+	bool droppedbymonster;
+	
+	private native class&lt;Inventory&gt; DetermineType();
+	
+	override bool TryPickup (in out Actor toucher)
+	{
+		let type = DetermineType ();
+		if (type == NULL)
+		{
+			return false;
+		}
+		RealPickup = Inventory(Spawn (type, Pos, NO_REPLACE));
+		if (RealPickup != NULL)
+		{
+			// The internally spawned item should never count towards statistics.
+			RealPickup.ClearCounters();
+			if (!bDropped)
+			{
+				RealPickup.bDropped = false;
+			}
+			// If this item has been dropped by a monster the
+			// amount of ammo this gives must be adjusted.
+			if (droppedbymonster)
+			{
+				RealPickup.ModifyDropAmount(0);
+			}
+			if (!RealPickup.CallTryPickup (toucher))
+			{
+				RealPickup.Destroy ();
+				RealPickup = NULL;
+				return false;
+			}
+			GoAwayAndDie ();
+			return true;
+		}
+		return false;
+	}
+
+	override String PickupMessage ()
+	{
+		if (RealPickup != null)
+			return RealPickup.PickupMessage ();
+		else return "";
+	}
+
+	override bool ShouldStay ()
+	{
+		if (RealPickup != null)
+			return RealPickup.ShouldStay ();
+		else return true;
+	}
+
+	override bool ShouldRespawn ()
+	{
+		if (RealPickup != null)
+			return RealPickup.ShouldRespawn ();
+		else return false;
+	}
+
+	override void PlayPickupSound (Actor toucher)
+	{
+		if (RealPickup != null)
+			RealPickup.PlayPickupSound (toucher);
+	}
+
+	override void DoPickupSpecial (Actor toucher)
+	{
+		Super.DoPickupSpecial (toucher);
+		// If the real pickup hasn't joined the toucher's inventory, make sure it
+		// doesn't stick around.
+		if (RealPickup != null &amp;&amp; RealPickup.Owner != toucher)
+		{
+			RealPickup.Destroy ();
+		}
+		RealPickup = null;
+	}
+
+	override void OnDestroy ()
+	{
+		if (RealPickup != null)
+		{
+			RealPickup.Destroy ();
+			RealPickup = null;
+		}
+		Super.OnDestroy();
+	}
+	
+	override void ModifyDropAmount(int dropamount)
+	{
+		// Must forward the adjustment to the real item.
+		// dropamount is not relevant here because Dehacked cannot change it.
+		droppedbymonster = true;
+	}
+
+}&lt;/syntaxhighlight&gt;
+
+=== [[DECORATE]] definition ===
+{{DecorateDefinitionNote}}
+ ACTOR &lt;u&gt;DehackedPickup&lt;/u&gt; : {{Class|Inventory}} native {}</text>
+    <sha1>r4d8jw5urw75mwq1xer9trau6q6crna</sha1>
+  </revision>
+</page>

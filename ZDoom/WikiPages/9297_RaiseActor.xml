@@ -1,0 +1,89 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>RaiseActor</title>
+  <ns>0</ns>
+  <id>9297</id>
+  <revision>
+    <id>53231</id>
+    <parentid>48938</parentid>
+    <timestamp>2024-10-06T11:35:04Z</timestamp>
+    <contributor>
+      <username>Jekyll Grim Payne</username>
+      <id>2175</id>
+    </contributor>
+    <origin>53231</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="2164" sha1="9dypdizon7h8h2twrtt28zka4ag5j9b" xml:space="preserve">__NOTOC__bool '''RaiseActor''' (Actor ''other'' [, int ''flags''])
+
+==Usage==
+Resurrects the specified actor, with the calling actor being the one performing the act of resurrection. The actor cannot be resurrected if:
+*it is not a {{Flag|CORPSE|corpse}}.
+*the duration of its current state is not -1 and said state lacks the {{c|[[Actor_states#CanRaise|CanRaise]]}} keyword.
+*it is a player.
+*lacks the {{c|Raise}} state.
+*there is not enough room for it to raise (this check is bypassed if the RF_NOCHECKPOSITION flag is passed to the function).
+*{{c|[[CanResurrect]]}} resolves to failure.
+
+===Parameters===
+*''other'': the actor to resurrect. This is a pointer to the actor.
+*''flags'': the following flags can be combined using the bit-wise OR operator (|):
+**'''RF_NOCHECKPOSITION''' — resurrect the actor without checking for room.
+
+===Return value===
+The function returns ''true'' if the actor is resurrected successfully, otherwise it returns ''false''.
+
+==Examples==
+Below is a special type of Arch-vile that will revive monsters in a small area around it.
+
+ class SuperArchvile : Archvile replaces Archvile
+ {
+   States
+   {
+     See:
+       VILE AABBCCDDEEFF 2
+       {
+          // 1 in 100 chance of activating
+          if (!Random(0,99) &amp;&amp; CheckAreaRevive())
+          {
+            SetStateLabel("SuperHeal");
+            return;
+          }
+ 				
+          A_VileChase();
+        }
+        Loop;
+ 
+      SuperHeal:
+        VILE [\] 35 Bright;
+        Goto See;
+   }
+ 
+   // revive everything around the Super Arch-vile
+   bool CheckAreaRevive()
+   {
+     int reviveCount;
+     BlockThingsIterator it = BlockThingsIterator.Create(self, radius*2);
+     Actor mo;
+     while (it.Next())
+     {
+       mo = it.thing;
+ 
+       // if out of range or it can't be resurrected, skip it
+       if (!mo || Distance2D(mo) &gt; radius*2 || !mo.CanRaise())
+         continue;
+ 
+       // if we successfully raised it, add it to the counter
+       if (RaiseActor(mo))
+         reviveCount++;
+     }
+ 
+     // only return true if we managed to revive something
+     return reviveCount &gt; 0;
+   }
+ }
+
+[[Category:ZScript]]
+[[Category:Monster resurrection functions]]</text>
+    <sha1>9dypdizon7h8h2twrtt28zka4ag5j9b</sha1>
+  </revision>
+</page>

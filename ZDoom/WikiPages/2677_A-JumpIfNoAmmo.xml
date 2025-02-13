@@ -1,0 +1,56 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>A JumpIfNoAmmo</title>
+  <ns>0</ns>
+  <id>2677</id>
+  <revision>
+    <id>53829</id>
+    <parentid>53825</parentid>
+    <timestamp>2024-11-22T10:20:24Z</timestamp>
+    <contributor>
+      <username>Jekyll Grim Payne</username>
+      <id>2175</id>
+    </contributor>
+    <origin>53829</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="1487" sha1="277tgr4wl1z4m22hpfiq9jzaw26qw1y" xml:space="preserve">{{DISPLAYTITLE:A_JumpIfNoAmmo}}
+'''[[Classes:StateProvider|StateProvider]]'''
+
+{{c|state '''A_JumpIfNoAmmo''' (int ''offset'')}}
+
+{{c|state '''A_JumpIfNoAmmo''' (StateLabel ''label'')}}
+
+== Usage ==
+This function can only be used with {{Class|Weapon|weapons}}. It jumps if the carrying player doesn't have enough ammunition for one attack of the currently used attack mode (defaulting to primary fire if called outside of a fire state).
+
+This function also checks for the Infinite Ammo DMFlag or the infinite ammo powerup. If either are present, this will never jump.
+
+''Offset'' is the number of frames to jump ahead when there is no ammo.
+''State'' is what state to jump to when you're out of ammo.
+
+=== Parameters ===
+Like other jump functions designed for DECORATE, this function's first argument accept different values, either a [[ZScript data types#StateLabel|state label]], or an integer number:
+*{{c|int '''offset'''}}
+:The number of states to skip over (''including'' the one where this function is called).
+*{{c|StateLabel '''label'''}}
+:The [[Actor_states#State_labels|name of the state sequence]] to jump to. The name must be given in quotation marks.
+
+== Examples ==
+
+   States
+   {
+     Fire:
+      TNT1 A 0 '''A_JumpIfNoAmmo'''("Reload");
+      CISG B 1 BRIGHT 
+      {
+        [[A_GunFlash]]();
+        [[A_FireBullets]](3, 2, -1, 9, pufftype: 'BulletHitPuff');
+      }
+      CISG CDE 2;
+      Goto Ready;
+
+[[Category:Decorate Jump functions]]
+[[Category:StateProvider]]</text>
+    <sha1>277tgr4wl1z4m22hpfiq9jzaw26qw1y</sha1>
+  </revision>
+</page>

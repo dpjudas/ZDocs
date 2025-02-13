@@ -1,0 +1,67 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>Demo</title>
+  <ns>0</ns>
+  <id>6625</id>
+  <revision>
+    <id>35168</id>
+    <parentid>32306</parentid>
+    <timestamp>2012-12-16T20:48:38Z</timestamp>
+    <contributor>
+      <username>Crimson Dusk</username>
+      <id>2000</id>
+    </contributor>
+    <minor />
+    <origin>35168</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="2742" sha1="0d1dafwmuwgj8926mbbpssiljlgn4fs" xml:space="preserve">{{doomwiki}}A '''demo''', short for '''demonstration''', is a recording of settings and in-game commands allowing to reconstitute a playthrough with perfect accuracy. The demo format, however, is very susceptible to engine or level changes. For this reason, [[ZDoom]] does not offer backward demo compatibility: if a demo was recorded with too old a [[version history|version of ZDoom]], the program will tell you it cannot play it back.
+
+ZDoom is also not compatible with the [[vanilla Doom]] demo format and will therefore not play the demo loop from the various supported [[IWAD]]s. Because of the lack of backward demo compatibility, it is not advised to put built-in demo lumps in a ZDoom mod, as they risk getting obsoleted. Instead, a scripted [[TITLEMAP]] can be used.
+
+The {{CVAR|D|chasedemo}} console variable can be used to watch demos in [[chasecam]] mode.
+
+The ZDoom demo format is based on the {{wp|Interchange_File_Format|Interchange File Format}}. It contains a '''FORM''' chunk of type '''ZDEM'''. It is then followed by several chunks, which can be of the following types:
+*'''ZDHD''': ZDoom demo header. Contains engine version, map label, and random number generator seed.
+*'''VARS''': Variables. Stores the state of the demo-critical [[console variables]].
+*'''UINF''': User information. Contains data about each of the players recorded in the demo.
+*'''NETD''': Net demo. Contains no info, but its presence flags the demo as being multiplayer.
+*'''WEAP''': Weapons. Contains the list of weapons available in-game during the demo and which slot they use.
+*'''BODY''': Body. Contains the bulk of the demo: the commands issued each tic by each player. This chunk may be compressed with {{wp|zlib}}.
+*'''COMP''': Compression. Contains the total size of the BODY chunk data when uncompressed.
+
+==Critical console variables==
+Demo-critical [[console variables]] are those that have either the CVAR_DEMOSAVE flag or the CVAR_SERVERINFO flag. They include:
+#{{CVAR|C|alwaysapplydmflags}}
+#{{CVAR|C|compatflags}}
+#{{CVAR|C|compatflags2}}
+#{{CVAR|C|deathmatch}}
+#{{CVAR|C|dmflags}}
+#{{CVAR|C|dmflags2}}
+#{{CVAR|C|forcewater}}
+#{{CVAR|C|fraglimit}}
+#{{CVAR|C|gameskill}}
+#{{CVAR|C|genblockmap}}
+#{{CVAR|C|genglnodes}}
+#{{CVAR|C|gennodes}}
+#{{CVAR|C|infighting}}
+#{{CVAR|C|splashfactor}}
+#{{CVAR|C|sv_aircontrol}}
+#{{CVAR|C|sv_cheats}}
+#{{CVAR|C|sv_corpsequeuesize}}
+#{{CVAR|C|sv_disableautohealth}}
+#{{CVAR|C|sv_dropstyle}}
+#{{CVAR|C|sv_fastweapons}}
+#{{CVAR|C|sv_gravity}}
+#{{CVAR|C|sv_smartaim}}
+#{{CVAR|C|sv_unlimited_pickup}}
+#{{CVAR|C|teamdamage}}
+#{{CVAR|C|teamplay}}
+#{{CVAR|C|timelimit}}
+#{{CVAR|C|var_friction}}
+#{{CVAR|C|var_pushers}}
+Currently, the VARS chunk can store up to 32 console variables.
+
+[[Category:Glossary]]</text>
+    <sha1>0d1dafwmuwgj8926mbbpssiljlgn4fs</sha1>
+  </revision>
+</page>

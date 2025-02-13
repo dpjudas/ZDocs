@@ -1,0 +1,106 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>Classes:Heresiarch</title>
+  <ns>0</ns>
+  <id>1621</id>
+  <revision>
+    <id>39510</id>
+    <parentid>37738</parentid>
+    <timestamp>2015-05-01T20:42:27Z</timestamp>
+    <contributor>
+      <username>Blue Shadow</username>
+      <id>2021</id>
+    </contributor>
+    <minor />
+    <comment>/* DECORATE definition */ Updated</comment>
+    <origin>39510</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="3335" sha1="obx7fyhfhatidynmjeuhc0zd1trj3bs" xml:space="preserve">{{Actor|
+| type = Monster
+| name = Heresiarch
+| class = Heresiarch
+| game = Hexen
+| doomednum = 10080
+}}[[Classes]]: &lt;u&gt;Heresiarch&lt;/u&gt;&lt;br&gt;
+The Heresiarch is a powerful sorcerer with a wide range of attacks and defenses. It has four different attacks, which are seleted mostly at random when it casts a spell:
+
+* Two [[Classes:SorcFX1|bouncing lava heads]] that follow the player like a seeker missile.
+* Total invulnerability and missile reflection, that lasts for a long time and makes the game irritating to play. This defense has a visual indicator, in the form of two [[Classes:SorcFX2|orbs]] that encircle the Heresiarch and leave a [[Classes:SorcFX2T1|trail]] behind him.
+* A [[Classes:SorcFX3|summoning projectile]], that spawns a [[Classes:Bishop|dark bishop]] where it lands.
+* A wide cone of [[Classes:SorcFX4|purple fireballs]] that spew out rapidly in a whiplash pattern.
+
+It also has [[Classes:SorcBall|three]] [[Classes:SorcBall1|different]] [[Classes:SorcBall2|floating]] [[Classes:SorcBall3|cubes]] over its head, which spin rapidly when it is charging a spell. These cubes break away when it is killed, bouncing around and eventually exploding violently.
+
+Note that you cannot give a [[special]] to this monster: its native action functions make use of its args field, preventing a special from being called with reliable parameters. Instead, when the Heresiarch dies, it will run the [[ACS|script]] with a number equal to its special. For example, in {{dw|Hub 4: Gibbet|Gibbet}}, the Heresiarch has for special 20. However, when it is killed, instead of calling [[Floor_LowerByValue]], it executes this map's script 20 (which raises a ceiling).
+==== [[DECORATE]] definition ====
+ ACTOR &lt;u&gt;Heresiarch&lt;/u&gt; native
+ {
+   {{Property|Health}} 5000
+   {{Property|PainChance}} 10
+   {{Property|Speed}} 16
+   {{Property|Radius}} 40
+   {{Property|Height}} 110
+   {{Property|Mass}} 500
+   {{Property|Damage}} 9
+   {{Property|Monster}}
+   +{{Flag|FLOORCLIP}}
+   +{{Flag|BOSS}}
+   +{{Flag|DONTMORPH}}
+   +{{Flag|NOTARGET}}
+   +{{Flag|NOICEDEATH}}
+   +{{Flag|DEFLECT}}
+   +{{Flag|NOBLOOD}}
+   {{Property|SeeSound}} "SorcererSight"
+   {{Property|PainSound}} "SorcererPain"
+   {{Property|DeathSound}} "SorcererDeathScream"
+   {{Property|ActiveSound}} "SorcererActive"
+   {{Property|Obituary}} "$OB_HERESIARCH" // "%o had %p bones rolled by the Heresiarch."
+ 
+   action native [[A_SorcSpinBalls]]();
+   action native [[A_SpeedBalls]]();
+   action native [[A_SorcBossAttack]]();
+   action native [[A_SpawnFizzle]]();
+ 
+   States
+   {
+   Spawn:
+     SORC A 3
+     SORC A 2 [[A_SorcSpinBalls]]
+   Idle:
+     SORC A 10 [[A_Look]]
+     Wait
+   See:
+     SORC ABCD 5 [[A_Chase]]
+     Loop
+   Pain:
+     SORC G 8
+     SORC G 8 [[A_Pain]]
+     Goto See
+   Missile:
+     SORC F 6 Bright [[A_FaceTarget]]
+     SORC F 6 Bright [[A_SpeedBalls]]
+     SORC F 6 Bright [[A_FaceTarget]]
+     Wait
+   Attack1:
+     SORC E 6 Bright
+     SORC E 6 Bright [[A_SpawnFizzle]]
+     SORC E 5 Bright [[A_FaceTarget]]
+     Goto Attack1+1
+   Attack2:
+     SORC E 2 Bright
+     SORC E 2 Bright [[A_SorcBossAttack]]
+     Goto See
+   Death:
+     SORC H 5 Bright
+     SORC I 5 Bright [[A_FaceTarget]]
+     SORC J 5 Bright [[A_Scream]]
+     SORC KLMNOPQRST 5 Bright
+     SORC U 5 Bright [[A_NoBlocking]]
+     SORC VWXY 5 Bright
+     SORC Z -1 Bright
+     Stop
+   }
+ }</text>
+    <sha1>obx7fyhfhatidynmjeuhc0zd1trj3bs</sha1>
+  </revision>
+</page>

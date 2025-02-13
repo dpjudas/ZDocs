@@ -1,0 +1,94 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>Making weapon pieces</title>
+  <ns>0</ns>
+  <id>2543</id>
+  <revision>
+    <id>28573</id>
+    <parentid>17439</parentid>
+    <timestamp>2010-11-19T16:04:22Z</timestamp>
+    <contributor>
+      <username>Gez</username>
+      <id>1283</id>
+    </contributor>
+    <minor />
+    <origin>28573</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="3638" sha1="mdcp3shrkt2lwttgqumwh66eg36nale" xml:space="preserve">There is now a way to create pieces of a weapon that assemble into one weapon, just like the three strongest weapon in Hexen, being Quietus, Wraithverge, and BloodScourge. Players would have to hunt for these pieces in order to get that weapon. This is a great way to add a powerful weapon into your mod without it being too easy to acquire.
+
+To do this, you would need your complete weapon first. Create your [[DECORATE]] entry for your complete weapon, just like anything else, except you give the weapon a HEALTH [[Actor properties|property]]. The HEALTH you just defined has nothing to do with the weapon's life; this value determines the number of WeaponPieces required to complete the weapon. The health of 5 would mean that Weapon Pieces number 1 through 5 are required to fully complete the weapon.
+
+As a side note, it would be a good idea not to define its SPAWN state so that the weapon is never found in its complete state.
+
+Now, you would need to define your Weapon Piece's entry. This entry should have its parent as "[[Classes:WeaponPiece|WeaponPiece]]". Now, it needs some WeaponPiece specific properties:
+:*''WeaponPiece.Weapon'' "name"
+::Name of the complete weapon.
+:*''WeaponPiece.Number'' value
+::Specific ID for the particular Weapon Piece being defined. Value of (1-32) are acceptable.
+:*''Inventory.Pickupmessage'' "string" (optional)
+::Message to display when you pick up that piece.
+Now, define its SPAWN state. Do this for your other Weapon Pieces. You may have up to 32 weapon pieces.
+
+Here is an example code of a weapon that requires 3 pieces to complete:
+
+ ACTOR Nightmare : [[Classes:Weapon|Weapon]]
+ {
+    '''Health 3'''
+    Inventory.Pickupmessage "Time for the Nightmare...!" 
+    Obituary "%k deserves to kill %o because %g worked hard to assemble this weapon."
+    States 
+    { 
+    Ready: 
+       NITE A 1 [[A_WeaponReady]]
+       LOOP 
+       ...
+    } 
+ }
+ 
+ ACTOR NMPiece1 : [[Classes:WeaponPiece|WeaponPiece]]
+ {
+    '''WeaponPiece.Number 1'''
+    '''WeaponPiece.Weapon "Nightmare"'''
+    Inventory.Pickupmessage "Picked up a fragment of something." 
+    States
+    {
+    Spawn:
+       PIEC A -1 
+       Loop
+    }
+ }
+ 
+ ACTOR NMPiece2 : [[Classes:WeaponPiece|WeaponPiece]]
+ {
+    '''WeaponPiece.Number 2'''
+    '''WeaponPiece.Weapon "Nightmare"'''
+    Inventory.Pickupmessage "Picked up a fragment of something." 
+    States
+    {
+    Spawn:
+       PIEC B -1 
+       Loop
+    }
+ }
+ 
+ ACTOR NMPiece3 : [[Classes:WeaponPiece|WeaponPiece]]
+ {
+    '''WeaponPiece.Number 3'''
+    '''WeaponPiece.Weapon "Nightmare"'''
+    Inventory.Pickupmessage "Picked up a fragment of something." 
+    States
+    {
+    Spawn:
+       PIEC C -1 
+       Loop
+    }
+ }
+
+The strongfaced parts are what makes the Weapon Pieces work. Although this is not really a working weapon, this "Nightmare" weapon requires 3 pieces of itself, NMPiece1, NMPiece2, and NMPiece3. When these are all collected, you will have completed the Nightmare weapon and will immediately be switched to your fresh weapon. The names of the pieces do not really matter. As long as the weapon has its health defined the number of the pieces, and your weapon pieces inherit "[[Classes:WeaponPiece|WeaponPiece]]" and define its complete weapon and number, there should be no problem.
+
+Of course, the weapon pieces must be obtainable somehow. You can give the pieces a DoomEdNumber and spawn them in your levels, or you can make the monsters drop them in a random occasion. Also, you should keep the number of your weapon pieces into something like three to five, unless your weapon pieces are ridiculously easily obtained.
+
+[[Category:DECORATE guides]]</text>
+    <sha1>mdcp3shrkt2lwttgqumwh66eg36nale</sha1>
+  </revision>
+</page>

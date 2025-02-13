@@ -1,0 +1,53 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>GetInventoryIcon</title>
+  <ns>0</ns>
+  <id>9721</id>
+  <revision>
+    <id>53588</id>
+    <parentid>51408</parentid>
+    <timestamp>2024-11-08T09:21:36Z</timestamp>
+    <contributor>
+      <username>Jekyll Grim Payne</username>
+      <id>2175</id>
+    </contributor>
+    <comment>/* Usage */</comment>
+    <origin>53588</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="1555" sha1="iaiiovw6hrip118f8z05vi7btt6ugg0" xml:space="preserve">__NOTOC__
+[[Classes:BaseStatusBar|'''BaseStatusBar''']]
+
+{{c|native static TextureID, bool '''GetInventoryIcon'''(Inventory ''item'', int ''flags'')}}
+
+==Usage==
+Can be used in a [[Classes:BaseStatusBar|ZScript HUD]] to obtain a [[Structs:TextureID|TextureID]] of the specified item's [[Inventory_properties#Inventory.Icon|icon]]. If not available, looks for [[Inventory_properties#Inventory.AltHUDIcon|alternative icon]], Spawn state sprite or Ready state sprite.
+
+{{class|BaseStatusBar}} also has another convenient wrapper for this function: [[GetIcon]]. The only significant difference is that [[GetIcon]] is not a static function.
+
+===Parameters===
+*{{c|Inventory '''item'''}}
+:A pointer to an instance of an [[Classes:Inventory|Inventory class]] (for example, obtained via [[FindInventory]]).
+*{{c|int '''flags'''}}
+:Possible flags:
+{{: BaseStatusBar icon flags}}
+
+==Return values==
+The function has 2 return values:
+*''TextureID'' - the textureID of the icon
+*''bool'' - true if the item's scale was applied to the icon
+
+==Examples==
+This obtains the icon of the player's currently equipped weapon an draws it at the bottom left corner of the screen:
+&lt;syntaxhighlight lang="csharp"&gt;
+TextureID icon = GetInventoryIcon(CPlayer.readyWeapon, 0);
+if (icon.isValid())
+{
+    DrawTexture(icon, (0,0), DI_SCREEN_LEFT_BOTTOM|DI_ITEM_LEFT_BOTTOM);
+}&lt;/syntaxhighlight&gt;
+Note: this example is for educational purposes only. In practice it's not useful because it copies the functionality of [[DrawInventoryIcon]].
+
+[[Category:ZScript]]
+[[Category:BaseStatusBar]]</text>
+    <sha1>iaiiovw6hrip118f8z05vi7btt6ugg0</sha1>
+  </revision>
+</page>

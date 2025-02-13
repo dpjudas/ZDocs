@@ -1,0 +1,64 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>A KoraxMissile</title>
+  <ns>0</ns>
+  <id>6760</id>
+  <revision>
+    <id>35700</id>
+    <parentid>30003</parentid>
+    <timestamp>2013-02-10T04:07:22Z</timestamp>
+    <contributor>
+      <username>Deded007</username>
+      <id>1392</id>
+    </contributor>
+    <minor />
+    <comment>codepointer template</comment>
+    <origin>35700</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="1456" sha1="kfmbbyyvzoyq03apj33relya376o41t" xml:space="preserve">{{codepointer|Spawn|Hexen|r=Korax}}
+'''A_KoraxMissile'''
+
+(no parameters)
+
+==Usage==
+This function handles [[Korax]]'s [[projectile]] attacks where the Serpent Rider throws a fireball from each of its six arms at the same time. First, it chooses randomly between the following possibilities:
+{| {{prettytable}}
+!Choice!!Missile type!!Attack sound
+|-
+|1||{{Class|WraithFX1}}||"WraithMissileFire"
+|-
+|2||{{Class|Demon1FX1}}||"DemonMissileFire"
+|-
+|3||{{Class|Demon2FX1}}||"DemonMissileFire"
+|-
+|4||{{Class|FireDemonMissile}}||"FireDemonAttack"
+|-
+|5||{{Class|CentaurFX}}||"CentaurLeaderAttack"
+|-
+|6||{{Class|SerpentFX}}||"CentaurLeaderAttack"
+|}
+
+Then it plays the sound "KoraxAttack" on the VOICE channel and the chosen sound on the WEAPON channel.
+
+Finally, it shoots six actors of the chosen missile type, using the following U, V coordinates relative to the calling actor's current facing:
+{| {{prettytable}}
+! !! Left arms !! Right arms
+|-
+!Upper arms
+| (-0.0006, 108) || (0.0006, 104)
+|-
+!Middle arms
+| (-0.0008, 82) || (0.0008, 86)
+|-
+!Lower arms
+| (-0.0008, 54) || (0.0008, 53)
+|}
+The U position is changed into X and Y coordinates relative to calling actor's position using the calling actor's angle and basic [[trigonometry]], the V position is turned into a Z coordinate relative to the calling actor's position after [[floorclip]] adjustment.
+
+This codepointer is restricted to {{Class|Korax}} and derived classes.
+
+== Examples ==
+{{noexamples}}</text>
+    <sha1>kfmbbyyvzoyq03apj33relya376o41t</sha1>
+  </revision>
+</page>

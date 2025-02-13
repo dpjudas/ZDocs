@@ -1,0 +1,168 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>CCMDs</title>
+  <ns>0</ns>
+  <id>3919</id>
+  <revision>
+    <id>48579</id>
+    <parentid>38130</parentid>
+    <timestamp>2021-05-31T20:18:34Z</timestamp>
+    <contributor>
+      <username>Dark Pulse</username>
+      <id>2624</id>
+    </contributor>
+    <comment>/* Examples */ mouse_sensitivity was split into m_sensitivty_x and m_sensitivity_y variables as of GZDoom 4.5.0, so the zoom example no longer worked. Updated with one that does. (Kept the old one for historical purposes.)</comment>
+    <origin>48579</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="10289" sha1="11kxuirt08g5qc4liz5dajgndeybubx" xml:space="preserve">Console commands (CCMDs) are instructions entered at the [[console]] that can be used to cause an immediate effect within ZDoom.
+
+__TOC__
+==Categories==
+To make finding specific commands easier, the wiki separates the available commands into several categories:
+* [[CCMDs:Customization|Customization]]
+* [[CCMDs:Debug|Debugging/Cheating]]
+* [[CCMDs:Informational|Informational]]
+* [[CCMDs:Multiplayer|Multiplayer]]
+* [[CCMDs:Control|Player control]]
+* [[CCMDs:Other|Other commands]]
+
+==Usage==
+You can execute CCMDs in the ZDoom [[console]], accessed by pressing the tilde (~) key by default.  Most commands need only be entered as shown to take effect, while others have one or more parameters (either required or optional) that are typed after the command, separated by a space.  For example, to exit the game from the console, you can simply type "exit".  However, if you want to bind the X key to +crouch, you must enter these as parameters in the console:
+
+ bind X +crouch
+
+Some commands will have different effects based on the number and type of parameter supplied.  For example, if you were to remove the second parameter (+crouch) from the previous line, the command would instruct ZDoom to retrieve the current binding for the X key and display it at the console.  Where commands have different methods of use, this is noted in the lists on the wiki.  Optional parameters will typically be surrounded by square brackets ([, ]) while required parameters will be surrounded by angle brackets (&lt;, &gt;).
+
+In addition, CCMDs can be entered at the command line by using +&lt;CCMD&gt; (followed by any appropriate parameters). For example, to load ZDoom on MAP01 and immediately freeze the actors on the map, you could use:
+
+ zdoom.exe -iwad doom2.wad -warp 01 '''+freeze'''
+
+==AutoExec==
+A series of console commands can be run automatically at startup from a file. The path and name of the file must be given in the ZDoom [[configuration file]], in one of the &lt;tt&gt;[&lt;Game&gt;.AutoExec]&lt;/tt&gt; sections. By default, ZDoom will look for a file named '''autoexec.cfg''' for all games.
+
+Auto-execution of console commands is especially useful for the [[CCMDs:Informational#logfile|logfile]] command as it allows then to save to the log file messages that are printed before the console becomes available. This makes it easier to detect and report bugs or other problems that prevent the game from starting normally.
+
+Example of autoexec.cfg file for creating a logfile:
+ logfile log.txt
+
+==Button commands==
+Button commands are commands that represent buttons and come in pairs. Each "button" has a command prefixed by a + and another corresponding command prefixed by a -. The + version of the command simulates pushing the button (Or "turning on" the command), while the - version of the command simulates releasing the button ("Turning off" the command).
+
+When you bind a command that begins with + to a key, releasing the key will automatically execute the - version of the same command. Note that this works for aliases as well. This provides a useful way to bind multiple actions to a single key. Suppose you want the normal Doom behavior of moving forward and using when you double click the right mouse button. If you use the commands:
+
+ bind mouse2 +forward
+ doublebind mouse2 +use
+
+ZDoom will move you forward when you press the right mouse button. When you double click it, you will press use, but you will not move forward. To simulate the standard Doom behavior, you can replace the doublebind command with these three commands instead: 
+
+ alias +useforward "+use; +forward"
+ alias -useforward "-use; -forward"
+ 
+ doublebind mouse2 +useforward
+
+Now when you double click the right mouse button, the +useforward alias will be executed. Because +useforward's name begins with a + releasing the right mouse button will execute the -useforward alias (If -useforward was not actually defined, an error would be displayed when ZDoom tried to use it). 
+
+This behavior of executing a - command when a key is released applies only to the first command or alias bound to the key. If you bind a key to "+forward; +right", releasing the key will execute the command "-forward; +right" and not "-forward; -right". As shown above, you can use aliases to get the correct behavior. 
+
+Another trick you can do with aliases is to create a key that only executes the + command without executing the - command. If you wanted a key that will make you move forward when you press it, and will keep you moving forward even after releasing it, you can use an alias like this:
+
+ alias go "+forward"
+
+Then instead of binding +forward to a key, you bind go to the key instead. This works because go does not begin with a + so nothing will happen when you release the key.  ZDoom only looks at the command actually bound to the key to determine if it should execute a - command when the key is released; it does not look inside aliases.
+
+==Console functions==
+The alias, eval and test commands are powerful functions that can be used to perform various calculations and then either display the results to the console or store them in a variable, as well as create scripted console macros.
+
+* '''{{LE|alias|Using aliases}}''' &lt;command name&gt; [string of commands]
+:Creates a new command called ''command name'' which executes all instructions in ''string of commands''. Individual commands in an alias should be separated by semicolons (;).  As an example, this alias will print a useless message and cause the player to jump:
+::&lt;pre&gt; alias Yay "echo Yippee!; +jump; -jump"&lt;/pre&gt;
+:Note that you can input information in aliases by using the percent symbol (%). "%n" will refer to the nth string separated by spaces by the user. "%0" returns the name of the alias itself.
+:Any command that can be entered at the console can be used in an alias.  As such, aliases can become powerful tools in the hands of a user with some imagination and knowledge of the various commands available. Alias is one of the commands that can be used in a [[KEYCONF]] lump.
+* '''{{LE|eval}}''' &lt;expression&gt; [variable]
+:Evaluates a mathematical ''expression'' and either prints it to the console or stores it in a [[console variable]].
+:When accessing [[CVARs]] from within the expression, you must prefix them with a dollar sign ($).
+* '''{{LE|test}}''' &lt;expression&gt; &lt;true-command&gt; [&lt;false-command&gt;]
+:Evaluates ''expression'' and executes ''true-command'' if the result is non-zero. If the result is zero, then ''false-command'' will be executed instead (if you specified it).
+===Expressions===
+Expressions for [[#eval|eval]] and [[#test|test]] are written using prefix notation instead of the more common infix notation. Basically, you first specify what you want to do (the operator) and then what you want to do it to (the operands). You must separate operators and operands with spaces. The supported operators are:
+{| {{prettytable}}
+|{{c|+ a b}}||Adds a and b.
+|-
+|{{c|- a b}}||Subtracts b from a.
+|-
+|{{c|* a b}}||Multiplies a and b.
+|-
+|{{c|/ a b}}||Divides a by b.
+|-
+|{{c|% a b}}||Calculates the remainder of a/b.
+|-
+|{{c|^ a b}}||Raises a to the b-th power.
+|-
+|{{c|&lt; a b}}||Produces 1 if a is less than b and 0 if not.
+|-
+|{{c|&lt;{{=}} a b}}||Produces 1 if a is less than or equal to b and 0 if not.
+|-
+|{{c|&gt; a b}}||Produces 1 if a is greater than b and 0 if not.
+|-
+|{{c|&gt;{{=}} a b}}||Produces 1 if a is greater than or equal to b and 0 if not.
+|-
+|{{c|{{=}} a b}}||Produces 1 if a is equal to b and 0 if not.
+|-
+|{{c|{{=}}{{=}} a b}}||Produces 1 if a is equal to b and 0 if not.
+|-
+|{{c|!{{=}} a b}}||Produces 1 if a is not equal to b and 0 if it is.
+|-
+|{{c|&lt;&gt; a b}}||Produces 1 if a is not equal to b and 0 if is.
+|-
+|{{c|xor a b}}||Calculates the bit-wise exclusive-or of a and b.
+|-
+|{{c|&amp; a b}}||Calculates the bit-wise and of a and b.
+|-
+|{{c|&lt;nowiki&gt;!&lt;/nowiki&gt; a b}}||Calculates the bit-wise or of a and b.
+|-
+|{{c|&amp;&amp; a b}}||Calculates the logical and of a and b.
+|-
+|{{c|&lt;nowiki&gt;||&lt;/nowiki&gt; a b}}||Calculates the logical or of a and b.
+|}
+
+===Examples===
+This is an example of a custom zoom that allows the player to toggle between a zoom and normal view with a single button. This example works in all versions of ZDoom, and GZDoom prior to 4.5.0:
+ alias zoomout "fov 90; eval * $mouse_sensitivity 4.5 mouse_sensitivity; rebind zoomin"
+ alias zoomin "fov 20; eval / $mouse_sensitivity 4.5 mouse_sensitivity; rebind zoomout"
+ bind F zoomin
+
+For a version that works in GZDoom 4.5.0 or later, this version must be used, as the mouse sensitivity was split into separate X and Y variables:
+ alias zoomout "fov 90; eval * $m_sensitivity_x 4.5 m_sensitivity_x; eval * $m_sensitivity_y 4.5 m_sensitivity_y; rebind zoomin"
+ alias zoomin "fov 20; eval / $m_sensitivity_x 4.5 m_sensitivity_x; eval / $m_sensitivity_y 4.5 m_sensitivity_y; rebind zoomout"
+ bind F zoomin
+
+These commands create two aliases.  The zoomout alias uses the fov CCMD to alter the player's field of vision (thus simulating a zoomed view), the [[#eval|eval]] command to dynamically adjust the {{CVAR|C|mouse_sensitivity}}, and then the rebind command to change the bound key (in this case, F) to activate the zoomin alias.  This alias then reverses the changes made by zoomout and rebinds F back to it.  In this way, a toggle effect is created.
+
+Let's apply this to a simple mouse-look toggle script.  Create the following aliases:
+
+ alias +mslook "+mlook; rebind -mslook"
+ alias -mslook "-mlook; rebind +mslook"
+
+Bind a key or mouse button to "+mslook" to begin the toggle bind.  You will notice that when the key is pressed, the game will toggle between mouse-look being on and mouse-look being off.
+
+These examples showcase the use of expressions with eval and test.
+
+To compute 2+2: 
+ eval + 2 2
+To compute 5-3: 
+ eval - 5 3
+To compute 2+(5*6): 
+ eval + 2 * 5 6
+To decrease the number of screenblocks: 
+ eval - $screenblocks 1 screenblocks
+To print a different message depending on whether autorun is on or off:
+ test $cl_run "echo cl_run is on" "echo cl_run is off"
+To verify that ZDoom performs basic additions correctly:
+ test = + 2 2 4 "echo 2+2 really is 4"
+To print different messages depending on the value of a variable:
+ test &amp;lt;= $screenblocks 10 "echo the view window is shrunk" "echo the view window is full size"
+
+[[category:ZDoom console]]</text>
+    <sha1>11kxuirt08g5qc4liz5dajgndeybubx</sha1>
+  </revision>
+</page>

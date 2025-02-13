@@ -1,0 +1,65 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>A StartSound</title>
+  <ns>0</ns>
+  <id>9335</id>
+  <revision>
+    <id>53674</id>
+    <parentid>52886</parentid>
+    <timestamp>2024-11-12T00:42:53Z</timestamp>
+    <contributor>
+      <username>Jekyll Grim Payne</username>
+      <id>2175</id>
+    </contributor>
+    <comment>/* Parameters */</comment>
+    <origin>53674</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="2570" sha1="11ozabmffbe7ps2i2cr4hrnvhxicwg2" xml:space="preserve">__NOTOC__{{codepointer|Sound}}
+
+'''{{class|Actor}}'''
+
+clearscope void '''A_StartSound''' (sound ''whattoplay'', int ''slot'' = CHAN_BODY, int ''flags'' = CHANF_DEFAULT, double ''volume'' = 1.0, double ''attenuation'' = ATTN_NORM, double ''pitch'' = 0, double ''startTime'' = 0)
+
+== Usage ==
+Plays the specified sound from the calling actor.
+
+=== Parameters ===
+*{{c|Sound '''whattoplay'''}}
+:The desired sound to play, as defined in [[SNDINFO]].
+*{{c|int '''slot'''}}
+:The sound slot used for the sound. Unlike {{c|[[A_PlaySound]]}}, the slot is not limited to predefined slots and can be any positive number other than 0 (which enables special behavior). The predefined slots are:
+{{:StartSound channels}}
+*{{c|int '''flags'''}}
+{{note|Please note that [[A_StartSound]] has a ''separate'' flags argument in constrast to [[A_PlaySound]]. Trying to combine channel constants and flag constants in one argument will NOT work with [[A_StartSound]].}}
+{{: StartSound flags}}
+*double '''volume'''
+:The volume of the sound, which ranges from 0 to 1.0. Default 1.0.
+*{{c|double '''attenuation'''}}
+:This is a positive value that specifies how quickly the sound fades with distance from its source. The exact formula for attenuation is: '''attenuation = default max hearable distance / desired max hearable distance'''. So, for example, in Doom the default max hearable distance is 1200; with attenuation of 20 the max hearable distance for the sound will be 60 map units (1200 / 20 = 60). This argument also accepts the following predefined constants: 
+:*'''ATTN_NONE''' — Plays the sound globally at the specified volume, disregarding distance. 
+:*'''ATTN_NORM''' — Uses the {{c|close_dist}} and {{c|clipping_dist}} fields defined in the sound definition. Default.
+:*'''ATTN_IDLE''' — Uses Doom's normal default sound attenuation behavior. 
+:*'''ATTN_STATIC''' — Fades quickly (inaudible from 512 units).
+*{{c|double '''pitch'''}}
+:The sound pitch to play the sound with. Default is 0, which means the engine uses whatever pitch shift (range) that is defined in SNDINFO, if any. For non-zero values anything lower than 1.0 will slow down the sound, while higher values speed it up.
+*{{c|double '''startTime'''}}
+:Sets how much of the sound to skip when starting. The value can be anywhere between 0 and 1.0, translating to 0% to 100%. Default is 0.
+
+== Examples ==
+
+  ...
+  states
+  {
+  Spawn:
+    BLAH A 5 [[actor states#NoDelay|NoDelay]] '''A_StartSound'''("play/sound");
+    BLAH BCD 6;
+    BLAH E -1;
+    stop;
+  ...
+  }
+
+== See also ==
+*[[A_StartSoundIfNotSame]]</text>
+    <sha1>11ozabmffbe7ps2i2cr4hrnvhxicwg2</sha1>
+  </revision>
+</page>

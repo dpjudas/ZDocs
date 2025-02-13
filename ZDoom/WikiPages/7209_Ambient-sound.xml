@@ -1,0 +1,78 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>Ambient sound</title>
+  <ns>0</ns>
+  <id>7209</id>
+  <revision>
+    <id>32495</id>
+    <timestamp>2012-04-26T21:50:53Z</timestamp>
+    <contributor>
+      <username>Gez</username>
+      <id>1283</id>
+    </contributor>
+    <comment>page creation, some content adapted and updated from the old editing.txt that shipped with ZDoom 1.13</comment>
+    <origin>32495</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="7780" sha1="e3w3wxskrokqoit44cmrp0vedxc3sdy" xml:space="preserve">[[ZDoom]] offers different ways in which '''ambient sounds''' can be played in a map. There are two main types of ambient sounds: positioned and global. Global ambient sounds are played at full volume and do not seem to originate from any precise point in space; whereas positioned ambient sounds originate from somewhere and are attenuated with distance.
+
+==Heretic==
+''[[Heretic]]'' ambient sounds are global [[sound sequence]]s. They use a custom {{Class|SoundSequence}} actor and the [[HereticAmbience]] slot defined in [[SNDSEQ]]. Since these sounds are global, the positioning of the things in the map does not matter. In the original ''Heretic'' maps, the level designers tended to group them together neatly in an area out of the way, outside of actual map geometry. 
+
+''Heretic'' also features two positioned ambient sounds, {{Class|SoundWaterfall}} and {{Class|SoundWind}}. These should be placed in zones where their respective sounds should logically be heard.
+
+==Hexen==
+''[[Hexen]]'' ambient sounds use the [[ACS]] function [[AmbientSound]] in {{dw|Hexen scripted ambient sounds|looping scripts}} to play global ambient sounds. In addition, it features a positioned ambient sound ({{Class|SoundWindHexen}}). Other positioned ambient sounds are created through [[ACS]], with the [[ThingSound]] function. For example, two trees in the courtyard of {{dw|Hub 1: Winnowing Hall|Winnowing Hall}} have overlapping {{Class|MapSpot}}s which randomly emit owl calls, creating the impression that owls are perching in these trees.
+
+==ZDoom==
+ZDoom also allows to define ambient sounds in [[SNDINFO]] with the {{sndinfo|ambient}} command. Both positioned and global ambient sounds are possible with this method, but in either case an {{Class|AmbientSound}} thing must be placed in the map. There are therefore two steps to using these ambient sounds in a map.
+
+===SNDINFO step===
+The {{c|$ambient}} command has six parts. These are:
+#The command itself ($ambient).
+#The ambient sound slot it defines. This will be referenced by {{c|arg0}} of the AmbientSound thing.
+#The sound's logical name, as previously defined in SNDINFO. By using the same logical name with different ambient sounds, it is possible to use the same sound with different parameters.
+#The sound's type (optional). This can be "world", "point" or "surround". ''Point'' indicates that this is a positioned sound, while ''world'' and ''surround'' both indicate that this is a global sound played at full volume. ''Surround'' also plays the sound in surround mode. If the type is omitted, the default of "world" is assumed.
+#How frequently the sound is played. This can be "continuous", "periodic", or "random". ''Continuous'' means that the sound should be continuously played (not recommended for world sounds, but possible anyway). ''Periodic'' indicates that the sound should be played at a specific interval and is followed by the number of seconds that should elapse between repeats of the sound. ''Random'' indicates that the sound will repeat at a random interval. It is followed by two numbers indicating the minimum number of seconds that must elapse before the sound is played again and the maximum number of seconds that may pass before the sound is again played (in that order).
+#The sound's relative volume (0.0-1.0). 0.0 means that the sound is silent and never played. 1.0 means full volume. For point sounds, this is the volume that the sound will be played at when the player is standing right next to the corresponding thing. The further away the player is, the quieter the sound becomes. For world sounds, this is the volume that the sound will be played at no matter where the player is standing. Note that this is multiplied by the {{sndinfo|volume}} command for the sound, if any is defined, and further affected by {{c|arg2}} of the AmbientSound thing, if not null.
+
+A few examples:
+
+ $alias AmbientSound1		cyber/hoof
+ $ambient 1 AmbientSound1 point periodic 1.0 0.7
+This line defines ambient sound 1. It uses the logical sound AmbientSound1 which was earlier defined as being the {{Class|cyberdemon}}'s hoof stomping sound. The logical name is followed by the word {{c|point}}, so ZDoom knows that this is a point sound, and it will play it at any thing of type 14001 (or type 14065 with {{c|arg0}} set to 1) on the map. Following this is {{c|periodic 1.0}} which indicates that this sound will be played at a rate of once per second. Finally, the {{c|0.7}} at the end of the line indicates that this sound is
+played at 70% of maximum volume.
+
+ $alias BossHurting		brain/pain
+ $ambient 2 BossHurting random 2.0 5.0 1.0
+This line defines ambient sound 2. It uses the logical sound BossHurting which was earlier defined as being the sound of the {{Class|BossBrain|big boss' brain}} being struck by a rocket. Because the sound's type is omitted, it is treated as a normal world sound and will be played on any maps that contain a map thing of type 14002 (or type 14065 with {{c|arg0}} set to 2). Next is {{c|random 2.0 5.0}}. This indicates that the sound will be played at a random interval with no fewer than two seconds and no more than five seconds passing between plays of the sound. The {{c|1.0}} at the end of the line indicates that this sound is played at full volume.
+
+ $ambient 3 AmbientSound1 random 1.0 3.0 0.5
+This line defines ambient sound 3. Like ambient sound 1, it also uses the logical sound AmbientSound1. This time, though, the sound's type is omitted, so we know a normal world sound is being defined rather than a point sound as was the case with ambient sound 1. It will be used on any maps containing a map thing of type 14003 (or type 14065 with {{c|arg0}} set to 3). (You can also use map thing 14001 on the same map without any problems.) The {{c|random 1.0 3.0}} indicates that the sound is played at a random interval between one and three seconds, and the {{c|0.5}} at the end of the line indicates that the sound is only played at half of maximum volume.
+
+===Map thing step===
+For a world or surround ambient sound, the position of the thing in the map does not matter. It can be a good idea to use the same approach as the ''Heretic'' level designers and leave them out of map geometry so that they do not interfere with the placing of other map things.
+
+For a point sound, the thing should be placed in the areas where the sounds should be heard.
+
+The AmbientSound thing should have its arguments as follow:
+*{{c|arg0}}: ambient slot
+*{{c|arg1}}: (optional) sound volume, in percent. 1 is nearly silent, 100 and above are full volume. If left to zero, full volume is also used.
+*{{c|arg2}}: (optional) minimum distance, in map units, at which volume attenuation begins. Note that {{c|arg3}} must also be set. If both are left to zero, normal rolloff is used instead.
+*{{c|arg3}}: (optional) maximum distance, in map units, at which the sound can be heard. If left to zero or lower than {{c|arg2}}, normal rolloff is used instead.
+*{{c|arg4}}: (optional) scalar by which to multiply the values of {{c|arg2}} and {{c|arg3}}. If left to zero, no multiplication takes place. This is useful for [[Hexen format]] maps where thing arguments cannot be greater than 255.
+If a custom rolloff is provided (with {{c|arg2}}, {{c|arg3}} and optionally also {{c|arg4}}), attenuation will be linear on the provided scale. Otherwise, the sound's normal rolloff is used, as defined with {{sndinfo|rolloff}} in SNDINFO. Note that global sounds are unaffected by rolloffs anyway.
+
+== See also ==
+* [[ACS]] functions:
+** [[AmbientSound]]
+** [[LocalAmbientSound]]
+** [[SectorSound]]
+** [[ThingSound]]
+** [[SoundSequence]] and its variants
+* {{Class|AmbientSound}} (actor)
+* [[SNDINFO]] and specifically {{sndinfo|ambient}}
+* [[SNDSEQ]]
+[[Category:Features]][[Category:Glossary]]</text>
+    <sha1>e3w3wxskrokqoit44cmrp0vedxc3sdy</sha1>
+  </revision>
+</page>

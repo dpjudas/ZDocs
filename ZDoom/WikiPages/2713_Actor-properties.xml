@@ -1,0 +1,524 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>Actor properties</title>
+  <ns>0</ns>
+  <id>2713</id>
+  <revision>
+    <id>54146</id>
+    <parentid>54010</parentid>
+    <timestamp>2025-01-21T09:14:56Z</timestamp>
+    <contributor>
+      <username>Jekyll Grim Payne</username>
+      <id>2175</id>
+    </contributor>
+    <comment>/* Map editing control */</comment>
+    <origin>54146</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="47343" sha1="2r7s6m6usvlgpq0gttkwmnct078wspr" xml:space="preserve">The following properties can be set in an actor's [[DECORATE]] or [[ZScript|ZScript's]] &lt;code&gt;Default {}&lt;/code&gt; block definition.  They control various characteristics of your actor, from appearance to behavior or the actor's physical properties.  To use, simply specify the property and any associated values on its own line within the actor's definition and outside the [[Actor states|state]] block.
+
+== Actor properties ==
+{{warning|[[ZScript]] requires more strict definition of values depending on their type than [[DECORATE]] due to stricted type checking. With [[ZScript_variables#Names|Name]]-type properties, values MUST be provided in quotation marks (either double or single quotation marks will work): for example, &lt;code&gt;BounceType 'Doom'&lt;/code&gt; or &lt;code&gt;RenderStyle 'Fuzzy'&lt;/code&gt; require this, while &lt;code&gt;BounceType Doom&lt;/code&gt; will not be recognized. [[ZScript_variables#Strings|String]] values must be provided in double quotation marks: for example, &lt;code&gt;Powerup.Color "GoldMap"&lt;/code&gt;. Skipping quotation marks for such properties will cause compile error at startup.&lt;br&gt;&lt;br&gt;However, numeric properties (which constitute the majority) are defined the same way both in ZScript and DECORATE.}}
+=== Map editing control ===
+* '''{{LE|Game}}''' ''gamename''
+*: '''(Not [[using inheritance|inheritable]]; superseded by [[lump filtering]]; DECORATE only)'''
+*: Defines the game in which the editor number and spawn ID should take effect. For normal custom WADs this is not necessary but it may have some use in resource WADs targeted at multiple games. Valid game names are:
+*:* '''Chex'''
+*:* '''Doom'''
+*:* '''Heretic'''
+*:* '''Hexen'''
+*:* '''Strife'''
+*:* '''Raven''' ('''Heretic''' + '''Hexen''')
+*: Multiple '''game''' statements are additive.
+* '''{{LE|SpawnID}}''' ''value''
+*: '''(Not [[using inheritance|inheritable]]; superseded by [[MAPINFO/Spawn number definition|MAPINFO]]; DECORATE only)'''
+*: Defines the [[spawn numbers|spawn number]] to be used with [[Thing_Spawn]] and its derivatives.
+* '''{{LE|ConversationID}}''' ''value''
+*: '''(Not [[using inheritance|inheritable]]; superseded by [[MAPINFO/Conversation number definition|MAPINFO]]; DECORATE only)'''
+*: Defines the [[ConversationID_List|ID]] used by the Strife's dialogue system. This property allows to use dialogues in all games, not just Strife. If you use [[ZSDF]] instead of the binary format or [[USDF]], then this is unnecessary and instead is set on a per-actor basis on the map.
+*: '''Note''': some standard Strife actors define three numbers here, but for a mod only the first is needed. The latter two are used by the two "teaser" demo versions of Strife, and since ZDoom does not allow to use mods with a demo version, adding support for the Strife teasers in a mod is pointless.
+* '''{{LE|Tag}}''' ''name''
+*: Gives the actor a name. The names are used in the key display on Strife's status bar and the default actor name in Strife's dialogs, as well as the name of the currently selected inventory item when the {{c|invquery}} [[console command]] is called.
+*: '''Note:''' This is meant to be the actor's "display name." As such, it should be considered a player-facing string, and, as with all strings of this kind, it's recommended to process it through the [[LANGUAGE]] lump rather than write it in the code directly.
+
+=== Behavior ===
+* '''{{LE|Health}}''' ''value''
+*: Defines the health a [[monster]] or any other shootable item starts with.
+*: Default is 1000.
+* '''{{LE|GibHealth}}''' ''value''
+*: Defines the (negative) health below which this actor enters the extreme death sequence. If this is not set the value depends on the game, as defined in the [[GameInfo definition]] with the {{c|gibfactor}} property. In ''[[Doom]]'' it is the negative of the spawn health, in the other games the half of the negative of the spawn health.
+*: If there's a need to check an actor's GibHealth, use the '''[[GetGibHealth]]''' function rather than reading the &lt;code&gt;gibhealth&lt;/code&gt; variable directly.
+* '''{{LE|WoundHealth}}''' ''value''
+*: Defines the health below which the actor enters the '''Wound''' [[Actor states|state]]. The default is 6.
+* '''{{LE|ReactionTime}}''' ''value''
+*: Time in [[tic]]s (1/35 seconds) a monster takes to attack after being alerted. Attacking a monster will cause it to return attack immediately, regardless of reaction time. A negative value will cause a monster to never attack unless attacked first. There is normally no need to change this value but it can be used as a counter for [[A_Countdown]].
+*: Default is 8.
+* '''{{LE|PainChance}}''' ''value''
+* '''{{LE|PainChance}}''' ''damagetype'', ''value''
+*: Probability of entering the pain state (256 = always, 0 = never).  You can also specify PainChance per [[Custom damage types|damage type]]. Sources of damage that have the {{flag|FORCEPAIN}} flag ignore this property.
+*: Default is 0.
+* '''{{LE|PainThreshold}}''' ''value''
+*: Minimum amount of damage required by the actor to potentially enter its Pain state. Sources of damage that have the {{flag|FORCEPAIN}} flag ignore this property.
+*: Default is 0.
+* '''{{LE|DamageFactor}}''' ''type'', ''value'' 
+* '''DamageFactor''' ''value''
+*: If the actor takes damage of the specified type, that damage is multiplied by the specified value.
+*: A comma is required between ''type'' and ''value''. ''value'' can be a decimal value; zero means the actor is completely immune to this kind of damage.
+*: Default is 1.0.
+*: The maximum this value can go is 32767. DamageFactor is ignored if the damage is 1,000,000 or more.
+*: ''See also [[Custom damage types]]
+*: If no type is provided, the factor applies to all damage types, not specified for the actor.
+* '''{{LE|SelfDamageFactor}}''' ''value''
+*: A multiplier for self-inflicted damage. This is ignored if the damage is 1,000,000 or more.
+*: Default is 1.0.
+* '''{{LE|DamageMultiply}}''' ''value''
+*: Generic damage multiplier. This is typically used on actors (e.g [[monster]]s) to strengthen or weaken the damage they deal from their attacks.
+*: Default is 1.0.
+* '''{{LE|Damage}}''' ''value''
+* '''{{LE|Damage}}''' ''(expression)'' {{Decoratefeaturesmall}}
+*: For a projectile defines the damage it inflicts upon impact. The formula is {{c|random(1,8) * damage}}, or {{c|random(1,4) * damage}} if the '''{{flag|STRIFEDAMAGE}}''' flag is set.
+*: This also defines the damage for actors which attack like the [[Classes:LostSoul|Lost Soul]]. The formula for this is {{c|random(1,8) * damage}}.
+*: '''damage''' is also used to define how many bullets are fired by the generic hitscan attack function [[A_BulletAttack]].
+*: In [[DECORATE]] custom damage formulas can be specified by enclosing the ''value'' completely within parenthesis.  For example: {{c|damage (random(4,8) * 5 + 6)}}. Also, [[ACS_ExecuteWithResult]] and [[user variable]]s can be used as part of the damage expression; this allows for more sophisticated damage calculations to be performed. The damage formula is evaluated at the moment the actor causes damage (e.g. projectile/hitscan impact). Using an expression for damage bypasses the normal calculation and does the exact damage resulting from the custom formula. To achieve the same in ZScript, use {{property|DamageFunction}} instead. {{Color|red|'''Warning:'''}} Custom damage expressions can be defined but will NOT actually work in [[ZScript]] (even though console log will not display any errors). Use {{c|DamageFunction}} (described below) to use a custom expression in ZScript.
+*: To modify the damage of an existing actor instance in [[ZScript]], use {{c|[[SetDamage]]}} (since the &lt;code&gt;damage&lt;/code&gt; field is not modifiable directly). 
+*: Default is 0.
+* '''{{LE|DamageFunction}}''' (''expression'')
+* '''{{LE|DamageFunction}}''' ''FormulaName()''
+*: {{Zscriptfeaturesmall}}
+*: Similar to {{c|Damage}}, it defines the damage of the actor. What is passed is always treated as an expression, be it a single value or a formula, and is not subject to randomization like with {{c|Damage}}. This property and {{c|Damage}} are considered to be the same property, i.e. an actor can only have one or the other, but not both. If both are specified, only {{c|Damage}} is used, while {{c|DamageFunction}} is ignored. Note that the function must be defined as a normal function, outside of the Default block. The function can use any name.
+*: Usage with examples is described in detail on the dedicated '''[[DamageFunction]]''' page.
+* '''{{LE|PoisonDamage}}''' ''value'' [, ''duration'' [, ''period'']]
+*: Gives a projectile [[poison]] damage. Poison damage is not inflicted all at once, but affects the victim for a certain amount of time. The value specified here defines the time the poisoning effect lasts. Remember, poison damage only affects players if only ''value'' is specified ([[Hexen]]-style poison). Otherwise, it also affects other actors ([[ZDoom]]-style poison).
+*: Poison damage is inflicted every ''period'' tics (the default value of 0 means once per second). If a non-zero ''duration'' is given, it is used for the total length of the poisoning, otherwise the length depends on the ''value''. See also {{Flag|ADDITIVEPOISONDAMAGE}} and {{Flag|ADDITIVEPOISONDURATION}}.
+* '''{{LE|PoisonDamageType}}''' ''type''
+*: Changes the [[damage type]] of poison, overriding its default type.
+* '''{{LE|RadiusDamageFactor}}''' ''value''
+*: Defines the factor radius damage on this actor is multiplied by.
+* '''{{LE|MissileChanceMult}}''' ''value'' {{new|4.13.0}}
+*: A multiplier for how likely the actor is to perform a ranged attack. The closer to 0.0 it is, the more likely they are to attack, the higher, the less likely. 0.125 equals {{flag|MISSILEEVENMORE}}, 0.5 equals {{flag|MISSILEMORE}}, and 0.0625 equals both flags being turned on.
+*: Default is 1.0.
+* '''{{LE|RipperLevel}}''' ''value''
+*: Used by projectiles or anything capable of performing with the RIPPER flag. Specifies the 'level' or how high up a projectile can rip through in terms of monsters with different minimum and maximum values.
+*: A projectile that is below a monster's minimum or above maximum means that projectile will not rip through them. All ripper properties are ignored if the DONTRIP flag is present on the monster, though, and will not rip regardless of level through that particular monster.
+*: When used on a monster, however, and no min or max is defined, only that specific level can rip through it.
+*: The value can be negative for this, RipLevelMin and RipLevelMax.
+* '''{{LE|RipLevelMin}}''' ''value''
+*: Used by monsters. Only projectiles that meet this level or ''higher'' can rip through this monster. Default is 0.
+* '''{{LE|RipLevelMax}}''' ''value''
+*: Used by monsters. Only projectiles that meet this level or ''lower'' can rip through this monster. Default is 0, which means anything above the minimum can rip through it.
+* '''{{LE|DesignatedTeam}}''' ''number''
+*: Assigns the actor to the specified team by its number from [[TEAMINFO]]. In team play, the actor will not take friendly fire from teammates unless the ''teamdamage'' [[console variable]] is set. If the monster is friendly, it will not target teammates.
+*: Default is no team.
+* '''{{LE|Speed}}''' ''value''
+*: Defines how fast an actor moves. For [[projectile]]s this is the distance it moves per [[tic]] (1/35 seconds). For [[monster]]s it defines the size of one step done in [[A_Chase]]. [[Player]]'s movement speed also depends on the {{Property|Player.ForwardMove}} property.
+*: Default is 0.
+* '''{{LE|VSpeed}}''' ''value'' 
+*: Gives an actor an initial vertical momentum. The higher the value, the more momentum. This is mainly used for special effect actors (e.g. weapon puffs) with the {{flag|NOGRAVITY}} flag to make them float upwards.
+* '''{{LE|FastSpeed}}''' ''value''
+*: Defines the speed for 'fast monsters' and nightmare mode. Please note that if you use this with a monster that monster will have the different speed for the rest of its life. Fast Monster's mode will make monsters and projectiles use their FastSpeed property instead of their defined speed when +fastmonsters or +alwaysfast flag is used. Fast monsters halves the duration of actor states with the Fast keyword. [[Fast monsters]] can be set in many ways like using the +ALWAYSFAST flag or +fastmonsters. 
+* '''{{LE|FloatSpeed}}''' ''value''
+*: Defines the speed the object floats up/down when '''{{flag|FLOAT}}''' flag is set. 
+*: Default is 4.
+* '''{{LE|Species}}''' ''string''
+*: Defines the [[species]] the monster belongs to. This determines [[infighting]] behavior, since a monster's missile do not inflict harm (except through splash damage) to other monsters belonging to the same species by default.
+*: When used with [[key]]s, this property allows for new keys to open the same [[LOCKDEFS|locks]] as the keys they are referencing with the property, without the need to redefine the locks to add the new keys. For example, setting the key's species to {{Class|RedCard}} will allow it to open locks as if it were a red keycard.
+*: Default is None that makes the game to look up the actor this actor inherits from and has this property set to something else.
+* '''{{LE|Accuracy}}''' ''value''
+*: Defines the object's [[accuracy]]. The higher the value, the more accurate the object is said to be.
+*: For players, this value is factored into the accuracy calculation for Strife's native weapon-firing functions.
+*: For monsters and other actors, this value has no predetermined effect, but it can be referenced in other places via the {{c|accuracy}} [[DECORATE_expressions#Variables|DECORATE variable]] and the {{c|APROP_Accuracy}} [[ACS actor properties|actor property]].
+* '''{{LE|Stamina}}''' ''value''
+*: Defines the object's [[stamina]].
+*: For players, each point of stamina will add one point to the player's maximum health pool. The value is also used in the damage calculation for Strife's [[Classes:PunchDagger|punch dagger]].
+*: For monsters and other actors, this value has no predetermined effect, but it can be referenced in other places via the {{c|stamina}} [[DECORATE_expressions#Variables|DECORATE variable]] and the {{c|APROP_Stamina}} [[ACS actor properties|actor property]].
+* '''{{LE|Activation}}''' ''flags''
+*: Defines how the actor will execute its [[special]]. In addition to that, some of these flags allow the actor to call its [[Activate]] and [[Deactivate]] virtual functions. The details are covered on the '''[[Activation]]''' page.
+*: The following flags are available (multiple flags can be combined with &lt;code&gt;|&lt;/code&gt; between them):
+{{: Thing activation flags}}
+* '''{{LE|TeleFogSourceType}}''' ''classname''
+*: Defines the fog to leave behind when an actor teleports away. Can be changed with [[A_SetTeleFog]].
+*: Default is [[Classes:TeleportFog|TeleportFog]].
+* '''{{LE|TeleFogDestType}}''' ''classname''
+*: Defines the fog the actor will spawn once it arrives. Can be changed with [[A_SetTeleFog]].
+*: Default is [[Classes:TeleportFog|TeleportFog]].
+* '''{{LE|Threshold}}''' ''value''
+*: Defines how long an actor will stick to one target after switching targets caused by infighting. e.g. if an imp changes targets because it was shot by a zombieman, it must call A_Chase this many times before it's ready to switch again. Note that further attacks which cause pain from the same target reset this value, making them stick with that target longer. {{Flag|QUICKTORETALIATE}} overwrites this property, and the property is adjustable with [[A_SetChaseThreshold]]. Note that this property is reset to DefThreshold, allowing monsters to have flexible infighting timers.
+* '''{{LE|DefThreshold}}''' ''value''
+*: Sets the default threshold reset value when the actor switches monster infighting. Adjustable with [[A_SetChaseThreshold]].
+* '''{{LE|FriendlySeeBlocks}}''' ''value''
+*: ({{Color|red|'''Warning:'''}} setting this property to high values is not recommended, as it could have a negative impact on performance.)
+*: Defines the maximum radius that a {{Flag|FRIENDLY|friendly}} [[monster]] or unfriendly monster with {{Flag|SEEFRIENDLYMONSTERS}} on can see enemies within. [[Blockmap| This is measured in blocks of 128x128 map units.]]
+*: Default is 10 (1280 map units).
+* '''{{LE|ShadowAimFactor}}''' ''value''
+*: Defines how much the actors' aim is degraded when shooting at actors with {{flag|SHADOW}} and/or {{flag|SHADOWBLOCK}}. Allowing the shooter to be better or worse at shooting shadow actors than normal. Default is 1.0.
+* '''{{LE|ShadowPenaltyFactor}}''' ''value''
+*: Used by actors with {{flag|SHADOW}} and/or {{flag|SHADOWBLOCK}} to increase or decrease the amount by which they worsen the aim of actors shooting at or through them by. Default is 1.0.
+
+=== Collisions and physics ===
+* '''{{LE|Radius}}''' ''value''
+*: Defines the radius of this actor. 
+*: Default is 20.
+*: '''Notes''': 
+** Using very small values can provoke glitches in collision detection. 
+** The total diameter is double this value, so an actor with a radius of 64 is actually 128 units in length and width, making it impossible for them to navigate through a corridor that's 128 units wide, for example.
+* '''{{LE|Height}}''' ''value''
+*: Defines the height of this actor.
+*: Default is 16.
+*: '''Note''': using very small values can provoke glitches in collision detection.
+* '''{{LE|DeathHeight}}''' ''value''
+*: Defines the height this actor has after dying.
+*: Default is 1/4 of the original height.
+* '''{{LE|BurnHeight}}''' ''value''
+*: Defines the height this actor has after dying by {{DamageType|Fire|fire}}.
+*: Default is 1/4 of the original height.
+* '''{{LE|ProjectilePassHeight}}''' ''value''
+*: Defines the height of the actor for the purposes of allowing projectiles to pass through. If this is 0, the actor's height is used. If the value is positive, it overrides the actor's height in the context of projectile collision: setting it to a value lower than the actor's {{c|Height}} will reduce its hitbox for projectiles vertically, while setting it to a higher values will increase it. For example, if {{c|Height}} is 60 but {{c|ProjectilePassHeight}} is 70, projectiles will be able to hit the monster if they fly within 10 units above its "head", while if {{c|Height}} is 60 but {{c|ProjectilePassHeight}} is 30, projectiles will pass through the actor if they hit it above 30 units from its bottom.
+*:If the value is negative, the absolute value will be used if the associated [[compatibility options|compatibility option]] is turned on.
+* '''{{LE|Gravity}}''' ''value'' 
+*: The amount of [[gravity]] that affects this actor.  Values less than 1 reduce gravity, while values greater than 1 increase it.
+*: Default is 1.0.
+* '''{{LE|Friction}}''' ''value''
+*: The amount of [[friction]] that affects this actor. Values less than 1 increase friction, while values greater than 1 reduce it. Note that this is multiplied by the [[sector]]'s own friction.
+*: Default is 1.0.
+* '''{{LE|Mass}}''' ''value''
+*: Defines the mass of this actor. The larger the mass the less an actor moves when being thrust by damage. If less than 10, the actor will also make small [[TERRAIN#Splash_blocks|terrain splashes]] rather than normal ones.
+*: Default is 100.
+*: '''Note''': giving an actor extremely high mass in an effort to make it unthrustable should be avoided in favor of using the {{flag|DONTTHRUST}} flag. High mass does not exclude the actor from thrust calculations, which may affect performance. In addition, if an actor is stuck in another one or in a wall, and then gets thrust by damage or [[A_RadiusThrust]], it could be killed almost instantly if RTF_NOIMPACTDAMAGE is not used.
+* '''{{LE|MaxStepHeight}}''' ''value''
+*: Defines the maximum height of a step this actor can climb up when moving. Default is 24.
+* '''{{LE|MaxDropOffHeight}}''' ''value''
+*: Defines the maximum height of a step this actor can climb down when moving. Normally this only applies to monsters but when you set the {{flag|NODROPOFF}} flag it applies to all forms of movement.
+*: Default is 24.
+* '''{{LE|MaxSlopeSteepness}}''' ''value''
+*: Defines the maximum incline of a slope that can be walked on when moving, based on the Z component of its normal. Thus, a value of 1 would make only perfectly flat floors walkable, while any slope would push down the actor and a value of 0 would make practically any kind of slope walkable, no matter how steep.
+*: Default is STEEPSLOPE ({{c|46342 / 65536 {{=}} 0.707122...}}), which limits movement to slopes of 45 degrees and below.
+* '''{{LE|BounceType}}''' ''name''
+*: Defines the way the actor bounces. See also [[actor flags#Bouncing|bounce flags]]. Valid names include:
+*:* {{c|None}}: actor does not bounce at all. This is the default value.
+*:* {{c|Doom}}: actor bounces off planes and walls until it loses enough momentum to stop.
+*:* {{c|Heretic}}: actor bounces off planes only &amp;mdash; ''and is put in its Death state when bouncing''!
+*:* {{c|Hexen}}: actor bounces off planes and walls.
+*:* {{c|Classic}}: actor bounces off planes only, and is considered an [[MBF]] bouncer.
+*:* {{c|Grenade}}: actor bounces off planes and walls, and is considered an MBF bouncer.
+*:* {{c|DoomCompat}}, {{c|HereticCompat}}, {{c|HexenCompat}}: same as {{c|Doom}}, {{c|Heretic}} or {{c|Hexen}} respectively, but the actor uses its {{c|SeeSound}} instead of its {{c|BounceSound}} and {{c|WallBounceSound}}.
+* '''{{LE|BounceFactor}}''' ''value''
+*: Defines the factor to which this actor's momentum will be reduced when bouncing off of ceilings and floors. This only has an effect if {{c|BounceType}} is not {{c|None}}. Default is 0.7.  The {{c|WallBounceFactor}} property can be used to decrease the actor's momentum when it bounces off of walls.
+* '''{{LE|WallBounceFactor}}''' ''value''
+*: Defines the factor this actor's momentum will be reduced for when bouncing off walls. This only has an effect if {{c|BounceType}} is not {{c|None}}. Default is 0.75.
+* '''{{LE|BounceCount}}''' ''value''
+*: Defines the amount of bounces this actor can do before it explodes. This only has an effect if {{c|BounceType}} is not "None". The default is infinite but for example [[Strife]]'s {{Class|PhosphorousGrenade|incendiary}} and {{Class|HEGrenade|explosive}} grenades only bounce twice before exploding.
+* '''{{LE|ProjectileKickBack}}''' ''value''
+*: Similarly to {{Property|Weapon.KickBack}}, this affects how far the projectile will push its target upon impact. This property overrides a weapon's kickback for projectiles thrown by weapons.
+* '''{{LE|PushFactor}}''' ''value''
+*: Defines how much an actor with the {{flag|PUSHABLE}} flag set can be pushed around. The pusher's momentum is multiplied by this amount and applied to the pushed actor. The default value is 0.25. A value of 0.0 is equivalent to not having the flag set, while a value greater than 1.0 makes it move faster than the pusher.
+* '''{{LE|WeaveIndexXY}}''' ''value''
+*: Defines the initial [[weave index]] for projectiles using the [[A_Weave]], [[A_BishopMissileWeave]] and [[A_CStaffMissileSlither]] functions. The value must be in the 0—63 range.
+* '''{{LE|WeaveIndexZ}}''' ''value''
+*: Defines the initial weave index for projectiles using the [[A_Weave]], [[A_BishopMissileWeave]] and [[A_CStaffMissileSlither]] functions. The value must be in the [0,63] range.
+* '''{{LE|ThruBits}}''' ''value''
+*: Allows defining collision disabling 'groups' with bit shifted numbers. This only takes effect if {{Flag|ALLOWTHRUBITS}} is on the actor.
+*: Default is 0, which collides with everything no matter what group is defined for others.
+
+ enum EGroups
+ {
+ 	ThruGroup1 = 1 &lt;&lt; 0,
+ 	ThruGroup2 = 1 &lt;&lt; 1,
+ 	//...
+ 	ThruGroup31 = 1 &lt;&lt; 30,
+ 	ThruGroup32 = 1 &lt;&lt; 31 // This is the highest it can go, totaling in 32 groups.
+ };
+ 
+ Default
+ {
+ 	+ALLOWTHRUBITS // The flag is needed to activate it.
+ 
+ 	// Anyone who is in 'ThruGroup3' or 'ThruGroup4' will pass through as well. Groups can be combined with the '|' symbol without the ''.
+ 	ThruBits (ThruGroup3|ThruGroup4); 
+ }
+
+=== Sound ===
+* '''{{LE|ActiveSound}}''' ''soundname''
+:: Defines the sound the actor makes when active.
+:: [[Puff#Puff_sounds|Melee attack puffs]] will play this sound (if defined) when the attack misses (hits nothing or a sky plane).
+* '''{{LE|AttackSound}}''' ''soundname''
+*: Defines the sound the actor makes when attacking.
+:: [[Puff#Puff_sounds|Puffs]] will play this sound when the attack hit a wall/plane. Bullet puffs can also play this when the attack hits nothing (i.e. hits a sky plane, or ends in the air due to limited range), provided the puff has {{flag|ALWAYSPUFF}}.
+* '''{{LE|BounceSound}}''' ''soundname''
+*: Defines the sound the actor makes when bouncing. If {{c|WallBounceSound}} is defined, applies only when bouncing off a floor.
+* '''{{LE|CrushPainSound}}''' ''soundname''
+*: Defines the sound the actor makes when being crushed.
+* '''{{LE|DeathSound}}''' ''soundname''
+*: Defines the sound the actor makes when dying or when a projectile explodes. For non-projectiles the death sound must be explicitly played with [[A_Scream]].
+* '''{{LE|HowlSound}}''' ''soundname'' 
+*: Defines the sound the actor makes when being electrocuted or poisoned.
+* '''{{LE|PainSound}}''' ''soundname''
+*: Defines the sound the actor makes when in pain. To hear this sound [[A_Pain]] has to be called.
+* '''{{LE|RipSound}}''' ''soundname''
+*: Defines the sound the [[projectile]] makes when it {{Flag|RIPPER|rips}} through damage-able actors.
+*: Default is {{c|"misc/ripslop"}}.
+* '''{{LE|SeeSound}}''' ''soundname''
+*: Defines the sound the actor makes when it sees the player (for monsters) or when a projectile is spawned.
+:: [[Puff#Puff_sounds|Puffs]] will also play this sound when the attack hit a shootable non-bleeding actor. Puffs can also play this when hitting a shootable ''bleeding'' actor, provided they have the right flags ({{flag|PUFFONACTORS}} for bullet and melee puffs, and {{flag|ALWAYSPUFF}} for railgun puffs).
+* '''{{LE|WallBounceSound}}''' ''soundname''
+*: Defines the sound the actor makes when bouncing off a wall. If this property is not defined, the {{c|BounceSound}} is played instead.
+* '''{{LE|PushSound}}''' ''soundname''
+*: Defines the sound the actor makes when pushed by another actor. This only works on actors with {{flag|PUSHABLE}}.
+
+=== Rendering ===
+* '''{{LE|RenderStyle}}''' ''type''
+*: Defines how this actor is rendered. Possible values include:
+*:* {{c|'None'}} - actor is invisible.
+*:* {{c|'Normal'}} - actor is visible and not translucent.
+*:* {{c|'Fuzzy'}} - like the {{Class|Spectre}} in Doom.
+*:* {{c|'SoulTrans'}} - actor is translucent, to an amount determined by the {{c|{{CVAR|R|transsouls}}}} [[CVARs|CVAR]].
+*:* {{c|'OptFuzzy'}} - actor is [[fuzz]]y or translucent, based on {{CVAR|R|r_drawfuzz|user preference}}.
+*:* {{c|'Stencil'}} - actor is drawn as a single color.  Use {{C|{{Property|StencilColor}}}} property to set the color to use. Note that internally this sets the actor's &lt;code&gt;renderstyle&lt;/code&gt; field to {{c|STYLE_Stencil}}, ''but'' if the {{property|Alpha}} value is set to something below 1.0, &lt;code&gt;renderstyle&lt;/code&gt; will be set to {{c|STYLE_TranslucentStencil}} instead, and translucency will be enabled on the actor.
+*:* {{c|'AddStencil'}} - the same as {{c|'Stencil'}}, only additive.
+*:* {{c|'Translucent'}} - actor is translucent.
+*:* {{c|'Add'}} - actor uses additive translucency.
+*:* {{c|'Subtract'}} - actor uses reverse-subtractive translucency.
+*:* {{c|'Shaded'}} - treats 8-bit indexed images as an alpha map.  Index 0 = fully transparent, index 255 = fully opaque. This is how decals are drawn. Use {{C|{{Property|StencilColor}}}} property to colorize the resulting sprite.
+*:* {{c|'AddShaded'}} - the same as {{c|'Shaded'}}, only additive.
+*:* {{c|'Shadow'}} - equivalent to black translucent stencil with an alpha of 0.3.
+*: Default is &lt;b&gt;'Normal'&lt;/b&gt;.
+*: The internal renderstyle constants can be found [[Renderstyle|here]].
+* '''{{LE|Alpha}}''' ''value''
+*: Defines the opacity/intensity for render styles '''Translucent''', '''Add''', '''Subtract''' and '''Stencil'''. The range is [0.0, 1.0].
+*: Default is 1.0.
+* '''{{LE|DefaultAlpha}}'''
+*: Sets the alpha value of the actor to 0.4 when playing [[Heretic]], and to 0.6 when playing the other games.
+* '''{{LE|StealthAlpha}}''' ''value''
+*: Defines the minimum visibility value of a [[stealth monster]].
+*: Default is 0.
+* '''{{LE|XScale}}''' ''value''
+*: Defines the X-scaling for this actor. Negative values are valid, and will result in mirroring the sprite on the axis. The range is [-4.0, 4.0].
+*: Default is 1.0.
+* '''{{LE|YScale}}''' ''value''
+*: Defines the Y-scaling for this actor. The range is [0.0, 4.0].
+*: Default is 1.0.
+* '''{{LE|Scale}}''' ''value''
+*: Combines '''XScale''' and '''YScale'''. The range is [0.0, 4.0].
+*: Default is 1.0.
+* '''{{LE|LightLevel}}''' ''value''
+*: Specifies the absolute light level of the actor, independent of the sectors' light level. This value can range from 0 to 255. The {{flag|ADDLIGHTLEVEL}} flag makes this property add or subtract from the actors' current sector light level.
+*: Default is -1, which means that the actor only uses the sectors' light level.
+* '''{{LE|Translation}}''' ''value''
+*: Sets one of Doom's standard translations (which translate the color green range) as default. The range is 0-2 and corresponds to the standard Doom translations of gray (0), brown (1), and red (2). Strife defines more, but they can be used only while playing it.
+*: Default is no translation.
+* '''Translation''' ''translationstring'' [, ''translationstring'' [,....]]
+* '''Translation''' "''translationname''"
+*: Defines a custom translation for this actor. There can be 65536 custom translations at the same time. All specified translation strings are added to create one final translation table (see [[Translation]] for the syntax of translation strings).
+*: The translation can either be set directly, or defined in [[TRNSLATE]] and then referenced by its name.
+* '''Translation Ice''' 
+*: This special usage of the '''Translation''' property will instruct ZDoom to use the built-in ice translation when rendering this actor. The main advantage of this is for GZDoom, where the ice range uses colors outside the normal Doom palette and is thus difficult to recreate with a normal translation.
+* '''{{LE|BloodColor}}''' ''color''
+*: Sets the actor's blood color. There can be up to 256 different custom blood colors at the same time. ''color'' is either specified as 3 integers, a string "rr gg bb" or a string containing one of the special color names.
+* '''{{LE|BloodType}}''' ''replaceblood'' [, ''replacebloodsplatter'' [, ''replacebloodaxe'']] 
+*: Tells ZDoom what class to spawn when the actor is hit with a weapon, replacing the standard blood.  If only one type is specified it will be used for all 3 blood actors.
+* '''{{LE|Decal}}''' ''decalname''
+*: Allows specifying the decal this actor creates here instead of having to edit the [[DECALDEF]] lump as well.
+*: Decals can be inherited this way instead of being specified for each actor. Note that the standard Doom projectiles' decals are defined through DECALDEF and custom actors based on them will not inherit their decals.
+*: Decals can be specified within weapon definitions or bullet puff definitions. If both exist, the weapon definition takes precedence unless the {{Flag|FORCEDECAL}} flag is set on the puff.
+*: Railgun puff decals require the {{Flag|FORCEDECAL}} flag to be set on the puff.
+*: If a projectile is to leave a decal, it must exist for at least a tic in its Death state &amp;mdash; otherwise no decal will be sprayed.
+* '''{{LE|StencilColor}}''' ''color'' 
+*: Sets the color to use when using the Stencil or Shaded {{property|RenderStyle}}.
+* '''{{LE|FloatBobPhase}}''' ''value''
+*: Sets the initial bob phase for the actor. Actors with the same phase value bob in-sync with each other. The range of phases is from -1 to 63, with -1 randomly choosing phase from the [0,63] range.
+*: Default is -1.
+* '''{{LE|FloatBobStrength}}''' ''value''
+*: Sets the magnitude of the bobbing behavior created by the {{Flag|FLOATBOB}} flag, effectively determining the distance the actor will cover when bobbing. A value of 1.0 produces the behavior seen in ''[[Heretic]]'' and ''[[Hexen]]'', while higher and lower numbers produce a more and less extreme bobbing, respectively. Note, this only changes the distance covered when bobbing, but not the time it takes to cover that distance.
+*: Default is 1.0.
+* '''{{LE|FloatBobFactor}}''' ''value'' {{new|4.13.0}}
+*: Sets the speed of the bobbing behavior created by the {{Flag|FLOATBOB}} flag. The lower it is, the faster the actor will visually bob up and down (so, 0.5 means twice as fast, 2.0 means half as fast). This value must always be higher than 0.
+*: Default is 1.0.
+* '''{{LE|DistanceCheck}}''' ''cvarname''
+*: An actor with this property is not rendered if the player's view is at a distance away from the actor which is equal or greater than the value of the specified [[console variable]]. Only integral console variables are acceptable.
+* '''{{LE|SpriteAngle}}''' ''angle''
+*: Sets the absolute angle for the sprite to draw at that given angle. This requires +SPRITEANGLE to have any effect, and once enabled, overrides all other sprite angle properties. This does not affect an actor's actual angle, rather the sprite a player would see if viewing them from that angle instead. Useful for things like decals, {{Flag|FLATSPRITE}}, and more. See [[GetSpriteAngle]] and [[A_SetSpriteAngle]] for manipulation at runtime.
+:: 0 is the actor's backside.
+:: 90 is the actor facing to the right.
+:: 180 is the actor's front. Etc.
+* '''{{LE|SpriteRotation}}''' ''angle''
+*: Offsets the actor's sprite angle in degrees. This allows for actors to visibly face one direction while truly looking another way. Use [[GetSpriteRotation]] and [[A_SetSpriteRotation]] for manipulation at runtime.
+* '''{{LE|VisibleAngles}}''' ''start'', ''end''
+* '''{{LE|VisiblePitch}}''' ''start'', ''end''
+*: Defines the range to draw the sprite if the player camera is looking at it from that particular angle/pitch range. Viewing it from outside this range will not render it. Can be modified with [[A_SetVisibleRotation]].
+*: '''Note''': these properties require setting the {{Flag|MASKROTATION}} flag to work. Also, they must be used together to work correctly (bug?).
+* '''{{LE|RenderRadius}}''' ''radius''
+*: Defines visual collision box in a similar manner to Radius. The actor is guaranteed to be drawn if any sector within this range is drawn, even if actor's main sector is not visible. This also affects dynamic lights around the actor, which is useful for ensuring distant lights illuminating an actor with a large model properly.
+*: If this value is smaller than Radius, Radius is used instead. A value of 0 restricts the actor to its source sector, matching vanilla Doom engine behavior; while a value of -1 causes the actor to be removed even from the source sector's render list, which can be useful to optimize performances of actors supposed to be invisible.
+*: Default is 0.0.
+* '''{{LE|CameraHeight}}''' ''value''
+*: Defines the height to render the view at when the actor is used as a camera.
+* '''{{LE|CameraFOV}}''' ''value''
+*:Defines the field of view when the actor is used as a camera.
+*:Default is 90.0.
+* '''{{LE|AutomapOffsets}}''' ''(value, value)'' {{Zscriptfeaturesmall}}
+*:Visually offsets the position that the actor is rendered at on the automap, when displaying sprites is enabled. Can be used for effects like having an actor made of multiple parts (Like a vehicle with a turret) render properly, instead of appearing sunken in due to both actors occupying the same XY position. This is a vector2 property, so it's set like this &lt;code&gt;AutomapOffsets (20,40);&lt;/code&gt;
+*:Default is (0,0).
+
+=== Obituaries ===
+Obituaries are messages displayed in the log when a player is killed by a monster, projectile or weapon. The string can be either used directly in the [[DECORATE]] code, or put in a [[LANGUAGE]] lump and referred to by its identifier. Starting a string with the $ character marks it as an identifier. The following placeholders can be used within the string itself:
+* %o: victim's name
+* %k: killer's name
+* %g: he/she/they/it, depending on the gender of the victim
+* %h: him/her/them/it
+* %p: his/her/their/its
+* %s: his/hers/theirs/its
+* %r: he's/she's/they're/it's
+The actors defined in {{c|gzdoom.pk3}} always use a reference to an identifier in the LANGUAGE lump; however for reference purposes the corresponding English string is provided as a comment. You can override a standard obituary by redefining it in a custom LANGUAGE lump, avoiding the need to replace the entire actor.
+
+Note that in [[deathmatch]], if the {{c|cl_bbannounce}} console variable is true, the [[Bloodbath announcer]] replaces weapon obituaries by its own random strings.
+* '''{{LE|HitObituary}}''' ''string''
+*: Defines the obituary string for a melee attack by this actor, which is identified as such by its [[damage type]] being {{c|Melee}}. If not present {{c|Obituary}} is used instead.
+* '''{{LE|Obituary}}''' ''string''
+*: Defines the obituary string for this actor. For weapons, this property can be used either directly on the weapon or on the puff for hitscan or rail attacks, but it should be on the projectile instead for missile attacks.
+
+=== Attacks ===
+* '''{{LE|MinMissileChance}}''' ''value''
+*: This is one part of the missile attack probability calculation. The lower this value is the more aggressive the monster is. This can be combined with the '''{{flag|MISSILEMORE}}''' and '''{{flag|MISSILEEVENMORE}}''' flags.
+*: Default value is 200.
+* '''{{LE|DamageType}}''' ''type''
+*: The attack uses a specific damage type. A number of predefined [[damage types]] are available, but it is possible to define your own [[custom damage types]]. Damage types are identified only by their name and do not need to be declared anywhere else. An attack can only use the ''last defined DamageType'' assigned to it, so more than one DamageType on an attack is pointless.
+* '''{{LE|DeathType}}''' ''type''
+*: The attack uses a specific death type, which overrides its [[damage type]]. Death types are identified only by their name and do not need to be declared anywhere else. This can be useful to combine special Death animations with a variety of different {{Property|DamageFactor}}s.
+* '''{{LE|MeleeThreshold}}''' ''value'' 
+*: The actor with this property set will not attack its target with a missile attack if it is within the specified range, but rather (if chasing) attempt to close in to engage in melee. To be used in place of the old '''{{flag|LONGMELEERANGE}}''' flag.
+* '''{{LE|MeleeRange}}''' ''value'' 
+*: Specifies the maximum distance to a target where a melee attack inflicts damage. Distance is calculated from the attacker's center to the target's bounding box.
+*: All monster melee attacks use this value for melee range. This include [[A_BasicAttack]], [[A_ComboAttack]], [[A_CustomComboAttack]], [[A_CustomMeleeAttack]], [[A_MeleeAttack]], and so on.
+*: Default is 44.
+* '''{{LE|MaxTargetRange}}''' ''value'' 
+*: A [[monster]] with this property set will not attack its target unless it is within the specified range. To be used in place of the deprecated '''{{flag|SHORTMISSILERANGE}}''' flag. This is used by [[A_Chase]] and similar functions.
+*: Seeker [[Projectile|missile]]s have a special use for this property. See [[A_SeekerMissile]] for more information.
+* '''{{LE|MeleeDamage}}''' ''value'' {{Deprecated}}
+* '''{{LE|MeleeSound}}''' ''soundname'' {{Deprecated}}
+* '''{{LE|MissileHeight}}''' ''value'' {{Deprecated}} (Except with {{Class|FastProjectile}})
+* '''{{LE|MissileType}}''' ''classname'' {{Deprecated}} (Except with {{Class|FastProjectile}} and a few others)
+*: These properties served as parameters for [[A_MeleeAttack]], [[A_MissileAttack]] and [[A_ComboAttack]]. However, these three functions have been superseded by parameterized versions called [[A_CustomMeleeAttack]], [[A_CustomMissile]] and [[A_CustomComboAttack]], respectively.
+*: Note that {{Class|FastProjectile}}, {{Class|ArtiPoisonBagShooter}}, {{Class|ArtiPoisonBagGiver}}, and classes using [[A_LightningZap]] or [[A_LastZap]] make special use of the missile properties.
+* '''{{LE|ExplosionRadius}}''' ''value'' 
+*: [[A_Explode]] will use this value as the explosion's radius, unless a different value is provided in the function call itself. This property can be useful for [[Using inheritance|inheritance]] purposes, to override explosion radius in a child actor without the need to change the state where it calls A_Explode.
+* '''{{LE|ExplosionDamage}}''' ''value'' 
+*: [[A_Explode]] will use this value as the explosion's damage, unless a different value is provided in the function call itself. This property can be useful for [[Using inheritance|inheritance]] purposes, to override explosion damage in a child actor without the need to change the state where it calls A_Explode.
+* '''{{LE|DontHurtShooter}}''' {{Deprecated}}
+*: These properties were used to pass the parameters to [[A_Explode]]. Now that A_Explode allows passing the parameters directly there is no need to use these except for compatibility with older definitions.
+* '''{{LE|PainType}}''' ''type''
+*: The attack uses a specific pain type, which overrides its [[damage type]]. Pain types are identified only by their name and do not need to be declared anywhere else. This can be useful to combine special scripted effect based on custom Pain states with a variety of different {{Property|DamageFactor}}s.
+
+=== Flag combos ===
+* '''{{LE|Monster}}'''
+*: Sets all appropriate flags to make this actor act like a regular [[monster]]. The following flags are set:
+*:* '''{{flag|SHOOTABLE}}'''
+*:* '''{{flag|COUNTKILL}}'''
+*:* '''{{flag|SOLID}}'''
+*:* '''{{flag|CANPUSHWALLS}}'''
+*:* '''{{flag|CANUSEWALLS}}''' 
+*:* '''{{flag|ACTIVATEMCROSS}}'''
+*:* '''{{flag|CANPASS}}'''
+*:* '''{{flag|ISMONSTER}}'''
+* '''{{LE|Projectile}}'''
+*: Sets all appropriate flags to make this actor act like a regular [[projectile]]. The following flags are set:
+*:* '''{{flag|NOBLOCKMAP}}'''
+*:* '''{{flag|NOGRAVITY}}'''
+*:* '''{{flag|DROPOFF}}'''
+*:* '''{{flag|MISSILE}}'''
+*:* '''{{flag|ACTIVATEIMPACT}}'''
+*:* '''{{flag|ACTIVATEPCROSS}}'''
+*:* '''{{flag|NOTELEPORT}}'''
+*: When playing Heretic or Hexen '''{{flag|BLOODSPLATTER}}''' is also set.
+
+=== Special ===
+* '''{{LE|Args}}''' ''arg0''[, ''arg1''[, ''arg2''[, ''arg3''[, ''arg4'']]]]
+*: Hardcodes arguments of the actor, they can be any integer value. They will override any argument set in the map editor; using this property is therefore generally not recommended unless if making actors for the Doom [[map format]] or actors for the Hexen map format that needs argument values outside the [0,255] range.
+* '''{{LE|ClearFlags}}'''
+*: Clears all flags ''previously'' set.
+* '''{{LE|DropItem}}''' ''classname'' [, ''probability'' [, ''amount'']]
+*: The item the actor is set to drop, which can be any actor class and not just {{class|inventory}}. The action of dropping the item is performed by {{c|[[A_NoBlocking]]}}, which is typically called during the death sequences of the actor. Optionally the probability can be specified. A ''probability'' of 255 or greater means the item is always dropped, while a ''probability'' of -1 or less means it is never dropped. When ''classname'' is ''None'' the drop list will be completely removed.
+*: ''amount'' is only applicable to the {{c|Inventory}} class and derivatives. It specifies how many samples the dropped item contains.
+*: {{Class|RandomSpawner}}, {{Class|BossEye}}, {{Class|SpawnShot}}, {{Class|Weapon}} and [[Skulltag]]'s {{Class|CustomMonsterInvasionSpot}} and {{Class|CustomPickupInvasionSpot}} use this property differently.
+*: There can be more than one '''dropitem''' definitions for an actor. The amount of definitions per actor is unlimited.
+*: '''dropitem''' works differently with [[Using inheritance|inherited]] actors. An actor can inherit a list of '''dropitem''' definitions from its parent but if it defines one of its own the entire parent's list is discarded. This parameter does not work for players.
+* '''{{LE|Spawn}}''' {{Deprecated}}
+* '''{{LE|See}}''' {{Deprecated}}
+* '''{{LE|Melee}}''' {{Deprecated}}
+* '''{{LE|Missile}}''' {{Deprecated}}
+* '''{{LE|Pain}}''' {{Deprecated}}
+* '''{{LE|Death}}''' {{Deprecated}}
+* '''{{LE|XDeath}}''' {{Deprecated}}
+* '''{{LE|Burn}}''' {{Deprecated}}
+* '''{{LE|Ice}}''' {{Deprecated}}
+* '''{{LE|Disintegrate}}''' {{Deprecated}}
+* '''{{LE|Raise}}''' {{Deprecated}}
+* '''{{LE|Crash}}''' {{Deprecated}}
+* '''{{LE|Wound}}''' {{Deprecated}}
+* '''{{LE|Crush}}''' {{Deprecated}}
+* '''{{LE|Heal}}''' {{Deprecated}}
+*: These keywords were originally used to remap [[Actor states|states]]. However, as of 2.1.0 they have been deprecated because now it is possible to place '''goto''' statements right behind state labels which gives the same effect in a way that is much cleaner and more flexible.
+* '''{{LE|States}}'''
+*: Defines an actor's [[Actor states|states]].
+* '''{{LE|Skip_Super}}'''
+*: Reinitializes the actor as if it has no parent. This can be used to have access to the parent's states without inheriting its attributes.
+* '''{{LE|VisibleToTeam}}''' ''team_number''
+*: Renders the actor visible to players of a specific [[team]]. The actor's physics and code will act normally, however.
+*: Can be combined with VisibleToPlayerClass. Originally a [[Skulltag]] feature.
+* '''{{LE|VisibleToPlayerClass}}''' ''classname''[, ''classname2''[, ''classname3''[, ...]]]
+*: Same as VisibleToTeam, but for [[player class]]es.
+*: Can be combined with VisibleToTeam. Originally a [[Skulltag]] feature.
+*: Instead of just one class, a comma-separated list of classes can be given. Note that this property [[using inheritance|uses inheritance]], so if an actor is visible to class {{Class|DoomPlayer}}, it will be visible by all classes derived from DoomPlayer as well.
+
+== Additional properties ==
+Subclasses of {{Class|Actor}} may have additional properties. Most notably, {{Class|Inventory}} and its own subclasses (such as {{Class|Weapon}}) do; they are listed with their respective classes. {{Class|PlayerPawn}} also defines its own properties.
+
+=== {{Class|Inventory}} ===
+Note that all of Inventory's subclasses (Ammo, Weapons, etc.) can be used with the following inventory properties.
+{{:Inventory properties}}
+
+=== {{Class|FakeInventory}} ===
+{{:FakeInventory properties}}
+
+=== {{Class|BasicArmorPickup}} ===
+{{:BasicArmorPickup properties}}
+
+=== {{Class|BasicArmorBonus}} ===
+{{:BasicArmorBonus properties}}
+
+=== {{Class|Weapon}} ===
+{{:Weapon properties}}
+
+=== {{Class|Ammo}} ===
+{{:Ammo properties}}
+
+=== {{Class|WeaponPiece}} ===
+{{:WeaponPiece properties}}
+
+=== {{Class|Health}} ===
+{{:Health properties}}
+
+=== {{Class|PuzzleItem}} ===
+{{:PuzzleItem properties}}
+
+=== {{Class|PlayerPawn}} ===
+{{:Player properties}}
+
+=== {{Class|Powerup}} ===
+{{:Powerup properties}}
+
+=== {{Class|PowerSpeed}} ===
+{{:PowerSpeed properties}}
+
+=== {{Class|PowerupGiver}} ===
+{{:PowerupGiver properties|norepeat=yeah}}
+
+=== {{Class|HealthPickup}} ===
+{{:HealthPickup properties}}
+
+=== {{Class|MorphProjectile}} ===
+{{:MorphProjectile properties}}
+
+[[Category:DECORATE]]
+[[Category:Editing concepts]]
+[[Category:Editing references]]</text>
+    <sha1>2r7s6m6usvlgpq0gttkwmnct078wspr</sha1>
+  </revision>
+</page>

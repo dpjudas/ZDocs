@@ -1,0 +1,48 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>A ClearOverlays</title>
+  <ns>0</ns>
+  <id>8897</id>
+  <revision>
+    <id>46402</id>
+    <parentid>45127</parentid>
+    <timestamp>2019-02-01T16:01:17Z</timestamp>
+    <contributor>
+      <username>Major Cooke</username>
+      <id>1703</id>
+    </contributor>
+    <minor />
+    <comment>/* Parameters */</comment>
+    <origin>46402</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="1607" sha1="i7v91ee9f7aad0ougtrt62q5xsba4in" xml:space="preserve">__NOTOC__{{DISPLAYTITLE: A_ClearOverlays}}
+int '''A_ClearOverlays''' [(int start, int stop, bool safety)]&lt;br&gt;
+== Usage ==
+Removes a range of layers between [start,stop]. If no value or 0 is used for both, it will clear all but the hardcoded layers. Returns the number of layers cleared that were active between the range.
+
+The following is a list of internal layers used by engine ('''These are NOT flags or constants for use!'''):
+*''PSP_STRIFEHANDS'' (-1) - Used by [[A_ItBurnsItBurns]] in Strife.
+*''PSP_WEAPON'' (1) - Used by the actual weapon.
+*''PSP_FLASH'' (1000) - Used by the '''Flash''' state (see [[A_GunFlash]]).
+*''PSP_TARGETCENTER'' (2147483645)
+*''PSP_TARGETLEFT'' (2147483646)
+*''PSP_TARGETRIGHT'' (2147483647) - The absolute highest layer number.
+
+It is recommended that all new overlays should use layers 2 on up, or -2 on down to avoid any potential problems with compatibility.
+== Parameters ==
+*''start'' - The low end of the range to clear through. If 0 including ''stop'', clears all current overlays except hardcoded ones.
+*''stop'' - The high end of the range to clear through. If 0 including ''start'', clears all current overlays except hardcoded ones.
+*''safety'' - Enabled by default, the hardcoded layers above are protected from wiping as this may cause problems with switching away from weapons, as there is no active layer to allow switching with. '''Use extreme caution when disabling.'''
+
+== Examples ==
+{{noexamples}}
+== See Also ==
+*[[A_Overlay]]
+*[[A_OverlayFlags]]
+*[[A_OverlayOffset]]
+*[[A_WeaponOffset]]
+
+{{DEFAULTSORT:Overlay}}[[category:Decorate Weapon functions]]</text>
+    <sha1>i7v91ee9f7aad0ougtrt62q5xsba4in</sha1>
+  </revision>
+</page>

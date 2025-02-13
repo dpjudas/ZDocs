@@ -1,0 +1,65 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>Classes:FlameThrower</title>
+  <ns>0</ns>
+  <id>4793</id>
+  <revision>
+    <id>40397</id>
+    <parentid>40140</parentid>
+    <timestamp>2015-09-18T09:06:39Z</timestamp>
+    <contributor>
+      <username>UsernameAK</username>
+      <id>2208</id>
+    </contributor>
+    <minor />
+    <origin>40397</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="1387" sha1="bze32yvpu8d66wro5xgd83kelmu8t9d" xml:space="preserve">{{Actor|
+| type = Weapon
+| name = Flamethrower
+| class = FlameThrower
+| game = Strife
+| doomednum = 2005
+| convid = 190, 184, 188
+}}[[Classes]]: [[Classes:Inventory|Inventory]]&amp;rarr;[[Classes:Weapon|Weapon]]&amp;rarr;[[Classes:StrifeWeapon|StrifeWeapon]]&amp;rarr;&lt;u&gt;FlameThrower&lt;/u&gt;&lt;br&gt;
+A flamethrower, reverse-engineered from [[Classes:Crusader|Crusader]] [[Classes:FlameThrowerParts|parts]] for human use. Especially effective against humans and humanoids!
+==== [[DECORATE]] definition ====
+ ACTOR &lt;u&gt;FlameThrower&lt;/u&gt; : {{Class|StrifeWeapon}}
+ {
+   +{{Flag|FLOORCLIP}}
+   {{Property|Weapon.SelectionOrder}} 2100
+   {{Property|Weapon.Kickback}} 0
+   {{Property|Weapon.AmmoUse1}} 1
+   {{Property|Weapon.AmmoGive1}} 100
+   {{Property|Weapon.UpSound}} "weapons/flameidle"
+   {{Property|Weapon.ReadySound}} "weapons/flameidle"
+   {{Property|Weapon.AmmoType1}} "{{Class|EnergyPod}}"
+   {{Property|Inventory.Icon}} "FLAMA0"
+   {{Property|Tag}} "$TAG_FLAMER" // "Flame Thrower"
+   {{Property|Inventory.PickupMessage}} "$TXT_FLAMER" // "You picked up the flame thrower."
+ 
+   action native [[A_FireFlamer]]();
+ 
+   States
+   {
+   Spawn:
+     FLAM A -1
+     Stop
+   Ready:
+     FLMT AB 3 [[A_WeaponReady]]
+     Loop
+   Deselect:
+     FLMT A 1 [[A_Lower]]
+     Loop
+   Select:
+     FLMT A 1 [[A_Raise]]
+     Loop
+   Fire:
+     FLMF A 2 [[A_FireFlamer]]
+     FLMF B 3 [[A_ReFire]]
+     Goto Ready
+   }
+ }</text>
+    <sha1>bze32yvpu8d66wro5xgd83kelmu8t9d</sha1>
+  </revision>
+</page>

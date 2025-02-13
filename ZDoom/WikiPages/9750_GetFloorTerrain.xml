@@ -1,0 +1,46 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>GetFloorTerrain</title>
+  <ns>0</ns>
+  <id>9750</id>
+  <revision>
+    <id>50927</id>
+    <timestamp>2023-11-06T10:37:17Z</timestamp>
+    <contributor>
+      <username>Jekyll Grim Payne</username>
+      <id>2175</id>
+    </contributor>
+    <comment>Created page with "{{ZScriptNote}}  '''[[Classes:Actor|Actor]]'''  native TerrainDef '''GetFloorTerrain'''()  ==Usage==  Returns a pointer to the [[Structs:TerrainDef|Terrain struct]] for the ..."</comment>
+    <origin>50927</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="733" sha1="455u24uebvy886ey50uyxrwgnya2b65" xml:space="preserve">{{ZScriptNote}}
+
+'''[[Classes:Actor|Actor]]'''
+
+native TerrainDef '''GetFloorTerrain'''()
+
+==Usage==
+
+Returns a pointer to the [[Structs:TerrainDef|Terrain struct]] for the [[Structs:SecPlane|floor plane]] below the calling actor.
+
+==Examples==
+This actor (presumably, a projectile) will go to the "Splash" state sequence if it hit a floor terrain defined as liquid. Otherwise it'll [[A_Explode|explode]] and show the [[Classes:Rocket|Doom rocket]] animation:
+&lt;syntaxhighlight lang="csharp"&gt;
+Death:
+	TNT1 A 0
+	{
+		let t = GetFloorTerrain();
+		if (t.IsLiquid &amp;&amp; pos.z &lt;= floorz)
+		{
+			return ResolveState("Splash");
+		}
+		A_Explode();
+		return ResolveState(null);
+	}
+	MISL BCD 5 bright;
+	stop;&lt;/syntaxhighlight&gt;
+
+[[Category:ZScript]]</text>
+    <sha1>455u24uebvy886ey50uyxrwgnya2b65</sha1>
+  </revision>
+</page>

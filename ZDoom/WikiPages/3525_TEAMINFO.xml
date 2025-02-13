@@ -1,0 +1,144 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>TEAMINFO</title>
+  <ns>0</ns>
+  <id>3525</id>
+  <revision>
+    <id>37490</id>
+    <parentid>25527</parentid>
+    <timestamp>2013-12-30T23:00:05Z</timestamp>
+    <contributor>
+      <username>Gez</username>
+      <id>1283</id>
+    </contributor>
+    <minor />
+    <comment>/* Skulltag properties */</comment>
+    <origin>37490</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="3474" sha1="4mqsk4tqjs0ewvxs2mlsmf4oac7z0xg" xml:space="preserve">TEAMINFO allows a player to define custom teams for team deathmatch play mode. There is no limit of teams you can define meaning it's possible for you to define a wide and exciting variety of teams. The team number depends on their order of introduction in the lump -- by default, blue is 0, red is 1, green is two, and so on.
+
+== Syntax ==
+
+ clearteams // Optional
+ Team &lt;Name&gt;
+ {
+         PlayerColor "RR GG BB"
+         TextColor "Color"
+         &lt;other properties&gt;
+ }
+
+== Commands ==
+
+'''ClearTeams''' - Removes all predefined teams. Remember to place this before you define your own teams!
+
+'''Team &lt;name&gt;''' - Start a team definition, to be contained within curly braces.
+
+== Properties ==
+All these properties are valid within a team definition.
+
+'''Name''' &lt;string&gt; - The name of your team to be defined, e.g, "Purple".
+
+'''Game''' &lt;keyword&gt; - The game in which the team is defined. Valid values are "Any", "Chex", "Doom", "Heretic", "Hexen", "Raven" and "Strife".
+
+'''PlayerColor''' &lt;color&gt; - In a hexadecimal format, this property defines the color of the player on said team, e.g, "FF 00 00".
+
+'''TextColor''' &lt;color&gt; - The color of the players' name on the scoreboard, e.g, "RED".
+
+'''Logo''' - The name of the logo drawn on the scoreboard. This feature is not supported by [[Skulltag]].
+
+'''AllowCustomPlayerColor''' - If present, this keyword enables players to use their own custom colors, instead of their team color.
+
+== Skulltag properties ==
+Skulltag defines additional properties. They are silently ignored in ZDoom, and have no effect. They are, however, naturally supported by Skulltag's successor [[Zandronum]].
+
+'''RailColor''' &lt;color&gt; - In a hexadecimal format, the color of your team's railgun, e.g "FF 00 FF".
+
+'''FlagItem''' &lt;string&gt; - The actor for your team's flag (in capture the flag).
+
+'''SkullItem ''' &lt;string&gt; - The actor for your team's Skull (in skulltag mode).
+
+'''PlayerStartThingNumber''' &lt;number&gt; - The team start thing number.
+
+'''SmallFlagHUDIcon''' &lt;string&gt; - This icon is shown on the screen next to the name of the player who is holding the flag.
+
+'''SmallSkullHUDIcon''' &lt;string&gt; - This icon is shown on the screen next to the name of the player who is holding the skull.
+
+'''LargeFlagHUDIcon''' &lt;string&gt; - The flag icon on the full screen HUD.
+
+'''LargeSkullHUDIcon''' &lt;string&gt; - The skull icon on the full screen HUD.
+
+'''WinnerPic''' &lt;string&gt; - The picture shown to members of the victorious team after a match.
+
+'''LoserPic''' &lt;string&gt; - The picture shown to members of the defeated team after a match.
+
+'''WinnerTheme''' &lt;string&gt; - The music played to members of the victorious team after a match.
+
+'''LoserTheme''' &lt;string&gt; - The music played to members of the defeated team after a match.
+
+== Examples ==
+
+Here are the defined teams in zdoom.pk3.
+
+&lt;pre&gt;ClearTeams
+
+Team "Blue"
+{
+	PlayerColor "00 00 FF"
+	TextColor "Blue"
+}
+
+Team "Red"
+{
+	PlayerColor "FF 00 00"
+	TextColor "Red"
+}
+
+Team "Green"
+{
+	PlayerColor "00 FF 00"
+	TextColor "Green"
+}
+
+Team "Gold"
+{
+	PlayerColor "FF FF 00"
+	TextColor "Gold"
+}
+
+Team "Black"
+{
+	PlayerColor "00 00 00"
+	TextColor "Black"
+}
+
+Team "White"
+{
+	PlayerColor "FF FF FF"
+	TextColor "White"
+}
+
+Team "Orange"
+{
+	PlayerColor "FF 80 00"
+	TextColor "Orange"
+}
+
+Team "Purple"
+{
+	PlayerColor "FF 00 FF"
+	TextColor "Purple"
+}&lt;/pre&gt;
+
+Here's another example:
+
+ Team "Assassins"
+ {
+        PlayerColor "FF 10 00"
+        TextColor "DarkRed"
+        Logo "ASSALOGO"
+ }
+
+[[Category:ZDoom special lumps]]</text>
+    <sha1>4mqsk4tqjs0ewvxs2mlsmf4oac7z0xg</sha1>
+  </revision>
+</page>

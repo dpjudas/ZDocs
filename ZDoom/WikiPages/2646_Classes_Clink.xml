@@ -1,0 +1,76 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>Classes:Clink</title>
+  <ns>0</ns>
+  <id>2646</id>
+  <revision>
+    <id>39329</id>
+    <parentid>34051</parentid>
+    <timestamp>2015-04-29T17:16:07Z</timestamp>
+    <contributor>
+      <username>Blue Shadow</username>
+      <id>2021</id>
+    </contributor>
+    <minor />
+    <comment>/* DECORATE definition */ Updated</comment>
+    <origin>39329</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="1559" sha1="cz9g7x20x1c4rhkq9qtto93szs3tf6z" xml:space="preserve">{{Actor|
+| type = Monster
+| name = Sabreclaw
+| class = Clink
+| game = Heretic
+| doomednum = 90
+| spawnid = 1
+| spawnname = T_CLINK 
+}}[[Classes]]: &lt;u&gt;Clink&lt;/u&gt;&lt;br&gt;
+The sabreclaw is a mechano-magical being that has a blade for a right arm. It has no ranged attack, but is fast and will cause moderate damage if it is allowed to slice its target repeatedly. They can be considered Heretic's equivalent to the [[Classes:Demon|demon]] from Doom.
+
+==== [[DECORATE]] definition ====
+ ACTOR &lt;u&gt;Clink&lt;/u&gt;
+ {
+   {{Property|Health}} 150
+   {{Property|Radius}} 20
+   {{Property|Height}} 64
+   {{Property|Mass}} 75
+   {{Property|Speed}} 14
+   {{Property|PainChance}} 32
+   {{Property|Monster}}
+   +{{Flag|NOBLOOD}}
+   +{{Flag|FLOORCLIP}}
+   {{Property|SeeSound}} "clink/sight"
+   {{Property|AttackSound}} "clink/attack"
+   {{Property|PainSound}} "clink/pain"
+   {{Property|DeathSound}} "clink/death"
+   {{Property|ActiveSound}} "clink/active"
+   {{Property|Obituary}} "$OB_CLINK"
+   {{Property|DropItem}} "{{Class|SkullRodAmmo}}", 84, 20		
+   States
+   {
+   Spawn:
+     CLNK AB 10 [[A_Look]]
+     Loop
+   See:
+     CLNK ABCD 3 [[A_Chase]]
+     Loop
+   Melee:
+     CLNK E 5 [[A_FaceTarget]]
+     CLNK F 4 [[A_FaceTarget]]
+     CLNK G 7 [[A_CustomMeleeAttack]]([[DECORATE_expressions#Mathematical_functions|random]][ClinkAttack](3,9), "clink/attack", "clink/attack")
+     Goto See
+   Pain:
+     CLNK H 3
+     CLNK H 3 [[A_Pain]]
+     Goto See
+   Death:
+     CLNK IJ 6
+     CLNK K 5 [[A_Scream]]
+     CLNK L 5 [[A_NoBlocking]]
+     CLNK MN 5
+     CLNK O -1
+     Stop
+   }
+ }</text>
+    <sha1>cz9g7x20x1c4rhkq9qtto93szs3tf6z</sha1>
+  </revision>
+</page>

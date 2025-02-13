@@ -1,0 +1,368 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>Converting DECORATE code to ZScript</title>
+  <ns>0</ns>
+  <id>8947</id>
+  <revision>
+    <id>53995</id>
+    <parentid>53994</parentid>
+    <timestamp>2024-12-01T13:35:54Z</timestamp>
+    <contributor>
+      <username>Gez</username>
+      <id>1283</id>
+    </contributor>
+    <minor />
+    <comment>/* See also */</comment>
+    <origin>53995</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="15126" sha1="t35pqrlzxtrzavdd8ibbz2ozsvukt5f" xml:space="preserve">[[DECORATE]] code is mostly compatible with [[ZScript]] code, able to recognize any action function and definition of actors. However, the parser is stricter on detecting code conversions and there is some syntax changes.
+
+DECORATE and ZScript can be used simultaneously. There is therefore no need to convert a DECORATE actor to ZScript if you do not intend to use this opportunity to enhance its code with ZScript-specific features. Converting the code from a large project need therefore only be done when it is important, while the more trivial code can remain untouched. Note that while DECORATE actors can inherit from ZScript actors, the reverse is not true; therefore if an actor is converted, any of its parent classes must also be converted; however its children classes can be left alone.
+
+== Required changes ==
+These changes must be performed on all DECORATE code in order to work with ZScript.
+
+* Actors are now known as classes which must inherit from Actor (or anything inheriting from Actor itself).
+* Actor names must be valid identifiers (i.e. be composed of only letters, numbers, and underscores; and must start with a letter or underscore). Most notably, this means that actor names may no longer begin with a number.
+* '''return state("name")'' casts must be converted by the following rules:
+** state() is now known as ResolveState()
+** No state (previously 0 or "") must now use '''null''' instead.
+;; '''NOTE:''' '''null''' and '''"Null"''' are two different meanings. Every actor has a Null state, and the double quotes means to jump there. This will destroy the actor. Without the quotes, it means jump to no state.
+&lt;syntaxhighlight lang="csharp"&gt;
+return ResolveState(null); // No state jump.
+return ResolveState("Null"); // Destroys the actor.
+&lt;/syntaxhighlight&gt;
+* '''float''' types must be named as '''double'''.
+** In DECORATE, floats were actually doubles the whole time. The name float was used as a misnomer, simply translated into a double internally.
+* Property separations require a comma.
+* '''Damage''' must be renamed to '''DamageFunction''' if direct control is desired.
+* Properties must now be placed inside a {{c|Default { }&lt;!-- --&gt;}} block. Constants are an exception. See the examples below.
+* Damagetype definitions belong in [[MAPINFO]].
+* {{c|PowerupType}} no longer automatically adds {{c|Power}} to the beginning of items.
+* Enums now require a name. &lt;code&gt;enum namehere&lt;/code&gt;
+* Some warnings such as missing actors are treated as errors. All actors must be defined.
+* All class names, colors, and strings now require enclosure by quotes ({{c|" "}}).
+** Species must be set to "None".
+** Empty Sounds and colors must use "".
+** Empty class actors, names and strings must use {{c|null}}. This applies to the following examples:
+&lt;syntaxhighlight lang="csharp"&gt;
+return ResolveState(null);
+A_CustomBulletAttack(...,null); // null can be used to not spawn something like the puff or projectile tracer, as "" will not work.
+&lt;/syntaxhighlight&gt;
+* Backslashes in strings must be escaped (i.e. use a double backslash); this is technically not a new requirement but is encountered more often due to the quote enclosure requirement. For example:
+&lt;syntaxhighlight lang="csharp"&gt;
+Inventory.Icon "RPOW\\0"; // will set the icon to the '\' frame of the RPOW sprite. Using "RPOW\0" will not work.
+&lt;/syntaxhighlight&gt;
+* Every property, state definition and action function, whether inside or outside of [[Actor states#Anonymous functions|anonymous functions]] now require a semicolon at the end. Even if the state definition doesn't have an action occurring, it requires a semicolon. 
+*; '''Exceptions:''' [[actor flags]], closing brackets ( {{c|}&lt;!-- --&gt;}}) (enum closing brackets still require it).
+* {{c|Game}}, {{c|DoomEdNum}}, {{c|SpawnID}} and {{c|ConversationID}} ''cannot'' be used in ZScript. Use [[MAPINFO]] for these instead.
+* Subclass flags are no longer optional and will require the appropriate prefix:
+&lt;syntaxhighlight lang="csharp"&gt;
++ALWAYSPICKUP // This will make ZDoom error out.
++INVENTORY.ALWAYSPICKUP // This will work.
+&lt;/syntaxhighlight&gt;
+
+== Warnings ==
+While the following behavior does not prevent the game from loading, at any time this could be changed. As such, it is strongly recommended to avoid the following:
+* Changing deprecated flags, [[A_ChangeFlag]], and [[A_CheckFlag]]. One can assign the flag directly now. See below for more information.
+* Position and velocity are accessed through vectors.
+&lt;syntaxhighlight lang="csharp"&gt;
+pos.* //where * is x, y or z
+vel.* //same as position, replaces velx//y/z (just adds a period between 'vel' and 'x')
+&lt;/syntaxhighlight&gt;
+== Additions ==
+ZScript brings some immediate benefits.
+
+* String constants can be defined and used in any property, using double quotes.
+* Name constants can be defined with single quotes.
+* String comparisons
+* Class&lt;Actor&gt; casting for names, specifically actors.
+** Strings are simply compared with &lt;code&gt;&lt;, &gt;, &lt;=, &gt;=, ==, ~==&lt;/code&gt; operators.
+** &lt;code&gt;~==&lt;/code&gt; is case insensitive. This also only works on strings. Names do not have &lt;code&gt;~==&lt;/code&gt; available and aren't case sensitive.
+* Structs
+** Struct member functions
+* SizeOf/AlignOf operators
+* Custom pointer creation
+* Custom functions
+* Direct access to actor flags
+* 2D and 3D Vectors
+** Functions: Unit() and Length()
+* Switch/Case
+* Virtual Functions
+* States and Functions cast types
+* Pass-by-reference
+* PSprite manipulation (aka actor overlays)
+* Custom player animation control
+* Multiple return value assignments
+**'''NOTE:''' The syntax is slightly different from LUA. Square brackets around them. I.e.
+&lt;syntaxhighlight lang="csharp"&gt;
+[a,b] = Function();
+&lt;/syntaxhighlight&gt;
+* Named Arguments
+&lt;syntaxhighlight lang="csharp"&gt;
+A_SpawnItemEx("DoomImp", flags: SXF_TRANSFERPOINTERS);
+&lt;/syntaxhighlight&gt;
+* Constant and local arrays
+
+== Specifics ==
+Some specific code syntax has changed which requires special noting.
+
+=== Virtuals ===
+Virtual functions allow overriding by inherited classes. Some of the internal functions have also been exposed.
+* '''BeginPlay''': Called just after an actor class has been created. This is used for initializing the defaults of an actor.
+* '''PostBeginPlay''': Called just before the first tic is processed, after BeginPlay.
+* '''Tick''': Called every tic that passes. This makes an actor actually perform over time in game.
+* '''Activate''': Called whenever [[Thing_Activate]] or similar is used.
+* '''Deactivate''': Called whenever [[Thing_Deactivate]] or similar us used. This is performed if the actor is spawned with the DORMANT flag.
+
+Virtual functions can be defined in two ways, both mutually exclusive to one another:
+
+&lt;syntaxhighlight lang="csharp"&gt;
+virtual void MyFunction();
+override void MyFunction(); //Override is already considered virtual on the engine side.
+&lt;/syntaxhighlight&gt;
+To call the super function:
+
+&lt;syntaxhighlight lang="csharp"&gt;
+override void PostBeginPlay()
+{
+    PerformSomeStuff();
+    Super.PostBeginPlay(); // In ZDoom, the super call is done by just super. instead of Super::
+}
+&lt;/syntaxhighlight&gt;
+This is especially important with the internal functions, otherwise the actor will not perform properly unless an entirely advanced new version is implemented.
+
+=== Cast types ===
+States and functions can optionally have one of four cast types. Generally, these will not be needed, but can be used identify specifics on what type of state is allowed to execute what kind of functions. The four types are:
+* Actor
+* Overlay
+* Weapon
+* Item
+
+&lt;syntaxhighlight lang="csharp"&gt;
+States(Actor)
+{
+    // Only actor-qualified functions can be used in here.
+}
+&lt;/syntaxhighlight&gt;
+&lt;syntaxhighlight lang="csharp"&gt;
+Action(Weapon) void MyFuncName()
+{
+    // Only weapon-qualified states will allow this function to be used.
+}
+&lt;/syntaxhighlight&gt;
+=== Damage ===
+'''Damage''' property no longer allows direct control of how much damage is given. This ability has been split into '''DamageFunction'''.
+&lt;syntaxhighlight lang="csharp"&gt;
+DamageFunction (random(3,12));
+&lt;/syntaxhighlight&gt;
+=== Actor flags ===
+Flags can be changed by prefixing the flag in question with &lt;code&gt;b&lt;/code&gt;. Note, this cannot be used directly as [[A_ChangeFlag]] because this is not considered a function call. Instead, this has to be done in a code block (for example, in an [[Anonymous function|anonymous function]]), for example:
+&lt;syntaxhighlight lang="csharp"&gt;
+TNT1 A 0
+{
+  bShootable = true; // Sets the SHOOTABLE flag to true on the calling actor
+  bVulnerable = false;  // Sets the VULNERABLE flag to false on the calling actor
+}
+&lt;/syntaxhighlight&gt;
+
+Note that not all flags can be changed that way. Some flags still require dedicated functions to change them, such as [[A_ChangeLinkFlags]] and [[A_ChangeCountFlags]].
+
+=== Constants ===
+Constants must be defined '''outside''' of the Default { } code block, and they must not be given a type -- these are automatically resolved at compiled time. There is a difference for determining names and strings.
+
+* String constants use double quotes after the =.
+* Name constants use single quotes after the =.
+
+=== User variables ===
+User variables are known as local variables in ZScript. These are much more powerful in ZScript and can be assigned to anything and everything, including weapons.
+
+They can be declared like this:
+
+&lt;syntaxhighlight lang="csharp"&gt;
+// Declaring variables is done like this.
+int localvar, secondvar, thirdvar;
+&lt;/syntaxhighlight&gt;
+&lt;syntaxhighlight lang="csharp"&gt;
+// Assigning values to local variables upon declaration only works inside (non)anonymous functions.
+TNT1 A 0 
+{
+    double testing = 0.12345;
+    double CountTracker = 33.543;
+}
+&lt;/syntaxhighlight&gt;
+To use them on weapons, and custominventory, it must be '''invoked'''. This must be done within either an anonymous function or a defined function with the word 'action' before the return type. Anonymous functions are considered action by default.
+
+&lt;syntaxhighlight lang="csharp"&gt;
+TNT1 A 0 { invoker.CountTracker += frandom(1.28,2.56); }
+
+// Or
+
+action void MyFunc()
+{
+    invoker.CountTracker += frandom(1.28,2.56);
+}
+&lt;/syntaxhighlight&gt;
+The [[A_SetUserVar]] and [[A_SetUserArray]] family will no longer function in ZScript. Instead, direct assignment must be used just like C++.
+
+&lt;code&gt;testing = 3.14 * 8;&lt;/code&gt;
+
+== Examples: Converting DECORATE ==
+This is an example of how constants are made.
+&lt;syntaxhighlight lang="csharp"&gt;
+// (needs verification)
+const String1 = "This is a string."; // Defines a string using double quotes.
+const GLLight1 = 'ActorLight1'; //Defines a name using single quotes.
+const Number1 = 1;
+const NumFloat = 1.0;
+const ofsx = 1;
+const ofsy = 1;
+// And in the states:
+TNT1 A Number1 Offset(ofsx, ofsy) Bright Light(GLLight1);
+&lt;/syntaxhighlight&gt;
+This is the {{class|BeastBall}} from Heretic's Beast.
+&lt;syntaxhighlight lang="csharp"&gt;
+class BeastBall : Actor
+{
+    Default
+    {
+        Radius 9;
+        Height 8;
+        Speed 12;
+        FastSpeed 20;
+        Damage 4;
+        Projectile;
+        -ACTIVATEIMPACT
+        -ACTIVATEPCROSS
+        -NOBLOCKMAP
+        +WINDTHRUST
+        +SPAWNSOUNDSOURCE
+        RenderStyle "Add";
+        SeeSound "beast/attack";
+    }
+    States
+    {
+    Spawn:
+        FRB1 AABBCC 2 A_SpawnItemEx("Puffy", random2[BeastPuff]()*0.015625, random2[BeastPuff]()*0.015625,
+                                    random2[BeastPuff]()*0.015625, 0,0,0,0,SXF_ABSOLUTEPOSITION, 64);
+        Loop;
+    Death:
+        FRB1 DEFGH 4;
+        Stop;
+    }
+}
+&lt;/syntaxhighlight&gt;
+
+This is the {{class|ArtiPork}} item from Raven converted from DECORATE to ZScript.
+&lt;syntaxhighlight lang="csharp"&gt;
+class ArtiPork : CustomInventory
+{
+    Default
+    {
+        +COUNTITEM
+        +FLOATBOB
+        +INVENTORY.INVBAR
+        Inventory.PickupFlash "PickupFlash";
+        +INVENTORY.FANCYPICKUPSOUND
+        Inventory.Icon "ARTIPORK";
+        Inventory.PickupSound "misc/p_pkup";
+        Inventory.PickupMessage "$TXT_ARTIEGG2";
+        Inventory.DefMaxAmount;
+        Tag "$TAG_ARTIPORK";
+    }
+    States
+    {
+    Spawn:
+        PORK ABCDEFGH 5;
+        Loop;
+    Use:
+        TNT1 A 0 A_FireProjectile("PorkFX", -15, 0, 0, 0, 1);
+        TNT1 A 0 A_FireProjectile("PorkFX", -7.5, 0, 0, 0, 1);
+        TNT1 A 0 A_FireProjectile("PorkFX", 0, 0, 0, 0, 1);
+        TNT1 A 0 A_FireProjectile("PorkFX", 7.5, 0, 0, 0, 1);
+        TNT1 A 0 A_FireProjectile("PorkFX", 15, 0, 0, 0, 1);
+        Stop;
+    }
+}
+&lt;/syntaxhighlight&gt;
+== Examples: ZScript functions ==
+
+This is an example of defining a struct of constants and using them in actor classes.
+&lt;syntaxhighlight lang="csharp"&gt;
+struct SpecialConstants
+{
+  const Target = AAPTR_TARGET;
+  const Master = AAPTR_MASTER;
+  const Tracer = AAPTR_TRACER;
+  enum MyEnum
+  {
+     num1 = 1,
+     num2 = 2,
+     num3, // Auto-assigned the next incremented value. In this case, 3.
+     num4, // Auto-assigned the next incremented value. In this case, 4.
+  };
+}
+&lt;/syntaxhighlight&gt; 
+&lt;syntaxhighlight lang="csharp"&gt;
+class Monstah : Actor
+{
+  //...
+  States
+  {
+  Missile:
+     TNT1 A 0
+     {
+        SpecialConstants cns;
+        if (CountInv("something",cns.Target) == cns.num2)
+        { 
+           //Do something
+        }
+     }
+  }
+}
+&lt;/syntaxhighlight&gt;
+This defines the Cacodemon's [[A_HeadAttack]] function in ZScript.
+&lt;syntaxhighlight lang="csharp"&gt;
+//===========================================================================
+//
+// Code (must be attached to Actor)
+//
+//===========================================================================
+extend class Actor
+{
+   void A_HeadAttack()
+   {
+       if (target)
+       {
+           if (CheckMeleeRange())
+           {
+               int damage = random[pr_headattack](1, 6) * 10;
+               A_PlaySound (AttackSound, CHAN_WEAPON);
+               int newdam = target.DamageMobj (self, self, damage, "Melee");
+               target.TraceBleed (newdam &gt; 0 ? newdam : damage, self);
+           }
+           else
+           {
+               // launch a missile
+               SpawnMissile (target, "CacodemonBall");
+           }
+       }
+   }
+}
+&lt;/syntaxhighlight&gt;
+== Community guides and documentation ==
+The ZDoom community has made some effort in creating guides designed to help people to switch from DECORATE to ZScript.
+
+* '''[https://forum.zdoom.org/viewtopic.php?f=39&amp;t=55409 Breaking the ice for non-programmer DECORATE users by matt]''' — This forum thread contains a starter guide describing some basic concepts of the language
+* '''[https://github.com/jekyllgrim/ZScript_Basics ZScript Basics: A Guide for Non-Programmers (from a non-programmer) by Agent_Ash]''' — A GitHub-based guide that aims to cover all main areas of ZScript and how it's different from DECORATE, designed specifically for people who have little to no programming experience and are only familiar with DECORATE/ACS
+* '''[https://github.com/marrub--/zdoom-doc ZScript Language Documentation aka ZScriptDoc by marrub]''' — Not a guide but rather an informational hub that provides details on ZScript language, functions, features, etc.
+
+== See also ==
+* [[ZScript]]
+* [[ZScript features]]
+* [[Coding language differences]]
+
+[[Category:ZScript guides]]</text>
+    <sha1>t35pqrlzxtrzavdd8ibbz2ozsvukt5f</sha1>
+  </revision>
+</page>

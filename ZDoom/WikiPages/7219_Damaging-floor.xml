@@ -1,0 +1,139 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>Damaging floor</title>
+  <ns>0</ns>
+  <id>7219</id>
+  <revision>
+    <id>53410</id>
+    <parentid>53397</parentid>
+    <timestamp>2024-10-21T13:43:16Z</timestamp>
+    <contributor>
+      <username>Blue Shadow</username>
+      <id>2021</id>
+    </contributor>
+    <minor />
+    <comment>/* UDMF */</comment>
+    <origin>53410</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="9992" sha1="tmt2gfqmmbv0s4nmp1h885pemvmhqqb" xml:space="preserve">{{Doomwiki}}
+'''Damaging floors''' are [[sector]]s which deal damage to the [[player]]s inside them. Or also to any monsters and decorations. (See [[#Non-player actors|below]]) 
+
+[[ZDoom]] allows several different manners in which a sector can be made to automatically inflict damage. It can be:
+*the sector's own damage type, set by the [[sector type]], through sector properties on the [[Universal Doom Map Format]], through [[Sector_SetDamage]] or [[SetSectorDamage]].
+*a damage effect attached to the sector's [[TERRAIN|terrain]],
+*Caused in [[ACS]] with [[SectorDamage]].
+
+Many types of damaging floors can be protected from by having a {{Class|PowerIronFeet}}, {{Class|PowerMask}} or derivative in inventory; usually obtained by picking up a {{Class|RadSuit}} or using an {{Class|EnvironmentalSuit}}. However, this protection might be affected by "leaks" where there is a 5 out of 256 risk (a bit less than 2%) for full damage to be inflicted regardless.
+
+==Sector types==
+The following [[sector type]]s provide this effect:
+{| {{prettySortable}}
+!Type!!Name!!Damage!!Frequency!![[Damage type]]!!{{Class|PowerIronFeet|Protection?}}!!Notes
+|-
+|68||Light_Strobe_Hurt||20||Every 32 tics||Slime||Leak||Light alternates cyclically 5 tics bright then 15 tics dark and loop.
+|-
+|69||Damage_Hellslime||10||Every 32 tics||Slime||Yes||
+|-
+|71||Damage_Nukage||5||Every 32 tics||Slime||Yes||
+|-
+|75||Damage_End||20||Every 32 tics||None||No||Clears god mode [[cheat]] but player cannot die, level exits when health at 10 or less.
+|-
+|80||Damage_SuperHellslime||20||Every 32 tics||Slime||Leak||
+|-
+|82||Damage_LavaWimpy||5||Every 16 tics||Fire||No||
+|-
+|83||Damage_LavaHefty||8||Every 16 tics||Fire||No||
+|-
+|84||Scroll_EastLavaDamage||5||Every 16 tics||Fire||No||Light alternates cyclically 5 tics bright then 15 tics dark and loop, sector scroll and carry.
+|-
+|85||Damage_Sludge||4||Every 32 tics||Slime||Yes||
+|-
+|104||Light_Strobe_Hurt||5||Every 32 tics||Slime||Yes||Light alternates cyclically 5 tics bright then 15 tics dark and loop.
+|-
+|105||Damage_Hellslime||5||Every 32 tics||Slime||Yes||Delayed [[poison]] damage, hazard count +2 per tic
+|-
+|115||Damage_InstantDeath||1000000||Every tic||InstantDeath||No||
+|-
+|116||Damage_SuperHellslime||5||Every 32 tics||Slime||Yes||Delayed [[poison]] damage, hazard count +4 per tic
+|-
+|196||Sector_Heal||1||Every 32 tics||N/A||No||Heals players instead of damaging them
+|-
+|256||N/A||5||Every 32 tics||Fire||Yes||[[Boom]]-style generalized sector, cannot be combined with a normal damage type.
+|-
+|512||N/A||10||Every 32 tics||Slime||Yes||[[Boom]]-style generalized sector, cannot be combined with a normal damage type.
+|-
+|768||N/A||20||Every 32 tics||Slime||Leak||[[Boom]]-style generalized sector, cannot be combined with a normal damage type.
+|}
+
+Two of the above types, originating from ''[[Strife]]'', feature a [[poison]] build-up system. While they do inflict five points of slime damage every thirty-two tics, the way in which the damage is only inflicted once the poison has reached a certain level of build-up and continues even after leaving the sectors until the poison has been sufficiently cleansed is unique and not really customizable with any of the other methods.
+
+==Terrains==
+In ''[[Hexen]]'', the following [[texture]]s are by default set to have damage types.
+{| {{prettytable}}
+!Texture!!Damage!!Frequency!!Damage type!!Protection!!Notes
+|-
+|X_001||5||Every 32 tics||Fire||No||A sector using X_002, X_003, or X_004 will not animate and not inflict damage.
+|-
+|F_033||0||N/A||Ice||N/A||The damage type here merely makes [[frozen corpse]] chunks last longer before they melt.
+|}
+A custom [[TERRAIN]] lump can define other types of texture-based damage. Any damage type can be used, including [[custom damage types]]. The frequency can be any power of two. {{Class|RadSuit}}s and similar items can protect from such damage.
+
+==Non-player actors==
+{{new|4.13.0}}
+
+For UDMF maps, the ''hurtmonsters'' property allows for non-player things, such as monsters and decorations to receive damage in the exact same manner as players do, including special effects like immunity if the actor in question has a {{Class|PowerIronFeet}}-derived power up in their inventory, and receiving health up to 100 HP if the sector has a negative ''damageamount''. If you want to make a 3D floor do damage to monsters in particular, the ''hurtmonsters'' property needs to be put in the control sector.
+
+==UDMF==
+In the [[Universal Doom Map Format]], it is possible to directly specify a floors' damage characteristics (Including some that there's no pre-made sector specials for) with the following [[sector]] properties:
+* {{c|damageamount}} - How much damage the floor does.
+* {{c|damagetype}} - The type of damage it does, as a string.
+* {{c|damageinterval}} - Every how many [[tics]] will it do damage?
+* {{c|leakiness}} - How often does it leak? From 0 to 255 (Always).
+* {{c|damagehazard}} - Use [[Strife]]'s special delayed damage logic.
+* {{c|damageterraineffect}} - {{moreinfo}}
+* {{c|hurtmonsters}} - Monsters and decorations in this sector can be hurt just like players. {{removed}}
+* {{c|harminair}} - Players (And non-players, with ''hurtmonsters'') can be harmed by this sector even in the air. {{removed}}
+
+Every sector type can be replicated with these properties - in fact that is what the sector types actually get converted into internally -, and new combinations are possible.
+
+In addition, the following properties can be used in conjunction with terrain effects:
+* {{c|floorterrain}} - {{moreinfo}}
+
+==Sector_SetDamage==
+The [[Sector_SetDamage]] allows to modify or set the sector's damage values which are initialized both from the sector types and the UDMF properties. There is also a [[SetSectorDamage]] ACS function which allows to do the same with actual damage types instead of the old MeansOfDeath parameter.
+
+Since these three methods all affect the same set of data, only one effect can be present at any time. When a map gets initialized the UDMF properties take precedence over the sector types.
+
+The terrain based damage is a separate entity, so this will always be added on top of the regular sector damage.
+
+==SectorDamage==
+The last method available is entirely [[ACS]]-driven. With [[SectorDamage]], the damage is applied instantly when the function is called, and no more afterwards. For a continuous effect similar to the previous methods, use a looping script which will call SectorDamage repeatedly. Although more complicated to use, it offers unparalleled flexibility. Since it is called from a script, it can use any frequency wanted, not just powers of two &amp;mdash; it can even be random intervals. The amount of damage can also be anything, including random values or values computed in real time from several parameters. Protective items can be any sort of inventory item, not necessarily the {{Class|PowerIronFeet|IronFeet}} or {{Class|PowerMask|Mask}} powerups. The "leak" can be simulated by using a random chance of calling the function with an empty string for its ''protection_item'' parameter instead of the normal call where a valid item is named.
+
+It is even possible to use this function to damage [[monster]]s and actors not touching the ground, instead of only players with their feet on the ground. Use the {{c|DAMAGE_IN_AIR}} flag to affect actors not touching the ground ([[falling]], [[flying]], stepping on another thing, perched atop a [[3D floor]], [[3D middle texture]] or a [[bridge thing]]).
+
+==Drowning damage==
+If the level's [[MAPINFO]] [[map definition]] feature an {{c|airsupply}} value greater than zero (the default value is 20 by the way), a player will start to drown after spending as many seconds underwater. A {{Class|PowerIronFeet}} effect continually reset the player's air supply while active, so radiation shielding suits double as SCUBA gear.
+
+Once a player's air supply is exhausted, drowning damage is inflicted every 32 tics. The damage inflicted increase over time, starting at two points and increasing by one for each additional damage spent without breathing.
+
+The air supply runs out while the player is fully immersed ([[DECORATE expressions|waterlevel 3]]). This means the player has to be within [[swimmable]] [[deep water]], created either through [[Transfer_Heights]] or [[Sector_Set3dFloor]].
+
+'''Note:''' Since [[Doom Legacy]] did not feature drowning damage, maps in the [[Doom format]] which feature [[FraggleScript]] code will disable drowning altogether unless the {{c|drown}} flag is set in the {{c|level info}} section of said FraggleScript.
+
+==Damaging 3D floors==
+If a [[3D floor]]'s control sector inflicts damage (through any of the means above), damage will also be inflicted by stepping on the 3D floor if it is solid, or by being inside it if the floor is non-solid. Using [[SectorDamage]] on a 3D floor's control sector works as expected in the target sector. Using SectorDamage with the {{c|DAMAGE_IN_AIR}} flag on the control sector will affect actors inside or above the 3D floor in the target sector (but actors below the 3D floor are safe). This effect is not stopped by additional 3D floors placed above the first.
+
+==Damaging transferred heights==
+With [[Transfer_Heights]], the control sector's damage is not taken into account. If Transfer_Heights is used to create [[deep water]], the sector damage will be inflicted in any part of the swimmable area. If Transfer_Heights is used to create unswimmable areas (the player's waterlevel isn't increased), then damage is only inflicted  when touching the ground. Using [[SectorDamage]] with the {{c|DAMAGE_IN_AIR}} flag will of course work as expected on the tagged sector; but again, if it is used on the control sector, it will not be transferred to the target sector.
+
+==See also==
+* [[A_CheckTerrain]]
+* {{Class|EnvironmentalSuit}}
+* {{Class|RadSuit}}
+* [[SectorDamage]]
+* [[Sector_SetDamage]]
+* [[TERRAIN]]
+[[Category:Features]][[Category:Glossary]][[Category:Technical aspects]]</text>
+    <sha1>tmt2gfqmmbv0s4nmp1h885pemvmhqqb</sha1>
+  </revision>
+</page>

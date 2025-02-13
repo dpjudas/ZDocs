@@ -1,0 +1,59 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>S PauseSound</title>
+  <ns>0</ns>
+  <id>9686</id>
+  <revision>
+    <id>54072</id>
+    <parentid>53680</parentid>
+    <timestamp>2024-12-20T09:02:36Z</timestamp>
+    <contributor>
+      <username>Jekyll Grim Payne</username>
+      <id>2175</id>
+    </contributor>
+    <origin>54072</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="1287" sha1="6ydqkdazxufbvcl1o1vf0hds15opy8g" xml:space="preserve">{{DISPLAYTITLE:S_PauseSound}}
+
+{{c|static void '''S_PauseSound''' (bool ''notmusic'', bool ''notsfx'')}}
+
+==Usage==
+&lt;code&gt;S_PauseSound&lt;/code&gt; can be used in [[ZScript]] to pause level music and/or level sounds.
+
+This function is defined in the {{c|Object}} class, so it can be called in ZScript in any context. However, the effect is negated as soon as the world ticks, so it can only be effectively utilized while in UI scope.
+
+===Parameters===
+*{{c|bool '''notmusic'''}}
+:If &lt;code&gt;true&lt;/code&gt;, level music will not be paused.
+*{{c|bool '''notsfx'''}}
+:If &lt;code&gt;true&lt;/code&gt;, currently playing sounds will not be paused.
+
+==Examples==
+This event will pause music while any [[Classes:Menu|menu]] based on the &lt;code&gt;ListMenu&lt;/code&gt; class is opened:
+&lt;syntaxhighlight lang="csharp"&gt;
+class StopMenuMusic : EventHandler
+{
+	override void UiTick()
+	{
+		Menu mnu = Menu.GetCurrentMenu();
+		if (mnu &amp;&amp; mnu is 'ListMenu')
+		{
+			S_PauseSound(false, false);
+		}
+	}
+}
+&lt;/syntaxhighlight&gt;
+
+Note, resuming the sound manually isn't required in this case, since as soon as the menu is closed, the world will tick and the sounds will be resumed automatically.
+
+== See also ==
+*[[A_StartSound]]
+*[[A_StopSound]]
+*[[S_StartSound]]
+*[[S_ResumeSound]]
+
+[[Category:ZScript]]
+[[Category:ZScript sound functions]]</text>
+    <sha1>6ydqkdazxufbvcl1o1vf0hds15opy8g</sha1>
+  </revision>
+</page>

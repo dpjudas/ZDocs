@@ -1,0 +1,205 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>Editor keys</title>
+  <ns>0</ns>
+  <id>9070</id>
+  <revision>
+    <id>52814</id>
+    <parentid>51899</parentid>
+    <timestamp>2024-07-26T05:54:12Z</timestamp>
+    <contributor>
+      <username>Gez</username>
+      <id>1283</id>
+    </contributor>
+    <minor />
+    <origin>52814</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="13380" sha1="73oxexxjpg7d3bg3iyxksgu4897f6cm" xml:space="preserve">'''Editor keys''', also called '''DECORATE keys''', are special comments in code that allows to provide editors with metadata. Essentially, they allow the editor to automatically complete the game configuration with the loaded resources.
+
+Editors originally only loaded their own configuration files, leading people to need to create mod-specific configuration files for mods featuring custom content. Furthermore, each editor having their own configuration format (often incompatible between different versions), this made providing mod-specific configurations for every editor out there a hassle. Some editors, such as [[Doom Builder]] and [[SLADE]], started including a [[ZScript]]/[[DECORATE]] parser allowing them to detect custom things in loaded resources, removing the need to provide a custom configuration. To provide editors with additional metadata over actor code without tripping the game with unknown keys, a special comment format is used: &lt;code&gt;//$&lt;/code&gt;. The double slash signals the game that the rest of the line should be ignored; but the following dollar sign tells the editor that this comment is actually a key with meaning for it.
+
+Editor keys can be used both in [[DECORATE]] and [[ZScript]]. Ultimate Doom Builder also supports editor keys in [[DEHACKED]], however in that format they start with &lt;code&gt;#$&lt;/code&gt;, not &lt;code&gt;//$&lt;/code&gt;.
+
+==List of keys==
+In this table, "DB" refers to the latest iteration of Doom Builder (currently: Ultimate Doom Builder) and SLADE likewise refers to SLADE 3. A green checkmark ({{checkbox|yes}}) means that the editor supports this key; a red x mark ({{checkbox|no}}) means that it does not. Unless otherwise stated, all keys must be present in an actor's definition block, just like regular actor properties: from the perspective of the editor, they ''are'' actor properties. In ZScript, they should be within the actor's Default sub-block.
+&lt;!-- LE is used to create a linkable name since the / and $ symbols don't work in them. For example, [[Editor keys#Color]] will link to the//$Color key thanks to LE.
+Quick template for adding new lines:
+|-
+|{{c|//${{LE|}}}}|| ||{{checkbox|}}||{{checkbox|}}
+--&gt;
+{| {{prettytable}}
+! Key !! Meaning !! DB !! SLADE
+|-
+|{{c|//${{LE|Angled}}}}||Specifies that the direction matters, and the actor should be represented with a direction arrow.||{{checkbox|yes}}||{{checkbox|yes}}
+|-
+|{{c|//${{LE|Arg0Str}}}}||Allows to mark this actor as supporting arg0str in UDMF format. An alternate name can optionally be specified for when string version is used (in a similar way to "Script number"/"Script name").||{{checkbox|yes}}||{{checkbox|no}}
+|-
+|{{c|//${{LE|Arg''N''|ArgN}}}}||Allows to override default argument names for this actor. ''N'' is the argument number, ranging from 0 to 4, so you would use for example {{c|//$Arg0}}.||{{checkbox|yes}}||{{checkbox|no}}
+|-
+|{{c|//${{LE|Arg''N''Default|ArgNDefault}}}}||Allows to set the default value for this argument. This property can only be used in conjunction with {{c|[[#ArgN|//$Arg''N]]}} property. ''N'' is the argument number, ranging from 0 to 4.||{{checkbox|yes}}||{{checkbox|no}}
+|-
+|{{c|//${{LE|Arg''N''Enum|ArgNEnum}}}}||Allows to specify an enum for this argument. This can be either a name of an enum defined in the Game Configuration, or an explicit enum definition. This property can only be used in conjunction with {{c|[[#ArgN|//$Arg''N]]}} property. ''N'' is the argument number, ranging from 0 to 4.||{{checkbox|yes}}||{{checkbox|no}}
+|-
+|{{c|//${{LE|Arg''N''RenderColor|ArgNRenderColor}}}}||Allows to specify a custom color for {{c|[[#ArgNRenderStyle|//$ArgNRenderStyle]]}}. The color is specified as RRGGBB hexadecimal value. ''N'' is the argument number, ranging from 0 to 4.||{{checkbox|yes}}||{{checkbox|no}}
+|-
+|{{c|//${{LE|Arg''N''RenderStyle|ArgNRenderStyle}}}}||Allows to specify visual representation for this argument when event lines are enabled, much like visual radius for dynamic lights. Supported values are ''Circle'' and ''Rectangle'' which result in that shape with the argument used for shape's radius. ''N'' is the argument number, ranging from 0 to 4.||{{checkbox|yes}}||{{checkbox|no}}
+|-
+|{{c|//${{LE|Arg''N''Tooltip|ArgNTooltip}}}}||:Allows to override tooltip for the argument of this actor. Newline character ("\n") can be used to format the text. This property can only be used in conjunction with {{c|[[#ArgN|//$Arg''N]]}} property. ''N'' is the argument number, ranging from 0 to 4.||{{checkbox|yes}}||{{checkbox|no}}
+|-
+|{{c|//${{LE|Arg''N''Type|ArgNType}}}}||Allows to specify an argument type for this argument. This property can only be used in conjunction with "//$ArgN" property. ''N'' is the argument number, ranging from 0 to 4.||{{checkbox|yes}}||{{checkbox|no}}
+|-
+|{{c|//${{LE|Category}}}}||Specifies in which category (Monsters, Weapons, etc.) it should be sorted. By default, a custom actor not identified in a configuration file will be put in the Decorate category. You can have hierarchical subgroups, using the backslash separator. For example: {{c|//$Category "Decorations/Tech"}} will put the actor within the "Tech" subgroup of the "Decorations" group.||{{checkbox|yes}}||{{checkbox|yes}}
+|-
+|{{c|//${{LE|ClearArgs}}}}||Clears inherited arguments (from either game configuration or parsed ZScript/DECORATE base classes).||{{checkbox|yes}}||{{checkbox|no}}
+|-
+|{{c|//${{LE|Color}}}}||Allows to override category color for this actor. Possible values range from {{c|0}} to {{c|19}}, see [[#Color table|Color table]] below.||{{checkbox|yes}}||{{checkbox|yes}}
+|-
+|{{c|//${{LE|Colour}}}}||Allows to override group color for this actor. Values are indicated either as a CSS-style syntax ({{c|RGB(red, green, blue)}} with decimal values in the 0-255 range for red, green, and blue) or as HTML-like hexadecimal value ({{c|#RRGGBB}} with hexadecimal values in the 00-FF range for red, green, and blue). If both the {{c|//$Color}} and the {{c|//$Colour}} keys are provided, {{c|//$Colour}} will be favored. This allows to adapt to the different colors used by both editors.||{{checkbox|no}}||{{checkbox|yes}}
+|-
+|{{c|//${{LE|EditorSprite}}}}||See {{c|[[#Sprite|//$Sprite]]}} below. This is a SLADE-specific alias, placing it after the {{c|//$Sprite}} key allows to specify different sprites for both editors.||{{checkbox|no}}||{{checkbox|yes}}
+|-
+|{{c|//${{LE|Icon}}}}||Specifies which editor icon to use to represent the actor in the editor. This is useful for spriteless actors; if a sprite is defined it will be used instead.||{{checkbox|no}}||{{checkbox|yes}}
+|-
+|{{c|//${{LE|IgnoreRenderstyle}}}}||The actor's {{Property|RenderStyle}} property will be ignored by the editor. Helpful when you want to see the sprite of an invisible actor in Visual mode.||{{checkbox|yes}}||{{checkbox|no}}
+|-
+|{{c|//${{LE|IsDecoration}}}}||Tells that the actor is a decoration. This is used for filtering things in 3D mode, as it is possible to cycle between showing all things, only decorations, and no things at all with the thing filter key (T by default).||{{checkbox|no}}||{{checkbox|yes}}
+|-
+|{{c|//${{LE|Group}}}}||See {{c|[[#Category|//$Category]]}} above. Since the default categories depend on editor configurations and differ between Doom Builder and SLADE, you can use {{c|//$Category}} for the DB configuration and follow it by {{c|//$Group}} for the SLADE 3 configuration.||{{checkbox|no}}||{{checkbox|yes}}
+|-
+|{{c|//${{LE|GZDB_SKIP}}}}||This key should not be in an actor block. The parser will stop parsing a file after encountering this comment. This can be used to speed up the parsing process by skipping files which do not contain placeable actor definitions.||{{checkbox|yes}}||{{checkbox|no}}
+|-
+|{{c|//${{LE|NotAngled}}}}||Specifies that the direction does not matter, and the actor should not have a direction arrow.||{{checkbox|yes}}||{{checkbox|yes}}
+|-
+|{{c|//${{LE|Obsolete}}}}||Marks the thing as obsolete. It will be detected by "Check obsolete things" Map Analysis Mode check and will be marked in the Thing Properties Window and the Thing Info panel.||{{checkbox|yes}}||{{checkbox|no}}
+|-
+|{{c|//${{LE|Sprite}}}}||Specifies which image to use to represent the actor in the editor. By default, a custom actor not identified in a configuration file will attempt to use the first suitable sprite it finds in the actor definition, trying first the states in the sequence Idle, See, Inactive, Spawn, and if all these fail, the first defined state. This key is therefore especially useful for stateless actor definitions. You should specify the actual lump name, for example if you use [[Sprite#Mirroring|sprite mirroring]] and your sprite lump is named JUNKA0D0, you need to put JUNKA0D0, JUNKA0 or JUNKD0 will not work.||{{checkbox|yes}}||{{checkbox|yes}}
+|-
+|{{c|//${{LE|Title}}}}||Specifies which name to give to the actor. By default, a custom actor not identified in a configuration file will use the {{Property|Tag}} property, and if not present, will default to the class name.||{{checkbox|yes}}||{{checkbox|yes}}
+|-
+|{{c|//${{LE|UserReinterpret}}}}||Specifies uncommon editor control type for the [[user variable]] defined directly under the comment. Supported types:
+* ''Color'' — integer variable, shows color selection dialog
+'''Note: only supported in ZScript as of now.'''
+||{{checkbox|yes}}||{{checkbox|no}}
+|-
+|{{c|//${{LE|UserDefaultValue}}}}||Specifies default value for the [[user variable]] defined directly under the comment.
+'''Note: only supported in ZScript as of now.'''
+||{{checkbox|yes}}||{{checkbox|no}}
+|}
+
+===Color table===
+Possible values for the {{c|[[#Color|//$Color]]}} key.
+{| {{prettytable}}
+!colspan="2"|Index!!Config Name!!System Name!!&amp;nbsp;!!colspan="2"|Index!!Config Name!!System Name!!&amp;nbsp;!!colspan="2"|Index!!Config Name!!System Name!!&amp;nbsp;!!colspan="2"|Index!!Config Name!!System Name
+|-
+|0||{{color|#696969}}||Dark Gray||DimGray|| ||5||{{color|#9400D3}}||Magenta||DarkViolet|| ||10||{{color|#32CD32}}||Light Green||LimeGreen|| ||15||{{color|#F5F5F5}}||White||WhiteSmoke
+|-
+|1||{{color|#4169E1}}||Blue||RoyalBlue|| ||6||{{color|#B8860B}}||Brown||DarkGoldenrod|| ||11||{{color|#AFEEEE}}||Light Cyan||PaleTurquoise|| ||16||{{color|#FFB6C1}}||Pink||LightPink
+|-
+|2||{{color|#228B22}}||Green||ForestGreen|| ||7||{{color|#C0C0C0}}||Gray||Silver|| ||12||{{color|#FF6347}}||Light Red||Tomato|| ||17||{{color|#FF8C00}}||Light Orange||DarkOrange
+|-
+|3||{{color|#20B2AA}}||Cyan||LightSeaGreen|| ||8||{{color|#808080}}||Light Gray||Gray|| ||13||{{color|#EE82EE}}||Light Magenta||Violet|| ||18||{{color|#BDB76B}}||Light Brown (default)||DarkKhaki
+|-
+|4||{{color|#B22222}}||Red||Firebrick|| ||9||{{color|#00BFFF}}||Light Blue||DeepSkyBlue|| ||14||{{color|#FFFF00}}||Yellow||Yellow|| ||19||{{color|#DAA520}}||Orange||Goldenrod
+|}
+
+===Argument types===
+Possible values for the {{c|[[#ArgNType|//$ArgNType]]}} key.
+* 0 = Integer (default) 
+* 4 = Action special 
+* 5 = Sector effect 
+* 8 = Angle in degrees 
+* 10 = XXRRGGBB color 
+* 11 = Enum option 
+* 12 = Enum bits 
+* 13 = Sector tag 
+* 14 = Thing tag 
+* 15 = Linedef tag 
+* 22 = Byte angle 
+* 23 = Thing Radius 
+* 24 = Thing Height
+
+== Examples ==
+A big version of the {{class|Zombieman}} with editor keys:
+&lt;syntaxhighlight lang="csharp"&gt;
+class BigZombieman : Zombieman
+{
+    Default
+    {
+        //$Title "Big Zombieman"
+        //$Angled
+        //$Category "Monsters"
+        health 1000;
+        scale 1.5;
+        radius 30;
+        height 56;
+        speed 6;
+    }
+}&lt;/syntaxhighlight&gt;
+
+A particle fountain using {{class|PlasmaBall}} sprites created with [[SpawnParticle (ZScript)|{{c|SpawnParticle}}]] with editor keys:
+&lt;syntaxhighlight lang="csharp"&gt;
+class ParticlePlasmaFire : Actor
+{
+	int freqPerTic;
+
+	Default
+	{
+		//$Title "Plasmafall"
+		//$Category "Decoration"
+		//$Arg0 "Particles per tic"
+		//$Arg0Tooltip "Determines the number of particles spawned per tic"
+		+NOINTERACTION
+		+NOBLOCKMAP
+		radius 16;
+	}
+
+	override void PostBeginPlay()
+	{
+		Super.PostBeginPlay();
+		// make frequency per tic equal to the value of
+		// the first argument, but clamp between 1-40:
+		freqPerTic = Clamp(args[0], 1, 40);
+	}
+
+	override void Tick()
+	{
+		super.Tick();
+		if (isFrozen())
+			return;
+		
+		FSpawnParticleParams fp;
+		fp.texture = TexMan.CheckForTexture('PLSSB0');
+		fp.flags = SPF_FULLBRIGHT|SPF_ROLL|SPF_REPLACE;
+		fp.color1 = "";
+		for (int i = freqPerTic; i &gt; 0; i--)
+		{
+			fp.lifetime = random[fp](40, 80);
+			
+			fp.pos.x = pos.x + frandom[fp](-radius, radius);
+			fp.pos.y = pos.y + frandom[fp](-radius, radius);
+			fp.pos.z = pos.z + frandom[fp](0, 16);
+			
+			fp.vel.xy = (frandom[fp](-2, 2), frandom[fp](-2, 2));
+			fp.vel.z = frandom[fp](2, 4);
+			fp.accel.xy = -(fp.vel.xy * 0.035); //acceleration is aimed to the opposite of velocity
+			fp.accel.z = -(fp.vel.z / fp.lifetime);
+
+			fp.size = random[fp](4, 10);
+			fp.sizeStep = -(fp.size / fp.lifetime); //size reduces to 0 over lifetime
+			fp.startalpha = frandom[fp](0.75, 1.0);
+			fp.fadestep = -1;
+			fp.startRoll = frandom[fp](0, 360);
+			fp.rollvel = frandom[fp](-15, 15);
+			fp.rollacc = -(fp.rollvel / fp.lifetime); //rollvel reduces to 0 over lifetime
+
+			Level.SpawnParticle(fp);
+		}
+	}
+}&lt;/syntaxhighlight&gt;
+
+{{note|Examples above imply that you've given these actors [[MAPINFO/Editor_number_definition|DoomEdNums]], otherwise they won't appear in the map editor.}}
+
+[[Category:Editing concepts]]</text>
+    <sha1>73oxexxjpg7d3bg3iyxksgu4897f6cm</sha1>
+  </revision>
+</page>

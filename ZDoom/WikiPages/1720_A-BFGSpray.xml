@@ -1,0 +1,131 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>A BFGSpray</title>
+  <ns>0</ns>
+  <id>1720</id>
+  <revision>
+    <id>53658</id>
+    <parentid>53657</parentid>
+    <timestamp>2024-11-11T17:43:34Z</timestamp>
+    <contributor>
+      <username>Jekyll Grim Payne</username>
+      <id>2175</id>
+    </contributor>
+    <comment>formatting</comment>
+    <origin>53658</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="5434" sha1="7x39xl5isc068s18iicl9khjtgx2t9d" xml:space="preserve">{{DISPLAYTITLE:A_BFGSpray}}
+{{doomwiki|A_BFGSpray}}
+
+'''{{class|Actor}}'''
+
+void '''A_BFGSpray'''(class&lt;Actor&gt; ''spraytype'' = "BFGExtra", int ''numrays'' = 40, int ''damagecnt'' = 15, double ''ang'' = 90, double ''distance'' = 16*64, double ''vrange'' = 32, int ''defdamage'' = 0, int ''flags'' = 0)
+
+==Usage==
+Performs the secondary, "tracer" attack of the {{Class|BFG9000}}. Note that this function will create unpredictable effects if used on a non-missile.
+
+The tracer actors (''spraytype'') which are spawned by the function could have custom damage types applied to them, much like other weapon puffs. Note that the {{Flag|EXTREMEDEATH}} flag still has no effect on this, however, so modders must use {{c|{{Property|DamageType}} "{{DamageType|Extreme}}"}} for it to work properly. If {{Flag|PUFFGETSOWNER}} is used, however, it will use the calling actor's owner as the inflictor -- meaning if the owner has EXTREMEDEATH, then it will actually enact that flag. Specifically, if a BFG ball shot from a player calls [[A_BFGSpray]] and the sprays have the PUFFGETSOWNER flag, it relies upon the player's actor to determine causing extreme death or not. A tracer with the {{Flag|MTHRUSPECIES}} flag set prevents this function from having any effect on actors with the same [[species]] as the shooter's own.
+
+=== Parameters ===
+*{{c|class&lt;Actor&gt; '''spraytype'''}}
+: The actor to spawn at the position of each shootable actor that is hit. Default is {{c|"{{Class|BFGExtra}}"}}.
+*{{c|int '''numrays'''}}
+: Spawns this many of the specified actor across an angle of 90 degrees with the target in the center. Default is 40, i.e. one tracer every 2.25°.
+*{{c|int '''damagecnt'''}}
+: The count of iterations to calculate the damage for original BFG formula; it will add N random values from 1 to 8 together based on this value. Default is 15.
+*{{c|double '''ang'''}}
+: Determines the field of view. Any actors within this angle are subject to being sprayed and damaged. Default is 90 (which is the player's FOV).
+*{{c|double '''distance'''}}
+: Determines how far the function should search for monsters from the calling actor. Default is 1024.
+*{{c|double '''vrange'''}}
+: Determines maximum vertical angle to autoaim at, in degrees. Default is 32.
+*{{c|int '''defdamage'''}}
+: If greater than 0, the tracers deal this exact amount of damage and ''damagecnt'' is ignored. Default is 0.
+*{{c|int '''flags'''}}
+: Flags that modify the function's behavior. Multiple flags can be combined with &lt;code&gt;|&lt;/code&gt;:
+:* '''BFGF_MISSILEORIGIN''' — If set, the tracers are emitted from the projectile rather than the shooter.
+:* '''BFGF_HURTSOURCE''' — If set, the shooter can be struck by their own projectile's tracers. This only has an effect if BFGF_MISSILEORIGIN is also set.
+
+== Examples ==
+
+Because of the unique behavior of the {{Class|BFG9000|BFG}}, this function has very limited use in custom projects. The only built-in class that makes use of it is the {{Class|BFGBall}}, which is fired by the BFG, and triggers the function upon exploding.
+
+ Death:
+     BFE1 AB 8 Bright;
+     BFE1 C 8 Bright [[A_BFGSpray]];
+     BFE1 DEF 8 Bright;
+     Stop;
+
+[[category:Decorate Doom functions]]{{DEFAULTSORT:BFGSpray}}
+== [[ZScript]] definition ==
+{{ZScriptDefinitionNote|actors/doom/weaponbfg.zs}}
+&lt;syntaxhighlight lang="csharp"&gt;
+	void A_BFGSpray(class&lt;Actor&gt; spraytype = "BFGExtra", int numrays = 40, int damagecnt = 15, double ang = 90, double distance = 16*64, double vrange = 32, int defdamage = 0, int flags = 0)
+	{
+		int damage;
+		FTranslatedLineTarget t;
+
+		// validate parameters
+		if (spraytype == null) spraytype = "BFGExtra";
+		if (numrays &lt;= 0) numrays = 40;
+		if (damagecnt &lt;= 0) damagecnt = 15;
+		if (ang == 0) ang = 90.;
+		if (distance &lt;= 0) distance = 16 * 64;
+		if (vrange == 0) vrange = 32.;
+
+		// [RH] Don't crash if no target
+		if (!target) return;
+
+		// [XA] Set the originator of the rays to the projectile (self) if
+		//      the new flag is set, else set it to the player (target)
+		Actor originator = (flags &amp; BFGF_MISSILEORIGIN) ? self : target;
+
+		// offset angles from its attack ang
+		for (int i = 0; i &lt; numrays; i++)
+		{
+			double an = angle - ang / 2 + ang / numrays*i;
+
+			originator.AimLineAttack(an, distance, t, vrange);
+
+			if (t.linetarget != null)
+			{
+				Actor spray = Spawn(spraytype, t.linetarget.pos + (0, 0, t.linetarget.Height / 4), ALLOW_REPLACE);
+
+				int dmgFlags = 0;
+				Name dmgType = 'BFGSplash';
+
+				if (spray != null)
+				{
+					if ((spray.bMThruSpecies &amp;&amp; target.GetSpecies() == t.linetarget.GetSpecies()) || 
+						(!(flags &amp; BFGF_HURTSOURCE) &amp;&amp; target == t.linetarget)) // [XA] Don't hit oneself unless we say so.
+					{
+						spray.Destroy(); // [MC] Remove it because technically, the spray isn't trying to "hit" them.
+						continue;
+					}
+					if (spray.bPuffGetsOwner) spray.target = target;
+					if (spray.bFoilInvul) dmgFlags |= DMG_FOILINVUL;
+					if (spray.bFoilBuddha) dmgFlags |= DMG_FOILBUDDHA;
+					dmgType = spray.DamageType;
+				}
+
+				if (defdamage == 0)
+				{
+					damage = 0;
+					for (int j = 0; j &lt; damagecnt; ++j)
+						damage += Random[BFGSpray](1, 8);
+				}
+				else
+				{
+					// if this is used, damagecnt will be ignored
+					damage = defdamage;
+				}
+
+				int newdam = t.linetarget.DamageMobj(originator, target, damage, dmgType, dmgFlags|DMG_USEANGLE, t.angleFromSource);
+				t.TraceBleed(newdam &gt; 0 ? newdam : damage, self);
+			}
+		}
+	}
+&lt;/syntaxhighlight&gt;</text>
+    <sha1>7x39xl5isc068s18iicl9khjtgx2t9d</sha1>
+  </revision>
+</page>

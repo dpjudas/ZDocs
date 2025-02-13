@@ -1,0 +1,68 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>CreateCopy</title>
+  <ns>0</ns>
+  <id>9830</id>
+  <revision>
+    <id>54032</id>
+    <parentid>54031</parentid>
+    <timestamp>2024-12-05T16:47:57Z</timestamp>
+    <contributor>
+      <username>Jekyll Grim Payne</username>
+      <id>2175</id>
+    </contributor>
+    <comment>/* Examples */</comment>
+    <origin>54032</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="2009" sha1="kdo54n8dxfj615etufczcistpsp9e5i" xml:space="preserve">'''{{class|Inventory}}'''
+
+{{c|virtual Inventory '''CreateCopy''' (Actor ''other'')}}
+
+== Usage ==
+A [[ZScript virtual functions|virtual function]] called by {{class|Inventory}} items from their [[CallTryPickup]] function. This function will either let the item be directly placed in the toucher's inventory, or will create a copy of the item, and ''that copy'' will be placed in the toucher's inventory. The primary purpose of this function is to handle respawnable items. In multiplayer some items, like {{class|Key|keys}}, stay in the world after a player has picked them up, so other players can pick them up as well—this behavior is handled by this function.
+
+'''{{color|red|Warning}}:''' The ''conditions'' that determine if the item must be given directly or copied are NOT handled in this function. This function simply creates a copy (or not, if it's not necessary), but the conditions for it are handled through a series of dedicated functions: {{c|[[GoAway]]}},  {{c|[[ShouldStay]]}} and {{c|[[ShouldRespawn]]}}.
+
+=== Parameters ===
+*{{c|Actor '''toucher'''}}
+:The actor who is trying to receive this item.
+
+=== Return values ===
+Returns a pointer to the item that the &lt;code&gt;toucher&lt;/code&gt; will receive: either this will be the calling item, or a freshly c reated copy of the calling item.
+
+== [[ZScript]] definition ==
+{{ZScriptDefinitionNote|actors/inventory/inventory.zs}}
+This function can be overridden, but the base {{class|Inventory}} class defines it as follows:
+&lt;syntaxhighlight lang="csharp"&gt;
+	virtual Inventory CreateCopy (Actor other)
+	{
+		Inventory copy;
+
+		Amount = MIN(Amount, MaxAmount);
+		if (GoAway ())
+		{
+			copy = Inventory(Spawn (GetClass()));
+			copy.Amount = Amount;
+			copy.MaxAmount = MaxAmount;
+		}
+		else
+		{
+			copy = self;
+		}
+		return copy;
+	}
+&lt;/syntaxhighlight&gt;
+
+== Examples ==
+See [[TryPickup#ZScript_definition|'''TryPickup''']].
+
+== See also ==
+* [[CallTryPickup]]
+* [[GoAway]]
+
+[[Category:ZScript]]
+[[Category:Inventory]]
+[[Category:ZScript virtual functions]]</text>
+    <sha1>kdo54n8dxfj615etufczcistpsp9e5i</sha1>
+  </revision>
+</page>

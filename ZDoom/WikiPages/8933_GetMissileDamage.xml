@@ -1,0 +1,66 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>GetMissileDamage</title>
+  <ns>0</ns>
+  <id>8933</id>
+  <revision>
+    <id>45201</id>
+    <parentid>45143</parentid>
+    <timestamp>2017-05-03T12:17:23Z</timestamp>
+    <contributor>
+      <username>Blue Shadow</username>
+      <id>2021</id>
+    </contributor>
+    <minor />
+    <comment>/* Usage */ Fixed the link to the damage property</comment>
+    <origin>45201</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="1938" sha1="o75xluk3614w9zrcr5lzqop0ctvqyv2" xml:space="preserve">int '''GetMissileDamage''' (int ''mask'', int ''add'' [, int ''pointer''])
+
+== Usage ==
+Gets the {{Property|Damage|damage}} of the calling or [[actor pointer|pointed to actor]]. This function replaces the use of the [[DECORATE_expressions#Variables|damage variable]] in expressions.
+
+
+If the damage passed to the damage property is not an expression, such as &lt;code&gt;Damage 5&lt;/code&gt;, the damage is calculated like the following if ''mask'' is 0:
+ add * damage
+However, if ''mask'' is non-zero, the damage is calculated like this:
+ ((random(0, 255) &amp; mask) + add) * damage
+
+If the damage passed to the damage property is an expression, however, such as &lt;code&gt;Damage (random(1, 3) * 12)&lt;/code&gt;, ''mask'' and ''add'' are ignored, and the damage is calculated using that expression.
+
+''pointer'' is the actor to get its damage. This is an [[actor pointer]], defaulting to {{c|{{const|AAPTR_DEFAULT}}}} (the calling actor).
+
+=== Return value ===
+The function returns the actor's damage after calculation.
+
+== Examples ==
+This {{Class|rocket}} uses its damage property for its splash damage.
+ ACTOR CustomRocket : {{Class|Rocket}}
+ {
+     {{Property|Damage}} 10
+ 
+     States
+     {
+     Death:
+         MISL B 8 Bright [[A_Explode]]([[GetMissileDamage]](7, 1))
+         Goto Super::Death+1
+     }
+ }
+On impact, the rocket does a direct damage between 10 and 80 (&lt;code&gt;random(1, 8) * 10&lt;/code&gt;). For its splash damage, calling {{c|[[GetMissileDamage]]}} while passing 7 and 1 as ''mask'' and ''add'', respectively, gets the same damage calculation.
+ // Damage is not an expression and mask is non-zero, so this formula is used:
+ ((random(0, 255) &amp; mask) + add) * damage
+ 
+ // mask is 7, add is 1 and damage is 10:
+ ((random(0, 255) &amp; 7) + 1) * 10
+ 
+ // Returns a value between 0 and 7 (inclusive):
+ random(0, 255) &amp; 7
+ 
+ // Add 1 for a value between 1 and 8 (inclusive):
+ (random(0, 7) + 1)
+ 
+ // Multiply by 10 for the damage:
+ random(1, 8) * 10</text>
+    <sha1>o75xluk3614w9zrcr5lzqop0ctvqyv2</sha1>
+  </revision>
+</page>

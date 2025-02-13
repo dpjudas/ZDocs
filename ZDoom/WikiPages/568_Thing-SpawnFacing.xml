@@ -1,0 +1,63 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>Thing SpawnFacing</title>
+  <ns>0</ns>
+  <id>568</id>
+  <revision>
+    <id>46772</id>
+    <parentid>40822</parentid>
+    <timestamp>2019-07-09T17:15:09Z</timestamp>
+    <contributor>
+      <username>Bauul</username>
+      <id>2596</id>
+    </contributor>
+    <minor />
+    <comment>/* Examples */</comment>
+    <origin>46772</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="1799" sha1="2xoao73d8jkfe6s5if7daxp96nkvu4x" xml:space="preserve">{{DISPLAYTITLE:Thing_SpawnFacing}}
+{{Special|139|tid, type, nofog, newtid|Thing|SpawnFacing}}
+
+* ''tid'': TID of map spot to spawn things at.
+* ''type'': Type of things to spawn.
+* ''nofog'': TRUE if there should be no fog, FALSE otherwise.
+* ''newtid'': TID to give to the newly spawned things.
+
+This special is like [[Thing_Spawn]] and [[Thing_SpawnNoFog]] combined, except that the angle the newly spawned thing is facing will match the angle of the map spot it spawns at.
+
+Note that this special requires the actor being spawned to have a [[SpawnID]]. To spawn an actor without one, use the [[SpawnSpotFacing]] function instead.
+
+== Usage ==
+
+* ''[[TID]]'' is a number that makes a thing unique, the default is zero, and therefore a TID is usually set to something else, like 1. In Doom Builder you have to right click on a thing, select the Effects tab and change the Thing Tag to something besides 0.
+
+* The ''type'' is actually from the list of [[Spawn numbers]]. You can either use the number or the defined name ('''T_SOMETHING''') for clarity.
+: When using this special on a [[linedef]] or a [[thing]] in [[UDMF]], you can use the {{c|arg1str}} property to define a class name instead of the {{c|arg1}} property to define a spawn number.
+
+* ''New TID'' is just a way to make the spawned thing unique if you need to refer to it later. It is just a number.
+
+==Examples==
+This script spawns a [[Demon]] at points 1 to 4 with a delay in between:
+
+ script 1 (void)
+ {
+    '''Thing_SpawnFacing'''(1, T_DEMON, FALSE, 0);
+    
+    [[delay]](30);
+    
+    '''Thing_SpawnFacing'''(2, T_DEMON, FALSE, 0);
+    
+    [[delay]](30);
+    
+    '''Thing_SpawnFacing'''(3, T_DEMON, FALSE, 0);
+    
+    [[delay]](30);
+    
+    '''Thing_SpawnFacing'''(4, T_DEMON, FALSE, 0);
+ }
+
+==External links==
+* {{oldref}}</text>
+    <sha1>2xoao73d8jkfe6s5if7daxp96nkvu4x</sha1>
+  </revision>
+</page>

@@ -1,0 +1,92 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>Classes:GlassJunk</title>
+  <ns>0</ns>
+  <id>4920</id>
+  <revision>
+    <id>50578</id>
+    <parentid>50576</parentid>
+    <timestamp>2023-09-22T14:08:35Z</timestamp>
+    <contributor>
+      <username>Jekyll Grim Payne</username>
+      <id>2175</id>
+    </contributor>
+    <origin>50578</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="1460" sha1="3tebbwt9a07z3f5jmq5aw8bet48vjdb" xml:space="preserve">{{Actor|
+| type = SFX
+| name = Glass junk
+| class = GlassJunk
+}}[[Classes]]: &lt;u&gt;GlassJunk&lt;/u&gt;&lt;br&gt;
+Glass debris actor, normally spawned by the [[GlassBreak]] line action.
+
+In Strife1.wad, the sprites are actually named SHRD* and are [[Sprite renaming|renamed at load-time]] by ZDoom.
+== [[ZScript]] definition ==
+{{ZScriptDefinitionNote|actors/shared/debris.zs#L344C1-L374C2}}
+&lt;syntaxhighlight lang="csharp"&gt;
+class GlassJunk : Actor
+{
+	Default
+	{
+		+NOCLIP
+		+NOBLOCKMAP
+		RenderStyle "Translucent";
+		Alpha 0.4;
+		Health 3;	// Number of different shards
+	}
+	States
+	{
+		// Are the first three frames used anywhere?
+		SHAR A 128;
+		Goto Death;
+		SHAR B 128;
+		Goto Death;
+		SHAR C 128;
+		Goto Death;
+	Spawn:
+		SHAR D 128;
+		Goto Death;
+		SHAR E 128;
+		Goto Death;
+		SHAR F 128;
+		Goto Death;
+	Death:
+		"----" A 1 A_FadeOut(0.03);
+		Wait;
+	}
+}&lt;/syntaxhighlight&gt;
+== [[DECORATE]] definition ==
+{{DecorateDefinitionNote}}
+ ACTOR &lt;u&gt;GlassJunk&lt;/u&gt;
+ {
+   +{{Flag|NOCLIP}}
+   +{{Flag|NOBLOCKMAP}}
+   {{Property|RenderStyle}} Translucent
+   {{Property|Alpha}} 0.4
+   {{Property|Health}} 3 // Number of different shards
+   States
+   {
+     // Are the first three frames used anywhere?
+     SHAR A 128
+     Goto Death
+     SHAR B 128
+     Goto Death
+     SHAR C 128
+     Goto Death
+   Spawn:
+     SHAR D 128
+     Goto Death
+     SHAR E 128
+     Goto Death
+     SHAR F 128
+     Goto Death
+   Death:
+     "----" A 1 [[A_FadeOut]](0.03)
+     Wait
+   }
+ }
+
+[[category:Actors]]</text>
+    <sha1>3tebbwt9a07z3f5jmq5aw8bet48vjdb</sha1>
+  </revision>
+</page>

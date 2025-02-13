@@ -1,0 +1,75 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>A HideThing</title>
+  <ns>0</ns>
+  <id>1684</id>
+  <revision>
+    <id>36795</id>
+    <parentid>35714</parentid>
+    <timestamp>2013-06-26T14:05:45Z</timestamp>
+    <contributor>
+      <username>Squishybrick</username>
+      <id>1647</id>
+    </contributor>
+    <origin>36795</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="1138" sha1="8dtaghvlkfv02rhxcnrk565p1fkf8vg" xml:space="preserve">{{DISPLAYTITLE:A_HideThing}}
+'''A_HideThing'''
+
+(no parameters)
+
+
+Makes the calling actor invisible.
+
+== Examples ==
+This is a modified doomimp that, when hurt, will suddenly turn invisible, through use of A_HideThing.
+If it is killed, or left alone to walk for a while, it triggers A_UnHideThing, which makes the imp visible 
+again.
+
+ ACTOR HidingImp : Doomimp
+ {
+  HitObituary "%o was killed by a hiding imp."
+  Obituary "%o was slashed by a hiding imp."
+  States
+  {
+  See:
+    TROO AABBCCDDAABBCCDDAABBCCDDAABBCCDDAABBCCDD 3 A_Chase
+    TROO A 10 A_UnHideThing
+    Loop
+  Melee:
+  Missile:
+    TROO EF 8 A_FaceTarget
+    TROO E 0 A_UnHideThing
+    TROO G 6 A_TroopAttack
+    Goto See
+  Pain:
+    TROO H 2 
+    TROO H 2 A_Pain
+    TROO H 2 A_HideThing
+    Goto See
+  Death:
+    TROO I 8 A_UnHideThing
+    TROO J 8 A_Scream
+    TROO K 6
+    TROO L 6 A_NoBlocking
+    TROO M -1
+    Stop
+  XDeath:
+    TROO N 5 A_UnHideThing
+    TROO O 5 A_XScream
+    TROO P 5
+    TROO Q 5 A_NoBlocking
+    TROO RST 5
+    TROO U -1
+    Stop
+  }
+ }
+
+
+==See also==
+* [[A_UnHideThing]]
+
+{{DEFAULTSORT:HideThing}}[[category:Decorate Status change functions]]</text>
+    <sha1>8dtaghvlkfv02rhxcnrk565p1fkf8vg</sha1>
+  </revision>
+</page>

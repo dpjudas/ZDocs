@@ -1,0 +1,39 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>Earthquake</title>
+  <ns>0</ns>
+  <id>7423</id>
+  <revision>
+    <id>44237</id>
+    <parentid>41173</parentid>
+    <timestamp>2017-03-20T13:09:03Z</timestamp>
+    <contributor>
+      <username>Gez</username>
+      <id>1283</id>
+    </contributor>
+    <minor />
+    <comment>removing "new" for GZDoom 2.4.0 release</comment>
+    <origin>44237</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="1875" sha1="tlrwgpldpuiquuhto5zvtcup7ajhj76" xml:space="preserve">'''Earthquakes''' are a feature introduced to the Doom engine by ''[[Hexen]]''. However, the implementation in [[ZDoom]] predates the release of Raven Software's source code, and as a result the earthquake code in ZDoom is completely different from its equivalent in ''Hexen''.
+
+Earthquakes can be created with the following functions:
+* [[A_QuakeEx]] (decorate) or [[QuakeEx]] (ACS)
+* [[A_Quake]] (an [[action function]]: can only be used in [[DECORATE]])
+* [[Radius_Quake]] (an [[action special]]: can be used anywhere)
+* [[Radius_Quake2]] (an [[ACS function]]: can only be used in [[ACS]])
+
+Earthquakes shake the [[player]]'s [[camera]]. Every [[tic]], they inflict 1d8 damage to actors within their damage radius and thrust them in a random direction with a force equal to half their intensity.
+
+Earthquakes also play a continuous sound as long as they are rumbling. By default, this sound is the one defined in [[SNDINFO]] as "world/quake"; however both [[A_Quake]] and [[Radius_Quake2]] allow to specify a different sound.
+
+The camera shaking effect is subject to {{c|{{CVAR|R|r_quakeintensity}}}}.
+
+Earthquakes can be manipulated to shake along the axis relative to the player with [[A_QuakeEx]], can be scaled up and/or down to cause intensifying effects, and can have intensities set on each individual planes for maximum customizability.
+
+Earthquakes can be set to a different type of quake, using sine waves instead of random jittering. These can be controlled further with the use of [[A_QuakeEx]]'s parameters to adjust the number of waves per second, allowing more realistic quakes to be defined. Unlike the regular quakes, these also operate based on the current in-game tic to preserve the current offset. These quakes are always overridden by the newest wave quake generated after it.
+
+[[Category:Features]][[Category:Glossary]][[Category:Technical aspects]]</text>
+    <sha1>tlrwgpldpuiquuhto5zvtcup7ajhj76</sha1>
+  </revision>
+</page>

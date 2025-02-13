@@ -1,0 +1,96 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>New</title>
+  <ns>0</ns>
+  <id>9825</id>
+  <revision>
+    <id>53818</id>
+    <parentid>52791</parentid>
+    <timestamp>2024-11-22T10:03:30Z</timestamp>
+    <contributor>
+      <username>Jekyll Grim Payne</username>
+      <id>2175</id>
+    </contributor>
+    <origin>53818</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="2422" sha1="emryliusu0hfr9on9fpwoil0tq4rnly" xml:space="preserve">{{c|clearscope Object '''new'''(class&lt;Object&gt; ''type'')}}
+
+==Usage==
+A generic object function that can be used in [[ZScript]] to create an instance of any object. 
+
+'''Warning:''' There are some classes that cannot be instantiated with &lt;code&gt;New()&lt;/code&gt; and instead have their own methods:
+* {{class|Actor}} and anything based on it are instantiated by spawning them with with functions like [[Spawn (ZScript)|Spawn]] and its derivatives.
+* All iterators (like {{class|ThinkerIterator}}, {{class|BlockThingsIterator}}, {{class|BlockLinesIterator}}) have their own dedicated &lt;code&gt;Create()&lt;/code&gt; functions designed to instantiate and set them up. This is also true for some other utility classes, like {{class|LinearValueInterpolator}}.
+
+The primary use of this function is to instantiate non-Actor objects, like menus, {{class|Thinker|thinkers}} and such.
+
+===Parameters===
+*{{c|class&lt;Object&gt; '''type'''}}
+:The name of the class to create.
+
+===Return value===
+Returns a pointer to the instantiated object.
+
+==Examples==
+Note, it's usually considered good practice to create a dedicated &lt;code&gt;Create()&lt;/code&gt; method when there's a need to instantiate a custom class, simply so that instantiation and setup can be performed in a single call. That method has to be defined as static.
+
+This is an example of a {{class|Thinker}} that can be attached to a killed monster to make them fade out gradually:
+
+&lt;syntaxhighlight lang="csharp"&gt;
+class CorpseFader : Thinker
+{
+	Actor victim; //pointer to monster
+
+	// This is the create method, with an argument
+	// to pass a pointer to the monster:
+	static CorpseFader Create(Actor victim)
+	{
+		// Create and null-check the thinker:
+		let c = New('CorpseFader');
+		if (c)
+		{
+			// Pass the victim pointer to the thinker:
+			c.victim = victim;
+		}
+		// Always return a pointer to the created object:
+		return c;
+	}
+
+	override void Tick()
+	{
+		// If the victim no longer exists, destroy this thinker:
+		if (!victim)
+		{
+			Destroy();
+			return;
+		}
+		// If the victim is alive, do nothing:
+		if (victim.health &gt; 0)
+		{
+			return;
+		}
+		// Otherwise fade it out gradually:
+		victim.A_FadeOut(0.02);
+	}
+}
+
+// Example implementation:
+class CorpseHandler : EventHandler
+{
+	override void WorldThingDied(worldEvent e)
+	{
+		if (e.thing &amp;&amp; e.thing.bIsMonster)
+		{
+			CorpseFader.Create(e.thing);
+		}
+	}
+}&lt;/syntaxhighlight&gt;
+
+== See also ==
+*[[Object]]
+*[[Classes:Thinker]]
+
+[[Category:ZScript]]</text>
+    <sha1>emryliusu0hfr9on9fpwoil0tq4rnly</sha1>
+  </revision>
+</page>

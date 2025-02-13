@@ -1,0 +1,105 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>Creating new projectiles</title>
+  <ns>0</ns>
+  <id>832</id>
+  <revision>
+    <id>52213</id>
+    <parentid>52212</parentid>
+    <timestamp>2024-04-02T15:07:50Z</timestamp>
+    <contributor>
+      <username>Jekyll Grim Payne</username>
+      <id>2175</id>
+    </contributor>
+    <origin>52213</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="2796" sha1="avx3ve3i836xr67vu01v9zofqclvnyt" xml:space="preserve">{{OutdatedGuide|Creating new projectiles (ZScript)}}
+
+Projectiles are rather simple items. There's only a few things to observe:
+
+* Use the '''Projectile''' [[Actor properties|property]] to set all the necessary [[Actor flags|flags]].
+* Set a proper '''height''' and '''radius'''.
+* Define a looping '''Spawn''' [[Actor states|state]] sequence and a terminating '''Death''' sequence. The '''Spawn''' sequence is shown while the projectile is moving and the '''Death''' sequence is the explosion animation.
+
+Projectiles can also use different death states depending on what they hit:
+
+* If the projectile hits an actor that has both the {{flag|SHOOTABLE}} and {{flag|NOBLOOD}} flags set, it will use its '''Crash''' state, if present.  If there is no '''Crash''' state, the '''XDeath''' state will be tried next, and finally if that doesn't exist the normal '''Death''' state will be used.
+* If the projectile hits an actor without the NOBLOOD flag (but with the SHOOTABLE flag), it will use the '''XDeath''' state.  If there is no '''XDeath''' state, the normal '''Death''' state will be used.
+* If the projectile hits a wall, floor, or a non-SHOOTABLE actor, the '''Death''' state will be used as normal.
+
+This shows a simple projectile:
+ actor BlueShot02
+ {
+   height 8
+   radius 6
+   damage 5
+   speed 10 
+   renderstyle Add
+   alpha 1
+   seesound "misc/shot"
+   deathsound "misc/shotx"
+   PROJECTILE
+   +RANDOMIZE
+   states
+   {
+   Spawn:
+     WS16 AB 4 bright
+     loop
+   Death:
+     WS16 CDE 6 bright
+     stop
+   }
+ }
+
+
+To create a homing missile you have to add the '''{{flag|SEEKERMISSILE}}''' [[Actor flags|flag]] and call one of the [[Action functions#Missile movement|seeking code pointers]] in the '''Spawn''' sequence:
+ actor BlueShotSeeking
+ {
+   height 8
+   radius 6
+   damage 5
+   speed 10 
+   renderstyle Add
+   alpha 1
+   seesound "misc/shot"
+   deathsound "misc/shotx"
+   PROJECTILE
+   +SEEKERMISSILE
+   states
+   {
+   Spawn:
+     WS16 A 4 bright [[A_Tracer2]]
+     loop
+   Death:
+     WS16 CDE 6 bright
+     stop
+   }
+ }
+
+
+You can also do more complex things with [[Action functions]], for example spawning a trail behind the projectile or doing some special effect while exploding. This is a projectile that is doing some BFG-like effect with a different sprite. This projectile also has a limited life span. It automatically explodes after a few seconds because the '''Spawn''' [[Actor states|state]] is not looped:
+ actor DevastatorBall
+ {
+   radius 13
+   height 8
+   speed 25
+   damage 200
+   renderstyle Add
+   alpha 0.9
+   deathsound "weapons/bfgx"
+   PROJECTILE
+   states
+   {
+   Spawn:
+     DVS1 A 100 bright
+   Death:
+     DVE1 AB 8 bright
+     DVE1 C 8 bright [[A_BFGSpray]] ("DevastatorExtra")
+     DVE1 DEF 8 bright
+     stop
+   }
+ }
+[[Category:DECORATE guides]]</text>
+    <sha1>avx3ve3i836xr67vu01v9zofqclvnyt</sha1>
+  </revision>
+</page>

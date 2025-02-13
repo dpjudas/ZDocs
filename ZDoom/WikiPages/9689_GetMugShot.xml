@@ -1,0 +1,68 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>GetMugShot</title>
+  <ns>0</ns>
+  <id>9689</id>
+  <revision>
+    <id>52666</id>
+    <parentid>52602</parentid>
+    <timestamp>2024-05-17T10:52:55Z</timestamp>
+    <contributor>
+      <username>Jekyll Grim Payne</username>
+      <id>2175</id>
+    </contributor>
+    <minor />
+    <comment>/* Parameters */</comment>
+    <origin>52666</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="2743" sha1="bv0yra9bs0fl5xmem3u5yyo5rdvxih8" xml:space="preserve">{{ZScriptNote}}
+__NOTOC__
+
+'''[[Classes:BaseStatusBar|BaseStatusBar]]'''
+
+native TextureID '''GetMugshot''' (int ''accuracy'', int ''stateflags'' = MugShot.STANDARD, String ''default_face'' = "STF");
+
+= Usage =
+Returns the TextureID of the current [[mugshot]]. The mugshot can then be drawn in a [[Classes:BaseStatusBar|ZScript HUD]] using the [[DrawTexture_(BaseStatusBar)|DrawTexture]] (similarly to how the [[DrawMugShot]] function is used in [[SBARINFO]]).
+
+== Parameters ==
+*{{c|int '''accuracy'''}}
+:A number in the 1-9 range which specifies how many blood levels there are before death. Doom's HUD uses the value of 5.
+*{{c|int '''stateFlags'''}}
+:Allows passing flags defined in the Mugshot struct. Possible flags are:
+:*{{c|MugShot.STANDARD}} - No special behavior (default).
+:*{{c|MugShot.XDEATHFACE}} - Mugshot will enter its '''XDeath''' [[SBARINFO#Mug_shots|state]] when the player is gibbed.
+:*{{c|MugShot.ANIMATEDGODMODE}} - Mugshot will enter the '''GodAnimated''' [[SBARINFO#Mug_shots|state]] instead of the standard '''God''' state when the player is invulnerable.
+:*{{c|MugShot.DISABLEGRIN}} - Disables the '''Grin''' [[SBARINFO#Mug_shots|state]]
+:*{{c|MugShot.DISABLEOUCH}} - Disables the '''Ouch''' [[SBARINFO#Mug_shots|state]]
+:*{{c|MugShot.DISABLEPAIN}} - Disables the '''Pain''' [[SBARINFO#Mug_shots|state]]
+:*{{c|MugShot.DISABLERAMPAGE}} - Disables the '''Rampage''' [[SBARINFO#Mug_shots|state]]
+:*{{c|MugShot.CUSTOM}} - {{moreinfo}}
+:Flags can be combined with &lt;code&gt;|&lt;/code&gt;.
+*{{c|string '''default_face'''}}
+:Specifies the default prefix for the mugshot graphics to be used. This is ''only'' used if the [[Classes:PlayerPawn#Player.Face|Player.Face]] value in the [[PlayerPawn]] is undefined or invalid. The default value is "STF", which corresponds to the mugshot graphics used in Doom. If {{c|Player.Face}} is defined and the graphic exists, the value of this argument is ignored.
+
+= Examples =
+This bit is from [https://github.com/ZDoom/gzdoom/blob/c675d60bacefd9c6651b8006f799f7bb55d0870b/wadsrc/static/zscript/ui/statusbar/doom_sbar.zs#L67 Doom HUD's] &lt;code&gt;DrawMainBar&lt;/code&gt; function:
+&lt;syntaxhighlight lang="csharp"&gt;
+// If the inventory bar is active, draw the selected item
+// instead of the mugshot:
+if (CPlayer.mo.InvSel != null &amp;&amp; !Level.NoInventoryBar)
+{
+	DrawInventoryIcon(CPlayer.mo.InvSel, (160, 198), DI_DIMDEPLETED);
+	if (CPlayer.mo.InvSel.Amount &gt; 1)
+	{
+		DrawString(mAmountFont, FormatNumber(CPlayer.mo.InvSel.Amount), (175, 198-mIndexFont.mFont.GetHeight()), DI_TEXT_ALIGN_RIGHT, Font.CR_GOLD);
+	}
+}
+// Otherwise draw the mugshot at the center of the statusbar:
+else
+{
+	DrawTexture(GetMugShot(5), (143, 168), DI_ITEM_OFFSETS);
+}&lt;/syntaxhighlight&gt;
+
+[[Category:ZScript]]
+[[Category:BaseStatusBar]]</text>
+    <sha1>bv0yra9bs0fl5xmem3u5yyo5rdvxih8</sha1>
+  </revision>
+</page>

@@ -1,0 +1,74 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>Compile ZDoom on Solaris</title>
+  <ns>0</ns>
+  <id>5800</id>
+  <revision>
+    <id>34811</id>
+    <parentid>27639</parentid>
+    <timestamp>2012-11-01T18:44:13Z</timestamp>
+    <contributor>
+      <username>Blzut3</username>
+      <id>413</id>
+    </contributor>
+    <minor />
+    <comment>/* Requirements */ I got the latest release of fmodex for Solaris from Firelight, so all 2 people out there trying to run ZDoom on Solaris/OpenIndiana can do so.</comment>
+    <origin>34811</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="3048" sha1="sf99s18we51yjaboltz2fe4czh7y1vh" xml:space="preserve">This guide covers setting up an environment on which you can build ZDoom for Solaris.  For the most part this is the same as compiling on [[Compile ZDoom on Linux|Linux]], however a few extra steps need to be done in order to set up a working compiler.
+
+== Requirements ==
+* GCC 4
+* cmake 2.6
+* fmodex 4.28.07. Download Linux version for header files. Grab ZDoom build [http://maniacsvault.net/files/zdoom-solaris-r3928.tar.bz2 from here] for compatible shared object.
+* SDL
+* autoconf
+* libtool
+
+You may also need subversion which require the following:
+* Apache APR + APR Util
+* Sqlite
+* libexpat
+* libneon
+
+== Setting up GCC 4 ==
+By default, Solaris only comes with GCC 3 whereas ZDoom requires GCC 4.  We will use GCC 3 in order to compile and install the latest version of the compiler.  You will need to add GCC 3 and other utilities to your PATH, the following command should do this:
+ PATH=$PATH:/usr/local/bin:/usr/ccs/bin:/usr/sfw/bin/
+
+Grab the GCC 4.4.2 sources, GMP 4.2.1 sources, and MPFR 2.4.1 sources.  Extract the GCC sources first then extract GMP and MPFR into the GCC source directory.  Be sure to rename the GMP and MPFR source directories to just gmp and mpfr respectively or GCC will not find them.
+
+''' IT IS EXTREMELY IMPORTANT THAT YOU CHECK THAT THE TAR EXTRACTED PROPERLY! '''  It is not uncommon for some files to be left out.  In particular the stuff for libiberty was missed for me.  7za seems to be a good extractor.
+
+As of this writing GCC will error late in the compiling process complaining about an unknown dependency style.  To fix this open 'gcc-4.4.2/libcpp/configure' and find the following line:
+ am_cv_CC_dependencies_compiler_type=none
+Change none to gcc3.  There may be more than one instance of this line so replace all of them.
+
+Now create a gcc-build directory and cd into it.
+&lt;pre&gt;../gcc-4.4.2/configure --with-gnu-as --with-as=/usr/sfw/bin/gas \
+	--without-gnu-ld --with-ld=/usr/ccs/bin/ld --disable-nls \
+	--enable-languages=c,c++ --build=i386-*-solaris2 CC=/usr/sfw/bin/gcc \
+	CXX=/usr/sfw/bin/g++
+gmake
+gmake install
+LD_LIBRARY_PATH=/usr/local/lib&lt;/pre&gt;
+
+You will need to figure out how to save LD_LIBRARY_PATH so that you don't need to reset it every run.  I believe to do this you need to add it to a '/usr/profile' file.  (Not sure on the name of the file at this time.)  I also believe the new GCC installs to /usr/share/bin/ and may be necessary to add this to your PATH.
+
+== Compiling CMake and Other Dependencies ==
+CMake along with the other dependencies follow a fairly standard compile and installation pattern.  Assuming the PATH and LD_LIBRARY_PATH is properly set up there shouldn't be too much of a problem with any of the dependencies.
+&lt;pre&gt;./configure
+gmake
+gmake install&lt;/pre&gt;
+
+Subversion's configure line is slightly different:
+ ./configure --with-apr=/usr/local/apr --with-apr-util=/usr/local/apr
+
+At this point you should be able to follow the Linux instructions to compile ZDoom.
+
+== See Also ==
+* [[Compile ZDoom on Linux]]
+
+[[Category:Guides]][[Category:Technical aspects]]</text>
+    <sha1>sf99s18we51yjaboltz2fe4czh7y1vh</sha1>
+  </revision>
+</page>

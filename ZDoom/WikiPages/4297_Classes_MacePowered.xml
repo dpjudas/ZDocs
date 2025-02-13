@@ -1,0 +1,51 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>Classes:MacePowered</title>
+  <ns>0</ns>
+  <id>4297</id>
+  <revision>
+    <id>39403</id>
+    <parentid>34127</parentid>
+    <timestamp>2015-04-29T17:58:39Z</timestamp>
+    <contributor>
+      <username>Blue Shadow</username>
+      <id>2021</id>
+    </contributor>
+    <minor />
+    <comment>/* DECORATE definition */ Updated</comment>
+    <origin>39403</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="1404" sha1="f042zh9ngxgeeclpuq371bhk5wcm55u" xml:space="preserve">{{Actor|
+| type = Weapon
+| name = Tomed firemace
+| class = MacePowered
+| game = Heretic
+}}[[Classes]]: [[Classes:Inventory|Inventory]]&amp;rarr;[[Classes:Weapon|Weapon]]&amp;rarr;[[Classes:HereticWeapon|HereticWeapon]]&amp;rarr;[[Classes:Mace|Mace]]&amp;rarr;&lt;u&gt;MacePowered&lt;/u&gt;
+
+When the [[Classes:ArtiTomeOfPower|tome of power]] is activated, the [[Classes:Mace|firemace]] fires a single, slow and huge [[Classes:MaceFX4|crushing sphere]] that will only deal its normal damage to enemies with either the {{flag|BOSS}} or the {{flag|DONTSQUASH}} flags. Enemies that have the {{flag|INVULNERABLE}} flag are unaffected, enemies that have a [[Classes:ArtiTeleport|chaos device]] will automatically use it to escape, and enemies with the {{flag|GHOST}} flag (including from the use of a [[Classes:ArtiInvisibility|shadowsphere]]) will be unaffected as the sphere will pass through them. In all other cases, the sphere deals one million damage, resulting in an instant kill.
+
+==== [[DECORATE]] definition ====
+ ACTOR &lt;u&gt;MacePowered&lt;/u&gt; : {{Class|Mace}}
+ {
+   +{{Flag|WEAPON.POWERED_UP}}
+   {{Property|Weapon.AmmoUse}} 5
+   {{Property|Weapon.AmmoGive}} 0
+   {{Property|Weapon.SisterWeapon}} "{{Class|Mace}}"
+   {{Property|Tag}} "$TAG_MACEP"
+ 
+   action native [[A_FireMacePL2]]();
+ 
+   States
+   {
+   Fire:
+   Hold:
+     MACE B 4
+     MACE D 4 [[A_FireMacePL2]]
+     MACE B 4
+     MACE A 8 [[A_ReFire]]
+     Goto Ready
+   }
+ }</text>
+    <sha1>f042zh9ngxgeeclpuq371bhk5wcm55u</sha1>
+  </revision>
+</page>

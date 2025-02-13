@@ -1,0 +1,62 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>Classes:PhosphorousFire</title>
+  <ns>0</ns>
+  <id>4802</id>
+  <revision>
+    <id>36469</id>
+    <parentid>35049</parentid>
+    <timestamp>2013-05-14T17:01:30Z</timestamp>
+    <contributor>
+      <username>Blue Shadow</username>
+      <id>2021</id>
+    </contributor>
+    <comment>/* DECORATE definition */ Updated.</comment>
+    <origin>36469</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="1144" sha1="3zwv025tl8cei48v5drvyl8lqqzbwst" xml:space="preserve">{{Actor|
+| type = Explosive
+| name = Phosphorous fire
+| class = PhosphorousFire
+| game = Strife
+}}[[Classes]]: {{Class|Actor}}&amp;rarr;&lt;u&gt;PhosphorousFire&lt;/u&gt;&lt;br&gt;
+{{desc}}
+==== [[DECORATE]] definition ====
+ ACTOR &lt;u&gt;PhosphorousFire&lt;/u&gt; native
+ {
+   {{Property|ReactionTime}} 120
+   {{Property|DamageType}} {{DamageType|Fire}}
+   +{{Flag|NOBLOCKMAP}}
+   +{{Flag|FLOORCLIP}}
+   +{{Flag|NOTELEPORT}}
+   +{{Flag|NODAMAGETHRUST}}
+   +{{Flag|DONTSPLASH}}
+   {{Property|RenderStyle}} Add
+   {{Property|Obituary}} "$OB_MPPHOSPHOROUSGRENADE" // "%o took a flame bath in %k's phosphorous pyre."
+ 
+   action native [[A_BurnArea]]();
+   action native [[A_Burnination]]();
+ 
+   States
+   {
+   Spawn:
+     BNG3 B 2 Bright [[A_BurnArea]]
+     BNG3 C 2 Bright [[A_Countdown]]
+     FLBE A 2 Bright [[A_Burnination]]
+     FLBE B 2 Bright [[A_Countdown]]
+     FLBE C 2 Bright [[A_BurnArea]]
+     FLBE D 3 Bright [[A_Countdown]]
+     FLBE E 3 Bright [[A_BurnArea]]
+     FLBE F 3 Bright [[A_Countdown]]
+     FLBE G 3 Bright [[A_Burnination]]
+     Goto Spawn+5
+   Death:
+     FLBE H 2 Bright
+     FLBE I 2 Bright [[A_Burnination]]
+     FLBE JK 2 Bright
+     Stop
+   }
+ }</text>
+    <sha1>3zwv025tl8cei48v5drvyl8lqqzbwst</sha1>
+  </revision>
+</page>

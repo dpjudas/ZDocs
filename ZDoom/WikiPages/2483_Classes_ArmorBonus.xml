@@ -1,0 +1,77 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>Classes:ArmorBonus</title>
+  <ns>0</ns>
+  <id>2483</id>
+  <revision>
+    <id>53610</id>
+    <parentid>39193</parentid>
+    <timestamp>2024-11-08T11:43:15Z</timestamp>
+    <contributor>
+      <username>Jekyll Grim Payne</username>
+      <id>2175</id>
+    </contributor>
+    <origin>53610</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="1737" sha1="3q4md8dv17hvmz0bo147crlg791kh42" xml:space="preserve">{{Actor|
+| type = Armor
+| name = Armor bonus
+| class = ArmorBonus
+| game = Doom
+| doomednum = 2015
+| spawnid = 22
+| spawnname = T_ARMORBONUS 
+}}[[Classes]]: [[Classes:Inventory|Inventory]]&amp;rarr;[[Classes:Armor|Armor]]&amp;rarr;[[Classes:BasicArmorBonus|BasicArmorBonus]]&amp;rarr;&lt;u&gt;ArmorBonus&lt;/u&gt;
+
+Armor bonuses add 1% of additional armor to the player, up to 200%.  If the player already had armor left, the protection percent is unchanged.  Otherwise, the player is granted 33% protection (same as the [[Classes:GreenArmor|Green Armor]]).
+
+Like all items of this type, this is based on the '''{{class|BasicArmorBonus}}''' class, which is a special type of armor pickup that adds to the current armor without overriding its values (such as damage absorption percentage).
+
+== [[ZScript]] definition ==
+{{ZScriptDefinitionNote|ctors/doom/doomarmor.zs}}
+&lt;syntaxhighlight lang="csharp"&gt;
+class ArmorBonus : BasicArmorBonus
+{
+	Default
+	{
+		Radius 20;
+		Height 16;
+		Inventory.Pickupmessage "$GOTARMBONUS";
+		Inventory.Icon "BON2A0";
+		Armor.Savepercent 33.335;
+		Armor.Saveamount 1;
+		Armor.Maxsaveamount 200;
+		+COUNTITEM
+		+INVENTORY.ALWAYSPICKUP
+	}
+	States
+	{
+	Spawn:
+		BON2 ABCDCB 6;
+		loop;
+	}
+}&lt;/syntaxhighlight&gt;
+
+=== [[DECORATE]] definition ===
+{{DecorateDefinitionNote}}
+ ACTOR &lt;u&gt;ArmorBonus&lt;/u&gt; : {{Class|BasicArmorBonus}}
+ {
+   {{Property|Radius}} 20
+   {{Property|Height}} 16
+   {{Property|Inventory.PickupMessage}} "$GOTARMBONUS" // "Picked up an armor bonus."
+   {{Property|Inventory.Icon}} "ARM1A0"
+   {{Property|Armor.SavePercent}} 33.335
+   {{Property|Armor.SaveAmount}} 1
+   {{Property|Armor.MaxSaveAmount}} 200
+   +{{Flag|COUNTITEM}}
+   +{{Flag|INVENTORY.ALWAYSPICKUP}}
+   States
+   {
+   Spawn:
+     BON2 ABCDCB 6
+     Loop
+   }
+ }</text>
+    <sha1>3q4md8dv17hvmz0bo147crlg791kh42</sha1>
+  </revision>
+</page>

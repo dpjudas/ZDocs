@@ -1,0 +1,58 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>Using slopes</title>
+  <ns>0</ns>
+  <id>5987</id>
+  <revision>
+    <id>27199</id>
+    <parentid>27078</parentid>
+    <timestamp>2010-08-01T07:21:12Z</timestamp>
+    <contributor>
+      <username>Gez</username>
+      <id>1283</id>
+    </contributor>
+    <minor />
+    <comment>/* Avoiding texture stretching */</comment>
+    <origin>27199</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="3466" sha1="mt8pqrmzu3eyaqua1j6qbm7w34r0mts" xml:space="preserve">This article should eventually cover different ways of using [[slopes]].
+
+==Avoiding texture stretching==
+Since sloped surfaces are, technically, floors or ceilings, the texture can be visibly stretched if the angle is steep enough. The closer to the vertical, the more blatant the effect. This can be avoided by changing the texture's scaling to compensate for the stretching. This may in turn require adjustment to the alignment. In the Hexen [[map format]], the following functions are useful for these purposes:
+* [[Sector_SetFloorScale]]
+* [[Sector_SetCeilingScale]]
+* [[Sector_SetFloorPanning]]
+* [[Sector_SetCeilingPanning]]
+In [[UDMF]], you can set these properties directly in the sector without needing to go through [[ACS]].
+
+==Cliff and basin with [[Plane_Align]]==
+===Step 1===
+[[File:SLslopes1.png|thumb|right|200px]]Draw the basic shape your slopes will take. Generally this will be either a row for a cliff (top) or a donut for a basin or dome (bottom).
+
+Set the height of the floor, ceiling, or both that you want on both sides of the row, or inside and outside the donut. These will be used to determine the slope's starting and ending height. The slope can go either up or down, it will work either way.
+&lt;div style="clear:both"&gt;&lt;/div&gt;
+===Step 2===
+[[File:SLslopes2.png|thumb|left|200px]] Set the outer lines to face inwards, and give them line special 181: [[Plane_Align]]. Set 1 for either floor, ceiling, or both as desired.
+
+Now split them up into several squares or rectangles, as shown. This is not required, but will help avoiding mistakes in the next step.
+&lt;div style="clear:both"&gt;&lt;/div&gt;
+===Step 3===
+[[File:SLslopes3.png|thumb|right|200px]] Split each square into two triangles, by drawing a line diagonally across it and then right-clicking to close the sector. (The method may vary depending on the [[level editor]] you use.)
+
+It is important that the triangles follow an AVAVAV pattern as shown here, or there may be problems with slopes not matching up with each other.
+&lt;div style="clear:both"&gt;&lt;/div&gt;
+===Step 4===
+[[File:SLslopes4.png|thumb|left|200px]]Once the slopes are all working, you can drag any of the vertices around to make a natural-looking, rocky shape. As long as the triangles were built correctly, you should be able to move them around however you want.
+
+&lt;div style="clear:both"&gt;&lt;/div&gt;
+===Troubleshooting===
+[[File:SLslopes5.png|thumb|right|200px]]If your slopes aren't working properly, make absolutely sure that you've got them in an alternating AVAVAVAV formation; the alternation between up-facing and down-facing is key. Make sure that the heights are also alternated correctly, as the blue/yellow illustration at the bottom of the guide specifies.
+
+You can put multiple donuts or rows adjacent to each other for more complex and natural shapes; as long as there is a flat, non-sloped sector in between each row so that the slope lines will know the correct height they should be sloping to.
+
+Depending on what you are building, it might be preferable to make the flat sectors in between your rows as thin as possible to hide their existence, but if I'm designing hills or a large rocky ceiling I'll often take advantage of the flat sectors between rows, making wider or narrower sections of slopes and flat regions in different areas; you can get more bang for your buck this way, so to speak, creating more complex-looking natural landscapes without needing even more rows of sloped sectors.
+
+[[Category:Guides]]</text>
+    <sha1>mt8pqrmzu3eyaqua1j6qbm7w34r0mts</sha1>
+  </revision>
+</page>

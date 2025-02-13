@@ -1,0 +1,223 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>Puff</title>
+  <ns>0</ns>
+  <id>6988</id>
+  <revision>
+    <id>53418</id>
+    <parentid>53316</parentid>
+    <timestamp>2024-10-22T21:30:25Z</timestamp>
+    <contributor>
+      <username>Jekyll Grim Payne</username>
+      <id>2175</id>
+    </contributor>
+    <comment>/* Puff pointers */</comment>
+    <origin>53418</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="12198" sha1="nb5r0c5539f3byo2tlbwxpzufxuhm4d" xml:space="preserve">Puffs are actors spawned by [[Hitscan|hitscan attacks]] when the attack hits something: usually map geometry (wall/floor/plane), but in certain conditions they can also spawn when hitting actors. 
+
+'''Hitscan''' attacks encompass &lt;u&gt;bullet attacks&lt;/u&gt; (fired by functions like [[A_FireBullets]]), &lt;u&gt;railgun attacks&lt;/u&gt; (such as [[A_RailAttack]]) and &lt;u&gt;melee attacks&lt;/u&gt; (such as [[A_CustomPunch]]).
+
+Puffs have a few purposes:
+* '''Modifying hitscan behavior'''. While when using [[Projectile|projectiles]] things like [[Custom damage types|damage types]] or flags like {{flag|EXTREMEDEATH}} would be defined in the projectile, in case of hitscan attacks all of these definitions must be attached to the puff. Puffs can also use the '''[[DoSpecialDamage]]''' virtual function, like projectiles.
+* '''Visuals'''. Puffs make hitscan attacks more interesting by creating a visual effect when hitting something. For example, in Doom bullet weapons will spawn {{class|BulletPuff|a puff of smoke}} when hitting geometry. This effect can be expanded to make a puff spawn some extra visuals, like dynamic smoke effects, [[particles]], sparks, etc.
+* '''Sounds'''. Puffs can play different sounds depending on what they hit, which can provide nice audio feedback, especially for melee attacks.
+
+There's a misconception that creating new puffs requires inheriting from [[Classes:BulletPuff|BulletPuff]]. In reality, &lt;u&gt;there's no special "puff" class&lt;/u&gt;. A puff is just an [[actor]]; it starts acting as a puff automatically when it's used by the appropriate attack functions. There are no special flags or properties that have to be given to the Actor in order for it to be useable as puff. In fact, even classes that aren't designed to be puffs, like items or monsters, can still be used as puffs and will spawn at the points where the attack hits.
+
+Most of the time puffs don't need any collision and will use {{flag|NOBLOCKMAP}}. {{flag|NOINTERACTION}} is usually possible as well, although it may sometimes cause weird positioning of the puff on top of floor/ceiling planes.
+
+== Puff usage and behavior ==
+
+Actors used puffs have the following properties:
+*Actors spawned as puffs (through hitscan attacks or with [[SpawnPuff]]) will get the '''{{flag|ISPUFF}}''' flag, and the puff's &lt;code&gt;DamageSource&lt;/code&gt; field will contain a pointer to the actor responsible for spawning the puff {{new|4.13.0}}.
+*They will pass their properties such as {{property|DamageType}} and damage-related flags (such as {{flag|EXTREMEDEATH}}) to the attack.
+*They can utilize {{property|VSpeed}} property to automatically float upwards when they spawn.
+*Puffs may be replaced by particles when spawned if the {{flag|ALLOWPARTICLES}} flag is set (and the player has the appropriate option enabled in their configuration settings).
+*Most importantly, puffs will automatically utilize special sounds and special states in their behavior.
+
+=== Puff states and flags ===
+Puffs have deceptively complex behavior when it comes to picking states. This behavior is tied to several aspects:
+* Whether the puff has {{flag|ALWAYSPUFF}} and/or {{flag|PUFFONACTORS}} flags;
+* What type of attack created it. There are 3 types:
+:1. Bullets - fired by '''[[LineAttack (ZScript)|LineAttack]]''', '''[[A_FireBullets]]''', '''[[A_CustomBulletAttack]]''' or built-in functions based on those (like '''[[A_FirePistol]]''')
+:2. Hitscans - fired by '''[[A_RailAttack]]''' or '''[[A_CustomRailgun]]'''
+:3. Melee - performed by '''[[A_CustomPunch]]''', '''[[A_CustomMeleeAttack]]''' or similar
+
+{| class="wikitable" 
+|-
+! 
+! colspan="9" style="text-align:center; font-weight:bold; background-color:#efefef;" | Puff state entered
+|- style="font-weight:bold; text-align:center;"
+| style="font-weight:normal;" | 
+| colspan="3" style="background-color:#efefef;" | Bullet attack
+| colspan="3" style="background-color:#efefef;" | Rail attack
+| colspan="3" style="background-color:#efefef;" | Melee attack
+|- style="text-align:center;"
+| style="text-align:left;" | 
+| style="background-color:#efefef;" | No flags
+| style="background-color:#efefef;" | ALWAYSPUFF
+| style="background-color:#efefef;" | PUFFONACTORS
+| style="background-color:#efefef;" | No flags
+| style="background-color:#efefef;" | ALWAYSPUFF
+| style="background-color:#efefef;" | PUFFONACTORS
+| style="background-color:#efefef;" | No flags
+| style="background-color:#efefef;" | ALWAYSPUFF
+| style="background-color:#efefef;" | PUFFONACTORS
+|- style="background-color:#ffcc67;"
+| style="background-color:#efefef;" | Hit a {{flag|SHOOTABLE|shootable}} non-bleeding actor&lt;br /&gt;(Non-bleeding requires one of the flollowing flags:&lt;br /&gt;{{flag|NOBLOOD}}, {{flag|INVULNERABLE}}, {{flag|DORMANT}}.)
+| Spawn
+| Spawn
+| Spawn
+| Spawn
+| Spawn
+| Spawn
+| style="background-color:#32cb00;" | Melee
+| style="background-color:#32cb00;" | Melee
+| style="background-color:#32cb00;" | Melee
+|- style="background-color:#9b9b9b;"
+| style="background-color:#efefef;" | Hit a {{flag|SHOOTALE|shootable}} bleeding actor
+| style="font-style:italic;" | none
+| style="font-style:italic;" | none
+| style="background-color:#FFaaaa;" | XDeath
+| style="font-style:italic;" | none
+| style="background-color:#FFaaaa;" | XDeath
+| style="font-style:italic;" | none
+| style="background-color:#c0c0c0;" | Melee&lt;br /&gt;(animation isn't played,&lt;br /&gt;pointers aren't obtained)
+| style="background-color:#c0c0c0;" | Melee&lt;br /&gt;(animation isn't played,&lt;br /&gt;pointers aren't obtained)
+| style="background-color:#FFaaaa;" | XDeath
+|- style="background-color:#34cdf9;"
+| style="background-color:#efefef;" | Hit geometry
+| Crash (if present)
+| Crash (if present)
+| Crash (if present)
+| style="font-style:italic; background-color:#9b9b9b;" | none
+| Crash (if present)
+| style="font-style:italic; background-color:#9b9b9b;" | none
+| Crash (if present)
+| Crash (if present)
+| Crash (if present)
+|- style="font-style:italic; background-color:#9b9b9b;"
+| style="background-color:#efefef; font-style:normal;" | Hit nothing (If the attack has limited range and ends in the air.&lt;br /&gt;Normally this happens with melee attacks, but hitscan/railgun&lt;br /&gt;also can have a limited range specified.)
+| none
+| style="background-color:#34cdf9; font-style:normal;" | Crash (if present)
+| none
+| none
+| none
+| none
+| none
+| style="background-color:#34cdf9; font-style:normal;" | Crash (if present)
+| none
+|}
+
+Note:
+* If '''Crash''' of '''XDeath''' states are supposed to be entered but aren't defined in the puff, '''Spawn''' will be used instead.
+* ALWAYSPUFF and PUFFONACTORS can be combined. For bullets and nelee attacks it means that the puff will be able to both enter XDeath when hitting a bleeding actor, and Crash will be used when hitting nothing.
+* For rail attacks ALWAYSPUFF functions the same way as PUFFONACTORS for other attacks, while PUFFONACTORS has no effect on them. It's also not possible to force rail puffs to trigger when hitting nothing.
+* Even if the puff is replaced by blood (which is the default behavior), it'll still call its '''[[DoSpecialDamage]]''' virtual.
+
+=== Puff sounds ===
+Puff can also play {{property|SeeSound}}, {{property|AttackSound}} or {{property|ActiveSound}} under certain conditions:
+
+{| class="wikitable" 
+|-
+! 
+! colspan="9" style="text-align:center; font-weight:bold; background-color:#efefef;" | Puff sound played
+|- style="font-weight:bold; text-align:center;"
+| style="font-weight:normal;" | 
+| colspan="3" style="background-color:#efefef;" | Bullet attack
+| colspan="3" style="background-color:#efefef;" | Rail attack
+| colspan="3" style="background-color:#efefef;" | Melee attack
+|- style="text-align:center;"
+| style="text-align:left;" | 
+| style="background-color:#efefef;" | No flags
+| style="background-color:#efefef;" | ALWAYSPUFF
+| style="background-color:#efefef;" | PUFFONACTORS
+| style="background-color:#efefef;" | No flags
+| style="background-color:#efefef;" | ALWAYSPUFF
+| style="background-color:#efefef;" | PUFFONACTORS
+| style="background-color:#efefef;" | No flags
+| style="background-color:#efefef;" | ALWAYSPUFF
+| style="background-color:#efefef;" | PUFFONACTORS
+|- style="background-color:#FFCC67;"
+| style="background-color:#efefef;" | Hit a {{flag|SHOOTABLE|shootable}} non-bleeding actor&lt;br /&gt;(Non-bleeding requires one of the flollowing flags:&lt;br /&gt;{{flag|NOBLOOD}}, {{flag|INVULNERABLE}}, {{flag|DORMANT}}.)
+| style="background-color:#ffcc67;" | SeeSound
+| SeeSound
+| SeeSound
+| SeeSound
+| SeeSound
+| SeeSound
+| SeeSound
+| SeeSound
+| SeeSound
+|- style="font-style:italic; background-color:#9b9b9b;"
+| style="background-color:#efefef; font-style:normal;" | Hit a {{flag|SHOOTALE|shootable}} bleeding actor
+| style="background-color:#9B9B9B;" | none
+| none
+| style="background-color:#FFCC67; font-style:normal;" | SeeSound
+| none
+| style="background-color:#FFCC67; font-style:normal;" | SeeSound
+| none
+| style="background-color:#9B9B9B;" | none
+| style="background-color:#9B9B9B;" | none
+| style="background-color:#FFCC67; font-style:normal;" | SeeSound
+|- style="background-color:#34CDF9;"
+| style="background-color:#efefef;" | Hit geometry
+| style="background-color:#34cdf9;" | AttackSound
+| AttackSound
+| AttackSound
+| style="font-style:italic; background-color:#9b9b9b;" | none
+| AttackSound
+| style="font-style:italic; background-color:#9b9b9b;" | none
+| AttackSound
+| AttackSound
+| AttackSound
+|- style="font-style:italic; background-color:#9b9b9b;"
+| style="background-color:#efefef; font-style:normal;" | Hit nothing (If the attack has limited range and ends in the air.&lt;br /&gt;Normally this happens with melee attacks, but hitscan/railgun&lt;br /&gt;also can have a limited range specified.)
+| none
+| style="background-color:#34CDF9; font-style:normal;" | AttackSound
+| none
+| none
+| none
+| none
+| style="background-color:#32CB00; font-style:normal;" | ActiveSound
+| style="background-color:#38fff8; font-style:normal;" | AttackSound AND ActiveSound
+| style="background-color:#32CB00; font-style:normal;" | ActiveSound
+|}
+
+Note that &lt;u&gt;sounds don't follow any fallback rules&lt;/u&gt;, in contrast to states: if a specific sound isn't defined, it simply won't play; no different sound will be used instead.
+
+=== Puff pointers ===
+Puffs can utilize [[actor pointers]] under the following conditions:
+* By default: a puff will have a readonly &lt;code&gt;DamageSource&lt;/code&gt; pointer to the actor responsible for the attack that spawned the puff {{new|4.13.0}}. In earlier versions, puffs don't get any pointers by default at all.
+* With {{flag|PUFFGETSOWNER}} flag, the puff will have a &lt;code&gt;target&lt;/code&gt; pointer to the actor responsible for the attacked (similar to projectiles).
+* Puffs, just like projectiles, utilize the '''[[DoSpecialDamage]]''' virtual function, which can be overridden to add special behavior. Within the context of that function, the puff will have a local &lt;code&gt;victim&lt;/code&gt; pointer to the actor it hit.
+* {{flag|HITTRACER}}/{{flag|HITMASTER}}/{{flag|HITTARGET}} flags will write a pointer to the actor hit by the attack to the puff's &lt;code&gt;tracer&lt;/code&gt;/&lt;code&gt;master&lt;/code&gt;/&lt;code&gt;target&lt;/code&gt; field respectively.
+
+== Further customization ==
+There are several extra features that can be utilized on puffs:
+* Using the {{flag|PUFFONACTORS}} will make the puff respect the three HIT* flags ({{flag|HITTRACER}}, {{flag|HITTARGET}} and {{flag|HITMASTER}}): this allows performing thigs with the actor that was hit using the obtained pointer (with HITTRACER it'll be '''tracer''') and one of the states entered when the attack hits an actor (such as Melee).
+* Using {{flag|PUFFGETSOWNER}} flag will set whoever used the attack as the '''target''' of the puff, which allows performing conditional checks and such based on the shooter's class and properties.
+* If the puff has the {{Flag|THRUGHOST}} flag, the hitscan attack the puff is attached to will pass through enemies with the {{Flag|GHOST}} flag.
+
+Note that puffs are spawned so as to face the originator of the attack.
+
+
+[[Category:ZScript]]
+[[Category:DECORATE]]
+[[Category:Guides]]
+
+== See also ==
+* [[LineAttack (ZScript)]]
+* [[A_FireBullets]]
+* [[A_CustomBulletAttack]]
+* [[A_RailAttack]]
+* [[A_CustomRailgun]]
+* [[SpawnPuff]]
+* [[Classes:BulletPuff]]
+
+[[Category:DECORATE]]
+[[Category:ZScript]]</text>
+    <sha1>nb5r0c5539f3byo2tlbwxpzufxuhm4d</sha1>
+  </revision>
+</page>

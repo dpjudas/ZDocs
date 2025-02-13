@@ -1,0 +1,612 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>Structs:PlayerInfo</title>
+  <ns>0</ns>
+  <id>9573</id>
+  <revision>
+    <id>54123</id>
+    <parentid>54122</parentid>
+    <timestamp>2025-01-09T10:00:59Z</timestamp>
+    <contributor>
+      <username>Jekyll Grim Payne</username>
+      <id>2175</id>
+    </contributor>
+    <origin>54123</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="29397" sha1="p7tvsvg5u6aasv9lfnbmy8qqpz2ndfb" xml:space="preserve">{{ZScriptNote}}
+
+The PlayerInfo [[Structs|struct]] holds all the variables and methods pertaining to each player. Every instance of the '''{{class|PlayerPawn}}''' class has a PlayerInfo attached to it, which can be accessed with the PlayerPawn's '''player''' field. Conversely, every PlayerInfo instance has a '''mo''' pointer to the PlayerPawn associated with it. PlayerInfo structs of all players (including ones not currently in the game) can also be accessed through the global '''players''' array.
+
+== How to access PlayerInfo ==
+=== Accessing from PlayerPawn ===
+If you have a pointer to a specific {{class|PlayerPawn}}, you can access its PlayerInfo through the '''player''' variable. Note, this field is not limited to the PlayerPawn class; it's actually defined in the base {{class|Actor}} class, but only player pawns use it.
+
+Thus, you can null-check '''player''' on any actor to check if it's a player:
+
+&lt;syntaxhighlight lang="csharp"&gt;
+if (myPointer.player != null) //assuming 'myPointer' is a pointer to an instance of an actor
+{
+    // myPointer is a player, and 'myPointer.player' is its PlayerInfo struct
+}&lt;/syntaxhighlight&gt;
+
+=== Accessing it through the players array ===
+To access a players' PlayerInfo struct by using the global '''players''' array, simply use &lt;code&gt;players[i]&lt;/code&gt; where &lt;code&gt;i&lt;/code&gt; is the players' number subtracted by 1 (so, player #1 is &lt;code&gt;0&lt;/code&gt; because it's the first element in the array).
+
+Keep in mind, however, that PlayerInfo structs are created for all players, even those that aren't currently in the game. You can use {{c|PlayerInGame}} to check if a given player actually exists:
+
+&lt;syntaxhighlight lang="csharp"&gt;
+if (PlayerInGame[i])
+{
+    // players[i] - a pointer to the PlayerInfo
+    // players[i].mo - a pointer to the associated PlayerPawn
+}
+&lt;/syntaxhighlight&gt;
+
+This will make sure your code only interacts on PlayerInfo structs of the players that exist in the game.
+
+== Voodoo dolls ==
+(For more information see '''[[Voodoo doll]]''')
+
+When it comes to voodoo dolls, each PlayerPawn will have a PlayerInfo struct, but each of those PlayerInfo instances will have its '''mo''' pointer pointing to the ''original'' PlayerPawn, not the doll. Thus, to check if a specific PlayerPawn is a voodoo doll, use this:
+&lt;syntaxhighlight lang="csharp"&gt;
+// assuming 'ppawn' is a pointer to a PlayerPawn actor you have:
+if (ppawn.player == null || ppawn.player.mo == null || ppawn.player.mo != ppawn)
+{
+    // ppawn is a voodoo doll
+}
+&lt;/syntaxhighlight&gt;
+This code checks if a specific actor doesn't have PlayerInfo assigned, or that PlayerInfo doesn't have a valid '''mo''', or that '''mo''' isn't the same actor as the calling actor. If any of these are true, while you know that the calling actor is a PlayerPawn, it's a voodoo doll.
+
+== Methods ==
+*{{c|bool '''{{LE|PoisonPlayer}}'''(Actor ''Poisoner'', Actor ''Source'', int ''Poison'')}}
+*: Poisons the player a certain number of times.
+*:* ''Poisoner''
+*:*: The actor that poisoned the player.
+*:* ''Source''
+*:*: The actor who the ''Poisoner'' originated from.
+*:* ''Poison''
+*:*: The amount of times to poison the player from which the function was called from.
+
+*{{c|void '''{{LE|PoisonDamage}}'''(Actor ''Source'', int ''Damage'', bool ''PlayPainSound'')}}
+*: Only poisons the player with an exact amount of damage.
+*:* ''Source''
+*:*: The source of the calling players' poisoning.
+*:* ''Damage''
+*:*: The exact amount of poison damage to deal.
+*:* ''PlayPainSound''
+*:*: Should the player play their pain sound when poisoned ?
+
+*{{c|void '''{{LE|SetLogNumber}}'''(int ''Text'')}}
+*: {{Moreinfo}}
+
+*{{c|void '''{{LE|SetLogText}}'''(String ''Text'')}}
+*: {{Moreinfo}}
+
+*{{c|void '''{{LE|SetSubtitleNumber}}'''(int ''Text'', Sound Sound_ID)}}
+*: {{Moreinfo}}
+
+*{{c|bool '''{{LE|Resurrect}}'''()}}
+*: Resurrects the player.
+
+*{{c|String '''{{LE|GetUserName}}'''()}}
+*: Returns the players' username.
+
+*{{c|Color '''{{LE|GetColor}}'''()}}
+*: Returns the players' color.
+
+*{{c|Color '''{{LE|GetDisplayColor}}'''()}}
+*: {{Moreinfo}}
+
+*{{c|int '''{{LE|GetColorSet}}'''()}}
+*: Returns the number of the players' color set, if any.
+
+*{{c|int '''{{LE|GetPlayerClassNum}}'''()}}
+*: Returns the number of the players' [[Player_class|current class]].
+
+*{{c|int '''{{LE|GetSkin}}'''()}}
+*: Returns the number of the players' current skin.
+
+*{{c|int '''{{LE|GetSkinCount}}'''()}} {{new|4.13.0}}
+*: Returns how many skins the player has available.
+
+*{{c|bool '''{{LE|GetNeverSwitch}}'''()}}
+*: Returns whether or not the player has enabled automatically [[CVARs:Configuration#neverswitchonpickup|changing weapons on pickup]].
+
+*{{c|int '''{{LE|GetGender}}'''()}}
+*: Returns [[CVARs:Configuration#gender|the players' gender]]. 0 is male, 1 is female, 2 is neutral, 3 is object.
+
+*{{c|int '''{{LE|GetTeam}}'''()}}
+*: Returns the number of [[CVARs:Configuration#team|the players' team]]. The default teams' numbers are as follows: 1 is blue, 2 is red, 3 is green, 4 is gold, 5 is black, 6 is white, 7 is orange, and 8 is purple.
+
+*{{c|float '''{{LE|GetAutoaim}}'''()}}
+*: Returns [[CVARs:Configuration#autoaim|the maximum angle at which the player will autoaim when shooting]].
+
+*{{c|bool '''{{LE|GetNoAutostartMap}}'''()}}
+*: {{Moreinfo}}
+
+*{{c|double '''{{LE|GetWBobSpeed}}'''()}}
+*: Returns [[CVARs:Configuration#wbobspeed|the multiplier by which the bob speed of the players' weapons are increased]].
+
+*{{c|double '''{{LE|GetWBobFire}}'''()}}
+*: Returns [[CVARs:Configuration#wbobfire|the multiplier by which the bob speed of the players' weapons are increased by when they fire]].
+
+*{{c|double '''{{LE|GetMoveBob}}'''()}}
+*: Returns the amount by which the player bobs when moving.
+
+*{{c|bool '''{{LE|GetFViewBob}}'''()}}
+*: Returns if the players' view should bob up and down when they are flying.
+
+*{{c|double '''{{LE|GetStillBob}}'''()}}
+*: Returns the amount by which the player bobs when standing still.
+
+*{{c|void '''{{LE|SetFOV}}'''()}}
+*: Sets the players' FOV to the specified amount.
+
+*{{c|int '''{{LE|SetSkin}}'''(int ''skinIndex'')}} {{new|4.13.0}}
+*: Sets the players' skin to the specified, index. Returns the index of the skin that was set for the player.
+
+*{{c|bool '''{{LE|GetClassicFlight}}'''()}}
+*: Returns true if classic flying is on (The player can't fly in a direction by aiming their mouse at it.).
+
+*{{c|void '''{{LE|SendPitchLimits}}'''()}}
+*: {{Moreinfo}}
+
+*{{c|bool '''{{LE|HasWeaponsInSlot}}'''(int ''Slot'')}}
+*: Returns true if the player has any weapon in the specified slot.
+*:* ''Slot''
+*:*: The inventory slot to check for weapons.
+
+*{{c|bool '''{{LE|IsTotallyFrozen}}'''()}}
+*: Returns true if the player or their playerpawn is totally frozen, or if the game is on the [[TITLEMAP]]
+
+*{{c|void '''{{LE|Uncrouch}}'''()}}
+*: Uncrouches the player if they are crouching.
+
+*{{c|int '''{{LE|FragSum}}'''()}}
+*: Returns all of the frags every player in the game has scored. {{Verification}}
+
+*{{c|double '''{{LE|GetDeltaViewHeight}}'''()}}
+*: {{Moreinfo}}
+
+{{:PlayerInfo PSprite methods}}
+
+== Variables ==
+
+*{{c|PlayerPawn '''Mo'''}}
+*: A pointer to the [[Classes:PlayerPawn| PlayerPawn]] which the player is controlling.
+
+*{{c|uint8 '''PlayerState'''}}
+*: The players' current state. All the possible states are:
+*:* {{c|'''PST_LIVE'''}} — The player is alive.
+*:* {{c|'''PST_DEAD'''}} — The player is dead.
+*:* {{c|'''PST_REBORN'''}} — The player is ready to restart the map or respawn.
+*:* {{c|'''PST_ENTER'''}} — The player just entered the game.
+*:* {{c|'''PST_GONE'''}} — The player has left the game.
+
+*{{c|ReadOnly uint '''Buttons'''}}
+*: Stores the buttons the player is currently pressing. Possible buttons include:
+*:* {{c|'''BT_ATTACK'''}} — Player is pressing their primary fire key.
+*:* {{c|'''BT_USE'''}} — Player is pressing the use key.
+*:* {{c|'''BT_JUMP'''}} — Player is pressing the jump key.
+*:* {{c|'''BT_CROUCH'''}} — Player is pressing the crouch key.
+*:* {{c|'''BT_TURN180'''}} — Player is pressing the 180 degree turn key.
+*:* {{c|'''BT_ALTATTACK'''}} — Player is pressing the alternate fire key.
+*:* {{c|'''BT_RELOAD'''}} — Player is pressing the reload key.
+*:* {{c|'''BT_ZOOM'''}} — Player is pressing the zoom key.
+*:* {{c|'''BT_SPEED'''}} — Player is pressing the run key.
+*:* {{c|'''BT_STRAFE'''}} — Player is pressing the strafe key.
+*:* {{c|'''BT_MOVERIGHT'''}} — Player is moving right.
+*:* {{c|'''BT_MOVELEFT'''}} — PLayer is moving left:
+*:* {{c|'''BT_BACK'''}} — Player is moving backwards.
+*:* {{c|'''BT_FORWARD'''}} — Player is moving forwards:
+*:* {{c|'''BT_RIGHT'''}} — Player is turning right.
+*:* {{c|'''BT_LEFT'''}} — Player is turning left.
+*:* {{c|'''BT_LOOKUP'''}} — Player is looking up.
+*:* {{c|'''BT_LOOKDOWN'''}} — Player is looking down.
+*:* {{c|'''BT_MOVEUP'''}} — Player is flying or swimming up.
+*:* {{c|'''BT_MOVEDOWN'''}} — Player is flying or swimming down.
+*:* {{c|'''BT_SHOWSCORES'''}} — Player is pressing the button to view the scoreboard.
+*:* {{c|'''BT_USER1'''}} — Player is pressing the USER1 key.
+*:* {{c|'''BT_USER2'''}} — Player is pressing the USER2 key.
+*:* {{c|'''BT_USER3'''}} — Player is pressing the USER3 key.
+*:* {{c|'''BT_USER4'''}} — Player is pressing the USER4 key.
+*:* {{c|'''BT_RUN'''}} — Player has toggled running on.
+
+*{{c|uint '''Original_OldButtons'''}}
+*: Stores the unmodified buttons that the player had pressed in the previous tic.
+
+*{{c|Class&lt;PlayerPawn&gt; '''Cls'''}}
+*: Used internally to force a new player class when the player is spawned or respawned, if they had set their class to random. {{Verification}}
+
+*{{c|float '''DesiredFOV'''}}
+*: Stores the FOV the player has set in their settings.
+
+*{{c|float '''FOV'''}}
+*: The players' current FOV.
+
+*{{c|double '''ViewZ'''}}
+*: The absolute Z coordinate of the players' view, also accounts for any sort of view bobbing performed on the players' view.
+
+*{{c|double '''ViewHeight'''}}
+*: The base height of the players' eyes/view, this is the ViewHeight property of the player pawn.
+
+*{{c|double '''DeltaViewHeight'''}}
+*: The speed at which the players' view squats up or down. {{Verification}}
+
+*{{c|double '''Bob'''}}
+*: The players current bob level, ranging from 0 to 16. {{Verification}}
+
+*{{c|Vector2 '''Vel'''}}
+*: A vector2 that contains the players' XY velocity.
+
+*{{c|bool '''Centering'''}}
+*: Returns true while the player is centering their view.
+
+*{{c|uint '''TurnTicks'''}}
+*: {{Moreinfo}}
+
+*{{c|bool '''AttackDown'''}}
+*: Returns true if the players' primary or secondary fire buttons are held down. If it remains true for 2 seconds consecutively, and the player's {{class|BaseStatusBar|HUD}} displays a [[Mugshot|mugshot]], the mugshot will enter its Rampage state.
+
+*{{c|bool '''UseDown'''}}
+*: Returns true if the players' use key is being held down.
+
+*{{c|uint '''OldButtons'''}}
+*: The players' modified buttons that they had pressed in the previous tic.
+
+*{{c|int '''Health'''}}
+*: The players' health.
+
+*{{c|int '''InventoryTics'''}}
+*: {{Moreinfo}}
+
+*{{c|uint8 '''CurrentPlayerClass'''}}
+*: The number of the players' current player class.
+
+*{{c|int '''Frags[MAXPLAYERS]'''}}
+*: Allows you to access how many frags other players have gotten. {{Verification}}
+
+*{{c|int '''FragCount'''}}
+*: The amount of frags the player has gotten.
+
+*{{c|int '''LastKillTime'''}}
+*: {{Moreinfo}}
+
+*{{c|uint '''MultiCount'''}}
+*: {{Moreinfo}}
+
+*{{c|uint '''SpreeCount'''}}
+*: {{Moreinfo}}
+
+*{{c|uint16 '''WeaponState'''}}
+*: The state in which the players' weapon is in, possible states include:
+*:* {{c|'''WF_WEAPONREADY'''}} — The weapon is in its' ready state, and is ready to fire its' primary attack.
+*:* {{c|'''WF_WEAPONBOBBING'''}} — The weapon is currently bobbing.
+*:* {{c|'''WF_WEAPONREADYALT'''}} — The weapon is in its' ready state, and is ready to fire its' secondary attack.
+*:* {{c|'''WF_WEAPONSWITCHOK'''}} — The player can switch away from this weapon.
+*:* {{c|'''WF_DISABLESWITCH'''}} — Weapon switching is disabled for the players' current weapon.
+*:* {{c|'''WF_WEAPONRELOADOK'''}} — The player can reload this weapon.
+*:* {{c|'''WF_WEAPONZOOMOK'''}} — The player can zoom with this weapon.
+*:* {{c|'''WF_REFIRESWITCHOK'''}} — {{Moreinfo}}
+*:* {{c|'''WF_USER1OK'''}} — The player can switch to the User1 state of the current weapon.
+*:* {{c|'''WF_USER2OK'''}} — The player can switch to the User2 state of the current weapon.
+*:* {{c|'''WF_USER3OK'''}} — The player can switch to the User3 state of the current weapon.
+*:* {{c|'''WF_USER4OK'''}} — The player can switch to the User4 state of the current weapon.
+
+*{{c|Weapon '''ReadyWeapon'''}}
+*: Stores the pointer to the players' currently selected {{class|Weapon|weapon}}.
+
+*{{c|Weapon '''PendingWeapon'''}}
+*: Stores the pointer to the {{class|Weapon|weapon}} the player is switching to. If the player is currently ''not'' switching to anything, the value if this is set to {{const|WP_NOCHANGE}} (''not'' {{c|null}}!).
+
+*{{c|PSprite '''PSprites'''}}
+*: Stores the pointer to the first {{class|PSprite}} used by this player. PSprites are stored in a [[linked list]], so this pointer is the beginning of that list.
+
+*{{c|int '''Cheats'''}}
+:: Stores the players' cheats and flags. Despite what the name may suggest, this field is actually mostly used to store player-specific flags (As opposed to ones on their player pawn) that the engine uses internally. This is a bit field and can be interacted with using [[Operators_(ZScript)#Bitwise_operators|bitwise operators]]. Some of the flags are the same as those that can be set by {{function|SetPlayerProperty}} in [[ACS]].
+::Available "cheats" include:
+::* {{c|'''CF_NOCLIP'''}} — The player can noclip, ignoring all collision.
+::* {{c|'''CF_GODMODE'''}} — The player is immune to all damage. Except for things that can bypass god mode.
+::* {{c|'''CF_NOVELOCITY'''}} — All horizontal velocity is removed from the player.
+::* {{c|'''CF_NOTARGET'''}} — Monsters don't target the player, unless the player hurts them.
+::* {{c|'''CF_FLY'''}} — The player can fly.
+::* {{c|'''CF_CHASECAM'''}} — The player has a third person chasecam that follows right behind them.
+::* {{c|'''CF_FROZEN'''}} — The player can't move, but can still perform other actions like shooting and using things.
+::* {{c|'''CF_REVERTPLEASE'''}} — Used when the players' view is changed by ZScript or the ChangeCamera line special/ACS function. So that the camera will revert back to their view if they move.
+::* {{c|'''CF_STEPLEFT'''}} — Does nothing.
+::* {{c|'''CF_FRIGHTENING'''}} — Monsters will run away from the player.
+::* {{c|'''CF_INSTANTWEAPSWITCH'''}} — The player instantly switches weapons.
+::* {{c|'''CF_TOTALLYFROZEN'''}} — All movement is blocked, except for pressing the use key.
+::* {{c|'''CF_PREDICTING'''}} — The players movement is predicted, useful for netgames/multiplayer.
+::* {{c|'''CF_INTERPVIEW'''}} — Interpolates the players' view, if it was altered outside of the players' own inputs. Such as being altered by [[A_SetAngle]].
+::* {{c|'''CF_INTERPVIEWANGLES'''}} — Interpolates the players' view, without interpolating the entire screen.
+::* {{c|'''CF_SCALEDNOLERP'''}} — Allows mouse movement interpolation to work properly in certain extreme scenarios like [[CVARs:Debug#i_timescale|i_timescale]] being set to incredibly low values.
+::* {{c|'''CF_NOFOVINTERP'''}} — Disable FOV interpolation for the player.
+::* {{c|'''CF_EXTREMELYDEAD'''}} — Marks the player as having died an extreme death.
+::* {{c|'''CF_BUDDHA2'''}} — The player can be damaged and hurt, but their health never drops below 1.
+::* {{c|'''CF_GODMODE2'''}} — Absolutely nothing can hurt the player, including things that bypass the normal god mode.
+::* {{c|'''CF_BUDDHA'''}} — The player can be damaged, but their health never drops below 1. With the exception of attacks that bypass this cheat.
+::* {{c|'''CF_NOCLIP2'''}} — The player can noclip and fly as well. Similar to how noclip works in Quake.
+::* {{c|'''CF_DRAIN'''}} — {{Deprecated}}
+::* {{c|'''CF_HIGHJUMP'''}} — {{Deprecated}}
+::* {{c|'''CF_REFLECTION'''}} — {{Deprecated}}
+::* {{c|'''CF_PROSPERITY'''}} — {{Deprecated}}
+::* {{c|'''CF_DOUBLEFIRINGSPEED'''}} — {{Deprecated}}
+::* {{c|'''CF_INFINITEAMMO'''}} — {{Deprecated}}
+
+*{{c|int '''TimeFreezer'''}}
+*: If set to any value besides 0, it prevents the player from being frozen by the [[Classes:PowerTimeFreezer|PowerTimeFreezer powerup]].
+
+*{{c|Int16 '''ReFire'''}}
+*: Reflects how many times the player has refired their weapon. This is normally incremented by {{function|A_ReFire}}; it can also be incremented manually, but simply attacking with a weapon doesn't increment this automatically. By itself this field isn't used by anything, but {{function|A_FireBullets}} can use this to modify the bullet spread of the weapon (see its '''numbullets''' argument for details). Custom weapon functions can be made to utilize this to create custom behaviors as well.
+
+*{{c|Int16 '''Inconsistent'''}}
+*: {{Moreinfo}}
+
+*{{c|bool '''Waiting'''}}
+*: {{Moreinfo}}
+
+*{{c|int '''KillCount'''}}
+*: The amount of monsters that count as kills which the player has killed. Used for intermissions.
+
+*{{c|int '''ItemCount'''}}
+*: The amount of items the player has picked up. Used for intermissions.
+
+*{{c|int '''SecretCount'''}}
+*: The amount of [[secrets]] the player has found. Used for intermissions.
+
+*{{c|uint '''DamageCount'''}}
+*: Controls the intensity of the screen flash the player receives after taking damage. The maximum valid value is 100. Directly writeable: can be manually set or clamped to a specific value to modify the intensity of the damage flash.
+
+*{{c|uint '''BonusCount'''}}
+*: Controls the intensity of the screen flash produced when the player picks up [[Classes:ArmorBonus|armor]] or [[Classes:HealthBonus|health bonuses]].
+
+*{{c|int '''HazardCount'''}}
+*: Controls the intensity of the screen flash produced when the player is hurt by a hazardous sector that uses Strife's damage model.
+
+*{{c|int '''HazardInterval'''}}
+*: Retrieved from the sectors' damage interval if it is using Strife's damage model. Controls how quickly the player will begin receiving damage once they get fully poisoned.
+
+*{{c|Name '''HazardType'''}}
+*: The name of the damage type that will be dealt to the player, retrieved from the sectors' damage type if it is using Strife's damage model.
+
+*{{c|int '''PoisonCount'''}}
+*: The amount of poison the player receives, also controls the amount by which the screen flashes. {{Verification}}
+
+*{{c|Name '''PoisonType'''}}
+*: The name of the poison damage to apply to the player.
+
+*{{c|Actor '''Poisoner'''}}
+*: A pointer to the actor, if any, who is the source of the players' poisoning.
+
+*{{c|Actor '''Attacker'''}}
+*: A pointer to the actor that attacked the player.
+
+*{{c|int '''ExtraLight'''}}
+*: Used by the [[A_Light]] functions to light up the level when the player fires. Can be modified directly to increase or decrease the brightness of the level. (This change in brightness is local and won't affect how the sector brightness appears in other players' views.) Has no effect on sectors with a brightness of 0 or 255.
+
+*{{c|Int16 '''FixedColorMap'''}}
+*: Contains a color map, normally applied by {{class|Powerup|powerups}}. Can be defined in a powerup through its {{property|Powerup.Color}} property.
+
+*{{c|Int16 '''FixedLightLevel'''}}
+*: Used by {{class|PowerLightAmp}}. At 1, makes the whole level fully bright, at -1 brightness returns to normal. {{clarification|What does the value of 0 do?}}
+
+*{{c|int '''MorphTics'''}}
+*: Stores the duration for which a player morph will last. {{Verification}}
+
+*{{c|Class&lt;PlayerPawn&gt; '''MorphedPlayerClass'''}}
+*: Contains the class the player can morph into using {{class|PowerMorph}}. {{verification}}
+
+*{{c|int '''MorphStyle'''}}
+*: Specifies what effects to apply to the player when morphed, possible flags include:
+*:* {{c|'''MRF_OLDEFFECTS'''}} — The default flag, uses standard Hexen/Heretic morphing behavior.
+*:* {{c|'''MRF_ADDSTAMINA'''}} — Adds health based on the players' stamina, instead of removing health based on it.
+*:* {{c|'''MRF_FULLHEALTH'''}} — Set the morphed players' maximum health to that of the player class they morphed to.
+*:* {{c|'''MRF_UNDOBYTOMEOFPOWER'''}} — The player will unmorph when they activate the [[Classes:ArtiTomeOfPower| Tome of Power]].
+*:* {{c|'''MRF_UNDOBYCHAOSDEVICE'''}} — The player will unmorph when they activate the [[Classes:ArtiTeleport| Chaos Device]].
+*:* {{c|'''MRF_FAILTNOTELEFRAG'''}} — The player won't be telefragged if the unmorph by the Tome of Power fails.
+*:* {{c|'''MRF_FAILNOLAUGH'''}} — The player will not laugh if the unmoprh by the Chaos Device fails.
+*:* {{c|'''MRF_WHENINVULNERABLE'''}} — The player can morph while invulnerable, but only if they were the one that morphed themselves.
+*:* {{c|'''MRF_LOSEACTUALWEAPON'''}} — When unmorphed, the player will lose the weapon they had gotten while morphed, if any. Instead of losing whatever weapon they were using before being morphed.
+*:* {{c|'''MRF_NEWTIDBEHAVIOR'''}} — Create a new TID for the player when they are morphed, instead of keeping the previous TID from prior to the morph.
+*:* {{c|'''MRF_UNDOBYDEATH'''}} — The player will unmorph when killed.
+*:* {{c|'''MRF_UNDOBYDEATHFORCED'''}} — Forces the player to unmorph when killed.
+*:* {{c|'''MRF_UNDOBYDEATHSAVES'''}} — Restore the players' health when they are killed while morphed
+*:* {{c|'''MRF_UNMORPHBYTIMEOUT'''}} — The player will unmorph once the countdown finishes.
+*:* {{c|'''MRF_UNDOALWAYS'''}} — Always undo a morph with this flag on when it expires.
+*:* {{c|'''MRF_TRANSFERTRANSLATION'''}} — Transfer the palette [[translation]] of the player to their morph as well.
+*:* {{c|'''MRF_STANDARDUNDOING'''}} — Imples MRF_UNDOBYTOMEOFPOWER, MRF_UNDOBYCHAOSDEVICE, and MRF_UNMORPHBYTIMEOUT.
+
+*{{c|Class&lt;Actor&gt; '''MorphExitFlash'''}}
+*: The actor that will be used as the exit flash when the player unmorphs.
+
+*{{c|Weapon '''PreMorphWeapon'''}}
+*: Pointer to the {{class|Weapon}} the player had selected (i.e. had in their &lt;code&gt;readyweapon&lt;/code&gt; field) before being morphed.
+
+*{{c|int '''ChickenPeck'''}}
+*: {{Moreinfo}}
+
+*{{c|int '''JumpTics'''}}
+*: Used by the [[ZScript_virtual_functions#PlayerPawn|CheckJump() virtual]] to determine if the player should be able to jump, if it is exactly 0, the player will be able to jump.
+
+*{{c|bool '''OnGround'''}}
+*: Returns true if the player is currently standin on the ground ''or'' another actor.
+
+*{{c|int '''Respawn_Time'''}}
+*: Used to give a delay between the player dying and automatically respawning in [[Deathmatch]] games.
+
+*{{c|Actor '''Camera'''}}
+*: A pointer to the actor that the player is currently looking through. By default this is their {{class|PlayerPawn}}. Directly modifiable: any actor can be used as a camera.
+
+*{{c|int '''Air_Finished'''}}
+*: Keeps track of how long it'll take before the player drowns, if [[Structs:LevelLocals#Level_data|{{c|level.maptime}}]] exceeds this variables' value, then the player will begin to drown.
+
+*{{c|FName '''LastDamageType'''}}
+*: The [[Damage type|type]] of most recent damage the player had received.
+
+*{{c|Actor '''MUSINFOActor'''}}
+*: Pointer to keep track of the [[Classes:MusicChanger| MusicChanger]] actor that the player activated by entering its' sector.
+
+*{{c|int '''MUSINFOTics'''}}
+*: The delay, in [[Tic|tics]], that it will take before the players' music is changed by the Music Changer actor.
+
+*{{c|bool '''Settings_Controller'''}}
+*: Players with this boolean on can control the game settings in netgames.
+
+*{{c|Int8 '''crouching'''}}
+*: Stores the crouching state of the player. 0 and 1 means the player is not crouching, and -1 means the player is crouching.
+
+*{{c|Int8 '''crouchdir'''}}
+*: Stores the direction of the crouch movement. 1 means the player is uncrouching (standing up), while -1 means they're crouching down from standing position. The initial value is obtained from &lt;code&gt;crouching&lt;/code&gt;
+
+*{{c|Bot '''Bot'''}}
+*: Stores a reference to the bot controlling this player, if any. {{Moreinfo}} {{Verification}} Can be used to check if the player is a bot.
+
+*{{c|float '''BlendR'''}}
+*{{c|float '''BlendG'''}}
+*{{c|float '''BlendB'''}}
+*{{c|float '''BlendA'''}}
+*: These three fields control the red, blue, green and alpha of the color blend that will appear on the players' screen respectively. Used by [[A_SetBlend]] and [[FadeRange]] to flash the players' screen with colors.
+
+*{{c|String '''LogText'''}}
+*: {{Moreinfo}}
+
+*{{c|double '''MinPitch'''}}
+*: This variable stores the minimum pitch that the player can have when [[Freelook| freelooking]]. The default value is -90. Negative values mean upwards pitch.
+
+*{{c|double '''MaxPitch'''}}
+*: This variable stores the maximum pitch that the player can have when freelooking. The default value is 90. Positive values mean towards pitch.
+
+*{{c|double '''CrouchFactor'''}}
+*: Controls by how much the players' view and hitbox is lowered when crouched. [[ZScript_virtual_functions#PlayerPawn| CheckCrouch()]] clamps this value between 0.5 and 1.0 by default, so that the final crouched height of the player is half their normal height.
+
+*{{c|double '''CrouchOffset'''}}
+*: {{Moreinfo}}
+
+*{{c|double '''CrouchViewDelta'''}}
+*: {{Moreinfo}}
+
+*{{c|Actor '''ConversationNPC'''}}
+*: A pointer to the actor the player is currently in conversation with. if any.
+
+*{{c|Actor '''ConversationPC'''}}
+*: A pointer to the player currently having a conversation.
+
+*{{c|double '''ConversationNPCAngle'''}}
+*: The angle at which the NPC the player is having a conversation with is facing.
+
+*{{c|Actor '''ConversationFaceTalker'''}}
+*: if set to true, the player will face the NPC they are having a conversation with.
+
+*{{c|@WeaponSlots '''Weapons'''}}
+*: A pointer to an instance of the [[Structs:WeaponSlots|WeaponSlots struct]] attached to this player.
+
+*{{c|@UserCmd '''Cmd'''}}
+*: A pointer to the [[Structs:UserCmd|UserCmd struct]] used by this player.
+
+*{{c|ReadOnly @UserCmd '''OriginalCmd'''}}
+*: {{Moreinfo}}
+
+== Examples ==
+Below are two example uses for accessing the PlayerInfo struct.
+=== Current weapon detector ===
+This inventory item accesses the ReadyWeapon pointer of its' player to print out the name of the new ReadyWeapon, every time that the ReadyWeapon's name doesn't much the stored name.
+
+&lt;syntaxhighlight lang="csharp"&gt;
+class CurrentWeaponDetector : Inventory
+{
+	Default
+	{
+		+Inventory.Quiet;
+		+Inventory.PersistentPower;
+	}
+	
+	string CurrentWeaponName; //The name of the current weapon in the players' inventory.
+	
+	override void AttachToOwner(Actor other)
+	{
+		Super.AttachToOwner(other);
+		
+		if (!other.Player) //Checks if the actor has a PlayerInfo struct at all, to determine if it is a player.
+			GoAwayAndDie(); //if the actor isn't a player, then despawn.
+		else
+			CurrentWeaponName = other.Player.ReadyWeapon.GetClassName(); //Access the players' current weapon through the ReadyWeapon pointer, and return its' class name with GetClassName().
+	}
+	
+	override void DoEffect()
+	{
+		Super.DoEffect();
+		
+		//Check if the player even has a ReadyWeapon, to prevent VM aborts.
+		//Then check if the class name of the players' ReadyWeapon no longer matches the string in CurrentWeaponName, meaning that the ReadyWeapon was changed.
+		if (Owner.Player.ReadyWeapon &amp;&amp; Owner.Player.ReadyWeapon.GetClassName() != CurrentWeaponName)
+		{
+			CurrentWeaponName = Owner.Player.ReadyWeapon.GetClassName(); //if it was changed, the update the name again.
+			Console.PrintF ("Your current weapon is now %s",CurrentWeaponName); //Print out the name of the current weapon in the console.
+		}
+	}
+}&lt;/syntaxhighlight&gt;
+
+=== Cyberdemon alarm ===
+This inventory item directly modifies the BlendR and BlendA variables of the player it is attached to, so that it can flash their screen red to warn them of nearby Cyberdemons.
+
+&lt;syntaxhighlight lang="csharp"&gt;
+class CyberdemonAlarm : Inventory
+{
+	Default
+	{
+		+Inventory.Quiet;
+		+Inventory.PersistentPower;
+	}
+	
+	override void AttachToOwner(Actor other)
+	{
+		// Allow attaching to players only:
+		if (other.player)
+		{
+			Super.AttachToOwner(other);
+		}
+	}
+	
+	bool FoundCyberdemon;
+	
+	override void DoEffect()
+	{
+		//Only run the Cyberdemon check every second.
+		if (GetAge() % TICRATE == 0)
+		{
+			BlockThingsIterator CyberdemonSearch = BlockThingsIterator.Create (owner,2048);
+			
+			while (CyberdemonSearch.Next())
+			{
+				Actor mobj;
+				mobj = CyberdemonSearch.Thing;
+				
+				if (mobj &amp;&amp; mobj.Health &gt; 0 &amp;&amp; !mobj.bDormant &amp;&amp; owner.IsHostile(mobj) &amp;&amp; mobj.GetClassName() == "Cyberdemon" &amp;&amp; owner.Distance2D (mobj) &lt;= 2048)
+				{
+					FoundCyberdemon = True;
+					break;
+				}
+			}
+		}
+		
+		if (owner.player.BlendA) owner.player.BlendA -= 0.0071428; //if the BlendA variable in the players' playerInfo is above 0, it will be decremented to wash away the red warning color.
+		
+		if (FoundCyberdemon)
+		{
+			Console.PrintF ("There's an enemy cyberdemon nearby!");
+			owner.player.BlendR = 1.0; //Set the owners' red blend color to full red.
+			owner.player.BlendA = 0.4; //And set the blends' alpha to 0.4.
+			owner.A_StartSound ("doors/dr2_open",CHAN_AUTO,CHANF_LOCAL); //Alarm sound, only heard by the player.
+			FoundCyberdemon = False;
+		}
+	}
+}
+&lt;/syntaxhighlight&gt;
+
+[[Category:ZScript]]
+[[Category:Structs]]
+[[Category:Player]]</text>
+    <sha1>p7tvsvg5u6aasv9lfnbmy8qqpz2ndfb</sha1>
+  </revision>
+</page>

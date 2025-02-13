@@ -1,0 +1,80 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>Falling damage</title>
+  <ns>0</ns>
+  <id>6669</id>
+  <revision>
+    <id>32934</id>
+    <parentid>29899</parentid>
+    <timestamp>2012-05-14T17:35:16Z</timestamp>
+    <contributor>
+      <username>Gez</username>
+      <id>1283</id>
+    </contributor>
+    <minor />
+    <comment>/* Falling speed */</comment>
+    <origin>32934</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="3912" sha1="46sbaafusqr8pnodtmt72m6i6yduwu5" xml:space="preserve">{{doomwiki}}[[ZDoom]] contains four different models to handle '''falling damage''': they can be off entirely, as in [[Doom]] and [[Heretic]], they can use [[Hexen]]'s implementation, [[Strife]]'s implementation, or ZDoom's old implementation initially added before support for other games than Doom was added.
+
+==Falling speed==
+All falling damage computation rely on the player's downward velocity, expressed as a [[fixed point number]]. Internally, a downward velocity is a negative number; but its absolute is used for these computations so this article will treat downward velocity as a positive value.
+
+If an actor is standing in mid-air, its downward speed is increased each [[tic]] by its [[gravity]] factor. The physics model inherited from [[vanilla Doom]] has the peculiarity of giving gravity an "initial boost" by doubling it when the fall begins, so after four rounds of free fall, the momentum acquired is five times the gravity factor, not four times. There is no terminal velocity.
+
+An actor's gravity factor is the product of the following factors:
+#The [[level]]'s overall gravity, as defined in [[MAPINFO]] with the {{c|gravity}} map property. Note that this value is set on a scale of 800.
+#The [[sector]]'s own gravity, as defined in [[UDMF]] with the {{c|gravity}} sector property and in [[Hexen format]] with the [[Static_Init]] special; possibly modified with [[Sector_SetGravity]].
+#The [[actor]]'s own {{Property|Gravity}} property in [[DECORATE]], possibly modified through [[ACS]] with the [[ACS actor properties|APROP_Gravity]] property.
+The default values are all 1.0, so a fall lasting one second (35 tics) gives an accumulated speed of 36 in the default conditions. The following chart gives a few values to estimate the landing speed in map units per tics for drops of various heights, using the default conditions, as well as a graph showing damage inflicted as a function of the landing speed for all three falling damage models.
+{| {{prettytable}}
+!Drop height!!Final speed!!Damage inflicted (vertical axis) in function of landing speed (horizontal axis)
+|-
+|16||6||rowspan="10"|[[File:FallingDamageChart.png|700px]]
+|-
+|32||8
+|-
+|64||11
+|-
+|128||16
+|-
+|256||23
+|-
+|512||32
+|-
+|1024||45
+|-
+|2048||64
+|-
+|4096||91
+|-
+|8192||128
+|}
+
+The "maximum safe speed" is the maximum velocity you can have before triggering falling damage. The "death threshold" is the maximum speed you can have that will not inflict lethal damage, it is represented by the blue area below the Hexen line. The "minimum kill speed" is the minimum velocity that will provoke an instant death. Only the Hexen algorithm has all three values.
+
+==ZDoom falling damage==
+Also called "old falling damage" since they were implemented first. Above the maximum safe speed, the minimal damage amount is always at least 1.
+*Maximum safe speed: 19
+*Minimum kill speed: 84
+Damage algorithm: damage = ((speed² * 11/128) - 30)/2
+:Examples: for a falling speed of 24, damage is (6336/128 - 30)/2 or 9 (rounded down). For a falling speed of 60, damage is 139 (rounded down).
+
+==Hexen falling damage==
+[[Hexen]] implemented a death threshold so that if the falling speed does not exceed this value yet the damage inflicted would be enough to kill the player, instead the player's hit points are reduced to 1.
+*Maximum safe speed: 23
+*Death threshold: 39
+*Minimum kill speed: 63
+Damage algorithm: damage = ((speed * 16/23)²/10) - 24
+:Examples: for a falling speed of 24, damage is (16.695652² / 10) -24 or 3 (rounded down). For a falling speed of 60, damage is 150 (rounded down).
+
+==Strife falling damage==
+[[Strife]] has the simplest falling damage formula, with no minimum kill speed nor death threshold.
+*Maximum safe speed: 20
+Damage algorithm: damage = speed * 2.62144
+:Examples: for a falling speed of 24, damage is 62 (rounded down). For a falling speed of 60, damage is 157 (rounded down). 
+
+[[Category:Glossary]]</text>
+    <sha1>46sbaafusqr8pnodtmt72m6i6yduwu5</sha1>
+  </revision>
+</page>

@@ -1,0 +1,47 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>Classes:CorpseBit</title>
+  <ns>0</ns>
+  <id>4680</id>
+  <revision>
+    <id>27575</id>
+    <parentid>27574</parentid>
+    <timestamp>2010-08-28T17:21:09Z</timestamp>
+    <contributor>
+      <username>Gez</username>
+      <id>1283</id>
+    </contributor>
+    <minor />
+    <origin>27575</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="836" sha1="94o03w1ppbva3kxvj4tpt0xfd4jw33p" xml:space="preserve">{{Actor|
+| type = SFX
+| name = CorpseBit
+| class = CorpseBit
+| game = Hexen
+}}[[Classes]]: {{Class}} &amp;rarr; &lt;u&gt;CorpseBit&lt;/u&gt;&lt;br&gt;
+A container actor for four different bits of an exploded {{Class|ZCorpseSitting|sitting corpse}}. Any replacement for this actor needs to have likewise four states defined in the same way, as Spawn to Spawn+3 are the four possible states in which the [[A_CorpseExplode]] function will place them when it spawns them. Spawn+3 corresponds to the corpse's head, the other three are random, nondescript chunks of flesh.
+
+==== [[DECORATE]] definition ====
+ ACTOR &lt;u&gt;CorpseBit&lt;/u&gt;
+ {
+   {{Property|Radius}} 5
+   {{Property|Height}} 5
+   +{{Flag|NOBLOCKMAP}}
+   +{{Flag|TELESTOMP}}
+   States
+   {
+   Spawn:
+     CPB1 A -1
+     Stop
+     CPB2 A -1
+     Stop
+     CPB3 A -1
+     Stop
+     CPB4 A -1
+     Stop
+   }
+ }</text>
+    <sha1>94o03w1ppbva3kxvj4tpt0xfd4jw33p</sha1>
+  </revision>
+</page>

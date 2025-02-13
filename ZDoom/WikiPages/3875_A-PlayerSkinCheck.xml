@@ -1,0 +1,59 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>A PlayerSkinCheck</title>
+  <ns>0</ns>
+  <id>3875</id>
+  <revision>
+    <id>42395</id>
+    <parentid>35072</parentid>
+    <timestamp>2016-02-25T18:31:12Z</timestamp>
+    <contributor>
+      <username>Marisa Heit</username>
+      <id>5</id>
+    </contributor>
+    <comment>Add return type</comment>
+    <origin>42395</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="1676" sha1="fyrmdhq5do15w93b25pf2ppclp1ryqc" xml:space="preserve">{{codepointer|Special action}}state '''A_PlayerSkinCheck''' (str ''state'')
+
+Checks if the player is currently using a custom [[S_SKIN|Skin]] made for another game and if so, jumps to the specified state. This function allows the default [[Classes:DoomPlayer|DoomGuy]] to use a [[Classes:HereticPlayer|Corvus]] skin and vice-versa. The number of death frames in Doom is different from the number of death frames in Heretic, which would without this function make skins from one game glitchy in another.
+
+''This function should only be used for Doom or Heretic custom classes that are allowed to use custom skins.''
+
+== Examples ==
+
+The {{Class|HereticPlayer|Heretic Player}} uses this function because it has a larger amount of frames from what custom Doom skins have. Using '''A_PlayerSkinCheck''' in both death states, it checks first if the player is using a Doom skin and then jumps to a different death state if he/she is.
+
+     Death:
+        PLAY H 6 '''A_PlayerSkinCheck'''("AltSkinDeath")
+        PLAY I 6 [[A_PlayerScream]]
+        PLAY JK 6
+        PLAY L 6 [[A_NoBlocking]]
+        PLAY MNO 6
+        PLAY P -1
+        Stop
+     XDeath:
+        PLAY Q 0 '''A_PlayerSkinCheck'''("AltSkinXDeath")
+        PLAY Q 5 [[A_PlayerScream]]
+        PLAY R 0 [[A_NoBlocking]]
+        PLAY R 5 [[A_SkullPop]]
+        PLAY STUVWX 5
+        PLAY Y -1
+        Stop
+     AltSkinDeath:	
+        PLAY H 10
+        PLAY I 10 [[A_PlayerScream]]
+        PLAY J 10 [[A_NoBlocking]]
+        PLAY KLM 10
+        PLAY N -1
+        Stop
+     AltSkinXDeath:
+        PLAY O 5
+        PLAY P 5 [[A_XScream]]
+        PLAY Q 5 [[A_NoBlocking]]
+        PLAY RSTUV 5
+        PLAY W -1
+        Stop</text>
+    <sha1>fyrmdhq5do15w93b25pf2ppclp1ryqc</sha1>
+  </revision>
+</page>

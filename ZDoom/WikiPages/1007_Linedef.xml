@@ -1,0 +1,200 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>Linedef</title>
+  <ns>0</ns>
+  <id>1007</id>
+  <revision>
+    <id>54109</id>
+    <parentid>51742</parentid>
+    <timestamp>2025-01-02T01:10:22Z</timestamp>
+    <contributor>
+      <username>SPZ</username>
+      <id>2640</id>
+    </contributor>
+    <minor />
+    <comment>/* Linedef flags */</comment>
+    <origin>54109</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="8055" sha1="mwc8fetxiraimbwvlvpga8pyqzq9pz8" xml:space="preserve">{{doomwiki}}
+'''Linedefs''' are what make up the 'shape' (for lack of a better word) of your map.  Every linedef is between two [[vertex|vertices]] and contains one or two [[sidedef]]s (which contain texture data).  There are two major purposes of linedefs.  The first is to give your map a definitive boundary between the player and the void (any area of a map behind a one-sided linedef is considered void space), and the second is to trigger [[action specials]].
+
+Linedefs can be assigned any of the action specials and will trigger them when a specified action occurs.  You may flag linedefs to have their special executed when the player walks over the line, when the player uses the line (switches) or when the player pushes the line (similar to ''Quake'' or ''Quake 2'' switches).  Monsters may also trigger specials by walking over the line, and finally a projectile impact or cross can also trigger a special if you so desire.
+
+In [[ZScript]] linedefs are controlled by the '''{{struct|Line}}''' struct.
+
+==Specification (Doom format)==
+{| {{prettytable}}
+!Bytes!!Data type!!Description
+|-
+|0-1||Unsigned short||Beginning [[vertex]]
+|-
+|2-3||Unsigned short||Ending vertex
+|-
+|4-5||Unsigned short||[[#Linedef flags|Flags]]
+|-
+|6-7||Unsigned short||Line type
+|-
+|8-9||Unsigned short||[[Sector]] [[tag]]
+|-
+|10-11||Unsigned short||Right [[sidedef]] - 0xFFFF means there is no sidedef
+|-
+|12-13||Unsigned short||Left sidedef - 0xFFFF means there is no sidedef
+|}
+
+==Specification (Hexen format)==
+
+{| {{prettytable}}
+!Bytes!!Data Type!!Description
+|-
+|0-1||Unsigned short||Beginning [[vertex]]
+|-
+|2-3||Unsigned short||Ending vertex
+|-
+|4-5||Unsigned short||[[#Linedef flags|Flags]]
+|-
+|6||Unsigned byte||[[Action special]]
+|-
+|7||Unsigned byte||Action argument 1
+|-
+|8||Unsigned byte||Action argument 2
+|-
+|9||Unsigned byte||Action argument 3
+|-
+|10||Unsigned byte||Action argument 4
+|-
+|11||Unsigned byte||Action argument 5
+|-
+|12-13||Unsigned short||Right [[sidedef]] - 0xFFFF means there is no sidedef
+|-
+|14-15||Unsigned short||Left sidedef - 0xFFFF means there is no sidedef
+|}
+
+==Linedef flags==
+There are several conflicts in the flag list, depending on game. [[Map translator]]s are used to define how values are associated to flags in a binary map. [[UDMF]] allows to solve these conflicts by not using a bitfield array but instead referring to each flag by name. UDMF also allows to define the remaining flags without having to use a function such as [[Line_SetIdentification]], and several flags are only available in this [[map format]].
+
+{| {{PrettySortable}}
+!Flag!!Bit!!Hex!!Description!!Mode!![[UDMF]] name!![[Line_SetBlocking]] name
+|-
+|BLOCKING||0||0x0001||blocks players and monsters||Doom||{{c|blocking}}||BLOCKF_CREATURES
+|-
+|BLOCKMONSTERS||1||0x0002||blocks monsters||Doom||{{c|blockmonsters}}||BLOCKF_MONSTERS
+|-
+|TWOSIDED||2||0x0004||two sided||Doom||{{c|twosided}}
+|-
+|DONTPEGTOP||3||0x0008||upper texture is unpegged||Doom||{{c|dontpegtop}}
+|-
+|DONTPEGBOTTOM||4||0x0010||lower texture is unpegged||Doom||{{c|dontpegbottom}}
+|-
+|SECRET||5||0x0020||secret (shows as one-sided on automap)||Doom||{{c|secret}}
+|-
+|SOUNDBLOCK||6||0x0040||blocks sound||Doom||{{c|blocksound}}||BLOCKF_SOUND
+|-
+|DONTDRAW||7||0x0080||never shows on automap||Doom||{{c|dontdraw}}
+|-
+|MAPPED||8||0x0100||always shows on automap||Doom||{{c|mapped}}
+|-
+|RAILING||9||0x0200||line is a railing||Strife||{{c|jumpover}}||BLOCKF_RAILING
+|-
+|PASSUSE||9||0x0200||passes use action||[[Boom]]||{{c|passuse}}
+|-
+|REPEAT_SPECIAL||9||0x0200||can be activated more than once||ZDoom||{{c|repeatspecial}}
+|-
+|BLOCK_FLOATERS|| 10 || 0x0400 ||Line blocks floating monsters||Strife||{{c|blockfloating}}||BLOCKF_FLOATERS
+|-
+|3DMIDTEX||10||0x0400||Actors can walk on mid texture.||[[Eternity Engine|Eternity]]||{{c|[[3D middle texture|midtex3d]]}}
+|-
+|SPAC_Use||10-12||0x0400||activated when used by player||ZDoom||{{c|playeruse}}
+|-
+|SPAC_MCross||10-12||0x0800||activated when crossed by monster||ZDoom||{{c|monstercross}}
+|-
+|SPAC_Impact||10-12||0x0C00||activated when hit by projectile||ZDoom||{{c|impact}}
+|-
+|SPAC_Push||10-12||0x1000||activated when bumped by player||ZDoom||{{c|playerpush}}
+|-
+|SPAC_PCross||10-12||0x1400||activated crossed by projectile||ZDoom||{{c|missilecross}}
+|-
+|SPAC_UseThrough||10-12||0x1800||activated when used by player (with pass through)||ZDoom||{{c|playeruseback}}
+|-
+|TRANSLUCENT||12||0x1000||line is 25% translucent (alpha of 0.75)||Strife||{{c|translucent}}
+|-
+|||13||0x2000||line is 75% translucent (alpha of 0.25)||Strife||{{c|transparent}}
+|-
+|MONSTERSCANACTIVATE||13||0x2000||line can be activated by players and monsters||ZDoom||{{c|monsteractivate}}
+|-
+|BLOCK_PLAYERS||14||0x4000||blocks players||ZDoom||{{c|blockplayers}}||BLOCKF_PLAYERS
+|-
+|BLOCKEVERYTHING||15||0x8000||blocks everything (includes gunshots &amp;amp; missiles)||ZDoom||{{c|blockeverything}}||BLOCKF_EVERYTHING
+|-
+|SPAC_Cross|| - || - ||activated when crossed by player (default)||ZDoom||{{c|playercross}}
+|-
+|SPAC_AnyCross|| - || - ||activated by anything crossing it||ZDoom||{{c|anycross}}
+|-
+|SPAC_MUse|| - || - ||activated by monsters using it||ZDoom||{{c|monsteruse}}
+|-
+|SPAC_MPush|| - || - ||activated by monsters bumping into it||ZDoom||{{c|monsterpush}}
+|-
+|FIRSTSIDEONLY|| - || - ||Line can only be triggered from the front side.||ZDoom||{{c|firstsideonly}}
+|-
+|ZONEBOUNDARY|| - || - ||Line is a boundary for sound reverb zones.||ZDoom||{{c|zoneboundary}}
+|-
+|CLIP_MIDTEX|| - || - ||Line's mid textures are clipped to floor and ceiling (default in Strife).||Strife||{{c|clipmidtex}}
+|-
+|WRAP_MIDTEX|| - || - ||Line's mid textures are wrapped.||ZDoom||{{c|wrapmidtex}}
+|-
+|CHECKSWITCHRANGE|| - || - ||Switches can only be activated when vertically reachable.||ZDoom||{{c|checkswitchrange}}
+|-
+|BLOCKPROJECTILE|| - || - ||Line blocks all projectiles||ZDoom||{{c|blockprojectiles}}||BLOCKF_PROJECTILES
+|-
+|BLOCKUSE|| - || - ||Line blocks all use actions||ZDoom||{{c|blockuse}}||BLOCKF_USE
+|-
+|BLOCKSIGHT||  - || - ||Line blocks line of sight for monsters||ZDoom||{{c|blocksight}}||BLOCKF_SIGHT
+|-
+|BLOCKHITSCAN||  - || - ||Line blocks [[hitscan]] attacks||ZDoom||{{c|blockhitscan}}||BLOCKF_HITSCAN
+|-
+|3DMIDTEX_IMPASS||  - || - ||Causes the mid texture to behave like an impassible line (projectiles pass through it). Used in conjunction with {{c|midtex3d}}.||ZDoom||{{c|midtex3dimpassible}}
+|-
+|BLOCKLANDMONSTERS||  - || - ||Line blocks ground-based monsters (Monsters without the {{flag|FLOAT}} flag).||ZDoom||{{c|blocklandmonsters}}||BLOCKF_LANDMONSTERS
+|}
+
+==UDMF properties==
+In addition to the above flags, the [[Universal Doom Map Format]] allows to set a number of properties on linedefs. Unless otherwise specified, default values for integers and float is 0, and {{c|false}} for booleans. They include:
+{| {{prettytable}}
+!Name!!Type!!Description
+|-
+|{{c|alpha}}||float||Translucency of this line, default is 1.0.
+|-
+|{{c|arg0str}}||string||Alternate string-based version of {{c|arg0}}, used for [[named script]]s.
+|-
+|{{c|arg0}}||integer||First parameter.
+|-
+|{{c|arg1}}||integer||Second parameter.
+|-
+|{{c|arg2}}||integer||Third parameter.
+|-
+|{{c|arg3}}||integer||Fourth parameter.
+|-
+|{{c|arg4}}||integer||Fifth parameter.
+|-
+|{{c|comment}}||string||A comment. This is purely for map authors' convenience as it is ignored by the engine.
+|-
+|{{c|locknumber}}||integer||Line special is locked, see [[key types]] and [[LOCKDEFS]].
+|-
+|{{c|renderstyle}}||string||Render style, can be "translucent" or "add", default is "translucent".
+|-
+|{{c|sidefront}}||integer||Front [[sidedef]] index. No default value: a linedef without a front sidedef invalidates the entire map.
+|-
+|{{c|sideback}}||integer||Back [[sidedef]] index. Default = -1 for "no back side".
+|-
+|{{c|special}}||integer||[[Action special]] for the line.
+|-
+|{{c|moreids}}||string||Additional line [[tag]]s, specified as a space-separated list of numbers, e.g., {{c|"2 666 1003 4505"}}.
+|}
+
+==See also==
+*[[SIDEDEFS]]
+*[[VERTEXES]]
+[[Category:Glossary]]
+[[Category:Editing references]]</text>
+    <sha1>mwc8fetxiraimbwvlvpga8pyqzq9pz8</sha1>
+  </revision>
+</page>

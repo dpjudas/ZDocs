@@ -1,0 +1,73 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>Classes:ThrowingBomb</title>
+  <ns>0</ns>
+  <id>4531</id>
+  <revision>
+    <id>39502</id>
+    <parentid>34558</parentid>
+    <timestamp>2015-04-30T21:39:09Z</timestamp>
+    <contributor>
+      <username>Blue Shadow</username>
+      <id>2021</id>
+    </contributor>
+    <minor />
+    <comment>/* DECORATE definition */ Updated</comment>
+    <origin>39502</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="1403" sha1="2xm6xalljd6ws7gfk1dw5el1vgjbe22" xml:space="preserve">{{Actor|
+| type = Explosive
+| name = Fléchette used by a fighter
+| class = ThrowingBomb
+| game = Hexen
+}}[[Classes]]: &lt;u&gt;ThrowingBomb&lt;/u&gt;
+
+A projectile spawned when a [[Classes:ArtiPoisonBag3|fighter fléchette]] is used, it bounces on the ground and explodes after a short while or when hitting an actor or a wall.
+
+==== [[DECORATE]] definition ====
+ ACTOR &lt;u&gt;ThrowingBomb&lt;/u&gt;
+ {
+   {{Property|Health}} 48
+   {{Property|Speed}} 12
+   {{Property|Radius}} 8
+   {{Property|Height}} 10
+   {{Property|DamageType}} "Fire"
+   +{{Flag|NOBLOCKMAP}}
+   +{{Flag|DROPOFF}}
+   +{{Flag|MISSILE}}
+   {{Property|BounceType}} "HexenCompat"
+   {{Property|SeeSound}} "FlechetteBounce"
+   {{Property|DeathSound}} "FlechetteExplode"
+ 
+   action native [[A_CheckThrowBomb]]();
+   action native [[A_CheckThrowBomb2]]();
+ 
+   States
+   {
+   Spawn:
+     THRW A 4 [[A_CheckThrowBomb]]
+     THRW BCDE 3 [[A_CheckThrowBomb]]
+     THRW F 3 [[A_CheckThrowBomb2]]
+     Loop
+     THRW G 6 [[A_CheckThrowBomb]]
+     THRW F 4 [[A_CheckThrowBomb]]
+     THRW H 6 [[A_CheckThrowBomb]]
+     THRW F 4 [[A_CheckThrowBomb]]
+     THRW G 6 [[A_CheckThrowBomb]]
+     THRW F 3 [[A_CheckThrowBomb]]
+     Wait
+   Death:
+     CFCF Q 4 Bright [[A_NoGravity]]
+     CFCF R 3 Bright [[A_Scream]]
+     CFCF S 4 Bright [[A_Explode]]
+     CFCF T 3 Bright
+     CFCF U 4 Bright
+     CFCF W 3 Bright
+     CFCF X 4 Bright
+     CFCF Z 3 Bright
+     Stop
+   }
+ }</text>
+    <sha1>2xm6xalljd6ws7gfk1dw5el1vgjbe22</sha1>
+  </revision>
+</page>

@@ -1,0 +1,42 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>Generic Stairs</title>
+  <ns>0</ns>
+  <id>734</id>
+  <revision>
+    <id>46982</id>
+    <parentid>46981</parentid>
+    <timestamp>2019-10-23T19:48:18Z</timestamp>
+    <contributor>
+      <username>Printz</username>
+      <id>874</id>
+    </contributor>
+    <comment>Undo revision 46981 by [[Special:Contributions/Printz|Printz]] ([[User talk:Printz|talk]]) (oops)</comment>
+    <origin>46982</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="1306" sha1="ka4bsvpwpxeyutx63okx6vnx7grp225" xml:space="preserve">{{DISPLAYTITLE:Generic_Stairs}}
+{{Special|204|tag, speed, height, flags, reset|General BOOM linetype|Stairs|type2=Stairs}}
+* ''tag'': Tag of first sector in staircase 
+* ''speed'': How quickly the steps move 
+* ''height'': Height of each step 
+* ''flags'': controls direction and ignorance of floor textures 
+* ''reset'': Tics until the stairs return to their original heights (0 if never) 
+
+This special encapsulates [[BOOM]]'s generalized stairs. The [[sectors]] of the staircase are determined as they are in BOOM. If bit 0 of ''flags'' is set (0x01), the stairs are built up, otherwise they build down. If bit 1 is set (0x02), then the determination of stair sectors ignores different floor textures. If a line activates this special, and the line is marked as repeatable, then the direction the stairs build will alternate between up and down each time the special is activated.
+
+== Examples ==
+
+{{noexamples}}
+
+== Conversions from linedef types ==
+The following Doom map format types can be converted as Generic_Stairs:
+{| {{prettytable}}
+!Type!!Conversion!!Trigger
+|-
+|{{icon|Strife}} 146:S1 Build Stairs 16 Down ||	Generic_Stairs 	(tag, {{xlat|ST_FAST}}, 16, 0, 0) || Player Use
+|-
+|{{icon|Strife}} 178:W1 Build Stairs 16 Down ||	Generic_Stairs 	(tag, {{xlat|ST_FAST}}, 16, 0, 0) || Player Cross
+|}</text>
+    <sha1>ka4bsvpwpxeyutx63okx6vnx7grp225</sha1>
+  </revision>
+</page>

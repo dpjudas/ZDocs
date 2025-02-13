@@ -1,0 +1,403 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>MAPINFO/GameInfo definition</title>
+  <ns>0</ns>
+  <id>5415</id>
+  <revision>
+    <id>53339</id>
+    <parentid>53319</parentid>
+    <timestamp>2024-10-14T08:50:39Z</timestamp>
+    <contributor>
+      <username>Jekyll Grim Payne</username>
+      <id>2175</id>
+    </contributor>
+    <minor />
+    <comment>/* Examples */</comment>
+    <origin>53339</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="20090" sha1="2aglsahfepb9wolyju5t080ixoj31ae" xml:space="preserve">{{note|This page is about the Gameinfo section in the [[MAPINFO]] lump. It should not be confused with '''[[GAMEINFO|the GAMEINFO lump]]'''.}}
+
+A GameInfo definition begins with the keyword "gameinfo".  This changes miscellaneous information about the game such as what lump should be used for the title picture.
+
+==GameInfo commands==
+'''gameinfo''' { ''properties'' }
+:Defines a GameInfo block. 
+
+==GameInfo properties==
+The following properties are supported within a GameInfo definition:
+{{list|Property|Description|content=
+
+{{-|{{LE|AdvisoryTime}} {{=}} &lt;value&gt;
+|Amount of time in seconds needed to pass in order for the ADVISOR lump to be displayed.  If this is set to 0 the ADVISOR lump will never be shown.}}
+
+{{-|{{LE|Border}} {{=}} &lt;preset&gt;
+&lt;nowiki&gt;Border = &lt;size&gt;, &lt;offset&gt;, "&lt;tr&gt;", "&lt;t&gt;", "&lt;tl&gt;", "&lt;r&gt;", "&lt;l&gt;", "&lt;br&gt;", "&lt;b&gt;", "&lt;bl&gt;"&lt;/nowiki&gt;
+|Sets the border graphics used in various places throughout the game.  Most notably is the border around the game window when a small screen size is used.  Valid presets are: {{c|DoomBorder}}, {{c|HereticBorder}}, or {{c|StrifeBorder}}.}}
+
+{{-|{{LE|BackpackType}} {{=}} "&lt;actor&gt;"
+|Sets the backpack given when cheating.}}
+
+{{-|{{LE|BorderFlat}} {{=}} "&lt;lump&gt;"
+|Default lump used for screen border.}}
+
+{{-|{{LE|ChatSound}} {{=}} "&lt;sound&gt;"
+|[[SNDINFO]] entry played when [[chat|chatting]]. Note that this sound is also used by the {{dwicon|Conversation|conversation|nolink=}} feature.}}
+
+{{-|{{LE|CreditPage}} {{=}} "&lt;lump1&gt;" [, "lump2" [, ...]]
+|Sets the lumps used to display the credits, overriding any previously set credits lumps.}}
+
+{{-|{{LE|AddCreditPage}} {{=}} "&lt;lump1&gt;" [, "lump2" [, ...]]
+|Adds to the list of already available credits lumps. }}
+
+{{-|{{LE|DefaultBloodColor}} {{=}} "&lt;color&gt;"
+|Sets the default color for blood [[decal]]s.}}
+
+{{-|{{LE|DefaultBloodParticleColor}} {{=}} "&lt;color&gt;"
+|Sets the default color for blood [[particle]]s.}}
+
+{{-|{{LE|DrawReadThis}} {{=}} &lt;bool&gt;
+|Sets if the "Read This" option should appear on the menu.}}
+
+{{-|{{LE|FinaleFlat}} {{=}} "&lt;lump&gt;"
+|Default background for [[MAPINFO/Cluster definition|cluster]] messages.}}
+
+{{-|{{LE|FinaleMusic}} {{=}} "&lt;lump&gt;"
+|Default music for cluster messages.}}
+
+{{-|{{LE|FinalePage}} {{=}} "&lt;lump1&gt;" [, "lump2" [, ...]]
+|Defines the default end game pictures.}}
+
+{{-|{{LE|ForceTextInMenus}} {{=}} &lt;bool&gt;
+|Replaces all main menu graphics with [[Font|BIGFONT]]-based text strings set in the [[LANGUAGE]] files, allowing for more flexible language support.
+
+Note that there are two main menu definitions: the standard main menu, which is called {{c|MainMenu}}, and a text-only variant with the name {{c|MainMenuTextOnly}}. The engine switches between them based on the state of this property. So for the purpose of [[MENUDEF|adding to or replacing]] the main menu, make sure the correct main menu definition is used.}}
+
+{{-|{{LE|InfoPage}} {{=}} "&lt;lump1&gt;" [, "lump2" [, ...]]
+|Defines the help screens, overriding any previously defined ones (accessed by F1 or "Read This").}}
+
+{{-|{{LE|AddInfoPage}} {{=}} "&lt;lump1&gt;" [, "lump2" [, ...]]
+|Adds to the list of already available lumps of info pages.}}
+
+{{-|{{LE|IntermissionCounter}} {{=}} &lt;bool&gt;
+|If true, the numbers in the intermission (kills, secrets etc) count up to their totals (normal Doom behavior). If false, the final total for each category simply appears in turn without a count-up.}}
+
+{{-|{{LE|IntermissionMusic}} {{=}} "&lt;lump&gt;"
+|Sets the default music played during the intermission.}}
+
+{{-|{{LE|NightmareFast}} {{=}} &lt;bool&gt;
+|If true, all monsters move faster in [[fast monsters]] mode.}}
+
+{{-|{{LE|NoLoopFinaleMusic}} {{=}} &lt;bool&gt;
+|Changes if the finale music should be looped.}}
+
+{{-|{{LE|PageTime}} {{=}} &lt;value&gt;
+|Amount of time to display the credit page between [[demo]]s.}}
+
+{{-|{{LE|QuitSound}} {{=}} "&lt;sound&gt;"
+|SNDINFO entry played on quit.}}
+
+{{-|{{LE|SkyFlatName}} {{=}} "&lt;lump&gt;"
+|Flat which represents the sky. (Example: "F_SKY1")}}
+
+{{-|{{LE|StatusBar}} {{=}} "&lt;lump&gt;"
+|Sets the default [[SBARINFO]] status bar.}}
+
+{{-|{{LE|TelefogHeight}} {{=}} &lt;height&gt;
+|Changes the height of the teleport fog.}}
+
+{{-|{{LE|TitleMusic}} {{=}} "&lt;lump&gt;"
+|Sets the lump of the music played with the title picture.}}
+
+{{-|{{LE|TitlePage}} {{=}} "&lt;lump&gt;"
+|Sets the lump used for the title picture.}}
+
+{{-|{{LE|TitleTime}} {{=}} &lt;value&gt;
+|Sets the time in seconds the title picture is displayed for.}}
+
+{{-|{{LE|Translator}} {{=}} "&lt;lump&gt;"
+|Sets the default xlat lump to use for Doom format maps.}}
+
+{{-|{{LE|WeaponSlot}} {{=}} &lt;slot&gt;, "&lt;weapon&gt;", ...
+|Sets the default configuration for weapon slot &lt;slot&gt;.}}
+
+{{-|{{LE|ArmorIcons}} {{=}} "&lt;basic icon lump&gt;", &lt;advanced savepercent value&gt;, "&lt;advanced icon lump&gt;"
+|Defines the default icon for the standard basic armor, the savepercent (as a floating point number) for the standard advanced armor, and the default icon for the standard advanced armor.}}
+
+{{-|{{LE|DimColor}} {{=}} "&lt;color&gt;"
+|The color to which the screen is dimmed when in menu mode. This is overridden by the {{CVAR|C|dimcolor}} console variable if {{CVAR|C|dimamount}} is a positive or null value.}}
+
+{{-|{{LE|DimAmount}} {{=}} &lt;value&gt;
+|Controls how much the game screen is "dimmed" to the dim color when in menu mode. A value of 0 doesn't change the screen at all, while a value of 1 obscures it entirely behind the dim color. This is overridden by the {{CVAR|C|dimamount}} console variable if the latter is a positive or null value.}}
+
+{{-|{{LE|DefInventoryMaxAmount}} {{=}} &lt;value&gt;
+|Maximum amount in an inventory of an item with the inventory.defmaxamount [[Actor properties#Inventory|actor property]].}}
+
+{{-|{{LE|DefKickback}} {{=}} &lt;value&gt;
+|[[Weapon]] kickback for weapons with the {{c|{{Property|Weapon.DefaultKickBack}}}} property. For ''[[Doom]]'' and ''[[Chex Quest]]'', this is 100; for ''[[Heretic]]'', ''[[Hexen]]'' and ''[[Strife]]'', it is 150.}}
+
+{{-|{{LE|DefaultRespawnTime}} {{=}} &lt;value&gt;
+|Number of seconds before a monster is respawned in skill settings such as Doom's ''Nightmare!''.}}
+
+{{-|{{LE|DefaultDropStyle}} {{=}} &lt;value&gt;
+|Manner in which items are dropped, unless overridden by the sv_dropstyle console variable. Valid values are 1 (standard style) or 2 (Strife style). The Strife style generally tosses dropped item farther away.}}
+
+{{-|{{LE|Endoom}} {{=}} "&lt;lump&gt;"
+|Name to use for the [[ENDOOM]] lump.}}
+
+{{-|{{LE|PickupColor}} {{=}} "&lt;color&gt;"
+|Changes the color of the screen tint caused by picking up items. (This effect was historically handled by a palette swap in Doom, but ZDoom has not supported that method for a long time, so this property can be used as a replacement.)}}
+
+{{-|{{LE|QuitMessages}} {{=}} "&lt;message1&gt;" [, "message2" [, ...]]
+|Lists the various random quit messages, overriding any previously defined messages. If the first character of a message is a $ sign, it is taken as a reference to a string defined in the [[LANGUAGE]] lump.}}
+
+{{-|{{LE|AddQuitMessages}} {{=}} "&lt;message1&gt;" [, "message2" [, ...]]
+|Adds to the list of already available quit messages. }}
+
+{{-|{{LE|MenuFontColor_Title}} {{=}} "&lt;color&gt;"
+|Color used for the titles of menu pages, as defined in [[TEXTCOLO#Default_colors|TEXTCOLO]].}}
+
+{{-|{{LE|MenuFontColor_Label}} {{=}} "&lt;color&gt;"
+|Color used for setting labels in menu pages, as defined in TEXTCOLO.}}
+
+{{-|{{LE|MenuFontColor_Value}} {{=}} "&lt;color&gt;"
+|Color used for setting values in menu pages, as defined in TEXTCOLO.}}
+
+{{-|{{LE|MenuFontColor_Action}} {{=}} "&lt;color&gt;"
+|Color used for actions in menu pages, as defined in TEXTCOLO.}}
+
+{{-|{{LE|MenuFontColor_Header}} {{=}} "&lt;color&gt;"
+|Color used for section headers in menu pages, as defined in TEXTCOLO.}}
+
+{{-|{{LE|MenuFontColor_Highlight}} {{=}} "&lt;color&gt;"
+|Color used for highlighted items in menu pages, as defined in TEXTCOLO.}}
+
+{{-|{{LE|MenuFontColor_Selection}} {{=}} "&lt;color&gt;"
+|Color used for selected items in menu pages, as defined in TEXTCOLO.}}
+
+{{-|{{LE|MenuSliderColor}} {{=}} "&lt;color&gt;"
+|Color used for the slider.}}
+
+{{-|{{LE|MenuSliderBackColor}} {{=}} "&lt;color&gt;"
+|Color used for the slider's background.}}
+
+{{-|{{LE|MenuBackButton}} {{=}} "&lt;lump&gt;"
+|Back button icon optionally used in menu pages.}}
+
+{{-|{{LE|PlayerClasses}} {{=}} "&lt;playerclass1&gt;" [, "playerclass2" [, ...]]
+|Defines which player classes are available in the game, overriding any previous definitions.}}
+
+{{-|{{LE|AddPlayerClasses}} {{=}} "&lt;playerclass1&gt;" [, "playerclass2" [, ...]]
+|Adds to the list of already available player classes.}}
+
+{{-|{{LE|PauseSign}} {{=}} "&lt;lump&gt;"
+|Defines which [[image format|image lump]] to use for the sign displayed when the game is paused.}}
+
+{{-|{{LE|GibFactor}} {{=}} &lt;value&gt;
+|Defines the negative value, as a factor of a monster's starting health, to which its hit points must be reduced to trigger the extreme death state instead of the normal death state when killed. This only affects monsters who do not have a {{Property|GibHealth}} property defined.}}
+
+{{-|{{LE|CursorPic}} {{=}} "&lt;lump&gt;"
+|Chooses the default mouse cursor when using the mouse in menu mode. A cursor must be a graphic no larger than 32x32 pixels in dimensions.}}
+
+{{-|{{LE|SwapMenu}} {{=}} &lt;bool&gt;
+|The normal [[main menu]] order is "new game, options, load game, save game". If swapmenu is true, this becomes "new game, load game, save game, options". This property defaults to false.}}
+
+{{-|{{LE|TextScreenX}} {{=}} &lt;value&gt;
+|Defines the default X offset for intermission text screens.}}
+
+{{-|{{LE|TextScreenY}} {{=}} &lt;value&gt;
+|Defines the default Y offset for intermission text screens.}}
+
+{{-|{{LE|DefaultEndSequence}} {{=}} "&lt;name&gt;"
+| Selects which end sequence is used with the default endgame. The name must correspond to a sequence defined in [[intermission definition|MAPINFO]].}}
+
+{{-|{{LE|MapArrow}} {{=}}  "&lt;lump&gt;" [, "cheatlump"]
+| Defines which [[map arrow]] vector graphics is used to represent the player on the [[automap]].}}
+
+{{-|{{LE|NoRandomPlayerClass}} {{=}} &lt;bool&gt;
+| Removes the ''random'' option from the [[class selection menu]] and [[player setup]]. }}
+
+{{-|{{LE|DontCrunchCorpses}} {{=}} &lt;bool&gt;
+| Corpses will not turn into {{Class|RealGibs|gibs}} when [[Crusher#Crushed corpses|crushed]], provided they do not have a [[actor states#Crush|Crush]] state defined. If they do, this flag is ignored for them.}}
+
+{{-|{{LE|CheatKey}} {{=}} &lt;lump&gt;
+|Defines which [[map arrow]] vector graphics is used to represent [[key]]s on the [[automap]] when using the {{CVAR|A|am_cheat|automap cheat}} to show actors and {{CVAR|A|am_showkeys}} is true.}}
+
+{{-|{{LE|EasyKey}} {{=}} &lt;lump&gt;
+|Defines which [[map arrow]] vector graphics is used to represent [[key]]s on the [[automap]] when using a [[MAPINFO/Skill definition|skill setting]] that has the {{c|EasyKey}} property set.}}
+
+{{-|{{LE|ForceKillScripts}} {{=}} &lt;bool&gt;
+|If set to true, forces all killable [[thing]]s to fire KILL-type ACS scripts. (Unless they have the +NOKILLSCRIPTS flag)}}
+
+{{-|{{LE|PrecacheSounds}} {{=}} "&lt;sound1&gt;" [, "sound2" [, ...]]
+|Preloads all the sounds provided when a level is first loaded. Unlike {{MapProperty|PrecacheSounds|the map property}}, the sounds are preloaded on every map.}}
+
+{{-|{{LE|PrecacheTextures}} {{=}} "&lt;texture1&gt;" [, "texture2" [, ...]]
+|Preloads all the [[texture]]s provided when a level is first loaded. Unlike {{MapProperty|PrecacheTextures|the map property}}, the textures are preloaded on every map.}}
+
+{{-|{{LE|PrecacheClasses}} {{=}} "&lt;actor1&gt;" [, "actor2" [, ...]]
+|Preloads all the actors provided when a level is first loaded. This means all actor sprites, translations, renderstyles, etc. In some heavier mods, an actor's sprite images may be of high quality and cause a noticeable moment of lag when viewing it for the first time. Using this property will resolve that issue. Unlike {{MapProperty|PrecacheClasses|the map property}}, the actors are preloaded on every map.}}
+
+{{-|{{LE|AddEventHandlers}} {{=}} "&lt;classname1&gt;" [, "classname2" [, ...]]
+
+{{LE|EventHandlers}} {{=}} "&lt;classname1&gt;" [, "classname2" [, ...]]
+|Adds the specified [[Events and handlers|event handler(s)]] to the list of global event handlers. Unlike {{MapProperty|EventHandlers|map-specific event handlers}}, {{Class|StaticEventHandler}}-derived classes are allowed here.
+
+{{c|EventHandlers}} behaves identically to {{c|AddEventHandlers}}. Prior to [[GZDoom_version_history#4.8.0|4.8.0]], {{c|EventHandlers}} used to clear the list before adding to. This was changed due to concerns over compatibility between mods.}}
+
+{{-|{{LE|MessageBoxClass}} {{=}} "&lt;classname&gt;"
+|Allows to specify a custom [[ZScript classes|class]] for [[message box]] displays. The class must derive from the [[MessageBoxMenu]] class.}}
+
+{{-|{{LE|DefaultConversationMenuClass}} {{=}} "&lt;classname&gt;"
+|Allows to specify a custom [[ZScript classes|class]] for Strife conversation displays. The class must derive from the [[ConversationMenu]] class.}}
+
+{{-|{{LE|CorrectPrintBold}} {{=}} &lt;bool&gt;
+|When {{c|[[PrintBold]]}} is called, the engine executes {{c|[[Print]]}}, instead. Due to compatibility concerns, the issue cannot simply be fixed. This property, if set to ''true'', corrects the behavior of the function.}}
+
+{{-|{{LE|AltHudClass}} {{=}} "&lt;classname&gt;"
+|Allows to specify a custom [[ZScript classes|class]] for the [[alternate HUD]], which must derive from the {{class|AltHUD}} class. The engine falls back to the internal alternate HUD class if the specified class is either {{c|"None"}}, does not exist, or is not derived from the AltHud class. The custom class is only usable by the engine if the {{c|{{CVAR|R|hud_althud_forceinternal}}}} [[console variable]] is set to ''false''.}}
+
+{{-|{{LE|NoMergePickupMsg}} {{=}} &lt;bool&gt;
+|When picking up multiple items with identical pickup messages at the same time, only a single pickup message is displayed for those items combined. This property disables that so that a pickup message is displayed for each item, instead.}}
+
+{{-|{{LE|FullscreenAutoaspect}} {{=}} &lt;mode&gt;
+|Aspect ratio control for fullscreen images. The modes are:
+*0: Treat all images as having an aspect ratio of 4:3.
+*1: Scale all images to fit the screen, becoming either pillarboxed or letterboxed.
+*2: Scale all images to fill the screen.
+*3: Scale all images so that the center 4:3 area is always fully visible. This is the recommended mode for 16:9 images designed to be shown with the sides being cropped on narrower displays.
+The default mode is 3.}}
+
+{{-|{{LE|StatusBarClass}} {{=}} "&lt;classname&gt;"
+|The status bar class to use as defined in [[ZScript]]. The class must derive from the {{c|{{Class|BaseStatusBar}}}} class or a descendant.}}
+
+{{-|{{LE|ForceNoGFXSubstitution}} {{=}} &lt;bool&gt;
+|}}
+
+{{-|{{LE|BlurAmount}} {{=}} &lt;amount&gt;
+|Controls how much the game screen is blurred when in menu mode. This ranges from 0 to 1.0, with 0 being no blur.}}
+
+{{-|{{LE|StatScreen_MapNameFont}} {{=}} "&lt;fontname&gt;" [, "color"]
+|}}
+
+{{-|{{LE|StatScreen_FinishedFont}} {{=}} "&lt;fontname&gt;" [, "color"]
+|}}
+
+{{-|{{LE|StatScreen_EnteringFont}} {{=}} "&lt;fontname&gt;" [, "color"]
+|}}
+
+{{-|{{LE|StatScreen_ContentFont}} {{=}} "&lt;fontname&gt;" [, "color"]
+|}}
+
+{{-|{{LE|StatScreen_AuthorFont}} {{=}} "&lt;fontname&gt;" [, "color"]
+|}}
+
+{{-|{{LE|Dialogue}} {{=}} "&lt;lump&gt;"
+|Adds the specified [[DIALOGUE|conversation lump]]. This lump is loaded with each map as long as the map does not have a local conversation lump. Long-name lumps are supported.&lt;br&gt;&lt;br&gt;{{c|Dialogue}} clears the list of global conversation lumps that are added by {{c|[[#AddDialogues|AddDialogues]]}} before it.}}
+
+{{-|{{LE|AddDialogues}} {{=}} "&lt;lump1&gt;" [, "lump2" [, ...]]
+|Adds the specified [[DIALOGUE|conversation lump(s)]] to the list of global conversation lumps. These lumps are loaded with each map, before a map's local conversation lump and that which is added through {{c|[[#Dialogue|Dialogue]]}}. Long-name lumps are supported.}}
+
+{{-|{{LE|StatScreen_Single}} {{=}} "&lt;classname&gt;"
+|The [[intermission]] (tally) class to use as defined in [[ZScript]] for single-player mode. The class must derive from the {{c|{{Class|StatusScreen}}}} class or a descendant.}}
+
+{{-|{{LE|StatScreen_Coop}} {{=}} "&lt;classname&gt;"
+|The [[intermission]] (tally) class to use as defined in [[ZScript]] for cooperative mode. The class must derive from the {{c|{{Class|StatusScreen}}}} class or a descendant.}}
+
+{{-|{{LE|StatScreen_DM}} {{=}} "&lt;classname&gt;"
+|The [[intermission]] (tally) class to use as defined in [[ZScript]] for deathmatch mode. The class must derive from the {{c|{{Class|StatusScreen}}}} class or a descendant.}}
+
+{{-|{{LE|NormSideMove}} {{=}} &lt;walkspeed&gt;, &lt;runspeed&gt;
+|Player's base side movement speeds. In all games, walking speed is 24.0 and running speed is 40.0.}}
+
+{{-|{{LE|NormForwardMove}} {{=}} &lt;walkspeed&gt;, &lt;runspeed&gt;
+|Player's base forward/backward movement speeds. In all games, walking speed is 25.0 and running speed is 50.0.}}
+
+{{-|{{LE|HideParTimes}} {{=}} &lt;bool&gt;
+|Par and "suck" times are not displayed on the [[intermission]] (tally).}}
+
+{{-|{{LE|HelpMenuClass}} {{=}} "&lt;classname&gt;"
+|The menu class to use to handle drawing of the [[info menu|help screen]], as defined in [[ZScript]]. The class must derive from the {{c|{{Class|Menu}}}} class or a descendant. Default is {{c|"{{Class|ReadThisMenu}}"}}.}}
+
+{{-|{{LE|MenuDelegateClass}} {{=}} "&lt;classname&gt;"
+|The menu delegate class to use by the game, as defined in [[ZScript]]. The class must derive from the {{c|{{Class|MenuDelegateBase}}}} class or a descendant. Default is {{c|"{{Class|DoomMenuDelegate}}"}}.}}
+
+{{-|{{LE|Intro}} { ... }
+|The [[cutscene]] to play at the beginning of the game, this block supports the following commands:
+{{:Cutscene MAPINFO properties}}}}
+
+{{-|{{LE|BasicArmorClass}} {{=}} "&lt;classname&gt;"
+|{{new|4.13.0}}
+
+The basic armor class to use for the game as defined in [[ZScript]]. The class must derive from {{c|{{Class|BasicArmor}}}} or a descendant. The engine falls back to {{c|BasicArmor}} if the specified class is not valid.}}
+
+{{-|{{LE|HexenArmorClass}} {{=}} "&lt;classname&gt;"
+|{{new|4.13.0}}
+
+The Hexen armor class to use for the game as defined in [[ZScript]]. The class must derive from {{c|{{Class|HexenArmor}}}} or a descendant. The engine falls back to {{c|HexenArmor}} if the specified class is not valid.}}
+}}
+
+==Examples==
+&lt;syntaxhighlight lang="csharp"&gt;
+Gameinfo
+{
+    titlepage = "TITLEPIC"
+    creditpage = "CREDIT"
+    titlemusic = "$MUSIC_DM2TTL"
+    titletime = 11
+    advisorytime = 0
+    pagetime = 5
+    chatsound = "misc/chat"
+    finalemusic = "$MUSIC_READ_M"
+    finaleflat = "SLIME16"
+    finalepage = "CREDIT"
+    infopage = "HELP", "CREDIT"
+    quitsound = "menu/quit2"
+    borderflat = "GRNROCK"
+    border = DoomBorder
+    telefogheight = 0
+    defkickback = 100
+    skyflatname = "F_SKY1"
+    translator = "xlat/doom.txt"
+    mapinfo = "mapinfo/doom2.txt"
+    defaultbloodcolor = "68 00 00"
+    defaultbloodparticlecolor = "ff 00 00"
+    backpacktype = "Backpack"
+    armoricons = "ARM1A0", 0.5, "ARM2A0"
+    statusbar = "sbarinfo/doom.txt"
+    intermissionmusic = "$MUSIC_DM2INT"
+    intermissioncounter = true
+    weaponslot = 1, "Fist", "Chainsaw"
+    weaponslot = 2, "Pistol"
+    weaponslot = 3, "Shotgun", "SuperShotgun"
+    weaponslot = 4, "Chaingun"
+    weaponslot = 5, "RocketLauncher"
+    weaponslot = 6, "PlasmaRifle"
+    weaponslot = 7, "BFG9000"
+    dimcolor = "ff d7 00"
+    dimamount = 0.2
+    definventorymaxamount = 25
+    defaultrespawntime = 12
+    defaultdropstyle = 1
+    endoom = "ENDOOM"
+    pickupcolor = "d6 ba 45"
+    quitmessages = "$QUITMSG", "$QUITMSG1", "$QUITMSG2", "$QUITMSG3", "$QUITMSG4", "$QUITMSG5", "$QUITMSG6", "$QUITMSG7",
+                   "$QUITMSG8", "$QUITMSG9", "$QUITMSG10", "$QUITMSG11", "$QUITMSG12", "$QUITMSG13", "$QUITMSG14"
+                  
+    menufontcolor_title = "RED"
+    menufontcolor_label = "UNTRANSLATED"
+    menufontcolor_value = "GRAY"
+    menufontcolor_action = "GRAY"
+    menufontcolor_header = "GOLD"
+    menufontcolor_highlight = "YELLOW"
+    menufontcolor_selection = "BRICK"
+    menubackbutton = "M_BACK_D"
+    playerclasses = "DoomPlayer"
+    pausesign = "M_PAUSE"
+    gibfactor = 1
+}
+&lt;/syntaxhighlight&gt;
+
+[[Category:MAPINFO|GameInfo]]</text>
+    <sha1>2aglsahfepb9wolyju5t080ixoj31ae</sha1>
+  </revision>
+</page>

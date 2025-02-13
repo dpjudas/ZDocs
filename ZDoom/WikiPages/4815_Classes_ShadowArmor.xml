@@ -1,0 +1,50 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>Classes:ShadowArmor</title>
+  <ns>0</ns>
+  <id>4815</id>
+  <revision>
+    <id>39974</id>
+    <parentid>35396</parentid>
+    <timestamp>2015-05-17T15:18:38Z</timestamp>
+    <contributor>
+      <username>Blue Shadow</username>
+      <id>2021</id>
+    </contributor>
+    <minor />
+    <comment>/* DECORATE definition */ Updated</comment>
+    <origin>39974</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="960" sha1="chneepm9ygig0atjo44m01lr74fewr7" xml:space="preserve">{{Actor|
+| type = Artifact
+| name = Shadow armor
+| class = ShadowArmor
+| game = Strife
+| doomednum = 2024
+| convid = 160, 156, 159
+}}[[Classes]]: [[Classes:Inventory|Inventory]]&amp;rarr;[[Classes:PowerupGiver|PowerupGiver]]&amp;rarr;&lt;u&gt;ShadowArmor&lt;/u&gt;&lt;br&gt;
+This gives the player partial invisibility when used.
+==== [[DECORATE]] definition ====
+ ACTOR &lt;u&gt;ShadowArmor&lt;/u&gt; : {{Class|PowerupGiver}}
+ {
+   +{{Flag|FLOORCLIP}}
+   +{{Flag|VISIBILITYPULSE}}
+   +{{Flag|INVENTORY.INVBAR}}
+   -{{Flag|INVENTORY.FANCYPICKUPSOUND}}
+   {{Property|RenderStyle}} Translucent
+   {{Property|Tag}} "$TAG_SHADOWARMOR" // "Shadow Armor"
+   {{Property|Inventory.MaxAmount}} 2
+   {{Property|Powerup.Type}} "{{Class|PowerShadow|Shadow}}"
+   {{Property|Inventory.Icon}} "I_SHD1"
+   {{Property|Inventory.PickupSound}} "misc/i_pkup"
+   {{Property|Inventory.PickupMessage}} "$TXT_SHADOWARMOR" // "You picked up the Shadow armor."
+   States
+   {
+   Spawn:
+     SHD1 A -1 Bright
+     Stop
+   }
+ }</text>
+    <sha1>chneepm9ygig0atjo44m01lr74fewr7</sha1>
+  </revision>
+</page>

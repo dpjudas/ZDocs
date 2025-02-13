@@ -1,0 +1,106 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>Spawn</title>
+  <ns>0</ns>
+  <id>994</id>
+  <revision>
+    <id>52107</id>
+    <parentid>51699</parentid>
+    <timestamp>2024-03-27T12:18:56Z</timestamp>
+    <contributor>
+      <username>Jekyll Grim Payne</username>
+      <id>2175</id>
+    </contributor>
+    <minor />
+    <origin>52107</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="3351" sha1="0xylw8gqm0656iixmthsvyi8byozpxu" xml:space="preserve">{{SameNameNote|ACS|ZScript|Spawn (ZScript)}}
+
+int '''Spawn''' (str ''classname'', fixed ''x'', fixed ''y'', fixed ''z'' [, int ''tid'' [, int ''angle'']])
+
+==Usage==
+
+Spawns an actor at the given X, Y and Z coordinates. Optionally a [[TID]] and a [[byte angle]] can be specified. The coordinates are specified in [[fixed point]].
+
+The Z coordinate is absolute, i.e. not relative to the floor height of the sector. So if you want something to spawn 128 units above a floor that is at a height of 64, then the Z coordinate needs to be 128 + 64 = 192.
+
+Unlike [[Thing_Spawn]], Spawn does not create {{class|TeleportFog|teleport fog}}. If you want teleport fog to appear, use the function again to spawn it manually.
+
+To spawn something at the location of another actor, e.g. a {{class|MapSpot}}, use [[SpawnSpot]] instead. To get a list of the things you can spawn in the game, visit the [[Classes]] page.
+
+The return value is the number of things spawned.
+
+== Examples ==
+
+This script spawns a {{class|Cacodemon}} above the player about three seconds after he enters the map. There is a 25% chance to instead spawn a {{class|PainElemental|Pain Elemental}}.  Since the script is dependent upon the player's location there is the potential for failure due to coordinate obstruction.  In an attempt to account for this, the script analyzes the return value of Spawn to determine success or failure, and upon failure will wait a tic and attempt the spawn again.
+
+  script 1 [[Script types|ENTER]]
+  {
+    str class = "{{class|Cacodemon}}";
+  
+    if (![[random]](0, 3))
+      class = "{{class|PainElemental}}";
+  
+    [[delay]](104);
+      
+    [[Loops#Do-until|do]] {
+      [[delay]](1);
+      int x = [[GetActorX]](0);
+      int y = [[GetActorY]](0);
+      int z = [[GetActorZ]](0) + 100.0;
+      int angle = [[GetActorAngle]](0) &gt;&gt; 8;
+  
+    } [[Loops#Do-until|until]] ([[Spawn]](class, x, y, z, 0, angle));
+  }
+
+In this example {{Class|HealthBonus|Health Bonuses}} will "rain" down on the activating player ''n'' number of times, where ''n'' is the amount passed to the script argument.  The effect is achieved by spawning the bonuses above the player's head and at randomized x and y coordinates.  This example spawns in a square pattern.
+
+  script 1 (int n)
+  {
+    if ([[PlayerNumber]]() &gt; -1 &amp;&amp; n &gt; 0)
+    {
+      [[print]](s:"It's raining meds!");
+  
+      while (n &gt; 0)
+      {
+        int x = [[GetActorX]](0) + [[random]](-64.0, 64.0);
+        int y = [[GetActorY]](0) + [[random]](-64.0, 64.0);
+        int z = [[GetActorCeilingZ]](0) - 8.0;
+  
+        if ([[Spawn]]("{{Class|HealthBonus}}", x, y, z))
+          n--;
+  
+        [[delay]](1);
+      }
+    }
+  }
+
+This example uses some trigonometric functions to spawn the bonuses in a circular pattern.
+
+  script 2 (int n)
+  {
+    if ([[PlayerNumber]]() &gt; -1 &amp;&amp; n &gt; 0)
+    {
+      [[print]](s:"It's raining meds!");
+  
+      while (n &gt; 0)
+      {
+        int angle = [[random]](0, 1.0);
+        int radius = [[random]](0, 64.0);
+        int x = [[GetActorX]](0) + [[FixedMul]]([[cos]](angle), radius);
+        int y = [[GetActorY]](0) + [[FixedMul]]([[sin]](angle), radius);
+        int z = [[GetActorCeilingZ]](0) - 8.0;
+  
+        if ([[Spawn]]("{{Class|HealthBonus}}", x, y, z))
+          n--;
+  
+        [[delay]](1);
+      }  
+    }
+  }
+{{spawn functions}}
+
+[[category:ACS Actor functions]]</text>
+    <sha1>0xylw8gqm0656iixmthsvyi8byozpxu</sha1>
+  </revision>
+</page>

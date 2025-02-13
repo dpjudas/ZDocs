@@ -1,0 +1,52 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>A CustomMissile</title>
+  <ns>0</ns>
+  <id>1756</id>
+  <revision>
+    <id>49278</id>
+    <parentid>45014</parentid>
+    <timestamp>2022-06-12T02:15:22Z</timestamp>
+    <contributor>
+      <username>Blue Shadow</username>
+      <id>2021</id>
+    </contributor>
+    <comment>corrected CMF_CHECKTARGETDEAD flag's docs + added return value + added more info + general formatting and styling</comment>
+    <origin>49278</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="3933" sha1="jisel5k16uztzruui9llfz3bdsoz9de" xml:space="preserve">{{Codepointer|Generic Attack}}void '''A_CustomMissile'''  (class&lt;Actor&gt; ''missiletype'' [, double ''spawnheight'' [, double ''spawnofs_xy'' [, double ''angle'' [, int ''flags'' [, double ''pitch'' [, int ''ptr'']]]]]])
+
+{{WarnDeprecated|[[A_SpawnProjectile]]}}
+{{note|the function detailed below exhibits bad pitch calculations which needed to be preserved for the purpose of backwards compatibility.}}
+==Usage==
+A customizable [[projectile]] attack for non-player actors, typically used by [[monster]]s to launch a projectile at their target.
+
+===Parameters===
+*''missiletype'': The class name of the projectile to fire.
+*''spawnheight'': Raises the projectile spawn point on the actor by this amount in units. Default is 32.
+*''spawnofs_xy'': Moves the projectile spawn point to the right if positive, left if negative. Default is 0.
+*''angle'': Adds this much offset to the actor's angle, which is aimed at the target first. Default is 0.
+*''flags'': Customizes the behavior of the function. Multiple flags can be combined by using the bitwise OR operator (&lt;code&gt;|&lt;/code&gt;) between the constant names:
+:*'''CMF_AIMOFFSET''' — Aim mode 2; the projectile is aimed parallel to a projectile with a spawn height of 32 and an xy-offset of 0. This can be useful if you want to have an actor shoot multiple projectiles at once. This aim mode requires a target to be present in order to spawn the projectile.
+:*'''CMF_AIMDIRECTION''' — Aim mode 3; the projectile is not aimed at a target. Instead, it is shot in the specified direction with the specified pitch. This implies the CMF_ABSOLUTEPITCH flag. This aim mode does not require a target to be present in order to spawn the projectile.
+::If neither of the above is used, then the function defaults to aim mode 1. With this mode, the projectile is aimed directly at the target. This aim mode requires a target to be present in order to spawn the projectile.
+:*'''CMF_TRACKOWNER''' — If a projectile is fired by another projectile, this flag can be used to ensure the secondary projectile knows who its real owner is. This behavior would have been the default, but it was not in the 2.0.x branch of ZDoom, allowing erroneous behavior which has been used by some mods, so fixing this would break compatibility.
+:*'''CMF_CHECKTARGETDEAD''' — If the target is not present and the chosen aim mode is not 3, no projectile is spawned. In such a case, this flag makes the calling actor abort its attack sequence by entering the See state, if it exists. Unlike other actor types, monsters need their health to be above 0 in order to successfully enter the state.
+:*'''CMF_ABSOLUTEPITCH''' — Use the pitch parameter as an absolute value, ignoring the calculated aim pitch. This is implied by the CMF_AIMDIRECTION flag. The main difference here is that a target is required, where as the CMF_AIMDIRECTION flag does not require a target.
+:*'''CMF_OFFSETPITCH''' — Use the pitch parameter as an offset to the calculated aim pitch.
+:*'''CMF_SAVEPITCH''' — The pitch used for firing the projectile is saved as the projectile's own pitch (requires the CMF_AIMDIRECTION, CMF_ABSOLUTEPITCH or CMF_OFFSETPITCH flag).
+:*'''CMF_ABSOLUTEANGLE''' — Use the angle parameter as an absolute value, ignoring the calculated aim angle. The calling actor's angle is still factored in, however.
+&lt;!--:*'''CMF_BADPITCH''' — Uses the old, broken pitch calculation. This should never be used!--&gt;
+:Default is 0.
+*''pitch'': Offsets the projectile's aim vertically by this amount. Positive values aim down, while negative values aim up. This is only used if at least one of the flags CMF_AIMDIRECTION, CMF_ABSOLUTEPITCH and CMF_OFFSETPITCH is used. Default is 0.
+*''ptr'': The actor to fire the projectile at. This takes an [[actor pointer]]. Default is AAPTR_TARGET.
+
+==Examples==
+ Missile:
+     POSS E 10 [[A_FaceTarget]]
+     POSS F 8 [[A_CustomMissile]]("NormalBullet", 48)
+     POSS E 8
+     Goto See</text>
+    <sha1>jisel5k16uztzruui9llfz3bdsoz9de</sha1>
+  </revision>
+</page>

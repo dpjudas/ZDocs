@@ -1,0 +1,524 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>Operators (ZScript)</title>
+  <ns>0</ns>
+  <id>9772</id>
+  <revision>
+    <id>54188</id>
+    <parentid>54187</parentid>
+    <timestamp>2025-02-04T12:55:08Z</timestamp>
+    <contributor>
+      <username>Jekyll Grim Payne</username>
+      <id>2175</id>
+    </contributor>
+    <minor />
+    <comment>/* &amp; (bitwise AND) */</comment>
+    <origin>54188</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="16844" sha1="oaijfmsqaszit5svjs65wkqn14fp598" xml:space="preserve">{{Note|This page is for [[ZScript]]. For [[ACS]] operators see [[Operators|'''here''']].}}
+
+This is a list of all operators supported by [[ZScript]] and their descriptions.
+
+==Assignment operators==
+===&lt;code&gt;=&lt;/code&gt; (assignment)===
+&lt;syntaxhighlight lang="csharp"&gt;
+int foo = 5;&lt;/syntaxhighlight&gt;
+
+Assignment can be combined with [[#Arhitmetic operators|arhitmetic operators]] as follows:
+*&lt;code&gt;+=&lt;/code&gt; (assignment + addition)
+*&lt;code&gt;-=&lt;/code&gt; (assignment + subtraction)
+*&lt;code&gt;*=&lt;/code&gt; (assignment + multiplication)
+*&lt;code&gt;/=&lt;/code&gt; (assignment + division)
+*&lt;code&gt;%=&lt;/code&gt; (assignment + modulo)
+
+Assignment can be combined with [[#Bitwise operators|bitwise operators]] as follows:
+*&lt;code&gt;&amp;=&lt;/code&gt; (bitwise AND assigment)
+*&lt;code&gt;|=&lt;/code&gt; (bitwise OR assigment)
+
+==Arithmetic operators==
+===&lt;code&gt;+&lt;/code&gt; (addition)===
+&lt;syntaxhighlight lang="csharp"&gt;
+int foo = 1 + 1; // foo = 2
+int bar = foo + 1; // bar = 3
+&lt;/syntaxhighlight&gt;
+
+===&lt;code&gt;-&lt;/code&gt; (subtraction)===
+&lt;syntaxhighlight lang="csharp"&gt;
+int foo = 1 - 1; // foo = 0
+int bar = foo - 1; // bar = -1
+&lt;/syntaxhighlight&gt;
+
+===&lt;code&gt;*&lt;/code&gt; (multiplication)===
+&lt;syntaxhighlight lang="csharp"&gt;
+int foo = 2 * 10; // foo = 20
+int bar = foo * 10; // bar = 200
+&lt;/syntaxhighlight&gt;
+
+===&lt;code&gt;**&lt;/code&gt; (power)===
+&lt;syntaxhighlight lang="csharp"&gt;
+int foo = 2 ** 8; // foo = 256
+&lt;/syntaxhighlight&gt;
+ 
+===&lt;code&gt;/&lt;/code&gt; (division)===
+Note: If both operands are integer numbers, the result of division will be an integer number, truncated (not rounded). At least one of the operands has to be a double value to get a decimal result.
+&lt;syntaxhighlight lang="csharp"&gt;
+int foo = 10 / 2; // foo = 5
+int foo1 = 5 / 2; // foo = 2
+
+double bar = 5 / 2; // bar = 2.0 because 2.5 was truncated
+double bar1 = 5.0 / 2; // bar1 = 2.5
+double bar2 = 5 / 2.0; // bar2 = 2.5
+&lt;/syntaxhighlight&gt;
+
+{{c|Round}} (round to closest), {{c|floor}} (round down) and {{c|ceil}} (round up) can be utilized on a float-point division to set the result to the closest suitable integer number:
+&lt;syntaxhighlight lang="csharp"&gt;
+double d = (5 / 3.0); // d = 1.666...
+int foo = round(5 / 3.0); // foo = 2
+int foo1 = ceil(5 / 3.0); // foo1 = 2
+int foo2 = floor(5 / 3.0); // foo2 = 1
+&lt;/syntaxhighlight&gt;
+
+===&lt;code&gt;%&lt;/code&gt; (modulo)===
+Returns a remainder after dividing integer numbers.
+&lt;syntaxhighlight lang="csharp"&gt;
+int foo = 5 / 2; // foo = 1 because 5 = 4 * 2 + 1 where 1 is the remainder
+&lt;/syntaxhighlight&gt;
+
+This operator can be used to perform something on a fixed time basis in a function that is being called every [[tic]]:
+&lt;syntaxhighlight lang="csharp"&gt;
+override void Tick()
+{
+  Super.Tick();
+  if (Level.maptime % TICRATE == 0)
+  {
+    // This will be called every second while the game isn't paused
+  }
+}
+&lt;/syntaxhighlight&gt;
+(See [[Tick]])
+
+===&lt;code&gt;++&lt;/code&gt; (incrementation)===
+Increases the value by 1.
+&lt;syntaxhighlight lang="csharp"&gt;
+int foo = 1;
+foo++; // foo = 2
+&lt;/syntaxhighlight&gt;
+
+Note: placing the &lt;code&gt;++&lt;/code&gt; operator before the value is possible as well: &lt;code&gt;++foo&lt;/code&gt;. If this is done while comparing the value to another value, the incrementation will be performed befor comparison. Compare:
+&lt;syntaxhighlight lang="csharp"&gt;
+int foo = 5;
+bool isBigger = foo++ &gt; 5; // isBigger is false
+&lt;/syntaxhighlight&gt;
+&lt;syntaxhighlight lang="csharp"&gt;
+int foo = 5;
+bool isBigger = ++foo &gt; 5; // isBigger is true
+&lt;/syntaxhighlight&gt;
+
+===&lt;code&gt;--&lt;/code&gt; (decrementation)===
+Decreases the value by 1.
+&lt;syntaxhighlight lang="csharp"&gt;
+int foo = 1;
+foo--; // foo = 0
+&lt;/syntaxhighlight&gt;
+
+Note: placing the &lt;code&gt;--&lt;/code&gt; operator before the value is possible as well: &lt;code&gt;--foo&lt;/code&gt;. If this is done while comparing the value to another value, the decrementation will be performed befor comparison. Compare:
+&lt;syntaxhighlight lang="csharp"&gt;
+int foo = 5;
+bool isSmaller = foo-- &lt; 5; // isSmaller is false
+&lt;/syntaxhighlight&gt;
+&lt;syntaxhighlight lang="csharp"&gt;
+int foo = 5;
+bool isSmaller = --foo &lt; 5; // isSmaller is true
+&lt;/syntaxhighlight&gt;
+
+==Relational operators==
+These operators are used in IF/ELSE, FOR, WHILE statements to check for conditions
+===&lt;code&gt;==&lt;/code&gt; (exactly equal)===
+Checks if two operands are equal to each other:
+&lt;syntaxhighlight lang="csharp"&gt;
+if (myNumber1 == myNumber2)
+{
+  // True if both numbers are the same
+}
+&lt;/syntaxhighlight&gt;
+&lt;syntaxhighlight lang="csharp"&gt;
+if (myPointer1 == myPointer2)
+{
+  // True if both pointers point to the same object
+}
+&lt;/syntaxhighlight&gt;
+
+Using &lt;code&gt;!=&lt;/code&gt; flips the check.&lt;br&gt;
+With floats and doubles, outside of specific circumstances &lt;code&gt;~==&lt;/code&gt; should be used instead, as floating-point error and precision loss means values from different calculations will rarely match exactly.
+
+===&lt;code&gt;~==&lt;/code&gt; (approximately equal)===
+Checks if two operands are approximately equal to each other.
+
+With floats and doubles, it checks if they're within 1/65536.0 (0.0000152587890625) distance of each other. Note that this check should almost always be used instead of &lt;code&gt;==&lt;/code&gt;, as due to the way floating-point numbers work, in particular error and precision loss, means they'll rarely match exactly.
+&lt;syntaxhighlight lang="csharp"&gt;
+if (myDouble1 ~== myDouble2)
+{
+  // True if the difference between the two values is less than 0.0000152587890625
+}&lt;/syntaxhighlight&gt;
+
+With strings, &lt;code&gt;~==&lt;/code&gt; performs a case-insensitive check:
+&lt;syntaxhighlight lang="csharp"&gt;
+string str1 = "Adam";
+string str2 = "ADAM";
+if (str1 ~== str2)
+{
+  // This check will pass
+}
+if (str1 == str2)
+{
+  // In contrast, this check will fail because the two strings use
+  // different capitalization, and '==' is case-sensitive
+}
+&lt;/syntaxhighlight&gt;
+
+===&lt;code&gt;&gt;&lt;/code&gt; (greater)===
+&lt;syntaxhighlight lang="csharp"&gt;
+if (myNumber1 &gt; myNumber2)
+{
+  // True if myNumber1 is greater than myNumber2
+}&lt;/syntaxhighlight&gt;
+===&lt;code&gt;&lt;&lt;/code&gt; (less)===
+&lt;syntaxhighlight lang="csharp"&gt;
+if (myNumber1 &lt; myNumber2)
+{
+  // True if myNumber1 is less than myNumber2
+}&lt;/syntaxhighlight&gt;
+===&lt;code&gt;&gt;=&lt;/code&gt; (greater or equal)===
+&lt;syntaxhighlight lang="csharp"&gt;
+if (myNumber1 &gt;= myNumber2)
+{
+  // True if myNumber1 is greater than or equal to myNumber2
+}&lt;/syntaxhighlight&gt;
+===&lt;code&gt;&lt;=&lt;/code&gt; (less or equal)===
+&lt;syntaxhighlight lang="csharp"&gt;
+if (myNumber1 &lt;= myNumber2)
+{
+  // True if myNumber1 is less than or equal to myNumber2
+}&lt;/syntaxhighlight&gt;
+
+==Logical operators==
+Logical operators are usually used in IF/ELSE, WHILE and FOR statements to combine conditions. Note: in case of multiple conditions, the statement will abort as soon as it encounters the first condition that isn't met. As such, stringing multiple conditions (while possibly detrimental to readability) will not increase the performance cost. The only exception is the ternary operator.
+
+===No operator===
+If an operator is skipped in a conditional check, the check is implicitly considered to be a boolean check:
+&lt;syntaxhighlight lang="csharp"&gt;
+if (myBool)
+{
+  // True if myBool is true
+}
+
+// This does the same thing:
+if (myBool == true)
+{
+}
+&lt;/syntaxhighlight&gt;
+
+With pointers, it performs a null-check:
+&lt;syntaxhighlight lang="csharp"&gt;
+if (myPointer)
+{
+  // True if myPointer is not null
+}
+
+// This does the same thing:
+if (myPointer != null)
+{
+}
+&lt;/syntaxhighlight&gt;
+
+With numeric values, it performs a zero-check:
+&lt;syntaxhighlight lang="csharp"&gt;
+if (myNumber)
+{
+  // True if myNumber is not 0
+}
+
+// This does the same thing:
+if (myNumber != 0)
+{
+}
+&lt;/syntaxhighlight&gt;
+
+With [[String]] values it checks if the string is not empty:
+&lt;syntaxhighlight lang="csharp"&gt;
+if (myString)
+{
+  // True if myString is not ""
+}
+
+// This does the same thing:
+if (myString != "")
+{
+}
+&lt;/syntaxhighlight&gt;
+
+{{warning|The above check will work on [[String|strings]] but will NOT work on [[ZScript_data_types#Names|&lt;i&gt;names&lt;/i&gt;]] unless a name was explicitly set to be empty. This is because when a String declared without a value, it's implicitly set to &lt;code&gt;""&lt;/code&gt;, but when a name is declared, it's implicitly set to &lt;code&gt;'none'&lt;/code&gt;.}}
+
+===&lt;code&gt;&amp;&amp;&lt;/code&gt; (logical AND)===
+Used to check if all conditions in a statement are true:
+&lt;syntaxhighlight lang="csharp"&gt;
+if (&lt;condition1&gt; &amp;&amp; &lt;condition2&gt;)
+{
+  // True if both conditions are true
+}&lt;/syntaxhighlight&gt;
+&lt;syntaxhighlight lang="csharp"&gt;
+while (&lt;condition1&gt; &amp;&amp; &lt;condition2&gt;)
+{
+  // loops as long as both conditions are true
+}&lt;/syntaxhighlight&gt;
+
+===&lt;code&gt;||&lt;/code&gt; (logical OR)===
+Used to check if at least one conditions in a statement is true:
+&lt;syntaxhighlight lang="csharp"&gt;
+if (&lt;condition1&gt; || &lt;condition2&gt;)
+{
+  // True if either condition is true
+}&lt;/syntaxhighlight&gt;
+&lt;syntaxhighlight lang="csharp"&gt;
+while (&lt;condition1&gt; || &lt;condition2&gt;)
+{
+  // loops as long as either condition is true
+}&lt;/syntaxhighlight&gt;
+
+===&lt;code&gt;!&lt;/code&gt; (logical NOT)===
+Used to invert any condition in a conditional check:
+&lt;syntaxhighlight lang="csharp"&gt;
+if (foo != bar)
+{
+  // True if foo isn't equal to bar
+}
+&lt;/syntaxhighlight&gt;
+
+&lt;syntaxhighlight lang="csharp"&gt;
+if (&lt;condition1&gt; &amp;&amp; !&lt;condition2&gt;)
+{
+  // True if condition1 is true but condition2 is false
+}&lt;/syntaxhighlight&gt;
+&lt;syntaxhighlight lang="csharp"&gt;
+if (!&lt;condition1&gt; &amp;&amp; !&lt;condition2&gt;)
+{
+  // True if both conditions are false
+}&lt;/syntaxhighlight&gt;
+&lt;syntaxhighlight lang="csharp"&gt;
+if (!&lt;condition1&gt; || !&lt;condition2&gt;)
+{
+  // True if either condition is false
+}&lt;/syntaxhighlight&gt;
+&lt;syntaxhighlight lang="csharp"&gt;
+if (!(&lt;condition1&gt; &amp;&amp; &lt;condition2&gt;))
+{
+  // True if either condition is false
+}&lt;/syntaxhighlight&gt;
+This operator can also be used to null-check pointers and zero-check values:
+&lt;syntaxhighlight lang="csharp"&gt;
+if (myPointer != null)
+{
+  // True if myPointer is NOT null; this is the same as just 'if (mypointer)'
+}
+&lt;/syntaxhighlight&gt;
+&lt;syntaxhighlight lang="csharp"&gt;
+if (!myPointer)
+{
+  // True if myPointer IS null; this is the same as 'if (myPointer == null)'
+}
+&lt;/syntaxhighlight&gt;
+&lt;syntaxhighlight lang="csharp"&gt;
+if (!foo)
+{
+  // If foo is a string, this is true if foo is "".
+  // If foo is a pointer, this is true if foo is null.
+  // If foo is a numeric value, this is true if foo is 0.
+}
+&lt;/syntaxhighlight&gt;
+
+===&lt;code&gt;?&lt;/code&gt; (ternary)===
+Essentially, syntactic sugar for an IF statement. The basic syntax requires &lt;code&gt;?&lt;/code&gt; and &lt;code&gt;:&lt;/code&gt; and functions as follows:
+ &lt;condition&gt;? &lt;result if true&gt; : &lt;result if false&gt;
+
+For example:
+&lt;syntaxhighlight lang="csharp"&gt;
+int foo = &lt;condition&gt;? 5 : 10; // if condition is true, foo = 5, otherwise foo = 10
+&lt;/syntaxhighlight&gt;
+Note, a ternary operator can only be used if both possible values are explicitly of the same type. For example, it's not possible to combine a string and a name value, both have to be either strings, or names:
+
+&lt;syntaxhighlight lang="csharp"&gt;
+// We can't use "none" here, because double quotes would turn 
+// it into a string, whereas GetClassName returns a name,
+// so we MUST use 'none' in single quotes:
+name clsname = target != null? target.GetClassName() : 'none';
+
+// Conversely, we can't use GetClassName() directly, because 
+// it returns a name, not a string, so the result of
+// GetClassName() first has to be cast to a string:
+string clsnameStr = target != null? ""..target.GetClassName() : "None";
+&lt;/syntaxhighlight&gt;
+
+For actor pointers, &lt;code&gt;null&lt;/code&gt; needs to be explicitly cast as Actor:
+&lt;syntaxhighlight lang="csharp"&gt;
+// This has a ~50% chance to set 'foo' to the calling
+// actor's target; otherwise it'll be set to null:
+Actor foo = random(0, 10) &gt;= 5? target : Actor(null); //Just null won't be recognized
+&lt;/syntaxhighlight&gt;
+
+Note: nesting ternaries is possible...
+&lt;syntaxhighlight lang="csharp"&gt;
+int foo = &lt;condition1&gt;? 5 : &lt;condition2&gt;? 10 : &lt;condition3&gt;? 20 : &lt;condition4&gt;? 40 : 50;&lt;/syntaxhighlight&gt;
+...but not recommended. Not only does it reduce readability, it also increases performance cost because the engine has to go through every condition, even when only one of them can be true.
+
+=== Notes on order of execution ===
+When strung together, AND/OR operators follow several rules:
+
+1. The conditions are always checked one by one, from left to right. This is why a condition like this is perfectly safe:
+&lt;syntaxhighlight lang="csharp"&gt;
+if (myPointer != null &amp;&amp; myPointer.health &gt;= 100)
+{
+  // If myPointer is null, the check stops there, and the second
+  // condition is never reached, so myPointer.health will never
+  // cause a VM abort in this case.
+}
+&lt;/syntaxhighlight&gt;
+
+2. As far as order goes, normally AND checks are executed before OR checks, but it is ''highly'' recommended to use parentheses to avoid any ambiguity. For example:
+&lt;syntaxhighlight lang="csharp"&gt;
+// Ambiguous:
+if (&lt;condition1&gt; &amp;&amp; &lt;condition2&gt; || &lt;condition3&gt;)
+{ }
+
+// Unambiguous:
+if ( (&lt;condition1&gt; &amp;&amp; &lt;condition2&gt;) || &lt;condition3&gt;)
+{
+  // Executes if both condition 1 and 2 are true,
+  // OR if condition 3 is true (regardless of the
+  // values of condition 1 and 2)
+}
+
+// Unambiguous:
+if (&lt;condition1&gt; &amp;&amp; (&lt;condition2&gt; || &lt;condition3&gt;) )
+{
+  // Executes if condition 1 is true, AND either 2 or
+  // 3 are true.
+}
+&lt;/syntaxhighlight&gt;
+
+==Bitwise operators==
+===&lt;code&gt;&amp;&lt;/code&gt; (bitwise AND)===
+Usually, used to check if a specific value is present in the bit field:
+&lt;syntaxhighlight lang="csharp"&gt;
+if (myBitField &amp; foo)
+{
+  // True if foo is contained in myBitField
+}&lt;/syntaxhighlight&gt;
+
+Aside from being used with bit fields, this can also be used with integer fields to make a condition that switches between true and false every set number. For exampe:
+
+&lt;syntaxhighlight lang="csharp"&gt;
+override void Tick()
+{
+  Super.Tick();
+
+  if (GetAge() &amp; 8)
+  {
+    // this will be true for 8 tics
+  }
+  else
+  {
+    // then this will true for the next 8 tics
+  }
+}
+&lt;/syntaxhighlight&gt;
+
+(See [[Tick]] and [[GetAge]])
+
+For example, this is how {{class|Powerup|powerups}}, when about to run out, blink on and off every 8 tics; see {{function|IsBlinking}}.
+
+===&lt;code&gt;&amp;=&lt;/code&gt; (bitwise AND assignment)===
+Usually, used in combination with &lt;code&gt;~&lt;/code&gt; to remove a value from the bitfield:
+&lt;syntaxhighlight lang="csharp"&gt;
+myBitField &amp;= ~foo; //foo is removed from myBitField
+&lt;/syntaxhighlight&gt;
+===&lt;code&gt;|&lt;/code&gt; (bitwise OR)===
+Used to combine multiple values to set them in a bit field:
+&lt;syntaxhighlight lang="csharp"&gt;
+int myBitField = bitValue1 | bitValue2; //myBitField now contains both values
+&lt;/syntaxhighlight&gt;
+
+===&lt;code&gt;|=&lt;/code&gt; (bitwise OR assignment)===
+Adds a value to the bit field:
+&lt;syntaxhighlight lang="csharp"&gt;
+myBitField |= foo; //foo is added to myBitField
+&lt;/syntaxhighlight&gt;
+===&lt;code&gt;~&lt;/code&gt; (bitwise NOT)===
+When used after &lt;code&gt;&amp;=&lt;/code&gt;, removes the value from the bit field:
+&lt;syntaxhighlight lang="csharp"&gt;
+myBitField &amp;= ~foo; //foo is removed from myBitField
+&lt;/syntaxhighlight&gt;
+
+==Miscellaneous operators==
+===&lt;code&gt;is&lt;/code&gt; (class inheritance)===
+Used to check if one class is based on another class through [[Using inheritance|inheritance]]:
+&lt;syntaxhighlight lang="csharp"&gt;
+if (MyClass is ParentClass)
+{
+  // True if MyClass inherits from ParentClass
+}&lt;/syntaxhighlight&gt;
+
+This can be called both on class type pointers and class instance pointers. For example:
+
+&lt;syntaxhighlight lang="csharp"&gt;
+if (target is 'DoomImp')
+{
+  // True if the target actor is a DoomImp or based on it
+}&lt;/syntaxhighlight&gt;
+
+&lt;syntaxhighlight lang="csharp"&gt;
+if (target.GetClass() is 'DoomImp')
+{
+  // True if the target's class is DoomImp or based on it
+}&lt;/syntaxhighlight&gt;
+
+===&lt;code&gt;..&lt;/code&gt; (string concatenation)===
+Appends one string to another using the following syntax:
+&lt;syntaxhighlight lang="csharp"&gt;
+"some text "..myStringValue;
+&lt;/syntaxhighlight&gt;
+
+It's possible to append to an empty string as well:
+&lt;syntaxhighlight lang="csharp"&gt;
+""..myStringValue;
+&lt;/syntaxhighlight&gt;
+
+For example an actor can call this"
+&lt;syntaxhighlight lang="csharp"&gt;
+Console.Printf("I am "..GetTag());
+&lt;/syntaxhighlight&gt;
+This will print "I am ###" where ### will contain the value of the actor's {{property|Tag}} (see {{function|GetTag}}).
+
+It is highly recommended to NOT use this for player-facing strings, because this will produce a hardcoded line that cannot be properly [[Internationalization|localized into other languages]]. However, this is a useful tool for debugging.
+
+In addition, the &lt;code&gt;..&lt;/code&gt; operator can perform certain type of casts that don't work with [[String|{{c|String.Format}}]]. For example, it can be used to cast SpriteID to a string, such as:
+&lt;syntaxhighlight lang="csharp"&gt;
+override void Tick()
+{
+  Super.Tick();
+  Console.Printf("Current sprite: "..curstate.sprite);
+}
+&lt;/syntaxhighlight&gt;
+This will print the name of the currently used sprite, such as BAL1. This will not obtain frame or rotation, which are stored separately (for that see {{function|GetSpriteTexture}}).
+
+It is unclear whether this behavior is considered valid, so it's not recommended to tie critical functionality of your project to such casts.
+
+==See also==
+*[[Statements]]
+
+[[Category:ZScript]]
+[[Category:ZScript guides]]
+[[Category:Editing concepts‏‎]]
+[[Category:Editing references]]‏</text>
+    <sha1>oaijfmsqaszit5svjs65wkqn14fp598</sha1>
+  </revision>
+</page>

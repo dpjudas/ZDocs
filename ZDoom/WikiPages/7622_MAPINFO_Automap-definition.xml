@@ -1,0 +1,124 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>MAPINFO/Automap definition</title>
+  <ns>0</ns>
+  <id>7622</id>
+  <revision>
+    <id>47157</id>
+    <parentid>44200</parentid>
+    <timestamp>2020-02-17T19:08:40Z</timestamp>
+    <contributor>
+      <username>AFADoomer</username>
+      <id>77</id>
+    </contributor>
+    <comment>Added PortalColor automap color definition information</comment>
+    <origin>47157</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="4695" sha1="928k4ywerf60hqjmjwo5ji8kxaje4hr" xml:space="preserve">__NOTOC__
+An [[automap]] definition begins with the keyword {{c|automap}} for regular mode or {{c|automap_overlay}} for overlay mode. This changes mod-specific automap settings such as the map colors.  
+
+==Automap commands==
+'''automap''' { ''properties'' }
+:Defines an automap block for regular mode.
+
+'''automap_overlay''' { ''properties'' }
+:Defines an automap block for overlay mode.
+
+==Automap properties==
+The following properties are supported within an Automap definition:
+
+{{list|Property|Description|content=
+
+{{-|base {{=}} "&lt;game&gt;"
+|Defines the base color set that will be used by the automap.  If a new color for any line type is not defined in this block, the base game's color definition for that type of line will be used.  Valid presets are 'Doom', 'Strife', or 'Raven'.}}
+
+{{-|showlocks {{=}} "&lt;bool&gt;"
+|Determines whether locked doors are displayed with a separate color on the automap.  This property defaults to false.}}
+}}
+
+===Automap color properties===
+{{list|Property|Description|content=
+
+{{-|Background {{=}} "&lt;color&gt;"
+|The color of the automap background.}}
+{{-|YourColor {{=}} "&lt;color&gt;"
+|The color of the arrow representing the player in single player games.}}
+{{-|WallColor {{=}} "&lt;color&gt;"
+|The color of one-sided and secret walls in the automap.}}
+{{-|TwoSidedWallColor {{=}} "&lt;color&gt;"
+|The color of two-sided lines that don't have any difference in floor or ceiling heights on either side. Only seen using map cheat.}}
+{{-|FloorDiffWallColor {{=}} "&lt;color&gt;"
+|The color of two-sided lines that have a different floor height on each side.}}
+{{-|CeilingDiffWallColor {{=}} "&lt;color&gt;"
+|The color of two-sided lines that have a different ceiling height on each side.}}
+{{-|ExtraFloorWallColor {{=}} "&lt;color&gt;"
+|The color of [[3D floor]] boundaries.}}
+{{-|ThingColor {{=}} "&lt;color&gt;"
+|The default color of things revealed with the map cheat.}}
+{{-|ThingColor_Item {{=}} "&lt;color&gt;"
+|The color of items revealed with the map cheat}}
+{{-|ThingColor_CountItem {{=}} "&lt;color&gt;"
+|The color of {{Flag|COUNTITEM|count items}} revealed with the map cheat.}}
+{{-|ThingColor_Monster {{=}} "&lt;color&gt;"
+|The color of hostile monsters revealed with the map cheat. }}
+{{-|ThingColor_NocountMonster {{=}} "&lt;color&gt;"
+|The color of non-counted, non-friendly monsters revealed with the map cheat.}}
+{{-|ThingColor_Friend {{=}} "&lt;color&gt;"
+|The color of allied players and friendly monsters revealed with the map cheat.}}
+{{-|SpecialWallColor {{=}} "&lt;color&gt;"
+|The color of lines with a triggerable, non-door [[action special]]. }}
+{{-|SecretWallColor {{=}} "&lt;color&gt;"
+|The color of lines that are marked secret when you are using &lt;tt&gt;am_cheat&lt;/tt&gt;. When you aren't using the automap [[cheat]], secret walls are drawn the same color as one-sided lines.}}
+{{-|PortalColor {{=}} "&lt;color&gt;"
+|The color of lines that belong to a portion of the map that is connected to the player's current area by a [[portal]].}}
+{{-|GridColor {{=}} "&lt;color&gt;"
+|The color of the automap grid.}}
+{{-|XHairColor {{=}} "&lt;color&gt;"
+|The color of the "crosshair" dot in the center of the automap. }}
+{{-|NotSeenColor {{=}} "&lt;color&gt;"
+|The color of lines on the automap that haven't yet been seen. Visible with a computer area map.}}
+{{-|LockedColor {{=}} "&lt;color&gt;"
+|The color of lines that open locked doors, provided the lock does not have a color defined in [[LOCKDEFS]].}}
+{{-|IntraTeleportColor {{=}} "&lt;color&gt;"
+|The color of intra-level teleporters. These are teleporters that teleport you to a different location on the same map.}}
+{{-|InterTeleportColor {{=}} "&lt;color&gt;"
+|The color of inter-level teleporters. These are teleporters that teleport you to a different map.}}
+{{-|SecretSectorColor {{=}} "&lt;color&gt;"
+|The color of secret sector boundary lines on the automap.}}
+{{-|AlmostBackgroundColor {{=}} "&lt;color&gt;"
+|The color used for invisible and partially invisible players}}
+}}
+
+==Examples==
+ Automap
+ {
+     Base = "Raven"
+     ShowLocks = True
+     Background = "00 49 49"
+     YourColor = "00 33 33"
+     WallColor = "00 66 66"
+     TwoSidedWallColor = "66 66 66"
+     FloorDiffWallColor = "66 66 66"
+     CeilingDiffWallColor = "66 66 66"
+     ExtraFloorWallColor = "66 66 66"
+     ThingColor = "88 88 88"
+     ThingColor_Item = "20 9c fc"
+     ThingColor_CountItem = "fc f4 20"
+     ThingColor_Monster = "fc 00 00"
+     ThingColor_Friend = "00 33 33"
+     SpecialWallColor = "00 77 77"
+     SecretWallColor = "00 aa aa"
+     GridColor = "00 88 88"
+     XHairColor = "00 00 00"
+     NotSeenColor = "00 50 50"
+     LockedColor = "00 00 00"
+     IntraTeleportColor = "00 00 00"
+     InterTeleportColor = "00 00 00"
+     SecretSectorColor = "00 00 00"
+     AlmostBackgroundColor = "00 50 50"
+ }
+
+[[Category:MAPINFO|Automap]]</text>
+    <sha1>928k4ywerf60hqjmjwo5ji8kxaje4hr</sha1>
+  </revision>
+</page>

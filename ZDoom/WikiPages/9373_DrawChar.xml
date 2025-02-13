@@ -1,0 +1,138 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>DrawChar</title>
+  <ns>0</ns>
+  <id>9373</id>
+  <revision>
+    <id>49827</id>
+    <parentid>49826</parentid>
+    <timestamp>2022-11-18T10:29:14Z</timestamp>
+    <contributor>
+      <username>Boondorl</username>
+      <id>2606</id>
+    </contributor>
+    <minor />
+    <comment>/* Parameters */</comment>
+    <origin>49827</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="9637" sha1="k1ndh6rrvlsoips2omh8lags5v3f25s" xml:space="preserve">{{ZScriptNote}}
+__NOTOC__
+
+'''[[Structs:Screen|Screen]]'''
+
+native static vararg void '''DrawChar'''(Font font, int normalcolor, double x, double y, int character, ...)
+
+== Usage ==
+Works similar to [[DrawText]] except is used to draw a character in ASCII code as a string to the screen. The character is always drawn from the top left point of the bounding box that contains it. Coordinates are absolute and start from the top left of the screen with positive x values shifting to the right and positive y values shifting downward.
+
+'''Note:''' ARGB colors are best specified by a hex value. For instance, if a color of pure red with full opaqueness is desired, the value 0xFFFF0000 should be used. The first FF specifies the alpha, the second FF specifies the level of red, and the next two 00 specify the level of green and blue respectively. If a tag says only "RGB" then the first FF specifying the alpha can be completely left out. 
+
+'''Warning:''' This can only be called from within functions that are specifically designed to draw HUD elements (e.g. BaseStatusBar's [[Draw]] or EventHandler's RenderOverlay).
+
+=== Parameters ===
+*''font'' - The [[Structs:Font|Font]] to use for drawing the character. Fonts can be created manually or one of the predefined ones can be used. See [[ZScript_global_variables|global variables]] for available default fonts
+*''normalcolor'' - The color to use for the font. Options include:
+:*'''Font.CR_BRICK'''
+:*'''Font.CR_TAN'''
+:*'''Font.CR_GRAY''' (alternatively '''Font.CR_GREY''')
+:*'''Font.CR_GREEN'''
+:*'''Font.CR_BROWN'''
+:*'''Font.CR_GOLD'''
+:*'''Font.CR_RED'''
+:*'''Font.CR_BLUE'''
+:*'''Font.CR_ORANGE'''
+:*'''Font.CR_WHITE'''
+:*'''Font.CR_YELLOW'''
+:*'''Font.CR_UNTRANSLATED''' (default color for text)
+:*'''Font.CR_BLACK'''
+:*'''Font.CR_LIGHTBLUE'''
+:*'''Font.CR_CREAM'''
+:*'''Font.CR_OLIVE'''
+:*'''Font.CR_DARKGREEN'''
+:*'''Font.CR_DARKRED'''
+:*'''Font.CR_DARKBROWN'''
+:*'''Font.CR_PURPLE'''
+:*'''Font.CR_DARKGRAY'''
+:*'''Font.CR_CYAN'''
+:*'''Font.CR_ICE'''
+:*'''Font.CR_FIRE'''
+:*'''Font.CR_SAPPHIRE'''
+:*'''Font.CR_TEAL'''
+*''x'' - The x offset for where to draw the character
+*''y'' - The y offset for where to draw the character
+*''character'' - The ASCII code of the character to draw
+*''tags'' - Tags allow for any number of optional arguments to be specified in any order. Tags are set with the following syntax:
+ // 67 is the ASCII code for 'C'
+ Screen.DrawChar(myFont, Font.CR_RED, 0, 0, 67, DTA_CleanNoMove, true, DTA_ColorOverlay, 0xFFFF0000); // etc
+with the tag first followed by its value. Valid tags:
+:*(int) '''DTA_DestWidth''' - Scales the width of the character to the specified width
+:*(double) '''DTA_DestWidthF''' - Same as DTA_DestWidth but accepts floating point values
+:*(int) '''DTA_DestHeight''' - Scales the height of the character to the specified height
+:*(double) '''DTA_DestHeightF''' - Same as DTA_DestHeight but accepts floating point values
+:*(double) '''DTA_ScaleX''' - Scales the width of the character about its offset point
+:*(double) '''DTA_ScaleY''' - Scales the height of the character about its offset point
+:*(double) '''DTA_Alpha''' - Sets the alpha of the character. A value of 1 is fully opaque while 0 is fully transparent. If less than 1 and DTA_LegacyRenderStyle is not specified then the render style is set to Translucent
+:*(int) '''DTA_Color''' - An ARGB color that the character's final colors (after all other color operations) are blended with
+:*(int) '''DTA_FillColor''' - An RGB color to stencil on top of the character. If DTA_LegacyRenderStyle is not specified then the render style is set to TranslucentStencil if DTA_Alpha is less than one, otherwise setting it to Stencil
+:*(bool) '''DTA_AlphaChannel''' - If DTA_LegacyRenderStyle is not specified then the render style is set to Shaded if a color was specified in DTA_FillColor
+:*(int) '''DTA_ColorOverlay''' - Applies an ARGB color overlay on top of the character
+:*(int) '''DTA_Desaturate''' - If DTA_FillColor is set then completely desaturates the character with a value greater than 0. Otherwise scales the desaturation. A value of 255 is fully desaturated while a value of 0 is fully saturated
+:*(int) '''DTA_TranslationIndex''' - Id for the [[translation]] to translate the color of the character. '''Translation.GetID(&lt;translation name&gt;)''' can be used to get an ID of a translation defined in the [[TRNSLATE]] lump
+:*(int) '''DTA_LegacyRenderStyle''' - Sets the render style via the STYLE_* constants. See: [[A_SetRenderStyle#Parameters|render styles]]
+:*(bool) '''DTA_Clean''' - Scale the position and size of the character by CleanXfac and CleanYfac (see [[ZScript_global_variables|global variables]] for more information)
+:*(bool) '''DTA_CleanTop''' - Same as DTA_Clean but aligns to the top of the screen instead of the center
+:*(bool) '''DTA_CleanNoMove''' - Similar to DTA_Clean except the character is not repositioned
+:*(bool) '''DTA_CleanNoMove_1''' - Similar to DTA_CleanNoMove except it uses CleanXfac_1 and CleanYfac_1 instead (see [[ZScript_global_variables|global variables]] for more information)
+:*(bool) '''DTA_320x200''' - Scale the position and size of the character as though the screen resolution were 320x200
+:*(bool) '''DTA_Bottom320x200''' - The same as DTA_320x200 except it scales from the bottom. Used for tall aspect ratios (e.g. 5:4)
+:*(bool) '''DTA_FlipX''' - Flips the character horizontally
+:*(bool) '''DTA_FlipY''' - Flips the character vertically
+:*(bool) '''DTA_FlipOffsets''' - Flips the character's offsets if one or both DTA_Flip* flags are set
+:*(double) '''DTA_Rotate''' - Rotates the character by the given degrees. Positive values rotate counter-clockwise
+:*(int) '''DTA_VirtualWidth''' - Draws the character as though the screen resolution were this wide
+:*(double) '''DTA_VirtualWidthF''' - Same as DTA_VirtualWidth but accepts floating point values
+:*(int) '''DTA_VirtualHeight''' - Draws the character as though the screen resolution were this tall
+:*(double) '''DTA_VirtualHeightF''' - Same as DTA_VirtualHeight but accepts floating point values
+:*(bool) '''DTA_NoOffset''' - The character ignores the global offsets for the screen when drawing it
+:*(int) '''DTA_TopOffset''' - Ignores the top offset set on the character and draws from the top of the character with this offset instead
+:*(double) '''DTA_TopOffsetF''' - Same as DTA_TopOffset but accepts floating point values
+:*(int) '''DTA_LeftOffset''' - Ignores the left offset set on the character and draws from the left of the character with this offset instead
+:*(double) '''DTA_LeftOffsetF''' - Same as DTA_LeftOffset but accepts floating point values
+:*(bool) '''DTA_CenterOffset''' - Ignores the top and left offset set on the character and draws from the center of the character
+:*(bool) '''DTA_CenterBottomOffset''' - Similar to DTA_CenterOffset except it draws from the center bottom of the character
+:*(int) '''DTA_CenterOffsetRel''' - The character's offsets are relative to the center of it instead of the top left. 1 is standard behavior while 2 floors the center point.
+:*(bool) '''DTA_TopLeft''' - If set to true, always draws the character from the top left
+:*(int) '''DTA_ClipTop''' - Clip anything above this position on the screen
+:*(int) '''DTA_ClipBottom''' - Clip anything below this position on the screen
+:*(int) '''DTA_ClipLeft''' - Clip anything to the left of this position on the screen
+:*(int) '''DTA_ClipRight''' - Clip anything to the right of this position on the screen
+::*'''Note:''' Clipping rectangles take precedence over the DTA_Clip* tags
+:*(int) '''DTA_WindowLeft''' - Works similar to DTA_ClipLeft but only applies to the character itself instead of the entire screen
+:*(double) '''DTA_WindowLeftF''' - Same as DTA_WindowLeft but accepts floating point values
+:*(int) '''DTA_WindowRight''' - Works similar to DTA_ClipRight but only applies to the character itself instead of the entire screen
+:*(double) '''DTA_WindowRightF''' - Same as DTA_WindowRight but accepts floating point values
+:*(bool) '''DTA_Masked''' - If false, don't use the character's mask
+:*(bool) '''DTA_KeepRatio''' - If the virtual width or height are set, keep the screen's current aspect ratio instead of forcing 4:3
+:*(bool) '''DTA_Pin''' - Same as DTA_KeepRatio
+:*(bool) '''DTA_Fullscreen''' - Draw the character to fill the entire screen
+:*(int) '''DTA_FullscreenEx''' - Allows the type of [[GetFullscreenRect|fullscreen]] mode to be set when filling the screen with the character
+:*(int) '''DTA_FullScreenScale''' - Allows the type of [[GetFullscreenRect|fullscreen]] mode to be set for the virtual resolution. This gives more customization than DTA_KeepRatio
+:*(double) '''DTA_SrcX''' - Start drawing at this pixel column on the character
+:*(double) '''DTA_SrcY''' - Start drawing at this pixel row on the character
+:*(double) '''DTA_SrcWidth''' - Stop drawing at [DTA_SrcX + this value] pixel column on the character
+:*(double) '''DTA_SrcHeight''' - Stop drawing at [DTA_SrcY + this value] pixel row on the character
+::*See [[Classes:Shape2D|Shapes]] for more information about uv coordinates
+:*(int) '''DTA_ViewportX''' - Allows the x offset of the viewport to be manually specified
+:*(int) '''DTA_ViewportY''' - Allows the y offset of the viewport to be manually specified
+:*(int) '''DTA_ViewportWidth''' - Allows the width of the viewport to be manually specified
+:*(int) '''DTA_ViewportHeight''' - Allows the height of the viewport to be manually specified
+:*(bool) '''DTA_Indexed''' - ''[Currently Raze only]'' Marks the character as indexed for palette emulation
+
+== Examples ==
+{{noexamples}}
+
+[[Category:ZScript]]
+[[Category:Screen]]</text>
+    <sha1>k1ndh6rrvlsoips2omh8lags5v3f25s</sha1>
+  </revision>
+</page>

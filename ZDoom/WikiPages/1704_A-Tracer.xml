@@ -1,0 +1,145 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>A Tracer</title>
+  <ns>0</ns>
+  <id>1704</id>
+  <revision>
+    <id>53146</id>
+    <parentid>47239</parentid>
+    <timestamp>2024-09-30T11:11:06Z</timestamp>
+    <contributor>
+      <username>Jekyll Grim Payne</username>
+      <id>2175</id>
+    </contributor>
+    <origin>53146</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="5162" sha1="pn9fnnrlzeeefouozj256jdtrehlhpb" xml:space="preserve">{{codepointer|Missile movement|sort=Tracer1}}
+{{doomwiki|A_Tracer}}
+
+'''{{class|Actor}}'''
+
+{{c|void '''A_Tracer'''()}}
+
+== Usage ==
+The seeking function for the {{Class|Revenant}}'s missile. This seeks very aggressively and spawns both a {{Class|BulletPuff|puff}} and a {{Class|RevenantTracerSmoke|smoke}} behind the missile. This only works for missiles with the '''{{flag|SEEKERMISSILE}}''' [[Actor flags|flag]].
+
+'''Note:''' This function is written so that it only performs its action if the global time counter is a multiple of 4, so it may have some side effects&amp;nbsp;&amp;mdash; for instance, [[Classes:RevenantTracer|Revenant rockets]], which call this function every two [[tic]]s, only home in if they were spawned during an even tic; if they were spawned during an odd tic the function will never be called during a tic that is a multiple of 4, and the tracer will not home in. The frequency at which '''A_Tracer''' is called is thus very important for its behavior:
+* If the interval is odd, the homing behavior will happen every ''interval &amp;times; 4'' tics.
+* If it is a multiple of four, it will happen every ''interval'' tics, but only if it was spawned during a tic that is a multiple of four.
+* If it is an even number that is not a multiple of four, it will happen every ''interval &amp;times; 2'' tics only if it was spawned during an even tic.
+See examples below.
+
+== [[ZScript]] definition ==
+{{ZScriptDefinitionNote|actors/doom/revenant.zs#L223}}
+&lt;syntaxhighlight lang="csharp"&gt;
+	void A_Tracer()
+	{
+		// killough 1/18/98: this is why some missiles do not have smoke
+		// and some do. Also, internal demos start at random gametics, thus
+		// the bug in which revenants cause internal demos to go out of sync.
+
+		if (level.maptime &amp; 3)	return;
+	
+		// spawn a puff of smoke behind the rocket
+		SpawnPuff ("BulletPuff", pos, angle, angle, 3);
+		Actor smoke = Spawn ("RevenantTracerSmoke", Vec3Offset(-Vel.X, -Vel.Y, 0.), ALLOW_REPLACE);
+	
+		if (smoke != null)
+		{
+			smoke.Vel.Z = 1.;
+			smoke.tics -= random[Tracer](0, 3);
+			if (smoke.tics &lt; 1)
+				smoke.tics = 1;
+		}
+
+		// The rest of this function was identical with Strife's version, except for the angle being used.
+		A_Tracer2(16.875);
+	}&lt;/syntaxhighlight&gt;
+
+== Examples ==
+The original example is {{Class|RevenantTracer}}. It only homes every four tics if it were spawned during an even tic. The following table underlines at which gametic the function will have an effect, depending on the ''gametic-modulo-four'' at which the RevenantTracer actor was spawned:&lt;br&gt;
+:0: 02 &lt;u&gt;04&lt;/u&gt; 06 &lt;u&gt;08&lt;/u&gt; 10 &lt;u&gt;12&lt;/u&gt; 14 &lt;u&gt;16&lt;/u&gt; etc.&lt;br&gt;
+:1: 03 05 07 09 11 13 15 17 etc.&lt;br&gt;
+:2: &lt;u&gt;04&lt;/u&gt; 06 &lt;u&gt;08&lt;/u&gt; 10 &lt;u&gt;12&lt;/u&gt; 14 &lt;u&gt;16&lt;/u&gt; 18 etc.&lt;br&gt;
+:3: 05 07 09 11 13 15 17 19 etc.&lt;br&gt;
+ class &lt;u&gt;RevenantTracer&lt;/u&gt; : Actor
+ {
+   // See {{Class|RevenantTracer}} for the full definition!
+   States
+   {
+   Spawn:
+     FATB AB 2 bright A_Tracer;   // See {{Class|RevenantTracerSmoke}}
+     loop;
+   }
+ }
+
+This “Tracer1” variant will home in very aggressively every four tics, no matter when it was spawned.
+:0: 01 02 03 &lt;u&gt;04&lt;/u&gt; 05 06 07 &lt;u&gt;08&lt;/u&gt; 09 10 11 &lt;u&gt;12&lt;/u&gt; etc.&lt;br&gt;
+:1: 02 03 &lt;u&gt;04&lt;/u&gt; 05 06 07 &lt;u&gt;08&lt;/u&gt; 09 10 11 &lt;u&gt;12&lt;/u&gt; 13 etc.&lt;br&gt;
+:2: 03 &lt;u&gt;04&lt;/u&gt; 05 06 07 &lt;u&gt;08&lt;/u&gt; 09 10 11 &lt;u&gt;12&lt;/u&gt; 13 14 etc.&lt;br&gt;
+:3: &lt;u&gt;04&lt;/u&gt; 05 06 07 &lt;u&gt;08&lt;/u&gt; 09 10 11 &lt;u&gt;12&lt;/u&gt; 13 14 15 etc.&lt;br&gt;
+
+ class &lt;u&gt;Tracer1&lt;/u&gt; : {{Class|RevenantTracer}}
+ {
+   States
+   {
+   Spawn:
+     FATB AB 1 bright A_Tracer;
+     loop;
+   }
+ }
+
+This “Tracer3” variant will home in on the target every time, but only steer towards it once every 12 tics.&lt;br&gt;
+:0: 03 06 09 &lt;u&gt;12&lt;/u&gt; 15 18 21 &lt;u&gt;24&lt;/u&gt; 27 30 33 &lt;u&gt;36&lt;/u&gt; etc.&lt;br&gt;
+:1: &lt;u&gt;04&lt;/u&gt; 07 10 13 &lt;u&gt;16&lt;/u&gt; 19 22 25 &lt;u&gt;28&lt;/u&gt; 31 34 37 etc.&lt;br&gt;
+:2: 05 &lt;u&gt;08&lt;/u&gt; 11 14 17 &lt;u&gt;20&lt;/u&gt; 23 26 29 &lt;u&gt;32&lt;/u&gt; 35 38 etc.&lt;br&gt;
+:3: 06 09 &lt;u&gt;12&lt;/u&gt; 15 18 21 &lt;u&gt;24&lt;/u&gt; 27 30 33 &lt;u&gt;36&lt;/u&gt; 39 etc.&lt;br&gt;
+ class &lt;u&gt;Tracer3&lt;/u&gt; : {{Class|RevenantTracer}}
+ {
+   States
+   {
+   Spawn:
+     FATB AB 3 bright A_Tracer;
+     loop;
+   }
+ }
+
+This “Tracer4” variant will only home in if it was spawned during a gametic that is a multiple of 4, as shown by the table below:&lt;br&gt;
+:0: &lt;u&gt;04&lt;/u&gt; &lt;u&gt;08&lt;/u&gt; &lt;u&gt;12&lt;/u&gt; &lt;u&gt;16&lt;/u&gt; &lt;u&gt;20&lt;/u&gt; etc.&lt;br&gt;
+:1: 05 09 13 17 21 etc.&lt;br&gt;
+:2: 06 10 14 18 22 etc.&lt;br&gt;
+:3: 07 11 15 19 23 etc.&lt;br&gt;
+ class &lt;u&gt;Tracer4&lt;/u&gt; : {{Class|RevenantTracer}}
+ {
+   States
+   {
+   Spawn:
+     FATB AB 4 bright A_Tracer;
+     loop;
+   }
+ }
+
+This “Tracer5” variant will home in every twenty tics.&lt;br&gt;
+:0: 05 10 15 &lt;u&gt;20&lt;/u&gt; 25 30 35 &lt;u&gt;40&lt;/u&gt; etc.&lt;br&gt;
+:1: 06 11 &lt;u&gt;16&lt;/u&gt; 21 26 31 &lt;u&gt;36&lt;/u&gt; 41 etc.&lt;br&gt;
+:2: 07 &lt;u&gt;12&lt;/u&gt; 17 22 27 &lt;u&gt;32&lt;/u&gt; 37 42 etc.&lt;br&gt;
+:3: &lt;u&gt;08&lt;/u&gt; 13 18 23 &lt;u&gt;28&lt;/u&gt; 33 38 43 etc.&lt;br&gt;
+ class &lt;u&gt;Tracer5&lt;/u&gt; : {{Class|RevenantTracer}}
+ {
+   States
+   {
+   Spawn:
+     FATB AB 5 bright A_Tracer;
+     loop;
+   }
+ }
+
+Likewise, a “Tracer6” variant would home every 12 rounds only if it were spawned during an even tic; a “Tracer7” would home every 28 tics, a “Tracer8” variant would home every eight rounds only if it were spawned during a tic that is a multiple of four, and so on.
+
+== See also ==
+* {{class|RevenantTracer}}
+* [[A_Tracer2]]
+* [[A_SeekerMissile]]</text>
+    <sha1>pn9fnnrlzeeefouozj256jdtrehlhpb</sha1>
+  </revision>
+</page>

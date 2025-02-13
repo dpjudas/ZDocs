@@ -1,0 +1,69 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>GetObituary</title>
+  <ns>0</ns>
+  <id>9264</id>
+  <revision>
+    <id>51053</id>
+    <parentid>46028</parentid>
+    <timestamp>2023-12-04T13:17:35Z</timestamp>
+    <contributor>
+      <username>Jekyll Grim Payne</username>
+      <id>2175</id>
+    </contributor>
+    <comment>Formatting, added categories, added parent class</comment>
+    <origin>51053</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="2063" sha1="r4uv3mc8r1nipwgegry5rge05racf4y" xml:space="preserve">__NOTOC__
+
+'''{{class|Actor}}'''
+
+{{c|virtual string '''GetObituary''' (Actor ''victim'', Actor ''inflictor'', Name ''mod'', bool ''playerattack'')}}
+
+==Usage==
+Used to retrieve the {{Property|Obituaries|obituary message}} to display upon the player's death. The function is not called if the player kills themselves, as the engine uses the self-killed obituary message ({{c|OB_KILLEDSELF}}) in this case.
+
+===Parameters===
+*{{c|Actor '''victim'''}}
+:A pointer to the killed actor.
+*{{c|Actor '''inflictor'''}}
+:A pointer to the actor that inflicted the damage.
+*{{c|Name '''mod'''}}
+:The means of death. This is the [[damage type]] of the attack which killed ''victim''.
+*{{c|bool '''playerattack'''}}
+:If this is &lt;code&gt;true&lt;/code&gt;, the attack came from a player, and it is either a [[hitscan]] or rail attack.
+
+===Return value===
+The return value is a string that is used as the obituary message. If the string is empty, the engine falls back to a default message.
+
+==Predefined functionality==
+If not overridden, the function returns the telefrag-killed message ({{c|OB_MONTELEFRAG}}) if &lt;code&gt;mod&lt;/code&gt; is {{c|'Telefrag'}}. If &lt;code&gt;mod&lt;/code&gt; is {{c|'Melee'}}, and the calling actor's {{c|{{Property|HitObituary}}}} is not an empty string, it returns that. If that fails, the calling actor's {{c|{{Property|Obituary}}}} is returned.
+
+==Examples==
+One of three obituary messages are chosen if this {{Class|archvile}} kills the player.
+ class Test_Archvile : {{Class|Archvile}}
+ {
+     override string '''GetObituary''' (Actor victim, Actor inflictor, Name mod, bool playerattack)
+     {
+         static const string messages[] =
+         {
+             "%o got blown up by an archvile.",
+             "%o was burned to death by an archvile.",
+             "An archvile made %o disappear."
+         };
+ 
+         return messages[Random(0, messages.Size() - 1)];
+     }
+ }
+
+==See also==
+*[[ZScript virtual functions|Virtual functions]]
+*[[LANGUAGE]]
+*[[Strings]]
+
+[[category:ZScript]]
+[[category:Actor virtual functions]]
+[[category:ZScript virtual functions]]</text>
+    <sha1>r4uv3mc8r1nipwgegry5rge05racf4y</sha1>
+  </revision>
+</page>

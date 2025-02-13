@@ -1,0 +1,40 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>FluidSynth</title>
+  <ns>0</ns>
+  <id>6116</id>
+  <revision>
+    <id>45992</id>
+    <parentid>43876</parentid>
+    <timestamp>2018-03-26T23:07:26Z</timestamp>
+    <contributor>
+      <username>Gez</username>
+      <id>1283</id>
+    </contributor>
+    <comment>this will need to be overhauled later</comment>
+    <origin>45992</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="1909" sha1="avxpum00b3honegt5r2kifwl0yhf0w6" xml:space="preserve">{{stub}}
+'''{{wp|FluidSynth}}''' is a [[software synthesizer]] using [[sound fonts|SF2 sound fonts]]. Support for using FluidSynth as the midi playback device in [[ZDoom]] was added shortly after version 2.5.0 was finalized.
+
+==Setting up FluidSynth==
+FluidSynth is bundled with GZDoom since [[GZDoom version history#3.0.0|version 3.0]], along with a default soundfont. The following instructions are only needed for older versions.
+
+On Windows, the simplest method is to grab {{plainlink|[http://zdoom.org/files/libfluidsynth.7z the 32-bit]}} or {{plainlink|[http://zdoom.org/files/libfluidsynth64.7z the 64-bit]}} version and place the extracted fluidsynth.dll in your ZDoom directory. The {{c|{{CVAR|S|fluid_patchset}}}} console variable must be set to point to a valid SF2 sound font for it to render any output; however ZDoom may be able to automatically detect one if it exists, depending on your hardware and operating system: on Unix systems, it will look for {{c|/usr/share/sounds/sf2/FluidR3_GS.sf2}} and on Windows it will look for CT4MGM.SF2 and CT2MGM.SF2 in the system directory ({{wp|Creative_Technology|Creative}} drivers usually install one of them so if you have a Creative sound card it may work out of the box).
+
+If you do not have any sound font pre-installed by your OS or your sound drivers, you will need to download one.
+
+==Advantages and drawbacks==
+* FluidSynth is very CPU-intensive, though this is mitigated by multicore CPUs.
+* Even though FluidSynth was designed to fully support all features of the SF2 [[sound font]] format, it is also more likely than [[TiMidity++]] to detect errors and abort loading instruments in sound fonts. A good example of this phenomenon is the Silverspring sound font, which is basically unusable with FluidSynth.
+
+==See also==
+* [[Sound options]]
+* [[Sound fonts]]
+
+==Forum threads==
+*{{forum|t=48044|64-bit Fluidsynth}}
+[[Category:Audio systems]]</text>
+    <sha1>avxpum00b3honegt5r2kifwl0yhf0w6</sha1>
+  </revision>
+</page>

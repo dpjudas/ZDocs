@@ -1,0 +1,44 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>A SetTranslucent</title>
+  <ns>0</ns>
+  <id>2674</id>
+  <revision>
+    <id>46825</id>
+    <parentid>46824</parentid>
+    <timestamp>2019-07-22T08:56:45Z</timestamp>
+    <contributor>
+      <username>Blue Shadow</username>
+      <id>2021</id>
+    </contributor>
+    <minor />
+    <comment>Forgot to reorder these</comment>
+    <origin>46825</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="877" sha1="iwlr8yx2eh58he6vv0d26zrrudm4wcn" xml:space="preserve">{{codepointer|Status change}}
+void '''A_SetTranslucent''' (double ''alpha'' [, int ''style''])
+{{Superseded|A_SetRenderStyle}}
+== Usage ==
+Sets translucency for the calling actor.
+
+=== Parameters ===
+*''alpha'': specifies the amount of visibility and is a value between 0.0 (not visible) and 1.0 (fully visible).
+*''style'': the translucency mode to set:
+**'''0''': normal translucency blending. This mode combined with an alpha setting of 1.0 will make the actor opaque. This is the default mode.
+**'''1''': additive blending.
+**'''2''': [[fuzz]] effect. Alpha has no meaning with this setting.
+
+== Examples ==
+This {{Class|rocket}} variant displays its explosion with additive translucency. Slight visual enhancement.
+ ACTOR PrettyRocket : {{Class|Rocket}} replaces Rocket
+ {
+   States
+   {
+   Death:
+     MISL B 0 [[A_SetTranslucent]](0.75, 1)
+     Goto Super::Death
+   }
+ }</text>
+    <sha1>iwlr8yx2eh58he6vv0d26zrrudm4wcn</sha1>
+  </revision>
+</page>

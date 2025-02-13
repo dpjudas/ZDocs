@@ -1,0 +1,48 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>Classes:ZCorpseLynchedNoHeart</title>
+  <ns>0</ns>
+  <id>4678</id>
+  <revision>
+    <id>39632</id>
+    <parentid>34741</parentid>
+    <timestamp>2015-05-02T21:06:32Z</timestamp>
+    <contributor>
+      <username>Blue Shadow</username>
+      <id>2021</id>
+    </contributor>
+    <minor />
+    <comment>/* DECORATE definition */ Updated</comment>
+    <origin>39632</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="864" sha1="dbwuq76dx687nw9h7dbsdshquhfh0mz" xml:space="preserve">{{Actor|
+| type = Gore
+| name = Hanging corpse with heart ripped out
+| class = ZCorpseLynchedNoHeart
+| game = Hexen
+| doomednum = 109
+}}[[Classes]]: &lt;u&gt;ZCorpseLynchedNoHeart&lt;/u&gt;&lt;br&gt;
+An emaciated hanging corpse, its legs broken and its ribcage torn out. 
+
+When the game is started, it automatically creates a {{Class|BloodPool|little blood pool}} under it. This is a special hard-coded behavior which will be shared by any actor inheriting from it. Its native action [[A_CorpseBloodDrip]] spawns {{Class|CorpseBloodDrip|blood droplets}}.
+==== [[DECORATE]] definition ====
+ ACTOR &lt;u&gt;ZCorpseLynchedNoHeart&lt;/u&gt; native
+ {
+   {{Property|Radius}} 10
+   {{Property|Height}} 100
+   +{{Flag|SOLID}}
+   +{{Flag|SPAWNCEILING}}
+   +{{Flag|NOGRAVITY}}
+ 
+   action native [[A_CorpseBloodDrip]]();
+ 
+   States
+   {
+   Spawn:
+     CPS5 A 140 [[A_CorpseBloodDrip]]
+     Loop
+   }
+ }</text>
+    <sha1>dbwuq76dx687nw9h7dbsdshquhfh0mz</sha1>
+  </revision>
+</page>

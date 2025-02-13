@@ -1,0 +1,65 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>Vec3Offset</title>
+  <ns>0</ns>
+  <id>9382</id>
+  <revision>
+    <id>52919</id>
+    <parentid>47464</parentid>
+    <timestamp>2024-08-20T16:05:58Z</timestamp>
+    <contributor>
+      <username>Jekyll Grim Payne</username>
+      <id>2175</id>
+    </contributor>
+    <comment>/* Examples */</comment>
+    <origin>52919</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="1571" sha1="23ru2paqisw4maqydgoc0ivonh10v7k" xml:space="preserve">{{ZScriptNote}}
+__NOTOC__
+
+native clearscope vector3 '''Vec3Offset'''(double x, double y, double z[, bool absolute]) const
+
+== Usage ==
+Calculates a 3D offset from the caller's current origin by the given amounts. This should be used over doing it manually since it is portal aware. Note that the values are not relative to the caller's current angle but are absolute. This function will not modify the calling Actor's position.
+
+=== Parameters ===
+*''x'' - The amount to offset by on the x axis
+*''y'' - The amount to offset by on the y axis
+*''z'' - The amount to offset by on the z axis
+*''absolute'' - Default is false. If true, completely ignores portals.
+
+=== Return value ===
+Returns a Vector3 containing the new offset position.
+
+== Examples ==
+This function will try to spawn a specified actor 128 units in front of the calling actor.
+&lt;syntaxhighlight lang="csharp"&gt;
+bool SpawnMonsterInFront(class&lt;Actor&gt; cls)
+{
+	// Get an offset of 128 units and rotate it
+	// to match the calling actor's angle:
+	Vector2 ofs = RotateVector((128, 0), self.angle); 
+	// Add it to the actor's current position:
+	Vector3 ppos = Vec3Offset(ofs.x, ofs.y, 0);
+	if (!level.IsPointInLevel(ppos))
+	{
+		Console.Printf("Couldn't spawn in the void");
+		return false;
+	}
+	let mo = Spawn(cls, ppos);
+	if (mo &amp;&amp; !mo.TestMobjLocation())
+	{
+		Console.Printf("Not enough space for %s", mo.GetTag());
+		mo.Destroy();
+		return false;
+	}
+	return true;
+}
+&lt;/syntaxhighlight&gt;
+
+See also [[RotateVector]], [[TestMobjLocation]], [[Structs:LevelLocals#IsPointInLevel|IsPointInLevel]].
+
+[[Category:ZScript]]</text>
+    <sha1>23ru2paqisw4maqydgoc0ivonh10v7k</sha1>
+  </revision>
+</page>

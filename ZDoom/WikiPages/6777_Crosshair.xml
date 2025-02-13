@@ -1,0 +1,43 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>Crosshair</title>
+  <ns>0</ns>
+  <id>6777</id>
+  <revision>
+    <id>51902</id>
+    <parentid>51901</parentid>
+    <timestamp>2024-03-05T12:02:27Z</timestamp>
+    <contributor>
+      <username>Jekyll Grim Payne</username>
+      <id>2175</id>
+    </contributor>
+    <comment>/* Creating your own crosshairs */</comment>
+    <origin>51902</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="2345" sha1="dx0guqvf4463u1oh8dwmxd8cdyhgdju" xml:space="preserve">{{doomwiki|crosshairs}}
+The '''crosshair''' or '''crosshairs''' is a small graphics displayed as part of the [[HUD]] in the center of the screen and serving as a targeting aid.
+
+[[ZDoom]] provides a selection of seven crosshairs, which can be configured through the [[HUD options]] menu. Additional crosshairs can be given through a custom [[XHAIRS]] lump. Weapons can feature their own built-in crosshairs with the [[A_SetCrosshair]] function.
+
+The user's choice of crosshair is stored in the {{CVAR|R|crosshair}} variable. A value of 0 means "no crosshair", and a positive value refers to that crosshair number.
+
+==Creating your own crosshairs==
+Creating crosshairs is a simple process:
+
+# Create a crosshair graphic. You can use a PNG image with an alpha channel, or a grayscale image where white is opaque and black is transparent.
+# Name the graphic {{c|XHAIRB##}} where ## is a crosshair number starting with 1, such as XHAIRB25. (Note that GZDoom itself occupies the first 7 crosshairs, so use larger numbers if you don't want to override them.)
+# Place the graphic under the {{c|/graphics/}} folder of your [[PK3]] archive.
+# (Optional) Add a small version of your crosshair and name it {{c|XHAIRS##}} where ## is the same number, such as XHAIRS25. This version will only be used at very low resolutions, so nowadays it's arguably not necessary.
+# Offset the crosshair graphic in [[SLADE]] in "Sprite" mode so it's exactly at the center. (For example, if your graphic is 64x64 pixels, the offsets must be set to 32, 32). (Note, it may seem like crosshairs provided in gzdoom.pk3 are not offset, but this is because they are in .imgz format, which stores offsets differently from .png, and SLADE simply cannot display it.)
+# If you want your crosshair to be selectable in the in-game options menu, you also need to define it in the [[XHAIRS]] lump:
+
+ 25 "My custom crosshair"
+
+The crosshair can be changed by the player with the {{c|crosshair}} [[CVAR]] (e.g. {{c|crosshair 25}} will select crosshair No. 25). If the crosshair has been added to the [[XHAIRS]] lump, its name will also show up in the options menu.
+
+The crosshair can also be set from [[ZScript]] or [[DECORATE]] with [[A_SetCrosshair]] (for example, if you want the crosshair to change for a specific weapon or attack sequence).
+
+[[Category:Features]][[Category:Glossary]]</text>
+    <sha1>dx0guqvf4463u1oh8dwmxd8cdyhgdju</sha1>
+  </revision>
+</page>

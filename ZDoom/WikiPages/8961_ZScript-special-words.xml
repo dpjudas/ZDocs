@@ -1,0 +1,77 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>ZScript special words</title>
+  <ns>0</ns>
+  <id>8961</id>
+  <revision>
+    <id>53287</id>
+    <parentid>52967</parentid>
+    <timestamp>2024-10-12T09:11:16Z</timestamp>
+    <contributor>
+      <username>Blue Shadow</username>
+      <id>2021</id>
+    </contributor>
+    <minor />
+    <comment>remove {{new}}</comment>
+    <origin>53287</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="3621" sha1="5zufb9tzuiiqush9kxdburp4uwbypgv" xml:space="preserve">{{ZScriptNote}}
+ZScript contains special words for certain circumstances.
+
+*'''is'''
+*: Compares a pointer or class type to a class type. This will also return true if the given pointer or class type is a child of the class type it's comparing to.
+ if (mobj is "ClassName")
+ if ("ClassC" is "ClassA")
+
+*'''let'''
+*: Infer the type of a local variable from what is initially assigned to it.
+ let a = 1;                       {{color|green|// The type of &lt;var&gt;a&lt;/var&gt; is [[ZScript variables#Types|int]].}}
+ let b = self.Owner;              {{color|green|// The type of &lt;var&gt;b&lt;/var&gt; is [[Actor]].}}
+ let c = 1.25;                    {{color|green|// The type of &lt;var&gt;c&lt;/var&gt; is [[ZScript variables#Types|double]].}}
+ let d = "Hello, world!";         {{color|green|// The type of &lt;var&gt;d&lt;/var&gt; is [[String]].}}
+ let e = [[FindInventory]](...);      {{color|green|// The type of &lt;var&gt;e&lt;/var&gt; is [[Inventory]].}}
+ let [f, g] = [[A_SpawnItemEx]](...); {{color|green|// The types of &lt;var&gt;f&lt;/var&gt; and &lt;var&gt;g&lt;/var&gt; are bool and Actor, respectively.}}
+:: You can use this as a shorthand for checking the real class of an object:
+ let i = Inventory(someObject);
+ &lt;span style="color:green"&gt;// The type of &lt;var&gt;i&lt;/var&gt; is [[Inventory]].
+ // If &lt;var&gt;someObject&lt;/var&gt; is an instance of Inventory, then &lt;var&gt;i&lt;/var&gt; will refer to that object.
+ // If &lt;var&gt;someObject&lt;/var&gt; is of some other class, then &lt;var&gt;i&lt;/var&gt; will be null.&lt;/span&gt;
+
+*'''out'''
+*: Qualifier for function parameters. Allows passing of a parameter by reference.
+ void MyFunction(out MyStruct s)
+ {
+   s.value = 5; &lt;span style="color:green"&gt;// this can be used to modify a struct directly since they can't be returned&lt;/span&gt;
+ }
+
+*'''&amp;'''
+*: Works the same as the ''out'' keyword, but looks more like [https://www.ibm.com/docs/en/i/7.5?topic=calls-pass-by-reference#cplr233 how parameters are passed by reference in C++].
+ void PassByRefFun (array &lt;Actor&gt; &amp;ArrayName)
+
+*'''dot'''
+*: Calculates the dot product of two vectors, resulting in a double. The syntax can take either a Vector2 or Vector3, but they must be the same on both sides. It is equivalent to a.length() * b.length() * cos(angle), where angle is the angle between the two vectors. A result of 0 means the vectors are orthogonal, or 90 degrees.
+*: For example, if using two unit vectors and the result is -1, the vectors are turned 180 degrees, meaning they're pointed in opposite directions. 1 means they're parallel.
+::: &lt;Vector2&gt; dot &lt;Vector2&gt;
+::: &lt;Vector3&gt; dot &lt;Vector3&gt;
+
+*'''cross'''
+*: Calculates the cross product of two Vector3s, resulting in a Vector3. The return value is a new vector that is perpendicular to both of the inputs (unless one of them is a 0 vector, or they are parallel/antiparallel), and therefore it cannot be used on 2D vectors.
+::: &lt;Vector3&gt; = &lt;Vector3&gt; cross &lt;Vector3&gt;
+
+ Vector3 a = (1, 2, 3);
+ Vector3 b = (3, 2, 1);
+ double dot_prod = a dot b;
+ Vector3 cross_prod = a cross b;
+
+*'''self'''
+*: Used to reference the world actor currently running ZScript code. Typically implied, but sometimes useful to specify, such as when a variable in a function has the same name as a variable in the class. In such cases, self will refer to the variable in the actor instead of the function when appended with self.
+
+*'''invoker'''
+*: Only used in functions that have the '''action''' keyword. Used to reference the actor that owns the State the function is currently being called from. This can be used to directly modify any variables on the true caller e.g. the weapon the player is currently using as opposed to the player themselves.
+== See also ==
+* [[ZScript]]
+
+[[Category:ZScript]]</text>
+    <sha1>5zufb9tzuiiqush9kxdburp4uwbypgv</sha1>
+  </revision>
+</page>

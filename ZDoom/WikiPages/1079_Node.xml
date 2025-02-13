@@ -1,0 +1,260 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>Node</title>
+  <ns>0</ns>
+  <id>1079</id>
+  <revision>
+    <id>49068</id>
+    <parentid>44944</parentid>
+    <timestamp>2022-04-02T10:23:39Z</timestamp>
+    <contributor>
+      <username>Gutawer</username>
+      <id>2517</id>
+    </contributor>
+    <minor />
+    <comment>parallelograms are convex</comment>
+    <origin>49068</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="16220" sha1="ltc1c4houcmuahc70zowll3h52x9r86" xml:space="preserve">{{doomwiki}}'''Nodes''' are probably the most complicated structure present in Doom [[WAD]]s ([[Doom format|Doom]] and [[Hexen format]] alike).  The information within this page is not at all necessary knowledge if you want to build ZDoom (or any kind) of maps, it's mainly here for completeness and for anyone seeking further information on the inner workings of Doom and the structure of maps and [[WAD]]s.
+
+Nodes and their related structures ([[segment]]s and [[subsector]]s) all pertain to rendering the level.  Often Doom maps are pretty large and only in very rare cases is every line of a map visible from every point (and most of those maps you'll want to avoid anyway).  As is the case, it doesn't make any sense for the engine to draw every single wall and pillar at the same time since generally only a fraction of the map is actually visible in the scene the player sees.  If the engine took up such a task the game would run much, much slower (to the point of near standstill) and would be painfully unplayable, even if the map was the size of, for instance, Doom 2 MAP02.
+
+This is where nodes come into play.  Nodes are branches on the ''binary space partition'' or BSP for short.  In what is a rather complex algorithm, the BSP divides up the given map over and over in order to determine which walls are in front of others.  The basic idea is to split the map in half and then split each half in half and so on until you're left with the smallest possible space in which all wall [[segment]]s within cannot possibly occlude any other walls within the same space.  That space is called a [[subsector]].
+
+Only sectors are divided, and thus no sub-sector can ever be in two sectors.  Segments are usually along linedefs, though most often some are created in order to form a proper sub-sector.  For this reason nodes builders will also add extra vertices to a map in order to connect new segs properly (since segs, like linedefs, need starting and ending vertices).
+
+The overall 'goal' of sub-sectors is to become a convex shape, which means that any line between any two points on the boarder of the shape will be contained in its entirety in the polygon (in other words, this new line will not intersect any of the lines of the shape).  For reference, all triangles and rectangles are convex, however not all quadrilaterals are convex ("V-shaped" kites, for instance, are not convex).
+
+The image below is a more or less accurate example of how a node builder ''might'' break up a simple, single sector:
+
+&lt;center&gt;[[image:bsp.png]]&lt;/center&gt;
+
+In this diagram the black lines are linedefs and the blue dotted lines are segs.  Notice how all the sub-sectors are now convex.  Also note that each linedef also becomes a seg and in the case of the top-most and bottom-most linedefs, those actually get split into three and two segs respectively for each spot where a seg intersects the line (which will have a vertex added there).
+
+The final goal of the binary tree is to make each leaf of the tree be a sub-sector, though this is not really necessary and a lot of times inefficient when you're only dealing with around 1000 or so polygons (and most maps contain thereabouts or less), though many nodes builders have the option to control linedef splits.  It is also worth noting that less segs (which results in less vertices) means the filesize will be smaller, and building nodes will greatly increase the file size of a map.
+
+
+==Specification==
+The original format used to store nodes in [[vanilla Doom]] suffered from some drawbacks and limitations, and as a result new node formats appeared to cover the needs of [[source port]]s. Two broad (and often overlapping) categories of new node formats include '''extended nodes''' (which raise limits to allow greater map complexity) and '''GL nodes''' which follow stricter rules in their coverage of the level geometry so as to allow its rendering by a true 3D engine.
+===Original format===
+These nodes work with the NODES, [[SEGS]] and [[SSECTORS]] lumps, and adds the additional vertices needed for the segments to the [[VERTEXES]] lumps. This is the cause of the first limitation of this format: since the vertices are added to the global vertex pool, the map format's limit of 32767 vertices is reached earlier. Another limitation of this format is that it forces the additional vertices to have integer coordinates, not floating or [[fixed point]], and as a result the position of a vertex may shift from where it is supposed to be according to the cut operated by the node builder. This lack of precision is responsible for many {{dw|slime_trail|slime trails}}.
+
+Here is the structure of the vanilla NODES lump:
+{| {{prettytable}}
+! Offset
+! Size (bytes)
+! Description
+|-
+| align="center" | 0
+| align="center" | 2
+| Partition line ''x'' coordinate
+|-
+| align="center" | 2
+| align="center" | 2
+| Partition line ''y'' coordinate
+|-
+| align="center" | 4
+| align="center" | 2
+| Change in ''x'' to end of partition line
+|-
+| align="center" | 6
+| align="center" | 2
+| Change in ''y'' to end of partition line
+|-
+| align="center" | 8
+| align="center" | 8
+| Right bounding box
+|-
+| align="center" | 16
+| align="center" | 8
+| Left bounding box
+|-
+| align="center" | 24
+| align="center" | 2
+| Right child
+|-
+| align="center" | 26
+| align="center" | 2
+| Left child
+|}
+Each of the two bounding boxes describe a rectangle which is the area covered by each of the two child nodes respectively. A bounding box consists of four &lt;tt&gt;short&lt;/tt&gt; values (top, bottom, left and right) giving the upper and lower bounds of the ''y'' coordinate and the lower and upper bounds of the ''x'' coordinate (in that order).
+
+The type of each child field is determined by its sign bit (bit 15). If bit 15 is zero, the child field gives the node number of a subnode. If bit 15 is set, then bits 0-14 give the number of a subsector.
+
+===Deep nodes===
+To remove the limits of regular nodes, the {{dw|DeePBSP}} nodebuilder uses a different format which can be recognized by a starting signature of "xNd4\0\0\0\0" (0x784E643400000000) in the NODES lump. Deep nodes use 32-bit signed values to reference vertices and segments, pushing the limits from 64K to 2G. However, they still suffer from lack of precision; for this reason it is not advised to use them. Nonetheless, ZDoom supports this node format, as well as a few other ports including [[PrBoom+]] and [[Risen3D]].
+
+===GL nodes===
+[[OpenGL]] renderers have additional requirements for the nodes that the software renderers can ignore, as they are much stricter on their need for subsectors to be convex and precision of coordinates is paramount. The {{dw|glBSP}} nodebuilder provides a standard for GL nodes, which are stored in additional lumps so as not to conflict with regular nodes: GL_VERT, GL_SEGS, GL_SSECT, GL_NODES and GL_PVS. These lumps may be in a separate file from their associated level, allowing the distribution of "GWA" files which contains prebuilt GL nodes for commercial levels without having to distribute modified versions of the levels themselves. To match the nodes with a level, a GL_LEVEL lump is used, generally containing a checksum of the level data to make sure the nodes are attributed properly.
+There are five different versions of GL nodes. Versions 1, 3 and 4 are considered deprecated now. Versions 2 is the preferred format, with version 5 used for maps requiring higher limits.
+GL nodes are supported by all OpenGL ports, though the extent of the support may vary, since the GL_PVS lump is considered optional and only V2 and V5 are required to be supported for an implementation to be considered valid.
+
+ZDoom supports GL nodes formats 2, 3 and 5. (Format 1 is not supported because it suffers from the same lack of precision as vanilla nodes; and format 4 because it does not contain information about partner segs.) In addition, ZDoom also offers its own formats for GL nodes.
+
+===ZDoom extended nodes===
+ZDoom's extended nodes, built by [[ZDBSP]], use 32-bit unsigned values to refer to vertices, segments and subsectors, pushing the limit to 4G for each. In addition, all structures are listed in the same lump (NODES), including additional vertices created by the nodebuilder. The SEGS and SSECTORS lumps are left empty. ZDoom extended nodes can be compressed or not; if uncompressed they start with an "XNOD" signature (0x584E4F44), if compressed with a "ZNOD" one (0x5A4E4F44).
+
+Outside of ZDoom and derivatives, uncompressed extended nodes are also supported by [[PrBoom+]] and the [[Eternity Engine]].
+
+====Technical details====
+The following sections use these types:
+
+;'''BYTE'''
+:A single unsigned byte. The number can be in the range [0, 255].
+;'''WORD'''
+:An unsigned integer stored in two bytes. The number can be in the range [0, 65535].
+;'''SWORD'''
+:A signed integer stored in two bytes. The number can be in the range [-32768, 32767].
+;'''DWORD'''
+:An unsigned integer stored in four bytes. The number can be in the range [0, 4294967295].
+;'''FIXED'''
+:A signed 16.16 fixed-point number stored in four bytes. The most-significant two bytes store the integer part of the number, and the least-significant two bytes store the fractional part of the number. The number can be in the approximate range [-32768.99998, 32767.99998].
+
+All multi-byte numbers are stored with their least significant byte first, i.e. little-endian.
+
+The first four byte of an extended or compressed nodes lump are a four-character signature (uncompressed even for compressed nodes). The first character identifies whether it is extended nodes ('X') or compressed nodes ('Z'). The following three characters can be “NOD” for regular nodes, or “GLN” for GL nodes. If there are more than 65534 lines in the map, the signature “GL2” is used for GL nodes instead. (Note that this can only happen with UDMF maps, because the binary [[map format]] does not allow more lines than that.) Following the signature is either the zlib data stream for a compressed node (see the zlib documentation for description of a data stream's format) containing the raw data, or directly this raw data in an uncompressed extended node. The following information is obtained in this order:
+
+#Vertex information
+#Subsector information
+#Segs information
+#Nodes information
+
+
+=====Vertex information=====
+{| {{prettytable}}
+|-
+|DWORD ||''OrgVerts''||Number of vertices used from the VERTEXES lump
+|-
+|DWORD ||''NewVerts''||Number of additional vertices that follow
+|-
+|colspan="3" bgcolor="#dddddd"|Repeat ''NewVerts'' times:
+|-
+|FIXED||''X''||X-Coordinate
+|-
+|FIXED||''Y''||Y-Coordinate
+|}
+These are all the ''additional'' vertices that the segs use. Unlike normal nodes, extra vertices are not added to the VERTEXES lump. When determining which vertex ''v'' a seg uses, if ''v'' &lt; ''OrgVerts'', then ''v'' is a vertex in the VERTEXES lump. Otherwise, when ''v'' &gt;= ''OrgVerts'', ''v''- ''OrgVerts'' is the index of a vertex stored here.
+
+Like version 2 GL nodes, the vertices stored here are represented as 16.16 fixed point numbers in order to maintain the full precision of the Doom engine.
+
+=====Subsector information=====
+{| {{prettytable}}
+|-
+|DWORD||''NumSubsectors''||Number of subsectors
+|-
+|colspan="3" bgcolor="#dddddd"|Repeat ''NumSubsectors'' times:
+|-
+|DWORD||NumSegs||Number of segs for this subsector
+|}
+Unlike normal nodes, the first seg in each subsector is not stored. This can be inferred by the ordering of the subsectors. The first subsector always starts at seg 0, and each following subsector begins with the seg immediately after the previous subsector's last seg.
+
+=====Segs information=====
+{| {{prettytable}}
+|-
+|DWORD||''NumSegs''||Number of segs
+|-
+|colspan="3" bgcolor="#dddddd"|Repeat ''NumSegs'' times:
+|-
+|DWORD||''v1''||Seg's first vertex
+|-
+|DWORD||''v2''||Seg's second vertex
+|-
+|WORD||''line''||The linedef this seg came from
+|-
+|BYTE||''side''||The linedef's side this seg came from (0=front, 1=back)
+|}
+Note that unlike vanilla nodes, the seg's angle and offset are not included. ZDoom does not need this information, and other ports that wish to support compressed nodes can recompute them trivially.
+
+=====Node information=====
+This is really no different from vanilla nodes.
+
+{| {{prettytable}}
+|-
+|DWORD  ||''NumNodes''||Number of nodes
+|-
+|colspan="3" bgcolor="#dddddd"|Repeat ''NumNodes'' times:
+|-
+|4 SWORDs||''X'', ''Y'', ''dX'', ''dY''||Splitter for this node
+|-
+|4 SWORDs||''Top'', ''Bottom'', ''Left'', ''Right''||Bounding box for ''Child0''
+|-
+|4 SWORDs||''Top'', ''Bottom'', ''Left'', ''Right''||Bounding box for ''Child1''
+|-
+|2 DWORDs||''Child0'', ''Child1''||References to child nodes or subsectors
+|}
+As with vanilla nodes, a child's high bit is set to indicate that it is a subsector and cleared to indicate that it is another node. Just remember that the child references are stored using four bytes each instead of two.
+
+===ZDoom GL nodes===
+There are three different formats of ZDoom GL nodes; hereafter referred to as GLN, GL2, and GL3. GLN is used for normal maps, GL2 is used for maps with more than 65536 linedefs (which are only possible in UDMF), GL3 is used for maps which require fractional precision for node splitters (which are also only possible in UDMF). GL3 supersedes GL2. All are also stored in a single lump (the SSECTORS lump in a [[Doom format|Doom-]] or [[Hexen format|Hexen-format]] map, the ZNODES lump in [[UDMF]]) and use a starting signature of XGLN, XGL2, or XGL3 for uncompressed, ZGLN, ZGL2, and ZGL3 for compressed. 
+
+====Technical details====
+Extended GL nodes have a format mostly identical to that of extended standard nodes, except for the way the nodes and segs are written; both GLN and GL2/GL3 nodes having their own format for segment information and GL3 having its own format for node information. For information on vertexes and subsectors, refer above.
+=====GLN segs information=====
+{| {{prettytable}}
+|-
+|DWORD||''NumSegs''||Number of segs
+|-
+|colspan="3" bgcolor="#dddddd"|Repeat ''NumSegs'' times:
+|-
+|DWORD||''v1''||Seg's first vertex
+|-
+|DWORD||''partner''||Seg's partner seg (0xFFFFFFFF if none)
+|-
+|WORD||''line''||The linedef this seg came from (0xFFFF if none)
+|-
+|BYTE||''side''||The linedef's side this seg came from (0=front, 1=back) (ignored if no line)
+|}
+=====GL2 segs information=====
+This also applies to GL3 segs.
+{| {{prettytable}}
+|-
+|DWORD||''NumSegs''||Number of segs
+|-
+|td bgcolor="#dddddd" colspan="3"|Repeat ''NumSegs'' times:
+|-
+|DWORD||''v1''||Seg's first vertex
+|-
+|DWORD||''partner''||Seg's partner seg (0xFFFFFFFF if none)
+|-
+|DWORD||''line''||The linedef this seg came from (0xFFFFFFFF if none)
+|-
+|BYTE||''side''||The linedef's side this seg came from (0=front, 1=back) (ignored if no line)
+|}
+Unlike standard GL nodes, each seg's second vertex is not stored. This is because GL subsectors must form a closed area. In other words, one seg's second vertex is the same as the next seg's first vertex. The subsector information contains everything you need to know to close each area and start a new one.
+
+Example: Suppose you have not read any segs yet, and the first subsector has four segs. Therefore, the second vertex for the first four segs can be determined to be:
+
+{| {{prettytable}}
+|-
+|Seg 0||Second vertex is Seg 1's first vertex
+|-
+|Seg 1||Second vertex is Seg 2's first vertex
+|-
+|Seg 2||Second vertex is Seg 3's first vertex
+|-
+|Seg 3||Second vertex is Seg 0's first vertex (because this is the last seg in the subsector)
+|}
+So for each subsector, all but the last seg's second vertex will be the same as the next seg's first vertex. The last seg's second vertex will be the same as the first seg's first vertex.
+
+=====GL3 nodes information=====
+
+{| {{prettytable}}
+|-
+|DWORD  ||''NumNodes''||Number of nodes
+|-
+|colspan="3" bgcolor="#dddddd"|Repeat ''NumNodes'' times:
+|-
+|4 SDWORDs||''X'', ''Y'', ''dX'', ''dY''||Splitter for this node, in 16.16 fixed point format
+|-
+|4 SWORDs||''Top'', ''Bottom'', ''Left'', ''Right''||Bounding box for ''Child0''
+|-
+|4 SWORDs||''Top'', ''Bottom'', ''Left'', ''Right''||Bounding box for ''Child1''
+|-
+|2 DWORDs||''Child0'', ''Child1''||References to child nodes or subsectors
+|}
+
+
+[[Category:Glossary]][[Category:Technical aspects]]</text>
+    <sha1>ltc1c4houcmuahc70zowll3h52x9r86</sha1>
+  </revision>
+</page>

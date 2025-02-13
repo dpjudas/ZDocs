@@ -1,0 +1,82 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>A KillTracer</title>
+  <ns>0</ns>
+  <id>7760</id>
+  <revision>
+    <id>46807</id>
+    <parentid>45099</parentid>
+    <timestamp>2019-07-16T06:13:54Z</timestamp>
+    <contributor>
+      <username>Quaker540</username>
+      <id>2135</id>
+    </contributor>
+    <comment>Replaced the deprecated action function, and added hyperlinks for all functions and properties</comment>
+    <origin>46807</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="3757" sha1="4kyowll8b2xj21h59av6jal247j0296" xml:space="preserve">{{codepointer|Monster AI}}
+'''A_KillTracer''' [(string ''damagetype'' [, int ''flags'' [, string ''filter'' [, string ''species'' [, int ''src'' [, int ''inflict'']]]]])]
+
+==Usage==
+Kills the calling actor's [[actor pointer|tracer]]. Optionally, a damage type can be given. Note that damage inflicted by this codepointer is not affected by damage factors.
+
+==Parameters==
+*''damagetype'': if the actor dies, the actor will enter a death state based on the specified damage type if present (or pain state if using {{Flag|NODAMAGE}}). Default is "{{c|{{DamageType|None}}}}".
+*''flags'': the following flags can be combined using the {{!}} character between name constants:
+**'''KILS_FOILINVUL''' - kills monsters and/or missiles that have the {{Flag|INVULNERABLE}} flag.
+**'''KILS_KILLMISSILES''' - causes missiles that are affected to enter their death state. Note that this follows the INVULNERABLE and NODAMAGE rules for monsters.
+**'''KILS_NOMONSTERS''' - do not target monsters with this function. Alone, it makes the function do nothing, but can be combined with KILS_KILLMISSILES to only affect missiles.
+**'''KILS_FOILBUDDHA''' — the ''{{Flag|BUDDHA|buddha}}'' effect is ignored when attempting to kill the actor.
+**'''KILS_EXFILTER''' — inverts the case of the class name filter; the calling actor's tracer is only killed if its class name does not match the value passed to ''filter''.
+**'''KILS_EXSPECIES''' — inverts the case of the [[species]] filter; the calling actor's tracer is only killed if its species does not match the value passed to ''species''.
+**'''KILS_EITHER''' — the calling actor's tracer is killed if either of its class name or [[species]] matches the values passed to ''filter'' and ''species'', respectively.
+*''filter'': the actor class to kill. The calling actor's tracer is only killed if its class name matches the specified filter class. Default is {{c|"None"}}.
+*''species'': the actor [[species]] to kill. The calling actor's tracer is only killed if its species matches the specified species filter. Default is {{c|"None"}}.
+* ''src'': Indicates the [[Actor pointer|actor pointer]] responsible for dealing the damage. A monster dealing the damage should use AAPTR_DEFAULT, and missiles should use AAPTR_TARGET (so monsters can identify missiles belonging to their owners and give proper credit for the kill). Default is AAPTR_DEFAULT.
+* ''inflict'': The actor doing the actual damage. By changing this, the actor's flags upon the pointed actor are taken into account instead of the calling actor's own.
+
+== Examples ==
+This is a modified revenant, whos projectile will instantly freeze the player to death if it
+flies for around 5 seconds, using A_KillTracer, with the "Ice" damage type.
+
+
+ ACTOR Petriphant : Revenant
+ {
+  {{Property|Translation}} "Ice"
+  {{Property|HitObituary}} "%o was punched by a Petriphant."
+  {{Property|Obituary}} "%o was petrified by a Petriphant's fireball."
+  States
+  {
+  Missile:
+    SKEL J 0 Bright [[A_FaceTarget]]
+    SKEL J 10 Bright [[A_FaceTarget]]
+    SKEL K 10 [[A_SpawnProjectile]] ("StoneTracer", 40)
+    SKEL K 10 [[A_FaceTarget]]
+    Goto See
+  }
+ }
+ 
+ ACTOR StoneTracer : RevenantTracer
+ {
+  {{Property|Translation}} "Ice"
+  {{Property|DamageType}} Ice
+  States
+  {
+  Spawn:
+    FATB ABABABABA 4 Bright [[A_SeekerMissile]] (45, 90, SMF_PRECISE)
+    FATB ABABABABA 4 Bright [[A_SeekerMissile]] (45, 90, SMF_PRECISE)
+    FATB ABABABABA 4 Bright [[A_SeekerMissile]] (45, 90, SMF_PRECISE)
+    FATB ABABABABA 4 Bright [[A_SeekerMissile]] (45, 90, SMF_PRECISE)
+    FATB ABABABABA 4 Bright [[A_SeekerMissile]] (45, 90, SMF_PRECISE)
+    FATB A 3 Bright '''A_KillTracer''' ("Ice")
+    Loop
+  Death:
+    FBXP A 8 Bright
+    FBXP B 6 Bright
+    FBXP C 4 Bright
+    Stop
+  }
+ }</text>
+    <sha1>4kyowll8b2xj21h59av6jal247j0296</sha1>
+  </revision>
+</page>

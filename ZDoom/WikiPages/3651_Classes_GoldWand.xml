@@ -1,0 +1,70 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>Classes:GoldWand</title>
+  <ns>0</ns>
+  <id>3651</id>
+  <revision>
+    <id>39391</id>
+    <parentid>38401</parentid>
+    <timestamp>2015-04-29T17:49:40Z</timestamp>
+    <contributor>
+      <username>Blue Shadow</username>
+      <id>2021</id>
+    </contributor>
+    <minor />
+    <comment>/* DECORATE definition */ Updated</comment>
+    <origin>39391</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="1357" sha1="eu0se0oywj9x8rmkm3g2g9exakv9ulx" xml:space="preserve">{{Actor|
+| type = Weapon
+| name = Elvenwand
+| class = GoldWand
+| game = Heretic
+| doomednum = 9042
+}}[[Classes]]: {{Class|Inventory}}&amp;rarr;{{Class|Weapon}}&amp;rarr;{{Class|HereticWeapon}}&amp;rarr;&lt;u&gt;GoldWand&lt;/u&gt;&lt;br&gt;
+&amp;ensp;&amp;rarr;{{Class|GoldWandPowered}}&lt;br&gt;
+
+
+{{Class|HereticPlayer|Corvus}}'s elvenwand. It fires {{Class|GoldWandPuff1|magical hitscan shots}} fairly quickly, but they are not very damaging. A magical equivalent to ''[[Doom]]'''s {{Class|pistol}}.
+
+==== [[DECORATE]] definition ====
+ ACTOR &lt;u&gt;GoldWand&lt;/u&gt; : {{Class|HereticWeapon}}
+ {
+   +{{Flag|BLOODSPLATTER}}
+   {{Property|Weapon.SelectionOrder}} 2000
+   {{Property|Weapon.AmmoGive}} 25
+   {{Property|Weapon.AmmoUse}} 1
+   {{Property|Weapon.AmmoType}} "{{Class|GoldWandAmmo}}"
+   {{Property|Weapon.SisterWeapon}} "{{Class|GoldWandPowered}}"
+   {{Property|Weapon.YAdjust}} 5
+   {{Property|Inventory.PickupMessage}} "$TXT_WPNGOLDWAND" // "GOLD WAND"
+   {{Property|Obituary}} "$OB_MPGOLDWAND"
+   {{Property|Tag}} "$TAG_GOLDWAND"
+ 
+   action native [[A_FireGoldWandPL1]]();
+ 
+   States
+   {
+   Spawn:
+     GWAN A -1
+     Stop
+   Ready:
+     GWND A 1 [[A_WeaponReady]]
+     Loop
+   Deselect:
+     GWND A 1 [[A_Lower]]
+     Loop
+   Select:
+     GWND A 1 [[A_Raise]]
+     Loop
+   Fire:
+     GWND B 3 
+     GWND C 5 [[A_FireGoldWandPL1]]
+     GWND D 3
+     GWND D 0 [[A_ReFire]]
+     Goto Ready
+   }
+ }</text>
+    <sha1>eu0se0oywj9x8rmkm3g2g9exakv9ulx</sha1>
+  </revision>
+</page>

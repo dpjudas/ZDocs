@@ -1,0 +1,47 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>A WolfAttack</title>
+  <ns>0</ns>
+  <id>6972</id>
+  <revision>
+    <id>43403</id>
+    <parentid>43402</parentid>
+    <timestamp>2016-11-22T13:17:13Z</timestamp>
+    <contributor>
+      <username>Major Cooke</username>
+      <id>1703</id>
+    </contributor>
+    <origin>43403</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="3142" sha1="kkel9r66al3at0chunp5a7u75jzljhn" xml:space="preserve">{{codepointer|Generic Attack}}'''A_WolfAttack'''
+
+'''A_WolfAttack''' (int ''flags''[, sound ''whattoplay''[, float ''snipe''[, int ''maxdamage''[, int ''blocksize''[, int ''pointblank''[, int ''longrange''[, float ''runspeed'', [class ''pufftype'']]]]]]]])
+
+This codepointer emulates the behavior of the enemy guns in ''Wolfenstein 3D''. It diverges greatly from normal [[hitscan]] attacks on several points:
+* There is no puff (unless the flag WAF_USEPUFF is given).
+* There is also no damage thrust.
+* Distance computation is orthogonal, like explosions. (So a target at [128, 127] relatively to the shooter will not be further away than a target at [128, 0], no matter what trigonometry says.)
+* The attack is less likely to be successful at longer range.
+* The attack is less likely to be successful if the attacker is in front of the target, as the target will be able to "dodge" the incoming bullet.
+* The attack is less likely to be successful if the target is a player running.
+* Damage is decreased with range, too: halved at medium range, and halved again (so, quartered) at long range. This can result in 0 damage.
+
+
+The parameters are all optional. They consist of:
+* ''flags'' can be set to 0 for default behavior, or a combination of the following flags:
+:* '''WAF_NORANDOM''' &amp;mdash; the ''damage'' parameter is used as an absolute value instead of the upper bound on a random roll.
+:* '''WAF_USEPUFF''' &amp;mdash; spawns a puff as normal Doom engine behavior. It will be used for damage type.
+* ''whattoplay'' is the attack sound. It defaults to "weapons/pistol".
+* ''snipe'' corresponds to the factor by which the effective distance is multiplied. The lower it is, the more precise the enemy is. Hans Grosse and the blue SS in Wolf 3D have a snipe factor of 2/3. It defaults to 1.0.
+* ''maxdamage'' corresponds (unless the WAF_NORANDOM flag is used) to the theoretical maximum damage inflicted at point blank range, and is used as a modulo for the random number generator. The default value of 64 corresponds to Wolf's double-bitshift (255&gt;&gt;2 == 63; 255%64 == 63).
+* ''blocksize'' corresponds to the size of a "block" emulating the Wolf 3D squares. The default value is 128, corresponding to the translation of the Wolf levels done by Id Software in the secret levels of [[Doom II]]. This value is used by the next two parameters.
+* ''pointblank'' corresponds to the number of squares below which the damage isn't divided.
+* ''longrange'' corresponds to the number of squares beyond which the damage is further divided.
+* ''runspeed'' is the combined velocity at which the target must move if it wants to be harder to aim. The default value of 160.0 is roughly based on the {{Class|DoomPlayer|Doom player}} walk and run speeds. This is compared to the target's velx²+vely²+velz². Note that because monster AI movements work without using velocities, this only has an effect against players (and theoretically, missiles).
+* ''pufftype'' is only meaningful if the WAF_USEPUFF flag is used. The puff specified will be used for damage type and other effects. The default puff is {{Class|BulletPuff}}.
+
+==Examples==
+{{noexamples}}</text>
+    <sha1>kkel9r66al3at0chunp5a7u75jzljhn</sha1>
+  </revision>
+</page>

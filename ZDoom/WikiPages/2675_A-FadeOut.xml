@@ -1,0 +1,89 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>A FadeOut</title>
+  <ns>0</ns>
+  <id>2675</id>
+  <revision>
+    <id>45314</id>
+    <parentid>44134</parentid>
+    <timestamp>2017-05-23T04:06:36Z</timestamp>
+    <contributor>
+      <username>Hfc2x</username>
+      <id>1650</id>
+    </contributor>
+    <comment>Not used anymore</comment>
+    <origin>45314</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="1933" sha1="inyz98fj3gzgvbooc5cef6ld61153mr" xml:space="preserve">__NOTOC__{{DISPLAYTITLE:A_FadeOut}}
+'''A_FadeOut''' [(float ''reduce_amount'' [, int ''flags''])]
+
+== Usage ==
+Increases the actor's translucency (decreases its {{Property|Alpha|alpha}}) by the specified amount. When the actor is fully transparent it will be removed, unless ''remove'' is explicitly set to ''false'' (it is true by default). This can be used to slowly fade out some things in a loop. If ''reduce_amount'' is not provided, it defaults to 0.1.
+
+=== Parameters ===
+*''reduce_amount'': The amount by which to reduce the actor's alpha.
+*''flags'': The following flags can be combined using the pipe character {{!}} between the constant names:
+**'''FTF_REMOVE''' — the actor is removed from the game once its alpha reaches 0. This flag is implied by default, and is equivalent to using "TRUE" in earlier versions of ZDoom. To prevent this from occurring, use 0.
+**'''FTF_CLAMP''' — the alpha cannot go below 0.
+
+== Examples ==
+This is a {{Class|cacodemon}} fireball which slowly fades out of existence when it is fired.
+
+ ACTOR Fadeball : {{Class|CacodemonBall}}
+ {
+   {{Property|RenderStyle}} "Translucent"
+   {{Property|Alpha}} 1.0
+   States
+   {
+   Spawn:
+     BAL2 AB 4 Bright [[A_FadeOut]](0.2)
+     Loop
+   }
+ }
+
+This code replaces plasma balls with a custom [[PlasmaBall]] with trails.
+
+ Actor CoolPlasmaBall : PlasmaBall replaces PlasmaBall
+ {
+    Radius 9
+    Height 6
+    Scale 0.75
+    RenderStyle Add
+    Alpha 0.8
+    
+    States
+    {
+    Spawn:
+      PLSS AAAAAABBBBBB 1 Bright A_SpawnItemEx("CPBTrail", 0, 0, 0, 0, 0, 0, 0, 0)
+      Loop
+    }
+ }
+ 
+ Actor CPBTrail
+ {
+    Radius 9
+    Height 6
+    Scale 0.75
+    RenderStyle Add
+    Alpha 0.8
+    
+    +NOGRAVITY
+    +NOBLOCKMAP
+    +NOCLIP
+    
+    States
+    {
+    Spawn:
+      PLSS AAAAAABBBBBB 1 Bright A_FadeOut
+      Loop
+    }
+ }
+
+== See Also ==
+* [[A_FadeIn]]
+* [[A_FadeTo]]
+
+[[category:Decorate Status change functions]]{{DEFAULTSORT:FadeOut}}</text>
+    <sha1>inyz98fj3gzgvbooc5cef6ld61153mr</sha1>
+  </revision>
+</page>

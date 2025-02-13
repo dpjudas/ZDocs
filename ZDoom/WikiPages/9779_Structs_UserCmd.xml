@@ -1,0 +1,48 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>Structs:UserCmd</title>
+  <ns>0</ns>
+  <id>9779</id>
+  <revision>
+    <id>53075</id>
+    <parentid>51300</parentid>
+    <timestamp>2024-09-12T22:59:38Z</timestamp>
+    <contributor>
+      <username>Jekyll Grim Payne</username>
+      <id>2175</id>
+    </contributor>
+    <minor />
+    <comment>/* Usage */</comment>
+    <origin>53075</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="1861" sha1="0ssv7vd443axighr5du4mjt4u6dm158" xml:space="preserve">The UserCmd [[Structs|struct]] contains data related to the player's current inputs. This struct is defined as '''native''', meaning the internals are handled in the C++ part of the engine and custom versions of this struct cannot be created.
+
+== Usage ==
+Each player has their own UserCmd struct which is accessible with the &lt;code&gt;cmd&lt;/code&gt; field of the [[Structs:PlayerInfo|PlayerInfo struct]] of that player.
+
+=== Fields ===
+*{{c|uint '''buttons'''}}
+:A bit field that contains the currently pressed buttons from [[#Buttons|the list below]].
+:To check if a specific button is pressed, [[Operators_(ZScript)#Bitwise_operators|bitwise operators]] must be used, for example &lt;code&gt;if (&lt;playerInfoPointer&gt;.cmd.buttons &amp; BT_ATTACK)&lt;/code&gt; will return true if the Fire button is present among any other possible buttons.
+*{{c|int16 '''pitch'''}}
+:{{moreinfo}}
+*{{c|int16 '''yaw'''}}
+:{{moreinfo}}
+*{{c|int16 '''roll'''}}
+:{{moreinfo}}
+*{{c|int16 '''forwardmove'''}}
+:The value of the forward/backward input in the -32767–32767 range. The range is there to account for the possible use of analog input, like gamepads. Keyboard keys will just instantly go to the full value.
+*{{c|int16 '''sidemove'''}}
+:The value of the leftward/rightward input in the -32767–32767 range. The range is there to account for the possible use of analog input, like gamepads. Keyboard keys will just instantly go to the full value.
+*{{c|int16 '''upmove'''}}
+:The value of the downward/upward input in the -32767–32767 range. The range is there to account for the possible use of analog input, like gamepads. Keyboard keys will just instantly go to the full value.
+
+=== Buttons ===
+The &lt;code&gt;buttons&lt;/code&gt; field can contain the same internal button names as the ones that can be obtained by [[GetPlayerInput]]:
+{{: Player input buttons}}
+
+[[Category:ZScript]]
+[[Category:Structs]]</text>
+    <sha1>0ssv7vd443axighr5du4mjt4u6dm158</sha1>
+  </revision>
+</page>

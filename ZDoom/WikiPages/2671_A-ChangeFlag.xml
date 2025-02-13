@@ -1,0 +1,48 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>A ChangeFlag</title>
+  <ns>0</ns>
+  <id>2671</id>
+  <revision>
+    <id>48413</id>
+    <parentid>47864</parentid>
+    <timestamp>2021-03-21T07:56:37Z</timestamp>
+    <contributor>
+      <username>Gez</username>
+      <id>1283</id>
+    </contributor>
+    <minor />
+    <comment>use DecorateNote instead of WarnDeprecated</comment>
+    <origin>48413</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="892" sha1="214q9oubohly5i1mhlaxf5jo2ks1z1a" xml:space="preserve">__NOTOC__{{codepointer|Status change}}
+void '''A_ChangeFlag''' (string ''flagname'', bool ''value'')
+{{DecorateNote|[[Converting DECORATE code to ZScript#Actor flags|direct access to flags]]}}
+
+== Usage ==
+Changes the specified [[Actor flags|flag]] and sets it to the given value. Note that not all flags will produce useful results when changed during gameplay.
+
+=== Parameters ===
+* ''flagname'': the name of the flag to change.
+* ''value'': the value to set the flag to. ''true'' sets the flag, while ''false'' clears it.
+
+== Examples ==
+This {{Class|DoomImp|imp}} attempts to flee from the attacker if it gets stunned by an attack.
+
+ actor CowardImp : {{class|DoomImp}}
+ {
+     States
+     {
+     Pain:
+         TROO H 2 [[A_ChangeFlag]]("{{flag|FRIGHTENED}}", true)
+         TROO H 2 [[A_Pain]]
+         Goto See
+     }
+ }
+
+== See also ==
+* [[A_ChangeCountFlags]]
+* [[A_ChangeLinkFlags]]</text>
+    <sha1>214q9oubohly5i1mhlaxf5jo2ks1z1a</sha1>
+  </revision>
+</page>

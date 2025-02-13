@@ -1,0 +1,50 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>Classes:CStaffMissile</title>
+  <ns>0</ns>
+  <id>4565</id>
+  <revision>
+    <id>34483</id>
+    <parentid>34449</parentid>
+    <timestamp>2012-10-15T05:54:37Z</timestamp>
+    <contributor>
+      <username>Blue Shadow</username>
+      <id>2021</id>
+    </contributor>
+    <comment>/* DECORATE definition */ Updated.</comment>
+    <origin>34483</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="793" sha1="h08h9ek6i7o7pq9u5ozyjjmg0vbd8lv" xml:space="preserve">{{Actor|
+| type = Explosive
+| name = Serpent staff projectile
+| class = CStaffMissile
+| game = Hexen
+}}[[Classes]]: &lt;u&gt;CStaffMissile&lt;/u&gt;&lt;br&gt;
+
+The projectile fired by the [[Classes:CWeapStaff|Serpent Staff]]. The native engine code makes this actor and any actor inheriting from this cause [[poison]] damage.
+
+==== [[DECORATE]] definition ====
+ ACTOR &lt;u&gt;CStaffMissile&lt;/u&gt; native
+ {
+   {{Property|Speed}} 22
+   {{Property|Radius}} 12
+   {{Property|Height}} 10
+   {{Property|Damage}} 5
+   {{Property|RenderStyle}} Add
+   {{Property|Projectile}}
+   {{Property|DeathSound}} "ClericCStaffExplode"
+   {{Property|Obituary}} "$OB_MPCWEAPSTAFFR"
+   States
+   {
+   Spawn:
+     CSSF DDEE 1 Bright [[A_CStaffMissileSlither]]
+     Loop
+   Death:
+     CSSF FG 4 Bright
+     CSSF HI 3 Bright
+     Stop
+   }
+ }</text>
+    <sha1>h08h9ek6i7o7pq9u5ozyjjmg0vbd8lv</sha1>
+  </revision>
+</page>

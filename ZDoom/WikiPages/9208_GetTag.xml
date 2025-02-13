@@ -1,0 +1,46 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>GetTag</title>
+  <ns>0</ns>
+  <id>9208</id>
+  <revision>
+    <id>53580</id>
+    <parentid>53579</parentid>
+    <timestamp>2024-11-07T11:44:03Z</timestamp>
+    <contributor>
+      <username>Jekyll Grim Payne</username>
+      <id>2175</id>
+    </contributor>
+    <comment>/* Parameters */</comment>
+    <origin>53580</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="976" sha1="nijmx694vtybnw4hx6i9tdm1yvcblvx" xml:space="preserve">'''{{class|Actor}}'''
+
+{{c|native clearscope string '''GetTag'''(string ''defstr'' }}={{c| "") const}}
+
+==Usage==
+Returns the {{Property|Tag|tag}} of the calling actor. If the actor does not have a tag and ''defstr'' is an empty string, the actor's class name is returned instead.
+
+===Parameters===
+*{{c|String '''defstr'''}}
+:Optional. A string to return by default if the actor does not have a tag. Default is {{c|""}} (an empty string), which is interepreted as "return actor's class name."
+
+==Examples==
+This is an example custom function that uses [[LineTrace]] to find an actor in front of the calling actor and then get its name:
+&lt;syntaxhighlight lang="cs"&gt;
+String GetLooktargetName()
+{
+	FLineTraceData tr;
+	LineTrace(self.angle, PLAYERMISSILERANGE, self.pitch, flags: TRF_ALLACTORS, offsetz: self.height*0.75, data: tr);
+	if (data.hitType == TRACE_HitActor &amp;&amp; data.HitActor)
+	{
+		return data.HitActor.GetTag();
+	}
+	return "";
+}&lt;/syntaxhighlight&gt;
+
+
+[[Category:ZScript]]</text>
+    <sha1>nijmx694vtybnw4hx6i9tdm1yvcblvx</sha1>
+  </revision>
+</page>

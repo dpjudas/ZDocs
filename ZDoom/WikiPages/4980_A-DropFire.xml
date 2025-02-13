@@ -1,0 +1,49 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>A DropFire</title>
+  <ns>0</ns>
+  <id>4980</id>
+  <revision>
+    <id>34453</id>
+    <parentid>34452</parentid>
+    <timestamp>2012-10-05T19:23:49Z</timestamp>
+    <contributor>
+      <username>Gez</username>
+      <id>1283</id>
+    </contributor>
+    <minor />
+    <comment>more links</comment>
+    <origin>34453</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="892" sha1="kn8fve3jcoqgp7upw5lfrxawfa8cwue" xml:space="preserve">{{codepointer|Spawn}}'''A_DropFire'''
+
+(no parameters)
+
+
+Spawns a [[Classes:FireDroplet|FireDroplet]] actor and does fire damage in a 64 unit radius.
+
+A possible way to replicate this with more-customizable functions would be:
+
+    [[A_SpawnItemEx]]("FireDroplet", 0, 0, 24, 0, 0, -1)
+    [[A_Explode]](64, 64, XF_NOTMISSILE, false) // With {{Property|DamageType}} "Fire" on the actor in question
+
+== Examples ==
+From the state definition of {{Class|StrifeHumanoid}}:
+
+  Burn:
+    BURN A 3 Bright [[A_PlaySoundEx]]("human/imonfire", "Voice")
+    BURN B 3 Bright [[A_DropFire]]
+    BURN C 3 Bright [[A_Wander]]
+    BURN D 3 Bright [[A_NoBlocking]]
+    BURN E 5 Bright [[A_DropFire]]
+    BURN FGH 5 Bright [[A_Wander]]
+    BURN I 5 Bright [[A_DropFire]]
+    BURN JKL 5 Bright [[A_Wander]]
+    BURN M 5 Bright [[A_DropFire]]
+    BURN NOPQPQ 5 Bright
+    BURN RSTU 7 Bright
+    BURN V -1
+    Stop</text>
+    <sha1>kn8fve3jcoqgp7upw5lfrxawfa8cwue</sha1>
+  </revision>
+</page>

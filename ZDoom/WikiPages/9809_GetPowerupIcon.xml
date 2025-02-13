@@ -1,0 +1,127 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>GetPowerupIcon</title>
+  <ns>0</ns>
+  <id>9809</id>
+  <revision>
+    <id>51536</id>
+    <parentid>51535</parentid>
+    <timestamp>2024-02-02T16:09:58Z</timestamp>
+    <contributor>
+      <username>Jekyll Grim Payne</username>
+      <id>2175</id>
+    </contributor>
+    <comment>/* Examples */</comment>
+    <origin>51536</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="3591" sha1="gja9qsw6llvb30pmj70xsiammj48pxs" xml:space="preserve">'''{{class|Powerup}}'''
+
+{{c|virtual clearscope TextureID '''GetPowerupIcon'''() const}}
+
+== Usage ==
+A [[ZScript virtual functions|virtual function]] of the {{class|Powerup}} class to obtain their {{property|Inventory.Icon}}. Can be overridden to add conditions.
+
+Normally, used by {{class|BaseStatusBar|HUDs}} to draw an icon for the active powerup. [[Classes:Doom#Powerups|Doom powerups]] don't have icons, but the ones in [[Classes:Heretic#Powerups|Heretic]] and [[Classes:Hexen#Inventory|Hexen]] do.
+
+=== Return values ===
+Returns a [[Structs:TextureID|TextureID]] of the icon.
+
+== [[ZScript]] definition ==
+{{ZScriptDefinitionNote|actors/inventory/powerups.zs#L279C2-L279C68}}
+The base {{class|Powerup}} class defines it as follows:
+&lt;syntaxhighlight lang="csharp"&gt;
+	virtual clearscope version("2.5") TextureID GetPowerupIcon() const
+	{
+		return Icon;
+	}
+&lt;/syntaxhighlight&gt;
+
+== Examples ==
+This example shows how a custom version of the base {{class|Powerup}} class can be created with a more robust handling of how it would obtain an icon. First, it tries to obtain {{property|Inventory.Icon}} defined in the powerup itself. If that failed, it looks for {{property|Inventory.AltHUDIcon}}. From there, it utilizes its new property, {{c|GiverClass}}. This is meant to be a {{class|PowerupGiver}} class name, filled in by the author, to be recognized as the powerup giver that is "responsible" for this powerup. The function will use [[GetDefaultByType]] to try and obtain its icon, altHUDicon, or Spawn state sprite with [[Structs:State#Methods|GetSpriteTexture]]:
+
+&lt;syntaxhighlight lang="csharp"&gt;
+class Powerup_Custombase : Powerup abstract
+{
+	class&lt;PowerupGiver&gt; giverClass;
+	Property GiverClass : giverClass;
+
+	// A custom function that returns true if the provided
+	// TextureID is a valid, existing texture and is NOT
+	// just TNT1A0:
+	clearscope bool IsIconValid(TextureID check)
+	{
+		return check &amp;&amp; check.IsValid() &amp;&amp; TexMan.GetName(check) != 'TNT1A0';
+	}
+
+	override TextureID GetPowerupIcon()
+	{
+		// Try obtaining the icon first:
+		if (IsIconValid(icon))
+		{
+			return icon;
+		}
+		// If that failed, try obtaining altHUDIcon:
+		if (IsIconValid(altHUDIcon))
+		{
+			return altHUDIcon;
+		}
+
+		// Declare a new field:
+		TextureID picon;
+
+		// Null-check giverClass
+		if (giverClass)
+		{
+			let def = GetDefaultByType(giverclass);
+			// ...and try obtaining its icon:
+			picon = def.icon;
+			if (IsIconValid(picon))
+			{
+				return picon;
+			}
+			// If that failed, try obtaining giverClass's altHUDIcon:
+			picon = def.altHUDIcon;
+			if (IsIconValid(picon))
+			{
+				return picon;
+			}
+			// If that failed, try obtaining giverClass's Spawn state sprite:
+			State sps = def.spawnState;
+			picon = sps.GetSpriteTexture(0);
+			if (IsIconValid(picon))
+			{
+				return picon;
+			}
+		}
+		// If the code reached this place, none of the above worked, the
+		// function failed to obtain a valid texture. So, explicitly set
+		// picon to null, so that future IsValid checks will recognize
+		// this pointer as null:
+		picon.SetNull();
+		return picon;
+	}
+}
+
+// Example implementation:
+class MyPowerup : Powerup_Custombase
+{
+	Default
+	{
+		// Defines Doom's Invulnerability sphere as the giver class
+		// for this powerup. As such, if this isn't given an icon,
+		// it'll return PINVA0, which is the spawn state sprite of
+		// InvulnerabilitySphere (because it doesn't have icons):
+		Powerup_Custombase.GiverClass 'InvulnerabilitySphere';
+	}
+}
+&lt;/syntaxhighlight&gt;
+
+== See also ==
+* [[Classes:Powerup]]
+* [[Powerup virtual functions]]
+
+[[Category:ZScript]]
+[[Category:ZScript virtual functions]]</text>
+    <sha1>gja9qsw6llvb30pmj70xsiammj48pxs</sha1>
+  </revision>
+</page>

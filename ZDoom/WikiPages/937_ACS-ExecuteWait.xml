@@ -1,0 +1,57 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>ACS ExecuteWait</title>
+  <ns>0</ns>
+  <id>937</id>
+  <revision>
+    <id>35690</id>
+    <parentid>35689</parentid>
+    <timestamp>2013-02-10T03:10:15Z</timestamp>
+    <contributor>
+      <username>Deded007</username>
+      <id>1392</id>
+    </contributor>
+    <minor />
+    <comment>test</comment>
+    <origin>35690</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="1726" sha1="n1blzk6emdlixwgv6u49d9oxurcv5co" xml:space="preserve">void '''ACS_ExecuteWait''' (int ''script'', int ''unused'', int ''arg1'', int ''arg2'', int ''arg3'');
+
+== Usage ==
+
+Using '''ACS_ExecuteWait''' is exactly equivalent to the following two commands:
+
+ [[ACS_Execute]] (script, 0, arg1, arg2, arg3);
+ [[ScriptWait]] (script);
+
+Note that where you would specify a map number with [[ACS_Execute]], you must specify 0 here because you can only wait on scripts in the current map.
+
+=== Parameters ===
+
+*''script'': The script number to execute.
+*''unused'': Not currently used. Should always be set to 0.
+*''arg1'': First argument passed to the script.
+*''arg2'': Second argument passed to the script.
+*''arg3'': Third argument passed to the script.
+
+==Examples==
+
+This function is rather uncommon, but does have its uses. A common use would be to wait on a scripted event. For example, if there were some sort of event or challenge that used a script at various points in the level, and at one point the player had to complete the event as part of another script, this command can be used rather than copying the challenge script twice. To elaborate, here is a script.
+
+ script 15 (int armytid, int sector)
+ {
+     [[Print]] (s:"Defeat the monsters for a prize!");
+ 
+     [[ACS_ExecuteWait]] (5, 0, armytid, 0, 0);
+ 
+     [[Ceiling_RaiseByValue]] (sector, 10, 64);
+ }
+
+This script tells the player to defeat the monsters for a prize. Then it executes script 5 which could be script 5 as used [[ThingCount|here]]. After the success of script 5, a ceiling is raised, supposedly to reveal a prize. As this script can be used elsewhere, script 15 is like a wrapper for script 5 which offers a prize.
+
+{{script functions}}
+[[category:ACS Wait functions]]
+{{DISPLAYTITLE:ACS_ExecuteWait}}</text>
+    <sha1>n1blzk6emdlixwgv6u49d9oxurcv5co</sha1>
+  </revision>
+</page>

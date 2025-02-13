@@ -1,0 +1,70 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>BeginHUD</title>
+  <ns>0</ns>
+  <id>9970</id>
+  <revision>
+    <id>53452</id>
+    <timestamp>2024-10-31T09:32:52Z</timestamp>
+    <contributor>
+      <username>Jekyll Grim Payne</username>
+      <id>2175</id>
+    </contributor>
+    <comment>Created page with "'''{{class|BaseStatusBar}}'''  native void '''BeginHUD'''(double ''Alpha'' = 1., bool ''forcescaled'' = false, int ''resW'' = -1, int ''resH'' = -1)  == Usage == A '''{{class|BaseStatusBar}}''' function that begins the process of drawing a fullscreen HUD. It sets up the virtual canvas for the HUD and aligns it to the current screen resolution, so all relevant orientation flags (such as DI_SCREEN* and DI_ITEM* flags used by many drawing functions) work as expected.  When..."</comment>
+    <origin>53452</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="3153" sha1="t3nd1e1cghan1sc0yf0mcty1xt0dmis" xml:space="preserve">'''{{class|BaseStatusBar}}'''
+
+native void '''BeginHUD'''(double ''Alpha'' = 1., bool ''forcescaled'' = false, int ''resW'' = -1, int ''resH'' = -1)
+
+== Usage ==
+A '''{{class|BaseStatusBar}}''' function that begins the process of drawing a fullscreen HUD. It sets up the virtual canvas for the HUD and aligns it to the current screen resolution, so all relevant orientation flags (such as DI_SCREEN* and DI_ITEM* flags used by many drawing functions) work as expected.
+
+When drawing a fullscreen HUD, this must be called before any drawing is done. 
+
+In contrast, if you want to draw a classic-style statusbar HUD (which is limited to a specific area of the screen, not the whole screen), '''[[BeginStatusBar]]''' is typically used instead.
+
+=== Parameters ===
+*{{c|double '''Alpha'''}}
+:The base overall translucency of the HUD (alpha of individual elements is applied on top). Default is 1.0 (opaque).
+*{{c|bool '''forcescaled'''}}
+:If &lt;code&gt;true&lt;/code&gt;, the size of the HUD will be fixed, and the player won't be able to change it via HUD options.
+:'''Note:''' using this argument simply to override how position coordinates work in drawing functions is highly discouraged. Authors are recommended to familiarize themselves with DI_SCREEN* and DI_ITEM* flags to make sure their HUD elements are attached to screen corners/edges, which will make their position size-agnostic. Forcing fixed size of a HUD is generally not recommended.
+*{{c|int '''resW'''}}
+:Horizontal virtual resolution of the fullscreen HUD. The default is -1, which is interpreted as 320.
+*{{c|int '''resH'''}}
+:Vertical virtual resolution of the fullscreen HUD. The default is -1, which is interpreted as 200.
+
+Note 1: The virtual resolution does not necessarily correspond to the actual size of the HUD's virtual canvas, because that size will be adjusted according to the user's resolution and its aspect ratio. Resolution specific in the function is meant to server as a base.
+
+Note 2: While [[BeginHUD]] is designed for fullscreen HUDs, it can be used for statusbar-styled HUDs as well, if you want those HUDs to use the whole screen as a canvas rather than bunch up close to the bottom center of the screen like the classic statusbar does.
+
+== Examples ==
+This example is from [https://github.com/ZDoom/gzdoom/blob/master/wadsrc/static/zscript/ui/statusbar/doom_sbar.zs DoomStatusBar], the HUD class used by Doom. First, it checks the &lt;code&gt;state&lt;/code&gt; argument of its [[Draw]] virtual function, and then calls either [[BeginStatusBar]] or [[BeginHUD]] depending on the type of the HUD currently used by the player:
+&lt;syntaxhighlight lang="csharp"&gt;
+	override void Draw (int state, double TicFrac)
+	{
+		Super.Draw (state, TicFrac);
+
+		if (state == HUD_StatusBar) // this begins classic statusbar drawing
+		{
+			BeginStatusBar();
+			DrawMainBar (TicFrac); // draws statusbar elements
+		}
+		else if (state == HUD_Fullscreen) // this begins fullscreen HUD drawing
+		{
+			BeginHUD();
+			DrawFullScreenStuff (); // draws fullscreen HUD elements
+		}
+	}
+&lt;/syntaxhighlight&gt;
+
+== See also ==
+* {{class|BaseStatusBar}}
+* [[BeginStatusBar]]
+
+[[Category:ZScript]]
+[[Category:BaseStatusBar]]</text>
+    <sha1>t3nd1e1cghan1sc0yf0mcty1xt0dmis</sha1>
+  </revision>
+</page>

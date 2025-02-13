@@ -1,0 +1,55 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>Classes:BishopMissile</title>
+  <ns>0</ns>
+  <id>4777</id>
+  <revision>
+    <id>38716</id>
+    <parentid>35386</parentid>
+    <timestamp>2015-01-20T07:29:29Z</timestamp>
+    <contributor>
+      <username>Blue Shadow</username>
+      <id>2021</id>
+    </contributor>
+    <comment>/* DECORATE definition */ Change(s) from git commit 6665ac5.</comment>
+    <origin>38716</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="984" sha1="0mt5u25tu688irmklhucyv52q7et7qo" xml:space="preserve">{{Actor|
+| type = Explosive
+| name = The Bishop's missiles
+| class = BishopMissile
+| game = Strife
+}}[[Classes]]: &lt;u&gt;BishopMissile&lt;/u&gt;&lt;br&gt;
+{{desc}}In Strife1.wad, the sprites are actually named MISL* and are [[Sprite renaming|renamed at load-time]] by ZDoom.
+==== [[DECORATE]] definition ====
+ ACTOR &lt;u&gt;BishopMissile&lt;/u&gt;
+ {
+   {{Property|Speed}} 20
+   {{Property|Radius}} 10
+   {{Property|Height}} 14
+   {{Property|Damage}} 10
+   {{Property|Projectile}}
+   +{{Flag|SEEKERMISSILE}}
+   +{{Flag|STRIFEDAMAGE}}
+   {{Property|MaxStepHeight}} 4
+   {{Property|SeeSound}} "bishop/misl"
+   {{Property|DeathSound}} "bishop/mislx"
+   States
+   {
+   Spawn:
+     MISS A 4 Bright [[A_RocketInFlight]]
+     MISS B 3 Bright [[A_Tracer2]]
+     Loop
+   Death:
+     SMIS A 0 Bright [[A_SetTranslucent]](1, 1)
+     SMIS A 0 Bright // State left for savegame compatibility
+     SMIS A 5 Bright [[A_Explode]](64, 64, 1, 1)
+     SMIS B 5 Bright
+     SMIS C 4 Bright
+     SMIS DEFG 2 Bright
+     Stop
+   }
+ }</text>
+    <sha1>0mt5u25tu688irmklhucyv52q7et7qo</sha1>
+  </revision>
+</page>

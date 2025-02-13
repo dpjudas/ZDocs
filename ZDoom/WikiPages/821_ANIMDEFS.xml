@@ -1,0 +1,288 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>ANIMDEFS</title>
+  <ns>0</ns>
+  <id>821</id>
+  <revision>
+    <id>53327</id>
+    <parentid>53079</parentid>
+    <timestamp>2024-10-12T11:11:01Z</timestamp>
+    <contributor>
+      <username>Blue Shadow</username>
+      <id>2021</id>
+    </contributor>
+    <minor />
+    <comment>{{git}} -&gt; {{new}} for 4.13.0</comment>
+    <origin>53327</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="18002" sha1="nm7pyy0mywf3kw2ur1cxdrf4eebbmz7" xml:space="preserve">'''ANIMDEFS''' is ZDoom's [[Hexen]]-derived answer to [[BOOM]]'s [[ANIMATED]] and [[SWITCHES]] [[lump]]s. ANIMDEFS provides additional flexibility, allowing one to not only animate textures with any amount of images at any rate of animation, and not only to make standard Doom-style on/off switch textures, but to combine the two. Switches can be animated like textures, and can even be set to play sounds (which must be defined in [[SNDINFO]]) at any given point during the animation. Textures are not necessarily actual textures, but can also be used for HUD graphics. [[Strife]]-style '''animated doors''', '''camera textures''' and [[A_SpawnParticleEx|'''animated particles''']] can also be created with this lump.
+
+ANIMDEFS, like ANIMATED, should be provided in a [[WAD]] only once, unlike compiled [[scripts]] contained in [[BEHAVIOR]] lumps, which are level-specific. An ANIMDEFS lump, when loaded, will apply to all maps played in any given gameplay session, and therefore will apply to all levels within a given WAD.
+
+Although all ANIMDEFS commands allow you to specify textures by lump offset from the base texture it is not recommended to do this. Use real texture names whenever possible as this is more robust and doesn't depend on lump ordering in a WAD. The index method is only maintained for backwards compatibility with Hexen and older ZDoom WADs.
+
+Multiple ANIMDEFS lumps are cumulative: all such lumps will be parsed in the order in which they are loaded.
+
+The followings commands can be used in an ANIMDEFS lump:
+
+== Animated graphics ==
+*'''TEXTURE'''/'''FLAT''' [optional] &lt;''name''&gt;:
+:Starts a new animation definition. TEXTURE defines a wall texture animation, FLAT a flat animation. This is something of a moot point though, since 'flat' and 'texture' are interchangeable in versions of ZDoom from 2.0.48 and up. The only difference is the search order in the case of duplicate names, see [[namespace]] for more information. 
+:If the "'''optional'''" keyword is used, no warnings are issued if the needed lumps are not found.
+:Both flat and texture support the same commands:
+:*'''PIC''' &lt;''number''|''name''&gt; '''tics''' &lt;duration&gt; | '''rand''' &lt;''min'' ''max''&gt;
+::Defines one animation frame. The texture used for it can either be specified as an index (with the base texture being index 1 and each subsequent index the following texture in the list) or as a name. If the frame texture is specified by index it is not necessary to order the indices in any way and you also can use the same index multiple times in the sequence. If the frame texture is specified by name, order in the WAD or TEXTUREx lump is irrelevant. The duration for each frame can either be specified as a constant value or as a range in which the duration is randomly selected. To specify a constant duration, add ''''tics''' &lt;''duration''&gt;' to the definition. For a random interval, add ''''rand''' &lt;''min'' ''max''&gt;'. ''min'' and ''max'' define the minimum and maximum values of the frame's duration. Only the base picture of the animation will animate if an animation is defined like this. Unlike most other places in the engine where you can specify tics for duration, the value may be fractional (e.g. 4.3 tics) instead of whole tics.  This is because texture animations are controlled by the renderer timer instead of the play timer, which allows them finer accuracy.
+:*'''RANGE''' &lt;''name''|''number''&gt; '''tics''' &lt;''duration''&gt; | '''rand''' &lt;''min'' ''max''&gt; | '''Oscillate'''
+:: Defines an animation range. &lt;''number''&gt; or &lt;''name''&gt; defines the last picture in the animation. This is either specified as a texture name or an offset from the base texture. Note that if you specify a number ''n'', the animation will have ''n''+1 frames. You can use ''''tics'''' and ''''rand'''' as with '''PIC'''. Unlike '''PIC''', though, an animation defined like this will animate all frames, much like an animation defined in the [[ANIMATED]] lump.  If the '''Oscillate''' flag is added, when the animation reaches the end, it will animate towards the first frame instead of looping.
+::Note: although this does not affect compatibility with mods using '''Oscillate''' with '''RANGE''', as of GZDoom 1.9.0, the flag is not part of the command's syntax.
+:*'''ALLOWDECALS'''
+::Normally [[decal]]s are disallowed on animated textures. With this command you can specifically enable decals for the current texture.
+:*'''OSCILLATE'''
+::When the animation reaches the end, it will animate towards the first frame instead of looping. This works for both '''RANGE''' and '''PIC'''.
+:*'''RANDOM'''
+::The texture animation is randomized instead of being sequential.
+=== Interface graphics ===
+Despite the "texture" or "flat" name, this function can be used for non-texture graphics, notably {{Class|Powerup}} {{Property|Inventory.Icon|icons}}. The following graphics are defined in the default ANIMDEFS lump:
+* {{Class|PowerWeaponLevel2|SPINBK0}}
+* {{Class|PowerSpeed|SPBOOT0}}
+* {{Class|PowerInvulnerable|SPSHLD0}}
+* {{Class|PowerMinotaur|SPMINO0}}
+One exception is {{Class|PowerFlight|SPFLY0}} whose behavior is more complicated (since it can be suspended) and is therefore still hardcoded.
+
+The menu selectors are also defined in ANIMDEFS:
+* Doom, Chex Quest, Harmony, Urban Brawl: M_SKULL1
+* Heretic, Hexen: M_SLCTR1
+* Strife: M_CURS1
+
+== Switches ==
+*'''SWITCH'''
+:Starts a new switch definition. The full definition looks like this:
+ switch ''&lt;game&gt;'' ''{{color|green|&lt;base texture&gt;}}'' on [activation sequence] tics|rand {{color|green|&lt;duration in tics&gt;}} off [deactivation sequence] tics|rand {{color|green|&lt;duration in tics&gt;}}
+
+:*''&lt;game&gt;'' (optional)
+::A game name like &lt;code&gt;doom&lt;/code&gt;, &lt;code&gt;hexen&lt;/code&gt;, &lt;code&gt;strife&lt;/code&gt; can be specified.
+:*''&lt;base texture&gt;''
+::This is the name of the texture the switch is being defined for, for example SW1GRAY (a gray switch with a red button in Doom).
+:*'''on'''
+::Defines the graphic/sound used when the switch is activated.
+:*'''off''' (optional)
+::Defines the graphic/sound used when the switch is activated. If this is omitted, the switch will return to the base texture and play the game's standard switch sound.
+
+::'''On''' and '''off''' commands can be followed with:
+::*'''pic''' &lt;''name''&gt;
+:::Defines the texture to be displayed for this sequence. The texture is defined by name. There can be multiple '''pic''' definitions in each sequence for the switch.
+:::Beware of using textures making use of the flag {{c|NullTexture}} from the [[TEXTURES]] lump as this can cause adverse effects.
+::*'''sound''' &lt;''soundname''&gt;
+:::Defines the sound that is played when the switch is pressed/reset. As usual, this uses a logical sound name from [[SNDINFO]] and not the name of the sound lump. 
+:::If the sound is not defined, '''switches/normbutn''' will be played.
+::*'''tics''' &lt;''duration''&gt; | '''rand''' &lt;''min'' ''max''&gt;
+:::Defines how long the texture will be displayed before reverting to the base one. If &lt;code&gt;0&lt;/code&gt; is used, the texture will stay for 1 second {{verification}}.
+:::'''Note:''' the texture will only revert if the [[special]] attached to the switch is a repeatable action. If it isn't, the switch will stay activated forever.
+
+[[Decal]]s are not disabled on switch sequences, therefore there is no "allowdecals" option for switches. (To disable decals on switches, you need to disable decals on the individual textures used in the switch sequence, using the [[TEXTURES]] format to have access to the {{c|NoDecals}} flag.)
+
+=== Examples ===
+These examples are from ANIMDEFS in gzdoom.pk3:
+ switch doom 1 {{color|green|SW1BRCOM}} '''on''' pic {{color|green|SW2BRCOM}} tics {{color|green|0}}
+ switch hexen {{color|green|SW51_OFF}} '''on''' sound {{color|green|Switch2}} pic {{color|green|SW51_ON}} tics {{color|green|0}}
+ switch strife {{color|green|GLASS01}} '''on''' sound {{color|green|world/glassbreak}} pic {{color|green|GLASS02}} tics {{color|green|0}}
+ switch strife {{color|green|DORWS04}} '''on''' sound {{color|green|switches/bolt}} pic {{color|green|DORWS05}} tics {{color|green|0}} '''off''' sound switches/boltback pic {{color|green|DORWS04}} tics {{color|green|0}}
+
+== Warping graphics ==
+*'''WARP''' '''texture'''|'''flat''' &lt;''name''&gt; ['''allowdecals''']
+*'''WARP''' '''texture'''|'''flat''' &lt;''name''&gt; &lt;''speed''&gt; ['''allowdecals''']
+:Defines a warping effect for flats and textures. This will make the flat (or texture) warp similar to the water in Quake or Q2.  This effect can also be used with sprites. As with other animated textures, you can optionally add ''''allowdecals'''' to override the default behavior of not placing [[decal]]s on animated textures.  You can also add an optional float value after the name to control the speed of the warp animation. Warping anything larger than 256x256 in software for OpenGL (i.e. for legacy support only) is too costly so it is intentionally disabled. Shader-based warping does not have this limitation. It also can warp textures of any size but for non-square textures it may not look the same as the software algorithm. Warp and warp2 cannot be used with long texture names.
+
+*'''WARP2''' '''texture'''|'''flat''' &lt;''name''&gt; ['''allowdecals''']
+*'''WARP2''' '''texture'''|'''flat''' &lt;''name''&gt; &lt;''speed''&gt; ['''allowdecals''']
+:Same as '''WARP''', but with nicer water-like effect.
+
+== Animated doors ==
+*'''ANIMATEDDOOR''' &lt;''name''&gt;:
+:Starts a definition for an animation sequence that can be used with the [[Door_Animated]] line special.  Unlike animated textures, the duration of each frame is not defined here; rather, the duration of each frame is given by the ''speed'' argument to [[Door_Animated]].
+:The following commands are supported:
+:*'''OPENSOUND''' &lt;''soundsequence''&gt;
+::Defines the sound sequence that is being played when the door opens. This sound sequence must be defined in the [[SNDSEQ]] lump.
+:*'''CLOSESOUND''' &lt;''soundsequence''&gt;
+::Defines the sound sequence that is being played when the door closes. This sound sequence must be defined in the [[SNDSEQ]] lump.
+:*'''PIC''' &lt;''number''|''name''&gt;
+::Defines one animation frame for this door. The texture used for it can either be specified as an index (with the base texture being index 1 and each subsequent index the following texture in the list) or as a name. If the frame texture is specified by index it is not necessary to order the indices in any way and you also can use the same index multiple times in the sequence. If the frame texture is specified by name, order in the WAD or TEXTUREx lump is irrelevant. The frames inside the sequence must be ordered from fully closed to fully open and the number of frames is not restricted in any way
+:*'''ALLOWDECALS'''
+::Normally [[decal]]s are disallowed on animated door textures. With this command you can specifically enable decals for the current texture.
+
+== Camera textures ==
+:'''CAMERATEXTURE''' &lt;''texture name''&gt; &lt;''width''&gt; &lt;''heigth''&gt; [fit &lt;''width''&gt; &lt;''height''&gt; [worldpanning]]
+:Define a texture that can show a camera view. You have to specify a name and a size. If &lt;''texture name''&gt; is an existing texture the image will be scaled to fit that texture's size. Optionally, you can also specify the size the image will be scaled to with the '''FIT''' keyword. Adding the {{c|worldpanning}} keyword makes camera textures pan in world units instead of texture units.
+:Square textures use less memory than non-square textures. However, if you want to use a camera that can see the texture it renders into, you should use a non-square texture. You have to use the [[SetCameraToTexture]] ACS command to specify the image this texture shows.
+
+== Canvas textures ==
+:'''CANVASTEXTURE''' &lt;''texture name''&gt; &lt;''width''&gt; &lt;''height''&gt; [fit &lt;''width''&gt; &lt;''height''&gt; [worldpanning]]
+:Define a texture that can be drawn to. Takes the same parameters as defining a camera texture, with the same behavior.
+:Canvas textures are interfaced with from [[ZScript]] through the [[Classes:Canvas|Canvas]] object.
+
+== Fire textures ==
+{{new|4.13.0}}
+:'''FIRETEXTURE''' &lt;''texture name''&gt; '''tics''' &lt;''duration''&gt; [allowdecals]
+:Define a fire texture, which will be displayed using the method from https://fabiensanglard.net/doom_fire_psx/. The first color defined will be used as the background color to fade to and the last color defined will be the starting color to fade from, in the reverse order defined. The following commands are supported:
+:*'''PALETTE''' &lt;''index''&gt;
+::Defines a color from [[PLAYPAL]] by index ranging from 0 to 255. Black palette will be made fully transparent.
+:*'''COLOR''' &lt;''red''&gt; &lt;''green''&gt; &lt;''blue''&gt; &lt;''alpha''&gt;
+::Defines a color with RGBA values ranging from 0 to 255.
+
+== Other ==
+:'''texture''' &lt;''graphic name''&gt; '''NoTrim'''
+:By default, GZDoom trims empty space in images, which may cause issues when rotating sprites or scaling sprites (e.g. the anchor point used by [[A_OverlayRotate]], [[A_OverlayScale]] and actor's roll is defined by the image's size, but since the empty space is trimmed, it can be hard to predict its placement). Specifying this disables the trimming for the graphic.
+:The ''graphic name'' can be both the name of a graphic file, or a [[TEXTURES]] definition.
+:The ''texture'' keyword is necessary regardless of the type of graphic.
+Alternatively can be done in [[TEXTURES]].
+
+==Examples==
+
+An animated flat:
+ flat x_001
+     pic 1 tics 5
+     pic 2 tics 5
+     pic 3 tics 5
+     pic 4 tics 5
+
+An animated texture that allows decals:
+ texture x_water1
+     allowdecals
+     pic x_water1 rand 5 12
+     pic x_water2 rand 5 12
+     pic x_water3 rand 5 12
+     pic x_water4 rand 5 12
+
+A simple toggle switch:
+ switch SW_1_UP on sound Switch1 pic SW_1_DN tics 0
+ switch SW_1_DN off sound Switch2 pic SW_1_UP tics 0
+
+A switch that plays an animation when it is toggled, but is filtered to only be active if the game is 'Doom':
+ switch doom sw1nj15 
+ on sound switches/lever2 
+ pic sw1nj15b tics 8 
+ pic sw1nj15c tics 8 
+ pic sw2nj15 tics 8 
+ 
+ off sound switches/lever2 
+ pic sw1nj15c tics 8 
+ pic sw1nj15b tics 8 
+ pic sw1nj15 tics 0
+
+A warped flat (the second variation allows decals to appear):
+ warp flat qslime2
+ warp flat qslime2 allowdecals
+
+An animated door texture:
+ animateddoor DORIRS01
+    opensound DoorOpenAirlock
+    closesound DoorCloseAirlock
+    pic DORIRS01 
+    pic DORIRS02 
+    pic DORIRS03 
+    pic DORIRS04 
+    pic DORIRS05 
+    pic DORIRS06 
+    pic DORIRS07 
+    pic DORIRS08
+
+A 64x64 camera texture:
+ cameratexture CAMTEX1 64 64
+
+An 80x50 camera texture that is scaled down from a 100x50 resolution camera:
+ cameratexture CAMTEX2 100 50 fit 80 50
+
+A 64x64 resolution camera that replaces the STARTAN2 texture.  Since fit is not specified, the texture will be fit to the original texture's size (128x128):
+ cameratexture STARTAN2 64 64
+
+This is the same thing as the previous example, but prevents the texture from scaling by explicitly specifying the fit size:
+ cameratexture STARTAN2 64 64 fit 64 64
+
+The fire texture defined to fade black-to-white:
+ FIRETEXTURE BLACKFIRE tics 4
+    color 255 255 255 255
+    color 200 200 200 255
+    color 180 180 180 255
+    color 150 150 150 255
+    color 125 125 125 255
+    color 100 100 100 255
+    color 75 75 75 255
+    color 50 50 50 255
+    color 30 30 30 255
+    color 15 15 15 255
+    color 0 0 0 0
+
+The animated flats and textures from Doom:
+ flat	BLOOD1  	range	BLOOD3  	tics 8
+ flat	FWATER1 	range	FWATER4 	tics 8
+ flat	LAVA1   	range	LAVA4		tics 8
+ flat	NUKAGE1 	range	NUKAGE3 	tics 8
+ flat	SLIME01 	range	SLIME04 	tics 8
+ flat	SLIME05 	range	SLIME08 	tics 8
+ flat	SLIME09 	range	SLIME12 	tics 8
+ flat	SWATER1 	range	SWATER4 	tics 8
+ texture	BFALL1  	range	BFALL4  	tics 8
+ texture	BLODGR1 	range	BLODGR4 	tics 8 allowdecals
+ texture	BLODRIP1	range	BLODRIP4	tics 8 allowdecals
+ texture	DBRAIN1 	range	DBRAIN4 	tics 8
+ texture	FIREBLU1	range	FIREBLU2	tics 8
+ texture	FIRELAV3	range	FIRELAVA	tics 8
+ texture	FIREMAG1	range	FIREMAG3	tics 8
+ texture	FIREWALA	range	FIREWALL	tics 8
+ texture	GSTFONT1	range	GSTFONT3	tics 8 allowdecals
+ texture	ROCKRED1	range	ROCKRED3	tics 8 allowdecals
+ texture	SFALL1  	range	SFALL4  	tics 8
+ texture	SLADRIP1	range	SLADRIP4	tics 8 allowdecals
+ texture	WFALL1  	range	WFALL4  	tics 8
+
+The animated flats and textures from Heretic:
+ flat	FLATHUH1	range	FLATHUH4	tics 8
+ flat	FLTFLWW1	range	FLTFLWW3	tics 9
+ flat	FLTLAVA1	range	FLTLAVA4	tics 8
+ flat	FLTSLUD1	range	FLTSLUT3	tics 8
+ flat	FLTTELE1	range	FLTTELE4	tics 6
+ flat	FLTWAWA1	range	FLTWAWA3	tics 8
+ texture	LAVAFL1 	range	LAVAFL3 	tics 6
+ texture	WATRWAL1	range	WATRWAL3	tics 4
+
+The animated flats and textures from Strife:
+ flat	F_CONVY1	range	F_CONVY2	tics 4
+ flat	F_FAN1  	range	F_FAN2  	tics 4
+ flat	F_HWATR1	range	F_HWATR3	tics 4
+ flat	F_PWATR1	range	F_PWATR3	tics 11
+ flat	F_RDALN1	range	F_RDALN4	tics 4
+ flat	F_SCANR1	range	F_SCANR4	tics 4 
+ flat	F_SCANR5	range	F_SCANR8	tics 4
+ flat	F_TELE1 	range	F_TELE2 	tics 4
+ flat	P_VWATR1	range	F_VWATR3	tics 4 // Yes, P_VWATR1, not F_VWATR1.
+ flat	F_WATR01	range	F_WATR03	tics 8
+ texture	BRKGRY13	range	BRKGRY16	tics 10
+ texture	BRNSCN01	range	BRNSCN04	tics 10
+ texture	COMP01  	range	COMP04  	tics 4
+ texture	COMP05  	range	COMP08  	tics 6
+ texture	COMP09  	range	COMP12  	tics 11
+ texture	COMP13  	range	COMP16  	tics 12
+ texture	COMP17  	range	COMP20  	tics 12
+ texture	COMP21  	range	COMP24  	tics 12
+ texture	COMP25  	range	COMP28  	tics 12
+ texture	COMP29  	range	COMP32  	tics 12
+ texture	COMP33  	range	COMP37  	tics 12
+ texture	COMP38  	range	COMP41  	tics 12
+ texture	COMP42  	range	COMP49  	tics 10
+ texture	CONCRT09	range	CONCRT12	tics 11
+ texture	CONCRT22	range	CONCRT25	tics 11
+ texture	FAN01   	range	FAN02   	tics 4
+ texture	FORCE01 	range	FORCE04 	tics 4
+ texture	FORCE05 	range	FORCE08 	tics 4
+ texture	SCAN01  	range	SCAN04  	tics 4
+ texture	SCAN05  	range	SCAN08  	tics 4
+ texture	SWTRMG01	range	SWTRMG03	tics 4
+ texture	WALPMP01	range	WALPMP02	tics 16
+ texture	WALTEK16	range	WALTEK17	tics 8
+
+
+[[category:ZDoom special lumps]]
+[[category:Graphics lumps]]</text>
+    <sha1>nm7pyy0mywf3kw2ur1cxdrf4eebbmz7</sha1>
+  </revision>
+</page>

@@ -1,0 +1,57 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>Ceiling CrushStop</title>
+  <ns>0</ns>
+  <id>623</id>
+  <revision>
+    <id>54124</id>
+    <parentid>44583</parentid>
+    <timestamp>2025-01-10T07:33:45Z</timestamp>
+    <contributor>
+      <username>Player701</username>
+      <id>1498</id>
+    </contributor>
+    <origin>54124</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="1654" sha1="2j6q603zora3yoayh3dfbqu2gxa7n1u" xml:space="preserve">{{DISPLAYTITLE:Ceiling_CrushStop}}
+{{Special|44|tag [, remove]|Ceiling|CrushStop}}
+
+* ''tag'': Tag of affected sector 
+* ''remove'': Whether to reset or keep the state of the crusher (see below)
+
+==Usage==
+
+Stops a crushing ceiling.
+
+This special works on [[Ceiling_CrushAndRaise]], [[Ceiling_CrushAndRaiseA]] and [[Ceiling_CrushAndRaiseSilentA]]. However, once the ceiling is stopped after one of these specials, using a special to make it crush again will resume the type of crushing it was doing previously, provided that the crusher's state has been preserved. The latter is controlled by the second argument (''remove''), which can take the following values:
+
+* 0 (default): keep the state except in [[Hexen]].
+* 1: always keep the state.
+* 2: always reset the state. Equivalent to calling [[Ceiling_Stop]].
+
+Note that if the state of the crusher is preserved, attempting to use another special to lower or raise the ceiling will not work.
+
+==Examples==
+
+{{noexamples}}
+
+== Conversions from linedef types ==
+The following Doom map format types can be converted as Ceiling_CrushStop:
+{| {{prettytable}}
+!Type!!Conversion!!Trigger
+|-
+|{{icon|Doom}} 57:W1 Stop Crusher || Ceiling_CrushStop(tag)  || Player Cross
+|-
+|{{icon|Strife}} 57:W1 Stop Crusher || Ceiling_CrushStop(tag)  || Player Cross
+|-
+|{{icon|Doom}} 74:WR Stop Crusher || Ceiling_CrushStop(tag)  || Player Cross, Repeatable
+|-
+|{{icon|Strife}} 74:WR Stop Crusher || Ceiling_CrushStop(tag)  || Player Cross, Repeatable
+|-
+|{{icon|Boom}} 168:S1 Stop Crusher || Ceiling_CrushStop(tag)  || Player Use
+|-
+|{{icon|Boom}} 188:SR Stop Crusher || Ceiling_CrushStop(tag)  || Player Use, Repeatable
+|}</text>
+    <sha1>2j6q603zora3yoayh3dfbqu2gxa7n1u</sha1>
+  </revision>
+</page>

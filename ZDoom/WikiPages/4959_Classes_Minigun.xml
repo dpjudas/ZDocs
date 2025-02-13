@@ -1,0 +1,78 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>Classes:Minigun</title>
+  <ns>0</ns>
+  <id>4959</id>
+  <revision>
+    <id>27514</id>
+    <parentid>27513</parentid>
+    <timestamp>2010-08-17T04:24:58Z</timestamp>
+    <contributor>
+      <username>Ant1991331</username>
+      <id>830</id>
+    </contributor>
+    <comment>Undo revision 27513 by [[Special:Contributions/Ant1991331|Ant1991331]] ([[User talk:Ant1991331|talk]])</comment>
+    <origin>27514</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="1563" sha1="9rbedf275z8ojk6e7z4qtlk74ujslk9" xml:space="preserve">{{Actor|
+| type = Weapon
+| name = Minigun
+| class = Minigun
+| game = Skulltag
+| doomednum = 5014
+| spawnid = 214
+| spawnname = T_MINIGUN
+}}
+[[Classes]]: [[Classes:Inventory|Inventory]]&amp;rarr;[[Classes:Weapon|Weapon]]&amp;rarr;&lt;u&gt;Minigun&lt;/u&gt;&lt;br /&gt;
+
+The minigun is a rapid fire bullet weapon, even faster than the [[Classes:Chaingun|chaingun]], which uses [[Classes:Clip|clips]] for ammo.
+
+==== [[DECORATE]] definition ====
+ ACTOR &lt;u&gt;Minigun&lt;/u&gt; : [[Classes:Weapon|Weapon]] 5014
+ {
+   SpawnID 214
+   Radius 20
+   Height 16
+   Weapon.AmmoType "[[Classes:Clip|Clip]]" 
+   Weapon.AmmoGive 20
+   Weapon.AmmoUse 1
+   Weapon.Selectionorder 700
+   Weapon.Kickback 100
+   Weapon.SlotNumber 4 // This line isn't in skulltag.pk3, which instead defines the slot directly in {{Class|DoomPlayer}}
+   Inventory.PickupMessage "$PICKUP_MINIGUN" // "You got the minigun!"
+   Obituary "$OB_MINIGUN" // "%o was drilled by %k's minigun."
+   AttackSound "weapons/minigun"
+   States
+   {
+   Spawn:
+     MNGN A -1
+     Loop
+   Ready:
+     MNGG A 1 [[A_WeaponReady]]
+     Loop
+   Deselect:
+     MNGG A 1 [[A_Lower]]
+     Loop
+   Select: 
+     MNGG A 1 [[A_Raise]] 
+     Loop  
+   Fire: 
+     MNGG A 0 [[A_GunFlash]]
+     MNGG A 2 [[A_FireBullets]](5.6, 0, 1, 5, "[[Classes:BulletPuff|BulletPuff]]")
+     MNGG B 2 [[A_FireBullets]](5.6, 0, 1, 5, "[[Classes:BulletPuff|BulletPuff]]")
+     MNGG A 2 [[A_ReFire]]
+     MNGG B 2
+     MNGG A 4
+     MNGG B 4
+     MNGG A 8
+     MNGG B 8
+     Goto Ready 
+   Flash: 
+     MNGF A 3 BRIGHT [[A_Light1]] 
+     MNGF B 3 BRIGHT [[A_Light0]]
+     Stop 
+   }
+ }</text>
+    <sha1>9rbedf275z8ojk6e7z4qtlk74ujslk9</sha1>
+  </revision>
+</page>

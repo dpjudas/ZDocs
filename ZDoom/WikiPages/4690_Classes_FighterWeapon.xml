@@ -1,0 +1,49 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>Classes:FighterWeapon</title>
+  <ns>0</ns>
+  <id>4690</id>
+  <revision>
+    <id>49016</id>
+    <parentid>34185</parentid>
+    <timestamp>2022-02-16T18:23:23Z</timestamp>
+    <contributor>
+      <username>Jekyll Grim Payne</username>
+      <id>2175</id>
+    </contributor>
+    <comment>added zscript definition</comment>
+    <origin>49016</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="1139" sha1="2y8bq4vrzmyevwejdsjpxcu9pybhrdu" xml:space="preserve">{{Actor|
+| type = Internal
+| name = Fighter weapon
+| class = FighterWeapon
+| game = Hexen
+}}[[Classes]]: [[Classes:Inventory|Inventory]]&amp;rarr;[[Classes:Weapon|Weapon]]&amp;rarr;&lt;u&gt;FighterWeapon&lt;/u&gt;&lt;br&gt;
+&amp;ensp;&amp;rarr;[[Classes:FWeapAxe|FWeapAxe]]&lt;br&gt;
+&amp;ensp;&amp;rarr;[[Classes:FWeapFist|FWeapFist]]&lt;br&gt;
+&amp;ensp;&amp;rarr;[[Classes:FWeapHammer|FWeapHammer]]&lt;br&gt;
+&amp;ensp;&amp;rarr;[[Classes:FWeapQuietus|FWeapQuietus]]&lt;br&gt;
+The base class for all Hexen [[Classes:FighterPlayer|fighter]] weapons. They cannot be used up by [[Classes:ClericPlayer|clerics]] or [[Classes:MagePlayer|mages]] and if picked up by these classes will only translate as mana ammunition.
+
+==== [[ZScript]] definition ====
+{{ZScriptDefinitionNote|actors/hexen/baseweapons.zs}} 
+ class FighterWeapon : Weapon
+ {
+ 	Default
+ 	{
+ 		{{Property|Weapon.Kickback}} 150;
+ 		{{Property|Inventory.ForbiddenTo}} {{Class|ClericPlayer}}, {{Class|MagePlayer}};
+ 	}
+ }
+
+==== [[DECORATE]] definition ====
+{{DecorateDefinitionNote}}
+ ACTOR &lt;u&gt;FighterWeapon&lt;/u&gt; : {{Class|Weapon}} native
+ {
+   {{Property|Weapon.Kickback}} 150
+   {{Property|Inventory.ForbiddenTo}} {{Class|ClericPlayer}}, {{Class|MagePlayer}}
+ }</text>
+    <sha1>2y8bq4vrzmyevwejdsjpxcu9pybhrdu</sha1>
+  </revision>
+</page>

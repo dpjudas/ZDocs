@@ -1,0 +1,71 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>A SeekerMissile</title>
+  <ns>0</ns>
+  <id>1743</id>
+  <revision>
+    <id>48951</id>
+    <parentid>43147</parentid>
+    <timestamp>2022-01-19T02:10:56Z</timestamp>
+    <contributor>
+      <username>XaserAcheron</username>
+      <id>2510</id>
+    </contributor>
+    <comment>Fix "distance" field descriptions: it's 128 units, not 64 units (it's doing a blockmap search) -- dunno where I got that old number from way back. :(</comment>
+    <origin>48951</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="3627" sha1="4785m8y8kqtawvjpp7401lolcfup56u" xml:space="preserve">{{DISPLAYTITLE:A_SeekerMissile}}
+'''A_SeekerMissile''' (angle ''threshold'', angle ''maxturnangle'', int ''flags'' = 0, int ''chance'' = 50, int ''distance'' = 10)
+
+
+Seeker missile handling. ''threshold'' and ''maxturnangle'' determine how 'aggressive' the missile will home in on its tracer. The larger the values the more precise it is.
+
+*''threshold''
+:Specifies the angle inside which the missile will home in directly on its tracer. If the angle toward the target is larger than threshold it will change its movement angle only partially towards the tracer.
+*''maxturnangle''
+:The maximum change of movement direction that will be performed in one move. ''maxturnangle'' should be larger than threshold. Both angles are specified in degrees and must be in the range [0, 90].
+*''flags''
+: The following flags can be combined by using the &lt;tt&gt;|&lt;/tt&gt; character between the constant names. The default value is 0 for no flags.
+:* '''SMF_LOOK'''&amp;nbsp;&amp;mdash; Look for targets: If this flag is passed, the missile will try to acquire a target if it does not already have one. The {{Flag|SCREENSEEKER}} flag on the projectile can restrict this search for potential targets that are in the shooter's field of vision.
+:* '''SMF_PRECISE'''&amp;nbsp;&amp;mdash; Precise trajectory: If this flag is passed, the missile will chase its target in true 3D, readjusting its vertical velocity with each call, making it harder to lead it to crash on a ground or ceiling.
+:* '''SMF_CURSPEED'''&amp;nbsp;&amp;mdash; Use current speed: If this flag is passed, the missile will keep its current velocity rather than use a vector calculated from its default {{Property|Speed}} value.
+*''chance''
+:If the SMF_LOOK flag is used, this is the chance (out of 256) that the missile will try acquiring a target if it doesn't already have one. The default value is 50.
+*''distance''
+:If the SMF_LOOK flag is used, this is the maximum distance (in blocks of 128 map units) at which targets are sought. The default value is 10 (i.e. roughly 1080 map units); values much larger should be avoided or the function might become too much resource intensive.
+
+
+The range at which a player-fired seeker [[Projectile|missile]] will first acquire a [[Actor pointer|tracer]] can be set using {{c|{{Property|MaxTargetRange}}}} actor property. Note that the value to be set is in a 128-map-unit block. For instance, a value of 4 means a range of 512 map units (4 * 64 = 512). Behind the scenes, this function uses the [[BLOCKMAP]] to perform this search, so the actual maximum range is not always exact (it depends on how close the player is to a blockmap boundary); if exact unit precision is desired, it may be necessary to do an additional distance check manually after acquiring the tracer.
+
+It is also worth mentioning that {{Flag|NOAUTOAIM}} should be disabled if SMF_LOOK isn't being used, otherwise it will not home when fired from a weapon.
+
+== Examples ==
+
+This is an example for a magic missile that homes in on its tracer. It has a low ''maxturnangle'' which gives it a laggy turning effect.
+
+ ACTOR MagicMissile
+ {
+   {{Property|Projectile}}
+   +{{Flag|RANDOMIZE}}
+   +{{Flag|SEEKERMISSILE}}
+   {{Property|Height}} 16
+   {{Property|Radius}} 8
+   {{Property|Speed}} 10
+   {{Property|Damage}} ([[DECORATE_expressions#Mathematical_functions|random]](13, 17))
+   {{Property|RenderStyle}} "Add"
+   {{Property|Alpha}} 0.8
+   States
+   {
+   Spawn:
+     MMIS B 2 Bright [[A_SeekerMissile]](0, 2) // MMIS is the sprite used for the missile.
+     Loop
+   Death:
+     MMIS CDE 5 Bright
+     Stop
+   }
+ }
+
+[[category:Decorate Missile movement functions]]{{DEFAULTSORT:SeekerMissile}}</text>
+    <sha1>4785m8y8kqtawvjpp7401lolcfup56u</sha1>
+  </revision>
+</page>

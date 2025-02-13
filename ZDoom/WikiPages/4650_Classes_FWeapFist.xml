@@ -1,0 +1,194 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>Classes:FWeapFist</title>
+  <ns>0</ns>
+  <id>4650</id>
+  <revision>
+    <id>49017</id>
+    <parentid>39481</parentid>
+    <timestamp>2022-02-16T18:24:40Z</timestamp>
+    <contributor>
+      <username>Jekyll Grim Payne</username>
+      <id>2175</id>
+    </contributor>
+    <comment>added zscript definition</comment>
+    <origin>49017</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="4477" sha1="6minq1z9f0zddey3qq8r5uz9235ju01" xml:space="preserve">{{Actor|
+| type = Weapon
+| name = Spiked gauntlets
+| class = FWeapFist
+| game = Hexen
+}}[[Classes]]: {{Class|Inventory}}&amp;rarr;{{Class|Weapon}}&amp;rarr;{{Class|FighterWeapon}}&amp;rarr;&lt;u&gt;FWeapFist&lt;/u&gt;&lt;br&gt;
+The spiked gauntlets that the {{Class|FighterPlayer|fighter}} uses. When hitting a monster or certain objects, it does two normal punches and then a right hook which can finish off some weak monsters.
+
+==== [[ZScript]] definition ====
+{{ZScriptDefinitionNote|actors/hexen/fighterfist.zs}} 
+ class FWeapFist : FighterWeapon
+ {
+ 	Default
+ 	{
+ 		+BLOODSPLATTER
+ 		Weapon.SelectionOrder 3400;
+ 		+WEAPON.MELEEWEAPON
+ 		Weapon.KickBack 150;
+ 		Obituary "$OB_MPFWEAPFIST";
+ 		Tag "$TAG_FWEAPFIST";
+ 	}
+ 
+ 	States
+ 	{
+ 	Select:
+ 		FPCH A 1 A_Raise;
+ 		Loop;
+ 	Deselect:
+ 		FPCH A 1 A_Lower;
+ 		Loop;
+ 	Ready:
+ 		FPCH A 1 A_WeaponReady;
+ 		Loop;
+ 	Fire:
+ 		FPCH B 5 Offset (5, 40);
+ 		FPCH C 4 Offset (5, 40);
+ 		FPCH D 4 Offset (5, 40) A_FPunchAttack;
+ 		FPCH C 4 Offset (5, 40);
+ 		FPCH B 5 Offset (5, 40) A_ReFire;
+ 		Goto Ready;
+ 	Fire2:
+ 		FPCH DE 4 Offset (5, 40);
+ 		FPCH E 1 Offset (15, 50);
+ 		FPCH E 1 Offset (25, 60);
+ 		FPCH E 1 Offset (35, 70);
+ 		FPCH E 1 Offset (45, 80);
+ 		FPCH E 1 Offset (55, 90);
+ 		FPCH E 1 Offset (65, 100);
+ 		FPCH E 10 Offset (0, 150);
+ 		Goto Ready;
+ 	}
+ 	
+ 	//============================================================================
+ 	//
+ 	// TryPunch
+ 	//
+ 	// Returns true if an actor was punched, false if not.
+ 	//
+ 	//============================================================================
+ 
+ 	private action bool TryPunch(double angle, int damage, int power)
+ 	{
+ 		Class&lt;Actor&gt; pufftype;
+ 		FTranslatedLineTarget t;
+ 
+ 		double slope = AimLineAttack (angle, 2*DEFMELEERANGE, t, 0., ALF_CHECK3D);
+ 		if (t.linetarget != null)
+ 		{
+ 			if (++weaponspecial &gt;= 3)
+ 			{
+ 				damage &lt;&lt;= 1;
+ 				power *= 3;
+ 				pufftype = "HammerPuff";
+ 			}
+ 			else
+ 			{
+ 				pufftype = "PunchPuff";
+ 			}
+ 			LineAttack (angle, 2*DEFMELEERANGE, slope, damage, 'Melee', pufftype, true, t);
+ 			if (t.linetarget != null)
+ 			{
+ 				// The mass threshold has been changed to CommanderKeen's value which has been used most often for 'unmovable' stuff.
+ 				if (t.linetarget.player != null || 
+ 					(t.linetarget.Mass &lt; 10000000 &amp;&amp; (t.linetarget.bIsMonster)))
+ 				{
+ 					if (!t.linetarget.bDontThrust)
+ 						t.linetarget.Thrust(power, t.attackAngleFromSource);
+ 				}
+ 				AdjustPlayerAngle(t);
+ 				return true;
+ 			}
+ 		}
+ 		return false;
+ 	}
+ 
+ 	//============================================================================
+ 	//
+ 	// A_FPunchAttack
+ 	//
+ 	//============================================================================
+ 
+ 	action void A_FPunchAttack()
+ 	{
+ 		if (player == null)
+ 		{
+ 			return;
+ 		}
+ 
+ 		int damage = random[FighterAtk](40, 55);
+ 		for (int i = 0; i &lt; 16; i++)
+ 		{
+ 			if (TryPunch(angle + i*(45./16), damage, 2) ||
+ 				TryPunch(angle - i*(45./16), damage, 2))
+ 			{ // hit something
+ 				if (weaponspecial &gt;= 3)
+ 				{
+ 					weaponspecial = 0;
+ 					player.SetPsprite(PSP_WEAPON, player.ReadyWeapon.FindState("Fire2"));
+ 					A_StartSound ("*fistgrunt", CHAN_VOICE);
+ 				}
+ 				return;
+ 			}
+ 		}
+ 		// didn't find any creatures, so try to strike any walls
+ 		weaponspecial = 0;
+ 
+ 		double slope = AimLineAttack (angle, DEFMELEERANGE, null, 0., ALF_CHECK3D);
+ 		LineAttack (angle, DEFMELEERANGE, slope, damage, 'Melee', "PunchPuff", true);
+ 	}
+ 	
+ }
+
+==== [[DECORATE]] definition ====
+{{DecorateDefinitionNote}}
+ ACTOR &lt;u&gt;FWeapFist&lt;/u&gt; : {{Class|FighterWeapon}}
+ {
+   +{{Flag|BLOODSPLATTER}}
+   {{Property|Weapon.SelectionOrder}} 3400
+   +{{Flag|WEAPON.MELEEWEAPON}}
+   {{Property|Weapon.KickBack}} 150
+   {{Property|Obituary}} "$OB_MPFWEAPFIST"
+   {{Property|Tag}} "$TAG_FWEAPFIST"
+ 
+   action native [[A_FPunchAttack]]();
+ 
+   States
+   {
+   Select:
+     FPCH A 1 [[A_Raise]]
+     Loop
+   Deselect:
+     FPCH A 1 [[A_Lower]]
+     Loop
+   Ready:
+     FPCH A 1 [[A_WeaponReady]]
+     Loop
+   Fire:
+     FPCH B 5 [[Offset]](5, 40)
+     FPCH C 4 [[Offset]](5, 40)
+     FPCH D 4 [[Offset]](5, 40) [[A_FPunchAttack]]
+     FPCH C 4 [[Offset]](5, 40)
+     FPCH B 5 [[Offset]](5, 40) [[A_ReFire]]
+     Goto Ready
+   Fire2:
+     FPCH DE 4 [[Offset]](5, 40)
+     FPCH E 1 [[Offset]](15, 50)
+     FPCH E 1 [[Offset]](25, 60)
+     FPCH E 1 [[Offset]](35, 70)
+     FPCH E 1 [[Offset]](45, 80)
+     FPCH E 1 [[Offset]](55, 90)
+     FPCH E 1 [[Offset]](65, 90)
+     FPCH E 10 [[Offset]](0, 150)
+     Goto Ready
+   }
+ }</text>
+    <sha1>6minq1z9f0zddey3qq8r5uz9235ju01</sha1>
+  </revision>
+</page>

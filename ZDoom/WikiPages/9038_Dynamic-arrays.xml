@@ -1,0 +1,152 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>Dynamic arrays</title>
+  <ns>0</ns>
+  <id>9038</id>
+  <revision>
+    <id>51251</id>
+    <parentid>51250</parentid>
+    <timestamp>2024-01-22T11:29:35Z</timestamp>
+    <contributor>
+      <username>Jekyll Grim Payne</username>
+      <id>2175</id>
+    </contributor>
+    <minor />
+    <comment>/* Examples */</comment>
+    <origin>51251</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="4772" sha1="qx66mi3fmbh9cnngkbjgn8gy7dysau9" xml:space="preserve">{{ZScriptNote}}
+'''Dynamic arrays''' are resizable versions of regular arrays, with built-in functions to allow easy management.
+
+The types available are:
+
+*Double
+*Int
+*String
+*Pointer (e.g. Actor)
+*Class Types (e.g. Class&lt;Actor&gt;)
+
+Dynamic arrays can be defined as a class member, or inside a function:
+&lt;syntaxhighlight lang="csharp"&gt;
+class example
+{
+    Array&lt;type&gt; myArray;
+    
+    void exampleFunction() 
+    {
+        Array&lt;type&gt; myArray2;
+    }
+}
+&lt;/syntaxhighlight&gt;
+
+'''Note:''' Class types have a small syntax requirement in order to work. 
+ // Notice the gap in between the two closing angle brackets. This is needed.
+ Array&lt;Class&lt;Actor&gt; &gt; myArray;
+
+== Functions ==
+*{{c|int '''{{LE|Size}}''' ()}}
+:Returns the size of the array.
+
+*{{c|void '''{{LE|Copy}}''' (Array&lt;type&gt; ''other'')}}
+:Replaces the array's contents with the contents of the specified other array.
+
+*{{c|void '''{{LE|Move}}''' (Array&lt;type&gt; ''other'')}}
+:Replaces the calling array's data with the other's data, clearing other's content in the process. This is faster than Copy, perfect for use with temporary arrays.
+
+*{{c|void '''{{LE|Append}}''' (Array&lt;type&gt; ''other'')}}
+:Copies other's data and put it at the end of the calling array's data.
+
+*{{c|int '''{{LE|Find}}''' (&lt;type&gt; ''item'')}}
+:Searches for a particular item of the array's type and returns the index of that item.  '''If the item is not found in the array, returns Size()''', so if you want to check if a specific object is present in the array, the check will need to look as follows:
+ if (arrayname.Find(item) != arrayname.Size())
+
+*{{c|int '''{{LE|Push}}''' (&lt;type&gt; ''item'')}}
+:Appends item to the end of the array and expands it by one.
+
+*{{c|vararg uint '''{{LE|PushV}}''' (&lt;type&gt; ''item'', ...)}}
+:('''Note:''' this function is available to integer and string arrays only.)
+:Appends an arbitrary number of elements, comma delimited, to the end of the array, expanding it by the number of elements appended. In case of integer arrays, attempting to append floating-point values converts them to integers by rounding them down.
+:The function returns the index of the last element in the array.
+
+*{{c|bool '''{{LE|Pop}}''' ()}}
+:Removes the item at the end of the array and decreases its size by one.
+
+*{{c|void '''{{LE|Delete}}''' (uint ''index'', int ''deletecount'' {{=}} 1)}}
+:Removes a range of entries from the array.
+
+*{{c|void '''{{LE|Insert}}''' (uint ''index'', &lt;type&gt; ''item'')}}
+:Inserts an item at the specified index. Implicitly performs a resize to accommodate.
+
+*{{c|void '''{{LE|ShrinkToFit}}''' ()}}
+:Shrinks the total array size to the last non-empty member's location.
+
+*{{c|void '''{{LE|Grow}}''' (uint ''amount'')}}
+:Increases the size of the array by the amount specified, expanding from the end.
+
+*{{c|void '''{{LE|Resize}}''' (uint ''amount'')}}
+:Grows or shrinks the array to the exact amount. Eliminates all content within the removed containers.
+
+*{{c|int '''{{LE|Reserve}}''' (uint ''amount'')}}
+:Allocates 'amount' new entries and returns the index of the first one.
+
+*{{c|int '''{{LE|Max}}''' ()}}
+:Returns how many entries are allocated, also counting those which are currently not in use. Caution must be used here since this can return a number greater than the array's actual size itself.
+
+*{{c|void '''{{LE|Clear}}''' ()}}
+:Shrinks the array to 0 and destroys all contents.
+
+== Null checking ==
+All that needs to be done is a call to see if the element exists.
+&lt;syntaxhighlight lang="csharp"&gt;
+Array&lt;Thinker&gt; thinkers;
+
+// ...some code which assigns thinkers to the array...
+// Always make sure the thinker size is substantial. Otherwise it'll throw an error.
+
+if (thinkers.Size() &gt; 0)
+{
+    // There is no need for casting of any kind. Just check it directly.
+
+    if (!thinkers[element])
+    {
+         Console.Printf("Detected a null element");
+    }
+}&lt;/syntaxhighlight&gt;
+
+== Examples ==
+This version of the [[Classes:Zombieman|Zombieman]] will spawn [[Classes:ExplosiveBarrel|explosive barrels]] every 70 tics while it's alive. The barrels are put into a dynamic array. Once the monster is killed, all those barrels will explode:
+&lt;syntaxhighlight lang="csharp"&gt;
+class BarrelZombie : Zombieman
+{
+	array &lt;Actor&gt; barrels;
+
+	override void Tick()
+	{
+		super.Tick();
+		if (health &gt; 0 &amp;&amp; !isFrozen() &amp;&amp; GetAge() % 70 == 0)
+		{
+			let bar = Spawn('ExplosiveBarrel', pos, ALLOW_REPLACE);
+			if (bar)
+			{
+				barrels.Push(bar);
+			}
+		}
+	}
+
+	override void Die(Actor source, Actor inflictor, int dmgflags, Name MeansOfDeath)
+	{
+		for (int i = 0; i &lt; barrels.Size(); i++)
+		{
+			let bar = barrels[i];
+			if (bar &amp;&amp; bar.health &gt; 0)
+			{
+				bar.DamageMobj(self, self, bar.health, 'normal');
+			}
+		}
+		super.Die(source, inflictor, dmgflags, MeansOfDeath);
+	}
+}&lt;/syntaxhighlight&gt;
+[[Category:ZScript]]</text>
+    <sha1>qx66mi3fmbh9cnngkbjgn8gy7dysau9</sha1>
+  </revision>
+</page>

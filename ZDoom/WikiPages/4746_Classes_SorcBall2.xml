@@ -1,0 +1,47 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>Classes:SorcBall2</title>
+  <ns>0</ns>
+  <id>4746</id>
+  <revision>
+    <id>34589</id>
+    <parentid>18686</parentid>
+    <timestamp>2012-10-21T08:55:30Z</timestamp>
+    <contributor>
+      <username>Blue Shadow</username>
+      <id>2021</id>
+    </contributor>
+    <minor />
+    <comment>/* DECORATE definition */</comment>
+    <origin>34589</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="712" sha1="ts5z7k72wku3zpbmv3dl8pk6yjv5nlm" xml:space="preserve">{{Actor|
+| type = SFX
+| name = Blue mana cube
+| class = SorcBall2
+| game = Hexen
+}}[[Classes]]: [[Classes:SorcBall|SorcBall]]&amp;rarr;&lt;u&gt;SorcBall2&lt;/u&gt;&lt;br&gt;
+One of the three mana cubes that orbit the [[Classes:Heresiarch|Heresiarch]]'s head. This one is its source of power for its invulnerability shield.
+==== [[DECORATE]] definition ====
+ ACTOR &lt;u&gt;SorcBall2&lt;/u&gt; : {{Class|SorcBall}} native
+ {
+   States
+   {
+   Spawn:
+     SBMB ABCDEFGHIJKLMNOP 2 [[A_SorcBallOrbit]]
+     Loop
+   Pain:
+     SBMB A 5 [[A_SorcBallPop]]
+     SBMB B 2 [[A_BounceCheck]]
+     Wait
+   Death:
+     SBS4 D 0 [[A_ChangeFlag]]("{{Flag|NOBOUNCESOUND}}", 1)
+     SBS3 D 5 [[A_Explode]](255, 255)
+     SBS3 E 5
+     SBS3 FGH 6
+     Stop
+   }
+ }</text>
+    <sha1>ts5z7k72wku3zpbmv3dl8pk6yjv5nlm</sha1>
+  </revision>
+</page>

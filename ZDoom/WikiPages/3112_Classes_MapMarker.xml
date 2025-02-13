@@ -1,0 +1,81 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>Classes:MapMarker</title>
+  <ns>0</ns>
+  <id>3112</id>
+  <revision>
+    <id>52573</id>
+    <parentid>49024</parentid>
+    <timestamp>2024-04-28T13:52:25Z</timestamp>
+    <contributor>
+      <username>Jekyll Grim Payne</username>
+      <id>2175</id>
+    </contributor>
+    <origin>52573</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="1773" sha1="4e8480y9uij4nlj6a41tsj94szmxc2n" xml:space="preserve">{{Actor|
+| type = Map spot
+| name = Map marker
+| class = MapMarker
+| doomednum = 9040
+}}[[Classes]]: &lt;u&gt;MapMarker&lt;/u&gt;&lt;br&gt;
+
+A map marker is an actor which shows up on the [[automap]], and can be used to point out points of interest, specific monsters, etc.  Inherit from this class to create your own custom map marker.  Setting the thing's special arguments can be used to control its behavior.  If the first argument is non-zero, the map marker will follow the thing with the same TID as specified.  If the second argument is 1, then the map marker will not show up until the player has seen the sector it resides in. If the third argument is 1, the map marker scales relative to the automap zoom, rather than keep a constant scale.
+
+Map markers can be activated and deactivated by using {{c|[[Thing_Activate]]/[[Thing_Deactivate]]}} in [[ACS]] or {{c|[[Activate]]/[[Deactivate]]}} in [[ZScript]]. Activating ''hides'' the map marker, while deactivating ''shows'' the map marker (not the other way around).
+
+== [[ZScript]] definition ==
+{{ZScriptDefinitionNote|actors/shared/mapmarker.zs}}
+&lt;syntaxhighlight lang="csharp"&gt;
+class MapMarker : Actor
+{
+	default
+	{
+		+NOBLOCKMAP
+		+NOGRAVITY
+		+DONTSPLASH
+		+INVISIBLE
+		Scale 0.5;
+	}
+	States
+	{
+	Spawn:
+		AMRK A -1;
+		Stop;
+	}
+	
+	override void BeginPlay ()
+	{
+		ChangeStatNum (STAT_MAPMARKER);
+	}
+
+	override void Activate (Actor activator)
+	{
+		bDormant = true;
+	}
+
+	override void Deactivate (Actor activator)
+	{
+		bDormant = false;
+	}
+	
+}&lt;/syntaxhighlight&gt;
+== [[DECORATE]] definition ==
+{{DecorateDefinitionNote}}
+ ACTOR &lt;u&gt;MapMarker&lt;/u&gt; native
+ {
+   +{{Flag|NOBLOCKMAP}}
+   +{{Flag|NOGRAVITY}}
+   +{{Flag|DONTSPLASH}}
+   +{{Flag|INVISIBLE}}
+   {{Property|Scale}} 0.5
+   States
+   {
+   Spawn:
+     AMRK A -1
+     Stop
+   }
+ }</text>
+    <sha1>4e8480y9uij4nlj6a41tsj94szmxc2n</sha1>
+  </revision>
+</page>

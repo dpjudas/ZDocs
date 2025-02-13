@@ -1,0 +1,31 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>PlayerInfo PSprite methods</title>
+  <ns>0</ns>
+  <id>9814</id>
+  <revision>
+    <id>51703</id>
+    <parentid>51583</parentid>
+    <timestamp>2024-02-08T13:54:29Z</timestamp>
+    <contributor>
+      <username>Boondorl</username>
+      <id>2606</id>
+    </contributor>
+    <minor />
+    <comment>/* PlayerInfo PSprite methods */</comment>
+    <origin>51703</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="2254" sha1="mwkxaypvocgz3xoocpewcpsqmw5qoqf" xml:space="preserve">=== PlayerInfo PSprite methods ===
+The following methods are called on a {{struct|PlayerInfo}} pointer to set up and interact with {{class|PSprite|PSprites}}. These methods have to be called on a [[PlayerInfo]] pointer. For example, when doing it from a [[PlayerPawn]] actor, the prefix for them would be &lt;code&gt;self.player&lt;/code&gt; (or just &lt;code&gt;player&lt;/code&gt;). Same for calling from a {{class|Weapon}} state or a weapon action function, (since in the context of weapon states &lt;code&gt;self&lt;/code&gt; is the player pawn owner, while &lt;code&gt;invoker&lt;/code&gt; is the weapon itself).
+*{{c|PSprite '''FindPSprite'''(int ''id'')}}
+:Finds a PSprite instance on the layer &lt;code&gt;id&lt;/code&gt; and returns a pointer to it. If it doesn't exists, returns {{c|null}}. This allows modifying a PSprite instance directly, much like various A_Overlay* functions do, and also allows checking that a certain PSprite layer already exists.
+*{{c|PSprite '''GetPSprite'''(int ''id'')}}
+:Same as &lt;code&gt;FindPSprite&lt;/code&gt;, but if the PSprite doesn't exist, this function will ''create'' it and return a pointer to it.
+*{{c|void '''SetPSprite'''(int ''id'', State ''stat'', bool ''pending'' }}={{c| false)}}
+:Sets the PSprite on the specified layer to the specified state (if the layer doesn't exist, it'll be created first). Basically, combines &lt;code&gt;GetPSprite&lt;/code&gt; and [[SetState|{{c|SetState}}]].
+:Generally, this is the same as [[A_Overlay]], with one small difference: if &lt;code&gt;A_Overlay&lt;/code&gt; is called on a layer that already exists, it'll reset its offsets before moving to the new state, whereas &lt;code&gt;SetPSprite&lt;/code&gt; won't. The latter may be useful when there's a need to move a PSprite layer to a different state while retaining previously set offsets. In addition, this function can be called from anywhere, whereas [[A_Overlay]] can only be called from a weapon state or weapon action function.
+*{{c|void '''SetSafeFlash'''(Weapon ''weap'', State ''flashstate'', int ''index'')}}
+:Verifies that &lt;code&gt;flashstate + index&lt;/code&gt; exists in the state table of the passed weapon (or a weapon class it inherits from) before setting the '''PSP_FLASH''' layer. This is mainly useful for preventing crashes if an offset state isn't guaranteed to exist i.e. a child class overrides it.</text>
+    <sha1>mwkxaypvocgz3xoocpewcpsqmw5qoqf</sha1>
+  </revision>
+</page>

@@ -1,0 +1,135 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>Libraries</title>
+  <ns>0</ns>
+  <id>816</id>
+  <revision>
+    <id>42547</id>
+    <parentid>37484</parentid>
+    <timestamp>2016-03-27T05:29:53Z</timestamp>
+    <contributor>
+      <username>Arookas</username>
+      <id>2066</id>
+    </contributor>
+    <comment>redid the layout so it reads less like a tutorial and more like documentation</comment>
+    <origin>42547</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="5493" sha1="2xln317w3ehr0e7tqust3th2n9fzzfw" xml:space="preserve">A library is a standalone [[ACS]] script defining common [[scripts]], [[functions]], and [[constants]] which can be used from other ACS scripts.
+They are distinct from the standard '''#include''' directives ACS offers in that the included script is not compiled into the resulting binary.
+
+Using libraries can help save space in your scripts (which is useful if you use a script editor with limited length, such as [[WadAuthor]]), as well as reducing code duplication and copy-paste errors.
+Any changes in libraries will be reflected automatically across all scripts which use them.
+
+The most common application of libraries are in large scale projects in which multiple maps share ACS, as well as auxiliary gameplay mods including their own ACS using [[LOADACS]].
+
+== Creating libraries ==
+An otherwise standard ACS script is marked as a library using the '''#library''' directive, which should be first statement in the script:
+
+ #library "LIBNAME"
+ #include "zcommon.acs"
+
+The name given to the '''#library''' directive specifies the name of the library, constrained by standard WAD lump name limitations.
+Once [[ACC|compiled]], the binary lump should be placed in the ACS library [[namespace]] with the same name as the '''#library''' directive.
+Modern resource editors, such as [[SLADE 3]], can automate this process.
+
+'''Note:''' When using [[LOADACS]], {{SType|enter}} and {{SType|open}} scripts in your library will execute on every map (as per the rules of their respective script types).
+
+== Importing libraries ==
+Scripts can import libraries by using the '''#import''' directive:
+
+ #import "libname.acs"
+
+The path given to the '''#import''' directive specifies the ''uncompiled'' source of the library (as opposed to the compiled binary). The path may be either absolute or relative (e.g. "/doom/levels/mymaps/foomap/lumps/lib/foolib.acs").
+The following script elements are imported from the library:
+
+* [[Scripts]], both [[named script|named]] and numbered (in the case of number/name conflicts, the one loaded last is used {{verification}})
+* [[Functions]]
+* [[Constants]] declared with the '''#libdefine''' directive
+
+'''Note:''' When [[ACC]] scans imported libraries, all '''#include''' directives are ignored in the library and those files are not scanned.
+
+== Example ==
+Below is a short and (hopefully) simple example, which is a simple level objective library. I have commented it more than I normally do, and it assumes you have some fundamental knowledge of ACS (such as [[loops]], if clauses, [[HudMessage]], #define, functions, [[arrays]] and variables), so if you do not, do not go trying to wrack your brain figuring it out (also if you do not know about those things, you probably should not be using libraries just yet anyway).
+
+ //foolib.acs, the script (library) text file
+ #library "foolib"
+ #include "zcommon.acs"
+ 
+ #define MAX_OBJECTIVES 4 //max number of objectives per map
+ 
+ //this array holds the objectives, this is altered each time you enter a new map
+ world str 0:objectives[];
+ 
+ //this function is called by script 999 (See below)
+ function void printobjs(void)
+ {
+     [[HudMessage]](s:"Objectives\n\n"; 
+         {{const|HUDMSG_PLAIN}} | {{const|HUDMSG_LOG}}, 0, {{const|CR_RED}}, 0.0, 0.0, 5.0 );
+     
+     //print out each objective
+     for(int x = 0; x &lt; MAX_OBJECTIVES; x++)
+     {
+         [[HudMessage]](s:objectives[x]; 
+             {{const|HUDMSG_PLAIN}} | {{const|HUDMSG_LOG}}, 0, {{const|CR_WHITE}}, 0.0, (x * 0.1) + 0.1, 5.0);
+     }
+ }
+ 
+ //This script will execute each time you enter a new map, showing the 
+ //mission objectives for that particular map.  If you want the player 
+ //to be able to see their objectives after they disappear, you'll need 
+ //to set up a puke 999 alias in a [[KEYCONF]] lump.
+ script 999 {{SType|Enter}}
+ {
+     printobjs();
+     [[delay]](35 * 5); //five second delay
+     //note that delays cannot be put in functions, which is why it appears here
+ }
+
+-----
+
+ //this is a scripts lump for map01
+ #import "foolib.acs"
+ #include "zcommon.acs"
+ 
+ script 100 {{SType|Open}}
+ {
+     objectives[0] = "Find the shotgun";
+     objectives[1] = "Get the blue key";
+     objectives[2] = "Destroy the computer";
+     objectives[3] = "Escape from the complex";
+ }
+ 
+ //Then you simply have whatever scripts you need for the map under here.
+ //If you like, when you complete an objective you can alter the color of 
+ //the completed objective so the player knows they completed it.  For 
+ //instance the hudmessage that prints the objectives prints them in 
+ //white, so the following script will execute when you complete 
+ //the first objective (objectives[0])
+ 
+ script 1 (void)
+ {
+     objectives[0] = "\cFFind the shotgun";
+     //the \cF appended to the front of the string changes the color of 
+     //the message to yellow (or gold)
+ }
+
+-----
+
+ //this is a scripts lump for map02
+ #import "foolib.acs"
+ #include "zcommon.acs"
+ 
+ script 100 {{SType|Open}}
+ {
+     objectives[0] = "Kill some imps";
+     objectives[1] = "Eat a cheeseburger";
+     objectives[2] = "Find a BFG";
+     objectives[3] = "";
+     //if you don't want an objective to show up, make it an empty string
+ }
+
+Note that this example stores each objective in the map scripts, you could store them in the library, but then you would need to have the exit map scripts note which map you were entering (not hard to do) and then select the appropriate array in the library when printing the objectives.
+[[Category:ACS]][[Category:Glossary]]</text>
+    <sha1>2xln317w3ehr0e7tqust3th2n9fzzfw</sha1>
+  </revision>
+</page>

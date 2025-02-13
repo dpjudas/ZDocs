@@ -1,0 +1,52 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>Getspawnid</title>
+  <ns>0</ns>
+  <id>2854</id>
+  <revision>
+    <id>27940</id>
+    <parentid>16571</parentid>
+    <timestamp>2010-10-20T20:05:32Z</timestamp>
+    <contributor>
+      <username>Ceeb</username>
+      <id>1593</id>
+    </contributor>
+    <minor />
+    <origin>27940</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="1209" sha1="0kka2wt8zck363ejcbwoblquih9d2yn" xml:space="preserve">{{DISPLAYTITLE:getspawnid}}
+This function returns the Spawn ID for a given TID.  It can be useful for making type or class specific decisions in a script.
+
+ function int getspawnid (int tid)
+ {
+     for (int i=1; i&lt;=255; i++)
+         if ([[ThingCount]](i, tid))
+             return i;
+ 
+     return 0;
+ }
+
+This version of the function uses a spawnid array made with a script generator.  The benefit here is that the overall number of times the function could possibly need to loop has been cut down from 255 to 104.
+
+ int spawnid[104] = {
+     1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 19, 20, 21, 22, 23, 24, 25, 27,
+     28, 29, 30, 31, 32, 33, 41, 42, 43, 44, 45, 46, 47, 48, 49, 51, 53, 54, 55, 56,
+     57, 58, 59, 60, 61, 62, 63, 68, 69, 75, 85, 86, 87, 88, 89, 90, 98, 100, 101, 102,
+     103, 110, 111, 112, 113, 114, 115, 116, 117, 118, 119, 120, 121, 122, 123, 124, 125, 126, 127,
+     128, 129, 130, 131, 132, 133, 134, 135, 136, 137, 138, 139, 140, 141, 143, 144, 146, 147, 148,
+     149, 150, 151, 152, 153, 154
+ };
+ 
+ function int getspawnid (int tid)
+ {
+ 	for (int i=0; i&lt;104; i++)
+ 		if ([[ThingCount]](spawnid[i], tid))
+ 			return spawnid[i];
+ 
+ 	return 0;
+ }
+
+[[category:Sample ACS functions]]</text>
+    <sha1>0kka2wt8zck363ejcbwoblquih9d2yn</sha1>
+  </revision>
+</page>

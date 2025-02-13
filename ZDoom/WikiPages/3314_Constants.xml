@@ -1,0 +1,186 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>Constants</title>
+  <ns>0</ns>
+  <id>3314</id>
+  <revision>
+    <id>54092</id>
+    <parentid>47147</parentid>
+    <timestamp>2024-12-25T18:46:47Z</timestamp>
+    <contributor>
+      <username>Boondorl</username>
+      <id>2606</id>
+    </contributor>
+    <comment>/* ZScript */</comment>
+    <origin>54092</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="5707" sha1="t6lhszvvm4ve7urzrsv6o3ceyfon2wg" xml:space="preserve">Constants are values that are always the same when executed. An example of a constant would be 1, "Hello", etc. Constants can also be #define'd.
+
+The syntax of defining a constant is as follows
+ #define NAME VALUE
+
+==Numbers==
+These constants can be used as values and also as script numbers.
+
+For example:
+ #define SNUM	1
+ #define VAL	3131
+ 
+ script {{const|SNUM|1}} (void)
+ {
+     int x = {{const|VAL|3131}};
+ }
+
+Here SNUM would be replaced with '''1''' and VAL would be replaced with '''3131'''.
+
+This is useful for a constant that is used a lot.  If something like the spawn numbers were to be changed, you'd only need to change the constant for the defined spawn numbers.
+
+==Use of operators==
+Constants can be used to define other constants.
+
+For example:
+ #define WEAPON_FIST	0
+ #define WEAPON_CHAINSAW	{{const|WEAPON_FIST|0}} + 1
+ 
+ script "Test" {{SType|Enter}}
+ {
+     [[Log]](i:{{const|WEAPON_FIST|0}});
+     [[Log]](i:{{const|WEAPON_CHAINSAW|1}});
+ }
+
+This logs the values '''0''' and '''1''' to the console.
+
+You can also make more complex operations.
+ #define HUD_WIDTH      1024
+ #define HUD_HEIGHT     768
+ #define HUD_FWIDTH     {{const|HUD_WIDTH|1024}} * 1.0
+ #define HUD_FCENTERX   {{const|HUD_FWIDTH|1024.0}} / 2
+ #define HUD_FHEIGHT    {{const|HUD_HEIGHT|768}} * 1.0
+ #define HUD_FCENTERY   {{const|HUD_FHEIGHT|768.0}} / 2
+ 
+ script "Test2" {{SType|Enter}}
+ {
+     [[Log]](f:{{const|HUD_FWIDTH|1024.0}});
+     [[Log]](i:{{const|HUD_HEIGHT|768}});
+ }
+
+This logs the values '''1024.0''' and '''768''' to the console.
+
+==String Constants==
+You can define string constants as well.
+
+First example:
+ script 1 {{SType|Open}}
+ {
+     [[print]](s:"err");
+     [[print]](s:"err");
+ }
+
+Second example:
+ #define STR_err "err"
+ 
+ script 1 {{SType|Open}}
+ {
+     [[print]](s:{{const|STR_err|"err"}});
+     [[print]](s:{{const|STR_err|"err"}});
+ }
+
+Both examples produce identical output.
+
+==Library Constants==
+You can also place constants in your [[Libraries]]. This can be especially useful when, say, applying a [[TID]] to the player, or numbers you may want handy for [[Functions|custom functions]].
+
+The syntax is much the same as a normal constant, with one change.
+ #libdefine NAME VALUE
+
+Here is an example of some constants I personally use. These constants provide quick shortcuts to cardinal directions for [[PolyObjects]] and [[SetActorAngle]].
+
+ #libdefine POLY_NORTH       64
+ #libdefine POLY_SOUTH       192
+ #libdefine POLY_WEST        128
+ #libdefine POLY_EAST        0
+ 
+ #libdefine ACTOR_FACE_NORTH 0.25
+ #libdefine ACTOR_FACE_WEST  0.5
+ #libdefine ACTOR_FACE_EAST  1.0
+ #libdefine ACTOR_FACE_SOUTH 0.75
+
+==DECORATE usage==
+Actors are also capable of storing individual constant integers. Unlike user variables, these cannot be changed.
+
+These may be used in parameters of almost any kind, except for strings or actor names. Constants may also be declared outside of an actor for global usage.
+
+ const int MyGlobalInt = 2;
+
+ Actor TestDummy
+ {
+ 	const int MyConst = 1;
+ 	const int FLAGS = CLOFF_JUMPOBJECT|CLOFF_SKIPTARGET; //Saves on space for defining flags!
+ 	const float Floaty = 1.234;
+ }
+
+Enums can also be used for '''integer values only'''. All others (i.e. floats) must be defined as above outside an enum. Assigning a number to specific values means they will always be that number, rather than being auto-assigned numbers. This may be vital to ensuring compatibility with saved games or demos, since adding anything to the enum list may cause unintended side effects or prevent proper function. A semicolon is required on the closing bracket of an enum. Like constants, they can be inside of an actor.
+
+Examples:
+
+ Actor Test
+ {
+ 	enum //Non-initialized numbers
+ 	{
+ 	 	StateNum_Punch, //Autoassigned 0
+ 		StateNum_Kick, //Autoassigned 1
+ 	};
+ 	//...States and stuff go here.
+ }
+
+ enum //Initialized numbers
+ {
+ 	Mons_MaxCount = 128, 
+ 	Mons_MinCount = 4,
+ };
+
+=== Notes ===
+[[DECORATE]]:
+*Constants can only be used with decorate functions.
+*Constants cannot be used for defining actor parameters. For example Health must have an actual number, not a constant.
+*Inheritance from parents only overwrites constants if the state itself is overwritten. It is recommended to have a state dedicated to the setup of user variables instead.
+
+== ZScript ==
+Constants are almost the same with [[ZScript]] as they are in [[DECORATE]] except the type is excluded. This is because the parser auto detects what type it is. ZScript also supports [[String|strings]].
+ const MyNumber = 1; // Casted as int.
+ const MyOtherNumber = 1.0; // Casted as double.
+ const MyString = "Something"; // Casted as string.
+
+While enums are still limited to integers, more control over what type of int is given. Normally only int and uint are useful, but it can also be used for sizing should it be used to refer to a field on an Object.
+
+ enum EMyEnum : uint
+ {
+     // ...
+ }
+
+Enum names can be used in place of int types in function parameters. This doesn't enforce any range bounds on it, but it does offer better code readability:
+
+ void MyFunc(int flags); // Works but not clear what flags are needed.
+ void MyFunc(EMyEnum flags); // Much more descriptive.
+
+If an enum is located within another class, its values can be accessed by using &lt;code&gt;Class.EnumValue&lt;/code&gt; (the enum name is skipped entirely). However, if you want to use it as a datatype for a function outside the class, you'll need to format it as &lt;code&gt;.Class.Enum&lt;/code&gt;.
+
+ class A
+ {
+     enum EMyEnum
+     {
+         MY_VALUE,
+     }
+ }
+ 
+ class B
+ {
+     int x;
+     void FuncA() { x = A.MY_VALUE; } // Access a specific value.
+     void FuncB(.A.EMyEnum value) { x = value; } // Pass it as a type.
+ }
+
+[[category:ACS guides]]</text>
+    <sha1>t6lhszvvm4ve7urzrsv6o3ceyfon2wg</sha1>
+  </revision>
+</page>

@@ -1,0 +1,69 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>WorldThingDamaged</title>
+  <ns>0</ns>
+  <id>9983</id>
+  <revision>
+    <id>53524</id>
+    <parentid>53523</parentid>
+    <timestamp>2024-11-01T14:14:13Z</timestamp>
+    <contributor>
+      <username>Jekyll Grim Payne</username>
+      <id>2175</id>
+    </contributor>
+    <comment>/* Examples */</comment>
+    <origin>53524</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="2525" sha1="6v07vgi1t7luumsjoy1tt1yq0gr1dd8" xml:space="preserve">'''{{class|StaticEventHandler}}'''
+
+{{c|void '''WorldThingDamaged''' (WorldEvent ''e'')}}
+
+== Usage ==
+An [[Events and handlers|event handler]] virtual function that is called when an [[actor]] is damaged. Will not be called if the actor was attacked but didn't receive any damage because of unique protection effects or similar.
+
+'''Notes:'''
+* This event is called ''after'' the damage has been dealt. As such, it cannot be used to override damage. For that, see '''[[DamageMobj]]''' (called on the actor itself) and '''[[ModifyDamage]]''' (called on items in the actor's possession).
+* This event is also called when an actor is killed, alongside [[WorldThingDied]]. To check if the actor actually died to this instanceof damage, check &lt;code&gt;e.thing.health &lt;= 0&lt;/code&gt;.
+
+=== Passed values ===
+This event gets a pointer to the {{struct|WorldEvent}} struct and can read the following from it by preceding the value with &lt;code&gt;e.&lt;/code&gt;:
+*{{c|Actor '''Inflictor'''}}
+:The actor dealing the damage. This is a [[projectile]] or a [[puff]] if one was used. For monster melee attacks this is the same as the source.
+*{{c|Actor '''DamageSource'''}}
+:The actor responsible for the inflictor. This is the actor who actually performed the attack. Can be &lt;code&gt;null&lt;/code&gt; if the damage is dealt without a source, for example by a damaging floor.
+*{{c|int '''Damage'''}}
+:The amount of damage that was dealt (this is the final amount of damage, after all randomization, factors and other special rules have been applied).
+*{{c|Name '''DamageType'''}}
+:The damage type applied to the attack. (By default, regular attacks use {{c|'Normal'}}, and hitscan attacks use {{c|'Hitscan'}}.)
+*{{c|int '''DamageFlags'''}}
+:The damage flags that were applied to the attack:
+{{: ZScript damage flags}}
+*{{c|double '''DamageAngle'''}}
+:The absolute angle from which the attack came. Is portal-aware {{verification}}
+
+== Examples ==
+This event handler simply prints a message whenever an actor is damaged, and will append " and died" at the end if it was also killed:
+&lt;syntaxhighlight lang="cs"&gt;
+class MyEventHandler : EventHandler
+{
+  override void WorldThingDamaged(WorldEvent e)
+  {
+    Console.Printf("%s was damaged by %s for %d damage%s",
+      e.thing.GetTag(),
+      e.DamageSource? e.DamageSource.GetTag() : "something",
+      e.Damage,
+      e.thing.health &lt;= 0? " and died" : "");
+  }
+}
+&lt;/syntaxhighlight&gt;
+
+(See {{struct|Console}} and [[GetTag]])
+
+== See also ==
+* [[Events and handlers]]
+
+[[Category:ZScript]]
+[[Category:Event handlers]]</text>
+    <sha1>6v07vgi1t7luumsjoy1tt1yq0gr1dd8</sha1>
+  </revision>
+</page>

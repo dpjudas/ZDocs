@@ -1,0 +1,71 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>Classes:CWeapMace</title>
+  <ns>0</ns>
+  <id>4451</id>
+  <revision>
+    <id>39470</id>
+    <parentid>34479</parentid>
+    <timestamp>2015-04-30T21:20:11Z</timestamp>
+    <contributor>
+      <username>Blue Shadow</username>
+      <id>2021</id>
+    </contributor>
+    <minor />
+    <comment>/* DECORATE definitions */ Updated</comment>
+    <origin>39470</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="1365" sha1="gj6q81wki6il3hrvu7ue8cpm7m3hx9h" xml:space="preserve">{{Actor|
+| type = Weapon
+| name = Mace of contrition
+| class = CWeapMace
+| game = Hexen
+}}[[Classes]]: [[Classes:Weapon|Weapon]]&amp;rarr;[[Classes:ClericWeapon|ClericWeapon]]&amp;rarr;&lt;u&gt;CWeapMace&lt;/u&gt;&lt;br&gt;
+The Cleric's mace weapon, from Hexen.
+==== [[DECORATE]] definitions ====
+ ACTOR &lt;u&gt;CWeapMace&lt;/u&gt; : {{Class|ClericWeapon}}
+ {
+   {{Property|Weapon.SelectionOrder}} 3500
+   {{Property|Weapon.KickBack}} 150
+   {{Property|Weapon.YAdjust}} -8
+   +{{Flag|BLOODSPLATTER}}
+   {{Property|Obituary}} "$OB_MPCWEAPMACE"
+   {{Property|Tag}} "$TAG_CWEAPMACE"
+ 
+   action native [[A_CMaceAttack]]();
+ 
+   States
+   {
+   Select:
+     CMCE A 1 [[A_Raise]]
+     Loop
+   Deselect:
+     CMCE A 1 [[A_Lower]]
+     Loop
+   Ready:
+     CMCE A 1 [[A_WeaponReady]]
+     Loop
+   Fire:
+     CMCE B 2 [[Offset]](60, 20)
+     CMCE B 1 [[Offset]](30, 33)
+     CMCE B 2 [[Offset]](8, 45)
+     CMCE C 1 [[Offset]](8, 45)
+     CMCE D 1 [[Offset]](8, 45)
+     CMCE E 1 [[Offset]](8, 45)
+     CMCE E 1 [[Offset]](-11, 58) [[A_CMaceAttack]]
+     CMCE F 1 [[Offset]](8, 45)
+     CMCE F 2 [[Offset]](-8, 74)
+     CMCE F 1 [[Offset]](-20, 96)
+     CMCE F 8 [[Offset]](-33, 160)
+     CMCE A 2 [[Offset]](8, 75) [[A_ReFire]]
+     CMCE A 1 [[Offset]](8, 65)
+     CMCE A 2 [[Offset]](8, 60)
+     CMCE A 1 [[Offset]](8, 55)
+     CMCE A 2 [[Offset]](8, 50)
+     CMCE A 1 [[Offset]](8, 45)
+     Goto Ready
+   }
+ }</text>
+    <sha1>gj6q81wki6il3hrvu7ue8cpm7m3hx9h</sha1>
+  </revision>
+</page>

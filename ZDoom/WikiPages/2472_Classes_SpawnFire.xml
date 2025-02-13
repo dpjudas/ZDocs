@@ -1,0 +1,65 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>Classes:SpawnFire</title>
+  <ns>0</ns>
+  <id>2472</id>
+  <revision>
+    <id>52461</id>
+    <parentid>33963</parentid>
+    <timestamp>2024-04-15T12:10:14Z</timestamp>
+    <contributor>
+      <username>Jekyll Grim Payne</username>
+      <id>2175</id>
+    </contributor>
+    <comment>/* DECORATE definition */ Added ZScript definition</comment>
+    <origin>52461</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="1009" sha1="8vt5n7sr6zfgq4hwgkhs2t6qnjogvvh" xml:space="preserve">{{Actor|
+| type = SFX
+| name = Boss spawning fire
+| class = SpawnFire
+| game = Doom2
+}}[[Classes]]: &lt;u&gt;SpawnFire&lt;/u&gt;
+
+The brief effect accompanying the [[A_SpawnFly|spawning]] of a monster by a [[Classes:SpawnShot|boss cube]] from the [[Classes:BossEye|boss eye]]. It reuses the sprites and the [[A_Fire]] action function from the [[Classes:Archvile|Archvile]]'s [[Classes:ArchvileFire|attack]].
+
+== [[ZScript]] definition ==
+{{ZScriptDefinitionNote|actors/doom/bossbrain.zs#L117}}
+&lt;syntaxhighlight lang="csharp"&gt;
+class SpawnFire : Actor
+{
+	Default
+	{
+		Height 78;
+		+NOBLOCKMAP
+		+NOGRAVITY
+		+ZDOOMTRANS
+		RenderStyle "Add";
+	}
+	States
+	{
+	Spawn:
+		FIRE ABCDEFGH 4 Bright A_Fire;
+		Stop;
+	}
+}&lt;/syntaxhighlight&gt;
+
+== [[DECORATE]] definition ==
+{{DecorateDefinitionNote}}
+ ACTOR &lt;u&gt;SpawnFire&lt;/u&gt;
+ {
+   {{Property|Height}} 78
+   +{{Flag|NOBLOCKMAP}}
+   +{{Flag|NOGRAVITY}}
+   {{Property|RenderStyle}} Add
+   States
+   {
+   Spawn:
+     FIRE ABCDEFGH 4 Bright [[A_Fire]]
+     Stop
+   }
+ }
+[[Category:Icon of Sin]]</text>
+    <sha1>8vt5n7sr6zfgq4hwgkhs2t6qnjogvvh</sha1>
+  </revision>
+</page>

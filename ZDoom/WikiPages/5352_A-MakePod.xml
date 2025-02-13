@@ -1,0 +1,30 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>A MakePod</title>
+  <ns>0</ns>
+  <id>5352</id>
+  <revision>
+    <id>46798</id>
+    <parentid>23504</parentid>
+    <timestamp>2019-07-16T05:59:47Z</timestamp>
+    <contributor>
+      <username>Quaker540</username>
+      <id>2135</id>
+    </contributor>
+    <minor />
+    <comment>Replaced the deprecated action function</comment>
+    <origin>46798</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="1208" sha1="2ewx1goag8cy45c7fnh8247ovev94g1" xml:space="preserve">{{DISPLAYTITLE:A_MakePod}}
+'''A_MakePod''' [(string ''podtype'')]
+
+Spawns an actor of type ''podtype'' (by default, {{Class|Pod}}) if there is enough room for it. There are, however, two important differences with other spawn functions such as [[A_SpawnItemEx]] or [[A_SpawnProjectile]]:
+*The children actors generated through A_MakePod will appear in their "Grow:" state. They '''''must''''' have a "Grow:" state in order for this codepointer to work correctly.
+*A master generating other actors with A_MakePod will keep track of its children and will not spawn more than sixteen of them. If the children call [[A_RemovePod]], however, they are unlinked from their master and leave room for more children. Typically, this is used in the children's death state so that they can be replaced.
+
+A_MakePod is restricted to actors inheriting from {{Class|PodGenerator}} because this codepointer uses the calling actor's &lt;tt&gt;special1&lt;/tt&gt; field to keep track of the amount of children, and other restricted codepointers might use the same field for different purposes.
+
+[[Category:Decorate Spawn functions]] [[category:Decorate Heretic functions]] [[Category:Decorate Restricted functions]] {{DEFAULTSORT:MakePod}}</text>
+    <sha1>2ewx1goag8cy45c7fnh8247ovev94g1</sha1>
+  </revision>
+</page>

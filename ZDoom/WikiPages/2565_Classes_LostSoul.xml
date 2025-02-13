@@ -1,0 +1,137 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>Classes:LostSoul</title>
+  <ns>0</ns>
+  <id>2565</id>
+  <revision>
+    <id>48922</id>
+    <parentid>48448</parentid>
+    <timestamp>2021-12-27T11:15:57Z</timestamp>
+    <contributor>
+      <username>Jekyll Grim Payne</username>
+      <id>2175</id>
+    </contributor>
+    <comment>updated in accordance with updated ZScriptDefinitionNote template</comment>
+    <origin>48922</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="3048" sha1="2xz00m6s96wwopc77w2r9zm4akm0623" xml:space="preserve">{{Actor|
+| type = Monster
+| name = Lost Soul
+| class = LostSoul
+| game = Doom
+| doomednum = 3006
+| thingindex = 19
+| spawnid = 110
+| spawnname = T_LOSTSOUL
+}}
+[[Classes]]: {{Class|Actor}} &amp;rarr; &lt;u&gt;LostSoul&lt;/u&gt;&lt;br&gt;
+&amp;ensp;&amp;rarr;{{Class|BetaSkull}}&lt;br&gt;
+&amp;ensp;&amp;rarr;{{Class|DeadLostSoul}}&lt;br&gt;
+
+
+Lost souls have nearly twice as much health as an [[Classes:DoomImp|imp]], but they don't shoot fireballs. They fly around and then charge at you for a big bite. These can really be a pain if there are lots of them flying around. In Doom 2, they are spat out by [[Classes:PainElemental|pain elementals]] as a form of offense.
+
+
+==== [[ZScript]] definition ====
+{{ZScriptDefinitionNote|actors/doom/lostsoul.zs}} 
+ class LostSoul : Actor
+ {
+ 	Default
+ 	{
+ 		{{Property|Health}} 100;
+ 		{{Property|Radius}} 16;
+ 		{{Property|Height}} 56;
+ 		{{Property|Mass}} 50;
+ 		{{Property|Speed}} 8;
+ 		{{Property|Damage}} 3;
+ 		{{Property|PainChance}} 256;
+ 		{{Property|Monster}};
+ 		+{{Flag|FLOAT}} +{{Flag|NOGRAVITY}} +{{Flag|MISSILEMORE}} +{{Flag|DONTFALL}} +{{Flag|NOICEDEATH}} +{{Flag|ZDOOMTRANS}} +{{Flag|RETARGETAFTERSLAM}}
+ 		{{Property|AttackSound}} "skull/melee";
+ 		{{Property|PainSound}} "skull/pain";
+ 		{{Property|DeathSound}} "skull/death";
+ 		{{Property|ActiveSound}} "skull/active";
+ 		{{Property|RenderStyle}} "SoulTrans";
+ 		{{Property|Obituary}} "$OB_SKULL";
+ 		{{Property|Tag}} "$FN_LOST";
+ 	}
+ 	States
+ 	{
+ 	Spawn:
+ 		SKUL AB 10 BRIGHT [[A_Look]];
+ 		Loop;
+ 	See:
+ 		SKUL AB 6 BRIGHT [[A_Chase]];
+ 		Loop;
+ 	Missile:
+ 		SKUL C 10 BRIGHT [[A_FaceTarget]];
+ 		SKUL D 4 BRIGHT [[A_SkullAttack]];
+ 		SKUL CD 4 BRIGHT;
+ 		Goto Missile+2;
+ 	Pain:
+ 		SKUL E 3 BRIGHT;
+ 		SKUL E 3 BRIGHT [[A_Pain]];
+ 		Goto See;
+ 	Death:
+ 		SKUL F 6 BRIGHT;
+ 		SKUL G 6 BRIGHT [[A_Scream]];
+ 		SKUL H 6 BRIGHT;
+ 		SKUL I 6 BRIGHT [[A_NoBlocking]];
+ 		SKUL J 6;
+ 		SKUL K 6;
+ 		Stop;
+ 	}
+ }
+==== [[DECORATE]] definition ====
+{{DecorateDefinitionNote}}
+ ACTOR &lt;u&gt;LostSoul&lt;/u&gt;
+ {
+   {{Property|Health}} 100
+   {{Property|Radius}} 16
+   {{Property|Height}} 56
+   {{Property|Mass}} 50
+   {{Property|Speed}} 8
+   {{Property|Damage}} 3
+   {{Property|PainChance}} 256
+   {{Property|Monster}}
+   +{{Flag|FLOAT}}
+   +{{Flag|NOGRAVITY}}
+   +{{Flag|MISSILEMORE}}
+   +{{Flag|DONTFALL}}
+   +{{Flag|NOICEDEATH}}
+   {{Property|AttackSound}} "skull/melee"
+   {{Property|PainSound}} "skull/pain"
+   {{Property|DeathSound}} "skull/death"
+   {{Property|ActiveSound}} "skull/active"
+   {{Property|RenderStyle}} SoulTrans
+   {{Property|Obituary}} "$OB_SKULL" // "%o was spooked by a lost soul."
+   States
+   {
+   Spawn:
+     SKUL AB 10 Bright [[A_Look]]
+     Loop
+   See:
+     SKUL AB 6 Bright [[A_Chase]]
+     Loop
+   Missile:
+     SKUL C 10 Bright [[A_FaceTarget]]
+     SKUL D 4 Bright [[A_SkullAttack]]
+     SKUL CD 4 Bright
+     Goto Missile+2
+   Pain:
+     SKUL E 3 Bright
+     SKUL E 3 Bright [[A_Pain]]
+     Goto See
+   Death:
+     SKUL F 6 Bright
+     SKUL G 6 Bright [[A_Scream]]
+     SKUL H 6 Bright
+     SKUL I 6 Bright [[A_NoBlocking]]
+     SKUL J 6
+     SKUL K 6
+     Stop
+   }
+ }</text>
+    <sha1>2xz00m6s96wwopc77w2r9zm4akm0623</sha1>
+  </revision>
+</page>

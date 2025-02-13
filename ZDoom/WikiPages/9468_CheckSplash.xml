@@ -1,0 +1,53 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>CheckSplash</title>
+  <ns>0</ns>
+  <id>9468</id>
+  <revision>
+    <id>47989</id>
+    <parentid>47984</parentid>
+    <timestamp>2020-10-09T20:51:47Z</timestamp>
+    <contributor>
+      <username>Boondorl</username>
+      <id>2606</id>
+    </contributor>
+    <minor />
+    <comment>/* Usage */</comment>
+    <origin>47989</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="1006" sha1="69rler3923ckycccgqhs1e7v32tj56g" xml:space="preserve">{{ZScriptNote}}
+__NOTOC__
+
+void '''CheckSplash'''(double distance)
+
+== Usage ==
+Checks to see if the Actor is on a liquid floor. If so, creates a splash that won't alert monsters. Mainly used with explosions.
+
+=== Parameters ===
+*''distance'' - The additional height the Actor is allowed to be above the floor for a splash to be created.
+
+== Examples ==
+{{noexamples}}
+
+== Internal Code ==
+ void CheckSplash(double distance)
+ {
+     double floorh;
+     sector floorsec;
+     [floorh, floorsec] = curSector.LowestFloorAt(pos.XY);
+ 
+     if (pos.Z &lt;= floorz + distance &amp;&amp; floorsector == floorsec &amp;&amp; curSector.GetHeightSec() == NULL &amp;&amp; floorsec.heightsec == NULL)
+     {
+         // Explosion splashes never alert monsters. This is because A_Explode has
+         // a separate parameter for that so this would get in the way of proper 
+         // behavior.
+         Vector3 pos = PosRelative(floorsec);
+         pos.Z = floorz;
+         HitWater (floorsec, pos, false, false);
+     }
+ }
+
+[[Category:ZScript]]</text>
+    <sha1>69rler3923ckycccgqhs1e7v32tj56g</sha1>
+  </revision>
+</page>

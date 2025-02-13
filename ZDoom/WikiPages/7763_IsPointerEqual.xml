@@ -1,0 +1,58 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>IsPointerEqual</title>
+  <ns>0</ns>
+  <id>7763</id>
+  <revision>
+    <id>54021</id>
+    <parentid>47941</parentid>
+    <timestamp>2024-12-05T11:09:07Z</timestamp>
+    <contributor>
+      <username>Jekyll Grim Payne</username>
+      <id>2175</id>
+    </contributor>
+    <origin>54021</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="2657" sha1="74jzlgcpgtbm55dkrjubui5nzlowb9j" xml:space="preserve">__NOTOC__
+{{note|If using [[ZScript]], this function is not necessary most of the time, since ZScript has access to [[Actor_pointer#ZScript|'''proper pointers''']] which can be directly compared using [[Operators_(ZScript)#==_(exactly_equal)|'''relational operators''']].}}
+
+bool '''IsPointerEqual''' (int ''ptr_select1'', int ''ptr_select2'' [, int ''tid1'' [, int ''tid2'']]); — ''ACS version''&lt;br /&gt;
+bool '''IsPointerEqual''' (int ''ptr_select1'', int ''ptr_select2'') — ''DECORATE/ZScript version''
+
+==Usage==
+Compares two [[actor pointer|pointers]] and see if they reference the same actor or not. ''tid1'' determines the actor used to resolve ''ptr_select1'', and ''tid2'' determines the actor used to resolve ''ptr_select2''. If ''tid1'' and ''tid2'' are equal, the same actor is used for resolving both pointers. Passing a {{c|[[TID|tid]]}} of 0 for either ''tid*'' means that the check is done on the activator of the script to resolve the respective pointer.
+
+The DECORATE version behaves the same, except that it does not accept {{c|tids}}, and instead, the check is done on the caller of the function to resolve the pointers.
+
+Note that the DECORATE version of the function is to be used where an [[DECORATE expressions|expression]] is expected. It is mostly useful when combined with {{c|[[A_JumpIf]]}}.
+
+===Parameters===
+*''ptr_select1'': the first pointer to pass for comparison.
+*''ptr_select2'': the second pointer to pass for comparison.
+*''tid1'': the {{c|tid}} to determine the actor used to resolve the first pointer (''ptr_select1''). Default is 0, which refers to the activator.
+*''tid2'': the {{c|tid}} to determine the actor used to resolve the second pointer (''ptr_select2''). Default is 0, which refers to the activator.
+
+===Return value===
+The function returns {{c|true}} if both pointers refer to the same actor (equal), otherwise the returned value is {{c|false}}.
+
+== Examples ==
+This {{Class|DoomImp|imp}} reports two messages on death: one when it is killed by the player (player 1 in this case), and another when it is killed by anything otherwise. The function checks the imp's target at that moment and see if it was the player, jumping to the {{c|Player1Kill}} state if it was and printing the message.
+
+ ACTOR SomeImp : {{Class|DoomImp}}
+ {
+   States
+   {
+   Death:
+     TNT1 A 0 [[A_JumpIf]]([[IsPointerEqual]]({{const|AAPTR_TARGET}}, {{const|AAPTR_PLAYER1}}) == {{const|TRUE}}, "Player1Kill")
+     TNT1 A 0 [[A_PrintBold]]("Killed by something else")
+     Goto Super::Death
+   Player1Kill:
+     TNT1 A 0 [[A_PrintBold]]("Killed by player 1")
+     Goto Super::Death
+   }
+ }
+
+[[category:ACS Information functions]]</text>
+    <sha1>74jzlgcpgtbm55dkrjubui5nzlowb9j</sha1>
+  </revision>
+</page>

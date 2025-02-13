@@ -1,0 +1,59 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>LogN</title>
+  <ns>0</ns>
+  <id>5565</id>
+  <revision>
+    <id>44524</id>
+    <parentid>36030</parentid>
+    <timestamp>2017-03-23T16:16:38Z</timestamp>
+    <contributor>
+      <username>Marrub</username>
+      <id>2058</id>
+    </contributor>
+    <comment>fix broken link</comment>
+    <origin>44524</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="1312" sha1="qbmprhe612vpro36bfmgy1qi7g1mtry" xml:space="preserve">{{DISPLAYTITLE:logN}}
+The logarithm function performs a mathematical operation that is opposite of an exponential function (raising a base constant to a power). The logarithm of a number ''x'' in base ''base'' is any number ''n'' such that ''x = base''&lt;sup&gt;''n''&lt;/sup&gt;. This function takes and returns [[Definitions#Fixed_point_numbers|fixed-point numbers]].
+
+This was adapted from the [http://web.archive.org/web/20070207040446/http://en.literateprograms.org/Logarithm_Function_%28Python%29 Python code on Literate Programs].
+
+ #define MATH_E 178145
+ function int logN (int x, int base)
+ {
+     if (!base) base = MATH_E;
+     int integer = 0;
+ 
+     if (x &lt; 1.0 &amp;&amp; base &lt; 1.0) return 0;
+       
+     while (x &lt; 1)
+     {
+         integer -= 1;
+         x = [[FixedMul]] (x, base);
+     }
+     while (x &gt;= base)
+     {
+         integer += 1;
+         x = [[FixedDiv]] (x, base);
+     }
+     int partial = 0.5;
+     x = [[FixedMul]] (x, x);
+     int decimal = 0;
+     while (partial &gt; 1) // Actually 0.0000152587890625
+     {
+         if (x &gt;= base)
+         {
+             decimal += partial;
+             x = [[FixedDiv]] (x, base);
+         }
+         partial = [[FixedMul]] (partial, 0.5);
+         x = [[FixedMul]] (x, x);
+     }
+     return ((integer &lt;&lt; 16) + decimal);
+ }
+
+[[category:Sample ACS functions]]</text>
+    <sha1>qbmprhe612vpro36bfmgy1qi7g1mtry</sha1>
+  </revision>
+</page>

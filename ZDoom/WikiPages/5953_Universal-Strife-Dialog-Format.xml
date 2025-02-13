@@ -1,0 +1,145 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>Universal Strife Dialog Format</title>
+  <ns>0</ns>
+  <id>5953</id>
+  <revision>
+    <id>38220</id>
+    <parentid>37835</parentid>
+    <timestamp>2014-08-30T23:12:16Z</timestamp>
+    <contributor>
+      <username>Blue Shadow</username>
+      <id>2021</id>
+    </contributor>
+    <minor />
+    <origin>38220</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="5035" sha1="kg324k2uhhrm9ai2j8tel578uf8nz6h" xml:space="preserve">The '''universal Strife dialog format''' is a scripting format agreed upon by both authors of editing utilities and source ports. One advantage to using this over [[KSSC]] is that these scripts are more likely to be forwards compatible.
+
+== Direct use ==
+[[ZDoom]] offers direct support of non-compiled USDF and [[ZSDF]] dialogue lumps.
+
+== Compiling ==
+The only format supported by [[Strife]] and ZDoom [[version history|versions up to 2.5.0]] is the original [[DIALOGUE|binary format]].  A tool known as the [http://bitowl.com/Universal_Strife_Dialog_Compiler Universal Strife Dialog Compiler] is capable of converting a subset of standard conformant dialogs to the original format. It can also be used to decompile old scripts into USDF.
+
+If you have a KSSC script and wish to convert it, you may compile it first and then decompile it with USDC.
+
+== Starting a script ==
+Although not directly used by USDC itself, the USDF standard requires that you include the following two lines in your script.  If you are writing a replacement for SCRIPT00 you may remove the include line, but do note that the compiler will still print a warning.
+
+ namespace = "Strife";
+ include = "SCRIPT00";
+
+To compile the script run the following command:
+
+ usdc myscript.txt -o script02.o
+
+== Conversation blocks ==
+The ''' conversation ''' keyword begins a group of scripts for a specific actor.  The only supported property is ''' actor ''' which must be set to the {{Property|ConversationID}} of the actor you wish to assign the dialogs to.  You should only have one conversation block per ConversationID as you may get undefined results otherwise.
+
+ conversation
+ {
+     actor = 1; // Change to the ConversationID of the actor.
+ }
+
+== Page blocks ==
+Within a conversation you may define as many ''' page ''' blocks as you would like.  Pages are indexed in the order in which they are defined.  Below is a list of properties supported within page blocks.
+
+* ''' name ''' - Name that goes in the upper left hand corner.
+* ''' panel ''' - Lump name that ZDoom uses as the portrait.
+* ''' voice ''' - Name of the lump to play for narration. Should be in the voices [[namespace]].
+* ''' dialog ''' - The contents of the page.
+* ''' drop ''' - ConversationID of the object to be droped if the actor is killed.
+* ''' link ''' - Page to jump to if all ifitem conditions are satisfied.
+
+ conversation
+ {
+     actor = 1;
+     page
+     {
+          name = "MY ACTOR";
+          dialog = "Hello, what can I do for you?";
+     }
+ }
+
+== IfItem blocks ==
+Within a page up to three ''' ifitem ''' blocks can be defined.  You may specify the conversationID of the ''' item ''' in which to check.  If all conditions are satisfied the it will jump to the page pointed to by the link property in the page block.
+
+ conversation
+ {
+     actor = 1;
+     page
+     {
+         link = 2;
+         ifitem
+         {
+             item = 168; // Coin
+         }
+     }
+ }
+
+== Choice blocks ==
+Additionally you may specify up to 5 ''' choice ''' blocks within a page.  A generic response is always listed after these choices which does nothing more than close the dialog.
+
+* ''' text ''' - The message of the response.
+* ''' displaycost ''' - Determines if the cost should be displayed (defaults to true).
+* ''' yesmessage ''' - Text to display if the choice is accepted (you can afford the option).
+* ''' nomessage ''' - Text to display if the choice is rejected (you can't afford the option).
+* ''' log ''' - The lump name of the log entry to use on success, for USDC this must be in the format of "LOGXXXXX"
+* ''' giveitem ''' - The ConversationID of the item to give on success.
+* ''' nextpage ''' - The index of the page to go upon success.
+* ''' closedialog ''' - Changes if the dialog will immediately go to the next page on success (default is false).
+* ''' special ''' - Line special to execute.
+* ''' arg0 - arg4 ''' - Arguments for the line special.
+
+ conversation
+ {
+     actor = 1;
+     page
+     {
+          name = "MY ACTOR";
+          dialog = "Hello, what can I do for you?";
+          choice
+          {
+              text = "I need a crossbow.";
+              giveitem = 194;
+              nextpage = 1;
+          }
+     }
+ }
+
+== Cost blocks ==
+Up to three ''' cost ''' blocks may be specified in a choice block, but if ''' displaycost ''' is true only the first will be shown.  You can specify the ''' item ''' ConversationID and the ''' amount ''' needed.
+
+ conversation
+ {
+     actor = 1;
+     page
+     {
+          name = "MY ACTOR";
+          dialog = "Hello, what can I do for you?";
+          choice
+          {
+              text = "I need a crossbow.";
+              giveitem = 194;
+              nextpage = 1;
+              cost
+              {
+                  item = 168; // Coin
+                  amount = 10;
+              }
+          }
+     }
+ }
+
+== See also ==
+* [[DIALOGUE]]
+* [[ZDoom Strife Dialog Format]]
+
+== External links ==
+* [https://github.com/rheit/zdoom/blob/master/specs/usdf.txt USDF specifications]
+
+[[Category:Editing concepts]]</text>
+    <sha1>kg324k2uhhrm9ai2j8tel578uf8nz6h</sha1>
+  </revision>
+</page>

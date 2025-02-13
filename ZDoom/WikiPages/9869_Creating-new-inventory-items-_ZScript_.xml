@@ -1,0 +1,118 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>Creating new inventory items (ZScript)</title>
+  <ns>0</ns>
+  <id>9869</id>
+  <revision>
+    <id>52214</id>
+    <timestamp>2024-04-02T15:08:20Z</timestamp>
+    <contributor>
+      <username>Jekyll Grim Payne</username>
+      <id>2175</id>
+    </contributor>
+    <comment>Created page with "Inventory items are special actors based on the {{class|Inventory}} class (either directly, or through one of its child classes) that can be picked up and/or placed into a pla..."</comment>
+    <origin>52214</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="7767" sha1="7t1vsad4yd3j64a92ydlacpmt9v8lyc" xml:space="preserve">Inventory items are special actors based on the {{class|Inventory}} class (either directly, or through one of its child classes) that can be picked up and/or placed into a player's or monster's inventory.
+
+''All'' actors can hold items in them. In fact, even items can hold items in them, although it's normally not necessary. However, only the actors with the {{flag|PICKUP}} flag in their definition can ''pick up'' items from the world — by default only {{class|PlayerPawn}} actors have this flag.
+
+== Base classes for items ==
+
+To define an inventory item you have to inherit from one of the predefined inventory classes:
+
+*'''{{class|Inventory}}'''
+:Basic items that can be placed in an actor's inventory but don't come with any special behaviors.
+
+*'''{{class|Health}}'''
+:Used for items that immediately increase the player's health upon being received (for example, Doom's {{class|Stimpack}} and {{class|Medikit}}).
+
+*'''{{class|HealthPickup}}'''
+:Similar to {{class|Health}}, but instead of healing immediately, they're placed in the actor's inventory. They can then be manually used to perform healing. For example, Hexen's {{class|ArtiHealth|Quartz Flask}}.
+
+*'''{{class|BasicArmorPickup}}'''
+:Used for armor items. For example, Doom's {{class|GreenArmor}} and {{class|BlueArmor}} are based on this.
+:Note: armor items aren't placed in the actor's inventory directly. Instead, when being picked up, they modify the values of the special {{class|BasicArmor}} class (which all player actors always have automatically) and set is values (such as amount, absorption, icon, etc.), after which the armor pickup itself is removed.
+
+*'''{{class|BasicArmorBonus}}'''
+:Used for items that increase the amount of ''existing'' armor. Doom's {{class|ArmorBonus}} is an example of this.
+
+*'''{{class|HexenArmor}}'''
+:Normally, only used in Hexen. A very specific variant of armor that consists of "pieces". It has a limited functionality, so it's almost never used in custom projects.
+
+*'''{{class|Ammo}}'''
+:Ammunition items. {{class|Weapon|Weapons}} usually need this to be able to fire.
+
+*'''{{class|Weapon}}'''
+:Player weapons. They can display sprite animations on the player's screen and utilize various [[Category:Decorate_Weapon_attack_functions|weapon-specific attack functions]]. They normally need {{class|Ammo}} to work.
+
+*'''{{class|BackpackItem}}'''
+:A special base class for items hat increase the player's {{class|Ammo|ammo capacity}} when picked up. Doom's {{class|Backpack}} is an example of this.
+
+*'''{{class|Powerup}}'''
+:These items exist in the player's inventory for a limited {{property|Powerup.Duration|duration}} and give some kind of a special effect while they do. Thins like invulnerability, invisibility and others would be based on Powerup.
+:Doom has a few powerups, such as {{class|PowerIronFeet|radiation suit}}.
+:These items '''cannot be placed in the world directly'''. Powerups can only exist in somebody's inventory and give an effect while they're in inventory, but they can't function as an in-world pickup. In order to have a ''pickup'' for a powerup, you need a {{class|PowerupGiver}}.
+
+*'''{{class|PowerupGiver}}'''
+:These items function as a pickup for a {{class|Powerup}}. They can be placed in the world, and either go into player's inventory, or (if they have the {{flag|Inventory.AUTOACTIVATE}} flag), are used automatically. Upon being used, they give a corresponding {{class|Powerup}} to the player, which then gives a specific effect.
+:Having a pickup for a powerup is not required. For example, if some kind of a powerup is only meant to be given ''directly'' (through scripts/functions) but never be picked up from the world, defining a PowerupGiver for it is not necessary.
+
+*'''{{class|Key}}'''
+:Used for keys. Keys are coded to open locked doors, and those locks must be defined in the [[LOCKDEFS]] lump. Aside from that, keys don't have any special functionality.
+
+*'''{{class|PuzzleItem}}'''
+:Used for Puzzle items. Highly specific item that can be utilized in map puzzles; the map in question will need to use the [[UsePuzzleItem]] script special. Hexen makes some use of this.
+
+*'''{{class|WeaponPiece}}'''
+:Used for for weapons that must be assembled out of several pieces. The most powerful weapons in Hexen utilize this.
+
+*'''{{class|CustomInventory}}'''
+:A special item that can be used to perform simple actions when it's being picke up and/or used. In [[ZScript]] this class is generally redundant, because all the necessary functionality can be performed through [[Inventory virtual functions]], such as [[TryPickup]] and [[Use]].
+
+*'''{{class|FakeInventory}}'''
+:Dummy items that exist only in order to perform some kind of a map special when being picked up, but after that they're immediately removed.
+
+== Properties, states and sounds ==
+The {{class|Inventory}} class and its subclasses come with unique properties. They're listed on the each class's individual page, linked above.
+
+The two most commonly used properties are:
+*{{property|Inventory.PickupSound}} - determines which sound will play when the item is picked up.
+*{{property|Inventory.PickupMessage}} - determins which message will appear on the screen when the item is picked up.
+
+Most inventory items utilize only two [[Actor states|states]] automatically:
+*'''Spawn''' - like with all actors, this is used when the item spawns in the world
+*'''Held''' - this is utilized while the item is in another actor's inventory. This can be used the same way as the [[DoEffect]] virtual function.
+
+Items also utilize the '''HoldAndDestroy''' state when they're about to be removed from an actor's inventory (this state is used for 1 tic only), but it's not always called when the item is destroyed.
+
+In addition to this, Inventory has a lot of [[Classes:Inventory#Using_in_ZScript_and_DECORATE|'''unique properties and flags''']].
+
+== Pointers ==
+Items have an &lt;code&gt;owner&lt;/code&gt; [[Actor pointers|pointer]] to the actor who is holding the item.
+
+== Inventory-related functions ==
+The most commonly used functions that intereact with items are:
+*'''[[A_GiveInventory]]''' - gives an item to the calling actor
+*'''[[A_TakeInventory]]''' - takes an item from the calling actor
+*'''[[DepleteAmmo]]''' - used by {{class|Weapon}} only: consumes the specified ammo
+*'''[[PrintPickupMessage]]''' - called to print the item's {{property|PickupMessage}}. Normally called automatically, but can be called manually for some reason.
+*'''[[PlayPickupSound]]''' - called to play the item's {{property|PickupSound}}. Normally called automatically, but can be called manually for some reason.
+
+== Virtual functions ==
+Inventory classes utilize a wide array of unique virtual functions. Some of the most commonly used ones are:
+* '''[[Touch]]''' - called when an item is touched by another actor. As a result, the item may be picked up.
+* '''[[TryPickup]]''' - called when the item is actually being picked up.
+* '''[[Use]]''' - called when an item is being used (manually or automatically)
+* '''[[DoEffect]]''' - called every [[Tic|game tic]] when the item exists in another actor's inventory. {{class|Powerup|Powerups}} use this to apply constant effects to their owner.
+* '''[[InitEffect]]''' and '''[[EndEffect]]''' - only used by the {{class|Powerup}} class to start and end its special effect. This is also where the player's colormap may be altered (for example, {{class|InvulnerabilitySphere|Doom's invulnerability orb}} does this).
+* '''[[OwnerDied]]''' - called when the item's owner is killed.
+* '''[[PickupMessage]]''' - called to determine what kind of {{property|PickupMessage}} the item will print. Can be modified to dynamically alter the message.
+
+More functions can be found [[Inventory virtual functions|here]].
+
+
+[[Category:ZScript guides]]</text>
+    <sha1>7t1vsad4yd3j64a92ydlacpmt9v8lyc</sha1>
+  </revision>
+</page>

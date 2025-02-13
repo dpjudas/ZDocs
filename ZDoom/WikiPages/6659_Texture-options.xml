@@ -1,0 +1,69 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>Texture options</title>
+  <ns>0</ns>
+  <id>6659</id>
+  <revision>
+    <id>48322</id>
+    <parentid>48320</parentid>
+    <timestamp>2021-03-02T17:33:47Z</timestamp>
+    <contributor>
+      <username>Blue Shadow</username>
+      <id>2021</id>
+    </contributor>
+    <comment>Undo revision 48320 by [[Special:Contributions/Jekyll Grim Payne|Jekyll Grim Payne]] ([[User talk:Jekyll Grim Payne|talk]]) moved to CVARs:Display</comment>
+    <origin>48322</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="4275" sha1="g8ewlysmivle6gialv8o715fw9lhd2s" xml:space="preserve">{{menutrail|Main menu|Options menu|Display options|OpenGL options}}
+[[File:TextureOptions.png|thumb|The texture options menu in [[Heretic]].]]
+{{OpenGL}}
+The '''texture options''' menu allows to modify how the textures (including [[sprite]]s and any other image) are sent to the video chipset by the [[OpenGL]] renderer. Its [[MENUDEF]] name is {{c|GLTextureGLOptions}}.
+
+*'''{{LE|Textures enabled}}''' (Yes/No)
+:{{c|{{CVAR|R|gl_texture}}}}
+:Enable or disable texturing of the level geometry. Disabling textures is only useful for troubleshooting.
+*'''{{LE|Texture filter mode}}''' (None/None (nearest mipmap)/None (linear mipmap)/Linear/Bilinear/Trilinear)
+:{{c|{{CVAR|R|gl_texture_filter}}}}
+:Chooses which {{wp|Texture_filtering|texture filtering}} mode to use.
+*'''{{LE|Anisotropic filter}}''' (Off/2x/4x/8x/16x)
+:{{c|{{CVAR|R|gl_texture_filter_anisotropic}}}}
+:Determines the maximum degree used for {{wp|Anisotropic_filtering|anisotropic filtering}}.
+*'''{{LE|Texture format}}''' (RGBA8/RGB5_A1/RGBA4/RGBA2/COMPR_RGBA/S3TC_DXT1/S3TC_DXT3/S3TC_DXT5)
+:{{c|{{CVAR|R|gl_texture_format}}}}
+:Chooses how textures are stored in video RAM. The best quality is offered by RGBA8; all other options sacrifice image quality for a reduced memory usage.
+:*RGBA8: Each pixel is described with 32-bits, using eight bits per channel.
+:*RGB5_A1: Each pixel is described with 16 bits, using five bits per color channel and a single bit for alpha transparency. Color depth is reduced, causing color banding, and there is no translucency possible.
+:*RGBA4: Each pixel is described with 16 bits, using four bits per channel. Translucency is possible, but at the cost of further loss of color depth.
+:*RGBA2: Each pixel is described with 8 bits, using two bits per channel. The loss of color depth is very severe.
+:*Compressed RGBA: This corresponds to the OpenGL ARB texture compression standard (GL_COMPRESSED_RGBA_ARB), which makes it equivalent to RGBA8; but depending on implementation, the compression may be lossy.
+:*S3TC_DXTx: Each group of 16 pixels is described with 64 or 128 bits, giving the equivalent of 4 or 8 bits per pixel. However, the compression method is very lossy, and DXT1 does not support transparency at all.
+:Because of the limitations of some of these formats, the user's choice will be overridden for textures with incompatible requirements, such as transparency.
+*'''{{LE|Enable hires textures}}''' (Yes/No)
+:{{c|{{CVAR|R|gl_texture_usehires}}}}
+:Enables [[Doomsday]]-style hires texture packs. This does ''not'' affect hires textures declared with a method compatible with [[ZDoom]], such as the [[HI_START]]/[[HI_END]] [[namespace]], the deprecated [[HIRESTEX]] method, or texture scaling.
+*'''{{LE|High quality resize mode}}''' (Off/Scale2x/Scale3x/Scale4x/hq2x/hq3x/hq4x)
+:{{c|{{CVAR|R|gl_texture_hqresize}}}}
+:Selects an optional {{wp|Pixel_art_scaling_algorithms|image resizing filter}}.
+*'''{{LE|Resize textures}}''' (On/Off)
+:{{c|{{CVAR|R|gl_texture_hqresize_textures}}}}
+:Allows the selected high quality resizing filter to affect level geometry textures.
+*'''{{LE|Resize sprites}}''' (On/Off)
+:{{c|{{CVAR|R|gl_texture_hqresize_sprites}}}}
+:Allows the selected high quality resizing filter to affect [[sprite]]s.
+*'''{{LE|Resize fonts}}''' (On/Off)
+:{{c|{{CVAR|R|gl_texture_hqresize_fonts}}}}
+:Allows the selected high quality resizing filter to affect [[font]]s.
+*'''{{LE|Precache GL textures}}''' (Yes/No)
+:{{c|{{CVAR|R|gl_precache}}}}
+:Enables or disables texture precaching.
+*'''{{LE|Camera textures offscreen}}''' (On/Off)
+:{{c|{{CVAR|R|gl_usefb}}}}
+:Enables or disables the use of a framebuffer to render [[camera]] textures. Normally camera textures, if they are smaller than the screen, are rendered on the screen, then copied, then overwritten by the actual screen. This process is slightly faster than using a separate framebuffer, but it may result in glitches with faulty graphics driver, so the option to force off-screen rendering in all cases is available.
+*'''{{LE|Trim sprite edges}}''' (On/Off)
+:{{c|{{CVAR|R|gl_trimsprites}}}}
+:If this option is on, sprites are made as small as possible in memory by removing any fully-transparent border. However, this requires hardware that can handle non-power-of-two textures.
+
+[[Category:Menus]]</text>
+    <sha1>g8ewlysmivle6gialv8o715fw9lhd2s</sha1>
+  </revision>
+</page>

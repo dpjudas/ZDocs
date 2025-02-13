@@ -1,0 +1,43 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>CheckMissileRange</title>
+  <ns>0</ns>
+  <id>9582</id>
+  <revision>
+    <id>49129</id>
+    <timestamp>2022-05-17T23:34:06Z</timestamp>
+    <contributor>
+      <username>Inkoalawetrust</username>
+      <id>2604</id>
+    </contributor>
+    <comment>Created the page.</comment>
+    <origin>49129</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="1677" sha1="pvbidt21ml5s1hvau0icyg9w0cexife" xml:space="preserve">__NOTOC__
+Bool '''CheckMissileRange''' ()
+
+== Usage ==
+This function determines if the actor calling it can attack their target, it is used by several built-in functions such as [[A_Chase]].
+
+The function has the following fail conditions:
+* The caller is inside a sector with the [[Sector_flags|SECF_NOATTACK]] flag on.
+* The callers' target is not visible.
+* The caller was {{flag|JUSTHIT|just hit}}, and his target is dead.
+* The callers' {{property|ReactionTime| reaction time}} has not reached zero yet.
+* The caller is a {{flag|FRIENDLY|friendly}} monster, and his target is also another friendly monster. In [[deathmatch]] games, this is only a fail condition if the other monster works for the same player or team as the caller.
+* The caller is a friendly monster, and another friendly monster is in the line of fire, this uses the same logic as the above condition for deathmatch games.
+* The target is beyond the callers' {{property|MaxTargetRange}}.
+* The caller has a melee state, and the target is closer than his {{property|MeleeThreshold}}.
+
+If none of the above conditions are true, then the function will decide if the caller could do a ranged attack based on whether or not they have a melee attack state, if the {{flag|MISSILEMORE}} and/or {{flag|MISSILEEVENMORE}} flags are on, the value of their {{property|MinMissileChance}} property, [[MAPINFO/Skill_definition|the aggressiveness value of the current skill level]], and at last, the distance between the caller and their target.
+
+=== Return value ===
+The function returns true if none of the above fail conditions are met. Otherwise it returns false.
+
+== Examples == 
+{{noexamples}}
+
+[[Category:ZScript]]</text>
+    <sha1>pvbidt21ml5s1hvau0icyg9w0cexife</sha1>
+  </revision>
+</page>

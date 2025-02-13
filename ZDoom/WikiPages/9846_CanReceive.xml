@@ -1,0 +1,65 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>CanReceive</title>
+  <ns>0</ns>
+  <id>9846</id>
+  <revision>
+    <id>53267</id>
+    <parentid>53002</parentid>
+    <timestamp>2024-10-12T08:56:02Z</timestamp>
+    <contributor>
+      <username>Blue Shadow</username>
+      <id>2021</id>
+    </contributor>
+    <minor />
+    <comment>remove {{new}}</comment>
+    <origin>53267</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="1770" sha1="ffkpid2gejo7o6br8yhza13vvm77ndi" xml:space="preserve">'''{{class|Actor}}'''
+
+{{c|virtual bool '''CanReceive'''(Inventory ''item'')}}
+
+==Usage==
+An {{class|Actor}} function that determines if a specific ''item'' can be received by that actor. Normally, this is called automatically by {{class|Inventory}} items from their '''[[CallTryPickup]]''' call, as soon as they're about to be received (whether by being picked up, or by being given directly).
+
+In the base {{class|Actor}} class this function simply always returns &lt;code&gt;true&lt;/code&gt;. Can be overridden to add custom behavior.
+
+If there's a need to add behavior ''after'' an item has been received, see '''[[HasReceived]]'''.
+
+If there's a need to modify the pickup rules from the ''item'' rather than its recipient, see '''[[CanPickup]]'''.
+
+===Parameters===
+*{{c|Inventory '''item'''}}
+:A pointer to the item that is about to be received by the calling actor.
+
+===Return values===
+*bool — returns &lt;code&gt;true&lt;/code&gt; if the ''item'' can be received. Returning &lt;code&gt;false&lt;/code&gt; will prevent the calling actor from being able to receive this item. (If the item was a pickup, it'll stay in the world; if it was being given directly through scripts/cheats, it'll disappear).
+
+==Examples==
+This custom {{class|PlayerPawn}} will not be able to receive any items based on the {{class|DoomWeapon}} class:
+&lt;syntaxhighlight lang="csharp"&gt;
+class CustomMagePlayer : PlayerPawn
+{
+  override bool CanReceive(Inventory item)
+  {
+    if (item &amp;&amp; item is 'DoomWeapon')
+    {
+      return false;
+    }
+    return true;
+  }
+  // States and Default blocks omitted to keep this example short
+}&lt;/syntaxhighlight&gt;
+
+==See also==
+*[[HasReceived]]
+*[[CallTryPickup]]
+*[[CanPickup]]
+*[[Actor virtual functions]]
+
+[[Category:ZScript]]
+[[Category:Actor virtual functions]]
+[[Category:Inventory]]</text>
+    <sha1>ffkpid2gejo7o6br8yhza13vvm77ndi</sha1>
+  </revision>
+</page>

@@ -1,0 +1,125 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>Classes:ThinkerIterator</title>
+  <ns>0</ns>
+  <id>8962</id>
+  <revision>
+    <id>53820</id>
+    <parentid>53819</parentid>
+    <timestamp>2024-11-22T10:15:38Z</timestamp>
+    <contributor>
+      <username>Jekyll Grim Payne</username>
+      <id>2175</id>
+    </contributor>
+    <origin>53820</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="3860" sha1="b01m4n2543u4oen455kmwb65v2nul6y" xml:space="preserve">{{ZScriptNote}}
+
+'''ThinkerIterator''' is an internal class in ZScript, inheriting from [[Object]].
+
+This class is used for searching through descendants of [[Thinker|thinkers]]. [[A_GiveToChildren]] is one of the many functions which uses this.
+
+== Methods ==
+=== Static ===
+*{{c|ThinkerIterator '''Create'''(class&lt;Object&gt; ''type'' {{=}} "Actor", int ''statnum'' {{=}} Thinker.MAX_STATNUM+1)}}
+:Initializes the iterator.
+:Parameters:
+:*{{c|class&lt;Object&gt; '''type'''}} — Serves as a filter. Specifying a classname here will only search for this type of class and descendants. Default is Actor.
+:*{{c|int '''statnum'''}} — Sets the specific statnum to be searched. The default is MAX_STATNUM+1, meaning the iterator will search through all of the statnums. If only {{class|Actor|actors}} or [[Thinker|thinkers]] in the game simulation are desired, consider setting this to STAT_DEFAULT to save on time an efficiency where all actors are regularly stored, except for inventory and [[PlayerPawn]]. See [[Thinker]] for more information.
+
+=== Non-static ===
+*{{c|Thinker '''Next'''(bool ''exact'' {{=}} false)}}
+:Cycles through the list of existing actors, filtered out by the '''Create()''' function.
+:Parameters:
+:*{{c|bool '''exact'''}} — If &lt;code&gt;true&lt;/code&gt;, disables ancestry checking. Note that ancestry checking is just like [[CheckClass]].
+
+*{{c|void '''Reinit'''()}}
+:Restarts the search.
+
+== Example ==
+In this example, an iterator is used during a Tick override on a morphed actor to allow key gathering, despite -PICKUP being set on the player.
+
+&lt;syntaxhighlight lang="csharp"&gt;
+// Think of this as A_CheckProximity, but with less limitation.
+// However, we have to invent all the checks in order to use it
+// properly.
+
+// So, create an iterator that searches for D4KeyBase-inheriting
+// only.
+ThinkerIterator KeyFinder = ThinkerIterator.Create("D4KeyBase");
+Actor mo;
+while (mo = D4KeyBase(KeyFinder.Next()))
+{
+	 // Make sure it can be touched.
+	 double blockdist = radius + mo.radius;
+	 if (abs(pos.x - mo.pos.x) &gt; blockdist || abs(pos.y - mo.pos.y) &gt; blockdist)
+	 {	continue;	}
+						
+	 // So we're in range horizontally. What about vertically?
+	 if (pos.z + height &lt; mo.pos.z || mo.pos.z + mo.height &lt; pos.z)
+	 {	continue;   }
+		
+	 // Execute any specials this thing had.				
+	 if (mo &amp;&amp; mo.special)
+	 {
+		 A_CallSpecial(mo.special, mo.args[0], mo.args[1], mo.args[2], mo.args[3], mo.args[4]);
+	 }
+
+	 // Assemble the arrays only if we succeed. This first array
+	 // contains the actor's hard names.
+	 static const Class&lt;Actor&gt; KeyName[] =
+	 {
+		 "D4RedCard",
+		 "D4YellowCard",
+		 "D4BlueCard",
+		 "D4RedSkull",
+		 "D4YellowSkull",
+		 "D4BlueSkull"
+	 };
+		
+	 // Contains the nice names for logging.
+	 static const String NiceKeyName[] =
+	 {
+		 "Red Card",
+		 "Yellow Card",
+		 "Blue Card",
+		 "Red Skull",
+		 "Yellow Skull",
+		 "Blue Skull"
+	 };
+
+	 // In the event someone decides to screw with the keys, check the base class.
+	 for (int index = 0; index &lt; 6; index++)
+	 {
+		 if (mo.CheckClass(KeyName[index], DefPtr, true))
+		 {
+			 //Concatenate a string with .. (two periods)
+			 A_Log(NiceKeyName[index].." Found");
+			 break;
+		 }
+	 }
+		
+	 // Grabs the actual key and gives it to the player. This would
+	 // be the same as if I had done A_GiveInventory(KeyName[Index])
+	 // inside the for loop and if block. However, if done above, it
+	 // wouldn't be safe as D4D mods could possibly modify them.
+	 // This ensures nothing is missed so long as they inherit from
+	 // D4KeyBase. The worst that will happen, they simply don't have
+	 // a pickup message attached. No big deal.
+		
+	 Class&lt;D4KeyBase&gt; keypick = (Class&lt;D4KeyBase&gt;)(mo.GetClass());
+	 A_GiveInventory(keypick,1);
+	 mo.A_Remove(DefPtr,RMVF_EVERYTHING);
+	 
+}
+&lt;/syntaxhighlight&gt;
+
+== See Also ==
+* [[ZScript]]
+* [[ZScript classes]]
+
+[[Category:ZScript]]
+[[Category:ZScript iterators]]</text>
+    <sha1>b01m4n2543u4oen455kmwb65v2nul6y</sha1>
+  </revision>
+</page>

@@ -1,0 +1,377 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>CVARs:Audio</title>
+  <ns>0</ns>
+  <id>7180</id>
+  <revision>
+    <id>53412</id>
+    <parentid>47160</parentid>
+    <timestamp>2024-10-22T09:12:16Z</timestamp>
+    <contributor>
+      <username>Blue Shadow</username>
+      <id>2021</id>
+    </contributor>
+    <comment>/* General settings */ snd_footstepvolume from git commit d0e6bce</comment>
+    <origin>53412</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="17316" sha1="skvflpdsyso8yrs29py2326xb8y18yo" xml:space="preserve">These CVARs control various aspects of the game's sound and music configurations, including the [[software synthesizer|MIDI synthesizers]] and [[module replayer]]s.
+
+See the [[CVARs]] article for general information on how to access and edit variables.
+
+__TOC__
+== General settings ==
+Most of these variables can be set from the [[sound options]] menu.
+
+* '''{{LE|dlg_musicvolume}}''' ([[CVARs#float|float]])
+:Default: 1.0
+:This is a multiplier for [[#snd_musicvolume|snd_musicvolume]] when a ''[[Strife]]''-style conversation starts. This can be used to reduce music volume so as to make it easier to listen to the voice acting.
+
+* '''{{LE|i_soundinbackground}}''' ([[CVARs#boolean|boolean]])
+:Default: false
+:If set to true, the sound and music continue to play in the background if the program's window loses focus, otherwise they pause in such a case.
+
+* '''{{LE|snd_buffercount}}''' ([[CVARs#integer|integer]])
+:Default: 0
+:If non-zero, allows to choose how many buffer are used by [[FMOD Ex]]. Note that with any {{CVAR|A|snd_samplerate}} below about 44kHz, you will need to set {{CVAR|A|snd_buffersize}} to avoid long latencies.
+
+* '''{{LE|snd_buffersize}}''' ([[CVARs#integer|integer]])
+:Default: 0
+:This is the length of the sound buffer in milliseconds. Leaving this at 0 will let [[FMOD Ex]] choose the value. If that is unacceptable, you can try setting the buffer size manually. Buffer sizes can be any multiple of 20. Sizes that are not will be rounded up to the nearest multiple of 20. Smaller buffers produce less latency but are more prone to "breaking up" or "stuttering". You want the buffer size to be as low as possible without  stuttering. Each time you change the buffer size, you should use {{CCMD|O|snd_reset}} to test the new buffer size.
+
+* '''{{LE|snd_channels}}''' ([[CVARs#integer|integer]])
+:Default: 32
+:This cvar determines the number of channels used for mixing sound effects. Larger values generally sound better but also require a faster processor; though if you have a multicore processor you can safely use the maximum value of 256. [[Version history|Older versions]] of ZDoom (up to 2.2.0) used a lower default value of 12. 
+
+* '''{{LE|snd_driver}}''' ([[CVARs#integer|integer]])
+:Default: 0
+:Selects a machine-specific sound driver. The available drivers depends both on the setting of {{CVAR|A|snd_output}} and on the hardware installed. The {{CCMD|I|snd_listdrivers}} command will list the drivers available for the current output device.
+
+* '''{{LE|snd_flipstereo}}''' ([[CVARs#boolean|boolean]])
+:Default: false
+:Setting this to true causes sounds to the left of the listener to play on the right channel and vice-versa. Use this if your sound setup is screwy and has stereo reversed.
+
+* '''{{LE|snd_footstepvolume}}''' ([[CVARs#float|float]]) {{git|d0e6bce}}
+:Default: 1.0
+:This is the volume at which the player's [[footsteps]] sound is played and can range from 0 to 1.
+
+* '''{{LE|snd_hrtf}}''' ([[CVARs#boolean|boolean]])
+:Default: false
+:If true, the {{wp|Head-related_transfer_function|head-related transfer function}} filter is applied.
+
+* '''{{LE|snd_menuvolume}}''' ([[CVARs#float|float]])
+:Default: 0.6
+:This is the volume at which menu sounds are played and can range from 0 to 1.
+
+* '''{{LE|snd_mididevice}}''' ([[CVARs#integer|integer]])
+:Default: -1
+:This cvar determines which [[MIDI device]] ZDoom uses for [[MIDI]] and [[MUS]] music. A value of -1 indicates to use the [[FMOD]] synthesizer, while other values select specific MIDI devices. A complete list of MIDI devices available can be obtained with the {{CCMD|I|snd_listmididevices}} command.
+
+* '''{{LE|snd_midiprecache}}''' ([[CVARs#boolean|boolean]])
+:Default: false
+:Works around a bug in the {{wp|Gravis Ultrasound|GUS}} PnP drivers by precaching every instrument in a song just before playback begins. If you do not have one of these cards, you can leave this to false to speed up music transitions (even if using the [[GUS]] emulator).
+
+* '''{{LE|snd_musicvolume}}''' ([[CVARs#float|float]])
+:Default: 0.5
+:This is the volume at which music is played and can range from 0 to 1.
+
+* '''{{LE|snd_output}}''' ([[CVARs#string|string]])
+:Default: "Default"
+:Selects how sound is sent to the operating system. Possible values other than "default" and "no sound" are system-dependent:
+:*Windows: "DirectSound", "WASAPI", "ASIO", "WaveOut", "OpenAL"
+:*Unix: "OSS", "ALSA", "SDL", "ESD", "PulseAudio"
+:*Mac OS: "Sound Manager", "Core Audio
+
+* '''{{LE|snd_output_format}}''' ([[CVARs#string|string]])
+:Default: "PCM-16"
+:The format in which ZDoom's audio output is sent to the system. Valid values are "PCM-8", "PCM-16", "PCM-24", "PCM-32", and "PCM-Float".
+
+* '''{{LE|snd_pitched}}''' ([[CVARs#boolean|boolean]])
+:Default: false
+:When set to true, the random pitch effect found in early versions of ''[[Doom]]'' will be simulated.
+
+* '''{{LE|snd_profile}}''' ([[CVARs#boolean|boolean]])
+:Default: false
+:
+
+* '''{{LE|snd_resampler}}''' ([[CVARs#string|string]])
+:Default: "Linear"
+:Valid values include "NoInterp", "Linear", "Cubic", and "Spline".
+
+* '''{{LE|snd_samplerate}}''' ([[CVARs#integer|integer]])
+:Default: 0
+:This is the sampling rate (in Hz) at which sounds are mixed in the game. This affects the sound quality for everything except MIDI music. Most ''[[Doom]]'' sounds are only 11025 Hz, but some are 22050 Hz, and music sounds better with higher sampling rates. A value of 0 lets [[FMOD Ex]] use the system default, with a fallback to 48000 Hz if the system does not provide a valid answer.
+
+* '''{{LE|snd_sfxvolume}}''' ([[CVARs#float|float]])
+:Default: 0.5
+:This is the volume at which sound effects are played and can range from 0 to 1. This does not set the volume for your sound card's wave playback.
+
+* '''{{LE|snd_speakermode}}''' ([[CVARs#string|string]])
+:Default: "Auto"
+:Adapts sound output to your speaker configuration. Valid values include "Auto", "Mono", "Stereo", "Prologic", "Quad", "Surround", "5.1", and "7.1".
+
+* '''{{LE|snd_waterlp}}''' ([[CVARs#float|float]])
+:Default: 250.0
+:Underwater low-pass filter cutoff frequency. Set to 0 to disable the filter.
+
+* '''{{LE|snd_waterreverb}}''' ([[CVARs#boolean|boolean]])
+:Default: true
+:Controls the use of reverb in underwater areas. False disables the  reverb, and true enables it.
+
+* '''{{LE|synth_watch}}''' ([[CVARs#boolean|boolean]])
+:Default: false
+:
+
+== FluidSynth settings ==
+These variables are specific to the [[FluidSynth]] synthesizer.
+{{moreinfo}}
+
+* '''{{LE|fluid_chorus}}''' ([[CVARs#boolean|boolean]])
+:Default: true
+:
+
+* '''{{LE|fluid_chorus_depth}}''' ([[CVARs#float|float]])
+:Default: 8.0
+:Valid values range from 0.0 to 21.0.
+
+* '''{{LE|fluid_chorus_level}}''' ([[CVARs#float|float]])
+:Default: 1.2
+:Valid values range from 0.0 to 1.0. The FluidSynth default value is 2.0.
+
+* '''{{LE|fluid_chorus_speed}}''' ([[CVARs#float|float]])
+:Default: 0.3
+:Valid values range from 0.29 to 5.0.
+
+* '''{{LE|fluid_chorus_type}}''' ([[CVARs#integer|integer]])
+:Default: 0
+:Valid values are 0 (sine) and 1 (triangle).
+
+* '''{{LE|fluid_chorus_voices}}''' ([[CVARs#integer|integer]])
+:Default: 3
+:Valid values range from 0 to 99.
+
+* '''{{LE|fluid_gain}}''' ([[CVARs#float|float]])
+:Default: 0.5
+:
+
+* '''{{LE|fluid_interp}}''' ([[CVARs#integer|integer]])
+:Default: 1
+:{{wp|Interpolation}} type. Valid values are 0 (no interpolation), 1 ({{wp|linear interpolation}}), 4 (fourth order {{wp|polynomial interpolation}}) and 7 (seventh order polynomial).
+
+* '''{{LE|fluid_patchset}}''' ([[CVARs#string|string]])
+:Default: ""
+:Defines the paths to the [[sound fonts]] used by the [[FluidSynth]] MIDI synthesizer.
+
+* '''{{LE|fluid_reverb}}''' ([[CVARs#boolean|boolean]])
+:Default: true
+:
+
+* '''{{LE|fluid_reverb_damping}}''' ([[CVARs#float|float]])
+:Default: 0.23
+:Valid values range from 0.0 to 1.0. The FluidSynth default is 0.0.
+
+* '''{{LE|fluid_reverb_level}}''' ([[CVARs#float|float]])
+:Default: 0.57
+:Valid values range from 0.0 to 1.0. The FluidSynth default value is 0.9.
+
+* '''{{LE|fluid_reverb_roomsize}}''' ([[CVARs#float|float]])
+:Default: 0.61
+:Valid values range from 0.0 to 1.2. The FluidSynth default value is 0.2.
+
+* '''{{LE|fluid_reverb_width}}''' ([[CVARs#float|float]])
+:Default: 0.76
+:Valid values range from 0.0 to 100.0. The FluidSynth default value is 0.5.
+
+* '''{{LE|fluid_samplerate}}''' ([[CVARs#integer|integer]])
+:Default: 0
+:The sample rate at which FluidSynth should work. Leaving it to 0 means that it uses its own default.
+
+* '''{{LE|fluid_threads}}''' ([[CVARs#integer|integer]])
+:Default: 1
+:Number of threads that FluidSynth can use. Valid values range from 1 to 256.
+
+* '''{{LE|fluid_voices}}''' ([[CVARs#integer|integer]])
+:Default: 128
+:Number of simultaneous voices. Valid values range from 16 to 4096.
+
+== GME settings ==
+These variables are specific to the [[Game Music Emu]] system.
+
+* '''{{LE|gme_stereodepth}}''' ([[CVARs#float|float]])
+:Default: 0.0
+:How much stereo separation is added to songs played by GME. This can make mono songs sound stereo. The maximum value is 1.0.
+
+== GUS settings ==
+These variables are specific to ZDoom's TiMidity-based [[GUS]] emulator.
+
+* '''{{LE|midi_dmxgus}}''' ([[CVARs#boolean|boolean]])
+:Default: true
+:Selects whether [[DMXGUS]] lumps ought to be parsed and read. If false, the GUS emulator will only read the midi_config.
+
+* '''{{LE|midi_config}}''' ([[CVARs#string|string]])
+:Default: "timidity.cfg"
+:Defines the path to the fallback configuration file.
+
+* '''{{LE|midi_timiditylike}}''' ([[CVARs#boolean|boolean]])
+:Default: false
+:This re-enables TiMidity handling of GUS patch flags, envelopes, and volume levels, while trying to be closer to TiMidity++ than original TiMidity.
+
+* '''{{LE|midi_voices}}''' ([[CVARs#integer|integer]])
+:Default: 32
+:The maximum amount of voices available to the GUS emulator. Valid values range from 16 to 256.
+
+* '''{{LE|gus_memsize}}''' ([[CVARs#integer|integer]])
+:Default: 0
+:Chooses the amount of memory available to the GUS emulator. Valid values are 0 for unlimited, 1 for 256K, 2 for 512K, 3 for 768K, and 4 for 1024K. A non-zero value only affects how patches are remapped; ZDoom's internal TiMidity will actually use as much memory as needed to load the patches in any case.
+
+* '''{{LE|gus_patchdir}}''' ([[CVARs#string|string]])
+*Default: ""
+:Defines the path in which to search for [[sound fonts|GUS patches]]. This is in addition to the system default of %ULTRADIR%/midi.
+
+== Module settings ==
+Most of these variables can be set from the [[module replayer options]] menu.
+* '''{{LE|mod_autochip}}''' ([[CVARs#boolean|boolean]])
+:Default: false
+:Disables interpolation for short samples that meet criteria set by the associated CVARs for scan threshold, size force, and size scan.
+
+* '''{{LE|mod_autochip_scan_threshold}}''' ([[CVARs#integer|integer]])
+:Default: 12
+:
+
+* '''{{LE|mod_autochip_size_force}}''' ([[CVARs#integer|integer]])
+:Default: 100
+:
+
+* '''{{LE|mod_autochip_size_scan}}''' ([[CVARs#integer|integer]])
+:Default: 500
+:
+
+* '''{{LE|mod_dumb}}''' ([[CVARs#boolean|boolean]])
+:Default: true
+:Selects whether the [[foo_DUMB]] replayer should be used. If false, the [[FMOD]] replayer is used instead.
+
+* '''{{LE|mod_interp}}''' ([[CVARs#integer|integer]])
+:Default: 1
+:Sets the interpolation type. Valid values are 0 for no interpolation, 1 for linear, and 2 for cubic.
+
+* '''{{LE|mod_samplerate}}''' ([[CVARs#integer|integer]])
+:Default: 0
+:The sample rate at which the replayer works. Leaving the value to 0 means to use the same rate as the rest of the sound system.
+
+* '''{{LE|mod_volramp}}''' ([[CVARs#integer|integer]])
+:Default: 0
+:Sets the mode used for volume ramping. Valid values are 0 (no ramping), 1 (logarithmic), 2 (linear), 3 (linear for XM, no ramping otherwise) and 4 (linear for XM, logarithmic otherwise).
+
+== OpenAL settings ==
+These variables are specific to ZDoom's [[OpenAL]] sound backend.
+* '''{{LE|snd_aldevice}}''' ([[CVARs#string|string]]) 
+:Default: "default"
+:Choose which sound device to use for OpenAL's sound output. Possible values are system-dependent.
+
+* '''{{LE|snd_efx}}''' ([[CVARs#boolean|boolean]])
+:Default: on
+:Enable OpenAL's audio effects extensions, which allows things such as [[reverbs]] to work.
+
+== OPL emulator settings ==
+These variables are specific to ZDoom's [[OPL synth emulation]].
+* '''{{LE|opl_core}}''' ([[CVARs#integer|integer]]) 
+:Default: 0
+:Choose which OPL emulator core to use. Possible values are:
+:*0: Use MAME-derived OPL2 core
+:*1: Use DOSBox-derived OPL3 core
+:*2: Use Java-ported OPL3 core
+:*3: Use Nuked.YKT's OPL3 core
+
+* '''{{LE|opl_fullpan}}''' ([[CVARs#boolean|boolean]]) 
+:Default: true
+:If true, the OPL emulator will be able to use full stereo on [[MIDI]] playback, even though the emulated hardware only supported mono output (OPL2) or stereo limited to three panning position (OPL3).
+
+* '''{{LE|opl_numchips}}''' ([[CVARs#integer|integer]]) 
+:Default: 2
+:This allows to choose the number of virtual OPL chips used in the [[OPL emulator]] when rendering [[MIDI]] songs. ([[Music format#OPL (AdLib) formats|Raw OPL]] is still limited to two chips at most.) Using only one chip can make the emulation up to twice as fast, but it is not really enough to play Doom's music, and most old sound cards had either two OPL2 chips or one OPL3 chip (which acts like two OPL2 chips).
+
+* '''{{LE|opl_singlevoice}}''' ([[CVARs#boolean|boolean]])
+:Default: false
+:Setting this to true will cause all double voice instruments to use only one voice. Many Doom instruments use two voices, so this is not recommended.
+
+== TiMidity++ settings ==
+These variables are specific to the external [[TiMidity++]] synthesizer.
+
+* '''{{LE|timidity_8bit}}''' ([[CVARs#boolean|boolean]])
+:Default: false
+:Set this to true to make TiMidity++ output 8-bit instead of 16-bit.
+
+* '''{{LE|timidity_byteswap}}''' ([[CVARs#boolean|boolean]])
+:Default: false
+:Set this to true to make Timidity swap the upper 8 bits and the lower 8 bits of audio data when it is outputting 16-bits. Probably nobody needs this.
+
+* '''{{LE|timidity_chorus}}''' ([[CVARs#string|string]])
+:Default: "0"
+:The contents of this CVAR are supplied to TiMidity's -EFchorus option.
+
+* '''{{LE|timidity_config}}''' ([[CVARs#string|string]])
+:Default: "gzdoom"
+:Indicates the path and name of the configuration file to use with TiMidity++. It can also be the name of an SF2 sound font, or a zip file with a collection of patches and a configuration named {{c|timidity.cfg}}.
+
+* '''{{LE|timidity_extargs}}''' ([[CVARs#string|string]])
+:Default: ""
+:This CVAR is used to supply any extra arguments to TiMidity++. Its contents are appended to the command line that [[ZDoom]] generates using the other timidity CVARs.
+
+* '''{{LE|timidity_frequency}}''' ([[CVARs#integer|integer]])
+:Default: 44100
+:This is the sample rate that at which TiMidity++ will play the music.
+
+* '''{{LE|timidity_mastervolume}}''' ([[CVARs#float|float]])
+:Default: 1.0
+:This scales the external TiMidity++'s output volume. It was added because TiMidity tends to be louder than other MIDI synthesizers. Valid values are in the range from 0.0 to 4.0.
+
+* '''{{LE|timidity_pipe}}''' ([[CVARs#integer|integer]])
+:Default: 90
+:This is the approximate size, in milliseconds, of the stream buffer the game uses to mix TiMidity's output with the rest of the game audio. Setting  the buffer size to 0 will cause TiMidity++ to send its output directly to the sound card instead of through the game. Most, if not all, PCI sound cards should be fine with this set to 0. Older sound cards will require this to be non-zero so that [[ZDoom]] can mix the music with the rest of its sounds.
+
+* '''{{LE|timidity_reverb}}''' ([[CVARs#string|string]])
+:Default: "0"
+:The contents of this cvar are supplied to TiMidity's -EFreverb  option.
+
+* '''{{LE|timidity_stereo}}''' ([[CVARs#boolean|boolean]])
+:Default: true
+:Set this to false to force Timidity's output to be monaural instead of stereo.
+
+== WildMIDI settings ==
+These variables are specific to the [[WildMIDI]] synthesizer.
+
+* '''{{LE|wildmidi_config}}''' ([[CVARs#string|string]])
+:Default: ""
+:Defines the path to the configuration file.
+
+* '''{{LE|wildmidi_frequency}}''' ([[CVARs#integer|integer]])
+:Default: 0
+:Defines the sample rate in hertz for MIDI rendering. Valid values are between 11025 and 65535; values outside that range (such as the default of 0) will cause the global default ({{c|{{CVAR|S|snd_samplerate}}}}) to be used.
+
+* '''{{LE|wildmidi_reverb}}''' ([[CVARs#boolean|boolean]])
+:Default: false
+:Defines whether the {{c|WM_MO_REVERB}} option is set in WildMIDI.
+
+* '''{{LE|wildmidi_enhanced_resampling}}''' ([[CVARs#boolean|boolean]])
+:Default: true
+:Defines whether the {{c|WM_MO_ENHANCED_RESAMPLING}} option is set in WildMIDI.
+
+== Miscellaneous ==
+
+* '''{{LE|eaxedit_test}}''' ([[CVARs#boolean|boolean]])
+:Default: true
+:When true, the EAX environment currently shown in the editor called by the [[reverbedit]] console command will be used for all areas of the map. This allows for interactive tweaking of different environments.
+
+* '''{{LE|snd_drawoutput}}''' ([[CVARs#integer|integer]])
+:Default: 0
+:When non-zero, shows various oscilloscopes and spectrums for debugging purposes.
+
+==See also==
+* [[Sound options]]
+* [[Advanced sound options]]
+* [[:Category:Audio formats|Audio formats]]
+* [[CCMDs]]
+* [[CVARs]]
+[[Category:ZDoom console]]</text>
+    <sha1>skvflpdsyso8yrs29py2326xb8y18yo</sha1>
+  </revision>
+</page>

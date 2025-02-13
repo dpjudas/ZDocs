@@ -1,0 +1,37 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>GetActorLightLevel</title>
+  <ns>0</ns>
+  <id>3584</id>
+  <revision>
+    <id>35974</id>
+    <parentid>22233</parentid>
+    <timestamp>2013-03-01T02:12:58Z</timestamp>
+    <contributor>
+      <username>Deded007</username>
+      <id>1392</id>
+    </contributor>
+    <minor />
+    <comment>templates</comment>
+    <origin>35974</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="656" sha1="7x015ri1he1fmr597jtd543ygalo8tk" xml:space="preserve">int '''GetActorLightLevel''' (int ''tid'')
+
+== Usage ==
+
+Returns the light level of the sector the actor is currently in. If ''tid'' is 0, it returns the activator's light level. Note that this does not take into account point-based lights in GZDoom's OpenGL mode; it only returns the light level of the actual sector.
+
+== Examples ==
+
+This script checks the light value of the sector the calling actor is in. If it is below 40, the actor will become fuzzy.
+
+ script 1 (int boss)
+ {
+     if ([[GetActorLightLevel]](0) &lt; 40)
+         [[SetActorProperty]] (boss, {{const|APROP_RENDERSTYLE}}, {{const|STYLE_Fuzzy}});
+ }
+
+[[category:ACS Information functions]]</text>
+    <sha1>7x015ri1he1fmr597jtd543ygalo8tk</sha1>
+  </revision>
+</page>

@@ -1,0 +1,76 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>Advanced DECORATE functions guide</title>
+  <ns>0</ns>
+  <id>7091</id>
+  <revision>
+    <id>35618</id>
+    <parentid>32205</parentid>
+    <timestamp>2013-02-08T10:53:31Z</timestamp>
+    <contributor>
+      <username>Gez</username>
+      <id>1283</id>
+    </contributor>
+    <minor />
+    <comment>/* A_SetUserVar/Array */</comment>
+    <origin>35618</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="4163" sha1="lructe7qkie5vdsa3wroqbkrl3w0mfh" xml:space="preserve">== Overview ==
+
+This guide will go into some potentially confusing details about how to use some of the newer and/or advanced functions. It will also demonstrate some complex uses for the functions as well.
+
+It is recommended to read more about [[Actor pointer|Actor pointers]] first to help understand more about the vast majority of functions covered in this guide.
+
+Be sure to also read up on the functions themselves before continuing with this guide.
+*[[A_Warp]]
+*[[A_TransferPointer]]
+*[[A_RearrangePointers]]
+*[[A_CheckFlag]]
+*[[A_SetUserVar]]
+*[[A_SetUserArray]]
+
+== A_Warp ==
+The function [[A_Warp]] acts similarly to [[A_Fire]]. The difference is extreme to the point where, with a little smart thinking, anyone can utilize it to perform other capabilities as well.
+
+Uses:
+*Laser-like effects (Real instant beams, NOT fast projectiles!)
+*Attachment-like actors capable of sticking to other actors
+*Satellite rotating abilities (can be combined effectively with [[A_Weave]] if done correctly)
+*Can attach to just about anything
+*Checking for empty space to see if it can perform a certain ability or not
+*Self-moving ability
+
+== A_TransferPointer ==
+This is direct manipulation of pointers down to the core. This, along with [[A_RearrangePointers]], it is possible to change relationships of any actor with other actors inside of it's "scope".
+
+This function in particular can allow transferring code pointers from itself or from other actors to itself or to other actors. This can get the target of a target, or even set the target of another target. It may seem confusing at first, but once you understand just how [[Actor pointers]] work, it will usually open up a wide load of possibilities. With this function, for example, one could make a missile which drains health from a monster, and then returns to the shooter, giving it the health in return.
+
+Uses:
+*Behavior modification
+*Alignments
+*Master/Target/Tracer manipulations
+
+== A_RearrangePointers ==
+This function is limited to only modifying the calling actor's pointers, but allows for copying. Say a monster wants to remember another monster later, it could use '''A_RearrangePointers(AAPTR_DEFAULT,AAPTR_DEFAULT,AAPTR_TARGET)'''. This stores the target in the tracer field, which is not used in monsters. This allows for easy retrieval later on, just by performing '''A_RearrangePointers(AAPTR_TRACER,AAPTR_DEFAULT,AAPTR_DEFAULT)'''.
+
+NOTE: It is important to keep in mind that when rearranging a pointer through copying such as the first function above, that target is now also the tracer. If the original monster changes course, the AAPTR_TRACER must be specified because that's where the monster is for retrieval. This is because the target field will change, so putting A_RearrangePointers(AAPTR_TARGET,AAPTR_DEFAULT,AAPTR_DEFAULT) will have absolutely no effect.
+
+Bear in mind, AAPTR_DEFAULT means no change, and it will keep the same pointer, which allows for copying.
+
+== A_CheckFlag ==
+With this function it is now possible to check flags on other actors. This means we can use it to check if the target/master/tracer has a certain flag enabled on them. It performs a jump if they have the flag, and doesn't jump if they don't. By default, it checks the calling actor.
+
+== A_SetUserVar/Array ==
+Since its introduction, user variables and arrays have been an extreme benefit to the community. This alone allows for reduction of bloat code (copy/pasted lines with many angle changes) except for weapons and players. Those two are the only things which cannot hold user variables or arrays due to their complex nature.
+
+User variables and arrays are even capable of working side along with ACS scripts such as to retrieve a variable of a console setting.
+
+Ultimately, they are capable of modifying and/or retrieving other user variables through [[CustomInventory]] actors. Bear in mind, the actor that is being manipulated also must have the same user_var, otherwise you will get a warning about an unknown variable attempting to be manipulated by the actor who receives the special CustomInventory actor.
+
+Uses:
+*Storage and Calculation
+*Tracking and Determination
+[[Category:Guides]]</text>
+    <sha1>lructe7qkie5vdsa3wroqbkrl3w0mfh</sha1>
+  </revision>
+</page>

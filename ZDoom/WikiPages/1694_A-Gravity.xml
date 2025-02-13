@@ -1,0 +1,62 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>A Gravity</title>
+  <ns>0</ns>
+  <id>1694</id>
+  <revision>
+    <id>46806</id>
+    <parentid>46796</parentid>
+    <timestamp>2019-07-16T06:06:32Z</timestamp>
+    <contributor>
+      <username>Quaker540</username>
+      <id>2135</id>
+    </contributor>
+    <minor />
+    <comment>Replaced the deprecated action function</comment>
+    <origin>46806</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="1658" sha1="csskzwq6nxknvv9rokmdujzccy1zo0l" xml:space="preserve">{{codepointer|Status change}}
+'''A_Gravity'''
+
+(no parameters)
+
+
+Makes the calling actor subject to normal gravity so it will fall down when in mid-air.
+
+== Examples ==
+ Jump:
+     SILE H 0 [[A_SetFloat]]
+     SILE H 0 [[A_NoGravity]]
+     SILE H 0 [[A_ChangeFlag]] ("{{flag|NODAMAGE}}", 1)
+     SILE HHH 1 [[A_SpawnItemEx]] ("flythrust")
+     SILE H 30 [[A_ChangeFlag]] ("{{flag|NODAMAGE}}", 0)
+     SILE A 10 
+     SILE P 0 [[A_Jump]] (80, "Missile2J")
+     SILE P 0 [[A_Jump]] (90, "MissileKJ")
+     SILE P 0 [[A_Jump]] (85, "MissileKiJ")
+     SILE L 1 BRIGHT [[A_FaceTarget]]
+     SILE LMN 3 BRIGHT [[A_FaceTarget]]
+     SILE O 10 BRIGHT [[A_FaceTarget]]
+     SILE P 0 [[A_PlaySound]] ("ki/shot")
+     SILE O 2 BRIGHT [[A_SpawnProjectile]] ("kiblast", 35, 0)
+     SILE N 8 BRIGHT [[A_PlaySound]] ("ka/charge", 0, 150.0)
+     SILE N 0 BRIGHT [[A_PlaySound]] ("kI/shot", 0, 150.0)
+     SILE LMNO 3
+     SILE O 10 BRIGHT [[A_SpawnProjectile]] ("KiblastBig", 35, 0)
+     Goto Land
+   Land:
+     SILE H 0 [[A_UnsetFloat]]
+     SILE H 25 [[A_Gravity]]
+     Goto see
+
+This is the jump decorate code to the monster SaiyinVileGoku from Zero Invasion. The code starts out with taking out gravity with [[A_NoGravity]], then, the monster gets a thrust upward causing the monster to appear to jump. When the monster is floating with no gravity, he needs to come back to the ground therefore; utilizing '''A_Gravity'''.
+
+This whole decorate function will make this monster appear to jump, fly, and come back down using '''A_Gravity''' and A_NoGravity, just like a Saiyin in the Dragon Ball Z series.
+
+== See also ==
+*[[A_NoGravity]]
+*[[A_LowGravity]]
+*[[A_SetGravity]]</text>
+    <sha1>csskzwq6nxknvv9rokmdujzccy1zo0l</sha1>
+  </revision>
+</page>

@@ -1,0 +1,55 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>RequestScriptPuke</title>
+  <ns>0</ns>
+  <id>8996</id>
+  <revision>
+    <id>43682</id>
+    <timestamp>2017-01-08T22:41:00Z</timestamp>
+    <contributor>
+      <username>Tiger</username>
+      <id>2074</id>
+    </contributor>
+    <comment>Imported article from the Zandronum wiki; script executions via clientside</comment>
+    <origin>43682</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="2114" sha1="c3dsbfuobv6gr0wr9zf1qny8y8icb0r" xml:space="preserve">{{STFeature}}
+int '''RequestScriptPuke''' (int ''script'', int ''arg0'', int ''arg1'', int ''arg2'')
+
+int '''RequestScriptPuke''' (int ''script''[, int ''arg0''[, int ''arg1''[, int ''arg2''[, int ''arg3'']]]]) (Dev: 3.0 | 150718-1852)
+
+int '''NamedRequestScriptPuke''' (str ''script''[, int ''arg0''[, int ''arg1''[, int ''arg2''[, int ''arg3'']]]]) (Dev: 3.0 | 150718-1852)
+
+== Usage ==
+
+RequestScriptPuke will request the execution of the script of the given script with the given arguments on the server. NamedRequestScriptPuke is the same except with named scripts. Scripts called by this are automatically treated as "execute always" and thus don't need to be negative numbers.
+
+Being a &lt;tt&gt;puke&lt;/tt&gt; wrapper, they have a few caveats and potential pitfalls:
+
+* The script passed must be &lt;tt&gt;NET&lt;/tt&gt;. It is not possible to request execution of non-&lt;tt&gt;NET&lt;/tt&gt; scripts.
+* The function must be used in &lt;tt&gt;CLIENTSIDE&lt;/tt&gt; scripts and will not do anything but print a warning if called on the server.
+* It is not guaranteed that the puke request ever reaches the server. If the packet containing the request is lost, the server will not recieve the request at all.
+* The activator of the &lt;tt&gt;NET&lt;/tt&gt; script puked is always the local player, not the activator of the parent client-side script.
+
+If run offline, the script will be executed on the local machine.
+
+==== Return value ====
+'''1''' if the script execution was successfully requested, '''0''' if RequestScriptPuke() is called on the server or the requested script is not NET. Note that the function may return '''1''' and the script still may not be executed on the server due to the unreliableness of the packet.
+
+== Examples ==
+In the following example, calling script 2 on the client-side requests puke of script 1 to give the server some cookies.
+
+&lt;syntaxhighlight lang="c" line="1"&gt;
+Script 1 (int numcookies) NET
+{
+    Print(n: 0, s: " gives the server host ", d: numcookies, s: " cookies in gratitude of the excellent hosting service");
+}
+ 
+Script 2 (int numcookies) CLIENTSIDE
+{
+    RequestScriptPuke(1, numcookies, 0, 0);
+}
+&lt;/syntaxhighlight&gt;</text>
+    <sha1>c3dsbfuobv6gr0wr9zf1qny8y8icb0r</sha1>
+  </revision>
+</page>

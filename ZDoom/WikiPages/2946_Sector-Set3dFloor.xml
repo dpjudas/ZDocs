@@ -1,0 +1,121 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>Sector Set3dFloor</title>
+  <ns>0</ns>
+  <id>2946</id>
+  <revision>
+    <id>51021</id>
+    <parentid>47105</parentid>
+    <timestamp>2023-11-18T23:32:52Z</timestamp>
+    <contributor>
+      <username>Major Cooke</username>
+      <id>1703</id>
+    </contributor>
+    <comment>/* Important notes */ workaround for sloped translucent 3D floors</comment>
+    <origin>51021</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="6838" sha1="3jslw8id3ilw4xp15uiftkj9kutldu5" xml:space="preserve">{{DISPLAYTITLE:Sector_Set3dFloor}}
+{{Special|160|tag, type, flags, alpha, hi-tag/line ID|Renderer|use=line}}
+
+Draws a 3D floor. Use this with a [[control sector]] in the same fashion as [[Transfer_Heights]].
+
+The ceiling of the control sector will be the floor of the 3D floor and the floor of the control sector will be the bottom of the 3d floor. The texture used on this line type will be the texture used for the sides of the 3D floor. The height of the 3D floor will be that of the distance between floor and ceiling.
+
+Normally the lighting (including light color) of the control sector is transferred to the volume of the 3D floor (if transparent) and the space below it down to the next lower 3D floor.
+
+=== Parameters ===
+* ''tag:'' Tag of affected sectors.
+* ''type:'' The type of 3D floor to create.
+* ''flags:'' The flags to apply to the 3D floor.
+* ''alpha:'' Specifies the translucency of the 3D-floor: 0 = invisible, 255 = opaque.
+* ''hi-tag/line ID:'' If type has the value 8 added to it this will give the control linedef a line ID. Otherwise this parameter serves as a high-byte for the sector tag in order to allow more than 256 3D floor definitions. This parameter is completely unnecessary in [[UDMF]] and should not be used in that format.
+
+=== Types ===
+* ''0:'' Defines a Vavoom-style 3D-floor. This means that the 3D floor's top surface will correspond to the control sector's floor, and the bottom surface will correspond to the ceiling. In other words, the control sector needs to have a negative height.
+* ''1:'' Defines a solid 3D floor.
+* ''2:'' Defines a [[swimmable]] 3D “floor”.
+* ''3:'' Defines a non-solid 3D-floor.
+* ''4:'' If you add 4 to the type the inside will also be rendered. Normally this is only done for liquids. This does not work for the Vavoom type. Using 4 alone is an "undocumented hack type that can be used to patch some missing texture hacks the engine can't detect".
+* ''16:'' If you add 16 to the type the visibility rules will be inverted. Monsters can see through solid 3D floors but not through non-solid ones. This does not work for the Vavoom type.
+* ''32:'' If you add 32 to the type the shootability rules will be inverted. You can shoot through solid 3D floors but not through non-solid ones. This does not work for the Vavoom type.
+
+=== Flags ===
+* ''1:'' Disables any lighting effects created by this 3D floor.
+* ''2:'' Restricts the lighting properties into the area between the 3D floor's top and bottom. Logically this is only useful if the 3D floor is not solid.
+* ''4:'' '''GZDoom only''': 'Fog' effect. Fills all 3D floor surfaces with solid color using control sector's fade color. Also tints the view when inside and below this 3D floor, depending on the lighting settings for the 3D floor. '''This flag is not implemented in the software renderer and currently produces undefined results!'''
+* ''8:'' Ignores the bottom height of the model sector and draws top and bottom of the 3D floor at the model sector's ceiling height.
+* ''16:'' Uses a sidedef's upper texture to draw the sides of the 3D floor instead of the transfer linedef's mid texture.
+* ''32:'' Uses a sidedef's lower texture to draw the sides of the 3D floor instead of the transfer linedef's mid texture. 
+* ''64:'' Renders the 3D floor using additive translucency.
+* ''512:'' 'Fade' effect. Applies control sector's fade color to the area below this 3D floor.
+* ''1024:'' Resets lighting effects created by 3D floors above this 3D floor.
+
+== Important notes ==
+* Sloped 3D floors are not available in the software renderer.
+* Sloped translucent 3D floors ''cannot'' be defined. They can be either sloped or translucent, not both.
+:: This can be worked around by exporting the 3D floor as an OBJ model via Ultimate Doom Builder, pairing it with an actor, and setting the alpha of the actual 3D floor itself to 0. The sloped floor actor can have whatever renderstyle and alpha desired.
+* When making a sloped 3D sector make sure that the control sectors are aligned with the in-game sectors on the editing grid. Odd results may happen if they are not aligned.
+* Translucent 3D floors may create glitches in the display of XY-billboarded sprites.
+* A same sector cannot have both a 3D floor and a [[Transfer_Heights]] effect.
+* 3D floors can move up and down by moving the model sector's floor and ceiling. But due to the way the Doom engine is doing this, it does not work for the Vavoom-type!
+* [[Sector damage]] on the control sector is transferred to the target sectors.  [[TERRAIN]]-based damage and friction are transferred as well.
+* If the control sector has a fade color, it will be used as the [[palette blend]] within and underneath the 3D floor.
+* Actor hits floor / ceiling doesn't work on Swimmable 3D Floors due to a limitation.
+* For optimization purposes, it is important to understand that this effect works by creating new visplanes to be rendered in the sectors which have the tag.  As this is basically how a single sector is rendered anyway, they don't use a large amount of resources, so this should be the preferred method of creating multi-level structures, as opposed to using the resource-intensive portals.
+
+== Conversions from linedef types ==
+The following Doom map format types can be converted as Sector_Set3dFloor:
+{| {{prettytable}}
+!Type!!Conversion!!Trigger
+|-
+|{{icon|Legacy}} 281 || Sector_Set3DFloor (tag, 1, 0, 255) ||
+|-
+|{{icon|Legacy}} 289 || Sector_Set3DFloor (tag, 1, 1, 255) ||
+|-
+|{{icon|Legacy}} 300 || Sector_Set3DFloor (tag, 1, 1, 127) ||
+|-
+|{{icon|Legacy}} 301 || Sector_Set3DFloor (tag, 2, 2, 127) ||
+|-
+|{{icon|Legacy}} 302 || Sector_Set3DFloor (tag, 3, 6, 127) ||
+|-
+|{{icon|Legacy}} 303 || Sector_Set3DFloor (tag, 3)  ||
+|-
+|{{icon|Legacy}} 304 || Sector_Set3DFloor (tag, 2, 2, 255) ||
+|-
+|{{icon|Legacy}} 305 || Sector_Set3DFloor (tag, 3, 2) ||
+|-
+|{{icon|Legacy}} 306 || Sector_Set3DFloor (tag, 1)  ||
+|-
+|{{icon|Legacy}} 332 || Sector_Set3DFloor (tag, 4)  ||
+|-
+|{{icon|EDGE}} 400 || Sector_Set3DFloor (tag, 1, 0, 255) ||
+|-
+|{{icon|EDGE}} 401 || Sector_Set3DFloor (tag, 1, 16, 255) ||
+|-
+|{{icon|EDGE}} 402 || Sector_Set3DFloor (tag, 1, 32, 255) ||
+|-
+|{{icon|EDGE}} 403 || Sector_Set3DFloor (tag, 2, 2, 255) ||
+|-
+|{{icon|EDGE}} 404 || Sector_Set3DFloor (tag, 2, 2, 204) ||
+|-
+|{{icon|EDGE}} 405 || Sector_Set3DFloor (tag, 2, 2, 153) ||
+|-
+|{{icon|EDGE}} 406 || Sector_Set3DFloor (tag, 2, 2, 102) ||
+|-
+|{{icon|EDGE}} 407 || Sector_Set3DFloor (tag, 2, 2, 51) ||
+|-
+|{{icon|EDGE}} 408 || Sector_Set3DFloor (tag, 2, 2) ||
+|-
+|{{icon|EDGE}} 413 || Sector_Set3DFloor (tag, 1, 8, 255) ||
+|-
+|{{icon|EDGE}} 414 || Sector_Set3DFloor (tag, 1, 8, 204) ||
+|-
+|{{icon|EDGE}} 415 || Sector_Set3DFloor (tag, 1, 8, 153) ||
+|-
+|{{icon|EDGE}} 416 || Sector_Set3DFloor (tag, 1, 8, 102) ||
+|-
+|{{icon|EDGE}} 417 || Sector_Set3DFloor (tag, 1, 8, 51) ||
+|}</text>
+    <sha1>3jslw8id3ilw4xp15uiftkj9kutldu5</sha1>
+  </revision>
+</page>

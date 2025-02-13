@@ -1,0 +1,60 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>TakeSpecialDamage</title>
+  <ns>0</ns>
+  <id>9738</id>
+  <revision>
+    <id>53035</id>
+    <parentid>51367</parentid>
+    <timestamp>2024-08-30T23:38:14Z</timestamp>
+    <contributor>
+      <username>Jekyll Grim Payne</username>
+      <id>2175</id>
+    </contributor>
+    <origin>53035</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="1719" sha1="qmsy9238cocjawa642br5khhlzze2pt" xml:space="preserve">__NOTOC__
+
+'''[[Classes:Actor|Actor]]'''
+
+{{c|virtual int '''TakeSpecialDamage'''(Actor ''inflictor'', Actor ''source'', int ''damage'', Name ''damagetype'')}}
+
+==Usage==
+
+A [[ZScript virtual functions|virtual function]] called by {{class|Actor|actors}} when when they're about to receive damage but haven't yet. The return value is the new damage to be taken. This occurs after all forms of damage modifiers are applied. This virtual is called automatically as part of the base '''[[DamageMobj]]''' call, and thus can modify whatever value DamageMobj will return.
+
+'''NOTE:''' If the actor taking damage isn't damageable (for example due to flags like {{flag|DORMAT}}, {{flag|INVULNERABLE}}, {{flag|NODAMAGE}}, or, if it's a {{class|PlayerPawn}}, due to console cheats) this function will not be called.
+
+===Parameters===
+*{{c|Actor '''inflictor'''}}
+:The actor dealing the damage. This is the missile for projectiles and the puff for hitscan attacks. For monster melee attacks this is the same as the source.
+*{{c|Actor '''source'''}}
+:The actor responsible for the inflictor.
+*{{c|int '''damage'''}}
+:The amount of damage to deal.
+*{{c|Name '''damagetype'''}}
+:The name of the damage type to apply.
+
+==Examples==
+This version of the [[Classes:Zombieman|Zombieman]] will take no damage from fire attacks:
+&lt;syntaxhighlight lang="csharp"&gt;
+class FireproofZombieman : Zombieman
+{
+	override int TakeSpecialDamage(Actor inflictor, Actor source, int damage, Name damagetype)
+	{
+		if (damagetype == 'Fire')
+		{
+			return 0;
+		}
+		
+		return super.TakeSpecialDamage(inflictor, source, damage, damagetype);
+	}
+}
+&lt;/syntaxhighlight&gt;
+
+[[Category:ZScript]]
+[[Category:ZScript virtual functions]]
+[[Category:Actor virtual functions]]</text>
+    <sha1>qmsy9238cocjawa642br5khhlzze2pt</sha1>
+  </revision>
+</page>

@@ -1,0 +1,52 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>Sector SetDamage</title>
+  <ns>0</ns>
+  <id>692</id>
+  <revision>
+    <id>44102</id>
+    <parentid>41014</parentid>
+    <timestamp>2017-03-20T10:53:41Z</timestamp>
+    <contributor>
+      <username>Gez</username>
+      <id>1283</id>
+    </contributor>
+    <minor />
+    <comment>removing "new" for GZDoom 2.4.0 release</comment>
+    <origin>44102</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="1970" sha1="05qb8rfv9tzal33fe56k3874hyp4gbd" xml:space="preserve">{{DISPLAYTITLE:Sector_SetDamage}}
+{{Special|214|tag, amount, mod, interval,leaky|Sector|Damage}}
+
+* ''tag:'' Tag of affected sector 
+* ''amount:'' Amount of damage to apply 
+* ''mod:'' Means-of-death identifier; see the "means of death" column on the [[damage types]] for a full list.
+**    0  = MOD_UNKNOWN
+**   12 = MOD_WATER 
+**   13 = MOD_SLIME 
+**   14 = MOD_LAVA 
+**   15 = MOD_CRUSH 
+**   16 = MOD_TELEFRAG 
+**   17 = MOD_FALLING 
+**   18 = MOD_SUICIDE 
+**   19 = MOD_BARREL 
+**   20 = MOD_EXIT 
+**   21 = MOD_SPLASH 
+**   22 = MOD_HIT 
+**   23 = MOD_RAILGUN
+**   24 = MOD_ICE (ala Hexen)
+**   25 = MOD_DISINTEGRATE (ala ''[[Strife]]'''s {{Class|Mauler}})
+**   26 = MOD_POISON
+**   27 = MOD_ELECTRIC
+**   1000 = Massacre (no constant)
+* ''interval'': Time between two inflictions of damage in tics. 
+* ''leaky'': Probability of a radiation suit 'leaking' damage, 0 meaning it doesn't leak. 256 means the radiation suit has no effect at all. Doom's 20% damage sector type uses a value of 5. 
+
+Sets the amount of damage done to a player in a sector. Damage settings from regular Doom sector types or [[UDMF]] map settings will be overridden by this. 
+
+If 'interval' is set to 0, the defaults of older versions will be used: Damage amount below 20 will never hurt the player if he has an {{Class|PowerIronFeet|environment suit}}. Damages between 20-49 will occasionally hurt the player even with an environment suit on. Damages of 50 and above will always hurt the player unless he is invulnerable.
+
+There are some newer built-in damage types for which no MOD code exists and custom damage types are identified by names; neither can be used with this special. If you want to attach this special outside a script (e.g., to a line or a thing) but need to use a damage type that is recognized by the game by name, but is not listed above, set the line/thing special to run a script instead and use the [[SectorDamage]] or [[SetSectorDamage]] ACS function in the script.</text>
+    <sha1>05qb8rfv9tzal33fe56k3874hyp4gbd</sha1>
+  </revision>
+</page>

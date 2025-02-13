@@ -1,0 +1,68 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>Classes:CeilingTurret</title>
+  <ns>0</ns>
+  <id>4877</id>
+  <revision>
+    <id>40128</id>
+    <parentid>37895</parentid>
+    <timestamp>2015-05-22T06:50:34Z</timestamp>
+    <contributor>
+      <username>Blue Shadow</username>
+      <id>2021</id>
+    </contributor>
+    <minor />
+    <comment>/* DECORATE definition */ Updated</comment>
+    <origin>40128</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="1348" sha1="ht3dtqakmto6eiehvehcqlsxydujk8z" xml:space="preserve">{{Actor|
+| type = Monster
+| name = Ceiling turret
+| class = CeilingTurret
+| game = Strife
+| doomednum = 27
+| convid = 122
+}}[[Classes]]: &lt;u&gt;CeilingTurret&lt;/u&gt;&lt;br&gt;
+A turret... on the ceiling. Can be tricky to fight early on in the game due to its respectable amount of health and being relatively tricky to aim at, but they'll only bother you if the alarm has been sounded. They can't hit you if you are directly under them, and it is possible to take them out with the [[Classes:PunchDagger|punch dagger]] in many cases without taking a hit.
+==== [[DECORATE]] definition ====
+ ACTOR &lt;u&gt;CeilingTurret&lt;/u&gt;
+ {
+   {{Property|Health}} 125
+   {{Property|Speed}} 0
+   {{Property|PainChance}} 0
+   {{Property|Mass}} 10000000
+   {{Property|Monster}}
+   -{{Flag|SOLID}}
+   -{{Flag|CANPASS}}
+   +{{Flag|AMBUSH}}
+   +{{Flag|SPAWNCEILING}}
+   +{{Flag|NOGRAVITY}}
+   +{{Flag|NOBLOOD}}
+   +{{Flag|NOSPLASHALERT}}
+   +{{Flag|DONTFALL}}
+   {{Property|MinMissileChance}} 150
+   {{Property|DeathSound}} "turret/death"
+   States
+   {
+   Spawn:
+     TURT A 5 [[A_TurretLook]]
+     Loop
+   See:
+     TURT A 2 [[A_Chase]]
+     Loop
+   Missile:
+   Pain:
+     TURT B 4 Slow [[A_ShootGun]]
+     TURT D 3 Slow [[A_SentinelRefire]]
+     TURT A 4 [[A_SentinelRefire]]
+     Loop
+   Death:
+     BALL A 6 Bright [[A_Scream]]
+     BALL BCDE 6 Bright
+     TURT C -1
+     Stop
+   }
+ }</text>
+    <sha1>ht3dtqakmto6eiehvehcqlsxydujk8z</sha1>
+  </revision>
+</page>

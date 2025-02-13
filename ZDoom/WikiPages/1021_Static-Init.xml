@@ -1,0 +1,90 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>Static Init</title>
+  <ns>0</ns>
+  <id>1021</id>
+  <revision>
+    <id>44642</id>
+    <parentid>42519</parentid>
+    <timestamp>2017-04-03T15:22:06Z</timestamp>
+    <contributor>
+      <username>Gez</username>
+      <id>1283</id>
+    </contributor>
+    <comment>xlat</comment>
+    <origin>44642</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="3953" sha1="8bxp9f6xsxxo7zy0xwu91mygvqxbs71" xml:space="preserve">{{DISPLAYTITLE:Static_Init}}
+{{Special|190|tag, prop, flip/ceiling, movetype|Sector|use=line}}
+
+* ''tag'': [[Tag]] of affected [[sector]], or lineid of concerned [[linedef]]s.
+* ''prop'': Sector property to set.
+* ''flip/ceiling'': If ''prop'' is set to 255, this is a boolean for whether to ''flip'' the [[sky]] texture. If ''prop'' is set to 3, this is a boolean for whether the control surface is the ''ceiling'' or not (and it not, obviously, it's the floor).
+* ''movetype'': If ''prop'' is set to 3, determines which type of movement to use, using the same values as in [[Sector_SetLink]].
+
+Sets a sector property during level initialization. '''Static_Init''' was designed to copy the functionality of several [[Boom]], [[MBF]] and [[Eternity Engine]] linetypes; the specific action depends on the second argument.
+
+{| {{prettytable}}
+|-
+!colspan="3"| Property
+|-
+! Value !! Function !! Notes
+|-
+| 0 || Gravity || Sets the [[gravity]] in tagged sectors to the length of the linedef (333 in Doom-format maps).
+|-
+| 1 || Color || Sets the [[colored lighting|light]] or [[fog]] color in a sector. An RRGGBB hex format color used as an upper texture name will set the light color; a lower texture will set the fog color.
+|-
+| 2 || Damage || Sets [[damaging floor|damage]] in tagged sectors to the length of the linedef (335 in Doom-format maps).
+|-
+| 3 || Link || Defines a [[Sector links with Static_Init|sector link]] with line IDs instead of tags, as in Eternity.
+|-
+| 253 || Sector || rowspan="2" | Define special handling for adding Eternity Engine ExtraData to sector and line. Used by [[XLAT]] for Eternity levels.
+|-
+| 254 || Line 
+|-
+| 255 || Sky || Uses the line's upper texture as the sky in any tagged sectors (that is, the [[sky]] flat will be replaced with that texture instead of the sky indicated in [[MAPINFO]]).  If flip is set to 1, the texture will be flipped, as is normal behavior for Doom skies. Offsets and scrolling of the texture are transferred to the sky as well. Scrolling, however, is only at a tiny fraction of the wall texture's scrolling speed. This corresponds to the MBF sky transfer linetypes (271 and 272).
+'''Note:''' The line's lower texture, if set and of the same dimensions as the upper texture, will be used during [[lightning]] flashes.
+|}
+
+== Conversions from linedef types ==
+The following Doom map format types can be converted as Static_Init:
+{| {{prettytable}}
+!Type!!Conversion!!Trigger
+|-
+|{{icon|Eternity}} 270:ExtraDataLine || Static_Init (tag, {{xlat|Init_EDLine}}) || 
+|-
+|{{icon|MBF}} 271:Transfer Sky Texture || Static_Init (tag, {{xlat|Init_TransferSky}}, 0) || 
+|-
+|{{icon|MBF}} 272:Transfer Sky Texture (Flipped) || Static_Init (tag, {{xlat|Init_TransferSky}}, 1) || 
+|-
+|{{icon|Legacy}} 282:Set Color (Upper Light, Lower Fog) || Static_Init (tag, {{xlat|Init_Color}}) || 
+|-
+|{{icon|ZDoom}} 333 || Static_Init (tag, {{xlat|Init_Gravity}}) || 
+|-
+|{{icon|ZDoom}} 334 || Static_Init (tag, {{xlat|Init_Color}}) || 
+|-
+|{{icon|ZDoom}} 335 || Static_Init (tag, {{xlat|Init_Damage}}) || 
+|-
+|{{icon|Eternity}} 379:Attach_SetCeilingControl || Static_Init (tag, {{xlat|Init_Link}}, 1) || 
+|-
+|{{icon|Eternity}} 380:Attach_SetFloorControl || Static_Init (tag, {{xlat|Init_Link}}, 0) || 
+|-
+|{{icon|Eternity}} 381:Attach_FloorToControl || Static_Init (0, {{xlat|Init_Link}}, 0, 1) || 
+|-
+|{{icon|Eternity}} 382:Attach_CeilingToControl || Static_Init (0, {{xlat|Init_Link}}, 1, 2) || 
+|-
+|{{icon|Eternity}} 383:Attach_MirrorFloorToControl || Static_Init (0, {{xlat|Init_Link}}, 0, 5) || 
+|-
+|{{icon|Eternity}} 384:Attach_MirrorCeilingToControl || Static_Init (0, {{xlat|Init_Link}}, 0, 10) || 
+|-
+|{{icon|Eternity}} 401:ExtraDataSector || Static_Init (tag, {{xlat|Init_EDSector}}) || 
+|}
+
+==Forum threads==
+* {{forum|Line type 190 - information|t=606}}
+
+== External links ==
+*[http://www.mediafire.com/download/9knvo9y2vv9p7je/190_multiple_skies_DiH.wad Example map in DiH format with multiple skies ]</text>
+    <sha1>8bxp9f6xsxxo7zy0xwu91mygvqxbs71</sha1>
+  </revision>
+</page>

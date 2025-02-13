@@ -1,0 +1,150 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>Classes:Cyberdemon</title>
+  <ns>0</ns>
+  <id>2482</id>
+  <revision>
+    <id>48930</id>
+    <parentid>48439</parentid>
+    <timestamp>2021-12-27T11:16:39Z</timestamp>
+    <contributor>
+      <username>Jekyll Grim Payne</username>
+      <id>2175</id>
+    </contributor>
+    <comment>updated in accordance with updated ZScriptDefinitionNote template</comment>
+    <origin>48930</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="3311" sha1="7hcyyty6mmyurckqnpaxsyhz99rklob" xml:space="preserve">{{Actor|
+| type = Monster
+| name = Cyberdemon
+| class = Cyberdemon
+| game = Doom
+| doomednum = 16
+| thingindex = 22
+| spawnid = 114
+| spawnname = T_CYBERDEMON
+}}
+[[Classes]]: &lt;u&gt;Cyberdemon&lt;/u&gt;
+
+
+With 4000 health, the Cyberdemon is the strongest enemy in ''[[Doom]]''. They can take as many as four {{Class|BFG9000|BFG}} shots to kill; with lesser weapons, this can require a lot of strafing around to dodge their {{Class|rocket}}s. It is recommended also to keep away from walls in their presence, as their rockets often inflict a lot of splash damage. As cyberdemons do not have a {{c|Raise}} [[actor states|state]], they cannot be resurrected by {{Class|Archvile|archviles}}.
+
+==== [[ZScript]] definition ====
+{{ZScriptDefinitionNote|actors/doom/cyberdemon.zs}} 
+ class Cyberdemon : Actor
+ {
+ 	Default
+ 	{
+ 		{{Property|Health}} 4000;
+ 		{{Property|Radius}} 40;
+ 		{{Property|Height}} 110;
+ 		{{Property|Mass}} 1000;
+ 		{{Property|Speed}} 16;
+ 		{{Property|PainChance}} 20;
+ 		{{Property|Monster}};
+ 		{{Property|MinMissileChance}} 160;
+ 		+{{Flag|BOSS}} 
+ 		+{{Flag|MISSILEMORE}}
+ 		+{{Flag|FLOORCLIP}}
+ 		+{{Flag|NORADIUSDMG}}
+ 		+{{Flag|DONTMORPH}}
+ 		+{{Flag|BOSSDEATH}}
+ 		{{Property|SeeSound}} "cyber/sight";
+ 		{{Property|PainSound}} "cyber/pain";
+ 		{{Property|DeathSound}} "cyber/death";
+ 		{{Property|ActiveSound}} "cyber/active";
+ 		{{Property|Obituary}} "$OB_CYBORG";
+ 		{{Property|Tag}} "$FN_CYBER";
+ 	}
+ 	States
+ 	{
+ 	Spawn:
+ 		CYBR AB 10 [[A_Look]];
+ 		Loop;
+ 	See:
+ 		CYBR A 3 [[A_Hoof]];
+ 		CYBR ABBCC 3 [[A_Chase]];
+ 		CYBR D 3 [[A_Metal]];
+ 		CYBR D 3 [[A_Chase]];
+ 		Loop;
+ 	Missile:
+ 		CYBR E 6 [[A_FaceTarget]];
+ 		CYBR F 12 [[A_CyberAttack]];
+ 		CYBR E 12 [[A_FaceTarget]];
+ 		CYBR F 12 [[A_CyberAttack]];
+ 		CYBR E 12 [[A_FaceTarget]];
+ 		CYBR F 12 [[A_CyberAttack]];
+ 		Goto See;
+ 	Pain:
+ 		CYBR G 10 [[A_Pain]];
+ 		Goto See;
+ 	Death:
+ 		CYBR H 10;
+ 		CYBR I 10 [[A_Scream]];
+ 		CYBR JKL 10;
+ 		CYBR M 10 [[A_NoBlocking]];
+ 		CYBR NO 10;
+ 		CYBR P 30;
+ 		CYBR P -1 [[A_BossDeath]];
+ 		Stop;
+ 	}
+ }
+==== [[DECORATE]] definition ====
+{{DecorateDefinitionNote}}
+ ACTOR &lt;u&gt;Cyberdemon&lt;/u&gt;
+ {
+   {{Property|Health}} 4000
+   {{Property|Radius}} 40
+   {{Property|Height}} 110
+   {{Property|Mass}} 1000
+   {{Property|Speed}} 16
+   {{Property|PainChance}} 20
+   {{Property|Monster}}
+   {{Property|MinMissileChance}} 160
+   +{{Flag|BOSS}}
+   +{{Flag|MISSILEMORE}}
+   +{{Flag|FLOORCLIP}}
+   +{{Flag|NORADIUSDMG}}
+   +{{Flag|DONTMORPH}}
+   +{{Flag|BOSSDEATH}}
+   {{Property|SeeSound}} "cyber/sight"
+   {{Property|PainSound}} "cyber/pain"
+   {{Property|DeathSound}} "cyber/death"
+   {{Property|ActiveSound}} "cyber/active"
+   {{Property|Obituary}} "$OB_CYBORG"
+   States
+   {
+   Spawn:
+     CYBR AB 10 [[A_Look]]
+     Loop
+   See:
+     CYBR A 3 [[A_Hoof]]
+     CYBR ABBCC 3 [[A_Chase]]
+     CYBR D 3 [[A_Metal]]
+     CYBR D 3 [[A_Chase]]
+     Loop
+   Missile:
+     CYBR E 6 [[A_FaceTarget]]
+     CYBR F 12 [[A_CyberAttack]]
+     CYBR E 12 [[A_FaceTarget]]
+     CYBR F 12 [[A_CyberAttack]]
+     CYBR E 12 [[A_FaceTarget]]
+     CYBR F 12 [[A_CyberAttack]]
+     Goto See
+   Pain:
+     CYBR G 10 [[A_Pain]]
+     Goto See
+   Death:
+     CYBR H 10
+     CYBR I 10 [[A_Scream]]
+     CYBR JKL 10
+     CYBR M 10 [[A_NoBlocking]]
+     CYBR NO 10
+     CYBR P 30
+     CYBR P -1 [[A_BossDeath]]
+     Stop
+   }
+ }</text>
+    <sha1>7hcyyty6mmyurckqnpaxsyhz99rklob</sha1>
+  </revision>
+</page>

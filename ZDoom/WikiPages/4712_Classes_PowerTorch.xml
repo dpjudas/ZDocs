@@ -1,0 +1,82 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>Classes:PowerTorch</title>
+  <ns>0</ns>
+  <id>4712</id>
+  <revision>
+    <id>53749</id>
+    <parentid>36541</parentid>
+    <timestamp>2024-11-13T23:19:04Z</timestamp>
+    <contributor>
+      <username>Jekyll Grim Payne</username>
+      <id>2175</id>
+    </contributor>
+    <origin>53749</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="1808" sha1="h4lt1hp08vuemhrurcpkfcod8wrkhbj" xml:space="preserve">{{actor|
+| type = Power
+| name = Torch power
+| class = PowerTorch
+}}[[Classes]]: [[Classes:Inventory|Inventory]]&amp;rarr;[[Classes:Powerup|Powerup]]&amp;rarr;[[Classes:PowerLightAmp|PowerLightAmp]]&amp;rarr;&lt;u&gt;PowerTorch&lt;/u&gt;&lt;br&gt;
+
+{{: Powerup definition}}
+
+'''PowerTorch''' is a subclass of {{class|PowerLightAmp}}, designed for the {{class|ArtiTorch}} in Heretic. It is mostly equivelant to PowerLightAmp, although the brightness flickers a bit for a more believable torch effect. The [[OpenGL]] renderer's option of "enhanced night vision mode" also colors the screen with this powerup with a faint yellow glow rather than the PowerLightAmp's full night-vision goggle.
+
+=== [[ZScript]] definition ===
+{{ZScriptDefinitionNote|actors/inventory/powerups.zs}}
+&lt;syntaxhighlight lang="csharp"&gt;
+class PowerTorch : PowerLightAmp
+{
+	int NewTorch, NewTorchDelta;
+	
+	override void DoEffect ()
+	{
+		if (Owner == NULL || Owner.player == NULL)
+		{
+			return;
+		}
+
+		let player = Owner.player;
+		if (EffectTics &lt;= BLINKTHRESHOLD || player.fixedcolormap &gt;= PlayerInfo.NUMCOLORMAPS)
+		{
+			Super.DoEffect ();
+		}
+		else 
+		{
+			Powerup.DoEffect ();
+
+			if (!(Level.maptime &amp; 16) &amp;&amp; Owner.player != NULL)
+			{
+				if (NewTorch != 0)
+				{
+					if (player.fixedlightlevel + NewTorchDelta &gt; 7
+						|| player.fixedlightlevel + NewTorchDelta &lt; 0
+						|| NewTorch == player.fixedlightlevel)
+					{
+						NewTorch = 0;
+					}
+					else
+					{
+						player.fixedlightlevel += NewTorchDelta;
+					}
+				}
+				else
+				{
+					NewTorch = random[torch](1, 8);
+					NewTorchDelta = (NewTorch == Owner.player.fixedlightlevel) ?
+						0 : ((NewTorch &gt; player.fixedlightlevel) ? 1 : -1);
+				}
+			}
+		}
+	}
+	
+}
+&lt;/syntaxhighlight&gt;
+
+=== [[DECORATE]] definition ===
+{{DecorateDefinitionNote}}
+ ACTOR &lt;u&gt;PowerTorch&lt;/u&gt; : {{Class|PowerLightAmp}} native {}</text>
+    <sha1>h4lt1hp08vuemhrurcpkfcod8wrkhbj</sha1>
+  </revision>
+</page>

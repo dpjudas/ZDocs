@@ -1,0 +1,44 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>Classes:CrossbowFX2</title>
+  <ns>0</ns>
+  <id>3657</id>
+  <revision>
+    <id>39398</id>
+    <parentid>34155</parentid>
+    <timestamp>2015-04-29T17:56:21Z</timestamp>
+    <contributor>
+      <username>Blue Shadow</username>
+      <id>2021</id>
+    </contributor>
+    <minor />
+    <comment>/* DECORATE definition */ Updated</comment>
+    <origin>39398</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="1080" sha1="263enwwkluorfw6fmwwi8ncoiw4wyju" xml:space="preserve">{{Actor|
+| type = Explosive
+| name = Tomed crossbow shot
+| class = CrossbowFX2
+| game = Heretic
+| spawnid = 148
+| spawnname = T_CROSSBOWMINIBLAST
+}}[[Classes]]: [[Classes:CrossbowFX1|CrossbowFX1]]&amp;rarr;&lt;u&gt;CrossbowFX2&lt;/u&gt;&lt;br&gt;
+The projectiles fired by the [[Classes:ArtiTomeOfPower|tomed]] [[Classes:Crossbow|ethereal crossbow]]. While they do less damage than their non-tomed [[Classes:CrossbowFX1|counterparts]], this is balanced by the fact the tomed crossbow shoots three of them. They also spawn [[Classes:CrossbowFX4|trails of magic sparks]] behind them.
+
+==== [[DECORATE]] definition ====
+ ACTOR &lt;u&gt;CrossbowFX2&lt;/u&gt; : {{Class|CrossbowFX1}}
+ {
+   {{Property|Speed}} 32
+   {{Property|Damage}} 6
+   {{Property|Obituary}} "$OB_MPPCROSSBOW"
+   States
+   {
+   Spawn:
+     FX03 B 1 Bright [[A_SpawnItemEx]]("{{Class|CrossbowFX4}}", [[DECORATE_expressions#Mathematical_functions|random2]][BoltSpark]()*0.015625, [[DECORATE_expressions#Mathematical_functions|random2]][BoltSpark]()*0.015625,
+                                   0, 0, 0, 0, 0, SXF_ABSOLUTEPOSITION, 50)
+     Loop
+   }
+ }</text>
+    <sha1>263enwwkluorfw6fmwwi8ncoiw4wyju</sha1>
+  </revision>
+</page>

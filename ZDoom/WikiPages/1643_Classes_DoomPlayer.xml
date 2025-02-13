@@ -1,0 +1,206 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>Classes:DoomPlayer</title>
+  <ns>0</ns>
+  <id>1643</id>
+  <revision>
+    <id>50416</id>
+    <parentid>40609</parentid>
+    <timestamp>2023-07-31T07:28:06Z</timestamp>
+    <contributor>
+      <username>Jekyll Grim Payne</username>
+      <id>2175</id>
+    </contributor>
+    <comment>Added ZScript definition</comment>
+    <origin>50416</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="4951" sha1="04znvxf23wuzpx2zwgd6gqgky6mj7hj" xml:space="preserve">{{Actor|
+| type = Player
+| name = Space marine
+| class = DoomPlayer
+| game = Doom
+}}[[Classes]]: [[Classes:PlayerPawn|PlayerPawn]] &amp;rarr;&lt;u&gt; DoomPlayer&lt;/u&gt;&lt;br&gt;
+&amp;nbsp;&amp;rarr;[[Classes:ChexPlayer|ChexPlayer]]&lt;br&gt;
+The DoomPlayer is who you play as in ''Doom'', ''Ultimate Doom'', ''Doom II'', and ''Final Doom''.
+
+==== [[ZScript]] Definition ====
+{{ZScriptDefinitionNote|actors/doom/doomplayer.zs}} 
+&lt;syntaxhighlight lang="csharp"&gt;
+class DoomPlayer : PlayerPawn
+{
+	Default
+	{
+		Speed 1;
+		Health 100;
+		Radius 16;
+		Height 56;
+		Mass 100;
+		PainChance 255;
+		Player.DisplayName "Marine";
+		Player.CrouchSprite "PLYC";
+		Player.StartItem "Pistol";
+		Player.StartItem "Fist";
+		Player.StartItem "Clip", 50;
+		Player.WeaponSlot 1, "Fist", "Chainsaw";
+		Player.WeaponSlot 2, "Pistol";
+		Player.WeaponSlot 3, "Shotgun", "SuperShotgun";
+		Player.WeaponSlot 4, "Chaingun";
+		Player.WeaponSlot 5, "RocketLauncher";
+		Player.WeaponSlot 6, "PlasmaRifle";
+		Player.WeaponSlot 7, "BFG9000";
+		
+		Player.ColorRange 112, 127;
+		Player.Colorset 0, "$TXT_COLOR_GREEN",		0x70, 0x7F,  0x72;
+		Player.Colorset 1, "$TXT_COLOR_GRAY",		0x60, 0x6F,  0x62;
+		Player.Colorset 2, "$TXT_COLOR_BROWN",		0x40, 0x4F,  0x42;
+		Player.Colorset 3, "$TXT_COLOR_RED",		0x20, 0x2F,  0x22;
+		// Doom Legacy additions
+		Player.Colorset 4, "$TXT_COLOR_LIGHTGRAY",	0x58, 0x67,  0x5A;
+		Player.Colorset 5, "$TXT_COLOR_LIGHTBROWN",	0x38, 0x47,  0x3A;
+		Player.Colorset 6, "$TXT_COLOR_LIGHTRED",	0xB0, 0xBF,  0xB2;
+		Player.Colorset 7, "$TXT_COLOR_LIGHTBLUE",	0xC0, 0xCF,  0xC2;
+	}
+
+	States
+	{
+	Spawn:
+		PLAY A -1;
+		Loop;
+	See:
+		PLAY ABCD 4;
+		Loop;
+	Missile:
+		PLAY E 12;
+		Goto Spawn;
+	Melee:
+		PLAY F 6 BRIGHT;
+		Goto Missile;
+	Pain:
+		PLAY G 4;
+		PLAY G 4 A_Pain;
+		Goto Spawn;
+	Death:
+		PLAY H 0 A_PlayerSkinCheck("AltSkinDeath");
+	Death1:
+		PLAY H 10;
+		PLAY I 10 A_PlayerScream;
+		PLAY J 10 A_NoBlocking;
+		PLAY KLM 10;
+		PLAY N -1;
+		Stop;
+	XDeath:
+		PLAY O 0 A_PlayerSkinCheck("AltSkinXDeath");
+	XDeath1:
+		PLAY O 5;
+		PLAY P 5 A_XScream;
+		PLAY Q 5 A_NoBlocking;
+		PLAY RSTUV 5;
+		PLAY W -1;
+		Stop;
+	AltSkinDeath:
+		PLAY H 6;
+		PLAY I 6 A_PlayerScream;
+		PLAY JK 6;
+		PLAY L 6 A_NoBlocking;
+		PLAY MNO 6;
+		PLAY P -1;
+		Stop;
+	AltSkinXDeath:
+		PLAY Q 5 A_PlayerScream;
+		PLAY R 0 A_NoBlocking;
+		PLAY R 5 A_SkullPop;
+		PLAY STUVWX 5;
+		PLAY Y -1;
+		Stop;
+	}
+}&lt;/syntaxhighlight&gt;
+
+==== [[DECORATE]] Definition ====
+{{DecorateDefinitionNote}}
+ ACTOR &lt;u&gt;DoomPlayer&lt;/u&gt; : [[Classes:PlayerPawn|PlayerPawn]]
+ {
+   {{Property|Speed}} 1
+   {{Property|Health}} 100
+   {{Property|Radius}} 16
+   {{Property|Height}} 56
+   {{Property|Mass}} 100
+   {{Property|PainChance}} 255
+   {{Property|Player.DisplayName}} "Marine"
+   {{Property|Player.CrouchSprite}} "PLYC"
+   {{Property|Player.StartItem}} "{{Class|Pistol}}"
+   {{Property|Player.StartItem}} "{{Class|Fist}}"
+   {{Property|Player.StartItem}} "{{Class|Clip}}", 50
+   {{Property|Player.WeaponSlot}} 1, {{Class|Fist}}, {{Class|Chainsaw}}
+   {{Property|Player.WeaponSlot}} 2, {{Class|Pistol}}
+   {{Property|Player.WeaponSlot}} 3, {{Class|Shotgun}}, {{Class|SuperShotgun}}
+   {{Property|Player.WeaponSlot}} 4, {{Class|Chaingun}}
+   {{Property|Player.WeaponSlot}} 5, {{Class|RocketLauncher}}
+   {{Property|Player.WeaponSlot}} 6, {{Class|PlasmaRifle}}
+   {{Property|Player.WeaponSlot}} 7, {{Class|BFG9000}}
+   {{Property|Player.ColorRange}} 112, 127
+   {{Property|Player.ColorSet}} 0, "Green",         0x70, 0x7F,  0x72
+   {{Property|Player.ColorSet}} 1, "Gray",          0x60, 0x6F,  0x62 // Called "Indigo" originally so as to have a unique initial
+   {{Property|Player.ColorSet}} 2, "Brown",         0x40, 0x4F,  0x42
+   {{Property|Player.ColorSet}} 3, "Red",           0x20, 0x2F,  0x22
+   // [[Doom Legacy]] additions
+   {{Property|Player.ColorSet}} 4, "Light Gray",    0x58, 0x67,  0x5A
+   {{Property|Player.ColorSet}} 5, "Light Brown",   0x38, 0x47,  0x3A
+   {{Property|Player.ColorSet}} 6, "Light Red",     0xB0, 0xBF,  0xB2
+   {{Property|Player.ColorSet}} 7, "Light Blue",    0xC0, 0xCF,  0xC2
+ 
+   States
+   {
+   Spawn:
+     PLAY A -1
+     Loop
+   See:
+     PLAY ABCD 4 
+     Loop
+   Missile:
+     PLAY E 12
+     Goto Spawn
+   Melee:
+     PLAY F 6 BRIGHT
+     Goto Missile
+   Pain:
+     PLAY G 4 
+     PLAY G 4 [[A_Pain]]
+     Goto Spawn
+   Death:
+     PLAY H 0 [[A_PlayerSkinCheck]]("AltSkinDeath")
+   Death1:
+     PLAY H 10
+     PLAY I 10 [[A_PlayerScream]]
+     PLAY J 10 [[A_NoBlocking]]
+     PLAY KLM 10
+     PLAY N -1
+     Stop
+   XDeath:
+     PLAY O 0 [[A_PlayerSkinCheck]]("AltSkinXDeath")
+   XDeath1:
+     PLAY O 5
+     PLAY P 5 [[A_XScream]]
+     PLAY Q 5 [[A_NoBlocking]]
+     PLAY RSTUV 5
+     PLAY W -1
+     Stop
+   AltSkinDeath:
+     PLAY H 6
+     PLAY I 6 [[A_PlayerScream]]
+     PLAY JK 6
+     PLAY L 6 [[A_NoBlocking]]
+     PLAY MNO 6
+     PLAY P -1
+     Stop
+   AltSkinXDeath:
+     PLAY Q 5 [[A_PlayerScream]]
+     PLAY R 0 [[A_NoBlocking]]
+     PLAY R 5 [[A_SkullPop]]
+     PLAY STUVWX 5
+     PLAY Y -1
+     Stop
+   }
+ }</text>
+    <sha1>04znvxf23wuzpx2zwgd6gqgky6mj7hj</sha1>
+  </revision>
+</page>

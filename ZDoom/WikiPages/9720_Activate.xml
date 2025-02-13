@@ -1,0 +1,97 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>Activate</title>
+  <ns>0</ns>
+  <id>9720</id>
+  <revision>
+    <id>52062</id>
+    <parentid>51715</parentid>
+    <timestamp>2024-03-24T16:32:54Z</timestamp>
+    <contributor>
+      <username>Jekyll Grim Payne</username>
+      <id>2175</id>
+    </contributor>
+    <comment>/* Examples */</comment>
+    <origin>52062</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="2832" sha1="iiytjy76jwcnvwalkejukugt2hh21fk" xml:space="preserve">'''{{class|Actor}}'''
+
+{{c|virtual native void '''Activate'''(Actor ''activator'')}}
+
+==Usage==
+Actors call this function when they're [[Activation|activated]], and it can be overridden to add special behavior to their activation. By default it does nothing.
+
+This function can be called on actors directly, through the ACS function [[Thing_Activate]], or through {{flag|USESPECIAL}} or {{flag|BUMPSPECIAL}} flags. Specific conditions are described [[Activation#ZScript|'''here''']].
+
+===Parameters===
+*{{c|Actor '''activator'''}}
+:A pointer to the actor that performed the activation. Who performed the activation can be determined by the {{property|Activation}} property: by default it's the actor that activated (used/bumped into) this actor, but with {{c|THINGSPEC_ThingActs}} the calling actor is instead considered the activator. If the function is called directly in ZScript, a pointer to any actor can be passed to the call manually.
+
+==Examples==
+This version of the {{class|ExplosiveBarrel|explosive barrel}} will explode if the player bumps into it, by calling [[DamageMobj]] on itself to deal damage to itself (passing the activator as the source of the damage):
+&lt;syntaxhighlight lang="csharp"&gt;
+class ExplosiveBarrelVolatile : ExplosiveBarrel
+{
+	Default
+	{
+		Activation THINGSPEC_Activate;
+		+BUMPSPECIAL
+	}
+
+	override void Activate(Actor activator)
+	{
+		self.DamageMobj(activator, activator, self.health, 'normal');
+	}
+}&lt;/syntaxhighlight&gt;
+
+{{note|Using the Activate() and Deactivate() functions to create interactive objects that can be activated by pressing Use is generally unnecessary. The easier way to set up similar interactions is with the [[Used|'''Used()''']] function, which is not tied to specials or activation.}}
+
+This version of the {{class|TechLamp|tech lamp}} can be manually switched on and off by pressing Use next to it:
+&lt;syntaxhighlight lang="csharp"&gt;
+class SwitchableLamp : TechLamp
+{
+	Default
+	{
+		Activation THINGSPEC_Switch; //can call Activate/Deactivate any number of times
+		+USESPECIAL
+	}
+
+	override void Activate(Actor activator)
+	{
+		// Attach dynamic light, play a standard switch sound
+		// and move to the LampOn state label:
+		A_AttachLight('lamplight', DynamicLight.PulseLight, "DDDDFF", 96, 99, DYNAMICLIGHT.LF_ATTENUATE, (0,0,72), 0.4);
+		A_StartSound("switches/normbutn");
+		SetStateLabel("LampOn");
+	}
+
+	override void Deactivate(Actor activator)
+	{
+		// Remove the light, play the sound, change states:
+		A_RemoveLight('lamplight');
+		A_StartSound("switches/normbutn");
+		SetStateLabel("Spawn");
+	}
+
+	States
+	{
+	Spawn:
+		TLMP C -1;
+		stop;
+	LampOn:
+		// This is how the regular TechLamp looks:
+		TLMP ABCD 4 Bright;
+		Loop;
+	}
+}&lt;/syntaxhighlight&gt;
+
+==See also==
+*[[Activation]]
+*[[Deactivate]]
+*[[Actor virtual functions]]
+
+[[Category:ZScript]]
+[[Category:Actor virtual functions]]</text>
+    <sha1>iiytjy76jwcnvwalkejukugt2hh21fk</sha1>
+  </revision>
+</page>

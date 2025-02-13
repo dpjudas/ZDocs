@@ -1,0 +1,54 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>Line SetPortal</title>
+  <ns>0</ns>
+  <id>7883</id>
+  <revision>
+    <id>45834</id>
+    <parentid>45826</parentid>
+    <timestamp>2018-01-02T18:24:43Z</timestamp>
+    <contributor>
+      <username>Gez</username>
+      <id>1283</id>
+    </contributor>
+    <comment>use interwiki for EE Wiki link; use template for forum link</comment>
+    <origin>45834</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="3151" sha1="gmcn6px9x5k7qnqk9nnwaly108gv8zc" xml:space="preserve">{{DISPLAYTITLE:Line_SetPortal}}
+{{Special|156|targetline, thisline, type, planeanchor|Miscellaneous|use=line}}
+{{note|text=This special behaves slightly differently with the Hexen map format compared to the [[UDMF]] map format. The ''thisline'' parameter, noted below, is unnecessary with UDMF because the linedef structure has a dedicated line ID property. This parameter should be set to 0 when using the UDMF format.}}
+== Usage ==
+Sets a portal upon a line. Once created, a portal can be redefined with [[Line_SetPortalTarget]].
+
+The line should have enough empty space to allow for something to pass through it. The line should also be '''double sided''' unless on a polyobject.
+
+This special will not allow to create crossable portals on one-sided lines unless it's a polyobject.
+
+== Parameters ==
+Creates a portal between two linedefs in a similar fashion to [[stacked sectors]].
+*''targetline:'' The tag number (line ID) of the line that will act as the "exit" of the current portal.
+*''thisline:'' The tag number of the current line. ''In UDMF, this argument should be 0.''
+*''type:'' The type of portal. 
+**0: Visual only. Actors cannot interact with this portal.
+**1: Visual plus simple teleporter. Triggering this line will cause the actor to be teleported to the "exit" line.
+**2: Interactive. Has all features of the teleporter type but allows certain other actions to recognize the portal.
+**3: Static. The portal should work like the linked portals in [[Eternity Engine]], including its [[eternity:Linked_portals#Setting_up_wall_portals|same limitations]]. They cannot be redefined.
+***'''NOTE:''' If your map has two or more contiguous sections connected to each other through two or more portals, those pairs of portals ''must'' be ''completely identical'' in how far away each one is from the other and the lengths and angles of the lines. See {{forum|p=910256|this explanation}} for details.
+**4: Eternity-compatibility. This is reserved for [[XLAT]] to make this line special compatible with the Eternity definition. Functionally this is identical to type 3, but with different parameter use. A line with a special Line_SetPortal(0, id, 4) will create a portal with another line with a special Line_SetPortal(1, id, 4). For the 'id' parameter the same rules as for the other types apply when being used in UDMF.
+*''planeanchor:'' Determines how the planes at the other side of the portal are relative to this line. Only portals of type 0 and 1 can have an alignment other than 'none'.
+**0: No alignment. Neither the floor nor ceiling at the other side of the portal will be aligned. The sectors at both sides should have similar z-heights.
+**1: Align floors. Both sides of the portal will be aligned so the floor heights match.
+**2: Align ceilings. Both sides of the portal will be aligned so the ceilings match.
+
+== Conversions from linedef types ==
+The following Doom map format types can be converted as :
+{| {{prettytable}}
+!Type!!Conversion!!Trigger
+|-
+|{{icon|Eternity}} 376:Portal_LinkedLineToLine || Line_SetPortal (0, tag, 4) || 
+|-
+|{{icon|Eternity}} 377:Portal_LinkedLineToLineAnchor || Line_SetPortal (1, tag, 4) || 
+|}</text>
+    <sha1>gmcn6px9x5k7qnqk9nnwaly108gv8zc</sha1>
+  </revision>
+</page>

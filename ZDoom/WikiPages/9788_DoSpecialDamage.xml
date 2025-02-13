@@ -1,0 +1,102 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>DoSpecialDamage</title>
+  <ns>0</ns>
+  <id>9788</id>
+  <revision>
+    <id>52884</id>
+    <parentid>52883</parentid>
+    <timestamp>2024-08-14T10:48:25Z</timestamp>
+    <contributor>
+      <username>Jekyll Grim Payne</username>
+      <id>2175</id>
+    </contributor>
+    <comment>/* Examples */</comment>
+    <origin>52884</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="2957" sha1="0939efoh8g8hs9eqrvxt2iq8n683neh" xml:space="preserve">'''{{class|Actor}}'''
+
+{{c|virtual int '''DoSpecialDamage''' (Actor ''victim'', int ''damage'', Name ''damagetype'')}}
+
+==Usage==
+Called by [[projectile|projectiles]] whenever they're about to deal damage to an actor and by hitscan [[Puff|puffs]] when the hitscan attack hits an actor (but not level geometry). Can be overridden to modify the damage the projectile/hitscan attack would deal, or add other custom behavior that should be executed when the projectile/hitscan hits its victim.
+
+Note, if there's a need to modify the projectile's collision rules, using [[SpecialMissileHit]] provides more flexibility.
+
+Hitscan note: the function will be executed even if the puff does ''not'' have the {{flag|PUFFONACTORS}} flag and is replaced with a blood actor, so you can still utilize this function to modify the behavior.
+
+===Parameters===
+*{{c|Actor '''victim'''}}
+:The actor about to be hit by the projectile.
+*{{c|int '''damage'''}}
+:The amount of damage to deal. If this value is returned directly (&lt;code&gt;return damage&lt;/code&gt;) without being modified first, the projectile's damage will remain unmodified.
+*{{c|Name '''damagetype'''}}
+:The [[damage type]] applied to the attack. Regular attacks use {{c|'Normal'}}, hitscan attacks use {{c|'Hitscan'}}.
+
+==Examples==
+Strife's {{class|LoreShot}} uses this virtual to pull the victim towards the shooter:
+&lt;syntaxhighlight lang="csharp"&gt;
+	override int DoSpecialDamage (Actor victim, int damage, Name damagetype)
+	{
+		
+		if (victim != NULL &amp;&amp; target != NULL &amp;&amp; !victim.bDontThrust)
+		{
+			Vector3 thrust = victim.Vec3To(target);
+			victim.Vel += thrust.Unit() * (255. * 50 / max(victim.Mass, 1));
+		}
+		return damage;
+	}
+&lt;/syntaxhighlight&gt;
+(The full code can be seen on the {{class|LoreShot}} page.)
+
+This example shows how [[DoSpecialDamage]] can be used in a [[Puff|puff]] to modify a [[hitscan]] weapon damage based on distance:
+&lt;syntaxhighlight lang="csharp"&gt;
+class BulletPuffDist : BulletPuff
+{
+	Default
+	{
+		+PUFFGETSOWNER // the shooter will be the puff's target
+	}
+
+	override int DoSpecialDamage (Actor victim, int damage, Name damagetype)
+	{
+		if (target &amp;&amp; victim)
+		{
+			// Get distance between shooter and victim,
+			// clamp it to a 128-2048 range and normalize 
+			// that range to a 0.0-1.0 inverted:
+			double dist = clamp(target.Distance3D(victim), 128, 2048);
+			double fac = 1.0 - (dist - 128) / (2048 - 128);
+			// Multiply damage by that value but clamp it so it
+			// doesn't go below 1:
+			return int(round( clamp(damage * fac, 1, damage) ));
+		}
+		return damage;
+	}
+}
+
+class PistolDist : Pistol
+{
+	States {
+	Fire:
+		PISG A 4;
+		PISG B 6
+		{
+			A_FireBullets (5.6, 0, 1, 15, "BulletPuffDist", FBF_NORANDOM); //base damage is 15 without randomization
+			A_StartSound("weapons/pistol", CHAN_WEAPON);
+			A_GunFlash();
+		}
+		PISG C 4;
+		PISG B 5 A_ReFire;
+		Goto Ready;
+	}
+}&lt;/syntaxhighlight&gt;
+
+==See also==
+*[[SpecialMissileHit]]
+
+[[Category:ZScript]]
+[[Category:Actor virtual functions]]</text>
+    <sha1>0939efoh8g8hs9eqrvxt2iq8n683neh</sha1>
+  </revision>
+</page>

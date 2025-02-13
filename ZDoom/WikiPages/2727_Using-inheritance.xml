@@ -1,0 +1,326 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>Using inheritance</title>
+  <ns>0</ns>
+  <id>2727</id>
+  <revision>
+    <id>53923</id>
+    <parentid>53922</parentid>
+    <timestamp>2024-11-27T10:29:26Z</timestamp>
+    <contributor>
+      <username>Jekyll Grim Payne</username>
+      <id>2175</id>
+    </contributor>
+    <comment>/* Examples */</comment>
+    <origin>53923</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="8639" sha1="hi5mirovdjtc5obqkzopog865qiebrq" xml:space="preserve">Inheritance is a mechanism that lets you take all properties defined by a previous class and inherit all of its contents (fields, functions, properties in case of an actor, etc.), and then only add focused changes to it, to create a modified version of the class Inheritance is often used with actors to create modified versions of actors to only change a few of its [[Actor properties|properties]], [[Actor flags|flags]] or [[Actor states|states]].
+
+Note, inheritance is often combined with [[Actor replacement]], but in [[ZScript]] it's not the only mechanism to modify the actor. See the [[Actor replacement]] page for details.
+
+Inheritance has special meaning when used with monsters. Any related monsters belong to one 'species'. Monsters within the same species cannot hurt each other with projectiles. A species is defined as all monsters that have one monster as a common ancestor. For example, if you create various variations of imps which are all derived from [[Classes:DoomImp|DoomImp]] they will form one species. This automatic mechanism can be altered with the {{Property|Species}} property.
+
+Inheritance is an essential means to create new inventory items. Inventory items are derived from predefined [[Creating new inventory items|inventory classes]].
+
+Inheritance can be combined with '''[[Actor_replacement#Replacing_existing_actors|replacement]]'''.
+
+__TOC__
+
+== Examples ==
+
+This is a Zombie with a different attack and more health. But it inherits everything else from the already existing [[Classes:ZombieMan|Doom zombie]]:
+
+'''[[ZScript]]:'''
+ class PlasmaZombie : [[Classes:ZombieMan|ZombieMan]]
+ {
+   Default
+   {
+     health 40;
+     dropitem "[[Classes:Cell|Cell]]";
+     missiletype "[[Classes:PlasmaBall|PlasmaBall]]";
+   }	 
+   States
+   {
+   Missile:
+     POSS E 10 [[A_FaceTarget]];
+     POSS F 5 [[A_MissileAttack]];
+     POSS E 5 [[A_FaceTarget]];
+     POSS F 5 [[A_MissileAttack]];
+     POSS E 5 [[A_FaceTarget]];
+     POSS F 5 [[A_MissileAttack]];
+     goto See;
+   }
+ }
+
+'''[[DECORATE]] {{deprecated}}:'''
+ actor PlasmaZombie : [[Classes:ZombieMan|ZombieMan]] 9600
+ {
+   health 40
+   dropitem [[Classes:Cell|Cell]]
+   missiletype [[Classes:PlasmaBall|PlasmaBall]]
+   states
+   {
+   Missile:
+     POSS E 10 [[A_FaceTarget]]
+     POSS F 5 [[A_MissileAttack]]
+     POSS E 5 [[A_FaceTarget]]
+     POSS F 5 [[A_MissileAttack]]
+     POSS E 5 [[A_FaceTarget]]
+     POSS F 5 [[A_MissileAttack]]
+     goto See
+   }
+ }
+
+
+This is a dead Zombieman from Doom. It uses '''SKIP_SUPER''' to reset the actor to default values. It only uses inheritance to get access to the parent's [[Actor states|states]]:
+
+'''[[ZScript]]:'''
+ class [[Classes:DeadZombieMan|DeadZombieMan]] : [[Classes:ZombieMan|ZombieMan]]
+ {
+   Default
+   {
+     Skip_Super;
+     DropItem "None";
+   }	 
+   States
+   {
+   Spawn:
+     Goto Super::Death+4;
+   }
+ }
+'''[[DECORATE]] {{deprecated}}:'''
+ actor [[Classes:DeadZombieMan|DeadZombieMan]] : [[Classes:ZombieMan|ZombieMan]] 18
+ {
+   SKIP_SUPER
+   DropItem "None"
+   States
+   {
+   Spawn:
+     Goto Super::Death +4
+   }
+ }
+
+
+Note that using inheritance retains all states unless redefined. As an example, the ScriptedZombie below has an incomplete death animation because calling the Death state removes any previous inheritance from that state. This is a zombie which uses a script to perform its attack and opens a door when dying:
+
+'''[[ZScript]]:'''
+ class ScriptedZombie : [[Classes:ZombieMan|ZombieMan]]
+ {
+   Default
+   {
+     health 40;
+   }
+   States
+   {
+   Missile:
+     POSS E 10 [[A_FaceTarget]];
+     POSS F 5 [[ACS_ExecuteAlways]] (999,0,0);
+     goto See;
+   Death:
+     POSS A 1 [[Door_Open]] (1337, 16);
+     stop;
+   }
+ }
+'''[[DECORATE]] {{deprecated}}:'''
+ actor ScriptedZombie : [[Classes:ZombieMan|ZombieMan]] 9604
+ {
+   health 40
+   states
+   {
+   Missile:
+     POSS E 10 [[A_FaceTarget]]
+     POSS F 5 [[ACS_ExecuteAlways]] (999,0,0)
+     goto See
+   Death:
+     POSS A 1 [[Door_Open]] (1337, 16)
+     stop
+   }
+ }
+
+
+Another possibility is to inherit from actors that have programmed capabilities. For example, Strife's [[Classes:LoreShot|LoreShot]] works like a grappling hook. You can easily get access to this behavior by inheriting from it and define your new actor around it.
+('''Note:''' Doing this in ZScript is unnecessary. You can easily achieve LoreShot's functionality simply by copying its [[DoSpecialDamage]] override — see the {{class|LoreShot}} page for its code.))
+
+'''[[ZScript]]:'''
+ class GrapplingHook : [[Classes:LoreShot|LoreShot]]
+ {
+   Default
+   {
+     Seesound "hook/shoot";
+     Deathsound "hook/hit";
+   }
+   States
+   {
+   Spawn:
+     WS12 AB 2 bright;
+     loop;
+   Death:
+     WS12 CDEF 6;
+     stop;
+   }
+ }
+'''[[DECORATE]] {{deprecated}}:'''
+ actor GrapplingHook : [[Classes:LoreShot|LoreShot]]
+ {
+   seesound "hook/shoot"
+   deathsound "hook/hit"
+   states
+   {
+   Spawn:
+     WS12 AB 2 bright
+     loop
+   Death:
+     WS12 CDEF 6
+     stop
+   }
+ }
+
+States in parent classes which have been redefined in a subclass can still be accessed using the 'Super' scope. In this example 'Super' allows us to do stuff at the beginning of a pain state without rewriting the entire state.
+
+'''[[ZScript]]:'''
+  class WimpyZombieMan : ZombieMan replaces ZombieMan
+  {
+    States
+    {
+    Pain:
+      TNT1 A 0 
+      {
+         bFRIGHTENED = true;
+      }
+      goto Super::Pain;
+    }
+  }
+
+'''[[DECORATE]] {{deprecated}}:'''
+  actor WimpyZombieMan : ZombieMan replaces ZombieMan
+  {
+    States
+    {
+    Pain:
+      TNT1 A 0 A_ChangeFlag("FRIGHTENED", 1)
+      goto Super::Pain
+    }
+  }
+
+
+As an alternative to using 'Super,' you can use the name of the superclass whose state you want to jump to. This example has former humans calling ACS scripts when they die. It is especially useful to go farther up in the hierarchy than the direct parent:
+
+'''[[ZScript]]:'''
+  class MyZombieMan : ZombieMan replaces ZombieMan
+  {
+    States
+    {
+    Death:
+      TNT1 A 0 ACS_ExecuteAlways(85);
+      goto Super::Death;
+    }
+  }
+
+  class MyOtherZombieMan : MyZombieMan replaces ShotgunGuy
+  {
+    States
+    {
+    Death:
+      TNT1 A 0 ACS_ExecuteAlways(86);
+      goto ZombieMan::Death;
+    XDeath:
+      TNT1 A 0 ACS_ExecuteAlways(86);
+      goto ZombieMan::XDeath;
+  }
+
+'''[[DECORATE]] {{deprecated}}:'''
+  actor MyZombieMan : ZombieMan replaces ZombieMan
+  {
+    States
+    {
+    Death:
+      TNT1 A 0 ACS_ExecuteAlways(85)
+      goto Super::Death
+    }
+  }
+
+  actor MyOtherZombieMan : MyZombieMan replaces ShotgunGuy
+  {
+    States
+    {
+    Death:
+      TNT1 A 0 ACS_ExecuteAlways(86)
+      goto ZombieMan::Death
+    XDeath:
+      TNT1 A 0 ACS_ExecuteAlways(86)
+      goto ZombieMan::XDeath
+  }
+
+== Dynamic and static jumps ==
+Jumps can be dynamic and static. '''Goto''' is the only example of a static jump. Other jumps, such as [[A_JumpIf]], [[A_JumpIfNoAmmo]], [[A_JumpIfInventory]] and [[:Category:Decorate Jump functions|others]], as well as returning a state directly (with [[FindState]] or [[ResolveState]]), are all dynamic jump methods.
+
+It's important to remember that &lt;code&gt;Goto&lt;/code&gt; performs the jump ''within the actor'', it's unaffected by inheritance. &lt;code&gt;Goto &lt;Label&gt;&lt;/code&gt; in the parent actor will always jump to the "Label" sequence inside that actor, even if the child actor defines the same state label:
+&lt;syntaxhighlight lang="csharp"&gt;
+ class ParentActor : Actor
+ {
+ 	States 
+ 	{
+ 	Spawn:
+ 		FRAM ABC 1;
+ 		goto Vanish; //this will only go to Vanish within this actor
+ 	Vanish:
+ 		FRAM DE 1;
+ 		stop;
+ 	}
+ }
+ 
+ class ChildActor : ParentActor
+ {
+ 	States
+ 	{
+ 	Vanish: //this will never be entered, because parent Vanish will be used instead
+ 		FRAM AB 1;
+ 		loop;
+ 	}
+ }&lt;/syntaxhighlight&gt;
+
+The only way to create a &lt;code&gt;goto&lt;/code&gt; instruction that respects inheritance is to use dynamic jumps instead—i.e. the A_Jump* functions or &lt;code&gt;return ResolveState("&lt;state label&gt;")&lt;/code&gt;. For example:
+&lt;syntaxhighlight lang="csharp"&gt;
+ class ParentActor : Actor
+ {
+ 	States
+ 	{
+ 	Spawn:
+ 		FRAM ABC 1;
+ 		TNT1 A 0 A_Jump(256,"Vanish");
+ 		wait; //it's OK to loop a 0-tic state here, since it contains a 100% chance jump
+ 	Vanish:
+ 		FRAM DE 1;
+ 		stop;
+ 	}
+ }
+ 
+ class ChildActor : ParentActor 
+ {
+ 	States
+ 	{
+ 	Vanish: //this will be entered properly
+ 		FRAM AB 1;
+ 		loop;
+ 	}
+ }&lt;/syntaxhighlight&gt;
+
+This will also work:
+&lt;syntaxhighlight lang="csharp"&gt;
+ 	Spawn:
+ 		FRAM ABC 1;
+ 		TNT1 A 0
+ 		{
+ 			return ResolveState("Vanish");
+ 		}
+ 		stop; //this will never be reached, so it doesn't matter what you use here
+&lt;/syntaxhighlight&gt;
+
+==See also==
+*[[Actor replacement]]
+
+[[Category:ZScript guides]]
+[[Category:DECORATE guides]]</text>
+    <sha1>hi5mirovdjtc5obqkzopog865qiebrq</sha1>
+  </revision>
+</page>

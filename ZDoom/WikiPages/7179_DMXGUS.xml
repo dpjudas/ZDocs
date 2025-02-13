@@ -1,0 +1,50 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>DMXGUS</title>
+  <ns>0</ns>
+  <id>7179</id>
+  <revision>
+    <id>33550</id>
+    <parentid>33390</parentid>
+    <timestamp>2012-07-28T14:58:40Z</timestamp>
+    <contributor>
+      <username>Gez</username>
+      <id>1283</id>
+    </contributor>
+    <minor />
+    <comment>removing new tags from 2.6.0</comment>
+    <origin>33550</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="2783" sha1="1y1hdofjd4ni3cjhy9yttif3q18erph" xml:space="preserve">{{Doomwiki}}
+The [[DMXGUS]] lump is used in Doom-engine games to set up the [[sound fonts|patches]] attributed to each of the 256 melodic and percussive instruments allowed by the {{wp|Gravis Ultrasound}} MIDI capabilities. [[ZDoom]]'s [[GUS]] emulator can read this lump.
+
+''[[Doom]]'', ''[[Doom II]]'', and ''[[Hexen]]'' feature DMXGUS lumps tailored to their MIDI soundtracks. Most of the work was in patch remapping to allow these soundtracks to sound as good as possible on the 1024K hardware. However, it is also possible to entirely replace instruments.
+
+== Lump format ==
+The DMXGUS is a plain text lump, which is in fact an embedded ultramid.ini configuration file. Any valid ultramid.ini can be used as a DMXGUS lump.
+
+Comments run from a # character to the end of the line.
+
+Each line is made of six comma-separated values: five numbers and a string. For example:
+ 0,2,1,1,0,acpiano
+The first number corresponds to the patch number, or in MIDI terms, the program number. In {{wp|General MIDI}}, program 0 is the acoustic grand piano. The string corresponds to the name of the patch to load to play that program, here "acpiano". 
+
+Note that numbers from 128 to 255 correspond, modulo 128, to the percussive instruments played on channel 10; General MIDI only covers programs 35 to 81 (163 to 209); but the default ultramid.ini contains settings from 155 (27) to 215 (87).
+
+The intermediate numbers (in this example: 2, 1, 1, 0) correspond to patch remapping. The GUS cards had limited amount of memory to load all the patches, and so as to save space, allowed to remap instruments to other that seemed close enough. The values correspond to the remapping done for 256K, 512K, 768K and 1024K cards, respectively. On the weakest hardware, the acoustic grand piano is remapped to program 2 (electric grand piano). On the two middle-of-the-road hardware, it is instead remapped to program 1 (bright acoustic piano). On the top-of-the-line hardware, it is remapped to 0, that is to say, to itself.
+
+==External links==
+Some custom DMXGUS PWADs are available on idgames:
+* {{idgames|id=182|GUS1M}} by Tom Klok for Doom
+* {{idgames|id=1166|HT_GUS1M}} by Tom Klok for Heretic
+* {{idgames|id=2070|GUS1M-II}} by Sebastien Bacquet for Doom II
+* {{idgames|id=3547|GUS1M-IID}} by Sebastien Bacquet for Doom II (bugfixed version of above)
+* {{idgames|id=2071|GUS-TLR}} by Sebastien Bacquet for the deathmatch wad {{idgames|id=13582|The Last Resort|linkonly=1}}
+Some PWADs feature a MIDI track composed specifically for custom GUS patches, which will only sound as intended when using a genuine or accurately emulated GUS card:
+* {{idgames|id=4850|Xtreme}} by Bobby Wolf and Jonathan Wright, replaces six of the "sound effects" GM instruments by sounds from Doom
+
+
+[[Category:Audio lumps]]</text>
+    <sha1>1y1hdofjd4ni3cjhy9yttif3q18erph</sha1>
+  </revision>
+</page>

@@ -1,0 +1,47 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>Classes:ViewPosition</title>
+  <ns>0</ns>
+  <id>9936</id>
+  <revision>
+    <id>54063</id>
+    <parentid>53303</parentid>
+    <timestamp>2024-12-17T10:43:50Z</timestamp>
+    <contributor>
+      <username>Jekyll Grim Payne</username>
+      <id>2175</id>
+    </contributor>
+    <origin>54063</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="1496" sha1="a7fspb0ftlierg77xyog9rbatrnvd0w" xml:space="preserve">&amp;ensp;&amp;rarr;[[Hierarchical class list|All other classes]]&lt;br&gt;
+
+A class used to define the {{c|ViewPos}} field within the base {{class|Actor}} class. Changing this for the {{class|PlayerPawn}} or [[Camera]] actor using [[SetViewPos]] can offset the viewpoint. This is typically used for leaning mechanics, micro-positioning viewpoint origin for large actors, and visual effects such as custom view bobbing and recoil (to simulate the shaking chassis of a vehicle or mechsuit, for example) that don't affect the player's aiming or movement controls (since the effect is visual only, and the actor's angle, pitch, and roll are what affect the playsim). 
+
+{{new|4.13.0}} (hardware renderer only) Additionally, it can be used for setting a camera actor's viewpoint outside of the level's bounds while keeping the camera position within bounds (See [[Isometric Mode]] tutorial).
+
+It uses the actors primary angles, with {{c|viewangle}} applied later. It takes into account the actor's pitch and roll by default when offsetting, unless certain flags are set.
+
+==Fields==
+*{{c|vector3 '''offset'''}}
+*{{c|int '''flags'''}}
+
+These fields contain the same values as the arguments used by '''[[SetViewPos]]'''.
+
+== [[ZScript]] definition ==
+{{ZScriptDefinitionNote|actors/actor.zs}}
+&lt;syntaxhighlight lang="csharp"&gt;
+class ViewPosition native
+{
+	native readonly Vector3 Offset;
+	native readonly int Flags;
+}
+&lt;/syntaxhighlight&gt;
+
+== See Also ==
+*[[SetViewPos]]
+*[[Isometric Mode]] tutorial
+
+[[Category:ZScript]]</text>
+    <sha1>a7fspb0ftlierg77xyog9rbatrnvd0w</sha1>
+  </revision>
+</page>

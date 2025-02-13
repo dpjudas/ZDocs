@@ -1,0 +1,67 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>GetActorVelX</title>
+  <ns>0</ns>
+  <id>5428</id>
+  <revision>
+    <id>35628</id>
+    <parentid>30427</parentid>
+    <timestamp>2013-02-08T17:12:34Z</timestamp>
+    <contributor>
+      <username>Deded007</username>
+      <id>1392</id>
+    </contributor>
+    <minor />
+    <comment>specify the return type as 'fixed', example edit</comment>
+    <origin>35628</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="1074" sha1="tjx787mcwkdbu13pum6cxk79i6oy3zb" xml:space="preserve">__NOTOC__
+fixed '''GetActorVelX''' (int ''tid'')
+
+== Usage ==
+
+This returns the velocity of the actor along the X axis. Positive values means eastward movement; negative values are westward.
+
+=== Parameters ===
+
+* ''tid'': TID of the actor.
+
+=== Return value ===
+
+The X velocity of the actor, as a [[Definitions|fixed point]] value.
+
+== Examples ==
+This example prints the angle that the player is moving in based on x and y velocity.
+
+ script 1 enter
+ {
+   int angle;
+   [[Loops#While|while]] (TRUE)
+   {
+     angle = [[VectorAngle]]('''GetActorVelX'''(0), [[GetActorVelY]](0));
+     [[print]](f:angle);
+     [[delay]](1);
+   }
+ }
+
+This example prints the current speed of the player, using the [[FixedSqrt]] function.
+
+ script 1 enter
+ {
+   int x, y, z, speed;
+   [[Loops#While|while]] (TRUE)
+   {
+     x = '''GetActorVelX'''(0);
+     y = [[GetActorVelY]](0);
+     z = [[GetActorVelZ]](0);
+     speed = [[FixedMul]](x, x) + [[FixedMul]](y, y) + [[FixedMul]](z, z);
+     [[print]](f:[[FixedSqrt]](speed));
+     [[delay]](1);
+   }
+ }
+
+
+[[Category:ACS Information functions]]</text>
+    <sha1>tjx787mcwkdbu13pum6cxk79i6oy3zb</sha1>
+  </revision>
+</page>

@@ -1,0 +1,503 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>MAPINFO/Map definition</title>
+  <ns>0</ns>
+  <id>5345</id>
+  <revision>
+    <id>53321</id>
+    <parentid>53290</parentid>
+    <timestamp>2024-10-12T11:05:33Z</timestamp>
+    <contributor>
+      <username>Blue Shadow</username>
+      <id>2021</id>
+    </contributor>
+    <minor />
+    <comment>{{git}} -&gt; {{new}} for 4.13.0</comment>
+    <origin>53321</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="34986" sha1="egqss51w0e9molczz9ccc1fa2xb30sl" xml:space="preserve">A map definition begins with the keyword &lt;code&gt;map&lt;/code&gt;. You can also specify standard characteristics for later map definitions by using the keywords &lt;code&gt;defaultmap&lt;/code&gt; or &lt;code&gt;adddefaultmap&lt;/code&gt; instead.
+
+==Map commands==
+'''map &lt;maplump&gt; &lt;nice name&gt;''' { ''properties'' }&lt;br&gt;
+'''map &lt;maplump&gt; lookup &lt;keyword&gt;''' { ''properties'' }
+:Defines a single map.
+:&lt;maplump&gt; refers to the name of the marker lump. The map name may be any valid name for a lump though ExMx and MAPxx are generally used.
+:The &lt;nice name&gt; provides the name of the map for the automap and, like any string, must be enclosed in quotes if it contains spaces or is empty.
+:Alternatively, the {{c|lookup}} keyword may be used to look the nice name up by finding the specified token within the [[LANGUAGE]] lump.
+
+'''defaultmap''' { ''properties'' }'''
+:Sets the defaults that will be automatically used for all subsequent map definitions. It resets the default information so anything specified in previous defaultmap sections is lost. Unlike gamedefaults, defaultmap definitions are only effective within the file they are placed.
+
+'''adddefaultmap''' { ''properties'' }'''
+:Similar to defaultmap but keeps the existing defaultmap information and just adds to it.
+
+'''gamedefaults''' { ''properties'' }'''
+:Used to define default settings that apply to an entire game, even when PWADs are loaded for it. This is mainly used by Hexen and Strife so that PWADs which define their own defaultmap do not override basic game settings. It has limited use with PWADs.
+
+==Map properties==
+{{note|[[MAPINFO options for GZDoom's GL renderer|GZDoom-renderer-specific options]], while not listed here, are also defined in the &lt;code&gt;map&lt;/code&gt; block.}}
+
+The following properties are supported within a map, [add]defaultmap or gamedefaults definition:
+{{list|Property|Description|content=
+{{-|{{LE|LevelNum}} {{=}} &lt;levelnum&gt;
+|This is the map's identification number that is used to identify it to the [[Teleport_NewMap]] special. If the map's name is of the form MAPxx, then it will automatically have a {{c|LevelNum}} of xx unless you specify differently. (e.g. MAP23's {{c|LevelNum}} will be 23 unless you set it to something else.)}} For ExMy maps, it will default to (x-1)*10+y.
+
+{{-|{{LE|WarpTrans}} {{=}} &lt;levelnum&gt;
+|This is the map's identification number that is used to identify it to the {{CCMD|D|hxvisit}} command. If the map's name is of the form MAPxx, then it will automatically have a {{c|WarpTrans}} of xx unless you specify differently. Other forms of map slot names do not get a default WarpTrans value.}}
+
+{{-|[{{LE|Secret|SecretNext}}]{{LE|Next}} {{=}} "&lt;maplump&gt;"&lt;br /&gt;[Secret]Next {{=}} "&lt;endgame type&gt;"&lt;br /&gt;[Secret]Next {{=}} endpic, "&lt;lump&gt;"&lt;br /&gt;[Secret]Next {{=}} endsequence, "&lt;intermission sequence&gt;"&lt;br /&gt;
+|Defines which map or ending to proceed to after this map is completed. {{c|Next}} defines the map to proceed to after using the normal exit (or reaching the time/fraglimit in a deathmatch game) and {{c|SecretNext}} defines the map to proceed to if the player locates the secret exit. For compatibility with [[Vavoom]] MAPINFO lumps, {{c|Secret}} can be used as an alias for {{c|SecretNext}}. &lt;maplump&gt; should be the name of the map in the wad and not the map's nice name.
+Alternatively, you can also use one of the following directives in place of the lump name to indicate that ZDoom should end the game instead of continuing to another level. Valid names are: 
+*EndPic, "&lt;lump&gt;"  Displays the specified lump as an image. This method should be used instead of the next four.
+*"EndGame1"  Displays the credit picture used after Doom episode 1 and Heretic episodes 1 and 5
+*"EndGame2"  Displays the picture used after Doom episode 2, or the credits screen for Doom 2
+*"EndGameW"  Displays the picture used after Heretic episode 2
+*"EndGame4"  Displays the picture used after Doom and Heretic episode 4
+*"EndGameC"  Rolls the cast finale for Doom II
+*"EndGame3"  The horizontal scroller (right to left) after Doom episode 3 
+*"EndDemon"  The vertical scroller (bottom to top) after Heretic episode 3
+*"EndGameS"  The conditional end game script for Strife
+*"EndChess"  Hexen's Ending Sequence
+*"EndTitle"  Returns to the title screen
+*EndSequence, "&lt;intermission name&gt;" Specifies the [[MAPINFO/Intermission definition|custom intermission]] to go to after finishing the level.
+A third option is to specify an endgame block. This will end the game using completely customized ending screens and music. The format is as follows:
+
+ [secret]next {{=}} endgame
+ {
+     [pic {{=}} "&lt;lump&gt;"] // displays a single image.
+     [hscroll {{=}} "&lt;left&gt;", "&lt;right&gt;"] // scrolls horizontally from left to right.
+     [vscroll {{=}} "&lt;bottom&gt;", "&lt;top&gt;"] // scrolls vertically from bottom to top.
+     [cast] // Rolls the Doom 2 cast sequence (Same as EndGameC).
+     [music {{=}} "&lt;lump&gt;", [loop]] // Music to play.  If none specified, uses the level's music.
+        // [loop] can be 0 or 1 (default), and specifies whether the music should loop.
+ }
+Note exactly one of {{c|pic}}, {{c|hscroll}}, {{c|vscroll}}, or {{c|cast}} should be used. {{c|Music}} may be used in addition to whichever option is selected.
+
+Note also that using any of these options will not display any text. To do that, use an {{c|exittext}} for this level's [[cluster]].}}
+
+{{-|{{LE|Slideshow}} {{=}} "&lt;intermission name&gt;"
+|Defines a slideshow to be played in this level if a {{class|SlideshowStarter}} is given to the player. Slideshows are defined the exact same way as [[MAPINFO/Intermission definition|custom intermission]].}}
+
+{{-|{{LE|DeathSequence}} {{=}} "&lt;intermission name&gt;"
+|Ends the level and goes to the [[MAPINFO/Intermission definition|custom intermission]] specified, only if the player dies within the current level.}}
+
+{{-|{{LE|Redirect}} {{=}} "&lt;item&gt;", "&lt;maplump&gt;"
+|If the player is carrying at least one of &lt;item&gt;, they will be taken to the map specified by &lt;maplump&gt; instead of the normal {{c|{{MapProperty|Next}}}} or {{c|{{MapProperty|SecretNext}}}} map.}}
+
+{{-|{{LE|CVAR_Redirect}} {{=}} "&lt;name&gt;", "&lt;maplump&gt;"
+|If the value of the [[console variable]], specified by &lt;name&gt;, evaluates to ''true'', the player will be taken to the map specified by &lt;maplump&gt; instead of the normal {{c|{{MapProperty|Next}}}} or {{c|{{MapProperty|SecretNext}}}} map.}}
+
+{{-|{{LE|Cluster}} {{=}} &lt;number&gt;
+|&lt;number&gt; is the [[cluster]] that this map belongs to.}}
+
+{{-|{{LE|Sky1}} {{=}} "&lt;texture&gt;", [scrollspeed]
+|&lt;texture&gt; is the name of the texture to use for the [[sky]]. [scrollspeed] is the rate at which the sky moves left or right (useful for clouds on windy maps). To keep the sky from moving, use a value of 0.0 or omit this parameter; to move it left, use a positive value; and to move it right, use a negative value. This is the number of steps that the sky moves each tic.}}
+
+{{-|{{LE|Sky2}} {{=}} "&lt;texture&gt;", [scrollspeed]
+|Used the same as {{c|Sky1}}, except it selects the properties for the background [[sky]] layer (if {{c|{{MapProperty|DoubleSky}}}} is used) or an alternate sky image that can be shown in selected sectors.}}
+
+{{-|{{LE|Skybox}} {{=}} "&lt;texture&gt;"
+|This is an alias for {{c|Sky1}} which does not let you define a scrollspeed parameter (0 is used instead). This is added for compatibility with [[Vavoom]] MAPINFO lumps.}}
+
+{{-|{{LE|DoubleSky}}
+|Specifies that both [[sky]] textures are drawn, with {{c|{{MapProperty|Sky1}}}} in front of {{c|{{MapProperty|Sky2}}}}. {{c|Sky2}} will show through wherever {{c|Sky1}} is color 0 (*not* cyan).}}
+
+{{-|{{LE|ForceNoSkyStretch}}
+|If you have a [[sky]] graphic that looks fine whether it tiles or not, you can use this, and the sky will never be stretched on this level, regardless of the value of {{c|{{CVAR|R|r_stretchsky}}}}.}}
+
+{{-|{{LE|SkyStretch}}
+|Forces the [[sky]] texture to stretch when {{c|{{CVAR|R|r_stretchsky}}}} is set to 1 if it's not large enough to fill the screen without tiling. This is the default setting}}
+
+{{-|{{LE|Fade}} {{=}} "&lt;color&gt;"
+|&lt;color&gt; is the color that things fade to the further away or "darker" they are. Normally, this is black, so that things seem darker as they get further away. To simulate fog (ala Hexen), set this to a gray instead. Other colors are also supported, but may not necessarily look very good. &lt;color&gt; can be either the name of a color (such as red or cyan) or a color descriptor of the form "RR GG BB". For example, to set the fade to red, both of the following will work:
+ Fade {{=}} "red"
+ Fade {{=}} "ff 00 00"
+To find a good fade within the game, you can use the {{c|{{CCMD|D|testfade}}}} [[CCMDs|console command]].}}
+
+{{-|{{LE|FadeTable}} {{=}} "&lt;colormap&gt;"
+|Included for Hexen compatibility and should not be used by custom maps. Right now, it does what it's supposed to (specify a default colormap to use instead of the regular [[COLORMAP]] lump), but in the future it will probably just act like a fadeto line.}}
+
+{{-|{{LE|OutsideFog}} {{=}} "&lt;color&gt;"
+|This is like {{c|{{MapProperty|Fade}}}} except that the &lt;color&gt; fade is only applied to sectors with a [[sky]] ceiling and not all sectors on the map.}}
+
+{{-|{{LE|TitlePatch}} {{=}} "&lt;patch&gt;", [hideauthorname]
+|This is the name of a graphic to display on the [[Intermission|intermission screen]] for this level (such as "CWILV00"). It should contain the name of the level. If this is omitted, the intermission screen will create a graphic using the map's nicename.&lt;br&gt;
+If ''hideauthorname'' is set to any non-zero value, the {{MapProperty|Author|name of the map's author}} is not shown on the intermission screen.}}
+
+{{-|{{LE|Par}} {{=}} &lt;partime&gt;
+|Partime is the number of seconds shown as the level's par in the [[Intermission|intermission screen]].}}
+
+{{-|{{LE|SuckTime}} {{=}} &lt;value&gt;
+|The time (in hours) the player is allowed to finish the map within before the player is told their time "SUCKS" on the [[Intermission|intermission screen]].  For Doom, this defaults to 1 hour. Only integer values (1, 2, 3...) are accepted. If this is 0 or not present, the actual time will always be displayed.}}
+
+{{-|{{LE|NoIntermission}}
+|This indicates that when the current level is finished, ZDoom should continue immediately to the next level without showing the [[Intermission|intermission screen]].}}
+
+{{-|{{LE|Intermission}}
+|Overrides the effect of NoIntermission.}}
+
+{{-|{{LE|Music}} {{=}} "&lt;musiclump&gt;", [tracknum]
+{{LE|Music}} {{=}} "&lt;musiclump[:tracknum]&gt;"
+|''musiclump'' is the name of the music to play while the player is playing the level. ''tracknum'' is the track number of the music in a multi-track [[music format|music file]]. It defaults to 0 if not specified.}}
+
+{{-|{{LE|CDTrack}} {{=}} &lt;track number&gt;
+|If you want the level to play music off a CD, this is the track number to play.}}
+
+{{-|{{LE|CDId}} {{=}} &lt;CD identification number&gt;
+|If you know the ID for the CD you want to play, you can use this in conjunction with {{c|{{MapProperty|CDTrack}}}} to play the track only when a specific CD is in the drive. However, there is no easy way to find a CD's ID unless you write a program to do it yourself, which makes this somewhat useless. If you are planning on using a CD to provide the music for your map, you are strongly encouraged to consider the other [[Music format|music formats]] supported by ZDoom.}}
+
+{{-|{{LE|ExitPic}} {{=}} "&lt;picname&gt;"
+|Defines the picture which is used as the backdrop for the 'Level finished' screen. If none is specified the current game's default will be used. If the name is preceded with a '{{c|$}}' the lump will be used as an [[intermission script]]. {{c|[[#ExitAnim|ExitAnim]]}} has precedence over this property.}}
+
+{{-|{{LE|EnterPic}} {{=}} "&lt;picname&gt;"
+|Defines the picture which is used as the backdrop for the 'entering Level' screen. If none is specified the current game's default will be used. If the name is preceded with a '{{c|$}}' the lump will be used as an [[intermission script]]. {{c|[[#EnterAnim|EnterAnim]]}} has precedence over this property.}}
+
+{{-|{{LE|ExitAnim}} {{=}} "&lt;lump&gt;"
+|{{new|4.13.0}} {{moreinfo}}
+
+Defines the animation lump which is used to draw the backdrop for the 'Level finished' screen. Has precedence over {{c|[[#ExitPic|ExitPic]]}}.}}
+
+{{-|{{LE|EnterAnim}} {{=}} "&lt;lump&gt;"
+|{{new|4.13.0}} {{moreinfo}}
+
+Defines the animation lump which is used to draw the backdrop for the 'entering Level' screen. Has precedence over {{c|[[#EnterPic|EnterPic]]}}.}}
+
+{{-|{{LE|InterMusic}} {{=}} "&lt;musicname&gt;"
+|This defines the music that will be played during the 'Level finished' and 'Entering level' screens.}}
+
+{{-|{{LE|BorderTexture}} {{=}} "&lt;picname&gt;"
+|This defines the image that will be used to create a border around the viewable playing area if the user has his {{c|{{CVAR|R|screenblocks}}}} [[CVARs|CVAR]] set to a value below 9.}}
+
+{{-|{{LE|Lightning}}
+|Creates lightning in the map.}}
+
+{{-|{{LE|LightningSound}}
+|The sound that lightning makes when it falls on the map, the default sound is "world/thunder".}}
+
+{{-|{{LE|EvenLighting}}
+|Specifies that lighting should be applied to walls evenly no matter what their orientation. Doom would use different light levels for walls that were vertical, horizontal, or diagonal (when viewed from above). This is done to give better definition to corners but can look bad in areas with many differently angled walls. You can disable that behavior by specifying this.
+
+Note that using {{c|EvenLighting}} is equivalent to using "{{c|{{MapProperty|VertWallShade}}}} 0" and "{{c|{{MapProperty|HorizWallShade}}}} 0".}}
+
+{{-|{{LE|SmoothLighting}}
+|Specifies that different light levels should be used for every wall angle.}}
+
+{{-|{{LE|VertWallShade}} {{=}} &lt;amount&gt;
+|This controls how much the light level on vertical (north/south) walls differs from the sector's light level. The default is +16. The {{c|{{MapProperty|EvenLighting}}}} property sets this value to 0.}}
+
+{{-|{{LE|HorizWallShade}} {{=}} &lt;amount&gt;
+|This controls how much the light level on horizontal (east/west) walls differs from the sector's light level. The default is -16. The {{c|{{MapProperty|EvenLighting}}}} property sets this value to 0.}}
+
+{{-|{{LE|TeamDamage}} {{=}} &lt;amount&gt;
+|This forces team damage to the specified level when the map is played in Team Deathmatch or Cooperative mode. 1 is normal damage, lower values cause lower damage to team mates and higher values increase damage done. 0 turns off team damage completely.  Note that this setting can be overridden by the host by changing the [[CVARs|CVAR]] value after the map has started.}}
+
+{{-|{{LE|Gravity}} {{=}} &lt;amount&gt;
+|The amount of [[gravity]] to exert on actors within the map. The default setting is 800. Lower values lessen gravity, while higher values increase it.}}
+
+{{-|{{LE|NoGravity}}
+|The map has no gravity. This is necessary over setting ''gravity'' to 0 because that will make GZDoom fall back to the default gravity.}}
+
+{{-|{{LE|AirControl}} {{=}} &lt;amount&gt;
+|This specifies the amount of control the player has when airborne. A value of 1 means the player can move as freely in the air as he can on land, and 0 means the player has no control at all and must wait until landing before he can control his movements again. The standard aircontrol value is 0.00390625, which is just enough to allow you to easily jump up onto ledges.}}
+
+{{-|{{LE|AirSupply}} {{=}} &lt;amount&gt;
+|Specifies the time in seconds the player can remain [[Deep water|under water]] without taking damage. Setting this to 0 allows the player to stay under water indefinitely. The default setting is 20 seconds which can be quite short if you wish to use extensive water areas within your map.}}
+
+{{-|{{LE|F1}} {{=}} "&lt;image&gt;"
+|Enable [[Skulltag]]'s custom F1 help screens. If the user presses the F1 key, the specified image will be displayed over the UI.}}
+
+{{-|{{LE|MapBackground}} {{=}} "&lt;image&gt;"
+|Allows to specify an image to be used as the [[AUTOPAGE|automap background]] for the given map.}}
+
+{{-|{{LE|Translator}} {{=}} "&lt;lumpname&gt;"
+|Sets a [[map translator|definition lump]] how Doom format maps' linedef and sector types are translated into the internal Hexen format representation.}}
+
+{{-|{{LE|AllowMonsterTelefrags}}
+|This indicates that [[monster]]s can {{dw|telefrag}} each other or the player on the level. Normally, monsters will never telefrag anything.}}
+
+{{-|{{LE|ActivateOwnDeathSpecials}}
+|When a thing with a special dies and activates this special, it is considered the activator of the special. Vanilla Hexen maps use this. Otherwise, the default is that the activator is considered to be the thing's killer. This flag can be overridden on a per-actor basis with the {{Property|Activation}} property and the {{c|THINGSPEC_TriggerActs}} flag.}}
+
+{{-|{{LE|SpecialAction}} {{=}} "&lt;monstertype&gt;", "&lt;action special&gt;", [arg1], [arg2], [arg3], [arg4], [arg5]''' 
+|Assigns an action to a monster class. This action is executed when all monsters of this type are dead. The monster needs to call [[A_BossDeath]] for this to take effect. Unlike the specialized death action properties you can define as many special actions as you want and these special actions can call any [[action specials|action special]] they like.}}
+
+{{-|{{LE|Map07Special}}
+|This level wants the special feature of Doom II MAP07. In this case, when every {{Class|Fatso|mancubus}} on the level dies, any sectors tagged 666 will have their floors lower to the next lowest floor, and when every {{Class|arachnotron}} on the level is dead, any sectors tagged 667 will have their floors raised by the height of their lower textures.}}
+
+{{-|{{LE|BaronSpecial}}&lt;br /&gt;{{LE|CyberdemonSpecial}}&lt;br /&gt;{{LE|SpiderMastermindSpecial}}&lt;br /&gt;{{LE|IronlichSpecial}}&lt;br /&gt;{{LE|MinotaurSpecial}}&lt;br /&gt;{{LE|DSparilSpecial}}
+|After every monster of the appropriate class ({{Class|BaronOfHell|Baron of Hell}} as in Doom E1M8, {{Class|Cyberdemon}} as in Doom E2M8 and E4M6, {{Class|SpiderMastermind|Spider Mastermind}} as in Doom E3M8 and E4M8, {{Class|IronLich|Iron Lich}} as in Heretic E1M8 and E4M8, {{Class|Minotaur}} as in Heretic E2M8 and E5M8 or {{Class|Sorcerer2|D'sparil}} as in Heretic's E3M8) on this level has died, a special action will be triggered.
+
+Only one of the previous six monsterspecial properties should be used at a time. In addition, you must specify one of the {{c|{{MapProperty|SpecialAction_ExitLevel|SpecialAction}}}} properties to tell ZDoom what should happen when the above conditions are met. If multiple {{c|SpecialAction}} properties are used, all will be triggered at once.}}
+
+{{-|{{LE|SpecialAction_ExitLevel}}&lt;br /&gt;{{LE|SpecialAction_OpenDoor}}&lt;br /&gt;{{LE|SpecialAction_LowerFloor}}&lt;br /&gt;{{LE|SpecialAction_KillMonsters}}
+|After all of the specified monsters have died, perform a special action: exit the level to go to the next, opens any doors tagged 666 with blazing speed, lowers the floors of all sectors tagged 666 to the next lowest floor, or kill all remaining monsters in the level.}}
+
+{{-|{{LE|ClipMidTextures}}
+|Normally middle textures are set to be clipped on a per linedef basis using the second parameter of [[Line_SetIdentification]] or the ''clipmidtex'' linedef property within a [[UDMF]] format map. This will apply clipping to middle textures globally, meaning middle textures will never be drawn into the floor or ceiling.}}
+
+{{-|{{LE|NoAutoSequences}}
+|By default, the sound sequence played in a sector when it moves is determined by the special used to activate it. If you specify this property, whatever sound sequence has ID 0 will be used by default instead. In either case, placing a [[sound sequence thing]] (1400-1409) in a sector will cause the sound assigned to that thing to be played.}}
+
+{{-|{{LE|AutoSequences}}
+|Forces the ZDoom behavior of choosing the sound sequence for a moving sector based on the special used to activate it. This is the default setting.}}
+
+{{-|{{LE|StrictMonsterActivation}}
+|By default ZDoom allows monsters to use certain line special types that are only flagged to be used by the player (slow doors, lifts and teleporters.) If you set this property in MAPINFO, monsters can only activate lines that are either of the activation type 'monster crosses' or have the 'monsters can activate' flag set. This gives you better control over the actions that monsters can perform. For example, with the default setting it is not possible to create teleporters that cannot be used by monsters. For new maps it is strongly recommended to use this and control this yourself with the 'monsters can activate' flag in your maps. This is the default setting when playing Hexen or for Doom format maps.}}
+
+{{-|{{LE|LaxMonsterActivation}}
+|Resets the activation checks to the default, allowing monsters to activate certain specials that are not flagged for them. This is the default setting.}}
+
+{{-|{{LE|MissileShootersActivateImpactLines}}
+|Actors that fire [[Projectile|missile]]s are considered the activator if the missile triggers an impact line. This is the default ZDoom behavior.}}
+
+{{-|{{LE|MissilesActivateImpactLines}}
+|When a [[Projectile|missile]] triggers an impact line, it is considered the activator rather than the actor who shot it. This is Hexen's original behavior.}}
+
+{{-|{{LE|FallingDamage}}
+|Enables [[Falling damage#Hexen falling damage|Hexen-style falling damage]] on the level. This uses the exact same formula as Hexen. This overrides the [[DMFlags|DMflag]] in the [[Gameplay options|gameplay options menu]], so the player cannot turn it off for this map.}}
+
+{{-|{{LE|OldFallingDamage}}&lt;br /&gt;{{LE|ForceFallingDamage}}
+|Enables [[Falling damage#ZDoom falling damage|ZDoom-style falling damage]] on the level. This enables ZDoom's old algorithm which differs from the one Hexen uses. The differences between this and Hexen's falling damage style are small. The minimum falling speed at which you start to take damage is lower and minimum speed above which you die for sure is somewhat higher for this style. Another difference is that Hexen's falling damage requires the player to have a certain minimum speed in order to die at all while this old style does not so it can kill you even with a minor impact in case you are already badly hurt.
+The alternate name comes from [[Skulltag]], which had it as a MAPINFO option first.}}
+
+{{-|{{LE|StrifeFallingDamage}}
+|Enables [[Falling damage#Strife falling damage|Strife-style falling damage]] on the level. Unlike the two other types this is extremely punishing as you lose a lot of health when falling too far.}}
+
+{{-|{{LE|NoFallingDamage}}
+|Disables [[falling damage]]. Unlike {{c|{{MapProperty|FallingDamage}}}}, the player can still turn falling damage on using [[DMFlags]]. This is the default setting.}}
+
+{{-|{{LE|MonsterFallingDamage}}
+|Enables monsters to take [[falling damage]]. A falling monster always dies upon hitting the floor if its downward velocity is high enough for it to be considered for damage, unless the {{c|{{MapProperty|ProperMonsterFallingDamage}}}} flag is also set.&lt;br&gt;&lt;br&gt;To enable falling damage on per-monster basis, set the {{Flag|FALLDAMAGE}} actor flag on the desired monster's actor class.}}
+
+{{-|{{LE|ProperMonsterFallingDamage}}
+|Corrects the behavior of [[falling damage]] for monsters that resulted in the falling monster always dying upon hitting the floor if its downward velocity is high enough for it to be considered for damage. With this flag set, the monster takes an amount of damage depending on its downward velocity upon hitting the floor as long as said velocity is above the minimum velocity threshold, and is only guaranteed to die if that velocity exceeds the maximum velocity threshold.}}
+
+{{-|{{LE|AvoidMelee}}
+|Monsters back away from melee combat when too close to their target, provided they have a valid Missile state.&lt;br&gt;&lt;br&gt;To enable this behavior on per-monster basis, set the {{Flag|AVOIDMELEE}} actor flag on the desired monster's actor class.}}
+
+{{-|{{LE|FilterStarts}}
+|This filters out player starts based on skill and gametype settings.}}
+
+{{-|{{LE|AllowRespawn}}
+|If this property is present, after the player dies in a single-player game, they may respawn without resetting the map or loading the most recent autosave, just as if they had respawned in a cooperative multiplayer game.}}
+
+{{-|{{LE|TeamPlayOn}}
+|Forces teamplay to true when this map is started. (Can be overridden by the host).}}
+
+{{-|{{LE|TeamPlayOff}}
+|Forces teamplay to false when this map is started. (Can be overridden by the host).}}
+
+{{-|{{LE|NoInventoryBar}}
+|This prevents the inventory bar from ever being drawn in a Doom map.}}
+
+{{-|{{LE|KeepFullInventory}}
+|Normally the player's [[Artifact|inventory items]] have their quantity reduced to 1 when exiting a map that is not part of a [[hub]]. If this property is specified within a map block, the player will not have their inventory reduced when they leave that map.}}
+
+{{-|{{LE|InfiniteFlightPowerup}}
+|Makes the {{Class|PowerFlight|flight powerup}} last for the duration of the level rather than a fixed amount of time. This is the default behavior for Hexen.}}
+
+{{-|{{LE|NoJump}}
+|Disallows jumping in a map.}}
+
+{{-|{{LE|AllowJump}}
+|Allows jumping in a map. This is the default setting.}}
+
+{{-|{{LE|NoCrouch}}
+|Disallows crouching in a map.}}
+
+{{-|{{LE|AllowCrouch}}
+|Allows crouching in a map. This is the default setting.}}
+
+{{-|{{LE|NoFreelook}}
+|Disables [[Freelook|freelooking]] and vertical aiming of projectile weapons in a map.}}
+
+{{-|{{LE|AllowFreelook}}
+|Allows [[Freelook|freelooking]] and vertical aiming of projectile weapons in a map. This is the default setting.}}
+
+{{-|{{LE|NoInfighting}}
+|[[Monster]]s in this map will never turn on each other, even if they are hit by another monster's attacks which damage them.}}
+
+{{-|{{LE|NormalInfighting}}
+|[[Monster]]s will turn on each other as normal when they get caught in a crossfire. Monsters of the same type who are hit by each other's projectile attacks will not be damaged and will not [[infight]]. This is the default setting.}}
+
+{{-|{{LE|TotalInfighting}}
+|All [[monster]]s will potentially [[infight]] with each other, even monsters of the same [[species]].}}
+
+{{-|{{LE|CheckSwitchRange}}
+|Enables checks to see whether switch textures are vertically reachable. If a switch is completely above or below the player and this option is on, the switch won't activate.}}
+
+{{-|{{LE|NoCheckSwitchRange}}
+|Disables checks to see whether switch textures are vertically reachable. This is the default setting.}}
+
+{{-|{{LE|UnFreezeSinglePlayerConversations}}
+|Allows the game to continue while a Strife-style conversation window is open. Normally, the game freezes in single-player mode while a conversation is ongoing. Use this to disable that behavior.}}
+
+{{-|{{LE|NoAllies}}
+|Turns friendly actors into hostile ones by clearing the '''{{Flag|FRIENDLY}}''' flag from said actors. The once-friendly actors will now behave and attack the player as regular [[monster]]s would.}}
+
+{{-|{{LE|NoSoundClipping}}
+|{{deprecated}}
+
+Does nothing. Previously, this was used to emulate the behavior of Doom 1 boss maps where sounds would never be clipped no matter how far the player was away from the source. Now it is only recognized so old maps that use it will work properly.}}
+
+{{-|{{LE|ResetHealth}}
+|[[Health]] is reset when entering the map, enforcing a "pistol start" gameplay.}}
+
+{{-|{{LE|ResetInventory}}
+|[[Item|Inventory]] is reset when entering the map, enforcing a "pistol start" gameplay.}}
+
+{{-|{{LE|ResetItems}}
+|Player loses all of their [[Artifact|inventory items]] upon map exit, except those which are {{Flag|INVENTORY.UNDROPPABLE|not droppable}}. }}
+
+{{-|{{LE|Grinding_Polyobj}}
+|Corpses caught in a [[PolyObjects|polyobject]]'s way are crushed into {{Class|RealGibs|gibs}} just like they would be if they were under a [[crusher]] or a closing door. This, however, does not affect dropped items, contrarily to doors and crushers which destroy them.}}
+
+{{-|{{LE|No_Grinding_Polyobj}}
+|Clears the {{c|{{MapProperty|Grinding_Polyobj}}}} flag.}}
+
+{{-|&lt;{{LE|Compat Option}}&gt; {{=}} [value]
+|You can alter some [[compatibility options]] in MAPINFO as well. Specifying a compatibility option with no parameters turns it on, but the user can override the setting later.  If [value] is 0, the option is forced off for the map, and a setting of 1 forces it on, regardless of the [[CVARs|CVAR]] settings.  This ensures that a map that requests a certain option to be on or off can be played correctly no matter what the user's settings are.}}
+
+{{-|{{LE|DefaultEnvironment}} {{=}} val1[, val2]&lt;br/&gt;DefaultEnvironment {{=}} "name"
+|Specifies a default sound environment (see [[REVERBS]] for more information). You can use either the numeric identifiers or the name.}}
+
+{{-|{{LE|NoAutosaveHint}}
+|Mark the level as not requiring a separate [[savegame#Autosaves|autosave]]. An autosave will still be performed, depending on [[miscellaneous options#disableautosave|user settings]], but it will be overwritten by the next autosave. Use this for "fake" levels that are used only for scripted sequences. Note that this flag will be ignored if the previous level also had it.}}
+
+{{-|{{LE|UsePlayerStartZ}}
+|By default, the Z height of player starts is ignored because of compatibility code needed to make player starts work correctly in certain levels. If this property is set, the Z height is enforced. This can be used to have the player start on a [[3D floor]].}}
+
+{{-|{{LE|RandomPlayerStarts}}
+|By default, when there are several player start points for the same player, a {{dw|voodoo doll}} is spawned in each extra start. If this property is set, no voodoo dolls will be created and instead the player will start at a point chosen randomly from the many start points available.}}
+
+{{-|{{LE|PrecacheSounds}} {{=}} "&lt;sound1&gt;", "&lt;sound2&gt;", "&lt;sound3&gt;", ...
+|Preloads all the sounds provided when the level is first loaded. }}
+
+{{-|{{LE|PrecacheTextures}} {{=}} "&lt;texture1&gt;", "&lt;texture2&gt;", "&lt;texture3&gt;", ...
+|Preloads all the [[texture]]s provided when the level is first loaded.}}
+
+{{-|{{LE|PrecacheClasses}} {{=}} "&lt;actor1&gt;", "&lt;actor2&gt;", "&lt;actor3&gt;", ...
+|Preloads all the actors provided when the level is first loaded. This means all actor sprites, translations, renderstyles, etc. In some heavier mods, an actor's sprite images may be of high quality and cause a noticeable moment of lag when viewing it for the first time. Using this property will resolve that issue.}}
+
+{{-|{{LE|ForgetState}}
+|This prevents a map's state from being remembered in a [[hub]], so when you return to it without leaving the hub, it will be as if you had never been in there yet. }}
+
+{{-|{{LE|RememberState}}
+|In case the {{c|{{MapProperty|ForgetState}}}} flag is not desired, this flag turns it off, thus allowing the state of a map to be saved like normal. }}
+
+{{-|{{LE|SpawnWithWeaponRaised}}
+|Player's weapon will already be raised when entering this map. }}
+
+{{-|{{LE|ForceFakeContrast}}
+|Normally, [[fake contrast]] is disabled on walls belonging to a sector with [[fog]] applied to it. If this flag is set, fake contrast will be applied regardless.}}
+
+{{-|{{LE|ForceWorldPanning}}
+|Forces the world panning flag (which causes textures to pan in world units rather than texture units) for all textures, even those without it explicitly set.}}
+
+{{-|{{LE|HazardColor}} {{=}} "&lt;color&gt;"
+{{LE|HazardFlash}} {{=}} "&lt;color&gt;"
+|This affects ''[[Strife]]'''s [[Damaging floor#Sector types|sector damage type]] that passively builds up over time. {{c|HazardColor}} changes the gradual blend that is used when [[palette flash]] is disabled. {{c|HazardFlash}} changes the flashing blend that is used when palette flash is turned on.}}
+
+{{-|{{LE|PauseMusicInMenus}}
+|Pauses the music when the menu or console is open}}
+
+{{-|{{LE|EventHandlers}} {{=}} "&lt;class1&gt;", "&lt;class2&gt;", ...
+|Adds a ZScript [[Events and handlers|event handler]] to this map.}}
+
+{{-|{{LE|NeedClusterText}}
+|A map with this flag needs to retain its cluster intermission texts when being redefined in {{dw|UMAPINFO}}.}}
+
+{{-|{{LE|NoClusterText}}
+|Ignore intermission texts for clusters. This gets set when {{dw|UMAPINFO}} is used to redefine its properties, otherwise there should not be a need to explicitly set this, normally.}}
+
+{{-|{{LE|Label}} {{=}} "&lt;label&gt;"
+|{{new|4.13.0}}
+
+The label which precedes the map's name as it appears on the [[automap]], for instance "E1M1" in "E1M1: Hangar". If not provided, the name of the map's header lump ([[WAD]]) or the name of the map's WAD file (directory structure) is used as the label.}}
+
+{{-|{{LE|Author}} {{=}} "&lt;name&gt;"
+|The name of the map's author. This is displayed on the [[intermission|intermission screen]] (tally).}}
+
+{{-|{{LE|EnableSkyboxAO}}
+|&lt;br&gt;Enables {{wp|ambient occlusion}} for [[skybox]]es. This flag is set by default.}}
+
+{{-|{{LE|DisableSkyboxAO}}
+|&lt;br&gt;Disables {{wp|ambient occlusion}} for [[skybox]]es.}}
+
+{{-|{{LE|EnableShadowmap}}
+|Enables {{wp|shadow mapping}} for dynamic lights.}}
+
+{{-|{{LE|DisableShadowmap}}
+|Disables {{wp|shadow mapping}} for dynamic lights.}}
+
+{{-|{{LE|AttenuateLights}}
+|Makes dynamic lights attenuated. Dynamic lights whose attenuation is explicitly disabled in their definition are not affected by this property.}}
+
+{{-|{{LE|NoFogOfWar}}
+|{{new|4.13.0}}
+
+Overrides the effect of the display [[CVar]] {{c|{{CVAR|R|r_radarclipper}}}}, which under orthographic projection mode (see {{class|ViewPosition}}, [[Isometric Mode]]) would have imposed a subsector-level fog-of-war effect.}}
+
+{{-|{{LE|SndInfo}} {{=}} "&lt;lump&gt;"
+{{LE|SoundInfo}} {{=}} "&lt;lump&gt;"
+|The [[SNDINFO]] lump local to this map. This is loaded in addition to the global SNDINFO lump. Long-name lumps are supported.}}
+
+{{-|{{LE|SndSeq}} {{=}} "&lt;lump&gt;"
+|The [[SNDSEQ]] lump local to this map. This is loaded in addition to the global SNDSEQ lump. Long-name lumps are supported.}}
+
+{{-|{{LE|Intro}} { ... }
+
+{{LE|Outro}} { ... }
+|Specifies an intro and outro [[Cutscene|cutscene]] to play when entering and exiting the map respectively. A map may only play its intro if entering it happens through a map transition, like coming to it from another map. The following properties can be used within the {{c|Intro}} and {{c|Outro}} blocks:
+{{:Cutscene MAPINFO properties}}}}
+}}
+
+==Examples==
+ map E1M1 lookup "HUSTR_E1M1"
+ {
+    levelnum = 1
+    titlepatch = "WILV00"
+    next = "E1M2"
+    secretnext = "E1M9"
+    sky1 = "SKY1", 0
+    cluster = 1
+    par = 30
+    sucktime = 1
+    music = "$MUSIC_E1M1"
+ }
+
+ map E1M8 lookup "HUSTR_E1M8"
+ {
+    levelnum = 8
+    titlepatch = "WILV07"
+    next = "EndGame1"
+    secretnext = "E1M9"
+    sky1 = "SKY1", 0
+    cluster = 1
+    par = 30
+    nointermission
+    nosoundclipping
+    baronspecial
+    specialaction_lowerfloor
+    sucktime = 1
+    music = "$MUSIC_E1M8"
+ }
+
+The following example assumes that MISRSEWR is a music file with multiple tracks.
+ map MAP01 "Sewers of Misery"
+ {
+     // ...
+     music = "MISRSEWR", 1 // Track #1
+     // ...
+ }
+ 
+ map MAP02 "Sewers of Misery II"
+ {
+     // ...
+     music = "MISRSEWR:2" // Track #2
+     // ...
+ }
+[[Category:MAPINFO|Map]]</text>
+    <sha1>egqss51w0e9molczz9ccc1fa2xb30sl</sha1>
+  </revision>
+</page>

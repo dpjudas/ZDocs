@@ -1,0 +1,106 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>SetInventory</title>
+  <ns>0</ns>
+  <id>9870</id>
+  <revision>
+    <id>52226</id>
+    <timestamp>2024-04-02T16:58:45Z</timestamp>
+    <contributor>
+      <username>Jekyll Grim Payne</username>
+      <id>2175</id>
+    </contributor>
+    <comment>Created page with "'''{{class|Actor}}'''  {{c|bool '''SetInventory'''(Class&lt;Inventory&gt; ''itemclass'', int ''amount'', bool ''beyondMax'' }}={{c| false)}}  ==Usage== A non-action version of A_S..."</comment>
+    <origin>52226</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="2364" sha1="0qbyhfxf7l84q10oyoyi2ynfglgfneb" xml:space="preserve">'''{{class|Actor}}'''
+
+{{c|bool '''SetInventory'''(Class&lt;Inventory&gt; ''itemclass'', int ''amount'', bool ''beyondMax'' }}={{c| false)}}
+
+==Usage==
+A non-action version of [[A_SetInventory]]. Sets the amount of ''itemclass'' {{class|Inventory|item}} in the calling actor's inventory to &lt;code&gt;amount&lt;/code&gt; (if the actor didn't have ''itemclass'' item at all, it'll be given first).
+
+===Parameters===
+*{{c|Class&lt;Inventory&gt; '''itemclass'''}}
+:the class name of the item to give. This should be a valid {{Class|Inventory|inventory item}}.
+*{{c|int '''amount'''}}
+:The number the item's &lt;code&gt;amount&lt;/code&gt; will be set to.
+*{{c|bool '''beyondMax'''}}
+:If true, the amount of the item will be allowed to exceed default {{property|Inventory.MaxAmount|MaxAmount}} for the ''itemclass'' class.
+
+===Return value===
+The function returns &lt;code&gt;true&lt;/code&gt; if the item's amount was successfully set. Note, if the calling actor already had the specified amount, it'll return false.
+
+== [[ZScript]] definition ==
+{{ZScriptDefinitionNote|actors/inventory_util.zs#L188C1-L244C3}}
+&lt;syntaxhighlight lang="csharp"&gt;
+	bool SetInventory(class&lt;Inventory&gt; itemclass, int amount, bool beyondMax = false)
+	{
+		let item = FindInventory(itemclass);
+
+		if (item != null)
+		{
+			// A_SetInventory sets the absolute amount.
+			// Subtract or set the appropriate amount as necessary.
+
+			if (amount == item.Amount)
+			{
+				// Nothing was changed.
+				return false;
+			}
+			else if (amount &lt;= 0)
+			{
+				//Remove it all.
+				return TakeInventory(itemclass, item.Amount, true, false);
+			}
+			else if (amount &lt; item.Amount)
+			{
+				int amt = abs(item.Amount - amount);
+				return TakeInventory(itemclass, amt, true, false);
+			}
+			else
+			{
+				item.Amount = (beyondMax ? amount : clamp(amount, 0, item.MaxAmount));
+				return true;
+			}
+		}
+		else
+		{
+			if (amount &lt;= 0)
+			{
+				return true;
+			}
+			item = Inventory(Spawn(itemclass));
+			if (item == null)
+			{
+				return false;
+			}
+			else
+			{
+				item.Amount = amount;
+				item.bDropped = true;
+				item.bIgnoreSkill = true;
+				item.ClearCounters();
+				if (!item.CallTryPickup(self))
+				{
+					item.Destroy();
+					return false;
+				}
+				return true;
+			}
+		}
+		return false;
+	}&lt;/syntaxhighlight&gt;
+
+==Examples==
+{{noexamples}}
+
+==See also==
+* [[GiveInventory (Actor)]]
+* [[A_GiveInventory]]
+
+[[Category:ZScript]]
+[[Category:Inventory]]</text>
+    <sha1>0qbyhfxf7l84q10oyoyi2ynfglgfneb</sha1>
+  </revision>
+</page>

@@ -1,0 +1,61 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>Classes:ClipBox</title>
+  <ns>0</ns>
+  <id>2573</id>
+  <revision>
+    <id>53602</id>
+    <parentid>39185</parentid>
+    <timestamp>2024-11-08T11:35:39Z</timestamp>
+    <contributor>
+      <username>Jekyll Grim Payne</username>
+      <id>2175</id>
+    </contributor>
+    <origin>53602</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="891" sha1="anx6rnrvx31gmhhtuqckdd2rejknc9j" xml:space="preserve">{{Actor|
+| type = Ammo
+| name = Clip box
+| class = ClipBox
+| game = Doom
+| doomednum = 2048
+| spawnid = 139
+| spawnname = T_AMMOBOX 
+}}[[Classes]]: [[Classes:Inventory|Inventory]]&amp;rarr;[[Classes:Ammo|Ammo]]&amp;rarr;[[Classes:Clip|Clip]]&amp;rarr;&lt;u&gt;ClipBox&lt;/u&gt;
+
+A box of bullets gives five times the amount of bullets a {{Class|clip}} does.
+
+=== [[ZScript]] definition ===
+{{ZScriptDefinitionNote|actors/doom/doomammo.zs}}
+&lt;syntaxhighlight lang="cs"&gt;
+class ClipBox : Clip
+{
+	Default
+	{
+		Inventory.PickupMessage "$GOTCLIPBOX";
+		Inventory.Amount 50;
+	}
+	States
+	{
+	Spawn:
+		AMMO A -1;
+		Stop;
+	}
+}
+&lt;/syntaxhighlight&gt;
+=== [[DECORATE]] definition ===
+{{DecorateDefinitionNote}}
+ ACTOR &lt;u&gt;ClipBox&lt;/u&gt; : {{Class|Clip}}
+ {
+   {{Property|Inventory.PickupMessage}} "$GOTCLIPBOX" // "Picked up a box of bullets."
+   {{Property|Inventory.Amount}} 50
+   States
+   {
+   Spawn:
+     AMMO A -1
+     Stop
+   }
+ }</text>
+    <sha1>anx6rnrvx31gmhhtuqckdd2rejknc9j</sha1>
+  </revision>
+</page>

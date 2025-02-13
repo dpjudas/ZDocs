@@ -1,0 +1,50 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>Classes:HolyMissile</title>
+  <ns>0</ns>
+  <id>4563</id>
+  <revision>
+    <id>34219</id>
+    <parentid>18191</parentid>
+    <timestamp>2012-09-05T12:19:55Z</timestamp>
+    <contributor>
+      <username>Blue Shadow</username>
+      <id>2021</id>
+    </contributor>
+    <minor />
+    <comment>/* DECORATE definition */</comment>
+    <origin>34219</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="624" sha1="3eqtzax85n4a759ifysf0f14l4fxmfk" xml:space="preserve">{{Actor|
+| type = Explosive
+| name = Wraithverge spirit ball
+| class = HolyMissile
+| game = Hexen
+}}[[Classes]]: &lt;u&gt;HolyMissile&lt;/u&gt;&lt;br&gt;
+{{desc}}
+==== [[DECORATE]] definition ====
+ ACTOR &lt;u&gt;HolyMissile&lt;/u&gt;
+ {
+   {{Property|Speed}} 30
+   {{Property|Radius}} 15
+   {{Property|Height}} 8
+   {{Property|Damage}} 4
+   {{Property|Projectile}}
+   -{{Flag|ACTIVATEIMPACT}}
+   -{{Flag|ACTIVATEPCROSS}}
+   +{{Flag|EXTREMEDEATH}}
+ 
+   action native [[A_CHolyAttack2]]();
+ 
+   States
+   {
+   Spawn:
+     SPIR PPPP 3 Bright [[A_SpawnItemEx]]("{{Class|HolyMissilePuff}}")
+   Death:
+     SPIR P 1 Bright [[A_CHolyAttack2]]
+     Stop
+   }
+ }</text>
+    <sha1>3eqtzax85n4a759ifysf0f14l4fxmfk</sha1>
+  </revision>
+</page>

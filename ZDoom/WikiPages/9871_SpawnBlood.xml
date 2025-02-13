@@ -1,0 +1,47 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>SpawnBlood</title>
+  <ns>0</ns>
+  <id>9871</id>
+  <revision>
+    <id>52233</id>
+    <timestamp>2024-04-02T17:15:33Z</timestamp>
+    <contributor>
+      <username>Jekyll Grim Payne</username>
+      <id>2175</id>
+    </contributor>
+    <comment>Created page with "'''{{class|Actor}}'''  {{c|native void '''SpawnBlood''' (Vector3 ''pos1'', double ''dir'', int ''damage'')}}  == Usage == Spawns the calling {{class|Actor|actor's}} {{class|Bl..."</comment>
+    <origin>52233</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="1364" sha1="7hhqru5ma4zolfl9sur4via5xkevhfs" xml:space="preserve">'''{{class|Actor}}'''
+
+{{c|native void '''SpawnBlood''' (Vector3 ''pos1'', double ''dir'', int ''damage'')}}
+
+== Usage ==
+Spawns the calling {{class|Actor|actor's}} {{class|Blood|Blood actor}}, as if it was damaged. This function respects the {{property|BloodType}} property.
+
+Blood behavior is still largely hardcoded in GZDoom, so the internals of this function are not exposed to [[ZScript]] at all. The function performs a series of checks, such as checking the {{property|BloodType}}, the game type, applying {{property|BloodColor}} and such.
+
+=== Parameters ===
+* {{c|Vector3 '''pos1'''}}
+:The position of where the attack came from. This is normally assumed to be the position of the [[Projectile|projectile]] or [[Puff|puff]] actor used by the attack.
+* {{c|double '''dir'''}}
+:The absolute angle direction of where the attack came from. {{verification}}
+* {{c|int '''damage'''}}
+:The presumed damage of the attack. &lt;u&gt;This does not deal any actual damage&lt;/u&gt;; this value is only used to determine which state the animation of the spawned blood actor should begin at:
+::13 damage or above — begins at the 1st state from the top of Spawn
+::9-12 damage — begins at the 2nd state
+::8 or less — begins at the 3rd state
+
+== Examples ==
+{{noexamples}}
+
+== See also ==
+* [[Classes:Blood]]
+* [[TraceBleed]]
+* [[ZScript actor functions]]
+
+[[Category:ZScript]]</text>
+    <sha1>7hhqru5ma4zolfl9sur4via5xkevhfs</sha1>
+  </revision>
+</page>

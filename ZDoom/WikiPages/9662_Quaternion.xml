@@ -1,0 +1,135 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>Quaternion</title>
+  <ns>0</ns>
+  <id>9662</id>
+  <revision>
+    <id>54098</id>
+    <parentid>54097</parentid>
+    <timestamp>2024-12-27T11:20:57Z</timestamp>
+    <contributor>
+      <username>Jekyll Grim Payne</username>
+      <id>2175</id>
+    </contributor>
+    <origin>54098</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="8295" sha1="sua2xyu5yrns0rs1rh4gsanvhitqiqg" xml:space="preserve">{{ZScriptNote}}
+
+'''Quaternions''' are a special type of mathematical structure that can be used to store orientation data for an object. In [[ZScript]] quaternions are handled by the '''Quat''' data type, which is similar to '''Vector4''' in that it has &lt;code&gt;x&lt;/code&gt;, &lt;code&gt;y&lt;/code&gt;, &lt;code&gt;z&lt;/code&gt; and &lt;code&gt;w&lt;/code&gt; components. Quats can be instantiated directly, such as:
+&lt;syntaxhighlight lang="csharp"&gt;
+Quat myquat = Quat(&lt;x&gt;, &lt;y&gt;, &lt;z&gt;, &lt;w&gt;);
+&lt;/syntaxhighlight&gt;
+where &lt;x&gt;, &lt;y&gt;, &lt;z&gt;, &lt;w&gt; are [[ZScript_data_types#Arthimetic|doubles]]. The other way of defining a quat is using {{c|AxisAngle()}} or {{c|FromAngles()}} static methods documented [[#Static|below]].
+
+Quaternions are critical especially in animation when rotating bones of a model as quaternions can properly interpolate angles in a way that rotation matrices cannot. This reduces the number of bugs that can occur such as bones interpolating in the wrong direction to get to an angle. They have other cases though such as solving the gimbal locking problem (see the examples for doing this). Only unit quaternions (quaternions with a length of 1) can correctly be used to rotate objects. They must be scaled by their length otherwise, similar to dealing with non-unit Vectors.
+
+Formulaically a quaternion can be defined as &lt;code&gt;w + xi + yj + zk&lt;/code&gt;, where i, j, and k are imaginary numbers. It's important to note that multiplication of quaternions is noncommutative: multiplying in different orders will give different results, similar to rotation matrices. As such care should be taken on what order to use.
+
+Note: in other environments/software the order of quaternion's components may be different. ZScript uses XYZW, but other environments may use WXYZ, for example.
+
+== Methods ==
+=== Static ===
+These static methods need to be prefixed with &lt;code&gt;Quat.&lt;/code&gt;:
+*Quat '''SLerp'''(Quat ''from'', Quat ''to'', double ''t'')
+:Performs spherical linear interpolation from the given quaternion to the destination. This type of interpolation should be used with models to represent more natural motion.
+:*''from'' - The starting orientation.
+:*''to'' - The destination orientation.
+:*''t'' - The fraction of the rotation distance that should be covered. Often a value between 0 and 1.
+*Quat '''NLerp'''(Quat ''from'', Quat ''to'', double ''t'')
+:Performs normalized linear interpolation from the given quaternion to the destination.
+:*''from'' - The starting orientation.
+:*''to'' - The destination orientation.
+:*''t'' - The fraction of the rotation distance that should be covered. Often a value between 0 and 1.
+*Quat '''FromAngles'''(double ''yaw'', double ''pitch'', double ''roll'')
+:Creates a quaternion from the given angles.
+:*''yaw'' - The angle to rotate about on the world's z axis (&lt;code&gt;(0,0,1)&lt;/code&gt;).
+:*''pitch'' - The angle to rotate about on the world's y axis (&lt;code&gt;(0,1,0)&lt;/code&gt;).
+:*''roll'' - The angle to rotate about on the world's x axis (&lt;code&gt;(1,0,0)&lt;/code&gt;).
+*Quat '''AxisAngle'''(Vector3 ''xyz'', double ''angle'')
+:Generates a quaternion from an angle rotated about the given axis. This can be used for generating simple rotations.
+:*''xyz'' - The axis to rotate about. Passing a world axis will give a general rotation.
+:*''angle'' - The angle to rotate by on the axis.
+
+=== Non-static ===
+*Quat '''Conjugate'''()
+:Returns the calling quaternion but with its imaginary parts set to negative. For unit quaternions this is the rotation that undoes the caller's rotation.
+:'''Note:''' Currently throws a JIT compiler error. If getting this on a unit quaternion is desired, &lt;code&gt;q.xyz = -q.xyz&lt;/code&gt; will give the same result.
+*Quat '''Inverse'''()
+:Returns the quaternion that gives the identity when multiplied by the caller, regardless of order. For unit quaternions this is equivalent to the conjugate.
+:'''Note:''' Currently throws a JIT compiler error. For unit quaternions the same solution for conjugates can be used.
+*Vector3 '''XYZ'''()
+:Returns a Vector3 containing the x, y and z fields.
+*Vector2 '''XY'''()
+:Returns a Vector2 containing the x and y fields.
+*double '''Length'''()
+:Returns the length of the quaternion.
+*double '''LengthSquared'''()
+:Returns the length of the quaternion squared.
+*Quat '''Unit'''()
+:Returns a unit version of the quaternion (length of 1).
+
+== Examples ==
+=== Solving Gimbal Locking ===
+Gimbal locking is a phenomenon that occurs when two axes become aligned with each other, causing a degree of freedom to be lost. One example of this is Doom's shotgun. When fired looking straight forward it correctly fans out from the player in a line. However, when looking straight up, it suddenly turns into a single point. This is because the direction the player is looking (their x axis) becomes aligned with their z axis (pointing straight up), causing roll and yaw to become indistinguishable from each other. Generating a rotation matrix from the facing direction can be used to solve this, but requires custom code to generate the local axes and is cumbersome as those functions then have to be ported to any project that wishes to solve it. Quaternions give a way to solve this without the need for extra code.
+
+First, we generate the quaternion that stores the direction the player is facing:
+&lt;syntaxhighlight lang="csharp"&gt;
+Quat base = Quat.FromAngles(angle, pitch, yaw);
+&lt;/syntaxhighlight&gt;
+This will be the base of our rotation. Next, lets generate our randomized yaw offset (this is what causes the pellets to fire out in a cone):
+&lt;syntaxhighlight lang="csharp"&gt;
+Quat offset = Quat.AxisAngle((0,0,1), Random2[GunShot]()*(5.625/256)); // Yaw rotations rotate about the world's z axis
+&lt;/syntaxhighlight&gt;
+
+Applying the rotation is simple:
+&lt;syntaxhighlight lang="csharp"&gt;
+Quat rotation = base * offset; // Pay attention to the order of multiplication here
+&lt;/syntaxhighlight&gt;
+Now comes the more complex part: extracting information from the quaternion. There's no function to simply return the yaw and pitch for our attack function, but we can generate a Vector3 that will let us get that data. Multiplying a quaternion by a Vector3 will return a Vector3 appropriately rotated by the quaternion's orientation. Since our rotation contains both the player's facing direction and the offset, we want to rotate it by the world's x axis (the direction pointing forward in a global sense) to get something pointing in our new direction:
+&lt;syntaxhighlight lang="csharp"&gt;
+Vector3 direction = rotation * (1,0,0); // The Vector3 you wish to apply it to must always come after all other multiplications
+&lt;/syntaxhighlight&gt;
+Note that multiplying by (0,1,0) will get a direction that points to the left of the player while multiplying by (0,0,1) will get a direction that points above them. Now that we have all the needed math, let's create a custom attack function to fix the shotgun.
+&lt;syntaxhighlight lang="csharp"&gt;
+action void A_FireNewShotgun()
+{
+    if (!invoker.DepleteAmmo(invoker.bAltFire, true))
+        return;
+
+    A_StartSound("weapons/shotgf", CHAN_WEAPON);
+    A_GunFlash();
+    player.mo.PlayAttacking2();
+
+    double pch = BulletSlope(); // Get the autoaimed pitch
+    Quat base = Quat.FromAngles(angle, pch, roll);
+
+    Vector3 up = (0,0,1);
+    Vector3 forward = (1,0,0);
+    for (int i = 0; i &lt; 7; i++)
+    {
+        int dmg = 5 * Random[GunShot](1, 3);
+
+        Quat ofs = Quat.AxisAngle(up, Random2[GunShot]()*(5.625/256));
+
+        Vector3 dir = base * ofs * forward;
+        double aimYaw = atan2(dir.y, dir.x); // Get the angle
+        double aimPitch = -asin(dir.z); // Get the pitch (must be negated). We can use asin() here since dir is a unit vector, otherwise we would need to use atan2()
+
+        LineAttack(aimYaw, PLAYERMISSILERANGE, aimPitch, dmg, 'Hitscan', "BulletPuff");
+    }
+}
+&lt;/syntaxhighlight&gt;
+=== Getting a Relative Offset ===
+Relative offsetting is fairly simple as all that needs to be done is taking the offset values and rotating it in the direction the actor is facing.
+&lt;syntaxhighlight lang="csharp"&gt;
+Vector3 offset = (8, -16, 28); // Shift 8 units forward, 16 units to the right, and 28 units up
+Quat base = Quat.FromAngles(angle, pitch, roll);
+ 
+Vector3 rotated = base * offset;
+Vector3 newPos = level.Vec3Offset(pos, rotated); // Portal-sensitive offsetting is recommended
+&lt;/syntaxhighlight&gt;
+
+[[Category:ZScript]]</text>
+    <sha1>sua2xyu5yrns0rs1rh4gsanvhitqiqg</sha1>
+  </revision>
+</page>

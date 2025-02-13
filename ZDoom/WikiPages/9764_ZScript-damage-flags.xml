@@ -1,0 +1,36 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>ZScript damage flags</title>
+  <ns>0</ns>
+  <id>9764</id>
+  <revision>
+    <id>53594</id>
+    <parentid>53553</parentid>
+    <timestamp>2024-11-08T09:35:36Z</timestamp>
+    <contributor>
+      <username>Jekyll Grim Payne</username>
+      <id>2175</id>
+    </contributor>
+    <origin>53594</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="2177" sha1="9kfrp9lukycu5ht8zqmlzoxpyvna8p8" xml:space="preserve">&lt;noinclude&gt;
+{{note|This page is meant to be included into other pages that describe damage functions, such as [[DamageMobj]], using the '''&lt;nowiki&gt;{{: ZScript damage flags}}&lt;/nowiki&gt;''' syntax. (This note will not be included.)}}
+&lt;/noinclude&gt;:*{{c|DMG_NO_ARMOR}} - The attack doesn't call '''[[AbsorbDamage]]''' on any of the victim's inventory items.
+:*{{c|DMG_NO_PAIN}} - The attack does not cause the victim to enter their [[Actor_states#Pain|Pain state sequence]].
+:*{{c|DMG_INFLICTOR_IS_PUFF}} - Used by '''[[ApplyKickback]]''' to determine whether the origin should be the source (if the flag is set) or the inflictor. Automatically set by [[hitscan]] attacks.
+:*{{c|DMG_THRUSTLESS}} - The attack doesn't call '''[[ApplyKickback]]''' on the victim.
+:*{{c|DMG_FORCED}} - The attack ignores all damage negation flags/properties the victim has, such as {{flag|NODAMAGE}}, and doesn't call special damage functions e.g. '''[[TakeSpecialDamage]]'''. Players with the {{flag|NODAMAGE}} flag, {{c|god2}}, or {{c|buddha2}} cheats are immune due to potential abuse.
+:*{{c|DMG_NO_FACTOR}} - The attack doesn't apply the victim's {{property|DamageFactor|damage factors}}.
+:*{{c|DMG_PLAYERATTACK}} - Set if the attack came from a [[hitscan]] weapon fired by a {{class|PlayerPawn|player}}.
+:*{{c|DMG_FOILINVUL}} - The attack ignores the {{flag|INVULNERABLE}} flag if the victim has it set.
+:*{{c|DMG_FOILBUDDHA}} - The attack ignores the {{flag|BUDDHA}} flag if the victim has it set.
+:*{{c|DMG_NO_PROTECT}} - The attack doesn't call '''[[ModifyDamage]]''' or '''[[AbsorbDamage]]''' on any of the victim's inventory items.
+:*{{c|DMG_NO_ENHANCE}} - The attack doesn't call '''[[ModifyDamage]]''' on any of the source's inventory items.
+:*{{c|DMG_USEANGLE}} - The attack uses use the &lt;code&gt;angle&lt;/code&gt; parameter when applying kickback instead of having [[ApplyKickback]] calculate the angle from the origin of the attack.
+:*{{c|DMG_EXPLOSION}} - The attack is marked as splash damage from an explosion. This is set automatically if the damage came from an [[A_Explode|explosive]] projectile.&lt;noinclude&gt;
+
+[[Category:Include templates]]&lt;/noinclude&gt;
+[[Category: Damage-related functions]]</text>
+    <sha1>9kfrp9lukycu5ht8zqmlzoxpyvna8p8</sha1>
+  </revision>
+</page>

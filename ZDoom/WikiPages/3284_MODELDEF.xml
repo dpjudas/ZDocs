@@ -1,0 +1,307 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>MODELDEF</title>
+  <ns>0</ns>
+  <id>3284</id>
+  <revision>
+    <id>53974</id>
+    <parentid>53292</parentid>
+    <timestamp>2024-11-30T10:10:57Z</timestamp>
+    <contributor>
+      <username>Jekyll Grim Payne</username>
+      <id>2175</id>
+    </contributor>
+    <comment>/* Flags */</comment>
+    <origin>53974</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="17288" sha1="iz9uvk45g4g30271q6kprmazk5f09xl" xml:space="preserve">{{OpenGL}}
+
+'''MODELDEF''' is the lump which defines [[model format|models]] used in hardware-accelerated ports.
+
+MODELDEF lumps are cumulative; multiple can exist in the same project and the engine parses all of them. Unlike in [[WAD]]s, in directory-based archives, multiple files with the same name are unacceptable. To workaround this, each MODELDEF file should be given a unique extension, e.g, {{c|modeldef.boxes}} or {{c|modeldef.cars}}. A better method of organization is to use the {{c|#include}} directive in the MODELDEF file while providing the full path to the target file. Example:
+ #include "modeldefs/boxes.txt"
+ #include "modeldefs/cars.txt"
+The above assumes a directory that is called {{c|modeldefs/}} which exists in the root directory of the archive. In it, are the files {{c|boxes.txt}} and {{c|cars.txt}} which contain model definitions.
+
+== Model Definition Overview == 
+3D models can only be attached to {{class|Actor|actors}}. The most basic rules to make a model work are:
+1. Define a new actor (or pick an existing one that you want to attach a model to).
+2. Define a model in MODELDEF. &lt;u&gt;The name of the model must be the same as the name of the actor class&lt;/u&gt;. For example, if you have an actor called &lt;code&gt;BigBrownTree&lt;/code&gt;, your model's definition must begin with &lt;code&gt;model BigBrownTree&lt;/code&gt;.
+3. Afterwards, you would most of the time use {{c|Frame}} or {{c|FrameIndex}} instructions to attach model keyframes to sprite names used by the actor. In [[ZScript]] model animations can be set and started dynamically with [[SetAnimation]].
+
+'''Note''': In [[ZScript]] it's possible to use models as attachments for other models with {{c|[[A_ChangeModel]]}}. For models like these creating a MODELDEF definition is not necessary at all, since they're not directly attached to any actor. (Note, to make sure those models have textures, their textures must be either embedded into the names of the model's materials in the model editor, or they will have to also be set through {{c|A_ChangeModel}}).
+
+=== Attaching model frames to sprites ===
+Note that the actor will not use or show its sprites when it has a 3D model attached to it. In fact, &lt;u&gt;those sprites don't have to be real sprites&lt;/u&gt;. But GZDoom will still run a spawnsprite check upon spawning an actor, and if its first sprite is not a real existing sprite image, the actor will be replaced with an error marker (this only happens for actors pre-placed on the map, not actors spawned dynamically at runtime through scripts or console).
+
+As such, it's recommended to create dummy sprites using [[TEXTURES]] to use in actors that are meant to be wholly animated through models. Those dummy sprites can be empty and don't need to use a patch:
+&lt;syntaxhighlight lang="csharp"&gt;
+sprite M000, 1, 1
+{}&lt;/syntaxhighlight&gt;
+
+Note, since models are attached '''per actor''', you can safely &lt;u&gt;reuse the same sprite names in multiple actors&lt;/u&gt; if different models are attached to them.
+
+=== Which model format to choose ===
+GZDoom supports several model formats:
+* '''IQM'''
+:Inter-Quake Model format is all around the best format for animated models. It supports skeletal animation, and can attach multiple models to the same armature with the use of [[A_ChangeModel]] and the {{c|MODELSAREATTACHMENTS}} MODELDEF flag, which can be used, for example, to dynamically swap weapons/equipment on a monster or a player model and other things. It works for static models as well, but since IQM requires an armature, static models will require at least one dummy bone to be present in the model. IQM should be used instead of the older MD3 format, because, due to its support for skeletal animation, the size of the model file is almost independent from the number of frames in the model, which means you can easily have thousands of frames in the model without much concern for performance.
+:Blender has an [https://github.com/lsalzman/iqm IQM export plugin]. While it's intended for Blender 2.93 or lower, it has been tested and proven to work without issues on Blender 3.x as well.
+* '''OBJ'''
+:GZDoom natively supports OBJ models, which can be used for static meshes without animation. OBJ is universally supported by all modelling software and can be exported easily. This format is not very efficient in terms of size, but due to not having animation this is rarely a concern.
+* '''MD3'''
+:Model format for the Quake 3 engine. This format supports vertex-based animation only. Most of the time it's recommended to use IQM instead, since it's vastly more efficient in terms of size (the file size for MD3 models baloons very quickly depending on the number of keyframes). However, MD3 can still be used fairly efficiently for static models, and for the edge cases where vertex animation rather than skeletal animation is necessary.
+:[https://github.com/nashmuhandes/io_export_gzdoom_md3/ An MD3 export plugin exists for Blender], maintained by Nash Muhandes.
+:If there's a need to ''import'' MD3 models into Blender, the [https://mino-git.github.io/rtcw-wet-blender-model-tools/user_guide.html RtCW:ET Blender Model Tools] can be used.
+* '''MD2'''
+:Model format used by Quake 2. Due to its low popularity and efficiency it's not recommended to use it nowadays.
+
+== Defining frames and animations ==
+=== IQM ===
+The IQM format currently supports 3 ways of assigning animations:
+
+1. By keyframe number (like MD3). This implies that the original model has a single animation sequence (action) that encompasses all keyframes. The syntax is:
+ Model &lt;ActorName&gt;
+ {
+    Path &lt;"path"&gt;
+    Model &lt;model index&gt; &lt;"model file"&gt;
+    Skin &lt;model index&gt; &lt;"skin file"&gt;
+    Scale &lt;X scale&gt; &lt;Y scale&gt; &lt;Z scale&gt;
+ 
+    FrameIndex &lt;XXXX&gt; &lt;X&gt; &lt;model index&gt; &lt;keyframe index&gt;
+ }
+For example:
+ FrameIndex {{color|blue|SPRT A}} 0 0 {{comment|Assigns the first keyframe of the first model's animation to SPRTA}}
+
+2. IQM also supports named animation sequences. To implement those, use whatever tools your 3D modelling software has to create multiple actions with separate names. For example, in Blender this can be done with its [https://docs.blender.org/manual/en/latest/editors/nla/index.html Nonlinear Animation feature]. If your IQM model has named animation sequences, you can reference frames by the name of the animation and a frame index in it, separated by a colon. Note that this requires using '''Frame''' instead of '''FrameIndex''' (which is used for frame numbers without animation names):
+
+ Model &lt;ActorName&gt;
+ {
+    ... {{comment|Same as in the above example}}
+ 
+    Frame &lt;XXXX&gt; &lt;X&gt; &lt;model index&gt; &lt;"animation name:frame number"&gt;
+ }
+For example:
+ Frame {{color|blue|SPRT A}} 0 "walkcycle:0" {{comment|Assigns the first keyframe of the 'walkcycle' sequence to SPRTA}}
+
+3. Finally, if your IQM model has multiple named animation sequences, and the actor in question has the {{flag|DECOUPLEDANIMATIONS}} flag, it is possible to use the '''[[SetAnimation]]''' function in [[ZScript]] to start animation sequences directly. In this case, they are not defined in MODELDEF at all but are started in ZScript. Your MODELDEF definition in this case MUST include the '''BaseFrame''' instruction and no frames at all:
+ Model &lt;ActorName&gt;
+ {
+    Path &lt;"path"&gt;
+    Model &lt;model index&gt; &lt;"model file"&gt;
+    Skin &lt;model index&gt; &lt;"skin file"&gt;
+    Scale &lt;X scale&gt; &lt;Y scale&gt; &lt;Z scale&gt;
+    BaseFrame {{comment|Decoupled animations REQUIRE this}}
+ }
+And in your actor you can use [[SetAnimation]] to start the animation directly:
+&lt;syntaxhighlight lang="csharp"&gt;
+class MyModelActor : Actor
+{
+  Default
+  {
+    +DECOUPLEDANIMATIONS
+  }
+  States
+  {
+  Spawn:
+    // This actor will start the model's 'idlebreathing' animation sequence
+    // as soon as it spawns. Note, the actor's states don't need to
+    // animate or progress for this, the function is called once and the
+    // model will animate:
+    M000 A -1 NoDelay SetAnimation('idlebreathing', flags:SAF_LOOP);
+    stop;
+  }
+}&lt;/syntaxhighlight&gt;
+
+More detailed information can be found on the '''[[SetAnimation]]''' page.
+
+=== MD3 ===
+MD3 can only use simple numeric indexes for its frame:
+ Model &lt;ActorName&gt;
+ {
+    Path &lt;"path"&gt;
+    Model &lt;model index&gt; &lt;"model file"&gt;
+    Skin &lt;model index&gt; &lt;"skin file"&gt;
+    Scale &lt;X scale&gt; &lt;Y scale&gt; &lt;Z scale&gt;
+ 
+    FrameIndex &lt;XXXX&gt; &lt;X&gt; &lt;model index&gt; &lt;frame number&gt;
+ }
+
+=== OBJ ===
+OBJ also only supports numeric indexes, and it also can use either {{c|Frame}} or {{c|FrameIndex}} equally:
+ Model &lt;ActorName&gt;
+ {
+    Path &lt;"path"&gt;
+    Model &lt;model index&gt; &lt;"model file"&gt;
+    Skin &lt;model index&gt; &lt;"skin file"&gt;
+    Scale &lt;X scale&gt; &lt;Y scale&gt; &lt;Z scale&gt;
+ 
+    FrameIndex &lt;XXXX&gt; &lt;X&gt; &lt;model index&gt; &lt;frame number&gt;
+ }
+
+=== MD2 ===
+MD2 can use both numeric keyframes like MD3, and named frames which can be referenced in MODELDEF:
+ Model &lt;ActorName&gt;
+ {
+    Path &lt;"path"&gt;
+    Model &lt;model index&gt; &lt;"model file"&gt;
+    Skin &lt;model index&gt; &lt;"skin file"&gt;
+    Scale &lt;X scale&gt; &lt;Y scale&gt; &lt;Z scale&gt;
+ 
+    Frame &lt;XXXX&gt; &lt;X&gt; &lt;model index&gt; &lt;"frame name"&gt;
+ }
+
+=== More detailed information ===
+
+In the above examples, '''&lt;ActorName&gt;''' is the name of the actor (as used in [[ZScript]], etc), '''&lt;XXXX&gt;''' is the sprite lump (example POSS), and '''&lt;X&gt;''' is the sprite frame (example A). The rest can be found in the Properties section.
+
+The '''Frame''' property does ''not'' need to use an actual sprite name. It can be an arbitrary set of letters or numbers (MODL or MDLA are some of the commonly used examples) and it doesn't have to correlate to any real sprite (but it can, it won't affect anything), because the sprite itself will never be rendered, it's just a way of attaching models to actors. 
+There are a few limitations to that rule, however:
+* If a non-existent sprite name is used as the very first frame in an actor's Spawn sequence, it won't be spawned at map start and will instead be replaced with an error marker. This will happen even if the actor has a model attached to it, despite the fact that that sprite isn't used in the game and won't be drawn. This can be circumvented by using an existing sprite name, or by adding '''TNT1 A 0''' as the very first frame of Spawn.
+* Similarly, using a non-existent sprite name as the very first frame of the Ready sequence in weapons will also cause issues, even if you attach a model do it.
+* Using non-existent sprite names everywhere will flood the console with errors if running GZDoom with -developer 2 parameter, which defines much stricter rules for potential issues. It doesn't cause any issues in practice, however.
+* Models can't be attached to '''TNT1 A 0''', since [[TNT1]] is an internal shorthand for disabling the rendering of the object completely.
+
+== Flags and Properties ==
+=== Flags ===
+There are a number of flags that you can use in MODELDEF. Many of them can also be modified dynamically from [[ZScript]] with functions like [[SetModelFlag]], [[ClearModelFlag]] and [[ResetModelFlags]].
+
+{{: Model flags}}
+
+=== Properties ===
+*'''AngleOffset''' ''angle''
+:Changes model yaw angle by the given floating point value in degrees. Keep in mind this and the other angles are applied after scaling and offsets.
+
+*'''Model''' ''model-index'' ''model-file''
+:Defines model to use. You can define multiple models to use with different indexes.
+
+*'''Path''' ''path''
+:''Path'' to model file in the ZIP/PK3. This parameter is entirely optional, its reason for existence is to avoid repeated typing of the path if it is used for the model itself and several skins. This will just get prepended to the specified names, so if it is left out, the ZIP/PK3's root will be used and all paths to the files have to be fully given with their respective properties.
+
+*'''PitchOffset''' ''angle''
+:Changes model pitch angle by the given floating point value in degrees.
+
+*'''Offset''' ''xoffset'' ''yoffset'' ''zoffset''
+:Sets actor x/y/z offsets.
+
+*'''RollOffset''' ''angle''
+:Changes model roll angle by the given floating point value in degrees.
+
+*'''Rotation-Center''' ''float'' ''float'' ''float''
+:Specify the x, y and z coordinate of the center of the rotation. Without either the ROTATING or USEROTATIONCENTER keywords, this does nothing
+
+*'''Rotation-Speed''' ''float''
+:Specify the speed of the rotation. Without the ROTATING keyword, this and the other rotation properties do nothing
+
+*'''Rotation-Vector''' ''float'' ''float'' ''float''
+:Specify the x, y and z component of the vector of the rotation
+
+*'''Skin''' ''model-index'' ''skin-file''
+:Defines skin to use for the model of the same index. The skin-file can be of any [[Image_format|format that ZDoom supports]].
+
+*'''SurfaceSkin''' ''model-index'' ''surface-index'' ''skin-file''
+:Defines skin to use for the specified MD3 surface index on ''model-index'' model. This can only be used on MD3 files, otherwise it gets ignored.
+
+*'''Scale''' ''float'' ''float'' ''float''
+:Defines the x, y, and z scaling of the model.
+
+*'''ZOffset''' ''float''
+:Adjusts the model's height, useful if you don't have access to a model editor.
+
+*'''Animation''' ''animation-index'' ''model-file ''
+:Defines the animation data to use for the model of the same index. This property only has an effect on skeletal formats such as [[IQM]].
+
+*'''BaseFrame'''
+:Allows the use of decoupled animations. In this case frame indexes don't need to be assigned to frames manually, and instead [[SetAnimation]] can be used in [[ZScript]] to start specific animation sequences.
+:This will only work if the model comes with multiple animation sequences. This also requires that the actor the model is attached to has the {{flag|DECOUPLEDANIMATIONS}} flag.
+
+== Examples ==
+
+Simple one-frame example:
+
+ Model SteelCrate
+ {
+    Path "Models/Crate"
+    Model 0 "Steelc.obj"
+    Skin 0 "Steelc.png"
+ 
+    FrameIndex M000 A 0 0
+ }
+
+An example of a walking animation for an MD2 model (uses frame names instead of frame numbers):
+
+ Model BloodHound              {{comment|Name of actor in [[ZScript]] or [[DECORATE]]}}
+ {
+    Path "models/bloodhound"   {{comment|Path to model in PK3}}
+    Model 0 "bloodhound.md2"   {{comment|Model index, model file}}
+    Skin 0 "bloodhound.pcx"    {{comment|Model index, texture (can be in any format supported by GZDoom)}}
+    Scale 1.0 1.0 1.0          {{comment|Scale values}}
+ 
+    Frame BHND A 0 "walk01"    {{comment|The sprite lump, sprite frame, model index, name of frame}}
+    Frame BHND B 0 "walk02"
+    Frame BHND C 0 "walk03"
+    Frame BHND D 0 "walk04"
+ }
+
+An example of a walking animation for an MD3 model (uses frame numbers instead of frame names):
+
+ Model InsaneCancer               {{comment|Name of actor in [[ZScript]] or [[DECORATE]]}}
+ {
+    Path "models/insanecancer"    {{comment|Path to model in PK3}}
+    Model 0 "insanecancer.md3"    {{comment|Model index, model file}}
+    Skin 0 "insanecancer.png"     {{comment|Model index, texture (can be in any format supported by GZDoom)}}
+    Scale 1.0 1.0 1.0             {{comment|Scale values}}
+ 
+    FrameIndex ICNC A 0 0         {{comment|The sprite lump, sprite frame, model index, frame number}}
+    FrameIndex ICNC B 0 1
+    FrameIndex ICNC C 0 2
+    FrameIndex ICNC D 0 3
+ }
+
+Multiple model example:
+ Model MultiModel
+ {
+    Path "Models/MyModel"
+    Model 0 MyModel_Piece_1.md3
+    Skin 0 MyModel_Piece_1.jpg
+    Model 1 MyModel_Piece_2.md3
+    Skin 1 MyModel_Piece_2.jpg
+    Model 2 MyModel_Piece_3.md3
+    Skin 2 MyModel_Piece_3.jpg
+    Model 3 MyModel_Piece_4.md3
+    Skin 3 MyModel_Piece_4.jpg
+ 
+    Scale 1.0 1.0 1.0
+ 
+    Frame FRAM A 0 0 {{comment|All four models are drawn when you call frame "FRAM A"}}
+    Frame FRAM A 1 0
+    Frame FRAM A 2 0
+    Frame FRAM A 3 0
+ }
+
+== Notes ==
+* Model skins can be referenced as 8-character lump names, or as full pathnames - or in the case that the supplied model file has defined its own internal materials (.obj format), as long as those materials match a lump or full path name texture, it will internally reference it without the need for a skin or surfaceskin definition.
+* If you don't know how the frames in your model file are named, simply use FrameIndex instead of Frame. By using FrameIndex, all you have to do is supply the frame ''numbers'', without having to worry about typing out the frame names correctly.
+* When using FrameIndex, setting frame number to -1 disables rendering of the associated model.
+* Naming a model or skin after the sprite it replaces will most likely result in issues.
+* Using the Animation property together with assigning frames by name may not work as expected unless both models have the same number of animation sequences, in the same order, with the same number of frames each.
+=== Multiple model animation issue ===
+There is a known issue with defining an animation with multiple models used in the same frame: The frame has to be defined in full consecutively, otherwise only the last defined model animation plays properly. For instance, this sequence results in issues:
+ //first model
+ FrameIndex FRAM A 0 0
+ FrameIndex FRAM B 0 1
+ FrameIndex FRAM C 0 2
+ //second model
+ FrameIndex FRAM A 1 0
+ FrameIndex FRAM B 1 1
+ FrameIndex FRAM C 1 2
+To work properly, it has to be reordered like so:
+ FrameIndex FRAM A 0 0
+ FrameIndex FRAM A 1 0
+ FrameIndex FRAM B 0 1
+ FrameIndex FRAM B 1 1
+ FrameIndex FRAM C 0 2
+ FrameIndex FRAM C 1 2
+The model index order inside a frame does not matter.</text>
+    <sha1>iz9uvk45g4g30271q6kprmazk5f09xl</sha1>
+  </revision>
+</page>

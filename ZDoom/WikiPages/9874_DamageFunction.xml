@@ -1,0 +1,82 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>DamageFunction</title>
+  <ns>0</ns>
+  <id>9874</id>
+  <revision>
+    <id>52303</id>
+    <timestamp>2024-04-07T13:36:45Z</timestamp>
+    <contributor>
+      <username>Jekyll Grim Payne</username>
+      <id>2175</id>
+    </contributor>
+    <comment>Created page with "[[DamageFunction]] is an [[Actor properties|Actor property]] that serves as an alternative to the {{property|Damage}} property and allows adding entirely custom behavior for c..."</comment>
+    <origin>52303</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="4066" sha1="s0wu43puz6njdtjs1an4d5b1kc86pjv" xml:space="preserve">[[DamageFunction]] is an [[Actor properties|Actor property]] that serves as an alternative to the {{property|Damage}} property and allows adding entirely custom behavior for calculating the damage that a [[Projectile|projectile]] would deal.
+
+{{warning|An actor can utilize ''either'' {{property|DamageFunction}} ''or'' {{property|Damage}} but NOT both. If a projectile has both specified, it will utilize {{property|Damage}} and follow standard randomization rules, ignoring {{property|DamageFunction}} entirely.}}.
+
+== Purpose ==
+By default projectile damage is multiplied by a random integer value between 1 and 8; with the {{flag|STRIFEDAMAGE}} flag it's multiplied by a value between 1 and 4. As a result, damage of projectiles can be vastly unpredictable: a projectile with &lt;code&gt;Damage 10;&lt;/code&gt; in its Default block can deal 10, 20, 30, 40, 50, 60, 70 or 80 damage (or 10, 20, 30, 40 with {{flag|STRIFEDAMAGE}}). Not only is this a very large range, it also provides only a few fixed values (so, for example, if Damage is defined as 10, the projectile will never deal 15 damage, since the randomization multiplier uses integer values only and will never be equal to 1.5).
+
+[[DamageFunction]] allows higher control. It can be used to turn damage into a fixed value, or add custom rules (such as, for example, distance-based damage falloff).
+
+{{note|[[DamageFunction]] is currently the ONLY actor property that natively supports custom expressions. No other actor properties can be defined this way.}}
+
+== How to define ==
+[[DamageFunction]] can be define in one of two ways:
+* '''{{c|DamageFunction ''expression''}}'''
+:This defines a simple mathematical expression. For example:
+:&lt;code&gt;DamageFunction 10&lt;/code&gt; — will force the damage to be exactly 10 without randomization.
+:&lt;code&gt;DamageFunction 10 * random(1,3)&lt;/code&gt; — will multiply damage by a value between 1-3 only (incidentally, this is the randomization range used by [[Hitscan|hitscan attacks]] by default).
+:&lt;code&gt;DamageFunction int(10 * frandom(1,4))&lt;/code&gt; — this will multiply 10 by a ''float-point'' value between 1.0 and 4.0 and only then convert the calculated value to an integer value (since damage can only be integer values). As a result, there will be more possible calcualted values instead of just 10, 20, 30 and 40; for example, the resulting value may end up being 14, 28, etc.
+* '''{{c|DamageFunction ''CustomFunctionName()''}}'''
+:This lets you feed an actual function to the damage. The function can do basically anything you like, the only rule is that &lt;u&gt;it must return an int&lt;/u&gt;. The integer value it returns will determine the projectile's damage.
+
+{{warning|Calling '''[[SetDamage]]''' on a projectile will completely disable whatever DamageFunction you might've set up, and will instead force it to deal damage using standard randomization rules.}}
+
+== Examples ==
+Here's an example of using a custom function to calculate damage with falloff:
+&lt;syntaxhighlight lang="csharp"&gt;
+class BulletProjectile : Actor
+{
+	Default
+	{
+		Projectile;
+		Speed 80;
+		// Attach GetBulletDamage function and pass 40
+		// as the base damage value:
+		DamageFunction GetBulletDamage(40);
+	}
+
+	int GetBulletDamage(int baseDmg)
+	{
+		// Get distance between projectile and its shooter,
+		// clamped between shooter's radius and 1024:
+		double dist = Clamp(target.Distance3D(self), target.radius, 1024); 
+		// Convert it to a factor that is equal to 1.0 at the minimum
+		// distance, and 0 at 1024 or higher distance:
+		double distFac = 1.0 - (dist / 1024.0);
+		// Multiply base damage by that value and round
+		// it to the closest value. Then also clamp it
+		// between 1 and initial damage, so the projectile
+		// will still deal at least 1 damage if the distance
+		// was too high:
+		int finalDmg = Clamp(round(baseDmg * distFac), 1, baseDmg);
+		return finalDmg;
+	}
+
+	// This example doesn't define any sprites,
+	// although the projectile will work without
+	// them, just invisible.
+}&lt;/syntaxhighlight&gt;
+
+== See also ==
+* [[Actor properties]]
+* [[Projectile]]
+
+[[Category:ZScript guides]]</text>
+    <sha1>s0wu43puz6njdtjs1an4d5b1kc86pjv</sha1>
+  </revision>
+</page>

@@ -1,0 +1,456 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>Default status bars</title>
+  <ns>0</ns>
+  <id>3742</id>
+  <revision>
+    <id>38905</id>
+    <parentid>31984</parentid>
+    <timestamp>2015-02-25T18:45:28Z</timestamp>
+    <contributor>
+      <username>Hellser</username>
+      <id>1914</id>
+    </contributor>
+    <minor />
+    <comment>Heretic ammo font has a one pixel-space kerning.</comment>
+    <origin>38905</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="11008" sha1="f2mff4ac5vca7bnykszldpeljzz70md" xml:space="preserve">This page contains [[SBARINFO]] code for any default status bar that can be accurately emulated.
+== Doom ==
+&lt;pre&gt;height 32;
+monospacefonts true, "0";
+
+statusbar fullscreen, fullscreenoffsets // ZDoom HUD
+{
+    //health
+    drawimage "MEDIA0", 20, -2, centerbottom;
+    drawnumber 3, HUDFONT_DOOM, untranslated, health, drawshadow, 82, -20;
+
+    //armor
+    drawimage armoricon, 20, -24, centerbottom;
+    drawnumber 3, HUDFONT_DOOM, untranslated, armor, drawshadow, whennotzero, 82, -39;
+
+    //ammo
+    drawimage ammoicon1, -14, -4, centerbottom;
+    drawnumber 3, HUDFONT_DOOM, untranslated, ammo1, drawshadow, -25, -20;
+
+    usesammo
+    {
+        //secondary ammo and inventory
+        usessecondaryammo
+        {
+            drawimage ammoicon2, -14, -22, centerbottom;
+            drawnumber 3, HUDFONT_DOOM, untranslated, ammo2, drawshadow, -25, -38;
+            inventorybarnotvisible
+            {
+                drawselectedinventory centerbottom, drawshadow, alwaysshowcounter, HUDFONT_DOOM, -14, -39, -26, -56, untranslated;
+            }
+        }
+        //no secondary ammo
+        usessecondaryammo not
+        {
+            inventorybarnotvisible
+            {
+                drawselectedinventory centerbottom, drawshadow, alwaysshowcounter, HUDFONT_DOOM, -14, -21, -26, -38, untranslated;
+            }
+        }
+    }
+    
+    // no ammo but inventory
+    usesammo not
+    {
+        inventorybarnotvisible
+        {
+            drawselectedinventory centerbottom, drawshadow, alwaysshowcounter, HUDFONT_DOOM, -14, -3, -26, -20, untranslated;
+        }
+    }
+
+    gamemode deathmatch
+    {
+        drawnumber 2, HUDFONT_DOOM, untranslated, frags, drawshadow, -3, 1;
+    }
+    gamemode singleplayer, cooperative, teamgame
+    {
+        drawkeybar 6, vertical, reverserows, auto, -10, 2, 0, 3, auto;
+    }
+}
+
+statusbar normal // Standard Doom Status bar
+{
+    drawimage "STBAR", 0, 168;
+    drawimage "STTPRCNT", 90, 171;
+    drawimage "STTPRCNT", 221, 171;
+    drawnumber 3, HUDFONT_DOOM, untranslated, ammo1, 44, 171;
+    drawnumber 3, HUDFONT_DOOM, untranslated, health, 90, 171;
+    drawnumber 3, HUDFONT_DOOM, untranslated, armor, 221, 171;
+
+    //keys
+    drawswitchableimage keyslot 2 &amp;&amp; 5, "nullimage", "STKEYS0", "STKEYS3", "STKEYS6", 239, 171;
+    drawswitchableimage keyslot 3 &amp;&amp; 6, "nullimage", "STKEYS1", "STKEYS4", "STKEYS7", 239, 181;
+    drawswitchableimage keyslot 1 &amp;&amp; 4, "nullimage", "STKEYS2", "STKEYS5", "STKEYS8", 239, 191;
+
+    drawnumber 3, INDEXFONT, gold, ammo Clip, 288, 173;
+    drawnumber 3, INDEXFONT, gold, ammo Shell, 288, 179;
+    drawnumber 3, INDEXFONT, gold, ammo RocketAmmo, 288, 185;
+    drawnumber 3, INDEXFONT, gold, ammo Cell, 288, 191;
+
+    drawnumber 3, INDEXFONT, gold, ammocapacity Clip, 314, 173;
+    drawnumber 3, INDEXFONT, gold, ammocapacity Shell, 314, 179;
+    drawnumber 3, INDEXFONT, gold, ammocapacity RocketAmmo, 314, 185;
+    drawnumber 3, INDEXFONT, gold, ammocapacity Cell, 314, 191;
+    gamemode deathmatch, teamgame
+    {
+        drawnumber 2, HUDFONT_DOOM, untranslated, frags, 138, 171;
+    }
+    gamemode cooperative, singleplayer
+    {
+        drawimage "STARMS", 104, 168;
+        drawswitchableimage weaponslot 2, "STGNUM2", "STYSNUM2", 111, 172; 
+        drawswitchableimage weaponslot 3, "STGNUM3", "STYSNUM3", 123, 172;
+        drawswitchableimage weaponslot 4, "STGNUM4", "STYSNUM4", 135, 172;
+        drawswitchableimage weaponslot 5, "STGNUM5", "STYSNUM5", 111, 182;
+        drawswitchableimage weaponslot 6, "STGNUM6", "STYSNUM6", 123, 182;
+        drawswitchableimage weaponslot 7, "STGNUM7", "STYSNUM7", 135, 182;
+    }
+    gamemode cooperative, deathmatch, teamgame
+    {
+        drawimage translatable "STFBANY", 144, 169;
+    }
+    drawselectedinventory alternateonempty, INDEXFONT, 143, 168
+    {
+        drawmugshot 5, 143, 168;
+    }
+}
+
+statusbar inventory // Standard bar overlay (ZDoom Addition)
+{
+    drawinventorybar Doom, 7, INDEXFONT, 50, 170;
+}
+
+statusbar inventoryfullscreen // ZDoom HUD overlay.
+{
+    drawinventorybar Doom, translucent, 7, INDEXFONT, 50, 170;
+}&lt;/pre&gt;
+
+== Heretic ==
+&lt;pre&gt;height 42;
+monospacefonts true, "0";
+interpolatehealth true;
+
+statusbar normal
+{
+	drawimage "BARBACK", 0, 158;
+	drawimage "LTFCTOP", 0, 148;
+	drawimage "RTFCTOP", 290, 148;
+
+	//god mode
+	drawswitchableimage invulnerable, "GOD1", "nullimage", 16, 167;
+	drawswitchableimage invulnerable, "GOD2", "nullimage", 287, 167;
+
+	//health
+	drawimage "CHAINBAC", 0, 190;
+	gamemode singleplayer
+	{
+		drawgem wiggle, "CHAIN", "LIFEGEM2", 15, 23, 16, 2, 191;
+	}
+	gamemode deathmatch, cooperative, teamgame
+	{
+		drawgem wiggle, translatable, "CHAIN", "LIFEGEM2", 15, 23, 16, 2, 191;
+	}
+	drawimage "LTFACE", 0, 190;
+	drawimage "RTFACE", 276, 190;
+	drawshader 16, 10, horizontal, 19, 190;
+	drawshader 16, 10, horizontal, reverse, 278, 190;
+
+	//statbar
+	gamemode singleplayer, cooperative
+	{
+		drawimage "LIFEBAR", 34, 160;
+		drawimage "ARMCLEAR", 57, 171;
+		drawnumber 3, HUDFONT_RAVEN, untranslated, health, 87, 170, 1;
+	}
+	gamemode deathmatch, teamgame
+	{
+		drawimage "STATBAR", 34, 160;
+		drawimage "ARMCLEAR", 57, 171;
+		drawnumber 3, HUDFONT_RAVEN, untranslated, frags, 87, 170, 1;
+	}
+	drawimage "ARMCLEAR", 224, 171;
+	drawnumber 3, HUDFONT_RAVEN, untranslated, armor, 254, 170, 1;
+
+	//ammo
+	usessecondaryammo not
+	{
+		drawnumber 3, HUDFONT_RAVEN, untranslated, ammo1, 134, 162, 1;
+		drawimage ammoicon1, 123, 180, center;
+	}
+	usessecondaryammo
+	{
+		drawnumber 3, INDEXFONT_RAVEN, untranslated, ammo1, 137, 165;
+		drawnumber 3, INDEXFONT_RAVEN, untranslated, ammo2, 137, 177;
+		drawimage ammoicon1, 115, 169, center;
+		drawimage ammoicon2, 115, 180, center;
+	}
+
+	//keys
+	drawswitchableimage keyslot 3, "nullimage", "YKEYICON", 153, 164;
+	drawswitchableimage keyslot 1, "nullimage", "GKEYICON", 153, 172;
+	drawswitchableimage keyslot 2, "nullimage", "BKEYICON", 153, 180;
+
+	//inventory box
+	drawselectedinventory artiflash, INDEXFONT_RAVEN, 179, 160, 208, 182, untranslated, 1;
+}
+
+statusbar inventory
+{
+	drawimage "INVBAR", 34, 160;
+	drawinventorybar Heretic, noartibox, 7, INDEXFONT_RAVEN, 50, 160, 76, 182, untranslated, 1;
+}&lt;/pre&gt;
+
+== Hexen ==
+&lt;pre&gt;height 38;
+monospacefonts true, "0";
+interpolatehealth true, 6;
+
+statusbar Normal
+{
+	drawimage "H2BAR", 0, 135;
+	drawimage "STATBAR", 38, 162;
+
+	drawselectedinventory artiflash, INDEXFONT_RAVEN, 143, 163, 173, 184, untranslated, 1;
+
+	gamemode deathmatch, teamgame
+	{
+		drawimage "KILLS", 38, 163;
+		drawnumber 3, HUDFONT_RAVEN, untranslated, frags, 58, 163, 1;
+	}
+	gamemode singleplayer, cooperative
+	{
+		drawimage "ARMCLEAR", 41, 178;
+		drawnumber 3, HUDFONT_RAVEN, untranslated, health, 65, 175, 1, red, 25;
+	}
+
+	//mana bars
+	weaponammo Mana1 &amp;&amp; Mana2
+	{
+		weaponammo Mana1
+		{
+			drawimage "MANABRT1", 77, 164;
+			drawbar "MANAVL1", "nullimage", ammo Mana1, vertical, 94, 164, 1;
+		}
+		weaponammo not Mana1
+		{
+			drawimage "MANADIM1", 77, 164;
+			drawbar "MANAVL1D", "nullimage", ammo Mana1, vertical, 94, 164, 1;
+		}
+		weaponammo Mana2
+		{
+			drawimage "MANABRT2", 110, 164;
+			drawbar "MANAVL2", "nullimage", ammo Mana2, vertical, 102, 164, 1;
+		}
+		weaponammo not Mana2
+		{
+			drawimage "MANADIM2", 110, 164;
+			drawbar "MANAVL2D", "nullimage", ammo Mana2, vertical, 102, 164, 1;
+		}
+		drawnumber 3, INDEXFONT_RAVEN, untranslated, ammo Mana1, 91, 181;
+		drawnumber 3, INDEXFONT_RAVEN, untranslated, ammo Mana2, 122, 181;
+	}
+
+	//Weapon doesn't use ammo draw an alternative
+	weaponammo not Mana1 &amp;&amp; Mana2
+	{
+		drawimage "HAMOBACK", 77, 164;
+		usessecondaryammo
+		{
+			drawimage ammoicon1, 89, 172, center;
+			drawimage ammoicon2, 113, 172, center;
+			drawnumber 3, INDEXFONT_RAVEN, untranslated, ammo1, 99, 182;
+			drawnumber 3, INDEXFONT_RAVEN, untranslated, ammo2, 123, 182;
+		}
+		usessecondaryammo not
+		{
+			drawimage ammoicon1, 100, 172, center;
+			drawnumber 3, INDEXFONT_RAVEN, untranslated, ammo1, 110, 182;
+		}
+	}
+
+	//armor
+	drawimage "ARMCLEAR", 255, 178;
+	drawnumber 2, HUDFONT_RAVEN, untranslated, armorclass, 277, 176, 1;
+
+	playerclass Fighter
+	{
+		drawimage "WPSLOT0", 190, 162;
+		hasweaponpiece FWeapQuietus, 1
+		{
+			drawimage "WPIECEF1", 190, 162;
+		}
+		hasweaponpiece FWeapQuietus, 2
+		{
+			drawimage "WPIECEF2", 225, 162;
+		}
+		hasweaponpiece FWeapQuietus, 3
+		{
+			drawimage "WPIECEF3", 234, 162;
+		}
+		hasweaponpiece FWeapQuietus, 1
+		{
+			hasweaponpiece FWeapQuietus, 2
+			{
+				hasweaponpiece FWeapQuietus, 3
+				{
+					drawimage "WPFULL0", 190, 162;
+				}
+			}
+		}
+
+		drawgem translatable, "CHAIN", "LIFEGMF2", -23, 49, 15, 30, 193;
+	}
+	playerclass Cleric
+	{
+		drawimage "WPSLOT1", 190, 162;
+		hasweaponpiece CWeapWraithverge, 1
+		{
+			drawimage "WPIECEC1", 190, 162;
+		}
+		hasweaponpiece CWeapWraithverge, 2
+		{
+			drawimage "WPIECEC2", 212, 162;
+		}
+		hasweaponpiece CWeapWraithverge, 3
+		{
+			drawimage "WPIECEC3", 225, 162;
+		}
+		hasweaponpiece CWeapWraithverge, 1
+		{
+			hasweaponpiece CWeapWraithverge, 2
+			{
+				hasweaponpiece CWeapWraithverge, 3
+				{
+					drawimage "WPFULL1", 190, 162;
+				}
+			}
+		}
+
+		drawgem translatable, "CHAIN2", "LIFEGMC2", -23, 49, 15, 30, 193;
+	}
+	playerclass Mage
+	{
+		drawimage "WPSLOT2", 190, 162;
+		hasweaponpiece MWeapBloodscourge, 1
+		{
+			drawimage "WPIECEM1", 190, 162;
+		}
+		hasweaponpiece MWeapBloodscourge, 2
+		{
+			drawimage "WPIECEM2", 205, 162;
+		}
+		hasweaponpiece MWeapBloodscourge, 3
+		{
+			drawimage "WPIECEM3", 224, 162;
+		}
+		hasweaponpiece MWeapBloodscourge, 1
+		{
+			hasweaponpiece MWeapBloodscourge, 2
+			{
+				hasweaponpiece MWeapBloodscourge, 3
+				{
+					drawimage "WPFULL2", 190, 162;
+				}
+			}
+		}
+
+		drawgem translatable, "CHAIN3", "LIFEGMM2", -23, 49, 15, 30, 193;
+	}
+	drawimage "LFEDGE", 0, 193;
+	drawimage "RTEDGE", 277, 193;
+}
+
+statusbar Automap
+{
+	drawimage "H2BAR", 0, 135;
+	drawimage "KEYBAR", 38, 162;
+	drawkeybar 5, horizontal, 20, 46, 164;
+	drawimage hexenarmor armor, "ARMSLOT1", 150, 164;
+	drawimage hexenarmor shield, "ARMSLOT2", 181, 164;
+	drawimage hexenarmor helm, "ARMSLOT3", 212, 164;
+	drawimage hexenarmor amulet, "ARMSLOT4", 243, 164;
+
+	// Also draw the life gem here
+	playerclass Fighter
+	{
+		drawgem translatable, "CHAIN", "LIFEGMF2", -23, 49, 15, 30, 193;
+	}
+	playerclass Cleric
+	{
+		drawgem translatable, "CHAIN2", "LIFEGMC2", -23, 49, 15, 30, 193;
+	}
+	playerclass Mage
+	{
+		drawgem translatable, "CHAIN3", "LIFEGMM2", -23, 49, 15, 30, 193;
+	}
+	drawimage "LFEDGE", 0, 193;
+	drawimage "RTEDGE", 277, 193;
+}
+
+statusbar inventory
+{
+	drawimage "INVBAR", 38, 162;
+	drawinventorybar Hexen, noartibox, 7, INDEXFONT_RAVEN, 51, 164, 79, 186, untranslated, 1;
+}&lt;/pre&gt;
+
+== Mug Shots ==
+&lt;pre&gt;mugshot "Normal", health2
+{
+	{ST00, ST01, ST02} 17;
+}
+
+mugshot "Pain", healthspecial, directional
+{
+	{TR00, KILL0, TL00} 35;
+}
+
+mugshot "Rampage", health
+{
+	KILL0 1;
+}
+
+mugshot "Ouch", health
+{
+	OUCH0 35;
+}
+
+mugshot "Grin", health
+{
+	EVL0 70;
+}
+
+mugshot "God"
+{
+	GOD0 -1;
+}
+
+mugshot "GodAnimated"
+{
+	{GOD0, GOD1, GOD2} 17;
+}
+
+mugshot "Death"
+{
+	DEAD0 -1;
+}
+
+mugshot "XDeath"
+{
+	XDTH0 10;
+	XDTH1 10;
+	XDTH2 10;
+	XDTH3 10;
+	XDTH4 10;
+	XDTH5 -1;
+}&lt;/pre&gt;
+[[Category:SBARINFO]]</text>
+    <sha1>f2mff4ac5vca7bnykszldpeljzz70md</sha1>
+  </revision>
+</page>

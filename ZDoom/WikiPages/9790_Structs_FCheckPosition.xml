@@ -1,0 +1,80 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>Structs:FCheckPosition</title>
+  <ns>0</ns>
+  <id>9790</id>
+  <revision>
+    <id>53841</id>
+    <parentid>51399</parentid>
+    <timestamp>2024-11-23T11:31:27Z</timestamp>
+    <contributor>
+      <username>Jekyll Grim Payne</username>
+      <id>2175</id>
+    </contributor>
+    <origin>53841</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="3346" sha1="k71ggt49qw6ryvnqdo29o5q6tshj074" xml:space="preserve">&lt;noinclude&gt;
+This struct contains information about a position, which can be obtained by functions like [[CheckMove]], [[TryMove]] and [[CheckPosition]].
+
+==Fields==
+&lt;/noinclude&gt;*{{c|Actor '''thing'''}}
+:Pointer to the actor whose position is stored in this struct.
+*{{c|Vector3 '''pos'''}}
+:Absolute coordinates of the actor whose position is stored in this struct.
+*{{c|Sector '''cursector'''}}
+:Pointer to the [[Structs:Sector|sector]] at the current position.
+*{{c|double '''floorz'''}}
+:Absolute highest floor height at &lt;code&gt;pos&lt;/code&gt;. If the caller is stepping on top of another actor then this is the top of that actor.
+*{{c|double '''ceilingz'''}}
+:Absolute lowest ceiling height at &lt;code&gt;pos&lt;/code&gt;.
+*{{c|double '''dropoffz'''}}
+:Absolute highest floor height at &lt;code&gt;pos&lt;/code&gt;.
+*{{c|TextureID '''floorpic'''}}
+:A [[Structs:TextureID|TextureID]] of the cursector's floor texture.
+*{{c|int '''floorterrain'''}}
+:[[Structs:TerrainDef|Terrain data]] of cursector's floor.
+*{{c|Sector '''floorsector'''}}
+:Pointer to the lowest [[Structs:Sector|sector]] at &lt;code&gt;pos&lt;/code&gt;, if portals are involved. Otherwise, same as &lt;code&gt;cursector&lt;/code&gt;.
+*{{c|TextureID '''ceilingpic'''}}
+:A [[Structs:TextureID|TextureID]] of the cursector's ceiling texture.
+*{{c|Sector '''ceilingsector'''}}
+:Pointer to the highest [[Structs:Sector|sector]] at &lt;code&gt;pos&lt;/code&gt;, if portals are involved. Otherwise, same as &lt;code&gt;cursector&lt;/code&gt;.
+*{{c|bool '''touchmidtex'''}}
+:True if actor at &lt;code&gt;pos&lt;/code&gt; is touching a 3D middle texture.
+*{{c|bool '''abovemidtex'''}}
+:True if actor at &lt;code&gt;pos&lt;/code&gt; is above a 3D middle texture.
+*{{c|bool '''floatok'''}}
+:If true, the caller can freely move up and down if it floats. This is used to signal the position wasn't fully blocked by a line or actor in [[TryMove]].
+*{{c|bool '''FromPMove'''}}
+:This is true if this struct was instantiated by &lt;code&gt;P_Move()&lt;/code&gt;. If true, handles non-players overlapping inside of each other by trying to unstick them if possible.
+*{{c|line '''ceilingline'''}}
+:The [[Structs:Line|line]] the actor collided with if it hit an upper line part. This is set in case a lower line part also blocks, allowing both the floor and ceiling lines to be checked.
+*{{c|Actor '''stepthing'''}}
+:Another actor the &lt;code&gt;thing&lt;/code&gt; stepped up on, if any.
+*{{c|bool '''DoRipping'''}}
+:If true, the caller is treated like a {{flag|RIPPER|ripping projectile}}.
+*{{c|bool '''portalstep'''}}
+:True if the line edge at &lt;code&gt;pos&lt;/code&gt; goes through a ceiling portal by going up a step.
+*{{c|int '''portalgroup'''}}
+:The index of the portal group the move goes to if &lt;code&gt;portalstep&lt;/code&gt; is true.
+*{{c|int '''PushTime'''}}
+:Sets any pushed actor's &lt;code&gt;lastPush&lt;/code&gt; field to this value. Used to track which actors were already pushed that move step.&lt;noinclude&gt;
+
+==Methods==
+*{{c|void '''ClearLastRipped()'''}}
+:Clears information about actors that were already ripped through. Normally an actor is only ripped once per tic.
+*{{c|private void '''_Constructor()'''}}
+:Internal function, necessary for the struct's setup. Doesn't need to be called manually.
+*{{c|private void '''_Destructor()'''}}
+:Internal function, necessary for the struct's setup. Doesn't need to be called manually.
+
+==See also==
+*[[CheckPosition]]
+*[[CheckMove]]
+*[[TryMove]]
+
+[[Category:ZScript]]
+[[Category:Structs]]</text>
+    <sha1>k71ggt49qw6ryvnqdo29o5q6tshj074</sha1>
+  </revision>
+</page>

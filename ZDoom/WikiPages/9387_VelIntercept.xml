@@ -1,0 +1,84 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>VelIntercept</title>
+  <ns>0</ns>
+  <id>9387</id>
+  <revision>
+    <id>52468</id>
+    <parentid>48755</parentid>
+    <timestamp>2024-04-16T12:20:56Z</timestamp>
+    <contributor>
+      <username>Rachael</username>
+      <id>81</id>
+    </contributor>
+    <comment>/* Examples */</comment>
+    <origin>52468</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="2460" sha1="3ncvsdzlkrmf3cmbd0cm19a3cwt3fvi" xml:space="preserve">__NOTOC__{{ZScriptNote}}
+
+native void '''VelIntercept''' (Actor ''targ'' [, double ''speed'' [, bool ''aimpitch'' [, bool ''oldvel'' [, bool ''resetvel'']]]])
+
+== Usage ==
+Aims the caller at the target and takes the target's velocity into account when doing so. This can be used to spawn a missile that will predict where its target is going instead of aiming directly at the target.
+
+=== Parameters ===
+*''targ'': The actor to aim at.
+*''speed'': Can be used to adjust the speed of the caller after aiming. Default is -1, which tells GZDoom to use the actor's {{Property|Speed|speed property}}.
+*''aimpitch'': If ''false'', the pitch on the caller will not be set after aiming. Default is ''true''.
+*''oldvel'': If ''true'', the velocity (both speed and direction) will not change, only the caller's angle and potentially pitch. Default is ''false''.
+*''resetvel'': Default is ''false''.
+
+== Examples ==
+
+The following example replaces the DoomImpBall with DoomImpBallIntercepting, which upon spawn, checks to see who spawned it, and then adjusts its rotation to intercept the target's velocity based on its own speed.
+&lt;pre&gt;&lt;nowiki&gt;class DoomImpBallIntercepting : DoomImpBall
+{
+	override void PostBeginPlay()
+	{
+		Super.PostBeginPlay();			// run actor init stuff first
+		if (target &amp;&amp; target.target)		// check for creature who fired me, and then check for who they intended to shoot at
+			VelIntercept(target.target);	// if their target exists, adjust ourselves to intercept.
+	}
+}&lt;/nowiki&gt;&lt;/pre&gt;
+
+The following example is a little more complicated, which does the same thing as above except it causes the monster firing the missile to change the missile's trajectory, instead.
+&lt;pre&gt;&lt;nowiki&gt;
+class DoomImpIntercepting : DoomImp
+{
+	States
+	{
+	Melee:
+	Missile:
+		TROO EF 8 A_FaceTarget;
+		TROO G 6 A_TroopAttackIntercepting;
+		Goto See;
+	}
+
+	void A_TroopAttackIntercepting()
+	{
+		let targ = target;
+		if (targ)
+		{
+			if (CheckMeleeRange())
+			{
+				int damage = random[pr_troopattack](1, 8) * 3;
+				A_StartSound ("imp/melee", CHAN_WEAPON);
+				int newdam = targ.DamageMobj (self, self, damage, "Melee");
+				targ.TraceBleed (newdam &gt; 0 ? newdam : damage, self);
+			}
+			else
+			{
+				// launch a missile
+				let missile = SpawnMissile (targ, "DoomImpBall");
+				if (target &amp;&amp; missile)			// check for both my missile and my target
+					missile.VelIntercept(target);	// adjust my missile to intercept my target
+			}
+		}
+	}
+}
+&lt;/nowiki&gt;&lt;/pre&gt;
+
+[[Category:ZScript]]</text>
+    <sha1>3ncvsdzlkrmf3cmbd0cm19a3cwt3fvi</sha1>
+  </revision>
+</page>

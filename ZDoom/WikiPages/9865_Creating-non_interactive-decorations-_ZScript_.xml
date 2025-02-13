@@ -1,0 +1,61 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>Creating non-interactive decorations (ZScript)</title>
+  <ns>0</ns>
+  <id>9865</id>
+  <revision>
+    <id>53645</id>
+    <parentid>52348</parentid>
+    <timestamp>2024-11-08T12:21:54Z</timestamp>
+    <contributor>
+      <username>Jekyll Grim Payne</username>
+      <id>2175</id>
+    </contributor>
+    <origin>53645</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="1738" sha1="aixnjt07t0lhmpgn1gafxdf6l6j06uu" xml:space="preserve">Non-interactive decorations are the simplest form of {{class|Actor|actor}} that can be defined. They usually consist of a single sprite with one frame or a looping animation and only use the '''Spawn''' [[Actor states|state sequence]], but they can utilize more states as well.
+
+You may set any [[Actor properties|property]] and [[Actor flags|flag]] as needed.
+
+Note, for your decorations to appear in the [[Ultimate Doom Builder|map editor]], you will to give them [[MAPINFO/Editor_number_definition|DoomEdNums through MAPINFO]].
+
+This is an example of a simple decoration:
+ class CEye : Actor
+ {
+   Default
+   {
+     {{Property|Height}} 40; {{comment|Height for collision checks}}
+     {{Property|Radius}} 20; {{comment|Radius for collision checks}}
+     +{{Flag|SOLID}} {{comment|Other actors can't pass through this object (but hitscan attacks can)}}
+   }
+   States
+   {
+   Spawn:
+     HAW6 A 10;
+     HAW6 B 10 Bright;
+     HAW6 C 10;
+     Loop;
+   }
+ }
+
+Decorations can utilize [[Action functions|functions]] just like any other actor. For example, this decoration will play a sound every second:
+
+ class CEye1 : Actor
+ {
+   States
+   {
+   Spawn:
+     HAW6 A 35 [[A_StartSound]]("ceye/alert"); {{comment|Notice the duration of this state is 35 [[Tic|tics]], which equals one second.}}
+     Loop;
+   }
+ }
+
+Notice, the example above won't play the sound as soon as it spawns, because functions attached to the first frame of the '''Spawn''' state sequence are not executed until the state sequence has looped once. If you ''want'' the sound to play immediately, use the {{c|'''NoDelay'''}} keyword:
+ HAW6 A 35 NoDelay [[A_StartSound]]("ceye/alert");
+
+[[Creating interactive decorations]] is also possible.
+
+[[Category:ZScript guides]]</text>
+    <sha1>aixnjt07t0lhmpgn1gafxdf6l6j06uu</sha1>
+  </revision>
+</page>

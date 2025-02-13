@@ -1,0 +1,147 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>LineTrace</title>
+  <ns>0</ns>
+  <id>9267</id>
+  <revision>
+    <id>53117</id>
+    <parentid>52800</parentid>
+    <timestamp>2024-09-25T10:44:31Z</timestamp>
+    <contributor>
+      <username>Jekyll Grim Payne</username>
+      <id>2175</id>
+    </contributor>
+    <origin>53117</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="7099" sha1="3y1w7851qo1i8iesp6uezqie5gdyl2d" xml:space="preserve">{{note|This page is about a [[ZScript]] function. This should not be confused with the '''{{class|LineTracer}}''' class that can be used for similar purposes.}}
+'''{{class|Actor}}'''
+
+native bool '''LineTrace'''(double ''angle'', double ''distance'', double ''pitch'', int ''flags'' = 0, double ''offsetz'' = 0., double ''offsetforward'' = 0., double ''offsetside'' = 0., out FLineTraceData ''data'' = null)
+
+==Usage==
+Draws a hitscan line from an {{class|Actor|actor}}, at the specified angle, pitch and range (''distance''). The line originates from the calling actor's exact position, which means that ''offsetz'' must be used if this is intended to represent an attack like a gunshot.
+
+===Parameters===
+*{{c|double '''angle'''}}
+:The absolute angle of the direction to fire the line.
+*{{c|double '''distance'''}}
+:The maximum range the line is allowed to travel.
+*{{c|double '''pitch'''}}
+:The absolute pitch of the direction to fire the line.
+*{{c|int '''flags'''}}
+:Flags passed to the function. Multiple flags can be combined with &lt;code&gt;|&lt;/code&gt;:
+:*{{c|TRF_ABSPOSITION}} — makes offsets absolute coordinates.
+:*{{c|TRF_ABSOFFSET }} — makes the x (forward) and y (side) offsets independent from actor rotation.
+:*{{c|TRF_THRUSPECIES}} — passes through all actors sharing the caller's species.
+:*{{c|TRF_THRUACTORS}} — passes through all actors in general. Useful for when you only need map geometry.
+:*{{c|TRF_THRUBLOCK}} — passes through all lines set to "block everything".
+:*{{c|TRF_THRUHITSCAN}} — passes through all lines set to "block hitscan".
+:*{{c|TRF_NOSKY}} — treats hitting a sky texture as not hitting anything at all.
+:*{{c|TRF_ALLACTORS}} — may stop at any actor, even if it's not shootable or solid (this still excludes actors not in the blockmap e.g. projectiles).
+:*{{c|TRF_SOLIDACTORS}} — will also stop at actors that aren't shootable but still solid.
+:*{{c|TRF_BLOCKUSE}} — stops at lines set to "block use".
+:*{{c|TRF_BLOCKSELF}} — stops at lines that would normally block the calling actor (e.g. if called from a player, stop at impassable or "block players" lines).
+*{{c|double '''offsetz'''}}
+:The amount to offset the height of the line's origin from the caller's position. Default is 0, meaning the trace will originate at the bottom of the actor.
+:''Note'': if you're calling the function from the player (either on a [[PlayerPawn]] directly, or from a weapon state), if you want the height of the origin point of the trace to ''exactly'' match the attack height of the player, use the following expression for this argument: &lt;code&gt;player.mo.height * 0.5 - player.mo.floorclip + player.mo.AttackZOffset*player.crouchFactor&lt;/code&gt;. This expression takes all relevant values into the account, including [[Floorclip|floorclip]], the crouch factor defined in the [[Structs:PlayerInfo|PlayerInfo struct]], and the value of the [[Actor_properties#Player.AttackZOffset|AttackZOffset]] property.
+:If you want this to match the center of the player's screen, use &lt;code&gt;player.viewz - player.mo.pos.z&lt;/code&gt; instead.
+*{{c|double '''offsetforward'''}}
+:Default is 0. The amount to offset the line's origin in the direction the caller is facing.
+*{{c|double '''offsetside'''}}
+:Default is 0. The amount to offset the line's origin to the sides of the caller.
+*{{c|FLineTraceData '''data'''}}
+:Stores information about the hitscan after the check is performed. Default is {{c|null}}.
+
+===Return value===
+The function's actual return is &lt;code&gt;true&lt;/code&gt; or &lt;code&gt;false&lt;/code&gt;, indicating whether the line hit anything.
+
+Much more significantly, this function lets you write information to an '''FLineTraceData''' pointer that can be accessed for detailed information about what the line hit and where.
+
+'''Note:''' Some of these values are only relevant if the return result of the function was &lt;code&gt;true&lt;/code&gt;. If the function returns &lt;code&gt;false&lt;/code&gt;, some of them may still be set to the last thing the line hit, even if that thing was ignored. Always check the trace actually hit something before using these values. Furthermore, the HitType value should be checked first, as pointers might contain bogus data that won't match what was truly hit.
+
+The struct contains the following pointers:
+*{{c|Actor '''HitActor'''}}
+:The actor that got hit, if any.
+*{{c|Line '''HitLine'''}}
+:The [[Structs:Line|line]] that got hit, if any.
+*{{c|Sector '''HitSector'''}}
+:The [[Structs:Sector|sector]] in which the impact occurred or the trace terminated.
+*{{c|F3DFloor '''Hit3DFloor'''}}
+:The [[Structs:F3DFloor|3D floor]] that got hit, if any.
+*{{c|TextureID '''HitTexture'''}}
+:The [[Structs:TextureID|Id of the texture]] of the surface that got hit, if any.
+*{{c|Vector3 '''HitLocation'''}}
+:The absolute position in the map in which the impact occurred or the trace terminated.
+*{{c|Vector3 '''HitDir'''}}
+:A unit vector representing the direction in which the trace was traveling when it terminated.
+*{{c|double '''Distance'''}}
+:The total distance traveled by the trace, whether it hit anything or not.
+*{{c|int '''NumPortals'''}}
+:The number of portals the trace crossed while traveling.
+*{{c|int '''LineSide'''}}
+:Which [[Structs:Side|side of the line]] the trace hit, if any. Can be one of the following constants:
+:*{{c|Line.front}}
+:*{{c|Line.back}}
+*{{c|int '''LinePart'''}}
+:Which part of the line the trace hit, if any. Can be one of the following constants:
+:*{{c|Side.top}}
+:*{{c|Side.mid}} (always if a 3D floor was hit)
+:*{{c|Side.bottom}}
+*{{c|int '''SectorPlane'''}}
+:Whether the trace hit the ceiling or floor, if either. Can be one of the following constants:
+:*{{c|Sector.floor}}
+:*{{c|Sector.ceiling}}
+*{{c|int '''HitType'''}}
+:What the trace hit, if anything. Can be one of the following constants:
+:*{{c|TRACE_HitNone}} - nothing was hit
+:*{{c|TRACE_HitFloor}} - hit a [[Structs:SecPlane|floor plane]] or the top of a 3D floor
+:*{{c|TRACE_HitCeiling}} - hit a [[Structs:SecPlane|ceiling plane]] or the bottom of a 3D floor
+:*{{c|TRACE_HitWall}} - hit a [[Structs:Line|line]] (including sides of a 3D floor)
+:*{{c|TRACE_HitActor}} - hit an actor
+:*{{c|TRACE_CrossingPortal}}
+:*{{c|TRACE_HasHitSky}} (unused)
+
+==Examples==
+This item when used will hit any switch in front of the player within about 2048 units, provided nothing is between the player and the line.
+
+&lt;syntaxhighlight lang="csharp"&gt;
+class RemoteSwitcher : Inventory
+{
+	Default
+	{
+		+Inventory.Invbar
+		inventory.icon "CELLA0"; //substitute your own graphic
+	}
+	
+	override bool Use (bool pickup)
+	{
+		if (owner &amp;&amp; owner.player)
+		{
+			console.printf ("firing linetrace");
+			FLineTraceData RemoteRay;
+			double pz = owner.height * 0.5 - owner.floorclip + owner.player.mo.AttackZOffset*owner.player.crouchFactor;
+			bool hit = owner.LineTrace(
+				owner.angle,
+				2048,
+				owner.pitch,
+				offsetz: pz,
+				data: RemoteRay
+			);
+
+			if (hit &amp;&amp; RemoteRay.HitType == TRACE_HitWall)
+			{
+				RemoteRay.HitLine.Activate(owner, 0, SPAC_Use);
+			}
+		}
+		return false;
+	}
+}&lt;/syntaxhighlight&gt;
+
+== See also ==
+* {{class|LineTracer}}
+* [[LineAttack (ZScript)]]
+
+[[Category:ZScript]]</text>
+    <sha1>3y1w7851qo1i8iesp6uezqie5gdyl2d</sha1>
+  </revision>
+</page>

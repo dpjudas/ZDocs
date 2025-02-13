@@ -1,0 +1,59 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>Classes:FSwordMissile</title>
+  <ns>0</ns>
+  <id>4660</id>
+  <revision>
+    <id>34528</id>
+    <parentid>34527</parentid>
+    <timestamp>2012-10-17T14:22:50Z</timestamp>
+    <contributor>
+      <username>Blue Shadow</username>
+      <id>2021</id>
+    </contributor>
+    <comment>Added a description.</comment>
+    <origin>34528</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="1003" sha1="5xwsziczizc3w7d11vbib5aip7r0gie" xml:space="preserve">{{Actor|
+| type = Explosive
+| name = Quietus missile
+| class = FSwordMissile
+| game = Hexen
+}}[[Classes]]: &lt;u&gt;FSwordMissile&lt;/u&gt;&lt;br&gt;
+
+The powerful green projectile fired by the {{Class|FighterPlayer|fighter}}'s ultimate weapon, the {{Class|FWeapQuietus|Quietus}}. The weapon fires five of these in a spread.
+==== [[DECORATE]] definition ====
+ ACTOR &lt;u&gt;FSwordMissile&lt;/u&gt; native
+ {
+   {{Property|Speed}} 30
+   {{Property|Radius}} 16
+   {{Property|Height}} 8
+   {{Property|Damage}} 8
+   {{Property|Projectile}}
+   +{{Flag|EXTREMEDEATH}}
+   {{Property|RenderStyle}} Add
+   {{Property|DeathSound}} "FighterSwordExplode"
+   {{Property|Obituary}} "$OB_MPFWEAPQUIETUS"
+ 
+   action native [[A_FSwordFlames]]();
+ 
+   States
+   {
+   Spawn:
+     FSFX ABC 3 Bright
+     Loop
+   Death:
+     FSFX D 4 Bright
+     FSFX E 3 Bright [[A_FSwordFlames]]
+     FSFX F 4 Bright [[A_Explode]](64, 128, 0)
+     FSFX G 3 Bright
+     FSFX H 4 Bright
+     FSFX I 3 Bright
+     FSFX J 4 Bright
+     FSFX KLM 3 Bright
+     Stop
+   }
+ }</text>
+    <sha1>5xwsziczizc3w7d11vbib5aip7r0gie</sha1>
+  </revision>
+</page>

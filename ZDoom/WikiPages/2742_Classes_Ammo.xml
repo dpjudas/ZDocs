@@ -1,0 +1,357 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>Classes:Ammo</title>
+  <ns>0</ns>
+  <id>2742</id>
+  <revision>
+    <id>50973</id>
+    <parentid>35671</parentid>
+    <timestamp>2023-11-13T12:55:02Z</timestamp>
+    <contributor>
+      <username>Jekyll Grim Payne</username>
+      <id>2175</id>
+    </contributor>
+    <comment>Added fields, methods, ZScript examples and ZScript definition</comment>
+    <origin>50973</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="9447" sha1="jjaoggxj145tratdnjq4an5cfd4pwpj" xml:space="preserve">{{Actor|
+| type = Internal
+| name = Ammo
+| class = Ammo
+}}[[Classes]]: {{class|Inventory}}&amp;rarr;&lt;u&gt;Ammo&lt;/u&gt;&lt;br&gt;
+&amp;ensp;&amp;rarr;{{class|BlasterAmmo}}&lt;br&gt;
+&amp;ensp;&amp;rarr;{{class|Cell}}&lt;br&gt;
+&amp;ensp;&amp;rarr;{{class|Clip}}&lt;br&gt;
+&amp;ensp;&amp;rarr;{{class|ClipOfBullets}}&lt;br&gt;
+&amp;ensp;&amp;rarr;{{class|CrossbowAmmo}}&lt;br&gt;
+&amp;ensp;&amp;rarr;{{class|ElectricBolts}}&lt;br&gt;
+&amp;ensp;&amp;rarr;{{class|EnergyPod}}&lt;br&gt;
+&amp;ensp;&amp;rarr;{{class|GoldWandAmmo}}&lt;br&gt;
+&amp;ensp;&amp;rarr;{{class|HEGrenadeRounds}}&lt;br&gt;
+&amp;ensp;&amp;rarr;{{class|MaceAmmo}}&lt;br&gt;
+&amp;ensp;&amp;rarr;{{class|Mana1}}&lt;br&gt;
+&amp;ensp;&amp;rarr;{{class|Mana2}}&lt;br&gt;
+&amp;ensp;&amp;rarr;{{class|MiniMissiles}}&lt;br&gt;
+&amp;ensp;&amp;rarr;{{class|PhoenixRodAmmo}}&lt;br&gt;
+&amp;ensp;&amp;rarr;{{class|PhosphorusGrenadeRounds}}&lt;br&gt;
+&amp;ensp;&amp;rarr;{{class|PoisonBolts}}&lt;br&gt;
+&amp;ensp;&amp;rarr;{{class|RocketAmmo}}&lt;br&gt;
+&amp;ensp;&amp;rarr;{{class|Shell}}&lt;br&gt;
+&amp;ensp;&amp;rarr;{{class|SkullRodAmmo}}&lt;br&gt;
+
+An &lt;u&gt;Ammo&lt;/u&gt; item defines ammunition for use by {{class|Weapon|weapons}}. For the most part ammo acts like a normal inventory item but there are some differences:
+
+* Only items that inherit directly from &lt;u&gt;Ammo&lt;/u&gt; are separate types. All items that inherit from a subclass of &lt;u&gt;Ammo&lt;/u&gt; define new pickup items for that ammo type.
+* The amount of ammo the player can carry can be affected by picking up a subclass of {{class|BackpackItem}}.
+* The amount of ammo each item gives the player can be increased for the easiest and hardest skill level in the game.
+* Ammunition is never placed in the inventory bar. Instead, it is shown in its own place on the HUD or status bar.
+
+== Using in [[ZScript]] and [[DECORATE]] ==
+Ammo items support all the basic [[Inventory properties]]. In addition they define:
+{{:Ammo properties}}
+
+Note that ammo capacity ({{Property|Inventory.MaxAmount}}, {{Property|Ammo.BackpackAmount}} and {{Property|Ammo.BackpackMaxAmount}}) are only relevant for a type derived directly from Ammo, such as {{Class|Clip}}. Types with further derivation (such as {{Class|ClipBox}} which is derived from Clip) use their parent class's amounts.
+
+Creating a new custom base ammo class that isn't Ammo can be done by overriding [[GetParentAmmo]].
+
+== Fields ==
+* {{c|int '''BackpackAmount'''}}
+:The value for the {{Property|Ammo.BackpackAmount}} property.
+* {{c|int '''BackpackMaxAmount'''}}
+:The value for the {{Property|Ammo.BackpackMaxAmount}} property.
+* {{c|meta int '''DropAmount'''}}
+:The value for the {{Property|Ammo.DropAmount}} property.
+
+== Methods ==
+'''NOTE''': Ammo supports all [[Classes:Inventory#Methods|Inventory methods]].
+=== Virtual ===
+*{{c|Class&lt;Ammo&gt; '''[[GetParentAmmo]]'''()}}
+
+== Examples ==
+
+This defines a new ammo type:
+ // ZScript:
+ class LaserRecharge : &lt;u&gt;Ammo&lt;/u&gt;
+ {
+   Default
+   {
+     {{Property|Inventory.PickupMessage}} "Laser recharge unit";
+     {{Property|Inventory.Amount}} 10;
+     {{Property|Inventory.MaxAmount}} 200;
+     {{Property|Inventory.Icon}} "AAMOA0";
+     {{Property|Ammo.BackpackAmount}} 10;
+     {{Property|Ammo.BackpackMaxAmount}} 400;
+   }
+   States
+   {
+   Spawn:
+     ZCLP A -1;
+     stop;
+   }
+ }
+
+ // DECORATE:
+ actor LaserRecharge : &lt;u&gt;Ammo&lt;/u&gt;
+ {
+   {{Property|Inventory.PickupMessage}} "Laser recharge unit"
+   {{Property|Inventory.Amount}} 10
+   {{Property|Inventory.MaxAmount}} 200
+   {{Property|Inventory.Icon}} "AAMOA0"
+   {{Property|Ammo.BackpackAmount}} 10
+   {{Property|Ammo.BackpackMaxAmount}} 400
+   states
+   {
+   Spawn:
+     ZCLP A -1
+     stop
+   }
+ }
+
+This defines a second pickup item for the same ammo type:
+
+ //ZScript:
+ class LargeLaserRecharge : LaserRecharge
+ {
+   Default
+   {
+     {{Property|Inventory.PickupMessage}} "Large laser recharge unit";
+     {{Property|Inventory.Amount}} 50;
+   }
+   States
+   {
+   Spawn:
+     AAMO A -1;
+     stop;
+   }
+ }
+
+ //DECORATE:
+ actor LargeLaserRecharge : LaserRecharge
+ {
+   {{Property|Inventory.PickupMessage}} "Large laser recharge unit"
+   {{Property|Inventory.Amount}} 50
+   states
+   {
+   Spawn:
+     AAMO A -1
+     stop
+   }
+ }
+
+'''NOTE''': In order to be able to place the items on the map, you will need to give your ammo items [[MAPINFO/Editor_number_definition|DoomEdNums]].
+
+== [[ZScript]] definition ==
+{{ZScriptDefinitionNote|actors/inventory/ammo.zs}}
+&lt;syntaxhighlight lang="csharp"&gt;
+class Ammo : Inventory
+{
+	int BackpackAmount;
+	int BackpackMaxAmount;
+	meta int DropAmount;
+	
+	property BackpackAmount: BackpackAmount;
+	property BackpackMaxAmount: BackpackMaxAmount;
+	property DropAmount: DropAmount;
+
+	Default
+	{
+		+INVENTORY.KEEPDEPLETED
+		Inventory.PickupSound "misc/ammo_pkup";
+	}
+
+	//===========================================================================
+	//
+	// AAmmo :: GetParentAmmo
+	//
+	// Returns the least-derived ammo type that this ammo is a descendant of.
+	// That is, if this ammo is an immediate subclass of Ammo, then this ammo's
+	// type is returned. If this ammo's superclass is not Ammo, then this
+	// function travels up the inheritance chain until it finds a type that is
+	// an immediate subclass of Ammo and returns that.
+	//
+	// The intent of this is that all unique ammo types will be immediate
+	// subclasses of Ammo. To make different pickups with different ammo amounts,
+	// you subclass the type of ammo you want a different amount for and edit
+	// that.
+	//
+	//===========================================================================
+
+	virtual Class&lt;Ammo&gt; GetParentAmmo ()
+	{
+		class&lt;Object&gt; type = GetClass();
+
+		while (type.GetParentClass() != "Ammo" &amp;&amp; type.GetParentClass() != NULL)
+		{
+			type = type.GetParentClass();
+		}
+		return (class&lt;Ammo&gt;)(type);
+	}
+
+	//===========================================================================
+	//
+	// AAmmo :: HandlePickup
+	//
+	//===========================================================================
+
+	override bool HandlePickup (Inventory item)
+	{
+		let ammoitem = Ammo(item);
+		if (ammoitem != null &amp;&amp; ammoitem.GetParentAmmo() == GetClass())
+		{
+			if (Amount &lt; MaxAmount || sv_unlimited_pickup)
+			{
+				int receiving = item.Amount;
+
+				if (!item.bIgnoreSkill)
+				{ // extra ammo in baby mode and nightmare mode
+					receiving = int(receiving * (G_SkillPropertyFloat(SKILLP_AmmoFactor) * sv_ammofactor));
+				}
+				int oldamount = Amount;
+
+				if (Amount &gt; 0 &amp;&amp; Amount + receiving &lt; 0)
+				{
+					Amount = 0x7fffffff;
+				}
+				else
+				{
+					Amount += receiving;
+				}
+				if (Amount &gt; MaxAmount &amp;&amp; !sv_unlimited_pickup)
+				{
+					Amount = MaxAmount;
+				}
+				item.bPickupGood = true;
+
+				// If the player previously had this ammo but ran out, possibly switch
+				// to a weapon that uses it, but only if the player doesn't already
+				// have a weapon pending.
+
+				if (oldamount == 0 &amp;&amp; Owner != null &amp;&amp; Owner.player != null)
+				{
+					PlayerPawn(Owner).CheckWeaponSwitch(GetClass());
+				}
+			}
+			return true;
+		}
+		return false;
+	}
+
+	//===========================================================================
+	//
+	// AAmmo :: CreateCopy
+	//
+	//===========================================================================
+
+	override Inventory CreateCopy (Actor other)
+	{
+		Inventory copy;
+		int amount = Amount;
+
+		// extra ammo in baby mode and nightmare mode
+		if (!bIgnoreSkill)
+		{
+			amount = int(amount * (G_SkillPropertyFloat(SKILLP_AmmoFactor) * sv_ammofactor));
+		}
+
+		let type = GetParentAmmo();
+		if (GetClass() != type &amp;&amp; type != null)
+		{
+			if (!GoAway ())
+			{
+				Destroy ();
+			}
+
+			copy = Inventory(Spawn (type));
+			copy.Amount = amount;
+			copy.BecomeItem ();
+		}
+		else
+		{
+			copy = Super.CreateCopy (other);
+			copy.Amount = amount;
+		}
+		if (copy.Amount &gt; copy.MaxAmount)
+		{ // Don't pick up more ammo than you're supposed to be able to carry.
+			copy.Amount = copy.MaxAmount;
+		}
+		return copy;
+	}
+
+	//===========================================================================
+	//
+	// AAmmo :: CreateTossable
+	//
+	//===========================================================================
+
+	override Inventory CreateTossable(int amt)
+	{
+		Inventory copy = Super.CreateTossable(amt);
+		if (copy != null)
+		{ // Do not increase ammo by dropping it and picking it back up at
+		  // certain skill levels.
+			copy.bIgnoreSkill = true;
+		}
+		return copy;
+	}
+
+	//---------------------------------------------------------------------------
+	//
+	// Modifies the drop amount of this item according to the current skill's
+	// settings (also called by ADehackedPickup::TryPickup)
+	//
+	//---------------------------------------------------------------------------
+	
+	override void ModifyDropAmount(int dropamount)
+	{
+		bool ignoreskill = true;
+		double dropammofactor = G_SkillPropertyFloat(SKILLP_DropAmmoFactor);
+		// Default drop amount is half of regular amount * regular ammo multiplication
+		if (dropammofactor == -1) 
+		{
+			dropammofactor = 0.5;
+			ignoreskill = false;
+		}
+
+		if (dropamount &gt; 0)
+		{
+			if (ignoreskill)
+			{
+				self.Amount = int(dropamount * dropammofactor);
+				bIgnoreSkill = true;
+			}
+			else
+			{
+				self.Amount = dropamount;
+			}
+		}
+		else
+		{
+			// Half ammo when dropped by bad guys.
+			int amount = self.DropAmount;
+			if (amount &lt;= 0)
+			{
+				amount = MAX(1, int(self.Amount * dropammofactor));
+			}
+			self.Amount = amount;
+			bIgnoreSkill = ignoreskill;
+		}
+	}
+	
+}&lt;/syntaxhighlight&gt;
+
+== [[DECORATE]] definition ==
+{{DecorateDefinitionNote}}
+ ACTOR &lt;u&gt;Ammo&lt;/u&gt; : {{Class|Inventory}} native
+ {
+   +{{Flag|INVENTORY.KEEPDEPLETED}}
+   {{Property|Inventory.PickupSound}} "misc/ammo_pkup"
+ }
+
+== See also ==
+* [[:Category:Ammo|Classes in the Ammo category]]
+
+[[Category:ZScript]]
+[[Category:DECORATE]]</text>
+    <sha1>jjaoggxj145tratdnjq4an5cfd4pwpj</sha1>
+  </revision>
+</page>

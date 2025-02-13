@@ -1,0 +1,46 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>SetActorVelocity</title>
+  <ns>0</ns>
+  <id>5593</id>
+  <revision>
+    <id>33146</id>
+    <parentid>27378</parentid>
+    <timestamp>2012-06-23T08:04:47Z</timestamp>
+    <contributor>
+      <username>Ijon Tichy</username>
+      <id>1730</id>
+    </contributor>
+    <origin>33146</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="1148" sha1="17mri9k1lqca9gspzr8dfgpyqg07xs8" xml:space="preserve">bool '''SetActorVelocity''' (int ''tid'', fixed ''velx'', fixed ''vely'', fixed ''velz'', bool ''add'', bool ''setbob'')&lt;br&gt;
+
+Changes actor velocity.
+
+==Arguments==
+* ''tid'': TID of things to affect. If 0, the activator is used.
+* ''velx'', ''vely'', ''velz'': The desired velocity for the affected things.
+* ''add'': If true, each affected actor's velocity is modified by the velx, vely and velz parameters, rather than replaced by them.
+* ''setbob'': If true, the speed adjustment influences the bobbing of any concerned player actor.
+
+==Examples==
+Put a [[Classes:Cacodemon|Cacodemon]] on your map with the matching tid and have some target practice with this script.
+
+ script 1 (int tid)
+ {
+   int angle, pitch, velx, vely, velz;
+   while (GetActorProperty(tid, APROP_Health) &gt; 0)
+   {
+     angle = random(0, 1.0);
+     pitch = random(-0.25, 0.25);
+     velx = FixedMul(cos(angle), FixedMul(cos(pitch), 10.0));
+     vely = FixedMul(sin(angle), FixedMul(cos(pitch), 10.0));
+     velz = FixedMul(sin(pitch), 10.0);
+     SetActorVelocity(tid, velx, vely, velz, FALSE, FALSE);
+     delay(random(1, 7) * 5);
+   }
+ }
+[[category:ACS Actor functions]]</text>
+    <sha1>17mri9k1lqca9gspzr8dfgpyqg07xs8</sha1>
+  </revision>
+</page>

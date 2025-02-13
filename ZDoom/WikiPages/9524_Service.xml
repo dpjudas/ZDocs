@@ -1,0 +1,155 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>Service</title>
+  <ns>0</ns>
+  <id>9524</id>
+  <revision>
+    <id>50946</id>
+    <parentid>48956</parentid>
+    <timestamp>2023-11-10T12:10:35Z</timestamp>
+    <contributor>
+      <username>Jekyll Grim Payne</username>
+      <id>2175</id>
+    </contributor>
+    <comment>/* Service Methods */ Updated formatting</comment>
+    <origin>50946</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="7089" sha1="seag3lhm37acszjj8xd6f1p8lft81l7" xml:space="preserve">{{ZScriptNote}}
+
+'''Service''' is a [[ZScript]] interface for cross-mod communication. Service can be used when two mods need to be compatible with each other, but there is no way for them to exchange information without adding hard dependencies. 
+
+'''ServiceIterator''' class is used to find and iterate over services.
+
+== Service Methods ==
+* virtual String '''Get''' (String ''request'') {{deprecated}}
+* virtual String '''UiGet''' (String ''request'') {{deprecated}}&lt;br&gt;&lt;br&gt;
+''NOTE:'' These versions have been deprecated in favor of more robust and expanded versions described below.
+
+* virtual string '''GetString''' (String ''request'', String ''stringarg'' = "", int ''intArg'' = 0, double ''doubleArg'' = 0.0, Object ''objectArg'' = null)
+* virtual int '''GetInt''' (String ''request'', String ''stringarg'' = "", int ''intArg'' = 0, double ''doubleArg'' = 0.0, Object ''objectArg'' = null)
+* virtual double '''GetDouble''' (String ''request'', String ''stringarg'' = "", int ''intArg'' = 0, double ''doubleArg'' = 0.0, Object ''objectArg'' = null)
+* virtual Object'''GetObject''' (String ''request'', String ''stringarg'' = "", int ''intArg'' = 0, double ''doubleArg'' = 0.0, Object ''objectArg'' = null)
+:Requests information from a service in[Object scopes and versions|play scope.
+
+* virtual string '''GetStringUI''' (String ''request'', String ''stringarg'' = "", int ''intArg'' = 0, double ''doubleArg'' = 0.0, Object ''objectArg'' = null)
+* virtual int '''GetIntUI''' (String ''request'', String ''stringarg'' = "", int ''intArg'' = 0, double ''doubleArg'' = 0.0, Object ''objectArg'' = null)
+* virtual double '''GetDoubleUI''' (String ''request'', String ''stringarg'' = "", int ''intArg'' = 0, double ''doubleArg'' = 0.0, Object ''objectArg'' = null)
+* virtual Object'''GetObjectUI''' (String ''request'', String ''stringarg'' = "", int ''intArg'' = 0, double ''doubleArg'' = 0.0, Object ''objectArg'' = null)
+:Requests information from a service in [[Object scopes and versions|UI scope]].
+
+=== Parameters ===
+All of the function above utilize the same list of arguments:
+* {{c|String '''request'''}}
+:String request to be read by the Service class.
+* {{c|int '''stringArg'''}}
+:String argument. Defaults to "".
+* {{c|int '''intArg'''}}
+:Integer argument. Defaults to 0.
+* {{c|double '''doubleArg'''}}
+:Double argument. Defaults to 0.0.
+* {{c|Object '''objectArg'''}}
+:Object argument. Defaults to {{c|null}}.
+
+=== Usage ===
+The different return functions allow for separation of functionality so modders can retrieve different results based on type. This also helps prevent string translation errors such as mistakenly interpreting a letter for a number. Translating/breaking strings into numbers or separating them into different pieces often may be detrimental to performance.
+
+In addition, custom Service classes can use these to construct custom functions and allow passing in the arguments in sets based on specification by modders who build them. 
+
+For example, one could set up the function(s) to read ''request'', take ''objectArg'' and then store it in a variable. This allows for direct variable control, grants maximum flexibility so casting Service to a specific type isn't required and prevents dependencies.
+
+== ServiceIterator Methods ==
+* {{c|ServiceIterator '''{{LE|Find}}''' (String ''serviceName'')}}
+:Creates an iterator for all services with class name containing ''serviceName''. Use [[#Next|Next]] to get services.
+
+* {{c|Service '''{{LE|Next}}''' ()}}
+:Gets the service and advances the iterator. Returns NULL if no more services are found.
+
+== Example Situation ==
+
+* ''RealWeapons'' is a weapon mod which provides sophisticated ammo management. Ammo counts for ''RealWeapons'' weapons are not stored as inventory items, but are calculated by method in ''RealWeapons'' weapon classes. 
+* ''AmmoWidget'' is a generic ammo display widget.
+
+Now, ''AmmoWidget'' wants to display ammo for ''RealWeapons''. To access ''RealWeapons'' ammo counts, ''AmmoWidget'' would need to get weapons in player inventory, cast them to ''RealWeapons'' classes, and access methods that calculate ammo counts. This would create hard dependency on ''RealWeapons'' in ''AmmoWidget'', which would mean that ''AmmoWidget'' will not load without ''RealWeapons''.
+
+One solution to this problem would be to create a patch for ''AmmoWidget'', AmmoWidgetForReal, which would know about ''RealWeapons'' classes and pass the counts to ''AmmoWidget''. Having a patch is inconvenient both to mod maintainers and to users.
+
+So, '''Service''' can help here. ''RealWeapons'' defines a '''Service''', RealAmmoCountService, which takes weapon class name and returns ammo count for it (if it exists in player inventory). ''AmmoWidget'' creates a '''ServiceIterator''' for AmmoCountService, which will find RealAmmoCountService if ''RealWeapons'' is loaded, and will find nothing if it's not. ''AmmoWidget'' iterates over Services it found and polls them for ammo counts. Thus, ''AmmoWidget'' gets information from ''RealWeapons'' without knowing anything about how ''RealWeapons'' ammo counts are stored.
+
+The code for this situation will be something like this:
+
+ // RealWeapons
+ class rw_Weapon : Pistol abstract
+ {
+   abstract int GetBullets();
+ }
+ 
+ class rw_Pistol : rw_Weapon replaces Pistol
+ {
+   override int GetBullets() { return 9; }
+ }
+ 
+ class rw_Revolver : rw_Weapon replaces Shotgun
+ {
+   override int GetBullets() { return 6; }
+ }
+ 
+ class rw_AmmoCountService : Service
+ {
+   // Returns ammo count from internal RealWeapons class as a string.
+   override string Get(string className)
+   {
+     PlayerPawn player = players[consolePlayer].mo;
+     if (player == NULL) return "";
+     let aWeapon = rw_Weapon(player.FindInventory(className));
+     if (aWeapon == NULL) return "";
+ 
+     return String.Format("%d", aWeapon.getBullets());
+   }
+ }
+
+ // AmmoWidget
+ class aw_EventHandler
+ {
+   // Is called once, on AmmoWidget initialization.
+   private void FindAmmoServices()
+   {
+     let i = ServiceIterator.Find("AmmoCountService");
+     Service ammoCountService;
+     while (ammoCountService = i.Next())
+     {
+       mAmmoServices.push(ammoCountService);
+     }
+   }
+ 
+   // Checks all weapons in player inventory.
+   // For each weapon, try to get ammo count from external services.
+   // If no such service found, print generic ammo count.
+   private void PrintAmmo()
+   {
+     PlayerPawn player = players[consolePlayer].mo;
+     for (Inventory inv = player.Inv; inv; inv = inv.Inv)
+     {
+       let aWeapon = Weapon(inv);
+       if (aWeapon == NULL) continue;
+       for (uint i = 0; i &lt; mAmmoServices.size(); ++i)
+       {
+         string response = mAmmoServices[i].Get(aWeapon.GetClassName());
+         if (response.length() == 0) continue;
+         console.printf("%s ammo: %d", aWeapon.GetTag(), response.ToInt());
+         break;
+       }
+       console.printf("%s ammo: %d", aWeapon.GetTag(), player.CountInv(aWeapon.AmmoType1));
+     }
+   }
+ 
+   private Array&lt;Service&gt; mAmmoServices;
+ }
+
+== See also ==
+* [[ZScript]]
+* [[ZScript classes]]
+
+[[Category:ZScript]]</text>
+    <sha1>seag3lhm37acszjj8xd6f1p8lft81l7</sha1>
+  </revision>
+</page>

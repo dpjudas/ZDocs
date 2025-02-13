@@ -1,0 +1,66 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>A JumpIfCloser</title>
+  <ns>0</ns>
+  <id>1754</id>
+  <revision>
+    <id>44127</id>
+    <parentid>42379</parentid>
+    <timestamp>2017-03-20T11:16:19Z</timestamp>
+    <contributor>
+      <username>Gez</username>
+      <id>1283</id>
+    </contributor>
+    <minor />
+    <comment>removing "new" for GZDoom 2.4.0 release</comment>
+    <origin>44127</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="2195" sha1="q5u9hale243s5p1ktz3jgsr1hr618uc" xml:space="preserve">{{codepointer|Jump}}
+state '''A_JumpIfCloser''' (float ''distance'', int ''offset'' [, bool ''noz''])&lt;br/&gt;
+state '''A_JumpIfCloser''' (float ''distance'', str "''state''" [, bool ''noz''])&lt;br/&gt;
+{{JumpNotice}}
+==Usage==
+Jumps ''offset'' amount of states forward, or to the state label ''state'', if the distance to the target is lower than the given value. For weapons and inventory, jumps if the target in the player's crosshair is closer than the given value.
+
+'''NOTE''' - This function does not take into account the radius of either actor, so it's possible that either one wide actor or both being wide can prevent the jump from ever occurring. It's important that a blocking actor takes their own radius into account through means such as '''A_JumpIfCloser(radius +''' ''distance,'' '''"label")''' to help avoid such occurrences.
+
+== Parameters ==
+* ''distance'' - The distance an actor's target must be in order to jump. Distance is in units, similar to to the radius of [[A_Explode]].
+* ''offset/state'' - The offset number of frames to jump forward, or the state label to jump to.
+* ''noz'' - If true, the function disables vertical distance checking. The default is false, which includes comparing the distance between how high the calling actor is to the target.
+
+== Examples ==
+This makes the {{Class|DoomImp|imps}} in Doom transform into {{Class|archvile}}s at random, but the transformation is guaranteed if you're close to them when they first see you.
+ ACTOR AngryImp : {{Class|DoomImp}} replaces {{Class|DoomImp}}
+ {
+   States
+   {
+   See:
+     TROO A 0 '''A_JumpIfCloser'''(196, "Transform")
+     TROO AABBCCDD 3 [[A_Chase]]
+     Loop
+   Transform:
+     TROO A 0 [[A_SpawnItemEx]]("{{Class|Archvile}}", 0, 0, 0, 0, 0, 0, angle)
+     Stop
+   }
+ }
+
+And this makes {{Class|ExplosiveBarrel|barrels}} self-aware and makes them go boom when you're in range:
+ ACTOR SmartBarrel : {{Class|ExplosiveBarrel}} replaces {{Class|ExplosiveBarrel}}
+ {
+   +{{Flag|LOOKALLAROUND}}
+   +{{Flag|AMBUSH}}
+   +{{Flag|QUICKTORETALIATE}}
+   States
+   {
+   Spawn:
+     TNT1 A 0
+     BAR1 AB 6 [[A_LookEx]](LOF_NOSOUNDCHECK)
+   See:
+     BAR1 AB 6 [[A_JumpIfCloser]](127, "Death")
+     Goto Spawn
+   }
+ }</text>
+    <sha1>q5u9hale243s5p1ktz3jgsr1hr618uc</sha1>
+  </revision>
+</page>

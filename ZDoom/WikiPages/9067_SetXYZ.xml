@@ -1,0 +1,62 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>SetXYZ</title>
+  <ns>0</ns>
+  <id>9067</id>
+  <revision>
+    <id>50086</id>
+    <parentid>46755</parentid>
+    <timestamp>2023-01-26T02:48:59Z</timestamp>
+    <contributor>
+      <username>Inkoalawetrust</username>
+      <id>2604</id>
+    </contributor>
+    <comment>Added categories.</comment>
+    <origin>50086</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="1563" sha1="tbazgpah2z2tct8fu2rp2fxjw7uzpcg" xml:space="preserve">{{ZScriptNote}}
+void '''SetXYZ''' (vector3 newpos)
+
+==Usage==
+
+This sets the actor's position '''without altering its blockmap links''' (and is '''NOT''' aware of portals)! This is good for, say, temporarily "imagining if" an actor were at a certain position for the sake of making specific calculations before restoring the actor's previous position in the same tic.
+
+To set an actor's position permanently, you must either use [[SetOrigin]] or perform all required actions manually.
+
+==Manually moving actors==
+To set an actor's coordinates without using [[SetOrigin]], you must call [[UnlinkFromWorld]] before calling SetXYZ, then call [[LinkToWorld]] and [[FindFloorCeiling]], in that order, after calling SetXYZ.&lt;br&gt;
+Additionally, if you want the actor to snap to its new coordinates, you must also call [[ClearInterpolation]] after calling the aforementioned functions.
+
+==Examples==
+
+This function returns true if a given position has enough room for the caller's height:
+ bool CheckZat (Vector3 testPos) {
+     vector3 oldPos = pos;
+     SetXYZ (testPos);
+          
+     if (GetZAt (flags: GZF_CEILING) - GetZAt () &lt; height) {
+         SetXYZ (oldPos);
+         return false;
+     }
+ 
+     SetXYZ (oldPos);
+     return true;
+ }
+&lt;br&gt;
+This function is a ZScript version of SetOrigin:
+ void ZScriptSetOrigin (Vector3 newPos, bool moving) {
+     LinkContext ctx;
+ 
+     UnlinkFromWorld (ctx);
+     SetXYZ (newPos);
+     LinkToWorld (ctx);
+     FindFloorCeiling (FFCF_ONLYSPAWNPOS);
+ 
+     if (!moving)
+         ClearInterpolation ();
+ }
+
+[[Category:ZScript]]</text>
+    <sha1>tbazgpah2z2tct8fu2rp2fxjw7uzpcg</sha1>
+  </revision>
+</page>

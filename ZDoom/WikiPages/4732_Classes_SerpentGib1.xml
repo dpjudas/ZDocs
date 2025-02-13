@@ -1,0 +1,54 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>Classes:SerpentGib1</title>
+  <ns>0</ns>
+  <id>4732</id>
+  <revision>
+    <id>34909</id>
+    <parentid>34908</parentid>
+    <timestamp>2012-11-11T02:30:22Z</timestamp>
+    <contributor>
+      <username>Blue Shadow</username>
+      <id>2021</id>
+    </contributor>
+    <comment>Added a description</comment>
+    <origin>34909</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="855" sha1="4vqhuqhfi48tvas4oefs0hvymev6lnk" xml:space="preserve">{{Actor|
+| type = Gibs
+| name = Stalker meat chunk
+| class = SerpentGib1
+| game = Hexen
+}}[[Classes]]: &lt;u&gt;SerpentGib1&lt;/u&gt;&lt;br&gt;
+&amp;ensp;&amp;rarr;[[Classes:SerpentGib2|SerpentGib2]]&lt;br&gt;
+&amp;ensp;&amp;rarr;[[Classes:SerpentGib3|SerpentGib3]]&lt;br&gt;
+
+A meat chunk from a {{Class|Serpent|stalker}} or a {{Class|SerpentLeader|stalker leader}}. It is spawned when gibbed. 
+==== [[DECORATE]] definition ====
+ ACTOR &lt;u&gt;SerpentGib1&lt;/u&gt;
+ {
+   {{Property|Radius}} 3
+   {{Property|Height}} 3
+   +{{Flag|NOBLOCKMAP}}
+   +{{Flag|NOGRAVITY}}
+ 
+   action native [[A_FloatGib]]();
+   action native [[A_DelayGib]]();
+   action native [[A_SinkGib]]();
+ 
+   States
+   {
+   Spawn:
+     SSXD Q 6
+     SSXD Q 6 [[A_FloatGib]]
+     SSXD QQ 8 [[A_FloatGib]]
+     SSXD QQ 12 [[A_FloatGib]]
+     SSXD Q 232 [[A_DelayGib]]
+     SSXD QQ 12 [[A_SinkGib]]
+     SSXD QQQ 8 [[A_SinkGib]]
+     Stop
+   }
+ }</text>
+    <sha1>4vqhuqhfi48tvas4oefs0hvymev6lnk</sha1>
+  </revision>
+</page>

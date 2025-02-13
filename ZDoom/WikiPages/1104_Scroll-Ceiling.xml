@@ -1,0 +1,63 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>Scroll Ceiling</title>
+  <ns>0</ns>
+  <id>1104</id>
+  <revision>
+    <id>44661</id>
+    <parentid>40938</parentid>
+    <timestamp>2017-04-03T17:24:48Z</timestamp>
+    <contributor>
+      <username>Gez</username>
+      <id>1283</id>
+    </contributor>
+    <comment>xlat</comment>
+    <origin>44661</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="1922" sha1="dbjcoa2xvtnjmax3d4w3jmlo7ix1cfi" xml:space="preserve">{{DISPLAYTITLE:Scroll_Ceiling}}
+''line version:''&lt;br&gt;
+{{Special|224|tag, scrollbits, unused, x-move, y-move|Scrolling|Ceiling}}
+
+''script version:''&lt;br&gt;
+{{Special|224|tag, x-move, y-move, unused|Scrolling|Ceiling}}
+
+* ''tag'': tag of affected sector
+* ''scrollbits'': how the scrolling speed is determined (see below)
+* ''unused'': does nothing, contrary to [[Scroll_Floor]].
+* ''x-move''/''y-move'': how quickly and in what directions to scroll.
+
+scrollbits: Selects the type of scroller and how the speed and angle is determined.
+
+* bit 0(1): Displacement scroller
+* bit 1(2): Accelerative scroller
+* bit 2(4): Use this linedef to get dx and dy
+
+This special takes 5 arguments when placed on a line, but 4 arguments when used in a script.
+
+''x-move'' and ''y-move'' are only used if ''scrollbits'' does not indicate to use the linedef to determine the scroll rate. When placed on a line, 128 is subtracted from these values to determine the actual direction and rate of scroll. (So 128 would be no scroll.) When used in a script, positive values move north/east, while negative values move south/west.
+
+'''NOTE: When using Doom Builder 2 the scripting popup help will show the line version instead of the script version. Do not follow it, use the script version.'''
+==Examples==
+The following results in a ceiling (with the tag of 14) that quickly scrolls to the north. 
+ script 1 OPEN
+ {
+    scroll_ceiling (14, 0, 150, 0);
+ }
+
+== Conversions from linedef types ==
+The following Doom map format types can be converted as Scroll_Ceiling:
+{| {{prettytable}}
+!Type!!Conversion!!Trigger
+|-
+|{{icon|Boom}} 214:Accel Tagged Ceiling w.r.t. 1st Side's Sector || Scroll_Ceiling (tag, 6, 0, 0, 0) || 
+|-
+|{{icon|Boom}} 245:Scroll Tagged Ceiling w.r.t. 1st Side's Sector || Scroll_Ceiling (tag, 5, 0, 0, 0) || 
+|-
+|{{icon|Boom}} 250:Scroll Tagged Ceiling || Scroll_Ceiling (tag, 4, 0, 0, 0) || 
+|}
+
+==External links==
+* {{oldref}}</text>
+    <sha1>dbjcoa2xvtnjmax3d4w3jmlo7ix1cfi</sha1>
+  </revision>
+</page>

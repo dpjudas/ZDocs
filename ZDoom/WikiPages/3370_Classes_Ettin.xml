@@ -1,0 +1,95 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>Classes:Ettin</title>
+  <ns>0</ns>
+  <id>3370</id>
+  <revision>
+    <id>39477</id>
+    <parentid>34498</parentid>
+    <timestamp>2015-04-30T21:24:05Z</timestamp>
+    <contributor>
+      <username>Blue Shadow</username>
+      <id>2021</id>
+    </contributor>
+    <minor />
+    <comment>/* DECORATE definition */ Updated</comment>
+    <origin>39477</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="2524" sha1="cu7gaixcxwyk4dfkfsbge06y64att9n" xml:space="preserve">{{Actor|
+| type = Monster
+| name = Ettin
+| class = Ettin
+| game = Hexen
+| doomednum = 10030
+| spawnid = 4
+| spawnname = T_ETTIN 
+}}[[Classes]]: &lt;u&gt;Ettin&lt;/u&gt;&lt;br&gt;
+&amp;ensp;&amp;rarr;[[Classes:EttinMash]]
+
+Ettins are big, brawny, brown bicephalous beasties that are one of the most often encountered enemy in Hexen. They have no ranged attack and no special power, making them the weakest monsters of Korax's horde. Along with [[Classes:FireDemon|afrits]] and [[Classes:Centaur|centaurs]], they are often spawned periodically through ACS to prevent a map from being empty for too long; which can make them quite annoying after a while.
+
+Ettins and centaurs, when hurt by a [[Classes:PoisonCloud|poison cloud]] or by a mage's [[Classes:MWeapLightning|arc of death]], emit the funny "puppy beat" sound.
+
+==== [[DECORATE]] definition ====
+ ACTOR &lt;u&gt;Ettin&lt;/u&gt;
+ {
+   {{Property|Health}} 175
+   {{Property|Radius}} 25
+   {{Property|Height}} 68
+   {{Property|Mass}} 175
+   {{Property|Speed}} 13
+   {{Property|Damage}} 3
+   {{Property|PainChance}} 60
+   {{Property|Monster}}
+   +{{Flag|FLOORCLIP}}
+   +{{Flag|TELESTOMP}}
+   {{Property|SeeSound}} "EttinSight"
+   {{Property|AttackSound}} "EttinAttack"
+   {{Property|PainSound}} "EttinPain"
+   {{Property|DeathSound}} "EttinDeath"
+   {{Property|ActiveSound}} "EttinActive"
+   {{Property|HowlSound}} "PuppyBeat"
+   {{Property|Obituary}} "$OB_ETTIN"
+   States
+   {
+   Spawn:
+     ETTN AA 10 [[A_Look]]
+     Loop
+   See:
+     ETTN ABCD 5 [[A_Chase]]
+     Loop
+   Pain:
+     ETTN H 7 [[A_Pain]]
+     Goto See
+   Melee:
+     ETTN EF 6 [[A_FaceTarget]]
+     ETTN G 8 [[A_CustomMeleeAttack]]([[DECORATE_expressions#Mathematical_functions|random]][EttinAttack](1, 8)*2)
+     Goto See
+   Death:
+     ETTN IJ 4
+     ETTN K 4 [[A_Scream]]
+     ETTN L 4 [[A_NoBlocking]]
+     ETTN M 4 [[A_QueueCorpse]]
+     ETTN NOP 4
+     ETTN Q -1
+     Stop
+   XDeath:     
+     ETTB A 4
+     ETTB B 4 [[A_NoBlocking]]
+     ETTB C 4 [[A_SpawnItemEx]]("{{Class|EttinMace}}", 0, 0, 8.5, [[DECORATE_expressions#Mathematical_functions|random]][DropMace](-128, 127)*0.03125,
+                            [[DECORATE_expressions#Mathematical_functions|random]][DropMace](-128, 127)*0.03125, 10+[[DECORATE_expressions#Mathematical_functions|random]][DropMace](0, 255)*0.015625, 0,
+                            SXF_ABSOLUTEVELOCITY)
+     ETTB D 4 [[A_Scream]]
+     ETTB E 4 [[A_QueueCorpse]]
+     ETTB FGHIJK 4
+     ETTB L -1
+     Stop
+   Ice:
+     ETTN R 5 [[A_FreezeDeath]]
+     ETTN R 1 [[A_FreezeDeathChunks]]
+     Wait
+   }
+ }</text>
+    <sha1>cu7gaixcxwyk4dfkfsbge06y64att9n</sha1>
+  </revision>
+</page>

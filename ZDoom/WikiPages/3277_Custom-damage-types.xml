@@ -1,0 +1,133 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>Custom damage types</title>
+  <ns>0</ns>
+  <id>3277</id>
+  <revision>
+    <id>52258</id>
+    <parentid>48681</parentid>
+    <timestamp>2024-04-04T10:57:31Z</timestamp>
+    <contributor>
+      <username>Jekyll Grim Payne</username>
+      <id>2175</id>
+    </contributor>
+    <origin>52258</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="5471" sha1="75oba2sp9f8n8ngpe8mxmth22668xda" xml:space="preserve">{{OutdatedGuide|Custom damage types (ZScript)}}
+
+Users can specify custom damage types using the DamageType [[Actor properties|actor property]] along with custom states. A number of [[damage types]] are predefined, but you can create more.
+
+You can specify the type of damage a projectile inflicts using the {{Property|DamageType}} property:
+
+ Actor Fireball
+ {
+     {{Flag|Projectile}}
+     {{Property|DamageType}} {{DamageType|Fire}}
+     ...
+
+In case of a [[hitscan]] or a melee attack the damage type should be defined in the [[puff]] actor used by that attack (meaning this will always require creating a custom puff). Damage types are never defined in monster or weapon actors directly.
+
+You can then create corresponding custom Pain, Death, Wound and Crash [[Actor states|states]] in your actors that are called instead of the normal states when this type of damage is inflicted.  You do this by using the form ''State''.''DamageType'':
+
+ Actor MyZombie : {{Class|ZombieMan}}
+ {
+     {{Property|PainChance}} "{{DamageType|Fire}}", 255
+ 
+     States {
+          Pain.{{DamageType|Fire}}:
+               ZMBF AB 3
+               ZMBF C 5 [[A_PlaySound]]("myzombie/Burn")
+               ZMBF D 3
+               goto See
+          Death.{{DamageType|Fire}}:
+               ZMBF EFG 3
+               ZMBF H 2 [[A_PlaySound]]("myzombie/BurnDeath")
+               ZMBF IJ 3
+               ZMBF K 3 [[A_NoBlocking]]
+               ZMBF L -1
+               stop
+      }
+ }
+
+As you can see in the above example, you can also specify a pain chance for each type of custom damage you have defined.  This can allow enemies that will always be affected by fire damage (as above) but never by ice damage, for example.
+{{note|The following note only applies to versions of GZDoom older than 1.8.10. In newer versions, you can use damage-based '''XDeath''' states in the same way you would with '''Death''' states.}}
+Note that custom XDeath states are not currently supported. However, since a custom Death state supersedes the XDeath state, you can use this to your advantage to simulate the effect.
+
+ actor GibZombie : {{Class|ZombieMan}}
+ {
+     States {
+          Death.Gib:
+               POSS G 0 [[A_JumpIfHealthLower]](-20,"SuperGibDeath")
+               goto Death
+      }
+ }
+
+Here [[A_JumpIfHealthLower]] is used to check if the damage incurred on the Zombie has passed its {{Property|GibHealth}} value (in this case, 20). If it  has, it jumps to a new gib sequence; if not, it goes to a normal death. Via this method, custom gib states that behave the same way as the original Doom ones can be created.
+
+In addition to the above, you can also create monsters that are resistant, or vulnerable, to a particular type of custom damage.  You do this with the {{Property|DamageFactor}} [[Actor properties|property]], using the format '''DamageFactor''' ''"DamageType"'', ''multiplier''.
+
+ Actor RaiDoom : {{Class|DoomImp}} replaces {{Class|CellPack}}
+ { 
+   {{Property|Health}} 200 
+   +{{Flag|MISSILEMORE}}
+   +{{Flag|MISSILEEVENMORE}}
+   {{Property|Speed}} 16 
+   {{Property|DamageFactor}} "Pikachu", 0.2  //it's not very effective... 
+   {{Property|DamageFactor}} "Squirtle", 1.8  //it's super effective! 
+ }
+
+== Damagetype declarations ==
+{{WarnDeprecated|the [[MAPINFO/Damage type definition|MAPINFO method]]}}
+You can declare a damagetype and default properties for it with a new decorate syntax "DamageType". Its syntax is:
+ DamageType &lt;DamageTypeName&gt; { &lt;DamageTypeProperties&gt; }
+
+''Damage type properties''
+* Factor (default 1.0): When an actor has no specific damagefactor for this damage type, the globally defined damage factor is applied. The fallback damagefactor (Normal) is also applied if it is defined.
+* ReplaceFactor: If specified, the fallback damagefactor (Normal) is not applied to this damagetype.
+* NoArmor: If specified, damage of this type always bypasses armor.
+
+'''Note:''' The actor property {{Property|DamageFactor}} always applies, unless damage factors are omitted completely. Declaring a damagetype does nothing to change that.
+
+Example: A new damage-type (SpecialDamage) that does no damage unless an actor is explicitly vulnerable.
+
+ DamageType SpecialDamage
+ {
+    Factor 0
+    ReplaceFactor // Not truly necessary, since we multiply by 0
+ }
+ 
+ Actor SpecialActor
+ {
+    {{Property|DamageFactor}} "SpecialDamage", 1 // explicitly vulnerable, global setting does not apply
+ }
+
+When you declare a damagetype, you reset any existing definitions to defaults.
+
+Example: Redefine "{{DamageType|Drowning}}" to affect armor. (Silly, but possible.)
+
+ DamageType {{DamageType|Drowning}}
+ {
+     // Declaring a damagetype with no explicit properties causes
+     // it to apply armor, have a default damage factor of 1.0 and
+     // apply the fallback damagefactor ({{DamageType|Normal}}) from the victim.
+ }
+
+Another trick: Redefine "{{DamageType|Drowning}}" to ignore fallback damage factor.
+
+ DamageType {{DamageType|Drowning}}
+ {
+     NoArmor // Drowning should not affect armor
+     ReplaceFactor // All actors that have no explicit damagefactor for drowning should use the global value from this definition
+     // Default Factor 1.0
+ }
+
+ Actor TakesMoreDamage
+ {
+    {{Property|DamageFactor}} "{{DamageType|Normal}}", 1.5 // Takes extra damage for attacks that have no specific damage factor
+    // We have changed {{DamageType|Drowning}} so that it ignores DamageFactor "{{DamageType|Normal}}" by ReplaceFactor
+ }
+
+[[Category:DECORATE guides]]</text>
+    <sha1>75oba2sp9f8n8ngpe8mxmth22668xda</sha1>
+  </revision>
+</page>

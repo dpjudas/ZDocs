@@ -1,0 +1,67 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>UseInventory (ZScript)</title>
+  <ns>0</ns>
+  <id>9223</id>
+  <revision>
+    <id>45686</id>
+    <timestamp>2017-10-24T04:36:54Z</timestamp>
+    <contributor>
+      <username>Blue Shadow</username>
+      <id>2021</id>
+    </contributor>
+    <comment>UseInventory</comment>
+    <origin>45686</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="1790" sha1="7poc1mixdrdqn6pxdbqihuycr9n502r" xml:space="preserve">bool '''UseInventory''' (Inventory ''item'')
+
+==Usage==
+Uses the specified item from the inventory. The actor must be alive and the item must be present in its inventory to be used. Note that what is passed to the function is a pointer to the item, not a class. Also note that the pointer should only be passed to the function if it is not null, as the function does not handle null pointers by itself.
+
+===Return value===
+If the item is successfully used, the function returns ''true'', otherwise it returns ''false''.
+
+==Examples==
+This item is meant as a quick heal method, activated by the press of a key. It uses a {{Class|ArtiHealth|quartz flask}} from the inventory and logs various messages, such as how many flasks are left after a successful use.
+
+ class PotionUse : {{Class|CustomInventory}}
+ {
+     States
+     {
+     Pickup:
+         TNT1 A 0
+         {
+             let pmobj = {{Class|PlayerPawn}}(self);
+             if (pmobj == null) return;
+ 
+             Inventory potion = [[FindInventory]]("{{Class|ArtiHealth}}");
+ 
+             if (potion)
+             {
+                 if ('''UseInventory'''(potion))
+                 {
+                     potion = FindInventory("ArtiHealth");
+ 
+                     if (potion)
+                     {
+                         [[A_Log]]("\c[Cyan]" .. potion.Amount .. "\c[White] potion(s) left.");
+                     }
+                     else
+                     {
+                         A_Log("\c[Cyan]You've used your last potion.");
+                     }
+                 }
+             }
+             else if (pmobj.health &gt; 0 &amp;&amp; pmobj.health &lt; pmobj.GetMaxHealth())
+             {
+                 A_Log("\c[Red]You don't have any potions.");
+             }
+         }
+         Stop;
+     }
+ }
+
+[[Category:ZScript]]</text>
+    <sha1>7poc1mixdrdqn6pxdbqihuycr9n502r</sha1>
+  </revision>
+</page>

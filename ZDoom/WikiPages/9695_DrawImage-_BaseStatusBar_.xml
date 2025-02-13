@@ -1,0 +1,55 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>DrawImage (BaseStatusBar)</title>
+  <ns>0</ns>
+  <id>9695</id>
+  <revision>
+    <id>53247</id>
+    <parentid>53246</parentid>
+    <timestamp>2024-10-07T22:19:27Z</timestamp>
+    <contributor>
+      <username>Jekyll Grim Payne</username>
+      <id>2175</id>
+    </contributor>
+    <comment>/* Example */</comment>
+    <origin>53247</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="1659" sha1="4fkmr1e7gmgu27ugrid7c6z5t5kjxh2" xml:space="preserve">{{ZScriptNote}}
+
+[[Classes:BaseStatusBar|'''BaseStatusBar''']]
+
+void '''DrawImage'''(String ''texture'', Vector2 ''pos'', int ''flags'' = 0, double ''Alpha'' = 1., Vector2 ''box'' = (-1, -1), Vector2 ''scale'' = (1, 1), ERenderStyle ''style'' = STYLE_Translucent, Color ''col'' = 0xffffffff, int ''translation'' = 0, double ''clipwidth'' = -1)
+
+==Usage==
+Can be used in a [[Classes:BaseStatusBar|ZScript HUD]] to draw an image. The {{c|texture}} argument takes an image name.
+
+===Parameters===
+*{{c|string '''texture'''}}
+:The name of the image. Any type of graphic can be used here (sprites, textures, graphics, [[ANIMDEFS]] definitions, [[TEXTURES]] definitions, etc.). The name must be provided in double quotation marks.
+:If the filename of the image is over 8 characters, a full path (with subfolders and the file extension) must be provided, for example &lt;code&gt;"graphics/hud/helmet_outline.png"&lt;/code&gt;
+:The image is anchored at its top left corner by default (this can be changed with flags). The built-in offsets of the image are ignored, unless the {{c|DI_ITEM_OFFSETS}} flag is passed.
+{{: BaseStatusBar position argument}}
+{{: BaseStatusBar image function arguments}}
+
+== Example ==
+An extremely simple HUD that draws the {{class|Medikit}} sprite at the top center of the screen if the HUD is in fullscreen mode:
+&lt;syntaxhighlight lang="csharp"&gt;
+class CustomStatusBar : BaseStatusBar
+{
+	override void Draw(int state, double TicFrac)
+	{
+		Super.Draw(state, TicFrac);
+
+		if (state == HUD_Fullscreen)
+		{
+			BeginHUD();
+			DrawImage("MEDIA0", (0, 0), DI_SCREEN_TOP|DI_ITEM_TOP);
+		}
+	}
+}&lt;/syntaxhighlight&gt;
+
+[[Category:ZScript]]
+[[Category:BaseStatusBar]]</text>
+    <sha1>4fkmr1e7gmgu27ugrid7c6z5t5kjxh2</sha1>
+  </revision>
+</page>

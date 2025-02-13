@@ -1,0 +1,59 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>IsHostile</title>
+  <ns>0</ns>
+  <id>9885</id>
+  <revision>
+    <id>52816</id>
+    <parentid>52395</parentid>
+    <timestamp>2024-07-26T10:31:16Z</timestamp>
+    <contributor>
+      <username>Jekyll Grim Payne</username>
+      <id>2175</id>
+    </contributor>
+    <minor />
+    <comment>/* Return values */</comment>
+    <origin>52816</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="1795" sha1="9vkn1cuo8zq5h2q4oslu6703taipq82" xml:space="preserve">'''{{class|Actor}}'''
+
+{{c|native clearscope bool '''IsHostile'''(Actor ''other'') const}}
+
+== Usage ==
+Checks if the calling actor is hostile to the ''other'' actor. This is meant to be run on [[Monster|monsters]] to determine their allegiance.
+
+This is not a direct opposite of [[IsFriend]], since the set of checks is slightly different.
+
+=== Parameters ===
+*{{c|Actor '''other'''}}
+:[[Actor pointers|Pointer]] to the actor, whose allegiance should be compared to.
+
+=== Return values ===
+If neither the calling actor, nor the ''other'' actor has the {{flag|FRIENDLY}} flag, the function returns &lt;code&gt;false&lt;/code&gt;. They can still become hostile to each other under specific conditions, the [[Infighting|infighting]] rules allow it.
+
+If at least one of the actors has the {{flag|FRIENDLY}} the function performs a sequence of checks, similar to the inverted {{c|[[IsFriend]]}}:
+
+:In team deathmatch, the function returns &lt;code&gt;false&lt;/code&gt; if ANY of the below conditions are met:
+:*The calling actor and ''other'' are [[IsTeammate|teammates]]
+:*The calling actor and ''other'' are allied to players who are [[IsTeammate|teammates]] (the allied players are determined by the value of the actors' &lt;code&gt;FriendPlayer&lt;/code&gt; fields)
+
+:In other game modes, the function returns &lt;code&gt;false&lt;/code&gt; if ANY of the below conditions are met:
+:*The game mode is NOT [[deathmatch]]
+:*The calling actor and ''other'' are allied to the same player
+:*The calling actor and ''other'' are allied players who are [[IsTeammate|teammates]]
+If none of the above mentioned conditions were met, the function returns &lt;code&gt;true&lt;/code&gt;.
+
+== Examples ==
+{{noexamples}}
+
+== See also ==
+* [[IsFriend]]
+* [[IsTeammate]]
+* [[Infighting]]
+* [[ZScript actor functions]]
+* {{flag|FRIENDLY|FRIENDLY flag}}
+
+[[Category:ZScript]]</text>
+    <sha1>9vkn1cuo8zq5h2q4oslu6703taipq82</sha1>
+  </revision>
+</page>

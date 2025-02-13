@@ -1,0 +1,37 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>Zipdir</title>
+  <ns>0</ns>
+  <id>5616</id>
+  <revision>
+    <id>28496</id>
+    <parentid>24258</parentid>
+    <timestamp>2010-11-19T14:33:41Z</timestamp>
+    <contributor>
+      <username>Gez</username>
+      <id>1283</id>
+    </contributor>
+    <minor />
+    <origin>28496</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="1711" sha1="nfpc8n1qk9bel305ff120ebakwd54io" xml:space="preserve">'''Zipdir''' is a tool created by [[Randy Heit]] and available under the terms of the GPL v2, packaged with [[ZDoom]]'s source code, where it is found in the /tools/zipdir subdirectory. It is used to generate &lt;tt&gt;zdoom.pk3&lt;/tt&gt;, but can also be used for other purposes.
+
+==Command line options==
+Usage: &lt;tt&gt;zipdir [-dfuq] &lt;zip file&gt; &lt;directory&gt; ...&lt;/tt&gt;
+
+Given one or more directories, their contents are scanned recursively. If any files are newer than the zip file or the zip file does not exist, then everything in the specified directories is stored in the zip. The base directory names are not stored in the zip file, but subdirectories recursed into are stored.
+
+Zipdir skips hidden files and subdirectories to prevent SVN bookkeeping info (i.e., the .svn subdirectories) from being put in the archive. It also ignores any .orig file which are left by some patching utilities.
+
+;-d
+:Force the use of the "deflate" algorithm. Normally zipdir guesses the most efficient compression algorithm for each file, but not all zip tools are able to recognize some of the most efficient methods. Forcing deflate results in a larger file that is guaranteed to work with any archiver. The compression methods supported by zipdir are "store" (no compression), "deflate", BZip2, LZMA and PPMd. If a file cannot be efficiently compressed, it will still be stored instead of deflated.
+;-f
+:Force creation of archive. Normally, zipdir only updates files that are more recent than those already in the archive.
+;-u
+:Only update changed file. The opposite of -f.
+;-q
+:Quiet mode: do not list files. Normally zipdir prints each file it adds or updates in the archive, along with the compression method used.
+[[Category:Tools]]</text>
+    <sha1>nfpc8n1qk9bel305ff120ebakwd54io</sha1>
+  </revision>
+</page>

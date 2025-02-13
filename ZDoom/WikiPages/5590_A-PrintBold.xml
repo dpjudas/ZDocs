@@ -1,0 +1,59 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>A PrintBold</title>
+  <ns>0</ns>
+  <id>5590</id>
+  <revision>
+    <id>42816</id>
+    <parentid>35069</parentid>
+    <timestamp>2016-06-23T20:45:18Z</timestamp>
+    <contributor>
+      <username>JSO x</username>
+      <id>2479</id>
+    </contributor>
+    <comment>/* Examples */ edit</comment>
+    <origin>42816</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="1034" sha1="rhq68qn1kddrdbkrmcb7p5x77lki977" xml:space="preserve">{{codepointer|Special action}}
+'''A_PrintBold''' (string ''text''[, float ''time''[, string ''fontname'']])
+
+[[PrintBold|Prints]] a text to all [[player]]s' screens.
+
+The text can be formatted text.
+
+Optionally, a duration for how long the message must be displayed can be passed. The default value of 0 means to use {{CVAR|M|con_midtime}}.
+
+Also optionally, a different [[font]] can be selected. By default, or if the font name given is invalid, it will use SmallFont.
+
+== Examples ==
+Revenant that shoots 4 times:
+ Actor RevenantBoss4ZDWiki: [[Classes:Revenant|Revenant]] replaces Revenant
+ {
+  [[Health]] 700
+  [[Translation]] "16:47=64:79"
+  States
+  {
+  Missile:
+    SKEL J 0 Bright [[A_FaceTarget]]
+    SKEL J 10 Bright A_FaceTarget
+    SKEL KKKK 2 [[A_SkelMissile]]
+    SKEL K 10 A_FaceTarget
+    Goto See
+  Death:
+    SKEL L 7 A_PrintBold( "Next revenant killed..." )
+    SKEL M 7
+    SKEL N 7 [[A_ScreamAndUnblock]]
+    SKEL O 7
+    SKEL P 7
+    SKEL Q -1
+    Stop
+  }
+ }
+
+== See also ==
+*[[A_Log]]
+*[[A_LogInt]]
+*[[A_Print]]</text>
+    <sha1>rhq68qn1kddrdbkrmcb7p5x77lki977</sha1>
+  </revision>
+</page>

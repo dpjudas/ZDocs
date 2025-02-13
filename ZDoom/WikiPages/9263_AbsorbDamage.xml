@@ -1,0 +1,82 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>AbsorbDamage</title>
+  <ns>0</ns>
+  <id>9263</id>
+  <revision>
+    <id>53930</id>
+    <parentid>51368</parentid>
+    <timestamp>2024-11-27T17:15:04Z</timestamp>
+    <contributor>
+      <username>Jekyll Grim Payne</username>
+      <id>2175</id>
+    </contributor>
+    <comment>/* Examples */</comment>
+    <origin>53930</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="2721" sha1="namqbmt98e00gq89a6apklyzvrhw0v2" xml:space="preserve">__NOTOC__
+
+'''{{class|Inventory}}'''
+
+virtual void '''AbsorbDamage''' (int ''damage'', Name ''damageType'', out int ''newdamage'', Actor ''inflictor'' = null, Actor ''source'' = null, int ''flags'' = 0)
+
+==Usage==
+Allows {{Class|Inventory|inventory items}} to manipulate the damage an actor receives. It is called when an actor is damaged, provided the damage is not set up to bypass armor and is greater than zero. Note that the function is called after '''[[ModifyDamage]]''', another similar function for damage manipulation.
+
+This function's main usage is with [[armor]], but could be used with any inventory item.
+
+===Parameters===
+*{{c|int '''damage'''}}
+:The amount of damage the attack would deal without modification.
+*{{c|Name '''damageType'''}}
+:The damage type applied to the attack. Regular attacks use {{c|'Normal'}}, hitscan attacks use {{c|'Hitscan'}}.
+*{{c|out int '''newdamage'''}}
+:The amount of damage the attack will deal after this function has been called. If nothing is done with this value, &lt;code&gt;damage&lt;/code&gt; will be used unmodified. Note, if the idea is to use this function to obtain data without modifying the damage, calling &lt;code&gt;newdamage = damage&lt;/code&gt; is redundant; it's enough to simply not do anything with &lt;code&gt;newdamage&lt;/code&gt; at all.
+*{{c|Actor '''inflictor'''}}
+:The actor dealing the damage. This is the missile for projectiles and the puff for hitscan attacks. For monster melee attacks this is the same as the source.
+*{{c|Actor '''source'''}}
+:The actor responsible for the inflictor.
+*{{c|int '''flags'''}} - The damage flags to use in the attack:
+{{: ZScript damage flags}}
+:NOTE: While the list of flags is the same as used by [[DamageMobj]], this function, naturally, won't be able to intercept attacks that are specifically set to bypass it, so {{c|DMG_NOPROTECT}} will never be readable.
+
+==Examples==
+This item fully absorbs damage from fire-based attacks, and half damage from ice-based attacks.
+&lt;syntaxhighlight lang="csharp"&gt;
+class FireAndIceProtection : Inventory
+{
+    Default
+    {
+        Inventory.Amount 1; //example values
+        Inventory.MaxAmount 10; //example values
+    }
+
+    override void AbsorbDamage (int damage, Name damageType, out int newdamage, Actor inflictor, Actor source, int flags)
+    {
+        if (damageType == 'Fire')
+        {
+            newdamage = 0;
+        }
+        else if (damageType == 'Ice')
+        {
+            newdamage = damage / 2;
+        }
+    }
+
+    States {
+    Spawn:
+        FIRP A -1; //example sprite name
+        stop;
+    }
+}&lt;/syntaxhighlight&gt;
+
+==See also==
+* [[Inventory virtual functions]]
+* [[ZScript virtual functions]]
+
+[[category:ZScript]]
+[[category:ZScript virtual functions]]
+[[Category:Inventory]]</text>
+    <sha1>namqbmt98e00gq89a6apklyzvrhw0v2</sha1>
+  </revision>
+</page>

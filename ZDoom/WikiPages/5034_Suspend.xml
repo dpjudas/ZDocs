@@ -1,0 +1,44 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>Suspend</title>
+  <ns>0</ns>
+  <id>5034</id>
+  <revision>
+    <id>35837</id>
+    <parentid>28538</parentid>
+    <timestamp>2013-02-11T00:38:37Z</timestamp>
+    <contributor>
+      <username>Deded007</username>
+      <id>1392</id>
+    </contributor>
+    <minor />
+    <comment>formatting</comment>
+    <origin>35837</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="1526" sha1="lc21x76czfhjfxo3bv9we51ltjs23fl" xml:space="preserve"> suspend;
+
+== Usage ==
+
+Suspend is a function used in [[ACS]] to suspend the script it is used within. You can also use [[ACS_Suspend]] to suspend other scripts.
+
+Suspend is essentially the same as [[terminate]], except that it leaves a marker in memory which instructs the script to pick up where it left off the next time it is run. After a script has been suspended, activating the script again by any means will resume the script from the point it was last suspended.
+
+== Examples ==
+
+This script will update the texture on a wall every time the player uses the wall. It will toggle between three different possibilities.  The script could easily be adapted to a computer terminal which allows the user to “page” between multiple displays or messages.
+
+ script 1 (void) {
+     [[SetLineTexture]] (60, {{const|SIDE_FRONT}}, {{const|TEXTURE_MIDDLE}}, "SCREEN2");
+     [[suspend]];
+ 
+     [[SetLineTexture]] (60, {{const|SIDE_FRONT}}, {{const|TEXTURE_MIDDLE}}, "SCREEN3");
+     [[suspend]];
+ 
+     [[SetLineTexture]] (60, {{const|SIDE_FRONT}}, {{const|TEXTURE_MIDDLE}}, "SCREEN1");
+ }
+
+The first activation of this script will change the texture to “SCREEN2” and suspend the script. The second activation will resume the script with the next line, which changes the texture to “SCREEN3” and suspends the script again. The third activation will change the line back to “SCREEN1” and the script will exit normally, so that the next time the script is run, it will start over from the beginning.
+[[Category:ACS]]</text>
+    <sha1>lc21x76czfhjfxo3bv9we51ltjs23fl</sha1>
+  </revision>
+</page>

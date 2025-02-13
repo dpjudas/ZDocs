@@ -1,0 +1,71 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>Classes:Unknown</title>
+  <ns>0</ns>
+  <id>4149</id>
+  <revision>
+    <id>53564</id>
+    <parentid>35231</parentid>
+    <timestamp>2024-11-07T10:46:18Z</timestamp>
+    <contributor>
+      <username>Jekyll Grim Payne</username>
+      <id>2175</id>
+    </contributor>
+    <minor />
+    <comment>/* DECORATE definition */</comment>
+    <origin>53564</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="1312" sha1="t99tatz8nt4uxm9t13kjmixib4n8vb1" xml:space="preserve">{{Actor|
+| type = Internal
+| name = Error marker
+| class = Unknown
+}}[[Classes]]: &lt;u&gt;Unknown&lt;/u&gt;&lt;br /&gt;
+&amp;ensp;&amp;rarr;{{class|SpeakerIcon}}
+
+This actor class is as an [[exclamation mark]] that replaces any problematic objects in a map. An actor is replaced if it is:
+*a map thing that specifies a DoomEd Number that does not match any existing actor
+*an actor whose sprite for the first “Spawn” frame is missing
+*a {{Class|RandomSpawner}} that went into too many recursions and might be stuck in an infinite loop
+
+In such an event of replacement an error message is logged into the console to help diagnose the cause of the problem. This actor is always guaranteed to be defined and must be defined for ZDoom to function properly.
+
+=== [[ZScript]] definition ===
+{{ZScriptDefinitionNote|actors/shared/sharedmisc.zs#L4C1-L20C2}}
+&lt;syntaxhighlight lang="cs"&gt;
+class Unknown : Actor
+{
+	Default
+	{
+		Radius 32;
+		Height 56;
+		+NOGRAVITY
+		+NOBLOCKMAP
+		+DONTSPLASH
+	}
+	States
+	{
+	Spawn:
+		UNKN A -1;
+		Stop;
+	}
+}&lt;/syntaxhighlight&gt;
+
+=== [[DECORATE]] definition ===
+{{DecorateDefinitionNote}}
+ ACTOR &lt;u&gt;Unknown&lt;/u&gt;
+ {
+   {{property|Radius}} 32
+   {{property|Height}} 56
+   +{{flag|NOGRAVITY}}
+   +{{flag|NOBLOCKMAP}}
+   +{{flag|DONTSPLASH}}
+   States
+   {
+   Spawn:
+     [[exclamation mark|UNKN]] A -1
+     Stop
+   }
+ }</text>
+    <sha1>t99tatz8nt4uxm9t13kjmixib4n8vb1</sha1>
+  </revision>
+</page>

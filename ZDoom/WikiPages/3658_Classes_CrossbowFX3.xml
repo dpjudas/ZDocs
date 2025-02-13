@@ -1,0 +1,49 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>Classes:CrossbowFX3</title>
+  <ns>0</ns>
+  <id>3658</id>
+  <revision>
+    <id>39399</id>
+    <parentid>34120</parentid>
+    <timestamp>2015-04-29T17:57:00Z</timestamp>
+    <contributor>
+      <username>Blue Shadow</username>
+      <id>2021</id>
+    </contributor>
+    <minor />
+    <comment>/* DECORATE definition */ Updated</comment>
+    <origin>39399</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="786" sha1="7sjplr7mfdmo7j8yd00ygvtiklynilc" xml:space="preserve">{{Actor|
+| type = Explosive
+| name = Secondary crossbow shot
+| class = CrossbowFX3
+| game = Heretic
+| spawnid = 149
+| spawnname = T_CROSSBOWPOWERBLAST 
+}}[[Classes]]: [[Classes:CrossbowFX1|CrossbowFX1]]&amp;rarr;&lt;u&gt;CrossbowFX3&lt;/u&gt;&lt;br&gt;
+The secondary projectiles fired by the [[Classes:Crossbow|ethereal crossbow]]. These do much less damage than the [[Classes:CrossbowFX1|main projectiles]], and also are affected by wind and pass through ghosts. 
+
+==== [[DECORATE]] definition ====
+ ACTOR &lt;u&gt;CrossbowFX3&lt;/u&gt; : {{Class|CrossbowFX1}}
+ {
+   {{Property|Speed}} 20
+   {{Property|Damage}} 2
+   {{Property|SeeSound}} ""
+   -{{Flag|NOBLOCKMAP}}
+   +{{Flag|WINDTHRUST}}
+   +{{Flag|THRUGHOST}}
+   States
+   {
+   Spawn:
+     FX03 A 1 Bright
+     Loop
+   Death:
+     FX03 CDE 8 Bright
+     Stop
+   }
+ }</text>
+    <sha1>7sjplr7mfdmo7j8yd00ygvtiklynilc</sha1>
+  </revision>
+</page>

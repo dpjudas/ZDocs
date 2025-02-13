@@ -1,0 +1,61 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>A CrusaderRefire</title>
+  <ns>0</ns>
+  <id>5649</id>
+  <revision>
+    <id>53985</id>
+    <parentid>53982</parentid>
+    <timestamp>2024-11-30T12:04:25Z</timestamp>
+    <contributor>
+      <username>Jekyll Grim Payne</username>
+      <id>2175</id>
+    </contributor>
+    <comment>/* Usage */</comment>
+    <origin>53985</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="1117" sha1="b62xn149b5rq41rcyvi2p7z8zhvg9lb" xml:space="preserve">{{DISPLAYTITLE:A_CrusaderRefire}}
+{{BuiltInFunctionNote|A_MonsterRefire}}
+
+'''{{class|Crusader}}'''
+
+{{c|void '''A_CrusaderRefire'''()}}
+
+== Usage ==
+Used by {{class|Crusader}} and is only avaiable to this class (not to other actors). Lets the monster refire if the target is alive and still in sight; otherwise returns to the monster's "See" state sequence.
+
+== Examples ==
+From {{class|Crusader}}'s code:
+&lt;syntaxhighlight lang="csharp"&gt;
+	Missile:
+		ROB2 E 3 Slow A_FaceTarget;
+		ROB2 F 2 Slow Bright A_CrusaderChoose;
+		ROB2 E 2 Slow Bright A_CrusaderSweepLeft;
+		ROB2 F 3 Slow Bright A_CrusaderSweepLeft;
+		ROB2 EF 2 Slow Bright A_CrusaderSweepLeft;
+		ROB2 EFE 2 Slow Bright A_CrusaderSweepRight;
+		ROB2 F 2 Slow A_CrusaderRefire;
+		Loop;
+&lt;/syntaxhighlight&gt;
+
+== [[ZScript]] definition ==
+{{ZScriptDefinitionNote|actors/strife/crusader.zs}}
+&lt;syntaxhighlight lang="csharp"&gt;
+	void A_CrusaderRefire ()
+	{
+		if (target == null ||
+			target.health &lt;= 0 ||
+			!CheckSight (target))
+		{
+			SetState (SeeState);
+		}
+	}
+&lt;/syntaxhighlight&gt;
+
+== See also ==
+* [[A_MonsterRefire]]
+
+[[Category:Decorate Generic Attack functions]]</text>
+    <sha1>b62xn149b5rq41rcyvi2p7z8zhvg9lb</sha1>
+  </revision>
+</page>

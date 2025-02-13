@@ -1,0 +1,64 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>ACS NamedExecuteWait</title>
+  <ns>0</ns>
+  <id>7455</id>
+  <revision>
+    <id>36649</id>
+    <parentid>33667</parentid>
+    <timestamp>2013-06-09T20:45:28Z</timestamp>
+    <contributor>
+      <username>Gez</username>
+      <id>1283</id>
+    </contributor>
+    <minor />
+    <comment>removing "new" templates</comment>
+    <origin>36649</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="1538" sha1="e4qab0bfp538c7ejpvwd28wcgasek5a" xml:space="preserve">{{DISPLAYTITLE:ACS_NamedExecuteWait}}__NOTOC__
+void '''ACS_NamedExecuteWait''' (string ''script'', int ''unused'', int ''arg1'', int ''arg2'', int ''arg3'')
+
+== Usage ==
+
+Using '''ACS_NamedExecuteWait''' is exactly equivalent to the following two commands:
+
+ [[ACS_NamedExecute]] (script, 0, arg1, arg2, arg3);
+ [[NamedScriptWait]] (script);
+
+Note that where you would specify a map number with [[ACS_NamedExecute]], you must specify 0 here because you can only wait on scripts in the current map.
+
+=== Parameters ===
+
+*''script'': The script name to execute.
+*''unused'': Not currently used. Should always be set to 0.
+*''arg1'': First argument passed to the script.
+*''arg2'': Second argument passed to the script.
+*''arg3'': Third argument passed to the script.
+
+==Examples==
+Like [[ACS_ExecuteWait]] there are often other solutions to achieve the desired effect, however, this method could save unnecessary code repetition.
+  script "WaitOnMonsters" (int tid)
+  {
+      while (ThingCount(T_NONE, tid))
+          [[delay]](1);
+  }
+  
+  script "MonsterChallengeA" (int tid, int tag, int speed)
+  {
+      [[print]](s:"Kill all the monsters to open the door.");
+      ACS_NamedExecuteWait("WaitOnMonsters", 0, tid);
+      [[Door_Open]](tag, speed, TRUE);
+  }
+  
+  script "MonsterCallengeB" (int tid, int tag, int speed)
+  {
+      Print(s:"Kill all the monsters to lower the floor.");
+      ACS_NamedExecuteWait("WaitOnMonsters", 0, tid);
+      [[Floor_LowerToLowest]](tag, speed);
+  }
+
+{{script functions}}
+[[category:ACS Wait functions]]</text>
+    <sha1>e4qab0bfp538c7ejpvwd28wcgasek5a</sha1>
+  </revision>
+</page>

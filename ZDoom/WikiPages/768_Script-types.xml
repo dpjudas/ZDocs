@@ -1,0 +1,219 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>Script types</title>
+  <ns>0</ns>
+  <id>768</id>
+  <revision>
+    <id>50186</id>
+    <parentid>44999</parentid>
+    <timestamp>2023-03-30T12:36:13Z</timestamp>
+    <contributor>
+      <username>Jekyll Grim Payne</username>
+      <id>2175</id>
+    </contributor>
+    <comment>clarified that this is for ACS in the description</comment>
+    <origin>50186</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="8403" sha1="psyar825uy74widd8v14kyteftcsbrk" xml:space="preserve">There are ten different types of [[ACS]] scripts.
+
+==Special scripts==
+Eight types are special, and executed under specific circumstances. These are:
+
+{| {{prettytable}}
+|-
+! Script type || Activator || When
+|-
+| OPEN || World || Immediately after the level is first loaded (Once per level)
+|-
+| ENTER || Player || When a player enters the level (Once per player per level)
+|-
+| RETURN || Player || When a player returns to the level in a hub after leaving 
+|-
+| RESPAWN || Player || When a player respawns in a multiplayer game
+|-
+| DEATH || Player || When a player dies 
+|-
+| LIGHTNING || World || Whenever lightning flashes on the current level
+|-
+| UNLOADING || World || After the level exit is triggered but before the next level loads
+|-
+| DISCONNECT || World || When a player disconnects from a multiplayer game
+|-
+| KILL || Thing || When a [[thing]] with the +USEKILLSCRIPTS flag is killed, or ForceKillScripts is enabled in the [[GameInfo definition]].
+|-
+| REOPEN || World || Immediately after the level is loaded again from a different level inside the hub.
+|}
+
+===OPEN===
+
+{{Note|text=Code that affects the script activator should '''not''' be used in an OPEN script, as the "activator" for these types of scripts is the game world and not a specific player.  Use the ENTER script type if you want to script actions that directly affect the player(s) at the beginning of the level.}}
+
+The level runs an OPEN script when it is started up. The purpose of OPEN scripts is to run the overall level. You can guarantee that it will always run, and only run once. They often contain code which monitors the level and waits for certain circumstances.
+
+An example could be:
+
+ script 1 OPEN
+ {
+ 	[[Delay]](35 * 30);
+ 	[[Door_Close]](5, 20, 0);
+ }
+
+===ENTER===
+
+Similar to OPEN scripts, these run once per player, and are always guaranteed to run. They often contain Thing_ChangeTID to give the player a TID, and other player-specific scripts such as custom HUDs. The player is TID 0 in an ENTER script, and this is the first point you can access the player's TID with certainty, as there is no way to set it whilst building the map.
+
+An example:
+
+ script 1 ENTER
+ {
+ 	[[Thing_ChangeTID]](0, 1000);
+ }
+
+A better version of this same script that would support multiplayer would go something like this:
+
+ script 1 ENTER
+ {
+ 	[[Thing_ChangeTID]](0, 1000+[[PlayerNumber]]());
+ }
+
+Scripts can normally be terminated by the action special [[ACS_Terminate]].  However, this is not true for ENTER scripts. If you chose to have an ENTER script running in an infinite loop (with [[restart]] at the end, or a while loop, or other methods) then there is no way to stop that script with [[ACS_Terminate]].  You can, however, terminate the ENTER script with the [[terminate]] keyword called from within the script.
+
+* '''Note:''' In [[Skulltag]], spectators never trigger an ENTER script.
+
+===RETURN===
+
+Like ENTER scripts, these run once per player and are guaranteed to run. Unlike ENTER scripts, they will run every time the player (re-)enters the level, only if the level has been previously visited (ENTER scripts will run the first time, RETURN will run subsequent times). This type of script is usually used if you need to perform some kind of repeated check every time the player enters the level.
+
+ script 1 RETURN
+ {
+ 	If([[GetActorProperty]](0, {{const|APROP_Health}}) &lt; 75)
+ 	{
+ 		[[SetActorProperty]](0, {{const|APROP_Health}}, 75);
+ 	}
+ }
+
+===RESPAWN===
+
+For cooperative and multiplayer games, these scripts can be used. They activate upon a player respawning after death, and act on that player. They will usually do similar code to ENTER scripts, resetting properties that the player will lose when they die.
+
+ script 1 RESPAWN
+ {
+ 	[[SetActorProperty]](0, {{const|APROP_Speed}}, 0.5);
+ }
+
+===DEATH===
+
+Executes when a player dies.  The player who died is the script activator, so their number can be determined in a multiplayer game using the [[PlayerNumber]] function.
+
+ script 1 DEATH // Drop the Golden Idol, if the dying player has it.
+ {
+        if ([[CheckInventory]]("GoldenIdolOfImportance") {
+             [[Thing_Spawn]](1337+[[PlayerNumber]](), T_MYGOLDENIDOL, 0, 0);
+        }
+ }
+
+===LIGHTNING===
+
+After the [[lightning]] effect occurs, this type of script is run. It is very uncommon to see this type of script and it has one very obvious use.
+
+ script 1 LIGHTNING
+ {
+ 	[[Delay]]([[Random]](20, 200));
+ 	[[AmbientSound]]([[Predefined Sounds|"world/thunder"]], 127);
+ }
+
+The sound "world/thunder" is the thunder sound from ''[[Hexen]]''.
+
+===UNLOADING===
+
+This is almost the inverse to OPEN. It calls when the level is exiting.
+
+For an UNLOADING script, everything up until the first delaying function will have a chance to execute. If the script needs to wait, it will continue execution when the players return to the map. Since this type of script is executed with the equivalent of [[ACS_Execute]] and not [[ACS_ExecuteAlways]], it can block itself from executing the next time the level is unloaded if it hasn't finished with its business yet.
+
+The difference between the opposite of OPEN and UNLOADING is that OPEN is only called once, even if you exit the map and return to it in a hub. UNLOADING will be called every time the map is unloaded.
+
+An example:
+
+ script 1 UNLOADING
+ {
+ 	[[Thing_Spawn]](10, {{const|T_SOULSPHERE}}, 0, 0);
+ }
+
+===DISCONNECT===
+
+A DISCONNECT script must be declared with a single argument.  ZDoom will pass the number of the disconnecting player into this variable.  Because the player has already left the game by the time this script is called, no actions can be taken on that player.  The script is executed by the world itself.
+
+Disconnect scripts activate immediately before the player actor is destroyed, setting the leaving player as the activator instead of the world. Note that any delays or waiting will cause the script to reset the activator back to the world.
+
+An example:
+
+ script 999 (int gone) DISCONNECT
+ {
+ 	[[PrintBold]](s:"Player ", n:gone + 1, s:" has left the building!");
+ }
+
+* '''Note:''' In [[Skulltag]], DISCONNECT scripts are also executed when a player turns into a spectator.
+
+
+===KILL===
+
+Executes when a killable [[thing]] dies and it has the +USEKILLSCRIPTS flag, or ForceKillScripts has been enabled in the [[GameInfo definition]].  The thing that died is the script activator. Works similarly to DEATH scripts for players, except for [[thing]]s that can be killed.
+
+ script 1 KILL // Makes monsters give the player health bonuses on death.
+ {
+ 	if(!CheckFlag(0, "ISMONSTER"))
+ 	{
+ 		terminate;
+ 	}
+ 
+ 	SetActivatorToTarget(0);
+ 	GiveInventory("HealthBonus", 1);
+ }
+
+===REOPEN===
+
+Executes when the level is re-entered as part of a hub, like a RETURN script except on the level itself and not the players.
+
+ script 1 REOPEN
+ {
+ 	[[Thing_Spawn]](16, {{const|T_MEGASPHERE}}, 0, 0);
+ }
+
+==Closed scripts==
+
+A script that does not fall into one of the above categories is known as a '''closed''' script.  This type of script ''must'' take an argument list, even if it's just (void).  Examples of closed scripts include:
+
+ script 1 (void) // Takes no arguments
+ {
+ }
+ 
+ script 13 (int x, int y) // Takes two arguments and stores them in x and y.
+ {
+ }
+
+==Net scripts==
+
+Any of the above scripts (open or closed) can be executed in a single-player game or when cheats are enabled by "puking them" from the [[console]], using the puke [[CCMDs|command]]. However, when playing a multiplayer game in which cheats are off by default, it may still be desirable to allow users to call the scripts on demand, typically by pressing a key bound to a puke statement.  To allow players in a multiplayer game to do this, you can define the script with the "net" keyword.  This makes the script pukable even when cheats are disabled.
+
+Net scripts are defined by placing the net keyword at the end of the line which defines the script:
+
+ script 7 (int x) net // Closed script which can be puked in multiplayer
+ {
+ }
+ 
+ script 109 ENTER net // ENTER script which can also be puked manually in multiplayer
+ {
+ }
+
+* '''Note:''' [[Skulltag]]'s net scripts work in a different kind of way. For more information see [[Skulltag_features#Script_Types|Skulltag's Script Types]].
+
+==Named scripts==
+
+Scripts can be used in [[ACS]] and [[DECORATE]] with strings instead of script numbers.
+
+See [[Named scripts]] for more information.
+
+[[Category:ACS]]</text>
+    <sha1>psyar825uy74widd8v14kyteftcsbrk</sha1>
+  </revision>
+</page>

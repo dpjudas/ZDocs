@@ -1,0 +1,29 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>IMGZ</title>
+  <ns>0</ns>
+  <id>5924</id>
+  <revision>
+    <id>26452</id>
+    <parentid>26206</parentid>
+    <timestamp>2010-04-04T20:57:13Z</timestamp>
+    <contributor>
+      <username>Gez</username>
+      <id>1283</id>
+    </contributor>
+    <minor />
+    <origin>26452</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="1202" sha1="barjoq3pxkh2p27ig8u4mcj7tn0vwl7" xml:space="preserve">IMGZ is a format specific to [[ZDoom]] which allows to describe alpha channels without actual color information. It is used to describe the majority of the stock crosshairs.
+
+An IMGZ file starts with a 24-byte header. The first four bytes correspond to the characters "IMGZ", this is followed by four two-byte, little-endian values for the width, height, left offset and top offset respectively, then a single byte for format (0 for normal, 1 for compressed) and finally eleven unused bytes which should be set to 0.
+
+The image data itself follows. The image is described row after row from left to right, and top to bottom.
+
+If the file is not compressed, it is a raw dump of width &amp;times; height byte values. 0x00 is fully transparent and 0xFF is fully opaque. 
+
+If the file is compressed, then it is read as segments. A segment starts with a single-byte code, whose value indicates whether the segment must be copied raw or must be expanded: if the value is less than than 128, the value+1 bytes are raw values; if the value is more than 128, the following byte is copied 257-value times. Then the next segment is parsed the same way, until the end of the file is reached.
+[[Category:Image formats]]</text>
+    <sha1>barjoq3pxkh2p27ig8u4mcj7tn0vwl7</sha1>
+  </revision>
+</page>

@@ -1,0 +1,62 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>A Die</title>
+  <ns>0</ns>
+  <id>1680</id>
+  <revision>
+    <id>51046</id>
+    <parentid>45629</parentid>
+    <timestamp>2023-11-24T05:00:59Z</timestamp>
+    <contributor>
+      <username>TheMisterCat</username>
+      <id>1636</id>
+    </contributor>
+    <minor />
+    <comment>Ambiguous wording fixed</comment>
+    <origin>51046</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="2014" sha1="ilpkbhfwhezvy02uhg79rf5h1tlzdy7" xml:space="preserve">{{codepointer|Monster AI}}'''A_Die''' [(str ''DamageType'')]
+
+
+Kills the calling actor if it is not already dead, setting its health value to 0 and sending it to its Death state. This has only an effect if the actor has the {{flag|SHOOTABLE}} or {{flag|VULNERABLE}} flag set.
+
+If ''DamageType'' is provided, it determines what type of damage is inflicted upon the actor to kill it. This could be used to determine which [[Custom damage types|Death state]] the monster uses as it dies.
+
+== Examples ==
+This {{Class|DoomImp|imp}}'s days are numbered... It will walk around and fire at you normally. But all the while walking on borrowed time, slowly gaining the {{Class|inventory}} "DeathTimer" with every action it takes. When the timer reaches 20, the imp will simulate having a violent heart-attack, then trigger [[A_Die]], forcing it to enter its death state, regardless what its health previously was. For added effect, [[A_Jump]] is used in its see state giving it a small chance to cringe with chest-pain once in a while.
+ ACTOR DyingImp : {{Class|DoomImp}}
+ {
+   States
+   {
+   See:
+     TROO AABBCCDD 3 [[A_Chase]]
+     TROO A 0 [[A_GiveInventory]]("DeathTimer", 1) // A dummy inventory for tracking how long the imp has been searching.
+     TROO A 0 [[A_JumpIfInventory]]("DeathTimer", 20, "HeartAttack") // Jump to the HeartAttack state when the timer reaches 20 
+     TROO A 0 [[A_Jump]](45, "Pain")
+     Loop
+   Melee:
+   Missile:
+     TROO EF 8 [[A_FaceTarget]]
+     TROO G 6 [[A_TroopAttack]]
+     TROO A 0 [[A_GiveInventory]]("DeathTimer", 1) // Attacking the player only speeds up the process
+     TROO A 0 [[A_JumpIfInventory]]("DeathTimer", 20, "HeartAttack")
+     Goto See
+   Pain:
+     TROO H 2
+     TROO H 2 [[A_Pain]]
+     Goto See
+   HeartAttack:
+     TROO H 2
+     TROO HHHH 20 [[A_Pain]]
+     TROO H 2 [[A_Die]]
+   }
+ } 
+This is the inventory item that the monster uses.
+ ACTOR DeathTimer : {{Class|Inventory}}
+ {
+   {{Property|Inventory.MaxAmount}} 20
+   {{Property|Inventory.Amount}} 1
+ }</text>
+    <sha1>ilpkbhfwhezvy02uhg79rf5h1tlzdy7</sha1>
+  </revision>
+</page>

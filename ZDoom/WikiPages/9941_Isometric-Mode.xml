@@ -1,0 +1,403 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>Isometric Mode</title>
+  <ns>0</ns>
+  <id>9941</id>
+  <revision>
+    <id>54053</id>
+    <parentid>54052</parentid>
+    <timestamp>2024-12-09T16:53:10Z</timestamp>
+    <contributor>
+      <username>Jekyll Grim Payne</username>
+      <id>2175</id>
+    </contributor>
+    <minor />
+    <comment>/* See also */</comment>
+    <origin>54053</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="16418" sha1="cnwykvwhvkii0e92l2jbmw98klr544t" xml:space="preserve">{{new|4.13.0}} (hardware renderer only) {{TOCright}}
+== Assumed knowledge ==
+
+It is assumed that before you begin this tutorial, you are familiar with the following concepts:
+
+* [[Sprite]]
+* [[Spawn]]
+* {{struct|PlayerInfo}}
+* {{class|PlayerPawn}}
+* [[Actor virtual functions]]
+* {{class|ViewPosition}}
+* {{class|SpectatorCamera}}
+* {{c|{{CVAR|R|r_radarclipper}}}}
+* {{c|{{CVAR|R|r_dithertransparency}}}}
+* [[Map_definition#NoFogOfWar|NoFogOfWar]]
+* {{flag|ISOMETRICSPRITES}}
+* [[Events and handlers]]
+
+Understanding these concepts is vital to understanding the following tutorial.
+
+==Uses==
+These experimental features add the ability to view the level from out of bounds and switch the projection matrix from perspective to orthographic (meaning projected size will not scale with distance). This enables the engine to be used for a wider range of gaming genres such as isometric crawlers, top-down RPGs, turn-based strategy games, or side-scrolling beat 'em ups.
+
+[[Image:isodemo.gif|right|thumb|200px|Orthographic projection coupled with an out-of-bounds viewpoint in a demo map with an isometrically drawn sprite.]]
+
+A few caveats being that skies and portals are not rendered in orthographic mode. Reflections from flats (floors, ceilings) will not work either. [[Shaders]] can be used instead for background landscape views and reflections in liquid surfaces, etc.
+
+==Isometric Sprites==
+This section is optional, and the mode will function and look reasonable with traditionally drawn sprites at small to medium viewing-pitch angles. However, when employing orthographic projection with a significant non-zero pitch, say for isometric or dimetric viewpoints, sprites will normally reveal their 2D nature. Replacement sprites can be drawn as viewed from a specific pitch, but an actor flag like {{flag|FORCEYBILLBOARD}} would have to be set to force the sprite to face the camera. This can cause bad overlaps and clipping when close to level geometry or other actor sprites/models, especially for tall sprites.
+
+It is recommended to use the {{flag|ISOMETRICSPRITES}} flag instead. The working principle is simple. The engine accepts two integer values as "x" and "y" pixel offsets for every sprite. These are typically read in through definitions in the [[TEXTURES]] lump, or the [[GrAb]] chunk of the png files of the sprite graphic. They can also be set during runtime via functions like [[A_SpriteOffset]]. The engine's renderer displaces the sprite along the z-axis in world space by the number of pixels specified by the "y" offset value. However, under orthographic projection, modulo draw-order and overlaps, a vertical offset for any graphic on screen is equivalent to a displacement along the xy-plane in world space. We can therefore exploit the "y" offset value to fake an xy-displacement.
+
+[[Image:Baldguy_sprites.png|right|thumb|400px|An example of isometrically drawn sprite with a square base. The diagonal sprite sets the minimum y-offset needed, and the spherical head is used as an alignment reference for all the other angles.]]
+
+The first step is to draw all the sprites with the intended square floor-tile base for reference. This is purely a visual-alignment aid and must be removed later. The side length of the square should ideally match twice the collision "radius" of the actor in game (all actor collision boxes are cuboids with square bases that are locked in global xy-orientation). Then use one the diagonal-facing sprite to set the maximum "y" offset required to avoid any part of the square base from being clipped into the floor. Then use some other geometric reference in the image to determine the "y" offset for all other sprite angles. Then remove the reference square base in all the sprite images. And finally, set the {{flag|ISOMETRICSPRITES}} flag in the actor's default block. See the image to the right for an illustrated example.
+
+The {{flag|ISOMETRICSPRITES}} flag will cause the engine to do a combination of sprite rotation and y-scaling to ensure that the image roughly approximates the perspective it was drawn from without egregiously clipping through surrounding level geometry. The overlaps work well between colliding actors who both have this flag set. It even sorts correctly for actors stacked on top of each other. One caveat is that while the sprite is being displaced towards the camera to compensate for the "y" offset, it is still being drawn a bit above the floor in world space. This can show up in certain contexts, such as the actor effectively walking over shallow water instead of dipping their feet in it. If this solution is unacceptable, use of 3D models or voxels can resolve all such issues.
+
+==[[ZScript]]==
+==={{class|PlayerPawn}}===
+With our player sprites ready, we can create our own {{class|PlayerPawn}}. Define some helper variables:
+
+*{{c|int '''face_cam_mult'''}}
+:Keeps track of whether the playerpawn is facing the camera. Used to modify how movement keys map to in-world directions.
+
+*{{c|int '''ppawn_camflags'''}}
+:The {{class|ViewPosition}} flags that the camera actor will be initiated with. This were we let the engine know that this camera's {{c|ViewPos}} will be allowed out of bounds and the projection will be orthographic.
+
+*{{c|double '''ppawn_isoyaw'''}}
+:The angle from which the camera viewpoint will look at the player. Will be converted to a {{c|property}} for access from the HUD overlay {{c|EventHandler}} functions.
+
+*{{c|double '''ppawn_isodist'''}}
+:The distance from which the camera viewpoint will look at the player. Will be converted to a {{c|property}} for access from the HUD overlay {{c|EventHandler}} functions.
+
+*{{c|double '''ppawn_isopitch'''}}
+:The pitch from which the camera viewpoint will look at the player. Will be converted to a {{c|property}} for access from the HUD overlay {{c|EventHandler}} functions.
+
+*{{c|double '''ppawn_isocamera'''}}
+:A pointer to the isometric camera that will be spawned. Will be converted to a {{c|property}} for access from some {{c|EventHandler}} functions.
+
+Then define their initial values in the {{c|Default}} block.
+
+Spawn an in-engine defined {{class|SpectatorCamera}} and set it to be the player's viewpoint camera in the [[PostBeginPlay]] virtual function. Alternatively, feel free to define your own camera actor with more sophisticated player-follow behavior.
+
+In the [[Tick]] virtual function, update the {{c|face_cam_mult}} value based on the player's current angle.
+
+In the [[MovePlayer]] virtual function, we can modify how the movement input affects the actual movement of the player.
+
+&lt;syntaxhighlight lang="csharp"&gt;
+class MyStandaloneGamePlayer : PlayerPawn
+{
+  int face_cam_mult, ppawn_camflags;
+  double ppawn_isoyaw, ppawn_isodist, ppawn_isopitch;
+  Actor ppawn_isocamera;
+
+  property ppawn_isoyaw : ppawn_isoyaw;
+  property ppawn_isodist : ppawn_isodist;
+  property ppawn_isopitch : ppawn_isopitch;
+  property ppawn_isocamera : ppawn_isocamera;
+
+	Default
+	{
+		Speed 1;
+		Radius 20;
+		Height 80;
+		Player.DisplayName "BaldGuy";
+		Player.ViewHeight 60;
+		Player.ViewBob 0;
+		Player.FlyBob 0;
+		MyStandaloneGamePlayer.ppawn_isoyaw 225;
+		MyStandaloneGamePlayer.ppawn_isodist 300;
+		MyStandaloneGamePlayer.ppawn_isopitch 30;
+		+ISOMETRICSPRITES
+	}
+
+	override void PostBeginPlay()
+	{
+	  Super.PostBeginPlay();
+	  face_cam_mult = 1;
+	  ppawn_camflags = VPSF_ABSOLUTEOFFSET | VPSF_ALLOWOUTOFBOUNDS | VPSF_ORTHOGRAPHIC;
+	  if(player.camera == player.mo) // Setup isometric camera
+	  {
+	      player.camera = SpectatorCamera(Actor.Spawn("SpectatorCamera", pos));
+          player.camera.player = player; // Necessary for pain and pickup screen flashes. Adds viewbob too.
+		  ppawn_isocamera = player.camera; // Store pointer, in case you lose it
+	      player.camera.tracer = player.mo; // Do you want the camera to follow any actor? Set it as tracer here.
+          player.camera.player = player; // Necessary for pain and pickup screen flashes. Adds viewbob too.
+	      SpectatorCamera(player.camera).Init(ppawn_isodist, ppawn_isoyaw, ppawn_isopitch, ppawn_camflags);
+	  }
+	}
+
+	override void Tick()
+	{	  
+
+	  int diffangle = deltaangle(angle, ppawn_isoyaw);
+	  if (abs(diffangle) &gt; 90) face_cam_mult = -1;
+	  else face_cam_mult = 1;
+	  
+	  Super.Tick();
+
+	  // Make movement less slippery
+	  if((Pos.Z == FloorZ) || bONMOBJ){
+	    A_SetSpeed(3.0);
+	    if((FindState('Pain') == NULL) || (CurState != FindState('Pain'))) {
+	      Vel.X *= 0.5; Vel.Y *= 0.5;
+	    }
+	  }
+	}
+	override void MovePlayer ()
+	{
+	  UserCmd cmd = player.cmd;
+	  let player = self.player;
+	  A_SetPitch(0); // Cancel pitch modification here
+	  if(cmd.sidemove) cmd.sidemove *= face_cam_mult;
+
+	  cmd.yaw -= GetPlayerInput(INPUT_YAW); // Cancel default mouse-turn first
+	  
+	  if(diffangle &gt; 45 &amp;&amp; diffangle &lt; 135) cmd.yaw += 3*GetPlayerInput(INPUT_PITCH);
+	  else if(diffangle &gt; -135 &amp;&amp; diffangle &lt; -45) cmd.yaw -= 3*GetPlayerInput(INPUT_PITCH);
+
+	  if(abs(diffangle) &lt; 80 || abs(diffangle) &gt; 100) cmd.yaw += face_cam_mult*GetPlayerInput(INPUT_YAW);
+		
+	  Super.MovePlayer();
+	}
+	
+	States
+	{
+	Spawn:
+		PLAY A -1;
+		Loop;
+	See:
+		PLAY ABCD 4;
+		Loop;
+	Missile:
+		PLAY A 12;
+		Goto Spawn;
+	Melee:
+		PLAY A 6 BRIGHT;
+		Goto Missile;
+	Pain:
+		PLAY A 4;
+		PLAY A 4 A_Pain();
+		Goto Spawn;
+	Death:
+		PLAY A 0 A_PlayerSkinCheck("AltSkinDeath");
+	Death1:
+		PLAY A 10;
+		PLAY A 10 A_PlayerScream();
+		PLAY A 10 A_NoBlocking();
+		PLAY AAA 10;
+		PLAY A -1;
+		Stop;
+	XDeath:
+		PLAY A 0 A_PlayerSkinCheck("AltSkinXDeath");
+	XDeath1:
+		PLAY A 5;
+		PLAY A 5 A_XScream();
+		PLAY A 5 A_NoBlocking();
+		PLAY AAAAA 5;
+		PLAY A -1;
+		Stop;
+	AltSkinDeath:
+		PLAY A 6;
+		PLAY A 6 A_PlayerScream();
+		PLAY AA 6;
+		PLAY A 6 A_NoBlocking();
+		PLAY AAA 6;
+		PLAY A -1;
+		Stop;
+	AltSkinXDeath:
+		PLAY A 5 A_PlayerScream();
+		PLAY A 0 A_NoBlocking();
+		PLAY A 5 A_SkullPop();
+		PLAY AAAAAA 5;
+		PLAY A -1;
+		Stop;
+	}
+}
+&lt;/syntaxhighlight&gt;
+
+
+You are free to define your own custom {{c|StateLabels}}.
+
+===HUD overlay===
+Isometric games typically require a visual indicator other than the player sprite/model to indicate where they are facing. In this tutorial, we take the approach of drawing a tiny cursor on screen (assumed image is stored at {{c|sprites/dir_hair.png}}) some distance in front of the player. Translating world locations to screen-space coordinates is trivial in orthographic projection.
+
+&lt;syntaxhighlight lang="csharp"&gt;
+class MyStandaloneGameHUD : BaseStatusBar
+{
+	MyStandaloneGamePlayer pmo;
+	double isoyaw, playeryaw, diffangle;
+	int cosine, sine, cursordist;
+
+	override void Init(void)
+	{
+	  Super.Init();
+	  SetSize(0, 320, 200);
+	  cursordist = 75;
+	  cosine = 0; sine = 0;
+	}
+
+	override void Draw(int state, double TicFrac)
+	{
+	  if (CPlayer &amp;&amp; CPlayer.mo)
+	    {
+	      pmo = MyStandaloneGamePlayer(CPlayer.mo);
+	    }
+
+	  BaseStatusBar.Draw(state, TicFrac);
+	  
+	  if (state == HUD_StatusBar || state == HUD_Fullscreen)
+	    {
+	      BeginHUD(forcescaled: true);
+
+	      DrawCursor(sine, cosine);
+	    }
+	}
+
+	override void Tick()
+	{
+	  if (CPlayer &amp;&amp; CPlayer.mo) {
+	    isoyaw = MyStandaloneGamePlayer(CPlayer.mo).ppawn_isoyaw;
+	    playeryaw = CPlayer.mo.angle;
+	  }
+	  diffangle = pmo.deltaangle(playeryaw, isoyaw);
+	  cosine = (int)(-0.5*cursordist*Cos(diffangle));
+	  sine = (int)(cursordist*Sin(diffangle));
+	  if(CPlayer.camera != NULL &amp;&amp; CPlayer.camera.tracer != NULL)
+	  {
+	    if(CPlayer.camera.ViewPos.Flags &amp; VPSF_ORTHOGRAPHIC)
+	    { // If using orthographic projection
+	      Vector3 playerdisp = CPlayer.camera.tracer.pos - CPlayer.camera.pos;
+	      diffangle = pmo.deltaangle(playerdisp.Angle(), isoyaw);
+	      // Translate game/map (x, y, z) position into screen (x, y) location
+	      double xproj = 320/players[consoleplayer].camera.ViewPos.offset.length();
+	      double yproj = Sin(CPlayer.camera.pitch)*xproj;
+	      double zproj = Cos(CPlayer.camera.pitch)*xproj;
+	      cosine -= (int)(playerdisp.xy.length()*Cos(diffangle)*yproj);
+	      cosine -= (int)(playerdisp.z*zproj);
+	      sine += (int)(playerdisp.xy.length()*Sin(diffangle)*xproj);
+	    }
+	  }
+	  Super.Tick();
+	}
+
+	void DrawCursor(int xpos, int ypos)
+	{
+	  DrawImage("sprites/dir_hair.png", (xpos, ypos), DI_SCREEN_CENTER|DI_ITEM_CENTER, scale: (0.5, 0.5));
+	}
+}
+&lt;/syntaxhighlight&gt;
+
+===[[Events and handlers]]===
+We will need a {{c|StaticEventHandler}} to destroy the camera actor in the event that a player abruptly disconnects from a multiplayer session. Furthermore, the camera's {{c|ViewPos}} properties will need to be reinitialized when a saved game is loaded.
+
+&lt;syntaxhighlight lang="csharp"&gt;
+class CameraHandler : StaticEventHandler
+{
+	override void PlayerDisconnected (PlayerEvent e)
+	{
+	  // This is needed if a player disconnects from a multiplayer session
+	  if(players[e.PlayerNumber].camera) players[e.PlayerNumber].camera.destroy();
+	}
+	override void WorldLoaded (WorldEvent e) 
+	{
+		if(e.IsSaveGame)
+		{
+			for (int i = 0; i &lt; MAXPLAYERS; i++)
+			{
+				if (PlayerInGame[i] &amp;&amp; players[i].mo)
+				{					
+					if (MyStandaloneGamePlayer(players[i].mo).ppawn_isocamera)
+					{
+						MyStandaloneGamePlayer pmo = MyStandaloneGamePlayer(players[i].mo);
+						players[i].camera = MyStandaloneGamePlayer(players[i].mo).ppawn_isocamera;
+						SpectatorCamera(players[i].camera).Init(pmo.ppawn_isodist, pmo.ppawn_isoyaw, pmo.ppawn_isopitch, pmo.ppawn_camflags);
+					}
+				}
+			}
+		}
+	}
+}
+&lt;/syntaxhighlight&gt;
+
+Create a second {{c|EventHandler}} that checks if the players camera has been reset to the {{class|PlayerPawn}} (which can happen after some script in the map teporarily captures the viewpoint to show in in-game cinematic) and restore our isometric camera from its stored location in {{c|ppawn_isocamera}}.
+
+&lt;syntaxhighlight lang="csharp"&gt;
+class CameraRestorer : EventHandler
+{
+  override void WorldTick()
+  {
+	  if (gamestate != GS_LEVEL) return;
+
+	  for (int i = 0; i &lt; MAXPLAYERS; i++)
+	  {
+		  if (PlayerInGame[i] &amp;&amp; players[i].mo)
+		  {
+			  if ((!players[i].camera || (players[i].camera == players[i].mo)) &amp;&amp; MyStandaloneGamePlayer(players[i].mo).ppawn_isocamera)
+			  {
+				  // player.camera was reset for some reason
+				  // Retreive from storage
+				  players[i].camera = MyStandaloneGamePlayer(players[i].mo).ppawn_isocamera;
+			  }
+		  }
+	  }
+  }
+}
+&lt;/syntaxhighlight&gt;
+
+==[[MAPINFO]]==
+In the [[MAPINFO]] lump, we can add our new {{class|PlayerPawn}}, HUD class, and event handler into the {{c|GameInfo}} block.
+
+&lt;syntaxhighlight lang="csharp"&gt;
+GameInfo
+{
+	PlayerClasses = "MyStandaloneGamePlayer"
+	StatusbarClass = "MyStandaloneGameHUD"
+	AddEventHandlers = "CameraHandler", "CameraRestorer"
+}
+&lt;/syntaxhighlight&gt;
+
+==[[MENUDEF]]==
+In the [[MENUDEF]] lump, we can add controls for two in-engine [[CVars]]:
+
+*{{c|{{CVAR|R|r_radarclipper}}}}
+:Gives a limited (up-to-subsectors) amount of fog of war. This can be suspended on a per-map basis by setting a {{c|{{MapProperty|NoFogOfWar}}}} in the [[MAPINFO]] lump.
+  
+*{{c|{{CVAR|R|r_dithertransparency}}}}
+:Tries to make obscuring level geometry partially transparent for the player and enemies within view.
+
+&lt;syntaxhighlight lang="csharp"&gt;
+AddOptionMenu "OptionsMenuSimple"
+{
+	SubMenu "Isometric Mode Options", "IsoModOptions"
+}
+
+AddOptionMenu "OptionsMenu"
+{
+	SubMenu "Isometric Mode Options", "IsoModOptions"
+}
+
+OptionMenu "IsoModOptions"
+{
+    Title "Isometric Mode Options (Hardware Renderers only)"	
+    Option "Isometric Fog of War", "r_radarclipper", "OnOff"
+    Option "Visibility Through Level Geometry", "r_dithertransparency", "OnOff"
+}
+&lt;/syntaxhighlight&gt;
+
+==Miscellaneous==
+
+Isometric mode is not restricted to a pitch of 30 degrees. Smaller or larger pitch angles can give rise to interesting viewpoints and effects. Orthographic mode works with most other graphical addons and enhancements present in the engine. A little bit of work on the UI and overlay code is required to get the game mode controlling and communicating information to the player. The camera could also be assigned to any pre-defined {{class|PlayerPawn}} from an Event handler, which makes an isometric mode mod applicable to other existing mods and games.
+
+[[Image:Lightmapped_temple_big.jpg|center|thumb|720px|Isometric mode showcase for compatibility with orthographic projection and lightmaps.]]
+
+==External Links==
+*[https://github.com/dileepvr/gzdoom_isometric_demo StandAlone Isometric Template]
+*[https://github.com/dileepvr/DRSGME near-Universal Isometric Mod]
+ 
+== See also ==
+* [[Tutorials]]
+
+[[category:ZScript guides]]</text>
+    <sha1>cnwykvwhvkii0e92l2jbmw98klr544t</sha1>
+  </revision>
+</page>

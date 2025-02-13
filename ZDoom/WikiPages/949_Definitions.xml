@@ -1,0 +1,176 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>Definitions</title>
+  <ns>0</ns>
+  <id>949</id>
+  <revision>
+    <id>49529</id>
+    <parentid>49522</parentid>
+    <timestamp>2022-08-27T16:59:07Z</timestamp>
+    <contributor>
+      <username>Gez</username>
+      <id>1283</id>
+    </contributor>
+    <comment>/* Fixed point angles */ add Build angle values, for Raze modders</comment>
+    <origin>49529</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="7962" sha1="tujxxwjvrmllp7p904bqzuded782d4e" xml:space="preserve">==Fixed point numbers==
+ZDoom commonly represents fixed point numbers as 32-bit integers with the integer part of the represented number stored in the top 16 bits, and with the fractional part (65536ths) stored the lower 16 bits.
+
+In other words, the fixed point representation of a number = that number * 65536.
+
+See [[Fixed point numbers]] for more information.
+
+==Byte angles==
+This is a value between 0 and 255 representing a direction and is used with some line specials. Some useful values are:&lt;br&gt;
+
+{| {{prettytable}} width="300"
+|- align="center"
+|width="100"|'''96'''&lt;br/&gt;Northwest||width="100"|'''64'''&lt;br/&gt;North||width="100"|'''32'''&lt;br/&gt;Northeast
+|- align="center"
+|width="100"|'''128'''&lt;br/&gt;West||width="100"|&amp;nbsp;||width="100"|'''0'''&lt;br/&gt;East
+|- align="center"
+|width="100"|'''160'''&lt;br/&gt;Southwest||width="100"|'''192'''&lt;br/&gt;South||width="100"|'''224'''&lt;br/&gt;Southeast
+|}
+
+==Fixed point angles==
+
+These angles are similar to above but the value lies between 0.0 and 1.0 and is represented as a [[fixed point number]]. This means the value lies between 0 and 65536, with 0 representing 0.0 and 65536 representing 1.0. It is therefore possible to represent these angles as decimals (e.g. 0.5 is west, 0.25 is north), and use [[FixedMul]] and other commands on them.
+
+=== Converting angles ===
+
+To convert fixed point angles to byte angles, you can use the following formula:
+
+ byte_angle = fixed_point_angle &gt;&gt; 8 
+
+And to convert byte to fixed point angles you use the opposite:
+
+ fixed_point_angle = byte_angle &lt;&lt; 8
+
+Here are some conversions between different angle representations, in degrees, byte angles, fixed point angle, and integral interpretation of fixed point. The greatest common factor of 360 and 256 is 8, which means that only multiples of 45° can be represented accurately by integers in both degrees and either byte angles or fixed point angles. 
+{{note|Angles that cannot be represented internally by an integral value will lose precision through rounding. Decimal values in the "Byte" and "Integer" columns are only there for illustration of the precision loss as, by definition, they cannot exist in these representations. If the "Integer" column does not represent an actual integer, then the fixed point representation is equally impossible: for example, 36° would be represented as 6553 in integer, not 6553.6, therefore the fixed point representation would be 0.0999908447265625 instead of 0.1.}}
+{| {{prettytable}}
+! Degree !! Circle fraction !! Byte !! Fixed !! Integer !! Build
+|-
+| 0° || 0/x || 0 || 0.0 || 0 || 0
+|-
+| 0.0054931640625° || 1/65536 || 0.00390625 || 0.0000152587890625 || 1 || 0.03125
+|-
+| 1° || 1/360 || 0.71 || 0.002777... || 182.0444444... || 5.688888...
+|-
+| 1.40625° || 1/256 || 1 || 0.00390625 || 256 || 8
+|-
+| 2.8125° || 1/128 || 2 || 0.0078125 || 512 || 16
+|-
+| 5° || 1/72 || 3.55 || 0.013888... || 910.222222... || 28.444444...
+|-
+| 5.625° || 1/64 || 4 || 0.015625|| 1024 || 32
+|-
+| 10° || 1/36 || 7.11 || 0.027777... || 1820.444444... || 56.888888...
+|-
+| 11.25° || 1/32 || 8 || 0.03125 || 2048 || 64
+|-
+| 15° || 1/24 || 10.67 || 0.041666... || 2730.666666... || 85.333333...
+|-
+| 22.5° || 1/16 || 16 || 0.0625 || 4096 || 128
+|-
+| 30° || 1/12 || 21.3333... || 0.083333... || 5461.333333... || 170.666666...
+|-
+| 36° || 1/10 || 0.000390625 || 0.1 || 6553.6 || 204.8
+|-
+| 45° || 1/8 || 32 || 0.125 || 8192 || 256
+|-
+| 60° || 1/6 || 42.6666... || 0.166666... || 10922.666666... || 341.333333...
+|-
+| 72° || 1/5 || 51.2 || 0.2 || 13107.2 || 409.6
+|-
+| 90° || 1/4 || 64 || 0.25 || 16384 || 512
+|-
+| 120° || 1/3 || 85.333333... || 0.333333... || 21845.333333... || 682.666666...
+|-
+| 135° || 3/8 || 96 || 0.375 || 24576 || 768
+|-
+| 144° || 2/5 || 102.4 || 0.4 || 26214.4 || 819.2
+|-
+| 150° || 5/12 || 106.666666... || 0.416666... || 27306.666666... || 853.333333...
+|-
+| 180° || 1/2 || 128 || 0.5 || 32768 || 1024
+|-
+| 210° || 7/12 || 149.333333... || 0.583333... || 38229.333333... || 1194.666666...
+|-
+| 216° || 3/5 || 153.6 || 0.6 || 39321.6 || 1228.8
+|-
+| 225° || 5/8 || 160 || 0.625 || 40960 || 1280
+|-
+| 240° || 2/3 || 170.666666... || 0.666666... || 43690.666666... || 1365.333333...
+|-
+| 270° || 3/4 || 192 || 0.75 || 49152 || 1536
+|-
+| 288° || 4/5 || 204.8 || 0.8 || 52428.8 || 1638.4
+|-
+| 300° || 5/6 || 213.333333... || 0.833333... || 54613.333333... || 1706.666666...
+|-
+| 315° || 7/8 || 224 || 0.875 || 57344 || 1792
+|-
+| 330° || 11/12 || 234.666666... || 0.916666... || 60074.666666... || 1877.333333...
+|-
+| 360° || 1/1 || 256 || 1.0 || 65536 || 2048
+|}
+
+==Sprite angles==
+See [[Sprite]] article
+
+==Byte pitches==
+Pitches can be represented in byte form, as they only have a range of 180°, rather than 360°. The pitch is a value between -90 and 90 representing vertical pitch and is used with some actors. The value is actually represented in degrees using a signed byte, negative values are upward, positive values are downward, 0 is level.
+Some useful values are:&lt;br&gt;
+
+{| {{prettytable}} width="200"
+|- align="center"
+|width="100"|'''-45'''&lt;br/&gt;45° up||width="100"|'''-90'''&lt;br/&gt;Straight up
+|- align="center"
+|width="100"|'''0'''&lt;br/&gt;Level
+|- align="center"
+|width="100"|'''45'''&lt;br/&gt;45° down||width="100"|'''90'''&lt;br/&gt;Straight down
+|}
+
+==Fixed point pitches==
+Some functions use pitch as a fixed point number. This uses the same fixed point angle values as other angles, so the range is between -0.25 (for 90° up) and 0.25 (for 90° down).
+
+==Units of time==
+;{{LE|Tic}}
+:A time interval of 1/35 second. Actor logic (state duration) is based on tics.
+;{{LE|Octic}}
+:A time interval of 1/8 second. Sector logic (speed and wait for crushers, doors, lifts, raising stairs, etc.) is based on octics, as well as {{Class|InterpolationPoint|interpolation points}} for {{Class|MovingCamera|moving cameras}} and {{Class|ActorMover|actor movers}}.
+
+Vanilla Doom doors wait for 150 tics, roughly 34 octics or 4.3 seconds.  Vanilla Doom platforms wait for 105 tics, equivalent to 24 octics or 3 seconds.
+
+=== Precision ===
+Since [[GZDoom version history#3.2.2|GZDoom v3.2.2]], the more precise timer 35 tics ensures that 35 tics last precisely one second. In earlier versions, this is not true, because of a loss of precision with integer division. In these older versions (including all official versions of parent port ZDoom), the duration of a tic is of 28 milliseconds (instead of 28.5714287514...), which means that 35 tics actually make up only 0.98 seconds. There are therefore actually 35.7142857142857... tics in one second. Likewise, octics are internally derived from tics (one octic being 35 tics divided by 8), and the duration of an octic is 122 milliseconds (instead of 122.5 based on the tic, or of 125 based on the second), which means that 8 octics actually make up only 0.976 seconds. There are therefore 8.192721311475409... octics in one second.
+
+[[Category:Glossary|*000000000000]]
+
+==Sector movement speed==
+Many specials take a ''speed'' argument, which is usually in eighths of a unit per tic.  That is, a value of 8 means to move by one unit per tic, or 35 units per second.  A value of 0 will generally not do anything useful.
+
+For reference, the standard Doom and Boom speeds are as follows.  Boom uses a standard set of "slow, normal, fast, turbo" speeds for many generalized specials, but they have different meanings for doors, platforms (including moving floors, ceilings, and crushers), and stair building.
+
+{| {{prettytable}}
+! Value !! Boom doors !! Boom platforms !! Boom stairs !! Doom
+|-
+| 2 ||  ||  || Slow || Standard stairs
+|-
+| 4 ||  ||  || Normal || Raising and perpetual platforms; [[Floor_Donut|donut]]
+|-
+| 8 ||  || Slow ||  || Standard floors, ceilings, and crushers
+|-
+| 16 || Slow || Normal || Fast || Standard doors; fast crushers
+|-
+| 32 || Normal || Fast || Turbo || Standard platforms; fast floors; fast stairs
+|-
+| 64 || Fast || Turbo ||  || Blazing doors; fast platforms
+|-
+| 128 || Turbo ||  ||  ||
+|}</text>
+    <sha1>tujxxwjvrmllp7p904bqzuded782d4e</sha1>
+  </revision>
+</page>

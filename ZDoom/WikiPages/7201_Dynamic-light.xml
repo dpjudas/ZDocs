@@ -1,0 +1,42 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>Dynamic light</title>
+  <ns>0</ns>
+  <id>7201</id>
+  <revision>
+    <id>43250</id>
+    <parentid>32466</parentid>
+    <timestamp>2016-10-10T21:08:12Z</timestamp>
+    <contributor>
+      <username>Gez</username>
+      <id>1283</id>
+    </contributor>
+    <minor />
+    <comment>there's also SEESDAGGER but I'm not sure it actually has any effect on unattached lights, so I'm not sure there's a point in mentioning it there</comment>
+    <origin>43250</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="2351" sha1="k6gfritgzsrlama7ea5zvx8jclsa9cd" xml:space="preserve">{{OpenGL}}
+[[File:DynamicLights01.png|thumb|Additive, normal, and subtractive.]]'''Dynamic lights''' are objects that provide point-based light sources. They can be used to complement the Doom engine's [[sector]]-based ambient lighting; but they are more resource-intensive and should not be used to replace sector lighting entirely.
+
+Dynamic lights can also be attached to certain actor frames with the [[GLDEFS]] lump and the [[Actor states#Dynamic light binding|light keyword]] in a [[DECORATE]] state definition.
+
+All types of lights are also available in additive and subtractive versions. Normal dynamic lights makes colors brighter, additive lights makes them whiter, and subtractive lights make them darker.
+
+A dynamic light is represented by its RGB value and intensity. Intensity basically corresponds to the light's radius; RGB values to its color.
+
+Non-attached dynamic lights are {{Class|PointLight}}s and its derivatives.
+#{{Class|PointLight}}: a simple static source of light.
+#{{Class|PointLightFlicker}}: a source of light which alternates between two intensities. Every [[tic]], the light has a chance equal to its angle out of 360 to use the secondary radius instead of the primary one.
+#{{Class|PointLightFlickerRandom}}: a source of light which alternates between random values in the continuum between its primary and secondary intensities. The angle is used as a number of tics between intensity changes.
+#{{Class|PointLightPulse}}: a source of light which gradually alternate between its primary and secondary intensities. The angle is used as the number of tics there are between minimal and maximal intensities.
+#{{Class|SectorPointLight}}: a source of light which depends on sector lighting. The intensity is equal to the sector's current light level multiplied by the scale value, and clamped between 0 and 255. The interest of this type is that it follows sector light effects caused by certain [[sector type]]s or by [[:Category:Lighting specials|lighting specials]].
+
+Two flags have special meanings when used on dynamic light actors:
+*{{Flag|MISSILEMORE}}: makes the light additive
+*{{Flag|MISSILEEVENMORE}}: makes the light subtractive
+
+Note that since [[ZDoom]] does not implement the dynamic light objects, if they are used in a map, they will spawn as {{Class|unknown|error markers}} in ZDoom.
+[[Category:Glossary]]</text>
+    <sha1>k6gfritgzsrlama7ea5zvx8jclsa9cd</sha1>
+  </revision>
+</page>

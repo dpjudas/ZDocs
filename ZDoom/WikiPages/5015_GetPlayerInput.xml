@@ -1,0 +1,244 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>GetPlayerInput</title>
+  <ns>0</ns>
+  <id>5015</id>
+  <revision>
+    <id>51301</id>
+    <parentid>51296</parentid>
+    <timestamp>2024-01-24T13:58:56Z</timestamp>
+    <contributor>
+      <username>Jekyll Grim Payne</username>
+      <id>2175</id>
+    </contributor>
+    <comment>/* Parameters */ Added mentions of comaprable ZScript values</comment>
+    <origin>51301</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="10903" sha1="en16apa6uv2ohi8qxqo3wy9yxnrvj0t" xml:space="preserve">int '''GetPlayerInput''' (int ''player'', int ''input'')
+
+==Usage==
+
+Returns information regarding the keyboard, mouse and joystick input of the specified player at this exact moment or the previous game tic. This can be used to create effects such as key pads or on-screen mouse cursors in your maps, or simply to act on player input directly instead of relying on other methods of determining the player's actions.
+
+Note that this function does not read the player's input devices directly. Instead, it will only report information about which binds the player is using. For example, you cannot check to see if the player is pressing “W”, but you ''can'' check to see if they are using '''+forward'''. This design is intended to prevent abuse, as well as making the function more adaptable (since here the player can freely rebind '''+forward''' and still have the script work for them).
+
+===Parameters===
+
+* ''player''
+: The number of the player you want to get information on. Player 1 is 0, player 2 is 1, etc. Use -1 to specify the script activator instead.
+* ''input''
+:The player input you wish to check. To use, specify one of the following flags. All flags come in two varieties; The '''INPUT_*''' series checks the player's raw input, e.g. the keys they are actually pressing. The '''MODINPUT_*''' series check the values after they have been processed by the game engine. These may be different if, for example, the player is fully or partially frozen (Movement inputs will be nulled) or is using a weapon such as the [[Classes:Chainsaw|chainsaw]] which alters the player's input to include forward movement.
+:* '''INPUT_BUTTONS'''
+:* '''MODINPUT_BUTTONS'''
+:: The movement commands that are currently active. See the table below for instructions on how to read individual controls.
+:: In [[ZScript]] it corresponds to the &lt;code&gt;buttons&lt;/code&gt; field of the [[Structs:UserCmd|UserCmd struct]].
+:* '''INPUT_OLDBUTTONS'''
+:* '''MODINPUT_OLDBUTTONS'''
+:: The movement commands that were active during the previous tic. By comparing this value with '''INPUT_BUTTONS''', you can determine the exact moment when the player presses or releases a key.
+:: In [[ZScript]] it corresponds to the &lt;code&gt;oldbuttons&lt;/code&gt; field of the [[Structs:PlayerInfo|PlayerInfo struct]].
+:* '''INPUT_PITCH'''
+:* '''MODINPUT_PITCH'''
+:: The pitch movement of the player. Looking up returns positive values, down returns negative. Maximum value is 32767.
+:: In [[ZScript]] it corresponds to the &lt;code&gt;pitch&lt;/code&gt; field of the [[Structs:UserCmd|UserCmd struct]].
+:* '''INPUT_YAW'''
+:* '''MODINPUT_YAW'''
+:: The yaw motion of the player. Turning left returns positive values, right returns negative. Maximum value is 32767.
+:: In [[ZScript]] it corresponds to the &lt;code&gt;yaw&lt;/code&gt; field of the [[Structs:UserCmd|UserCmd struct]].
+:* '''INPUT_ROLL'''
+:* '''MODINPUT_ROLL'''
+:: In [[ZScript]] it corresponds to the &lt;code&gt;roll&lt;/code&gt; field of the [[Structs:UserCmd|UserCmd struct]].
+:: Not currently used.
+:* '''INPUT_FORWARDMOVE'''
+:* '''MODINPUT_FORWARDMOVE'''
+:: The forward/backward movement of the player. Forward is positive, reverse is negative. Maximum positive value is 12800, save with negative except negative; walking speed is half that (6400). This is useful to compare to if the intent is to see if the player is walking or running and at specific player-intended speeds if a joystick axis is used.
+:: In [[ZScript]] it corresponds to the &lt;code&gt;forwardmove&lt;/code&gt; field of the [[Structs:UserCmd|UserCmd struct]].
+:* '''INPUT_SIDEMOVE'''
+:* '''MODINPUT_SIDEMOVE'''
+:: The side-to-side (strafing) movement of the player. Left is negative, right is positive. Maximum positive value is 10240. When walking, this becomes 6144.
+:: In [[ZScript]] it corresponds to the &lt;code&gt;sidemove&lt;/code&gt; field of the [[Structs:UserCmd|UserCmd struct]].
+:* '''INPUT_UPMOVE'''
+:* '''MODINPUT_UPMOVE'''
+:: The up or down movement of the player (flying or swimming). Upwards is positive, down is negative.
+:: In [[ZScript]] it corresponds to the &lt;code&gt;upmove&lt;/code&gt; field of the [[Structs:UserCmd|UserCmd struct]].
+: Note that these only return the input being received by ZDoom from the specified player, and do not correlate to the actual movement (if any) of the player. In other words, '''INPUT_SIDEMOVE''' may be used to measure the amount of force a player is putting on an analog axis (such as a joystick or mouse) bound to the strafe inputs. Therefore, if the player is stuck in a small room and cannot move any further in the specified direction, this function will still return the value that the player is trying to make the player move, not the actual player's end movement.
+
+===Return value===
+
+If ''input'' is one of the '''*BUTTONS''' flags, the return value is a bitmask representing the inputs that the specified player is currently using from the given category. Otherwise, the return value is a scalar value representing the amount of input being applied to the specified control. If the specified player is not in the game, the return value is always 0.
+
+==Reading buttons==
+
+{{note|text=Currently, joystick or mouse axes bound to movement will not set the corresponding button for the purposes of reading by this function. (E.g. moving forward by pressing forward on an analog joystick will not set the &lt;tt&gt;BT_FORWARD&lt;/tt&gt; key.) However, pressing a keyboard key ''does'' set the axis inputs. Therefore, it is recommended that mod authors read the axes above whenever possible, instead of relying on &lt;tt&gt;[MOD]INPUT_[OLD]BUTTONS&lt;/tt&gt; to read directional movement.}}
+
+To properly use '''GetPlayerInput''' for button presses, you will need to check the result value against a set of defined controls to determine which ones the player is using. You can do this by using the bitwise AND operator (&amp;) in your code, as in this example:
+
+ int buttons = [[GetPlayerInput]](-1, {{const|INPUT_BUTTONS}});
+ 
+ if (buttons &amp; {{const|BT_FORWARD}})
+ {
+     [[print]](s:"You are pressing the move forward key.");
+ }
+
+The bitwise OR operator (|) can be used to check for multiple buttons.
+
+ int buttons = [[GetPlayerInput]](-1, {{const|INPUT_BUTTONS}});
+ 
+ if (buttons &amp; ({{const|BT_USE}}|{{const|BT_ATTACK}}))
+ {
+     [[print]](s:"You could be pressing the use key, or the attack key.");
+ }
+
+The following buttons can be read in ACS:
+
+{{: Player input buttons}}
+
+The four user-defined buttons (+user1, -user1, +user2, -user2 etc) can now be used for weapons, and have been included for usage with this function so that mod authors can implement up to four custom inputs which the player can bind in the controls menu.
+
+===BT_RUN and BT_SPEED===
+BT_RUN reflects the running/walking state, not merely whether the {{CCMD|P|+speed|speed}} button is pressed or not like the case with BT_SPEED. This distinction becomes evident when {{CVAR|C|cl_run|autorun}} is involved.
+
+{| {{prettytable}}
+! Action
+! State
+! BT_SPEED
+! BT_RUN
+|-
+| Speed button not pressed; autorun disabled || Walking || Not set || Not set
+|-
+| Speed button pressed; autorun disabled || Running || Set || Set
+|-
+| Speed button not pressed; autorun enabled || Running || Not set || Set
+|-
+| Speed button pressed; autorun enabled || Walking || Set || Not set
+|}
+
+==Examples==
+
+This simple example prints a message if the player presses both the forward and back buttons at the same time, thereby canceling his forward or backward movement.
+ script 1 {{SType|Enter}}
+ {
+  int buttons;
+ 
+  while ({{const|TRUE}})
+  {
+    buttons = [[GetPlayerInput]](-1, {{const|INPUT_BUTTONS}});
+ 
+    if (buttons &amp; {{const|BT_FORWARD}} &amp;&amp; buttons &amp; {{const|BT_BACK}})
+    {
+      [[print]](s:"Are you coming or going?");
+    }
+ 
+    [[delay]](1);
+  }
+ }
+
+
+This example demonstrates how to make a simple three digit combination lock.  In this case, there are three locks.  The lock combination that is used is specified by passing a value between 0 (the first) and 2 (the third) in the first argument.  When adding or subtracting locks, be sure to define the NUM_LOCKS constant and lock_code array accordingly.  Also, be sure to adjust the number of cases in the switch statement at the end of the script as well.
+
+ #define NUM_LOCKS  3
+ 
+ int lock_code[NUM_LOCKS][3] = {{6, 9, 1}, {3, 2, 5}, {1, 7, 3}};
+ int digit_pick[3];
+ bool lock_picked[NUM_LOCKS];
+ 
+ script 1 (int this_lock)
+ {
+  if (!lock_picked[this_lock])
+  {
+    int buttons, count, match, quit, wait;
+ 
+    [[SetHudSize]](640, 480, 1);
+    [[HudMessage]](s:"Forward and back change digits, use to pick, and fire to exit.";
+      {{const|HUDMSG_PLAIN}}, 1, {{const|CR_WHITE}}, 0.1, 30.1, 0.0);
+    [[SetPlayerProperty]](0, {{const|ON}}, {{const|PROP_TOTALLYFROZEN}});
+ 
+    while (count &lt; 3 &amp;&amp; !quit)
+    {
+      buttons = [[GetPlayerInput]](-1, {{const|INPUT_BUTTONS}});
+ 
+      if (buttons &amp; {{const|BT_ATTACK}})
+      {
+        quit = 1;
+      }
+      else if (buttons &amp; {{const|BT_FORWARD}})
+      {
+        digit_pick[count]++;
+        digit_pick[count] %= 10;
+      }
+      else if (buttons &amp; {{const|BT_BACK}})
+      {
+        digit_pick[count] += 9;
+        digit_pick[count] %= 10;
+      }
+      else if (buttons &amp; {{const|BT_USE}})
+      {
+        count++;
+      }
+ 
+      if (count &lt; 3)
+      {
+        [[HudMessage]](i:digit_pick[count]; 
+          {{const|HUDMSG_PLAIN}}, 2+count, {{const|CR_RED}}, 305.0+count*10.0, 240.0, 0);
+        do 
+        {
+          [[delay]](1);
+          wait++;
+        } 
+        while ([[GetPlayerInput]](-1, {{const|INPUT_BUTTONS}}) == buttons &amp;&amp; wait &lt; 5);
+        wait = 0;
+      }
+    }
+ 
+    if (!quit)
+    {
+      for (int i=0; i&lt;3; i++)
+      {
+        if (lock_code[this_lock][i] == digit_pick[i])
+        {
+          match++;
+        }
+        digit_pick[i] = 0;
+      }
+ 
+      if (match == 3)
+      {
+        [[HudMessage]](s:"Lock combination accepted."; {{const|HUDMSG_FADEOUT}}, 5, {{const|CR_GREEN}}, 320.0, 200.0, 3.0, 1.0);
+        lock_picked[this_lock] = 1;
+ 
+        switch (this_lock)
+        {
+        case 0:
+          //action for lock 1
+          break;
+        case 1:
+          //action for lock 2
+          break;
+        case 2:
+          //action for lock 3
+          break;
+        }
+      }
+      else
+      {
+        [[HudMessage]](s:"Invalid lock combination."; {{const|HUDMSG_FADEOUT}}, 5, {{const|CR_RED}}, 320.0, 200.0, 3.0, 1.0);
+      }
+    }
+ 
+    [[HudMessage]](s:""; 0, 1, 0, 0, 0, 0);
+    [[HudMessage]](s:""; 0, 2, 0, 0, 0, 0);
+    [[HudMessage]](s:""; 0, 3, 0, 0, 0, 0);
+    [[HudMessage]](s:""; 0, 4, 0, 0, 0, 0);
+    [[SetPlayerProperty]](0, {{const|OFF}}, {{const|PROP_TOTALLYFROZEN}});
+  }
+ }
+
+==Important note==
+There have been recommendations to use '==' and '!=' to check for a single input bit being set. Please note that this advice is wrong and should not be followed! Always use '&amp;' and '|' with the appropriate bits being checked. 
+
+==See Also==
+* [[GetPlayerInput (DECORATE)]]
+
+[[category:ACS Information functions]]</text>
+    <sha1>en16apa6uv2ohi8qxqo3wy9yxnrvj0t</sha1>
+  </revision>
+</page>

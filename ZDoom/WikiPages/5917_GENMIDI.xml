@@ -1,0 +1,91 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>GENMIDI</title>
+  <ns>0</ns>
+  <id>5917</id>
+  <revision>
+    <id>46242</id>
+    <parentid>37702</parentid>
+    <timestamp>2018-10-02T23:36:24Z</timestamp>
+    <contributor>
+      <username>Wohlstand</username>
+      <id>2594</id>
+    </contributor>
+    <minor />
+    <comment>Added link to OPL3-BE that allows to create and edit GENMIDI files</comment>
+    <origin>46242</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="3581" sha1="9itbi3uxml1uqeyhqqi6pz06jho4pgz" xml:space="preserve">{{Doomwiki}}
+The [[GENMIDI]] lump is used in [[Doom]] and other Doom-engine games to initialize the registers for the MIDI instruments in an OPL chip. ZDoom has an OPL emulation feature and can make use of this lump.
+
+== Lump format ==
+
+=== Header ===
+The lump has an 8-byte ASCII header, containing the text "#OPL_II#".  
+
+=== Instrument data ===
+
+The header is followed by 175 36-byte records of instrument data. Records are little-endian.
+
+Each record has a 4 byte header of the following form, followed by two 16-byte records of OPL voice data. If the double voice bit is set in the header, both voices will be played simultaneously; otherwise, only the first set of voice data is played.
+
+{| {{prettytable}}
+!Offset
+!Size (bytes)
+!Description
+|-
+| align="center" | 0-1 || align="center" | 2 || Flags: a bitfield that control the record. 
+{|
+!Bit||Hex||Description
+|-
+|0||0x01||Fixed pitch - Instrument always plays the same note.  Most MIDI instruments play a note that is specified in the MIDI "key on" event, but some (most notably percussion instruments) always play the same fixed note.
+|-
+|1||0x02||Unknown - used in instrument #65 of the Doom GENMIDI lump.
+|-
+|2||0x04||Double voice - Play two voices simultaneously.  This is used even on an OPL2 chip.  If this is not set, only the first voice is played.  If it is set, the fine tuning field (see below) can be used to adjust the pitch of the second voice relative to the first.
+|}
+|-
+| align="center" | 2 || align="center" | 1 || Fine tuning - This normally has a value of 128, but can be adjusted to adjust the tuning of the instrument. This field only applies to the second voice of double-voice instruments; for single voice instruments it has no effect.  The offset values are similar to MIDI pitch bends; for example, a value of 82 (hex) in this field is equivalent to a MIDI pitch bend of +256.
+|-
+| align="center" | 3 || align="center" | 1 || Note number used for fixed pitch instruments (see below)
+|-
+| align="center" | 4 || align="center" | 1 || Modulator Tremolo / vibrato / sustain / KSR / multi
+|-
+| align="center" | 5 || align="center" | 1 || Modulator Attack rate / decay rate
+|-
+| align="center" | 6 || align="center" | 1 || Modulator Sustain level / release rate
+|-
+| align="center" | 7 || align="center" | 1 || Modulator Waveform select
+|-
+| align="center" | 8 || align="center" | 1 || Modulator Key scale level
+|-
+| align="center" | 9 || align="center" | 1 || Modulator Output level
+|-
+| align="center" | 10 || align="center" | 1 || Feedback
+|-
+| align="center" | 11 || align="center" | 1 || Carrier Tremolo / vibrato / sustain / KSR / multi
+|-
+| align="center" | 12 || align="center" | 1 || Carrier Attack rate / decay rate
+|-
+| align="center" | 13 || align="center" | 1 || Carrier Sustain level / release rate
+|-
+| align="center" | 14 || align="center" | 1 || Carrier Waveform select
+|-
+| align="center" | 15 || align="center" | 1 || Carrier Key scale level
+|-
+| align="center" | 16 || align="center" | 1 || Carrier Output level
+|-
+| align="center" | 17 || align="center" | 1 || Unused
+|-
+| align="center" | 18-19 || align="center" | 2 || Base note offset.  This is used to offset the MIDI note values.  Several of the GENMIDI instruments have a base note offset of -12, causing all notes to be offset down by one octave.
+|-
+| align="center" | 20-35 || align="center" | 16 || Second voice, same layout as 4-19.
+|}
+
+== External links ==
+* [https://github.com/Wohlstand/OPL3BankEditor OPL3 Bank Editor] - a utility that allows the editing and creation of own GENMIDI banks.
+
+[[Category:Audio lumps]]</text>
+    <sha1>9itbi3uxml1uqeyhqqi6pz06jho4pgz</sha1>
+  </revision>
+</page>

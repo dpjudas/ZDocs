@@ -1,0 +1,133 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>Classes:PainElemental</title>
+  <ns>0</ns>
+  <id>2567</id>
+  <revision>
+    <id>48923</id>
+    <parentid>48449</parentid>
+    <timestamp>2021-12-27T11:16:02Z</timestamp>
+    <contributor>
+      <username>Jekyll Grim Payne</username>
+      <id>2175</id>
+    </contributor>
+    <comment>updated in accordance with updated ZScriptDefinitionNote template</comment>
+    <origin>48923</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="3104" sha1="9of7buezu1c22h62cbv1wx28lrbtnso" xml:space="preserve">{{Actor|
+| type = Monster
+| name = Pain Elemental
+| class = PainElemental
+| game = Doom2
+| doomednum = 71
+| thingindex = 23
+| spawnid = 115
+| spawnname = T_PAINELEMENTAL
+}}
+[[Classes]]: &lt;u&gt;PainElemental&lt;/u&gt;
+
+Pain elementals are similar in appearance to {{Class|cacodemon}}s, but are brown and have stubby arms. The pain elemental is unique in that it does not have an attack of its own, instead it spits [[Classes:LostSoul|lost souls]] to do its bidding for them. Note that when a pain elemental dies, three lost souls spawn burst out of it.
+
+In [[vanilla Doom]], if the total number of lost souls in the level was greater than 20, the pain elemental's [[A_PainAttack|attack]] would fail, putting a limit at 21 lost souls. This did not differentiate between lost souls spawned by pain elementals and "independent" lost souls placed directly in the map. In [[ZDoom]], this is subjected to a [[compatibility option]], accessible through the {{CVAR|C|compat_limitpain}} [[console variable]] or the [[menu]] system.
+
+==== [[ZScript]] definition ====
+{{ZScriptDefinitionNote|actors/doom/painelemental.zs}} 
+ class PainElemental : Actor
+ {
+ 	Default
+ 	{
+ 		{{Property|Health}} 400;
+ 		{{Property|Radius}} 31;
+ 		{{Property|Height}} 56;
+ 		{{Property|Mass}} 400;
+ 		{{Property|Speed}} 8;
+ 		{{Property|PainChance}} 128;
+ 		{{Property|Monster}};
+ 		+{{Flag|FLOAT}} 
+ 		+{{Flag|NOGRAVITY}}
+ 		{{Property|SeeSound}} "pain/sight";
+ 		{{Property|PainSound}} "pain/pain";
+ 		{{Property|DeathSound}} "pain/death";
+ 		{{Property|ActiveSound}} "pain/active";
+ 		{{Property|Tag}} "$FN_PAIN";
+ 	}
+ 	States
+ 	{
+ 	Spawn:
+ 		PAIN A 10 [[A_Look]];
+ 		Loop;
+ 	See:
+ 		PAIN AABBCC 3 [[A_Chase]];
+ 		Loop;
+ 	Missile:
+ 		PAIN D 5 [[A_FaceTarget]];
+ 		PAIN E 5 [[A_FaceTarget]];
+ 		PAIN F 5 BRIGHT [[A_FaceTarget]];
+ 		PAIN F 0 BRIGHT [[A_PainAttack]];
+ 		Goto See;
+ 	Pain:
+ 		PAIN G 6;
+ 		PAIN G 6 [[A_Pain]];
+ 		Goto See;
+ 	Death:
+ 		PAIN H 8 BRIGHT;
+ 		PAIN I 8 BRIGHT [[A_Scream]];
+ 		PAIN JK 8 BRIGHT;
+ 		PAIN L 8 BRIGHT [[A_PainDie]];
+ 		PAIN M 8 BRIGHT;
+ 		Stop;
+ 	Raise:
+ 		PAIN MLKJIH 8;
+ 		Goto See;
+ 	}
+ }
+==== [[DECORATE]] definition ====
+{{DecorateDefinitionNote}}
+ ACTOR &lt;u&gt;PainElemental&lt;/u&gt;
+ {
+   {{Property|Health}} 400
+   {{Property|Radius}} 31
+   {{Property|Height}} 56
+   {{Property|Mass}} 400
+   {{Property|Speed}} 8
+   {{Property|PainChance}} 128
+   {{Property|Monster}}
+   +{{Flag|FLOAT}}
+   +{{Flag|NOGRAVITY}}
+   {{Property|SeeSound}} "pain/sight"
+   {{Property|PainSound}} "pain/pain"
+   {{Property|DeathSound}} "pain/death"
+   {{Property|ActiveSound}} "pain/active"
+   States
+   {
+   Spawn:
+     PAIN A 10 [[A_Look]]
+     Loop
+   See:
+     PAIN AABBCC 3 [[A_Chase]]
+     Loop
+   Missile:
+     PAIN D 5 [[A_FaceTarget]]
+     PAIN E 5 [[A_FaceTarget]]
+     PAIN F 5 Bright [[A_FaceTarget]]
+     PAIN F 0 Bright [[A_PainAttack]]
+     Goto See
+   Pain:
+     PAIN G 6
+     PAIN G 6 [[A_Pain]]
+     Goto See
+   Death:
+     PAIN H 8 Bright
+     PAIN I 8 Bright [[A_Scream]]
+     PAIN JK 8 Bright
+     PAIN L 8 Bright [[A_PainDie]]
+     PAIN M 8 Bright
+     Stop
+   Raise:
+     PAIN MLKJIH 8
+     Goto See
+   }
+ }</text>
+    <sha1>9of7buezu1c22h62cbv1wx28lrbtnso</sha1>
+  </revision>
+</page>

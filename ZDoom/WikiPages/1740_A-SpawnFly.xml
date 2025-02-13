@@ -1,0 +1,203 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>A SpawnFly</title>
+  <ns>0</ns>
+  <id>1740</id>
+  <revision>
+    <id>52441</id>
+    <parentid>52440</parentid>
+    <timestamp>2024-04-13T21:47:09Z</timestamp>
+    <contributor>
+      <username>Jekyll Grim Payne</username>
+      <id>2175</id>
+    </contributor>
+    <minor />
+    <origin>52441</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="4888" sha1="0s6ryfeqb2vzavdwmnpubj2sz6nm5xh" xml:space="preserve">{{codepointer|Classic attack}}
+{{doomwiki|A_SpawnFly}}
+
+'''{{class|Actor}}'''
+
+{{c|void '''A_SpawnFly'''(class&lt;Actor&gt; ''spawntype'' }}={{c| null)}}
+
+== Usage ==
+Checks whether a [[Classes:SpawnShot|boss cube]] has reached its {{class|BossTarget|target}} and if so spawns a monster there. Monsters are defined through the {{property|DropItem}} property of the {{class|SpawnShot}}.
+
+It also telefrags anything in the way of spawning.
+
+If ''spawntype'' is provided, the specified actor will be spawned as a visual effect on top of the monster. If not provided, uses {{class|SpawnFire}} instead.  Also, the sound that plays at spawn will be the {{property|SeeSound}} of the spawned ''spawntype'' actor.
+
+== [[ZScript]] definition ==
+{{ZScriptDefinitionNote|actors/doom/bossbrain.zs#L281}}
+The behavior of this function is wholly handled in ZScript and consists of two parts: a public &lt;code&gt;A_SpawnFly&lt;/code&gt; function and a private &lt;code&gt;SpawnFly&lt;/code&gt; method. Despite being private, the latter can be copy-pasted and modified to create custom behavior.
+
+The behavior of picking the class to spawn is very similar to what {{class|RandomSpawner}} uses.
+
+&lt;syntaxhighlight lang="csharp"&gt;
+	private void SpawnFly(class&lt;Actor&gt; spawntype, sound snd)
+	{
+		Actor newmobj;
+		Actor fog;
+		Actor eye = master; // The eye is the spawnshot's master, not the target!
+		Actor targ = target; // Unlike other projectiles, the target is the intended destination.
+		int r;
+
+		if (targ == null)
+		{
+			Destroy();
+			return;
+		}
+			
+		// [GZ] Should be more viable than a countdown...
+		if (special2 != 0)
+		{
+			if (special2 &gt; level.maptime)
+				return;		// still flying
+		}
+		else
+		{
+			if (reactiontime == 0 || --reactiontime != 0)
+				return;		// still flying
+		}
+		
+		if (spawntype)
+		{
+			fog = Spawn (spawntype, targ.pos, ALLOW_REPLACE);
+			if (fog) A_StartSound(snd, CHAN_BODY);
+		}
+
+		class&lt;Actor&gt; SpawnName = null;
+
+		DropItem di;   // di will be our drop item list iterator
+		DropItem drop; // while drop stays as the reference point.
+		int n = 0;
+
+		// First see if this cube has its own actor list
+		drop = GetDropItems();
+
+		// If not, then default back to its master's list
+		if (drop == null &amp;&amp; eye != null)
+			drop = eye.GetDropItems();
+
+		if (drop != null)
+		{
+			for (di = drop; di != null; di = di.Next)
+			{
+				if (di.Name != 'None')
+				{
+					int amt = di.Amount;
+					if (amt &lt; 0)
+					{
+						amt = 1; // default value is -1, we need a positive value.
+					}
+					n += amt; // this is how we can weight the list.
+				}
+			}
+			di = drop;
+			n = random[pr_spawnfly](0, n);
+			while (n &gt;= 0)
+			{
+				if (di.Name != 'none')
+				{
+					int amt = di.Amount;
+					if (amt &lt; 0)
+					{
+						amt = 1;
+					}
+					n -= amt;
+				}
+				if ((di.Next != null) &amp;&amp; (n &gt;= 0))
+				{
+					di = di.Next;
+				}
+				else
+				{
+					n = -1;
+				}
+			}
+			SpawnName = di.Name;
+		}
+		if (SpawnName == null)
+		{
+			// Randomly select monster to spawn.
+			r = random[pr_spawnfly](0, 255);
+
+			// Probability distribution (kind of :),
+			// decreasing likelihood.
+				 if (r &lt; 50)  SpawnName = "DoomImp";
+			else if (r &lt; 90)  SpawnName = "Demon";
+			else if (r &lt; 120) SpawnName = "Spectre";
+			else if (r &lt; 130) SpawnName = "PainElemental";
+			else if (r &lt; 160) SpawnName = "Cacodemon";
+			else if (r &lt; 162) SpawnName = "Archvile";
+			else if (r &lt; 172) SpawnName = "Revenant";
+			else if (r &lt; 192) SpawnName = "Arachnotron";
+			else if (r &lt; 222) SpawnName = "Fatso";
+			else if (r &lt; 246) SpawnName = "HellKnight";
+			else			  SpawnName = "BaronOfHell";
+		}
+		if (spawnname != null)
+		{
+			newmobj = Spawn (spawnname, targ.pos, ALLOW_REPLACE);
+			if (newmobj != null)
+			{
+				// Make the new monster hate what the boss eye hates
+				if (eye != null)
+				{
+					newmobj.CopyFriendliness (eye, false);
+				}
+				// Make it act as if it was around when the player first made noise
+				// (if the player has made noise).
+				newmobj.LastHeard = newmobj.CurSector.SoundTarget;
+
+				if (newmobj.SeeState != null &amp;&amp; newmobj.LookForPlayers (true))
+				{
+					newmobj.SetState (newmobj.SeeState);
+				}
+				if (!newmobj.bDestroyed)
+				{
+					// telefrag anything in this spot
+					newmobj.TeleportMove (newmobj.pos, true);
+				}
+				newmobj.bBossSpawned = true;
+			}
+		}
+
+		// remove self (i.e., cube).
+		Destroy ();
+	}
+
+	void A_SpawnFly(class&lt;Actor&gt; spawntype = null)
+	{
+		sound snd; 
+		if (spawntype != null) 
+		{
+			snd = GetDefaultByType(spawntype).SeeSound;
+		}
+		else
+		{
+			spawntype = "SpawnFire";
+			snd = "brain/spawn";
+		}
+		SpawnFly(spawntype, snd);
+	}&lt;/syntaxhighlight&gt;
+
+== Examples ==
+This example is taken from Doom's spawn cube.
+
+  Spawn:
+    BOSF A 3 BRIGHT [[A_SpawnSound]];
+    BOSF BCD 3 BRIGHT [[A_SpawnFly]]; {{comment|See [[Classes:SpawnFire|SpawnFire]]}}
+    Loop;
+
+== See also ==
+* [[Classes:BossBrain]]
+* [[Classes:BossTarget]]
+* [[Classes:SpawnShot]]
+* [[A_BrainSpit]]
+
+[[Category:Icon of Sin]]</text>
+    <sha1>0s6ryfeqb2vzavdwmnpubj2sz6nm5xh</sha1>
+  </revision>
+</page>

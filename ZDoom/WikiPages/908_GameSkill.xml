@@ -1,0 +1,71 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>GameSkill</title>
+  <ns>0</ns>
+  <id>908</id>
+  <revision>
+    <id>36570</id>
+    <parentid>35765</parentid>
+    <timestamp>2013-05-22T23:50:42Z</timestamp>
+    <contributor>
+      <username>Marrub</username>
+      <id>2058</id>
+    </contributor>
+    <minor />
+    <comment>Fixed a small error</comment>
+    <origin>36570</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="2077" sha1="tl7h5qar89b1sxvwmvjkkg8gl19qxmq" xml:space="preserve">int '''GameSkill''' (void)
+
+== Usage ==
+
+Returns the skill level of the current game.
+
+=== Return value ===
+
+The skill level of the current game. For script readability there are skill levels defined in zdefs.acs as follows:
+*'''SKILL_VERY_EASY''' = 0
+:“I'm Too Young to Die” in Doom.
+*'''SKILL_EASY''' = 1
+:“Hey, Not Too Rough" in Doom.
+*'''SKILL_NORMAL''' = 2
+:“Hurt Me Plenty” in Doom.
+*'''SKILL_HARD''' = 3
+:“Ultra-Violence” in Doom.
+*'''SKILL_VERY_HARD''' = 4
+:“Nightmare!” in Doom.
+These are ordered 0 through 4 so all operators will work. For example, skills which are &lt;= &lt;tt&gt;SKILL_NORMAL&lt;/tt&gt; are very easy, easy and normal.
+
+== Examples ==
+
+This script takes the [[TID]] of a boss monster and applies different effects depending on the skill. Easier skills get a quarter health boss. Harder skills get a half health boss. Nightmare gets a full strength boss which is invisible.  Although this example is somewhat unbalanced, this command can help to finely tune skill levels.
+
+ script 1 (int boss)
+ {
+     if ([[GameSkill]] () &lt;= {{const|SKILL_EASY}})
+         [[SetActorProperty]] (boss, {{const|APROP_HEALTH}}, 1000);
+     else if ([[GameSkill]] () &lt; {{const|SKILL_VERY_HARD}})
+         [[SetActorProperty]] (boss, {{const|APROP_HEALTH}}, 2000);
+     else
+         [[SetActorProperty]] (boss, {{const|APROP_RENDERSTYLE}}, {{const|STYLE_Fuzzy}});
+ }
+
+This example increases the amount of {{Class|DoomImp|Imps}} that get spawned at the {{Class|MapSpot}} with the matching TID, starting with the base count provided, and adding the factor amount for every skill level beyond SKILL_VERY_EASY.  The return value from [[SpawnSpotFacing]] is analyzed to determine the success of the spawn attempt. 
+
+ script 1 (int tid, int base, int factor)
+ {
+     int count = base + [[GameSkill]]() * factor;
+     while (count)
+     {
+         if ([[SpawnSpotFacing]]("{{Class|DoomImp}}", tid))
+         {
+             [[SpawnSpot]]("{{Class|TeleportFog}}", tid);
+             count--;
+         }
+         [[delay]](35);
+     }
+ }
+[[category:ACS Information functions]]</text>
+    <sha1>tl7h5qar89b1sxvwmvjkkg8gl19qxmq</sha1>
+  </revision>
+</page>

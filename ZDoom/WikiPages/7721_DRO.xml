@@ -1,0 +1,119 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>DRO</title>
+  <ns>0</ns>
+  <id>7721</id>
+  <revision>
+    <id>37705</id>
+    <parentid>37693</parentid>
+    <timestamp>2014-02-24T14:16:27Z</timestamp>
+    <contributor>
+      <username>Gez</username>
+      <id>1283</id>
+    </contributor>
+    <minor />
+    <comment>/* External links */</comment>
+    <origin>37705</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="4397" sha1="dui5nf5dbgatd6z9dsrhfz9vr9uv2zw" xml:space="preserve">'''DOSBox Raw OPL''' or '''DRO''' is the format used by {{wp|DOSBox}} to capture [[OPL]] output. The format uses a clear header but went through two incompatible versions. The first version was used up to DOSBox 0.72, the second version replaced it starting with DOSBox 0.73.
+
+==Technical information==
+All numerical values are little-endian.
+{| {{prettytable}}
+!Offset!!Size!!Description
+|-
+|0||char[8]||Signature (must be {{c|DBRAWOPL}})
+|-
+|8||uint16||First version word
+|-
+|10||uint16||Second version word
+|}
+Version number identification is complicated by the fact the version words aren't read in the same order depending on the specifications. In the 1.0 version of the format, the minor version number comes first, and the major version number is the second word. So for version 1.0, the value is {{c|00 00 01 00}}. However, version 2.0 of the specifications reverse the order, so for version 2.0, the value is {{c|02 00 00 00}}. For this reason, the 1.0 version also became known as version 0.1.
+
+{{note|Some files using the old version format contain large garbage values in the minor version word. ZDoom will refuse to read them. You will need to set the minor version to {{c|00 00}} with a hex editor.}}
+
+Delay values are indicated in milliseconds - 1. Since a delay of 0 is deemed to be useless, the byte value is increased by one to get the actual delay.
+
+The header is then followed by a subheader. The two different formats have completely different subheaders.
+
+===Format 1.0===
+{| {{prettytable}}
+!Size!!Description
+|-
+|12||uint32||Song length (in millisecond)
+|-
+|16||uint32||Song data size (in bytes)
+|-
+|20||uint8||Hardware type (0: OPL2, 1: OPL3, 2: Dual OPL2)
+|-
+|21||byte[3]||Optional null padding (may not be present: if non-null, these bytes are song data)
+|}
+
+===Format 2.0===
+{| {{prettytable}}
+!Size!!Description
+|-
+|12||uint32||Song data size (in pairs of bytes)
+|-
+|16||uint32||Song data length (in milliseconds)
+|-
+|20||uint8||Hardware type (0: OPL2, 1: Dual OPL2, 2: OPL3)
+|-
+|21||uint8||Data format (ZDoom only supports data format 0)
+|-
+|22||uint8||Compression method (ZDoom only supports compression 0, meaning no compression)
+|-
+|23||uint8||Short delay code (command value used to introduce a one-byte delay, should always be 122)
+|-
+|24||uint8||Long delay code (command value used to introduce a one-byte delay multiplied by 256, should always be 123)
+|-
+|25||uint8||Codemap table size (must be 126 or less, technically should always be 122)
+|-
+|26||uint8*||Codemap table (associate OPL registers with index values)
+|}
+
+The standard codemap looks like this:
+{| {{prettytable}}
+! Index !! Register !! !! Index !! Register !! !! Index !! Register !! !! Index !! Register !! !! Index !! Register !! !! Index !! Register !! !! Index !! Register !! !! Index !! Register
+|-
+|0||01|| ||1||04|| ||2||05|| ||3||08|| ||4||BD|| ||5||20|| ||6||40|| ||7||60
+|-
+|8||80|| ||9||E0|| ||10||21|| ||11||41|| ||12||61|| ||13||81|| ||14||E1|| ||15||22
+|-
+|16||42|| ||17||62|| ||18||82|| ||19||E2|| ||20||23|| ||21||43|| ||22||63|| ||23||83
+|-
+|24||E3|| ||25||24|| ||26||44|| ||27||64|| ||28||84|| ||29||E4|| ||30||25|| ||31||45
+|-
+|32||65|| ||33||85|| ||34||E5|| ||35||28|| ||36||48|| ||37||68|| ||38||88|| ||39||E8
+|-
+|40||29|| ||41||49|| ||42||69|| ||43||89|| ||44||E9|| ||45||2A|| ||46||4A|| ||47||6A
+|-
+|48||8A|| ||49||EA|| ||50||2B|| ||51||4B|| ||52||6B|| ||53||8B|| ||54||EB|| ||55||2C
+|-
+|56||4C|| ||57||6C|| ||58||8C|| ||59||EC|| ||60||2D|| ||61||4D|| ||62||6D|| ||63||8D
+|-
+|64||ED|| ||65||30|| ||66||50|| ||67||70|| ||68||90|| ||69||F0|| ||70||31|| ||71||51
+|-
+|72||71|| ||73||91|| ||74||F1|| ||75||32|| ||76||52|| ||77||72|| ||78||92|| ||79||F2
+|-
+|80||33|| ||81||53|| ||82||73|| ||83||93|| ||84||F3|| ||85||34|| ||86||54|| ||87||74
+|-
+|88||94|| ||89||F4|| ||90||35|| ||91||55|| ||92||75|| ||93||95|| ||94||F5|| ||95||A0
+|-
+|96||B0|| ||97||C0|| ||98||A1|| ||99||B1|| ||100||C1|| ||101||A2|| ||102||B2|| ||103||C2
+|-
+|104||A3|| ||105||B3|| ||106||C3|| ||107||A4|| ||108||B4|| ||109||C4|| ||110||A5|| ||111||B5
+|-
+|112||C5|| ||113||A6|| ||114||B6|| ||115||C6|| ||116||A7|| ||117||B7|| ||118||C7|| ||119||A8
+|-
+|120||B8|| ||121||C8|| ||122||colspan="7"|short delay|| ||123||colspan="7"|long delay
+|}
+
+==External links==
+* {{shikadiw|DRO Format}}
+* {{vgmpfw}}
+* [ftp://ftp.modland.com/pub/modules/Ad%20Lib/DOSBox/ Modland repository of DRO files]
+[[Category:Audio formats]]</text>
+    <sha1>dui5nf5dbgatd6z9dsrhfz9vr9uv2zw</sha1>
+  </revision>
+</page>

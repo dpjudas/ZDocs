@@ -1,0 +1,45 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>SoundSequenceOnActor</title>
+  <ns>0</ns>
+  <id>5766</id>
+  <revision>
+    <id>35963</id>
+    <parentid>30356</parentid>
+    <timestamp>2013-03-01T01:51:28Z</timestamp>
+    <contributor>
+      <username>Deded007</username>
+      <id>1392</id>
+    </contributor>
+    <minor />
+    <comment>links</comment>
+    <origin>35963</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="908" sha1="pplyioeikxr6gkev3ywq1437oz8495e" xml:space="preserve">void '''SoundSequenceOnActor''' (int tid, str ''sndseq'');
+
+== Usage ==
+
+Plays a sound sequence defined in [[SNDSEQ]] lump.
+
+== Examples ==
+First make sure that you have defined in a [[SNDINFO]] lump in your mod the sounds that will be used by your sequence, for example:
+     world/machinery1		A_AMB1
+Here A_AMB1 is the name of a [[sound format|sound file]] included in the mod.
+
+Then define a sound sequence in a [[SNDSEQ]] lump. For example:
+     :MachineryLoop1
+          playrepeat world/machinery1
+     end
+
+You can then easily use the sound sequence in your [[ACS]] script to make a sound come from a 'thing' on your map. For example, using a {{Class|MapSpot|map spot}} with its [[tag]] set to 1, you could use this line:
+     [[SoundSequenceOnActor]] (1, "MachineryLoop1");
+
+== See also ==
+* [[SoundSequence]]
+* [[SoundSequenceOnSector]]
+* [[SoundSequenceOnPolyobj]]
+
+[[category:ACS Sound functions]]</text>
+    <sha1>pplyioeikxr6gkev3ywq1437oz8495e</sha1>
+  </revision>
+</page>

@@ -1,0 +1,76 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>Classes:Snake</title>
+  <ns>0</ns>
+  <id>2920</id>
+  <revision>
+    <id>39449</id>
+    <parentid>34176</parentid>
+    <timestamp>2015-04-30T21:06:18Z</timestamp>
+    <contributor>
+      <username>Blue Shadow</username>
+      <id>2021</id>
+    </contributor>
+    <minor />
+    <comment>/* DECORATE definition */ Updated</comment>
+    <origin>39449</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="1459" sha1="jsxfl0nh7o4mdwjq4dvh0hafykzgk75" xml:space="preserve">{{Actor|
+| type = Monster
+| name = Ophidian
+| class = Snake
+| game = Heretic
+| doomednum = 92
+| spawnid = 132
+| spawnname = T_SNAKE 
+}}[[Classes]]: &lt;u&gt;Snake&lt;/u&gt;&lt;br&gt;
+A serpentine enemy wielding a magic trident able to throw projectiles of [[Classes:SnakeProjA|ice]] and [[Classes:SnakeProjB|fire]]. They are tougher than they look.
+
+==== [[DECORATE]] definition ====
+ ACTOR &lt;u&gt;Snake&lt;/u&gt;
+ {
+   {{Property|Health}} 280
+   {{Property|Radius}} 22
+   {{Property|Height}} 70
+   {{Property|Speed}} 10
+   {{Property|PainChance}} 48
+   {{Property|Monster}}
+   +{{Flag|FLOORCLIP}}
+   {{Property|AttackSound}} "snake/attack"
+   {{Property|SeeSound}} "snake/sight"
+   {{Property|PainSound}} "snake/pain"
+   {{Property|DeathSound}} "snake/death"
+   {{Property|ActiveSound}} "snake/active"
+   {{Property|Obituary}} "$OB_SNAKE"
+   {{Property|DropItem}} "{{Class|PhoenixRodAmmo}}", 84, 5
+   States
+   {
+   Spawn:
+     SNKE AB 10 [[A_Look]]
+     Loop
+   See:
+     SNKE ABCD 4 [[A_Chase]]
+     Loop
+   Missile:
+     SNKE FF 5 [[A_FaceTarget]]
+     SNKE FFF 4 [[A_CustomMissile]]("{{Class|SnakeProjA}}", 32, 0, 0, CMF_CHECKTARGETDEAD)
+     SNKE FFF 5 [[A_FaceTarget]]
+     SNKE F 4 [[A_CustomMissile]]("{{Class|SnakeProjB}}", 32, 0, 0, CMF_CHECKTARGETDEAD)
+     Goto See
+   Pain:
+     SNKE E 3
+     SNKE E 3 [[A_Pain]]
+     Goto See
+   Death:
+     SNKE G 5
+     SNKE H 5 [[A_Scream]]
+     SNKE IJKL 5
+     SNKE M 5 [[A_NoBlocking]]
+     SNKE NO 5
+     SNKE P -1
+     Stop
+   }
+ }</text>
+    <sha1>jsxfl0nh7o4mdwjq4dvh0hafykzgk75</sha1>
+  </revision>
+</page>

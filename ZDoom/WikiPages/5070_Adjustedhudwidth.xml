@@ -1,0 +1,32 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>Adjustedhudwidth</title>
+  <ns>0</ns>
+  <id>5070</id>
+  <revision>
+    <id>27949</id>
+    <parentid>21282</parentid>
+    <timestamp>2010-10-20T20:10:07Z</timestamp>
+    <contributor>
+      <username>Ceeb</username>
+      <id>1593</id>
+    </contributor>
+    <minor />
+    <origin>27949</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="686" sha1="2um7oqvhis0tc6vj8vjkmb9xyr27uj8" xml:space="preserve">{{DISPLAYTITLE:adjustedhudwidth}}
+This function will return an adjusted width value for a given height value depending on the users screen settings.  This is useful for maintaining continuity in size across a variety of screen resolutions and aspect ratios.  It can also be useful for tracking screen dimensions for controlling things such as boundaries for mouse navigated menus.
+
+   function int AdjustedHUDWidth (int hud_height)
+   {
+      int width, height;
+      hud_height &lt;&lt;= 16;
+      width = [[GetScreenWidth]]() &lt;&lt; 16;
+      height = [[GetScreenHeight]]() &lt;&lt; 16;
+      return [[FixedMul]](hud_height, [[FixedDiv]](width, height)) &gt;&gt; 16;
+   }
+
+[[category:Sample ACS functions]]</text>
+    <sha1>2um7oqvhis0tc6vj8vjkmb9xyr27uj8</sha1>
+  </revision>
+</page>

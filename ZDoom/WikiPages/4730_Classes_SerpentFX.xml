@@ -1,0 +1,52 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>Classes:SerpentFX</title>
+  <ns>0</ns>
+  <id>4730</id>
+  <revision>
+    <id>34905</id>
+    <parentid>34904</parentid>
+    <timestamp>2012-11-11T02:21:16Z</timestamp>
+    <contributor>
+      <username>Blue Shadow</username>
+      <id>2021</id>
+    </contributor>
+    <comment>Added a description</comment>
+    <origin>34905</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="832" sha1="o8gsmw85vad2hhf01ibcsyfivo0kt7f" xml:space="preserve">{{Actor|
+| type = Explosive
+| name = Stalker slime ball
+| class = SerpentFX
+| game = Hexen
+}}[[Classes]]: &lt;u&gt;SerpentFX&lt;/u&gt;&lt;br&gt;
+
+The slimy green ball of acid thrown by a {{Class|SerpentLeader|stalker leader}}. It makes a "whissing" sound while it travels along.
+==== [[DECORATE]] definition ====
+ ACTOR &lt;u&gt;SerpentFX&lt;/u&gt;
+ {
+   {{Property|Speed}} 15
+   {{Property|Radius}} 8
+   {{Property|Height}} 10
+   {{Property|Damage}} 4
+   {{Property|Projectile}}
+   -{{Flag|ACTIVATEIMPACT}}
+   -{{Flag|ACTIVATEPCROSS}}
+   {{Property|RenderStyle}} Add
+   {{Property|DeathSound}} "SerpentFXHit"
+   States
+   {
+   Spawn:
+     SSFX A 0
+     SSFX A 3 Bright [[A_PlaySoundEx]]("SerpentFXContinuous", "Body", 1)
+     SSFX BAB 3 Bright
+     Goto Spawn+1
+   Death:
+     SSFX C 4 Bright [[A_StopSoundEx]]("Body")
+     SSFX DEFGH 4 Bright
+     Stop
+   }
+ }</text>
+    <sha1>o8gsmw85vad2hhf01ibcsyfivo0kt7f</sha1>
+  </revision>
+</page>

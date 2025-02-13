@@ -1,0 +1,114 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>CVARINFO</title>
+  <ns>0</ns>
+  <id>7587</id>
+  <revision>
+    <id>54137</id>
+    <parentid>54000</parentid>
+    <timestamp>2025-01-16T20:57:47Z</timestamp>
+    <contributor>
+      <username>Boondorl</username>
+      <id>2606</id>
+    </contributor>
+    <minor />
+    <comment>/* Other options */</comment>
+    <origin>54137</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="6104" sha1="tajzou5g297rp0bgxiriu974hqbcw6l" xml:space="preserve">'''CVARINFO''' is a lump for defining custom, mod-specific [[CVARs]]. The syntax is as follows:
+
+ &lt;scope&gt; [noarchive] [cheat] [latch] [handlerclass("&lt;classname&gt;")] &lt;type&gt; &lt;name&gt; [= defaultvalue];
+
+== Scope ==
+This can be one of the following:
+*'''server'''
+:This CVAR is shared by all players, and in network games, only select players can change it. Changes to server CVARs will not be reflected until at-least one tic later (network games will make this length of time indeterminate). Their values are saved to savegame. In [[ZScript]] server CVARs are readable directly, like global variables.
+*'''user'''
+:This CVar is not saved to save games, but is written into config (changing this CVar, then loading an earlier save will not modify its value). Each player has their own copy of this CVAR, which they can change independently. Changes to these variables are immediate and are shared across network.
+:User CVars can be used to store per-player data that should still be visible to all players in [[multiplayer]]. For example, player's name, skin, color, gender and such are stored in '''user''' CVars.
+:User CVars can be retrieved with {{c|[[Structs:CVar#GetCVar|'''CVar.GetCvar''']]('&lt;cvarname&gt;', &lt;{{struct|PlayerInfo|PlayerInfo pointer}}&gt;)}}. {{color|red|Warning:}} Using [[Structs:CVar#GetCVar|'''CVar.FindCVar''']] or passing &lt;code&gt;consoleplayer&lt;/code&gt; as the PlayerInfo pointer in '''GetCVar''' will obtain data for consoleplayer, not shared across network, and if any gameplay changes are tied to this value, it'll cause a desync in multiplayer.
+*'''nosave'''
+:Similarly to user CVars, nosave CVARs are only saved in config files, and each player has their own copy of this CVar. However, they're also not shared across network, so other players don't have access to each other values for this CVar.
+:Nosave CVars should be used to store user-specific options that are not relevant to other players. For example, options that can modify some UI aspects (such as elements of a custom {{class|BaseStatusBar|ZScript HUD}}) can be tied to a nosave CVar.
+:Nothing that can modify the playsim (such as spawning actors) should be tied to nosave CVars, because doing so will cause a desync in multiplayer, since nosave CVar values aren't sent across network.
+:Nosave CVars can be read directly, just like server CVars. If there's a need to obtain a pointer to it, {{c|[[Structs:CVar#FindCVar|'''CVar.FindCVar''']]('&lt;cvarname&gt;')}} can be safely used, because this function always retrieves the CVar for the consoleplayer, and nosave CVars are not shared across network.
+
+Summarized:
+{| class="wikitable" 
+|- style="font-weight:bold; text-align:center;"
+! style="font-weight:normal; text-align:left;" | 
+! server
+! user
+! nosave
+|-
+| style="font-weight:bold;" | Stored in save games
+| Yes
+| No
+| No
+|-
+| style="font-weight:bold;" | Who can modify in multiplayer
+| Only host
+| Anyone
+| Anyone
+|-
+| style="font-weight:bold;" | Can value be different for each player?
+| No
+| Yes
+| Yes
+|-
+| style="font-weight:bold;" | Shared across network
+| Yes
+| Yes
+| No
+|-
+| style="font-weight:bold;" | How to read in [[ZScript]]
+| Readable directly by name, like a global variable.
+| {{c|[[Structs:CVar#GetCVar|'''CVar.GetCvar''']]('&lt;cvarname&gt;', &lt;{{struct|PlayerInfo|PlayerInfo pointer}}&gt;)}}&lt;br&gt;&lt;br&gt;This retrieves a pointer to the CVar. To get the actual value,&lt;br /&gt;use &lt;code&gt;GetInt()&lt;/code&gt;, &lt;code&gt;GetFloat()&lt;/code&gt;, &lt;code&gt;GetBool()&lt;/code&gt;, &lt;code&gt;GetString()&lt;/code&gt;.
+| Readable directly by name, like a global variable.&lt;br&gt;'''CVar.GetCVar''' and '''CVar.FindCVar''' can also be used to cache a pointer to the CVar,&lt;br&gt;but usually aren't necessary.
+|-
+| style="font-weight:bold;" | Intended use
+| Data that affects all players equally (usually, gameplay changes)
+| Data unique to each player but visible for other players and their clients.&lt;br&gt;This can either be tied to visual-only options, or to events that&lt;br&gt;affect player separately, for example when you want to give&lt;br&gt;each player a different item.
+| Local user options that aren't relevant to other users.&lt;br&gt;Nothing that modifies playsim should ever be tied to nosave CVars!
+|}
+
+{{note|text=Server CVAR names must be no longer than 63 characters. While GZDoom 3.4 will refuse to load, prior versions will suffer issues with multiplayer.}}
+
+== Other options ==
+
+*''noarchive'': If present, it prevents the CVAR from being written to the [[configuration file]].
+*''cheat'': If present, the CVAR can only be modified by console if sv_cheats is enabled. ACS can still change these freely.
+*''latch'': Changes to this CVAR only take effect upon starting a new game. This is only the case when changing it from the console, however.
+*''handlerclass'': See [[Structs:CVar#Handlers|Handlers]] for more information.
+*''type'': The data type of the CVAR's value, which can be one of the following:
+**'''int''' — An integer value. Defaults to 0.
+**'''float''' — A value that can include a fraction. Defaults to 0.0.
+**'''color''' — A color value. Defaults to black ("00 00 00").
+**'''bool''' — A boolean value that can hold either true or false. Defaults to false.
+**'''string''' — A string value. Defaults to "".
+*''name'': The CVAR's name. It must begin with a letter and may only include alphanumeric characters and the underscore character.
+
+{{warning|text=User CVAR name and its value cannot contain more than 254 characters in total. It may be saved to the external configuration file without warning, but the engine will refuse to load it next parsing. '''Error description will not contain the CVar name'''.}}
+
+*''defaultvalue'': The default value to be given to the CVAR, if desired.
+
+==Example==
+This creates an integer CVAR with the name {{c|mymod_coolness}}. The CVAR is shared by all players. It has a default value of 10, and it is saved in the configuration file.
+ server int mymod_coolness = 10;
+
+==See also==
+* [[Structs:CVar]]
+==== [[ACS]] methods: ====
+* [[GetCVar]]
+* [[GetCVarString]]
+* [[GetUserCVar]]
+* [[GetUserCVarString]]
+* [[SetCVar]]
+* [[SetCVarString]]
+* [[SetUserCVar]]
+* [[SetUserCVarString]]
+
+[[Category:ZDoom special lumps]]</text>
+    <sha1>tajzou5g297rp0bgxiriu974hqbcw6l</sha1>
+  </revision>
+</page>

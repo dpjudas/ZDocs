@@ -1,0 +1,39 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>GetRadiusDamage</title>
+  <ns>0</ns>
+  <id>9321</id>
+  <revision>
+    <id>50426</id>
+    <parentid>46849</parentid>
+    <timestamp>2023-08-03T15:46:46Z</timestamp>
+    <contributor>
+      <username>Inkoalawetrust</username>
+      <id>2604</id>
+    </contributor>
+    <comment>Documented new parameter and rephrased some things.</comment>
+    <origin>50426</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="2057" sha1="mafm3px1z39tay67lwacd5bhs1tfee5" xml:space="preserve">__NOTOC__int '''GetRadiusDamage''' (Actor ''thing'', int ''damage'', int ''distance'' [, int ''fulldmgdistance'' [, bool ''oldradiusdmg''[, bool ''round'']]])
+
+==Usage==
+Performs the formula used by [[A_Explode]] to determine how much damage an actor should take, originating from the calling actor, on ''thing'' for the purpose of calculating the raw radius damage it would receive. Since no actual damage is inflicted, damage modifiers, such as {{Property|DamageFactor|damage factors}} and {{Class|PowerProtection|protection powerups}}, are excluded from damage calculation. {{CVAR|C|splashfactor|Splash}} and {{Property|RadiusDamageFactor|radius damage}} factors are also excluded, so they need to be manually factored in, such as with [[ApplyDamageFactor|ApplyDamageFactor()]].
+
+===Parameters===
+*''thing'': A pointer to the actor on which to perform the attack.
+*''damage'': How much damage would be inflicted at the center of the explosion.
+*''distance'': The coverage area of the attack. This is the same as ''damage'' if it is set to 0 or less.
+*''fulldmgdistance'': The area within which full damage would be inflicted. Default is 0.
+*''oldradiusdmg'': The method of calculating the damage. If ''true'', the function uses the {{Flag|OLDRADIUSDMG|old method}} which is utilized by actors such us {{Class|ExplosiveBarrel|explosive barrels}}, otherwise if ''false'', the standard method is used, which takes z-height into account. Default is ''false''.
+*''round'': Return the damage ''thing'' would receive using a spherical blast, as opposed to the original cuboid shape Doom uses. Used by explosions with ''XF_CIRCULAR''.
+
+===Return value===
+The amount of raw radius damage that ''thing'' would receive. The damage amount which is passed to the function is returned as is if the calling actor performs the attack on itself, since it is at the center of the explosion. If ''thing'' is out of the coverage area, the function returns negative damage values. In all other cases, the function returns 0.
+
+==Examples==
+{{noexamples}}
+
+[[Category:ZScript]]</text>
+    <sha1>mafm3px1z39tay67lwacd5bhs1tfee5</sha1>
+  </revision>
+</page>

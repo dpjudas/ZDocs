@@ -1,0 +1,273 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>String</title>
+  <ns>0</ns>
+  <id>9033</id>
+  <revision>
+    <id>54090</id>
+    <parentid>52970</parentid>
+    <timestamp>2024-12-24T01:14:50Z</timestamp>
+    <contributor>
+      <username>Zhs2</username>
+      <id>1656</id>
+    </contributor>
+    <minor />
+    <comment>Correct type returned by String::Length. Actually it's called SizeType in (G)ZDoom source code but it is treated as uint in ZScript.</comment>
+    <origin>54090</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="13269" sha1="o5zmtvzju3ujigtdv3em2o7nt9yadbl" xml:space="preserve">{{ZScriptNote}}
+
+'''String''' is a built-in type in ZScript. It is used for text data and has some additional features in it.
+
+== Special operations ==
+=== Concatenation ===
+You can use the {{c|..}} operator to concatenate text representations of any objects (ints, doubles...) into a single string. Example:
+  double x = 4;
+  int y = 2;
+  A_Log(x..", "..y); // outputs 4.00000, 2
+Note that this way you cannot control the count of digits after the decimal point, for example. For that, see {{c|[[#Format|Format]]}}.
+
+Casting a single code point string literal as an integer will convert that string literal to its appropriate code point:
+ int codePoint = int("a"); // This will set codePoint to 97, the ASCII code for a
+Note that this doesn't work with string variables, only literals.
+
+=== Decimal places ===
+The number of decimal places displayed can set with &lt;code&gt;%.#f&lt;/code&gt; where {{c|#}} is the number of places to print. For example:
+&lt;syntaxhighlight lang="csharp"&gt;
+double foo = 1.534234;
+String str = String.Format("%.2f", foo); //str = "1.53"
+&lt;/syntaxhighlight&gt;
+
+=== Padding ===
+You can control the size of padding with &lt;code&gt;%#d&lt;/code&gt; where {{c|#}} is the number of places to pad. For example:
+&lt;syntaxhighlight lang="csharp"&gt;
+int foo = 10;
+String str = String.Format("%4d", foo); //str = "  10"
+&lt;/syntaxhighlight&gt;
+
+The size of padding can also be controlled dynamically, by using &lt;code&gt;%*d&lt;/code&gt; and passing the size of padding as an integer to &lt;code&gt;String.Format&lt;/code&gt;:
+&lt;syntaxhighlight lang="csharp"&gt;
+int foo = 10;
+int padding = 4;
+// Pad to the 'padding' number of characters:
+String str = String.Format("%*d", padding, foo); //str = "  10"
+&lt;/syntaxhighlight&gt;
+
+By default padding is done with spaces. A custom character can be placed right after &lt;code&gt;%&lt;/code&gt; to define a custom padding character. This can be combined with either of the above syntaxes:
+&lt;syntaxhighlight lang="csharp"&gt;
+int foo = 10;
+// Pad to 4 characters using zeroes:
+String str = String.Format("%04d", foo); //str = "0010"
+&lt;/syntaxhighlight&gt;
+
+Example of how this can be used in a {{class|BaseStatusBar|ZScript HUD}}:
+&lt;syntaxhighlight lang="csharp"&gt;
+Ammo am1, am2;
+int am1amt, am2amt;
+[am1, am2, am1amt, am2amt] = GetCurrentAmmo();
+int padding;
+if (am1)
+{
+  // Determine padding as the length of maxamount of ammo1
+  // (for example, if maxamount is 200, padding will be 3):
+  padding = String.Format("%d", am1.maxamount).Length();
+  // Create a string like "aaa/bbb" where aaa is the current
+  // ammo1 amount, and bbb is ammo1 maxamount. Both sides will
+  // be padded to the length of its maxamount:
+  String ammo1string = String.Format("%*d\c/%*d", padding, am1amt, padding, am1.maxamount);
+}
+[...] // can be repeated for am2
+&lt;/syntaxhighlight&gt;
+In the example above, if the current amount of Ammo1 is 60, and its maxamount is 400, &lt;code&gt;ammo1string&lt;/code&gt; will contain {{c|" 60/400"}}.
+
+== Methods ==
+=== Static ===
+*{{c|int '''{{LE|CharLower}}''' (int ''ch'')}}
+:If available, returns the lower case character code for the character ''ch''.
+
+*{{c|int '''{{LE|CharUpper}}''' (int ''ch'')}}
+:If available, returns the upper case character code for the character ''ch''.
+
+*{{c|vararg String '''{{LE|Format}}''' (String ''fmt'', ...)}}
+:Allows to format a string using a subset of [http://en.wikipedia.org/wiki/Printf_format_string C Printf format].
+  [[A_Log]](String.'''Format'''("%p = %s (at %.2f, %.2f, %.2f)", self, [[GetClassName]](), pos.x, pos.y, pos.z));
+:'''Note''': uppercase formats generally mean uppercase versions of outputs.
+
+{| {{prettytable}}
+! Format !! Description
+|-
+| %% || Escaped % character.
+|-
+| %s || A string. Can be padded, for example, %-20s will mean that the string will be minimum 20 characters long.
+|-
+| %p || A pointer. This takes an object, for example, an actor pointer like ''self''.
+|-
+| %c || An unsigned integer as character. Refer to the [http://www.asciitable.com/ ASCII table] for character indices.
+|-
+| %d, %i || A signed integer as decimal. Signed integers can be negative. Can be padded with zeroes with formats like %04d (this particular one means minimum of 4 characters).
+|-
+| %u || An unsigned integer as decimal. Unsigned integers cannot be negative.
+|-
+| %x, %X || An unsigned integer as hexadecimal. %08X outputs uppercase 8-digit value padded with zeroes.
+|-
+| %o || An unsigned integer as octal.
+|-
+| %f, %F || A simple double format, for example, 1.82. Exact precision can be specified using %.2f (for guaranteed two digits after the decimal point).
+|- 
+| %e, %E || An exponent-based double format, for example, 2.00E-01 for 0.2. Exact precision for the main part can be specified the same way as for %f.
+|-
+| %g, %G || Either %f/%F or %e/%E, depending on the situation and size of the number.
+|-
+| %a, %A || A hexadecimal double format. This is not recommended to use, as it is OS-dependent.
+|}
+
+=== Non-static ===
+*{{c|void '''{{LE|AppendCharacter}}''' (int ''c'')}}
+:Appends a character code to the end of the string.
+
+*{{c|vararg void '''{{LE|AppendFormat}}''' (String ''fmt'', ...)}}
+:This is the same as {{c|[[#Format|Format]]}}, but it needs an existing string and appends the formatted value to it.
+  String s;
+  s.'''AppendFormat'''("%s %.2f", "meow", 0.24);
+
+*{{c|int '''{{LE|ByteAt}}''' (int ''pos'') const}}
+:Returns the code for the character at ''pos'' index in the string as a byte. Note that strings in GZDoom support unicode characters and as such, the code returned may not match the actual character in the string. {{c|[[#GetNextCodePoint|GetNextCodePoint]]}} should be used for safety since this will take non-ASCII characters into account.
+
+*{{c|String '''{{LE|CharAt}}''' (int ''pos'') const}} {{deprecated}}
+:('''Note:''' this has been deprecated in favor of {{c|[[#Left|Left]]}} and {{c|[[#Mid|Mid]]}}.)
+:Returns the character at the specified position as a string.
+  String s = "abcd";
+  String chrat = s.'''CharAt'''(1); // should be "b"
+
+*{{c|int '''{{LE|CharCodeAt}}''' (int ''pos'') const}} {{deprecated}}
+:('''Note:''' this has been deprecated in favor of {{c|[[#ByteAt|ByteAt]]}}.)
+:Returns the character at the specified position as an integer (ASCII code). This can be used with the {{c|%c}} format.
+
+*{{c|int '''{{LE|CodePointCount}}''' () const}}
+:Returns the number of code points in the string. This gets the actual number of characters present when taking unicode into account.
+
+*{{c|void '''{{LE|DeleteLastCharacter}}''' ()}}
+:Deletes the last character in the string.
+
+*{{c|String '''{{LE|Filter}}''' ()}}
+:Locates any escape sequences within the string and replaces them with appropriate escape characters. Returns the new string with escape characters.
+
+*{{c|int, int '''{{LE|GetNextCodePoint}}''' (int ''position'') const}}
+:Returns the code for the character at ''position'' index in the string as an integer and the index of the next code point respectively. This should be used for adding unicode support when iterating through a string.
+ for (int i = 0; i &lt; myString.Length();)
+ {
+     int chr, next;
+     [chr, next] = myString.GetNextCodePoint(i);
+ 
+     console.printf("%c", chr); // Prints the proper character, even if it uses more than one byte
+ 
+     i = next;
+ }
+
+*{{c|int '''{{LE|IndexOf}}''' (String ''substr'', int ''startIndex'' {{=}} 0) const}}
+:Attempts to find and return the starting position of ''substr'', if the string matches. This searches from left to right starting from ''startIndex'' position in the string. This function is case sensitive. If there is no match, returns -1.
+ // Returns 5, since every character from left to right is a position.
+ // I.e. the I is at position 0, W at 1, a at 2, n at 3, t at 4, T at 5.
+ String tacoline = "IWantTacos";
+ int location = tacoline.'''IndexOf'''("Tacos");
+
+*{{c|int '''{{LE|LastIndexOf}}''' (String ''substr'', int ''endIndex'' {{=}} 2147483647) const}} {{deprecated}}
+:('''Note:''' as of GZDoom 3.5.1, this function has been deprecated in favor of {{c|[[#RightIndexOf|RightIndexOf]]}} due to incorrect implementation.)
+:Like {{c|[[#IndexOf|IndexOf]]}}, but with a reversed search pattern going from right to left. This function is case sensitive.
+
+*{{c|String '''{{LE|Left}}''' (int ''len'') const}}
+:Like {{c|[[#Mid|Mid]]}}, but always starts at the very beginning of the string.
+  String s = "barkblargh";
+  String bark = s.'''Left'''(4); // should result in a string "bark"
+
+*{{c|uint '''{{LE|Length}}''' ()}}
+:Returns the number of bytes in the string. Use {{c|[[#CodePointCount|CodePointCount]]}} to get the true number of characters.
+ String s = "abcd";
+ int size = s.'''Length'''(); // Returns 4.
+
+*{{c|String '''{{LE|MakeLower}}''' () const}}
+:Returns the string converted to all lower-case letters.
+
+*{{c|String '''{{LE|MakeUpper}}''' () const}}
+:Returns the string converted to all upper-case letters.
+
+*{{c|String '''{{LE|Mid}}''' (int ''pos'' {{=}} 0, int ''len'' {{=}} 2147483647) const}}
+:Returns a substring starting at ''pos'' and ''len'' bytes long, or, if ''len'' is too large, until the end of the string.
+  String s = "tmeowd";
+  String meow = s.'''Mid'''(1, 4); // should result in a string "meow"
+
+*{{c|void '''{{LE|Remove}}''' (int ''index'', int ''remlen'')}}
+:Deletes ''remlen'' bytes from the string starting at ''index'' position in it.
+
+*{{c|void '''{{LE|Replace}}''' (String ''pattern'', String ''replacement'')}}
+*{{c|void '''{{LE|Substitute}}''' (String ''str'', String ''replace'')}}
+:Replaces all occurrences of the specified ''pattern'' with ''replacement'' in an existing string.
+  String s = "ZScript sucks";
+  s.'''Replace'''("sucks", "is awesome");
+  [[A_Log]](s); // should output "ZScript is awesome"
+:{{c|Substitute}} functions the same as {{c|Replace}}.
+
+*{{c|int '''{{LE|RightIndexOf}}''' (String ''substr'', int ''endIndex'' {{=}} 2147483647) const}}
+:Like {{c|[[#IndexOf|IndexOf]]}}, but with a reversed search pattern going from right to left. This function is case sensitive.
+
+*{{c|void '''{{LE|Split}}''' (out Array&lt;String&gt; ''tokens'', String ''delimiter'', EmptyTokenType ''keepEmpty'' {{=}} {{const|TOK_KEEPEMPTY}}) const}}
+:Appends pieces of the string to an array, separated by ''delimiter''. Elements already in the array will be kept. ''keepEmpty'' can be one of two values:
+:*'''TOK_SKIPEMPTY''' - If the split string has a length of 0, don't add it to the ''tokens'' array.
+:*'''TOK_KEEPEMPTY''' - Keep all strings regardless of length.
+ // Takes a list of possible actors and spawns one at random.
+ Array&lt;String&gt; tospawn;
+ string spawnlist = "BFG9000, Megasphere, Berserk, Backpack, Cyberdemon, InvulnerabilitySphere";
+ spawnlist.'''Split'''(tospawn, ", ");
+ Spawn(tospawn[random(0, tospawn.Size() - 1)], pos);
+
+*{{c|void '''{{LE|StripLeft}}''' (String ''junk'' {{=}} "")}}
+:{{verification}}
+:Removes from the start of the string a part that matches ''junk'' string. If ''junk'' is an empty string, then the function removes {{wp|Whitespace character|white space}} instead.
+*{{c|void '''{{LE|StripLeftRight}}''' (String ''junk'' {{=}} "")}}
+:{{verification}}
+:Removes from the start and end of the string a part that matches ''junk'' string. If ''junk'' is an empty string, then the function removes white space instead.
+*{{c|void '''{{LE|StripRight}}''' (String ''junk'' {{=}} "")}}
+:Removes from the end of the string a part that matches ''junk'' string. If ''junk'' is an empty string, then the function removes white space instead.
+ string s1 = "Blue     ";
+ string s2 = "CardBlahBlahBlah";
+ Console.Printf("%s%s", s1, s2); // Prints "Blue      CardBlahBlahBlah".
+ s1.'''StripRight'''();                // Remove white space from the end of s1.
+ s2.'''StripRight'''("Blah");          // Remove "Blah" from the end of s2.
+ Console.Printf("%s%s", s1, s2); // Prints "BlueCard".
+
+*{{c|double '''{{LE|ToDouble}}''' () const}}
+:Returns the string converted to a double up to the first invalid character it finds.
+
+*{{c|int '''{{LE|ToInt}}''' (int ''base'' {{=}} 0) const}}
+:Returns the string converted to an integer of base ''base'' up to the first invalid character it finds. If ''base'' is non zero, then the string will be treated as if it was a number of that base. If ''base'' is zero the string is used to determine the base.
+ string s = "012";
+ int i = s.'''ToInt'''(); // s = 10, this is an octal number
+ i = s.'''ToInt'''(10); // s = 12, this is a decimal number
+
+*{{c|void '''{{LE|ToLower}}''' ()}} {{deprecated}}
+:('''Note:''' this function has been deprecated in favor of {{c|[[#MakeLower|MakeLower]]}}.)
+:Converts the string to all lower-case letters.
+
+*{{c|void '''{{LE|ToUpper}}''' ()}} {{deprecated}}
+:('''Note:''' this function has been deprecated in favor of {{c|[[#MakeUpper|MakeUpper]]}}.)
+:Converts the string to all upper-case letters.
+ // Prints out a text string as upper case letters. If the font has upper and lower case,
+ // the difference will be visible. The default console font has both.
+ String t = "test";
+ Console.[[Printf]]("%s", t.'''ToUpper'''());
+
+*{{c|void '''{{LE|Truncate}}''' (int ''newlen'')}}
+:Truncates the string to the specified byte length.
+ String t = "12345678";
+ Console.[[Printf]]("%s", t);// this will print "12345678"
+ t.Truncate(4); //string t has been truncated
+ Console.[[Printf]]("%s", t);// this will print "1234"
+
+== See also ==
+* [[ZScript]]
+* [[ZScript classes]]
+
+[[Category:ZScript]]</text>
+    <sha1>o5zmtvzju3ujigtdv3em2o7nt9yadbl</sha1>
+  </revision>
+</page>

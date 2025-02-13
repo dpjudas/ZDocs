@@ -1,0 +1,281 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>ZScript actor functions</title>
+  <ns>0</ns>
+  <id>8972</id>
+  <revision>
+    <id>54166</id>
+    <parentid>54160</parentid>
+    <timestamp>2025-01-29T12:17:52Z</timestamp>
+    <contributor>
+      <username>Inkoalawetrust</username>
+      <id>2604</id>
+    </contributor>
+    <comment>Documented new volume parameter.</comment>
+    <origin>54166</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="16817" sha1="5zclc707isemsbvjsi94hvpv04q782m" xml:space="preserve">{{ZScriptNote}}
+
+This page lists [[ZScript]]-specific factors that are not part of the classic [[Action functions]] list. There is no guarantee these will work in [[DECORATE]], especially anything that is not type int, double, bool or void.
+
+This list does not include [[ZScript virtual functions]] and [[Object#Intrinsic functions|functions intrinsic to all ZScript classes]], including actors.
+
+__TOC__
+
+== Math ==
+*clearscope double '''[[AngleTo]]'''(Actor target, bool absolute = false) const
+*clearscope double '''[[PitchTo]]'''(Actor target, double zOfs = 0, double targZOfs = 0, bool absolute = false) const
+*clearscope static double '''[[DeltaAngle]]'''(double ang1, double ang2)
+*clearscope static double '''[[AbsAngle]]'''(double ang1, double ang2)
+*clearscope static Vector2 '''[[AngleToVector]]'''(double angle, double length = 1)
+*clearscope static Vector2 '''[[RotateVector]]'''(Vector2 vec, double angle)
+*clearscope static double '''[[Normalize180]]'''(double ang)
+*clearscope static double '''[[BobSin]]'''(double fb)
+*clearscope Vector2 '''[[Vec2To]]'''(Actor other) const
+*clearscope Vector3 '''[[Vec3To]]'''(Actor other) const
+*clearscope Vector3 '''[[Vec3Offset]]'''(double x, double y, double z, bool absolute = false) const
+*clearscope Vector3 '''[[Vec3Angle]]'''(double length, double angle, double z = 0, bool absolute = false) const
+*clearscope Vector2 '''[[Vec2Angle]]'''(double length, double angle, bool absolute = false) const
+*clearscope Vector2 '''[[Vec2Offset]]'''(double x, double y, bool absolute = false) const
+*clearscope Vector3 '''[[Vec2OffsetZ]]'''(double x, double y, double atz, bool absolute = false) const
+*void '''[[VelIntercept]]'''(Actor targ, double speed = -1, bool aimpitch = true, bool oldvel = false)
+*void '''[[VelFromAngle]]'''(double speed = 1e37, double angle = 1e37)
+*void '''[[Vel3DFromAngle]]'''(double speed, double angle, double pitch)
+
+== Checks ==
+*bool '''[[IsPointerEqual]]'''(int ptr_select1, int ptr_select2)
+*bool '''[[isFrozen]]'''()
+*clearscope bool '''[[CheckKeys]]'''(int locknum, bool remote, bool quiet = false)
+*bool '''[[HitFloor]]'''()
+*bool '''[[CheckFOV]]'''(Actor other, double fov)
+*bool '''[[CheckLocalView]]'''(int consoleplayer = -1)
+*bool '''[[CheckNoDelay]]'''()
+*bool '''[[IsZeroDamage]]'''()
+*bool '''[[CheckFor3DFloorHit]]'''(double z, bool trigger)
+*bool '''[[CheckFor3DCeilingHit]]'''(double z, bool trigger)
+*int '''[[CheckMonsterUseSpecials]]'''('''[[Structs:Line|Line]]''' blocking = null)
+*bool '''[[CheckMissileSpawn]]'''(double maxdist)
+*bool '''[[CheckPosition]]'''(Vector2 pos, bool actorsonly = false, FCheckPosition tm = null)
+*bool '''[[TestMobjLocation]]'''()
+*bool '''[[HitWater]]'''(sector sec, Vector3 pos, bool checkabove = false, bool alert = true, bool force = false, int flags = 0)
+*bool '''[[CheckSight_(ZScript)|CheckSight]]'''(Actor target, int flags = 0)
+*bool '''[[IsVisible]]'''(Actor other, bool allaround, LookExParams params = null)
+*bool '''[[CanSeek]]'''(Actor target)
+*bool '''[[CheckIfCloser]]'''(Actor targ, double dist, bool noz = false)
+*bool '''[[CheckArmorType]]'''(name Type, int amount = 1)
+*bool '''[[CheckIfSeen]]'''()
+*bool '''[[CheckSightOrRange]]'''(double distance, bool two_dimension = false)
+*bool '''[[CheckRange]]'''(double distance, bool two_dimension = false)
+*bool '''[[PlayerSkinCheck]]'''()
+*bool '''[[CheckLOF]]'''(int flags = 0, double range = 0, double minrange = 0, double angle = 0, double pitch = 0, double offsetheight = 0, double offsetwidth = 0, int ptr_target = AAPTR_DEFAULT, double offsetforward = 0)
+*bool '''[[CheckIfTargetInLOS]]'''(double fov = 0, int flags = 0, double dist_max = 0, double dist_close = 0)
+*bool '''[[CheckIfInTargetLOS]]'''(double fov = 0, int flags = 0, double dist_max = 0, double dist_close = 0)
+*bool '''[[CheckProximity]]'''(class&lt;Actor&gt; classname, double distance, int count = 1, int flags = 0, int ptr = AAPTR_DEFAULT)
+*bool '''[[CheckBlock]]'''(int flags = 0, int ptr = AAPTR_DEFAULT, double xofs = 0, double yofs = 0, double zofs = 0, double angle = 0)
+*bool '''[[CanRaise]]'''()
+*void '''[[CheckSplash]]'''(double distance)
+
+== Information ==
+*ui void '''[[DisplayNameTag]]'''()
+*name '''[[GetClassName]]'''()
+*class&lt;Actor&gt; '''[[GetClass]]'''()
+*static class&lt;Actor&gt; '''[[GetReplacement]]'''(class&lt;Actor&gt; cls)
+*static class&lt;Actor&gt; '''[[GetReplacee]]'''(class&lt;Actor&gt; cls)
+*static int '''[[GetSpriteIndex]]'''(name sprt)
+*clearscope static double '''[[GetDefaultSpeed]]'''(class&lt;Actor&gt; type)
+*clearscope static readonly&lt;Actor&gt; '''[[GetDefaultByType]]'''(class&lt;Actor&gt; type)
+*static class&lt;Actor&gt; '''[[GetSpawnableType]]'''(int spawnnum)
+*clearscope int '''[[GetRenderStyle]]'''() const
+*protected void '''[[CheckPortalTransition]]'''(bool linked = true)
+*clearscope string '''[[GetTag]]'''(string defstr = "") const
+*clearscope string '''[[GetCharacterName]]'''() const
+*double '''[[GetBobOffset]]'''(double frac = 0)
+*clearscope int '''[[PlayerNumber]]'''() const
+*TerrainDef '''[[GetFloorTerrain]]'''()
+*clearscope Vector3 '''[[PosRelative]]'''(sector sec) const
+*clearscope int '''[[SpawnHealth]]'''() const
+*clearscope double '''[[Distance2D]]'''(Actor other) const
+*clearscope double '''[[Distance3D]]'''(Actor other) const
+*clearscope double '''[[Distance2DSquared]]'''(Actor other) const
+*clearscope double '''[[Distance3DSquared]]'''(Actor other) const
+*clearscope Actor '''[[GetPointer]]'''(int aaptr)
+*void '''[[CheckFakeFloorTriggers]]'''(double oldz, bool oldz_has_viewheight = false)
+*Actor '''[[RoughMonsterSearch]]'''(int distance, bool onlyseekable = false, bool frontonly = false)
+*int '''[[GetModifiedDamage]]'''(Name damagetype, int damage, bool passive, Actor inflictor = null, Actor source = null, int flags = 0)
+*clearscope bool '''[[CountsAsKill]]'''() const
+* bool '''[[LineTrace]]'''(double angle, double distance, double pitch, int flags = 0, double offsetz = 0., double offsetforward = 0., double offsetside = 0., out FLineTraceData data = null)
+*void '''[[FindFloorCeiling]]'''(int flags = 0)
+*double, double '''[[GetFriction]]'''()
+*bool, Actor '''[[TestMobjZ]]'''(bool quick = false)
+*clearscope DropItem '''[[GetDropItems]]'''() const
+*double '''[[DistanceBySpeed]]'''(Actor other, double speed)
+*name '''[[GetSpecies]]'''()
+*clearscope double '''[[GetCameraHeight]]'''() const
+*clearscope double '''[[GetGravity]]'''() const
+*clearscope int '''[[GetLevelSpawnTime]]'''() const
+*clearscope int '''[[GetAge]]'''() const
+*double '''[[AccuracyFactor]]'''()
+*Actor '''[[AimTarget]]'''()
+*int '''[[GetRadiusDamage]]'''(Actor thing, int damage, int distance, int fulldmgdistance = 0, bool oldradiusdmg = false, bool round = false)
+*clearscope Name '''[[GetDecalName]]'''() {{new|4.13.0}}
+*bool, Actor, double '''[[PerformShadowChecks]]''' (Actor other, Vector3 pos)
+*clearscope bool '''[[CanTalk]]'''() const {{git|92dbdd3}}
+*clearscope bool '''[[HasConversation]]'''() const {{git|9e3db4f}}
+
+== Actor Control ==
+*static int '''[[ApplyDamageFactors]]'''(class&lt;Inventory&gt; itemcls, Name damagetype, int damage, int defdamage)
+*void '''[[RemoveFromHash]]'''()
+*void '''[[ChangeTid]]'''(int newtid)
+*bool '''[[ActivateSpecial]]'''(bool death = false) {{git|f5bf1d0}}
+*void '''[[SetShade]]'''(color col)
+*void '''[[SetTag]]'''(string defstr = "")
+*void '''[[ClearCounters]]'''()
+*bool '''[[GiveBody]]'''(int num, int max=0)
+*void '''[[SetFriendPlayer]]'''(PlayerInfo player)
+*void '''[[ClearBounce]]'''()
+*bool '''[[UpdateWaterLevel]]'''(bool splash = true)
+*void '''[[ClearInterpolation]]'''()
+*void '''[[ClearFOVInterpolation]]'''()
+*void '''[[HandleSpawnFlags]]'''()
+*void '''[[ExplodeMissile]]'''(line lin = null, Actor target = null, bool onsky = false)
+*void '''[[RestoreDamage]]'''()
+*void '''[[SetDamage]]'''(int dmg)
+*int '''[[ApplyDamageFactor]]'''(Name damagetype, int damage)
+*void '''[[SetIdle]]'''(bool nofunction = false)
+*void '''[[LinkToWorld]]'''(LinkContext ctx = null)
+*void '''[[UnlinkFromWorld]]'''(out LinkContext ctx = null)
+*void '''[[AdjustFloorClip]]'''()
+*void '''[[CopyFriendliness]]'''(Actor other, bool changeTarget, bool resetHealth = true)
+*void '''[[DrawSplash]]'''(int count, double angle, int kind)
+*void '''[[GiveSecret]]'''(bool printmsg = true, bool playsound = true)
+*void '''[[A_ChangeLinkFlags]]'''(int blockmap = FLAG_NO_CHANGE, int sector = FLAG_NO_CHANGE)
+*void '''[[RestoreRenderStyle]]'''()
+*void '''[[A_Face]]'''(Actor faceto, double max_turn = 0, double max_pitch = 270, double ang_offset = 0, double pitch_offset = 0, int flags = 0, double z_ofs = 0)
+*bool '''[[RaiseActor]]'''(Actor other, int flags = 0)
+*void '''[[Revive]]'''()
+*action void '''[[SetCamera]]'''(Actor cam, bool revert = false)
+*void '''[[AdjustPlayerAngle]]'''(FTranslatedLineTarget t)
+*void '''[[CopyBloodColor]]'''(Actor other)
+&lt;!-- These model functions should probably get their own section here, since I think there's already more of them that I just don't know about, and me and Jekyll are the only ones documenting our damn changes. --&gt;
+*void '''[[SetModelFlag]]'''(int flag)
+*void '''[[ClearModelFlag]]'''(int flag)
+*void '''[[ResetModelFlags]]'''(int flag)
+*bool '''[[StartConversation_(ZScript)|StartConversation]]'''(Actor player, bool faceTalker = true, bool saveAngle = true) {{git|92dbdd3}}
+
+== Spawn Functions ==
+*static Actor '''[[Spawn_(ZScript)|Spawn]]'''(class&lt;Actor&gt; type, vector3 pos = (0,0,0), int replace = NO_REPLACE)
+*void '''[[SpawnTeleportFog]]'''(Vector3 pos, bool beforeTele, bool setTarget)
+*void '''[[SpawnBlood]]'''(Vector3 pos1, double dir, int damage)
+*void '''[[BloodSplatter]]'''(Vector3 pos, double hitangle, bool axe = false)
+*void '''[[SpawnDirt]]'''(double radius)
+
+== State Functions ==
+*bool '''[[SetState]]'''(state st, bool nofunction = false)
+*clearscope state '''[[FindState]]'''(statelabel st, bool exact = false) const
+*clearscope state '''[[FindStateByString]]'''(string st, bool exact = false) const
+*bool '''[[SetStateLabel]]'''(statelabel st, bool nofunction = false)
+*action state '''[[ResolveState]]'''(statelabel st)
+*static bool '''[[InStateSequence]]'''(State newstate, State basestate)
+
+== Movement Functions ==
+*void '''[[SetOrigin]]'''(vector3 newpos, bool moving)
+*void '''[[SetXYZ]]'''(vector3 newpos)
+*bool '''[[Teleport (ZScript)|Teleport]]'''(Vector3 pos, double angle, int flags)
+*void '''[[AddZ]]'''(double zadd, bool moving = true)
+*void '''[[SetZ]]'''(double z)
+*void '''[[Thrust]]'''(double speed = 1e37, double angle = 1e37)
+*bool '''[[TeleportMove]]'''(Vector3 pos, bool telefrag, bool modifyactor = true)
+*bool '''[[SinkMobj]]'''(double speed)
+*bool '''[[RaiseMobj]]'''(double speed)
+*bool '''[[Warp (ZScript)|Warp]]'''(Actor dest, double xofs = 0, double yofs = 0, double zofs = 0, double angle = 0, int flags = 0, double heightoffset = 0, double radiusoffset = 0, double pitch = 0)
+*bool '''[[BounceActor]]'''(Actor blocking, bool onTop)
+*bool '''[[BounceWall]]'''('''[[Structs:Line|Line]]''' l = null)
+*bool '''[[BouncePlane]]'''('''[[Structs:SecPlane|SecPlane]]''' plane)
+*bool '''[[ReflectOffActor]]'''(Actor blocking)
+
+== Monster AI ==
+*void '''[[A_DoChase]]'''(state melee, state missile, int flags = 0)
+*bool '''[[IsTeammate]]'''(Actor other)
+*bool '''[[CheckBossDeath]]'''()
+*bool '''[[CheckMeleeRange]]'''(Double Range = -1)
+*bool '''[[CheckMeleeRange2]]'''()
+*bool '''[[TriggerPainChance]]'''(Name mod, bool forcedPain = false)
+*bool '''[[HitFriend]]'''()
+*bool '''[[MonsterMove]]'''()
+*bool '''[[TryWalk]]'''()
+*bool '''[[TryMove]]'''(vector2 newpos, int dropoff, bool missilecheck = false, FCheckPosition tm = null)
+*bool '''[[CheckMove]]'''(vector2 newpos, int flags = 0, FCheckPosition tm = null)
+*void '''[[NewChaseDir]]'''()
+*void '''[[RandomChaseDir]]'''()
+*bool '''[[CheckMissileRange]]'''()
+*bool '''[[IsFriend]]'''(Actor other)
+*bool '''[[IsHostile]]'''(Actor other)
+*bool '''[[LookForMonsters]]'''()
+*bool '''[[LookForTid]]'''(bool allaround, LookExParams params = null)
+*bool '''[[LookForEnemies]]'''(bool allaround, LookExParams params = null)
+*bool '''[[LookForPlayers]]'''(bool allaround, LookExParams params = null)
+*int '''[[LookForEnemiesEx]]'''(out Array&lt;Actor&gt; targets, double range = -1, bool noPlayers = true, bool allaround = false, LookExParams params = null) {{git|9df656a}}
+
+== Sound Functions ==
+*void '''[[SoundAlert]]'''(Actor target, bool splash = false, double maxdist = 0)
+*void '''[[DaggerAlert]]'''(Actor target)
+*void '''[[PlaySpawnSound]]'''(Actor missile)
+*SeqNode '''[[StartSoundSequenceID]]'''(int sequence, int type, int modenum, bool nostop = false)
+*SeqNode '''[[StartSoundSequence]]'''(Name seqname, int modenum)
+*void '''[[StopSoundSequence]]'''()
+*void '''[[PlayActiveSound]]'''()
+*void '''[[PlayPushSound]]'''()
+*void '''[[PlayBounceSound]]'''(bool onFloor, double volume = 1.0)
+*void '''[[Howl]]'''()
+*void '''[[A_StartSound]]'''(sound whattoplay, int slot = CHAN_BODY, int flags = 0, double volume = 1.0, double attenuation = ATTN_NORM, double pitch = 0.0)
+*bool '''[[IsActorPlayingSound]]'''(int channel, Sound snd = 0)
+
+== Attack Functions ==
+*void '''[[RailAttack]]'''(FRailParams p)
+*double '''[[BulletSlope]]'''(out FTranslatedLineTarget pLineTarget = null, int aimflags = 0)
+*Actor '''[[SpawnMissile]]'''(Actor dest, class&lt;Actor&gt; type, Actor owner = null)
+*Actor '''[[SpawnMissileXYZ]]'''(Vector3 pos, Actor dest, Class&lt;Actor&gt; type, bool checkspawn = true, Actor owner = null)
+*Actor '''[[SpawnMissileZ]]'''(double z, Actor dest, class&lt;Actor&gt; type)
+*Actor '''[[SpawnMissileAngleZSpeed]]'''(double z, class&lt;Actor&gt; type, double angle, double vz, double speed, Actor owner = null, bool checkspawn = true)
+*Actor '''[[SpawnMissileZAimed]]'''(double z, Actor dest, Class&lt;Actor&gt; type)
+*Actor '''[[SpawnSubMissile]]'''(Class&lt;Actor&gt; type, Actor target)
+*Actor, Actor '''[[SpawnPlayerMissile]]'''(class&lt;Actor&gt; type, double angle = 1e37, double x = 0, double y = 0, double z = 0, out FTranslatedLineTarget pLineTarget = null, bool nofreeaim = false, bool noautoaim = false, int aimflags = 0)
+*Actor '''[[OldSpawnMissile]]'''(Actor dest, class&lt;Actor&gt; type, Actor owner = null)
+*Actor '''[[SpawnPuff]]'''(class&lt;Actor&gt; pufftype, vector3 pos, double hitdir, double particledir, int updown, int flags = 0, Actor victim = null)
+*void '''[[TraceBleed]]'''(int damage, Actor missile)
+*void '''[[TraceBleedAngle]]'''(int damage, double angle, double pitch)
+*void '''[[PoisonMobj]]''' (Actor inflictor, Actor source, int damage, int duration, int period, Name type)
+*double '''[[AimLineAttack]]'''(double angle, double distance, out FTranslatedLineTarget pLineTarget = null, double vrange = 0., int flags = 0, Actor target = null, Actor friender = null)
+*Actor, int '''[[LineAttack_(ZScript)|LineAttack]]'''(double angle, double distance, double pitch, int damage, Name damageType, class&lt;Actor&gt; pufftype, int flags = 0, out FTranslatedLineTarget victim = null, double offsetz = 0., double offsetforward = 0., double offsetside = 0.)
+*Actor '''[[SpawnMissileAngle]]'''(class&lt;Actor&gt; type, double angle, double vz)
+*Actor '''[[SpawnMissileAngleZ]]'''(double z, class&lt;Actor&gt; type, double angle, double vz)
+*static void '''[[AimBulletMissile]]'''(Actor proj, Actor puff, int flags, bool temp, bool cba)
+*void '''[[DoMissileDamage]]'''(Actor target)
+
+== Inventory Functions ==
+*clearscope Inventory '''[[FindInventory]]'''(class&lt;Inventory&gt; itemtype, bool subclass = false) const
+*Inventory '''[[GiveInventoryType]]'''(class&lt;Inventory&gt; itemtype)
+*bool '''[[GiveInventory (Actor)|GiveInventory]]'''(Class&lt;Inventory&gt; type, int amount, bool givecheat = false)
+*bool '''[[TakeInventory (Actor)|TakeInventory]]'''(class&lt;Inventory&gt; itemclass, int amount, bool fromdecorate = false, bool notakeinfinite = false)
+*bool '''[[SetInventory]]'''(class&lt;Inventory&gt; itemclass, int amount, bool beyondMax = false)
+*bool '''[[UsePuzzleItem]]'''(int PuzzleItemType)
+*clearscope Inventory '''[[FirstInv]]'''()
+*Inventory '''[[DropInventory__(ZScript)|DropInventory]]'''(Inventory item, int amt = -1)
+*bool '''[[GiveAmmo]]'''(Class&lt;Ammo&gt; type, int amount)
+*static bool '''[[DoGiveInventory]]'''(Actor receiver, bool orresult, class&lt;Inventory&gt; mi, int amount, int setreceiver)
+*bool '''[[DoTakeInventory]]'''(Actor receiver, bool orresult, class&lt;Inventory&gt; itemtype, int amount, int flags, int setreceiver = AAPTR_DEFAULT)
+*void '''[[TossItem]]'''()
+*clearscope int '''[[CountInv]]'''(class&lt;Inventory&gt; itemtype, int ptr_select = AAPTR_DEFAULT) const
+*bool '''[[CheckInventory]]'''(class&lt;Inventory&gt; itemtype, int itemamount, int owner = AAPTR_DEFAULT)
+*void '''[[ObtainInventory]]'''(Actor other)
+*bool '''[[InitSpawnedItem]]'''(Actor mo, int flags)
+*int '''[[GetAmmoCapacity_(Actor_function)|GetAmmoCapacity]]'''(class&lt;Ammo&gt; type)
+*void '''[[SetAmmoCapacity_(Actor_function)|SetAmmoCapacity]]'''(class&lt;Ammo&gt; type, int amount)
+
+== See also ==
+* [[ZScript]]
+
+[[Category:ZScript guides]][[Category:ZScript]]</text>
+    <sha1>5zclc707isemsbvjsi94hvpv04q782m</sha1>
+  </revision>
+</page>

@@ -1,0 +1,54 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>PlayActorSound</title>
+  <ns>0</ns>
+  <id>7596</id>
+  <revision>
+    <id>50241</id>
+    <parentid>49924</parentid>
+    <timestamp>2023-04-22T00:41:54Z</timestamp>
+    <contributor>
+      <username>Blue Shadow</username>
+      <id>2021</id>
+    </contributor>
+    <minor />
+    <comment>remove {{new}}</comment>
+    <origin>50241</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="2444" sha1="lg9noapob1qnjpryayxpsai6x6net8x" xml:space="preserve">void '''PlayActorSound''' (int ''tid'', int ''sound'', int ''channel'', fixed ''volume'', bool ''looping'', fixed ''attenuation'');
+
+== Usage ==
+
+Plays a sound at a thing. This is similar to [[PlaySound]] except it takes a ''sound identifier'' as the ''sound'' parameter instead of an explicit sound, and thus the sound that is eventually played depends on the actor's [[Actor_properties#Sound|defined sounds]]. If {{c|[[TID|tid]]}} is 0, the sound will be played by the activator of the script.
+
+== Parameters ==
+
+*''tid'': The {{c|tid}} of the actor to play the sound from.
+*''sound'': The sound identifiers to play the sound they reference:
+**'''SOUND_See'''&amp;nbsp;&amp;mdash; Plays the {{c|{{Property|SeeSound}}}} of the actor.
+**'''SOUND_Attack'''&amp;nbsp;&amp;mdash; Plays the {{c|{{Property|AttackSound}}}}.
+**'''SOUND_Pain'''&amp;nbsp;&amp;mdash; Plays the {{c|{{Property|PainSound}}}}.
+**'''SOUND_Death'''&amp;nbsp;&amp;mdash; Plays the {{c|{{Property|DeathSound}}}}.
+**'''SOUND_Active'''&amp;nbsp;&amp;mdash; Plays the {{c|{{Property|ActiveSound}}}}.
+**'''SOUND_Use'''&amp;nbsp;&amp;mdash; Plays the {{c|{{Property|Inventory.UseSound}}}}. {{verification}}
+**'''SOUND_Bounce'''&amp;nbsp;&amp;mdash; Plays the {{c|{{Property|BounceSound}}}}.
+**'''SOUND_WallBounce'''&amp;nbsp;&amp;mdash; Plays the {{c|{{Property|WallBounceSound}}}}.
+**'''SOUND_CrushPain'''&amp;nbsp;&amp;mdash; Plays the {{c|{{Property|CrushPainSound}}}}.
+**'''SOUND_Howl'''&amp;nbsp;&amp;mdash; Plays the {{c|{{Property|HowlSound}}}}.
+**'''SOUND_Push'''&amp;nbsp;&amp;mdash; Plays the {{c|{{Property|PushSound}}}}.
+*''channel'': The [[A_PlaySound#Sound_slots|channel]] to play the sound on. Default is {{c|{{Const|CHAN_BODY}}}}.
+*''volume'': The volume of the sound. This ranges from 0.0 (mute) to 1.0 (full volume). Default is 1.0.
+*''looping'': Whether the sound is to be looped or not. If {{c|{{Const|TRUE}}}}, the sound loops, otherwise it does not. Default is {{c|{{Const|FALSE}}}}.
+*''attenuation'': This is how quickly the sound fades with distance from its source. The higher the value the quicker the sound fades out. The following are the standard attenuation values:
+**'''ATTN_NONE'''&amp;nbsp;&amp;mdash; 0 (no attenuation; the sound can be heard regardless of the distance).
+**'''ATTN_NORM'''&amp;nbsp;&amp;mdash; 1.0 (normal attenuation; this is the default value).
+**'''ATTN_IDLE'''&amp;nbsp;&amp;mdash; 1.001
+**'''ATTN_STATIC'''&amp;nbsp;&amp;mdash; 3.0 (the sound diminish very rapidly with distance).
+
+== Examples ==
+{{noexamples}}
+
+[[category:ACS Sound functions]]</text>
+    <sha1>lg9noapob1qnjpryayxpsai6x6net8x</sha1>
+  </revision>
+</page>

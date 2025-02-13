@@ -1,0 +1,60 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>A SpawnDebris</title>
+  <ns>0</ns>
+  <id>2690</id>
+  <revision>
+    <id>43415</id>
+    <parentid>37192</parentid>
+    <timestamp>2016-11-22T13:52:22Z</timestamp>
+    <contributor>
+      <username>Major Cooke</username>
+      <id>1703</id>
+    </contributor>
+    <origin>43415</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="1399" sha1="mj0yafxfmin49d3mdgmoux0psak070m" xml:space="preserve">{{codepointer|Spawn}}
+'''A_SpawnDebris''' (string ''type'' [, bool ''translation'' [, float ''mult_h'' [, float ''mult_v'']]])
+
+==Usage==
+Spawns debris actors based on the specified type and positions them around the calling actor. The debris type has to be defined in a certain way:
+* Its [[health]] parameter specify the amount ''n'' of objects being spawned.
+* The first ''n'' states are reserved as the initial states for the separate objects. If you want to do some animations you can jump to later states from here.
+
+==Parameters==
+*''type'': The class name of the debris actor to spawn.
+*''translation'': If this is {{c|{{const|true}}}}, the spawned actor will be assigned the same translation table as the actor that called the function. Default is {{c|{{const|false}}}}.
+*''mult_h'': This is a multiplier for the x and y velocities of the spawned actor. Default is {{c|1.0}}.
+*''mult_v'': This is a multiplier for the z velocity of the spawned actor. Default is {{c|1.0}}.
+
+==Examples==
+
+This is an example of a valid debris class:
+ ACTOR SentinelDebris
+ {
+   {{Property|Health}} 15
+   {{Property|Radius}} 1
+   {{Property|Height}} 1
+   States
+   {
+   Spawn:
+     SNT1 A -1
+     SNT2 A -1
+     SNT3 A -1
+     SNT3 A -1
+     SNT4 A -1
+     SNT4 A -1
+     SNT5 A -1
+     SNT6 A -1
+     SNT7 A -1
+     SNT7 A -1
+     SNT8 A -1
+     SNT8 A -1
+     SNT9 A -1
+     SNT9 A -1
+     SNT0 A -1
+   }
+ }</text>
+    <sha1>mj0yafxfmin49d3mdgmoux0psak070m</sha1>
+  </revision>
+</page>

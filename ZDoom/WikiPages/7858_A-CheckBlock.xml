@@ -1,0 +1,85 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>A CheckBlock</title>
+  <ns>0</ns>
+  <id>7858</id>
+  <revision>
+    <id>50190</id>
+    <parentid>50189</parentid>
+    <timestamp>2023-04-03T23:00:52Z</timestamp>
+    <contributor>
+      <username>Boondorl</username>
+      <id>2606</id>
+    </contributor>
+    <minor />
+    <comment>/* Parameters */</comment>
+    <origin>50190</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="3723" sha1="2oal37zupnztxhunozz7xj7escek8qg" xml:space="preserve">{{codepointer|Jump}}
+State '''A_CheckBlock'''(StateLabel ''label'', int ''flags'' = 0, int ''ptr'' = '''AAPTR_DEFAULT''', double ''xofs'' = 0, double ''yofs'' = 0, double ''zofs'' = 0, double ''angle'' = 0)
+{{JumpNotice}}
+
+==Usage==
+Checks if the given [[Actor pointer]] would be blocked at the position defined by the x/y/z and angle offsets. If it would be blocked, the caller jumps to the state specified by ''label''. The '''CBF_DROPOFF''' flag will enable full movement checking instead of doing a basic position check. An important note is that the pointers from the '''CBF_SET*''' flags will still get set even when '''CBF_NOACTORS''' is used, but only if '''CBF_DROPOFF''' isn't set.
+
+===Parameters===
+*''label'': The State to jump to if the position would be blocked.
+*''flags'': The following can be combined with a &lt;code&gt;|&lt;/code&gt; symbol (bitwise or)
+**'''CBF_NOLINES''' - Ignore any lines that would block the Actor pointer.
+**'''CBF_SETTARGET''' - If an Actor would block the Actor pointer, set that Actor as the caller's target.
+**'''CBF_SETMASTER''' - Same as '''CBF_SETTARGET''', but for master.
+**'''CBF_SETTRACER''' - Same as '''CBF_SETTARGET''', but for tracer.
+**'''CBF_SETONPTR''' - Set the pointers on the Actor pointer instead of the caller. Requires any of the '''CBF_SET*''' flags to be set.
+**'''CBF_DROPOFF''' - Test to see if the Actor pointer would move over any terrain it can't traverse.
+**'''CBF_NOACTORS''' - Ignore any Actors that would block the Actor pointer.
+**'''CBF_ABSOLUTEPOS''' - Use ''x/y/zofs'' as an absolute map position. ''angle'' will be ignored.
+**'''CBF_ABSOLUTEANGLE''' - Use ''angle'' as an absolute direction instead of offsetting from the caller's current angle.
+*''ptr'': Which Actor pointer to use for the test. By default this is the caller.
+*''xofs'': How much to offset forward from the Actor pointer's position based on the caller's current angle.
+*''yofs'': How much to offset to the left from the Actor pointer's position based on the caller's current angle.
+*''zofs'': How much to offset upward from the Actor pointer's current position.
+*''angle'': How much to offset the caller's current angle. Positive values rotate counter-clockwise.
+
+===Return Value===
+Returns the State the caller wants to jump to. This is &lt;code&gt;null&lt;/code&gt; if the position wasn't blocked. The return value is only relevant within anonymous or custom ZScript functions. Otherwise the jump will happen automatically.
+
+== Examples ==
+This {{Class|Zombieman|former human}} is very nervous; it runs around if anything disturbs it.
+ Actor NervousZombieman : {{Class|Zombieman}}
+ {
+     States
+     {
+     See:
+         POSS AA 4 [[Actor_states#State_keywords|Fast]] [[A_Chase]]
+         POSS A 0 [[A_CheckBlock]]("Nervous", {{const|CBF_SETTARGET}}, {{const|AAPTR_DEFAULT}}, {{Property|Radius|radius}} + 1)
+         POSS BB 4 Fast A_Chase
+         POSS B 0 [[A_CheckBlock]]("Nervous", {{const|CBF_SETTARGET}}, {{const|AAPTR_DEFAULT}}, radius + 1)
+         POSS CC 4 Fast A_Chase
+         POSS C 0 [[A_CheckBlock]]("Nervous", {{const|CBF_SETTARGET}}, {{const|AAPTR_DEFAULT}}, radius + 1)
+         POSS DD 4 Fast A_Chase
+         POSS D 0 [[A_CheckBlock]]("Nervous", {{const|CBF_SETTARGET}}, {{const|AAPTR_DEFAULT}}, radius + 1)
+         Loop
+     Missile:
+         POSS E 10 [[A_FaceTarget]]
+         POSS F 8 [[A_PosAttack]]
+         POSS E 8
+         Goto See
+     Pain:
+         POSS G 3
+         POSS G 3 [[A_Pain]]
+         Goto Nervous
+     Nervous:
+         POSS AABBCCDD 2 Fast [[A_Wander]]
+         POSS A 0 [[A_Jump]](64, "See")
+         Loop
+     Raise:
+         POSS K 5
+         POSS JIH 5
+         Goto See
+     }
+ }
+
+[[category:Decorate Jump functions]]{{DEFAULTSORT:CheckBlock}}</text>
+    <sha1>2oal37zupnztxhunozz7xj7escek8qg</sha1>
+  </revision>
+</page>

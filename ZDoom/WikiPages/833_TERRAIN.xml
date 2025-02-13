@@ -1,0 +1,174 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>TERRAIN</title>
+  <ns>0</ns>
+  <id>833</id>
+  <revision>
+    <id>53498</id>
+    <parentid>53493</parentid>
+    <timestamp>2024-11-01T12:55:35Z</timestamp>
+    <contributor>
+      <username>Blue Shadow</username>
+      <id>2021</id>
+    </contributor>
+    <minor />
+    <comment>/* Terrain properties */</comment>
+    <origin>53498</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="10718" sha1="m12hyjgwzxrx21srz7kgakriecvnt46" xml:space="preserve">The '''TERRAIN''' lump is used to add sounds, liquid splashes and damaging effects to certain [[flat]]s. The most common use is to create splashing sounds (such as water, mud, and lava in ''[[Heretic]]'' and ''[[Hexen]]''), but it can also be used to give the player a custom landing sound when dropping onto a particular flat. For instance, if the player lands on a wood flat one may want to hear a heavy 'clunk' sound, and on a metal flat it will instead be a metallic 'clang' sort of sound. Note that those are only landing sounds, not footsteps.
+
+Entries in the TERRAIN lump are created with the {{c|Terrain}} and {{c|Splash}} blocks.  The effects of these blocks are then applied to certain flats using the {{c|Floor}} command.
+
+In [[ZScript]] terrain data is stored in the [[Structs:TerrainDef|'''TerrainDef struct''']] and can be obtained from [[Classes:Actor|actors]] with '''[[GetFloorTerrain]]'''. Splash data is stored in the '''{{c|FSplashDef}}''' struct which is currently not exposed to ZScript.
+
+==Terrain blocks==
+Terrain blocks are defined as follows:
+
+ Terrain &lt;Unique name&gt; [modify]
+ {
+ 	Splash			&lt;splash block name&gt;
+ 	Footclip		&lt;integer value&gt;
+ 	Liquid			&lt;boolean value&gt;
+ 
+ 	Friction		&lt;float value&gt;
+ 
+ 	DamageType		&lt;type&gt;
+ 	DamageAmount		&lt;value&gt;
+ 	DamageTimeMask		&lt;value&gt;
+ 	DamageOnLand		&lt;boolean&gt;
+ 	AllowProtection		&lt;boolean&gt;
+ 
+ 	LeftStepSounds		&lt;sound from [[SNDINFO]]&gt;
+ 	RightStepSounds		&lt;sound from [[SNDINFO]]&gt;
+ 	StepSounds		&lt;sound from [[SNDINFO]]&gt;
+ 	StepDistance		&lt;float value&gt;
+ 	StepDistanceMinVel	&lt;float value&gt;
+ 	WalkStepTics		&lt;integer value&gt;
+ 	RunStepTics		&lt;integer value&gt;
+ }
+
+The '''&lt;unique name&gt;''' must be unique to all the other terrain blocks, however you may have a splash block with the same name (so {{c|splash water}} and {{c|terrain water}} can co-exist just fine). The names {{c|None}} and {{c|Null}} should not be used as they are reserved for engine use.
+
+The {{c|modify}} keyword allows for altering an already-existing terrain definition with the same name. If the keyword is not present, then the new definition replaces the old one completely.
+
+=== Terrain properties ===
+* '''{{LE|Splash}}'''
+:The name of the associated Splash block attached to this terrain definition. Splashes can play sounds, spawn splash actors, and interact with the {{flag|NOSPLASHALERT}} and {{flag|DONTSPLASH}} flags.
+* '''{{LE|Footclip}}''' 
+:The number of pixels relative to the height of an actor that will be clipped off actors that are in the sector that uses this terrain definition on its floor. See [[Floorclip]].
+* '''{{LE|Liquid}}'''
+:If set, marks the terrain as being liquid. This can affect projectile behavior based on their use {{Flag|Bouncing|bouncing flags}}.
+* '''{{LE|Friction}}''' 
+:A float-point value (1.0 by default) that determines the friction of the floor this terrain is applied to. Larger values are more slippery (ice), and lesser values have more [[friction]], resulting in a "muddy" effect.
+* '''{{LE|DamageAmount}}'''
+:Specifies how much damage the player entering this terrain will receive. (0 by default).
+* '''{{LE|DamageType}}'''
+:Allows defining a custom {{property|damagetype|damage type}} for the damage dealt by this terrain. This correlates directly to [[Custom damage types|damage types]] defined in [[ZScript]] or [[DECORATE]].
+* '''{{LE|DamageTimeMask}}'''
+:Determines how often the damage is dealt, based on the current [[tic|gametic]]. If ''none'' of the current gametic value's bits match the mask, then damage is inflicted. In practice, it is simpler to just assume that using for value a power of two, minus one, will result in damage inflicted every power of two [[tic|tics]]. For example, using a damage time mask of &lt;code&gt;31&lt;/code&gt; results in damage being inflicted every 32 tics. See {{forum|t=32793}} for more information.
+:Starting with [[GZDoom]] 4.4.0, the damage interval is calculated by using a modulo operation, instead of a bitwise AND operation. This removes the restriction of only using power of two values minus one as the mask value. To retain the same results from the original way of calculating the interval, the engine adds 1 to the specified mask value before the calculations are performed. This needs to be taken into account for when setting the mask value by subtracting 1 from it. For instance, if a two-second interval ({{c|2 * 35 {{=}} 70}}) is desired, then the mask value should be 69, not 70.
+* '''{{LE|AllowProtection}}''' 
+:If true, {{Class|PowerIronFeet}}-based powerups (such as [[Doom]]'s {{Class|RadSuit}}) will protect against the periodic damage.
+* '''{{LE|DamageOnLand}}''' 
+:Determines whether or not damage is applied upon hitting this terrain, in addition to the periodic damage.
+* '''{{LE|RightStepSounds}}''' and '''{{LE|LeftStepSounds}}'''
+:Allows providing a right and left footstep sound for this terrain; takes a [[SNDINFO]] sound name.
+:These properties, as well as other footstep properties, do nothing on their own unless a {{class|PlayerPawn|player actor}} with {{flag|PLAYERPAWN.MAKEFOOTSTEPS|MAKEFOOTSTEPS}} flag set walks over the terrain, in which case the [[footsteps|footstep system]] will run.
+:Note that the internal [[ZScript]] field names are &lt;code&gt;RightStepSound&lt;/code&gt; and &lt;code&gt;LeftStepSound&lt;/code&gt; (with no '''s''' on the end).
+:For randomization the &lt;code&gt;$random&lt;/code&gt; instruction in [[SNDINFO]] can be used.
+* '''{{LE|StepSounds}}''' {{git|12d1afc}}
+:Serves a similar purpose to the above sound properties, except that it is meant to be used for foot-agnostic stepping sounds. If present, this sound takes precedence in the default footstep system.
+*'''{{LE|StepVolume}}'''
+:The volume of the step sounds (if defined).
+*'''{{LE|StepDistance}}''' {{git|d07d08c}}
+:Makes the terrain produce footsteps only on every interval of distance the player travels that is at or greater than this value. i.e if set to 32, a footstep will be made every 32 map units the player travels. If this is kept to 0, the default footstep system will use the above step time intervals instead.
+*'''{{LE|StepDistanceMinVel}}''' {{git|d07d08c}}
+:If {{c|[[#StepDistance|StepDistance]]}} is over 0, the player must be moving over this specified velocity to make a footstep. Can be used to prevent footsteps if the player is move very slowly, such as crawling around.
+*'''{{LE|WalkStepTics}}''' and '''{{LE|RunStepTics}}'''
+:The frequency of the footstep sound when walking and running, respectively.
+
+==Splash blocks==
+Splash blocks are defined as follows:
+
+ Splash &lt;unique name&gt; [modify]
+ {
+ 	SmallClass		&lt;nowiki&gt;&lt;small class&gt;&lt;/nowiki&gt;
+ 	SmallClip		&lt;clipping of small chunks?&gt;
+ 	SmallSound		&lt;sound (as defined in [[SNDINFO]])&gt;
+ 
+ 	BaseClass		&lt;base class&gt;
+ 	ChunkBaseZvel		&lt;z velocity of base&gt;
+ 	ChunkClass		&lt;chunk class&gt;
+ 	ChunkXVelShift		&lt;x velocity of chunks&gt;
+ 	ChunkYVelShift		&lt;y velocity of chunks&gt;
+ 	ChunkZVelShift		&lt;z velocity of chunks&gt;
+ 	Sound			&lt;sound (defined in [[SNDINFO]])&gt;
+ 
+ 	noalert			&lt;does not alert monsters of the player's presence&gt;
+ }
+
+The {{c|modify}} keyword allows for altering an already-existing splash definition with the same name. If the keyword is not present, then the new definition replaces the old one completely.
+
+=== Splash properties ===
+*'''{{LE|SmallClass}}'''
+:An actor class that will spawn when this splash is triggered, provided the actor who triggered the splash has a {{property|Mass}} value below 10.
+:If this isn't provided, &lt;code&gt;BaseClass&lt;/code&gt; will be spawned instead.
+*'''{{LE|SmallClip}}'''
+:{{moreinfo}}
+*'''{{LE|SmallSound}}'''
+:The sound played when an actor triggers this splash, provided the actor who triggered the splash has a {{property|Mass}} value below 10.
+:If this isn't provided, &lt;code&gt;Sound&lt;/code&gt; will be played instead.
+*'''{{LE|BaseClass}}'''
+:Splash actor spawned, if the actor who triggered it has a {{property|Mass}} of 10 or above.
+*'''{{LE|ChunkBaseZVel}}'''
+:SmallClass/BaseClass actor will be given this velocity, slightly randomized.
+*'''{{LE|Sound}}'''
+:The sound played when an actor triggers this splash, provided the actor who triggered the splash has a {{property|Mass}} value of 10 or above.
+*'''{{LE|ChunkClass}}'''
+:An actor class that will spawn in addition to SmallClass/BaseClass when this splash is triggered. Usually this is smaller "drops of liquid", in contrast to the base splash actor. Chunks can be given randomized velocity with:
+:*ChunkXVelShift
+:*ChunkYVelShift
+:*ChunkZVelShift
+:Note, giving velocity to the chunks via TERRAIN is not obligatory; it's perfectly possible to apply velocity to the chunk actors on spawn directly in [[ZScript]]/[[DECORATE]].
+
+A number of predefined splash classes exist, though one may of course create new splashes to use as well.
+*{{Class|WaterSplash}} - small water splashes
+*{{Class|WaterSplashBase}} - normal water splashes
+*{{Class|BloodSplash}} - small blood splashes
+*{{Class|BloodSplashBase}} - normal blood splash
+*{{Class|SlimeChunk}} - small green slime or nukage chunks
+*{{Class|SlimeSplash}} - normal green slime or nukage splash
+*{{Class|LavaSmoke}} - smoke (for lava or 'hot' rocks)
+*{{Class|LavaSplash}} - splash of lava (normal sized)
+*{{Class|SludgeChunk}} - small sludge (brown slime) chunks
+*{{Class|SludgeSplash}} - normal sized sludge splash
+
+Note that &lt;code&gt;DamageType 'Ice'&lt;/code&gt; will cause {{Class|IceChunk}} and {{Class|IceChunkHead}} actors to melt and disappear more slowly on this terrain. &lt;code&gt;DamageType 'Lava'&lt;/code&gt; or &lt;code&gt;'Fire'&lt;/code&gt; will cause them to melt faster. Furthermore, 'Lava' and 'Fire' are identical: the engine will remap any &lt;code&gt;DamageType 'Lava'&lt;/code&gt; to &lt;code&gt;DamageType 'Fire'&lt;/code&gt;.
+
+==Floor command==
+Finally we use the {{c|floor}} command to define the actual flats that get the terrain treatment. This is simply:
+
+ floor [optional] &lt;flatname&gt; &lt;terrain name&gt;
+
+Where &lt;flatname&gt; is the name of the flat (if a flat is animated it is best to define each frame here) and &lt;terrain name&gt; is the name of the terrain block (defined above) which you want to correspond to &lt;flatname&gt;. The presence of {{c|optional}} tells the engine that the flat is not to be error-logged if it does not exist or is invalid.
+
+Setting &lt;terrain name&gt; to {{c|Null}} or {{c|None}} allows to remove an association between a texture and a terrain type.
+
+==DefaultTerrain command==
+The {{c|DefaultTerrain}} command sets the terrain that is used for all floors that are not explicitly tied to a terrain type by the [[#Floor command|{{c|floor}} command]]. The {{c|DefaultTerrain}} command takes only one parameter, which is the name of a terrain.
+
+ defaultterrain &lt;terrain name&gt;
+
+== Examples ==
+This reduces the friction on all floors.
+
+ Terrain lowfriction
+ {
+ 	friction 2.0
+ }
+ 
+ Defaultterrain lowfriction
+[[Category:ZDoom special lumps]]</text>
+    <sha1>m12hyjgwzxrx21srz7kgakriecvnt46</sha1>
+  </revision>
+</page>

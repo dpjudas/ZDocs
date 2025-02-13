@@ -1,0 +1,77 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>Use</title>
+  <ns>0</ns>
+  <id>9792</id>
+  <revision>
+    <id>51452</id>
+    <parentid>51447</parentid>
+    <timestamp>2024-02-01T16:03:06Z</timestamp>
+    <contributor>
+      <username>Jekyll Grim Payne</username>
+      <id>2175</id>
+    </contributor>
+    <comment>Added See Also</comment>
+    <origin>51452</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="2647" sha1="8nd3ejqp9f1uzwunjxmk26otbwnfabb" xml:space="preserve">'''{{class|Inventory}}'''
+
+{{c|virtual void '''Use'''(bool ''pickup'')}}
+
+==Usage==
+A [[ZScript virtual functions|virtual function]] called by {{class|Inventory}} items when they're used. Items can be used as follows:
+* The player selects an item in the inventory bar and presses the "use item" button. (The item needs the {{flag|INVENTORY.INVBAR}} flag set to be visible in the inventory bar.)
+* The player uses the &lt;code&gt;use &lt;itemname&gt;&lt;/code&gt; command where &lt;itemname&gt; is the Inventory item class.
+* &lt;code&gt;Use()&lt;/code&gt; is called automatically on items that have the {{flag|INVENTORY.AUTOACTIVATE}} flag (this happens in the item's [[TryPickup]] call).
+* &lt;code&gt;Use()&lt;/code&gt; can be called directly on an item.
+
+It's important to note that by default items don't utilize this function; most items are just picked up and placed in the actor's inventory, without being "used" in any way besides that.
+
+=== Parameters ===
+*{{c|bool '''pickup'''}}
+:Is true if the item was used automatically when it was picked up. Can be checked to apply different effects when item is used from inventory or on pickup.
+
+=== Return values ===
+Returns a boolean value. If the function returns &lt;code&gt;true&lt;/code&gt; the item is consumed: its &lt;code&gt;amount&lt;/code&gt; is reduced by 1, and the item is removed if the amount is set to 0 (unless the item has the {{flag|INVENTORY.KEEPDEPLETED}} flag).
+
+Note: if the item's {{property|Amount}} property is set to 0 but it has the {{flag|INVENTORY.AUTOACTIVATE}} flag set, it will still call &lt;code&gt;Use()&lt;/code&gt; when received.
+
+== Examples ==
+This virtual function is a convenient choice when you want to have an item apply an effect after it's been picked up but don't want to recreate the various checks for whether an item ''can'' be picked up (which is something you'd have to do in a [[TryPickup]] override).
+
+This is a variation of the Doom {{class|Backpack}} that also restores the player's health up to the default maximum (100) with [[GiveBody]] when it's picked up:
+&lt;syntaxhighlight lang="csharp"&gt;
+class HealingBackpack : Backpack
+{
+	Default
+	{
+		+Inventory.AUTOACTIVATE
+	}
+
+	override bool Use(bool pickup)
+	{
+		// bDepleted will be set to true if the backpack
+		// was dropped with the 'drop' command. Check that
+		// it's false, so that the player can't heal
+		// themselves by repeatedly dropping and picking
+		// up this backpack:
+		if (!bDepleted &amp;&amp; owner)
+		{
+			owner.GiveBody(100);
+		}
+		// We don't want backpack to be consumed:
+		return false;
+	}
+}
+&lt;/syntaxhighlight&gt;
+
+== See also ==
+* [[Inventory virtual functions]]
+* [[TryPickup]]
+
+[[Category:ZScript]]
+[[Category:Inventory]]
+[[Category:ZScript virtual functions]]</text>
+    <sha1>8nd3ejqp9f1uzwunjxmk26otbwnfabb</sha1>
+  </revision>
+</page>

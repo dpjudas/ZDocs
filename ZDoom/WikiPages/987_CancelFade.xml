@@ -1,0 +1,48 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>CancelFade</title>
+  <ns>0</ns>
+  <id>987</id>
+  <revision>
+    <id>35961</id>
+    <parentid>22934</parentid>
+    <timestamp>2013-03-01T01:49:02Z</timestamp>
+    <contributor>
+      <username>Deded007</username>
+      <id>1392</id>
+    </contributor>
+    <minor />
+    <comment>links</comment>
+    <origin>35961</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="665" sha1="erc57s9yt1kmta2cthhfqpczr26n3td" xml:space="preserve">void '''CancelFade''' (void);
+
+== Usage ==
+
+If either [[FadeTo]] or [[FadeRange]] is currently in progress, '''CancelFade''' stops it and turns off the palette flash. If neither of these in progress, it does nothing.
+
+== Examples ==
+
+This alarm flashes the screen red and makes an alarm sound.
+
+ script 1 (void)
+ {
+     [[AmbientSound]]("special/alarm",127);
+     [[FadeTo]](255, 0, 0, 0.9, 1.0); 
+     [[Delay]](1*35);
+     [[FadeTo]](255, 0, 0, 0.9, 1.0); 
+     [[Delay]](1*35);
+ }
+
+The only way to shut it of is to hit a switch which executes script 2.
+
+ script 2 (void)
+ {
+     [[ACS_Terminate]](1,0);
+     [[CancelFade]]();
+ }
+
+[[category:ACS Actor functions]]</text>
+    <sha1>erc57s9yt1kmta2cthhfqpczr26n3td</sha1>
+  </revision>
+</page>

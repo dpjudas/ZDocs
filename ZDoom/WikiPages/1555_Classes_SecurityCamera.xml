@@ -1,0 +1,97 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>Classes:SecurityCamera</title>
+  <ns>0</ns>
+  <id>1555</id>
+  <revision>
+    <id>54064</id>
+    <parentid>42842</parentid>
+    <timestamp>2024-12-17T12:35:52Z</timestamp>
+    <contributor>
+      <username>Jekyll Grim Payne</username>
+      <id>2175</id>
+    </contributor>
+    <origin>54064</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="2069" sha1="qv4u8i2f5fds9lzwjkcjyjdxiwukzhp" xml:space="preserve">{{Actor|
+| type = Script thing
+| name = Security camera
+| class = SecurityCamera
+| doomednum = 9025
+}}[[Classes]]: &lt;u&gt;SecurityCamera&lt;/u&gt;&lt;br&gt;
+&amp;ensp;&amp;rarr;{{Class|AimingCamera}}
+
+==Usage==
+The '''SecurityCamera''' is a camera that pans from side to side, much like the security camera in Duke Nukem 3D. It is a great addition to either a single player or multiplayer map.
+
+Place the camera in the map and set the thing angle to point in the direction you want the camera to face. Set the three arguments of the camera and give the camera a unique [[TID]].
+
+The camera is activated by using the [[ChangeCamera]] (237) special or by a [[SetCameraToTexture]] in [[ACS]].
+
+===Arguments===
+The security camera takes three arguments:
+
+{{TArgs|0}} [[Definitions#Byte pitches|pitch]] of camera in degrees, '''''equal to the angle subtracted from 256'''''.
+{{TArgs|1}} number of degrees camera will rotate in either direction from its original orientation.
+{{TArgs|2}} number of [[Definitions#Octics|octics]] to complete one cycle of turning.
+
+== [[ZScript]] definition ==
+{{ZScriptDefinitionNote|actors/shared/camera.zs}}
+&lt;syntaxhighlight lang="csharp"&gt;
+class SecurityCamera : Actor
+{
+	default
+	{
+		+NOBLOCKMAP 
+		+NOGRAVITY
+		+DONTSPLASH
+		RenderStyle "None";
+		CameraHeight 0;
+	}
+
+	double Center;
+	double Acc;
+	double Delta;
+	double Range;
+	
+	override void PostBeginPlay ()
+	{
+		Super.PostBeginPlay ();
+		Center = Angle;
+		if (args[2])
+			Delta = 360. / (args[2] * TICRATE / 8);
+		else
+			Delta = 0.;
+		if (args[1])
+			Delta /= 2;
+		Acc = 0.;
+		int arg = (args[0] &lt;&lt; 24) &gt;&gt; 24;	// make sure the value has the intended sign.
+		Pitch = clamp(arg, -89, 89);
+		Range = args[1];
+	}
+
+	override void Tick ()
+	{
+		Acc += Delta;
+		if (Range != 0)
+			Angle = Center + Range * sin(Acc);
+		else if (Delta != 0)
+			Angle = Acc;
+	}
+
+	
+}
+&lt;/syntaxhighlight&gt;
+== [[DECORATE]] definition ==
+{{DecorateDefinitionNote}}
+ ACTOR &lt;u&gt;SecurityCamera&lt;/u&gt; native 
+ {
+   +{{flag|NOBLOCKMAP}} 
+   +{{flag|NOGRAVITY}}
+   +{{flag|DONTSPLASH}}
+   {{property|RenderStyle}} None
+   {{property|CameraHeight}} 0
+ }</text>
+    <sha1>qv4u8i2f5fds9lzwjkcjyjdxiwukzhp</sha1>
+  </revision>
+</page>

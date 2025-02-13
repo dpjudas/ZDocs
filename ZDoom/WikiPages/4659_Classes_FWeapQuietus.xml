@@ -1,0 +1,77 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>Classes:FWeapQuietus</title>
+  <ns>0</ns>
+  <id>4659</id>
+  <revision>
+    <id>39487</id>
+    <parentid>34526</parentid>
+    <timestamp>2015-04-30T21:30:27Z</timestamp>
+    <contributor>
+      <username>Blue Shadow</username>
+      <id>2021</id>
+    </contributor>
+    <minor />
+    <comment>/* DECORATE definition */ Updated</comment>
+    <origin>39487</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="1990" sha1="0kmoaa9abs9b2heok6stm08ytajywhg" xml:space="preserve">{{Actor|
+| type = Weapon
+| name = Quietus
+| class = FWeapQuietus
+| game = Hexen
+}}[[Classes]]: [[Classes:Inventory|Inventory]]&amp;rarr;[[Classes:Weapon|Weapon]]&amp;rarr;[[Classes:FighterWeapon|FighterWeapon]]&amp;rarr;&lt;u&gt;FWeapQuietus&lt;/u&gt;&lt;br&gt;
+The {{Class|FighterPlayer|Fighter}}'s final weapon, the Quietus is a very powerful sword that sends out a spread of {{Class|FSwordMissile|green balls}}. It is recommended for use in short range, so all projectiles strike the target, inflicting serious damage. It uses 14 mana of each kind per attack.
+==== [[DECORATE]] definition ====
+ ACTOR &lt;u&gt;FWeapQuietus&lt;/u&gt; : {{Class|FighterWeapon}}
+ {
+   {{Property|Health}} 3
+   {{Property|Weapon.SelectionOrder}} 2900
+   +{{Flag|WEAPON.PRIMARY_USES_BOTH}}
+   +{{Flag|INVENTORY.NOATTENPICKUPSOUND}}
+   {{Property|Weapon.AmmoUse1}} 14
+   {{Property|Weapon.AmmoUse2}} 14
+   {{Property|Weapon.AmmoGive1}} 20
+   {{Property|Weapon.AmmoGive2}} 20
+   {{Property|Weapon.KickBack}} 150
+   {{Property|Weapon.YAdjust}} 10
+   {{Property|Weapon.AmmoType1}} "{{Class|Mana1}}"
+   {{Property|Weapon.AmmoType2}} "{{Class|Mana2}}"
+   {{Property|Inventory.PickupMessage}} "$TXT_WEAPON_F4"
+   {{Property|Inventory.PickupSound}} "WeaponBuild"
+   {{Property|Tag}} "$TAG_FWEAPQUIETUS"
+ 
+   action native [[A_FSwordAttack]]();
+ 
+   States
+   {
+   Spawn:
+     TNT1 A -1
+     Stop
+   Select:
+     FSRD A 1 Bright [[A_Raise]]
+     Loop
+   Deselect:
+     FSRD A 1 Bright [[A_Lower]]
+     Loop
+   Ready:
+     FSRD AAAABBBBCCCC 1 Bright [[A_WeaponReady]]
+     Loop
+   Fire:
+     FSRD DE 3 Bright [[Offset]](5, 36)
+     FSRD F 2 Bright [[Offset]](5, 36)
+     FSRD G 3 Bright [[Offset]](5, 36) [[A_FSwordAttack]]
+     FSRD H 2 Bright [[Offset]](5, 36)
+     FSRD I 2 Bright [[Offset]](5, 36)
+     FSRD I 10 Bright [[Offset]](5, 150)
+     FSRD A 1 Bright [[Offset]](5, 60)
+     FSRD B 1 Bright [[Offset]](5, 55)
+     FSRD C 1 Bright [[Offset]](5, 50)
+     FSRD A 1 Bright [[Offset]](5, 45)
+     FSRD B 1 Bright [[Offset]](5, 40)
+     Goto Ready
+   }
+ }</text>
+    <sha1>0kmoaa9abs9b2heok6stm08ytajywhg</sha1>
+  </revision>
+</page>

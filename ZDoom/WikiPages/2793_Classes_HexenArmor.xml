@@ -1,0 +1,245 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>Classes:HexenArmor</title>
+  <ns>0</ns>
+  <id>2793</id>
+  <revision>
+    <id>53346</id>
+    <parentid>53343</parentid>
+    <timestamp>2024-10-14T17:26:00Z</timestamp>
+    <contributor>
+      <username>Jekyll Grim Payne</username>
+      <id>2175</id>
+    </contributor>
+    <origin>53346</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="8891" sha1="dtbso9tlolvitm7vlqz9qlslz0n474b" xml:space="preserve">{{Actor|
+| type = Internal
+| name = Hexen armor
+| class = HexenArmor
+| game = Hexen
+}}[[Classes]]: [[Classes:Inventory|Inventory]]&amp;rarr;[[Classes:Armor|Armor]]&amp;rarr;&lt;u&gt;HexenArmor&lt;/u&gt;&lt;br&gt;
+&amp;ensp;&amp;rarr;[[Classes:AmuletOfWarding|AmuletOfWarding]]&lt;br&gt;
+&amp;ensp;&amp;rarr;[[Classes:FalconShield|FalconShield]]&lt;br&gt;
+&amp;ensp;&amp;rarr;[[Classes:MeshArmor|MeshArmor]]&lt;br&gt;
+&amp;ensp;&amp;rarr;[[Classes:PlatinumHelm|PlatinumHelm]]&lt;br&gt;
+
+'''HexenArmor''' is a basic armor class, similar to (but not based on) [[Classes:BasicArmor|BasicArmor]]. It's normally used specifically in Hexen. Much like '''BasicArmor''', this class is present in the player's inventory from the start of the game (even if they're not playing Hexen), and various armor pickups that the player receives interact with it and modify its values.
+
+{{new|4.13.0}} As of GZDoom 4.13, it's possible to replace BasicArmor and HexenArmor with custom classes [[GameInfo_definition#BasicArmorClass|'''using MAPINFO''']]. The custom classes still have to be based on BasicArmor or HexenArmor, respectively.
+
+== Mechanics ==
+Hexen armor works differently from armor in other games:
+*Hexen armor pickups are based on the '''HexenArmor''' class directly (in contrast to armor pickups in other games, which are based on special classes like [[Classes:BasicArmorPickup|BasicArmorPickup]] and [[Classes:BasicArmorBonus|BasicArmorBonus]]).
+*Hexen armor consits of 5 "pieces" that can be "worn" at the same time. 4 of them correspond to armor pickups, while the 5th is the player's "natural armor" that they always have.
+*Hexen armor pickups don't define amount, saveamount or savepercent values. The only meaningful value in them is '''health''', which determines the "armor class" of the pickup, from 0 (the strongest) to 3 (the weakest).
+*The amount of armor provided by HexenArmor pickups is not (and can not) be defined in the pickup itself, it's defined in the player class.
+
+The protection offered by HexenArmor pickups depends on the [[Classes:PlayerPawn|PlayerClass]] definition, through the following line:&lt;br&gt;
+:&lt;code&gt;'''Player.HexenArmor''' ''base value'', ''[[Classes:MeshArmor|armor]] value'', ''[[Classes:FalconShield|shield]] value'', ''[[Classes:PlatinumHelm|helm]] value'', ''[[Classes:AmuletOfWarding|amulet]] value''&lt;/code&gt;&lt;br&gt;
+The values given here must be multiple of five, as they are divided by five on the HUD.
+
+The armor values are stored in the array called '''Slots''' defined in the '''HexenArmor''' class. The array has a fixed size of 5. Whenever a Hexen armor pickup is received, it modifies the value of the element in that array that corresponds to its "class" (which is determined by the value of '''health''' of the pickup). The classes correspond to the array elements as follows:
+* 0: [[Classes:MeshArmor|Mesh Armor]]
+* 1: [[Classes:FalconShield|Falcon Shield]]
+* 2: [[Classes:PlatinumHelm|Platinum Helm]]
+* 3: [[Classes:AmuletOfWarding|Amulet of Warding]]
+* 4: Base armor (natural armor); doesn't correspond to a pickup
+
+Because of the way Hexen Armor works, it is not possible to create meaningful new armor items, although it is possible to create classes gaining different numerical benefits from them. It may be possible to create new items that, like the [[Classes:ArtiBoostArmor|Dragonskin Bracers]], enhance the character's armor class through a different method. The bracers give a 20% (+4) armor class bonus to all classes, up to the class's maximum (which is equal to a fully-armored character using the bracers once).
+For reference, here is a table showing the different AC values for the different Hexen player classes:
+
+{| {{prettytable}}
+|+ Hexen Armor Classes: Total (Displayed)
+! Class Name !! Unarmored !! [[Classes:MeshArmor|Mesh Armor]] !! [[Classes:FalconShield|Falcon Shield]] !! [[Classes:PlatinumHelm|Platinum Helm]] !! [[Classes:AmuletOfWarding|Amulet Of Warding]] !! Fully Armored !! Maximum Total
+|-
+! [[Classes:FighterPlayer|Baratus the Fighter]]
+| 15 (3) || 25 (5) || 20 (4) || 15 (3) || 5 (1) || 80 (16) || 100 (20)
+|-
+! [[Classes:ClericPlayer|Parias the Cleric]]
+| 10 (2) || 10 (2) || 25 (5) || 5 (1) || 20 (4) || 70 (14) || 90 (18)
+|-
+! [[Classes:MagePlayer|Daedolon the Mage]]
+| 5 (1) || 5 (1) || 15 (3) || 10 (2) || 25 (5) || 60 (12) || 80 (16)
+|}
+
+It is also important to note that Hexen armor items don't define a {{property|Inventory.icon}} and they don't modify the '''icon''' field on the base '''HexenArmor''' class when they're picked up. As such, it's not possible to meaningfully determine what kind of icon to display if you want to draw the armor icon(s) in a custom [[Classes:BaseStatusBar|HUD]], aside from iterating through all existing HexenArmor items and lifting their spawnstate sprite with [[Structs:State#Non-static|GetSpriteTexture()]].
+
+== [[ZScript]] definition ==
+{{ZScriptDefinitionNote|actors/inventory/armor.zs#L451}} 
+&lt;syntaxhighlight lang="csharp"&gt;
+class HexenArmor : Armor
+{
+	
+	double Slots[5];
+	double SlotsIncrement[4];
+	
+	Default
+	{
+		+Inventory.KEEPDEPLETED
+		+Inventory.UNTOSSABLE
+	}
+	
+	//===========================================================================
+	//
+	// AHexenArmor :: CreateCopy
+	//
+	//===========================================================================
+
+	override Inventory CreateCopy (Actor other)
+	{
+		// Like BasicArmor, HexenArmor is used in the inventory but not the map.
+		// health is the slot this armor occupies.
+		// Amount is the quantity to give (0 = normal max).
+		let copy = HexenArmor(Spawn("HexenArmor"));
+		copy.AddArmorToSlot (health, Amount);
+		GoAwayAndDie ();
+		return copy;
+	}
+
+	//===========================================================================
+	//
+	// AHexenArmor :: CreateTossable
+	//
+	// Since this isn't really a single item, you can't drop it. Ever.
+	//
+	//===========================================================================
+
+	override Inventory CreateTossable (int amount)
+	{
+		return NULL;
+	}
+
+	//===========================================================================
+	//
+	// AHexenArmor :: HandlePickup
+	//
+	//===========================================================================
+
+	override bool HandlePickup (Inventory item)
+	{
+		if (item is "HexenArmor")
+		{
+			if (AddArmorToSlot (item.health, item.Amount))
+			{
+				item.bPickupGood = true;
+			}
+			return true;
+		}
+		return false;
+	}
+
+	//===========================================================================
+	//
+	// AHexenArmor :: AddArmorToSlot
+	//
+	//===========================================================================
+
+	protected bool AddArmorToSlot (int slot, int amount)
+	{
+		double hits;
+
+		if (slot &lt; 0 || slot &gt; 3)
+		{
+			return false;
+		}
+		if (amount &lt;= 0)
+		{
+			hits = SlotsIncrement[slot];
+			if (Slots[slot] &lt; hits)
+			{
+				Slots[slot] = hits;
+				return true;
+			}
+		}
+		else
+		{
+			hits = amount * 5;
+			let total = Slots[0] + Slots[1] + Slots[2] + Slots[3] + Slots[4];
+			let max = SlotsIncrement[0] + SlotsIncrement[1] + SlotsIncrement[2] + SlotsIncrement[3] + Slots[4] + 4 * 5;
+			if (total &lt; max)
+			{
+				Slots[slot] += hits;
+				return true;
+			}
+		}
+		return false;
+	}
+
+	//===========================================================================
+	//
+	// AHexenArmor :: AbsorbDamage
+	//
+	//===========================================================================
+
+	override void AbsorbDamage (int damage, Name damageType, out int newdamage, Actor inflictor, Actor source, int flags)
+	{
+		if (!DamageTypeDefinition.IgnoreArmor(damageType))
+		{
+			double savedPercent = Slots[0] + Slots[1] + Slots[2] + Slots[3] + Slots[4];
+
+			if (savedPercent)
+			{ // armor absorbed some damage
+				if (savedPercent &gt; 100)
+				{
+					savedPercent = 100;
+				}
+				for (int i = 0; i &lt; 4; i++)
+				{
+					if (Slots[i])
+					{
+						// 300 damage always wipes out the armor unless some was added
+						// with the dragon skin bracers.
+						if (damage &lt; 10000)
+						{
+							Slots[i] -= damage * SlotsIncrement[i] / 300.;
+							if (Slots[i] &lt; 2)
+							{
+								Slots[i] = 0;
+							}
+						}
+						else
+						{
+							Slots[i] = 0;
+						}
+					}
+				}
+				int saved = int(damage * savedPercent / 100.);
+				if (saved &gt; savedPercent*2)
+				{	
+					saved = int(savedPercent*2);
+				}
+				newdamage -= saved;
+				damage = newdamage;
+			}
+		}
+	}
+
+	//===========================================================================
+	//
+	// AHexenArmor :: DepleteOrDestroy
+	//
+	//===========================================================================
+
+	override void DepleteOrDestroy()
+	{
+		for (int i = 0; i &lt; 4; i++)
+		{
+			Slots[i] = 0;
+		}
+	}	
+}&lt;/syntaxhighlight&gt;
+
+== [[DECORATE]] definition ==
+{{DecorateDefinitionNote}}
+ ACTOR &lt;u&gt;HexenArmor&lt;/u&gt; : {{Class|Armor}} native
+ {
+   +{{Flag|INVENTORY.KEEPDEPLETED}}
+   +{{Flag|INVENTORY.UNDROPPABLE}}
+ }
+
+==Related Classes==
+[[Classes:ArtiBoostArmor|ArtiBoostArmor]], called in-game the Dragonskin Bracers, enhances a character's Hexen Armor class.</text>
+    <sha1>dtbso9tlolvitm7vlqz9qlslz0n474b</sha1>
+  </revision>
+</page>

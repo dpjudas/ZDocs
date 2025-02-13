@@ -1,0 +1,102 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>Classes:Stalker</title>
+  <ns>0</ns>
+  <id>4610</id>
+  <revision>
+    <id>39950</id>
+    <parentid>37894</parentid>
+    <timestamp>2015-05-17T15:04:14Z</timestamp>
+    <contributor>
+      <username>Blue Shadow</username>
+      <id>2021</id>
+    </contributor>
+    <minor />
+    <comment>/* DECORATE definition */ Updated</comment>
+    <origin>39950</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="2156" sha1="oupcapa2qfy79bvuamfzeesabu3r7q3" xml:space="preserve">{{actor|
+| type = Monster
+| name = Stalker
+| class = Stalker
+| game = Strife
+| doomednum = 186
+| convid = 92
+}}[[Classes]]: &lt;u&gt;Stalker&lt;/u&gt;&lt;br&gt;
+Small spider-like robots in Strife which use only melee attacks. They can walk on the ceiling and drop when you get close. In Strife1.wad, the sprites are actually named SPID* and are [[Sprite renaming|renamed at load-time]] by ZDoom.
+==== [[DECORATE]] definition ====
+ ACTOR &lt;u&gt;Stalker&lt;/u&gt;
+ {
+   {{Property|Health}} 80
+   {{Property|PainChance}} 40
+   {{Property|Speed}} 16
+   {{Property|Radius}} 31
+   {{Property|Height}} 25
+   {{Property|Monster}}
+   +{{Flag|NOGRAVITY}}
+   +{{Flag|DROPOFF}}
+   +{{Flag|NOBLOOD}}
+   +{{Flag|SPAWNCEILING}}
+   +{{Flag|INCOMBAT}}
+   +{{Flag|NOVERTICALMELEERANGE}}
+   {{Property|MaxDropOffHeight}} 32
+   {{Property|MinMissileChance}} 150
+   {{Property|SeeSound}} "stalker/sight"
+   {{Property|AttackSound}} "stalker/attack"
+   {{Property|PainSound}} "stalker/pain"
+   {{Property|DeathSound}} "stalker/death"
+   {{Property|ActiveSound}} "stalker/active"
+   {{Property|HitObituary}} "$OB_STALKER" // "%o was bugged by a Stalker."
+ 
+   action native [[A_StalkerLookInit]]();
+   action native [[A_StalkerChaseDecide]]();
+   action native [[A_StalkerWalk]]();
+   action native [[A_StalkerDrop]]();
+   action native [[A_StalkerAttack]]();
+ 
+   States
+   {
+   Spawn:
+     STLK A 1 [[A_StalkerLookInit]]
+     Loop
+   LookCeiling:
+     STLK A 10 [[A_Look]]
+     Loop
+   LookFloor:
+     STLK J 10 [[A_Look]]
+     Loop
+   See:
+     STLK A 1 Slow [[A_StalkerChaseDecide]]
+     STLK ABB 3 Slow [[A_Chase]]
+     STLK C 3 Slow [[A_StalkerWalk]]
+     STLK C 3 Slow [[A_Chase]]
+     Loop
+   Melee:
+     STLK J 3 Slow [[A_FaceTarget]]
+     STLK K 3 Slow [[A_StalkerAttack]]
+   SeeFloor:
+     STLK J 3 [[A_StalkerWalk]]
+     STLK KK 3 [[A_Chase]]
+     STLK L 3 [[A_StalkerWalk]]
+     STLK L 3 [[A_Chase]]
+     Loop
+   Pain:
+     STLK L 1 [[A_Pain]]
+     Goto See
+   Drop:
+     STLK C 2 [[A_StalkerDrop]]
+     STLK IHGFED 3
+     Goto SeeFloor
+   Death:
+     STLK O 4
+     STLK P 4 [[A_Scream]]
+     STLK QRST 4
+     STLK U 4 [[A_NoBlocking]]
+     STLK VW 4
+     STLK "XYZ[" 4 Bright
+     Stop
+   }
+ }</text>
+    <sha1>oupcapa2qfy79bvuamfzeesabu3r7q3</sha1>
+  </revision>
+</page>

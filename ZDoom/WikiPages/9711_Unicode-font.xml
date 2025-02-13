@@ -1,0 +1,39 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>Unicode font</title>
+  <ns>0</ns>
+  <id>9711</id>
+  <revision>
+    <id>51171</id>
+    <parentid>51023</parentid>
+    <timestamp>2024-01-03T12:18:05Z</timestamp>
+    <contributor>
+      <username>Jekyll Grim Payne</username>
+      <id>2175</id>
+    </contributor>
+    <comment>/* How to use */ Added a note about using images with multiple glyphs</comment>
+    <origin>51171</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="1991" sha1="tfb39rfhb9ggvr443khlfxokkv6ioqv" xml:space="preserve">__NOTOC__
+[[GZDoom]] supports Unicode fonts that can be defined as a series of PNG images. These fonts support a full set of Unicode characters and offer flexibility for localization.
+
+==How to use==
+To add a Unicode font, follow these steps:
+*Generate a series of PNG images where each image represents one glyph of the font. This can be done with a font generator, like [https://forum.zdoom.org/viewtopic.php?t=65818 this one].
+*Make sure the name of each image is the Unicode codepoint of the character it represents, in hexadecimal notation. For example the image with the glyph for Latin Capital Letter A must be named '''0041.png'''; glyph with the number 1 should be named '''0031.png''', and so on. If you're using a font generator, it should take care of this automatically.
+*Place all of the images under the {{c|/fonts/&lt;yourfontname&gt;/}} folder in your [[PK3]] archive.
+
+This way your font will be accessible everywhere with the name you gave to the folder. It's also possible to place a '''font.inf''' file in the font folder to scale it, modify its kerning and some other things, as described [[Font#GZDoom|here]].
+
+'''Note:''' if you use a font generator, like the one by ErmacMKIII, remember that it generates fonts from the ones installed in your operating system. For the program to see a font, it has to be installed ''for all users''. Fonts installed for a local user won't be visible.
+
+'''Note 2:''' It's also possible create a Unicode font where one PNG image represents a series of glyphs. In this case, each image must have the name that corresponds to the Unicode codepoint of the first glyph represented (for example, an image that starts with the first Unicode character, the null character, would be named {{c|0000.png}}). This is how Consolefont is presented in gzdoom.pk3.
+
+==External links==
+* [https://forum.zdoom.org/viewtopic.php?t=65818 Unicode Doom Font Creator by ErmacMKIII]
+
+[[Category:Data formats]] [[Category:Font formats|*]]
+[[Category:Use of fonts]]</text>
+    <sha1>tfb39rfhb9ggvr443khlfxokkv6ioqv</sha1>
+  </revision>
+</page>

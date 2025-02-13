@@ -1,0 +1,73 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>GetClass</title>
+  <ns>0</ns>
+  <id>9588</id>
+  <revision>
+    <id>49143</id>
+    <parentid>49142</parentid>
+    <timestamp>2022-05-18T20:35:18Z</timestamp>
+    <contributor>
+      <username>Inkoalawetrust</username>
+      <id>2604</id>
+    </contributor>
+    <minor />
+    <origin>49143</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="1886" sha1="lj6ecppzbd8m4o4avffv2cpudhm3krw" xml:space="preserve">Class&lt;Actor&gt; '''GetClass''' ()
+
+== Usage ==
+Returns the class of the calling actor.
+
+=== Return value ===
+Directly returns the class of the calling actor. This is different from [[GetClassName]]() which merely returns the name of the actors' class.
+
+== Examples ==
+This friendly version of the {{class|Archvile}} will attack by spawning friendly clones of its' target. It uses [[Spawn_(ZScript)|Spawn]]() to create the clones, which only directly accepts classes instead of class names.
+
+ Class ArchvileCloner : Archvile Replaces Archvile
+ {
+ 	Default
+ 	{
+ 		Translation "0:255=%[0.00,0.00,0.00]:[0.97,0.00,0.00]";
+ 		MinMissileChance 250; //Avoid clone spam.
+ 		+Friendly;
+ 	}
+ 	States
+ 	{
+ 		Missile:
+ 			VILE G 0 BRIGHT [[A_VileStart]]();
+ 			VILE G 10 BRIGHT [[A_FaceTarget]]();
+ 			VILE H 8 BRIGHT;
+ 			VILE IJKLMN 8 BRIGHT A_FaceTarget();
+ 			VILE O 8 BRIGHT
+ 			{
+ 				Class&lt;Actor&gt; WhoToSpawn;
+ 				Actor Spawned;
+ 				Vector3 FinalPos;
+ 				
+ 				If (Target) WhoToSpawn = Target.'''GetClass'''(); //If the Archvile currently has a target, then get its' class to use in Spawn();
+ 				[[A_StartSound]] ("Vile/Stop",CHAN_VOICE);
+  				
+ 				//Repeat this code 3 times, to spawn 3 clones.
+ 				For (Int I; I &lt;= 3; I++)
+ 				{
+  					FinalPos = [[Vec3Offset]] (FRandom(160,-160),FRandom (160,-160),0); //Randomly offsets the position of the actor that will be spawned, relative to the Archviles' position.
+ 					Spawned = Spawn (WhoToSpawn,FinalPos);
+  					Spawn ("{{class|ArchvileFire}}",FinalPos); //Spawn effect.
+ 					
+ 					Spawned.[[CopyFriendliness]] (Self,True); //Make the clone of the Archviles' target share its' allegience.
+ 					//Remove the clone if it's out of bounds.
+ 					If (!Level.[[Structs:LevelLocals#Static|IsPointInLevel]](FinalPos))
+ 						Spawned.[[Object#Functions|Destroy]]();
+ 				}
+ 			}
+ 			VILE P 20 BRIGHT;
+ 			Goto See;
+ 	}
+ }
+
+[[Category:ZScript]]</text>
+    <sha1>lj6ecppzbd8m4o4avffv2cpudhm3krw</sha1>
+  </revision>
+</page>

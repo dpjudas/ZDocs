@@ -1,0 +1,46 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>CheckActorInventory</title>
+  <ns>0</ns>
+  <id>2853</id>
+  <revision>
+    <id>35649</id>
+    <parentid>26609</parentid>
+    <timestamp>2013-02-09T22:15:39Z</timestamp>
+    <contributor>
+      <username>Deded007</username>
+      <id>1392</id>
+    </contributor>
+    <minor />
+    <comment>/* Example */  formatting</comment>
+    <origin>35649</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="934" sha1="k1ra0gwbqh9o09uq6cs0f1jq7s89kmp" xml:space="preserve">int '''CheckActorInventory'''(int ''tid'', str ''inventory_item'');
+
+==Usage==
+
+Checks the given actor's inventory for the item specified by ''inventory_item''. For a list of possible inventory items, see [[Inventory]].
+
+This function does not treat tid 0 as the activator of the script. To check the script activator's inventory, see [[CheckInventory]].
+
+The function will return the number of items of the given type the actor carries.
+
+== Examples ==
+This example will give any player a shotgun who does not have one at the time script 2 is activated, regardless of how script 2 is activated.
+
+ script 1 enter
+ {
+     [[Thing_ChangeTID]](0, 1000 + [[PlayerNumber]]());
+ }
+ 
+ script 2 (void)
+ {
+     for (int p = 0; p &lt; 8; p++)
+         if ([[PlayerInGame]](p) &amp;&amp; ![[CheckActorInventory]](1000 + p, "{{class|Shotgun}}"))
+             [[GiveActorInventory]](1000 + p, "{{class|Shotgun}}", 1);
+ }
+
+[[category:ACS Inventory functions]]</text>
+    <sha1>k1ra0gwbqh9o09uq6cs0f1jq7s89kmp</sha1>
+  </revision>
+</page>

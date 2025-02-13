@@ -1,0 +1,162 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>Creating shootable projectiles</title>
+  <ns>0</ns>
+  <id>9901</id>
+  <revision>
+    <id>52596</id>
+    <parentid>52595</parentid>
+    <timestamp>2024-05-04T20:33:22Z</timestamp>
+    <contributor>
+      <username>Jekyll Grim Payne</username>
+      <id>2175</id>
+    </contributor>
+    <origin>52596</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="6303" sha1="89i8ga2vp2eknabugdfbnvkfyr1powy" xml:space="preserve">Sometimes you need to make projectiles shootable. Perhaps you made a boss that fires powerful projectiles, and you want to give the player a chance to shoot them down. 
+
+Your first instinct is probably to give them the {{flag|SHOOTABLE}} flag, but '''this should be avoided'''. However, if an actor is shootable, it means its &lt;code&gt;target&lt;/code&gt; [[Actor pointers|pointer]] will be set to whatever actor killed it (in fact, even just damaging an actor is enough to make it switch its &lt;code&gt;target&lt;/code&gt; pointer, unless it has {{flag|NOTARGETSWITCH}}). 
+
+This is very bad news for projectiles, because projectiles use their &lt;code&gt;target&lt;/code&gt; [[Actor pointers|pointer]] to track who actually shot them. This pointer is important for kill credit (it determines which actor was responsible for dealing the damage with said projectile), and prevents projectiles from being able to hit their shooters (note that projectiles usually spawn ''inside'' the actor that fired them, and a lot of them would just immediately explode if they were able to collide with their shooter).
+
+This is not a superficial reason. If the chain that keeps track of who the actual damage source is gets broken, this will mean that all functions that are explicitly designed to track the source (like [[DamageMobj]], [[Die]], the [[Events_and_handlers#WorldThingDied|WorldThingDied]] event and many others) will not obtain the correct information, which can break a lot of other systems.
+
+In short: '''do not make projectiles shootable.''' What you should do? Make a separate hitbox actor!
+
+The approach is simple:
+# First, you'll make a separate {{flag|SHOTABLE|shootable}} actor that will function as a hitbox. Remember to give it {{property|Health}}, {{property|Radius}} and {{property|Height}}. Note, it might be a good idea to make its radius and height ''bigger'' than those of the actual projectile, so it's a bit easier to hit with attacks.
+# The hitbox actor will have a custom pointer to track the projectile it's attached to.
+# When the projectile spawns, in its [[PostBeginPlay]] override it'll spawn that new hitbox actor and record itself in the hitbox actor's special pointer.
+# The hitbox will continuously warp to the projectile with [[SetOrigin]].
+# The hitbox will use its [[Die]] override to call [[ExplodeMissile]] on the attached projectile, causing it to explode as soon as the hitbox is destroyed.
+
+First, let's create a hitbox actor:
+&lt;syntaxhighlight lang="csharp"&gt;
+class ProjectileHitbox : Actor
+{
+	// This will store a pointer to the projectile
+	// the  hitbox is attached to:
+	Actor attachedProjectile;
+
+	Default
+	{
+		// The SHOOTABLE flag is needed so it can actually
+		// be hit by attacks. The NOBLOOD flag is optional,
+		// although most projectiles don't bleed:
+		+SHOOTABLE
+		+NOBLOOD
+		// Set up radius and height as desired. Usually it's
+		// recommended to make them bigger than the projectile's:
+		Radius 64;
+		Height 32;
+		// Don't forget to set the desired number of health:
+		Health 100;
+	}
+
+	// For convenience, we'll make a dedicated static function
+	// to spawn and attach a hitbox (this is not required though):
+	static Actor SpawnHitbox(Actor attached)
+	{
+		let h = ProjectileHitbox(Actor.Spawn('ProjectileHitbox', attached.pos));
+		if (h)
+		{
+			h.attachedProjectile = attached;
+		}
+		return h;
+	}
+
+	// When the hitbox is destroyed, it'll cause
+	// the projectile it's attached to to explode:
+	override void Die(Actor source, Actor inflictor, int dmgflags, Name MeansOfDeath)
+	{
+		if (attachedProjectile)
+		{
+			attachedProjectile.ExplodeMissile();
+		}
+		super.Die(source, inflictor, dmgflags, MeansOfDeath);
+	}
+
+	// Continuously warp to the projectile:
+	override void Tick()
+	{
+		Super.Tick();
+		if (attachedProjectile)
+		{
+			// We're offsetting the hitbox so that it's vertically
+			// centered at the projectile's middle:
+			SetOrigin(attachedProjectile.pos + (0,0, attachedProjectile.height*0.5), true);
+		}
+		// If the projectile doesn't exist anymore, immediately
+		// destroy this actor:
+		else
+		{
+			Destroy();
+		}
+	}
+
+	// This actor doesn't need any states, unless
+	// you specifically want to make it visible.
+}&lt;/syntaxhighlight&gt;
+Relevant functions:
+* [[Tick]]
+* [[Die]]
+* [[ExplodeMissile]]
+
+
+As an example of how it can be attached to projectile, we'll make a very simple projectile based on {{class|Rocket}}:
+&lt;syntaxhighlight lang="csharp"&gt;
+// Example projectile. For simplicity, it's based on Doom's Rocket,
+// but you can design any kind of projectile however you like.
+class RocketWithHitbox : Rocket
+{
+	// This will store a pointer to the projectile's hitbox:
+	Actor hitbox;
+
+	// This spawns the hitbox actor as soon as the projectile
+	// has spawned:
+	override void PostBeginPlay()
+	{
+		Super.PostBeginPlay();
+		hitbox = ProjectileHitbox.SpawnHitbox(self);
+	}
+
+	// This is an important bit: we need to make sure the projectile
+	// can't hit its own hitbox, so we pass MHIT_PASS if it crosses it:
+	override int SpecialMissileHit(Actor victim)
+	{
+		if (victim &amp;&amp; hitbox &amp;&amp; victim == hitbox)
+		{
+			return MHIT_PASS;
+		}
+		return MHIT_DEFAULT;
+	}
+
+	// You can add any other Default properties/flags and states
+	// as usual.
+}&lt;/syntaxhighlight&gt;
+Relevant functions:
+* [[PostBeginPlay]]
+* [[SpecialMissileHit]]
+
+In addition, you might want to protect the hitbox from certain sources of damage. For example, you might not want to allow the actor that actually shot the projectile to be able to destroy it. If this is a boss who fires multiple different attacks and there's a risk they'll shoot down their own projectile, it might make sense.
+
+If so, this is easily achievable with a [[DamageMobj]] override you will need to add to the '''hibox actor''' (not the projectile):
+&lt;syntaxhighlight lang="csharp"&gt;
+	override int DamageMobj (Actor inflictor, Actor source, int damage, Name mod, int flags, double angle)
+	{
+		// Check that source and master are valid. Then check
+		// that master (the projectile) still has a valid
+		// target (the actor that shot it) and check if the source
+		// of damage is that actor. If so, nullify the damage:
+		if (source &amp;&amp; master &amp;&amp; master.target &amp;&amp; source == master.target)
+		{
+			return 0;
+		}
+		return super.DamageMobj(inflictor, source, damage, mod, flags, angle);
+	}&lt;/syntaxhighlight&gt;
+
+[[Category:Guides]]
+[[Category:ZScript guides]]</text>
+    <sha1>89i8ga2vp2eknabugdfbnvkfyr1powy</sha1>
+  </revision>
+</page>

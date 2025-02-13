@@ -1,0 +1,57 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>GetAirSupply</title>
+  <ns>0</ns>
+  <id>5380</id>
+  <revision>
+    <id>35869</id>
+    <parentid>35868</parentid>
+    <timestamp>2013-02-11T02:46:37Z</timestamp>
+    <contributor>
+      <username>Deded007</username>
+      <id>1392</id>
+    </contributor>
+    <minor />
+    <comment>array code mess</comment>
+    <origin>35869</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="1486" sha1="ltk33ylf44pz3mt6xxjkwr531p5a6nb" xml:space="preserve">__NOTOC__
+int '''GetAirSupply''' (int ''playernum'')
+
+== Usage ==
+
+Gives the amount of tics remaining in a player's air supply. This function targets only players since monsters do not have an air supply&amp;nbsp;&amp;mdash; drowning is not implemented for them.
+
+=== Parameters ===
+
+* ''playernum'': Player number. This information can be obtained through [[PlayerNumber]].
+
+=== Return value ===
+
+The duration in tics before the player will start to drown. A negative value tells the player is already drowning. Note that a negative value of 0 is possible by coincidence if the script is run at just the right tic, but is also used to mean there are no player for the given number.
+
+== Examples ==
+
+This example prints the number of seconds the player has until his or her air supply runs out.  It then prints a message warning the player to return for air.  Set this script to be executed by {{Class|SecActEyesDive|Eyes Go Below Surface}} and {{Class|SecActEyesSurface|Eyes Go Above Surface}} actors placed in your [[Transfer_Heights|'deep water']] sectors. 
+
+ int print_air[8];
+ 
+ script 1 (void)
+ {
+   print_air[&lt;b&gt;&lt;/b&gt;[[PlayerNumber]]()]++;
+   print_air[&lt;b&gt;&lt;/b&gt;[[PlayerNumber]]()] %= 2;
+   while (print_air[&lt;b&gt;&lt;/b&gt;[[PlayerNumber]]()])
+   {
+     if ([[GetAirSupply]]([[PlayerNumber]]()) &gt; 0)
+       [[print]](i:[[GetAirSupply]]([[PlayerNumber]]()) / 35);
+     else
+       [[print]](s:"You'd better go up for air!");
+       
+     [[delay]](1);
+   }
+ }
+
+[[category:ACS Information functions]]</text>
+    <sha1>ltk33ylf44pz3mt6xxjkwr531p5a6nb</sha1>
+  </revision>
+</page>

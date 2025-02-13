@@ -1,0 +1,65 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>Creating simple projectiles</title>
+  <ns>0</ns>
+  <id>2722</id>
+  <revision>
+    <id>21706</id>
+    <parentid>15591</parentid>
+    <timestamp>2009-05-17T20:51:51Z</timestamp>
+    <contributor>
+      <username>Gez</username>
+      <id>1283</id>
+    </contributor>
+    <minor />
+    <comment>msg</comment>
+    <origin>21706</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="2057" sha1="j8ufxtejh56abe3jbcp7pxdqynslty6" xml:space="preserve">{{WarnDeprecated|the modern [[DECORATE]] format}}
+
+[[The old DECORATE format]] allows for custom projectiles. The format is basically the same as for normal [[Creating simple decorations|decorations]], except you add the keyword "projectile" before its name, and you get to define the following additional properties: 
+
+* DeathSprite - Sprite used when the projectile "dies". 
+* DeathFrames - Animation sequence when the projectile "dies". 
+* ExplosionRadius - Distance from the projectile's impact that its explosion can be felt. 
+* ExplosionDamage - Amount of explosion damage done at the projectile's impact site. This is separate from Damage, and if you don't specify it, it will be the same as ExplosionRadius. 
+* DoNotHurtShooter - Explosion damage does not hurt the thing that shot it. 
+* DamageType - Defines the type of damage the projectile inflicts.  See [[custom damage types]]. 
+* Speed - How fast the projectile moves when you spawn it with the summon cheat. 
+* SpawnSound - Sound the projectile makes when it spawns. 
+* DeathSound - Sound the projectile makes when it "dies". 
+* Damage - This is the damage the projectile does to whatever it directly hits and is actually a random amount based on the value you specify for it here. The damage calculation is 1d8 * ''n''.
+* Doombounce - The projectile will bounce several times, slowly losing height before exploding.
+* Hereticbounce - The projectile will bounce once and then explode.
+* Hexenbounce - The projectile will bounce forever.
+
+An example follows:
+
+    projectile FooShot
+    {
+        SpawnNum 255
+        Sprite PLSS
+        Frames "24:AB"
+        DeathSprite PLSE
+        DeathFrames "ABCDE"
+        Radius 13
+        Height 8
+        Speed 70
+        Damage 1
+        NoBlockmap
+        NoGravity
+        ActivatePCross
+        ActivateImpact
+        NoTeleport
+        SpawnSound "weapons/plasmaf"
+        DeathSound "weapons/rocklx"
+        ExplosionRadius 1024
+        ExplosionDamage 16
+        DamageType Ice
+        DoNotHurtShooter
+    }
+
+[[category:Old Decorate format]]</text>
+    <sha1>j8ufxtejh56abe3jbcp7pxdqynslty6</sha1>
+  </revision>
+</page>

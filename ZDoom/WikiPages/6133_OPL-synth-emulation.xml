@@ -1,0 +1,56 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>OPL synth emulation</title>
+  <ns>0</ns>
+  <id>6133</id>
+  <revision>
+    <id>46251</id>
+    <parentid>45260</parentid>
+    <timestamp>2018-10-03T01:33:16Z</timestamp>
+    <contributor>
+      <username>Wohlstand</username>
+      <id>2594</id>
+    </contributor>
+    <minor />
+    <comment>With adding of libADLMIDI and libOPNMIDI, it's no more "only"</comment>
+    <origin>46251</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="3365" sha1="nkv05gpts73f3xebh49zrh13lvi4dnl" xml:space="preserve">{{doomwiki|OPL emulation}}[[ZDoom]]'s '''OPL emulator''' replicates Yamaha {{wp|Yamaha YM3812|OPL2}} or {{wp|Yamaha YMF262|OPL3}} chips. It is the one of [[software synthesizer]]s offered by ZDoom which does not use [[sound fonts]]. While the Doom music, for example, was composed on and for a {{wp|Roland Sound Canvas}}, most gamers at the time had a more affordable {{wp|Sound Blaster}} card and the OPL emulator can seem "more authentic" (or at least more nostalgic) for them because of this. Doom was one of the relatively rare games which included instructions for the OPL registers (contained in the [[GENMIDI]] lump), allowing to tweak the OPL's output to make it as good as it could be despite its inherent limits.
+
+The [[vanilla Doom]] engine supported OPL2, and by default used OPL3 as if the OPL3 chip were two OPL2 chips. One could enable support for OPL3 features, notably stereo output, but the method to activate this support was obscure and poorly documented one had to create an environment variable named {{c|DMXOPTION}} (the manual incorrectly said {{c|DMXOPTIONS}}) and setting it to a value containing the string {{c|-opl3}}. In ZDoom, OPL-specific options can be edited from the [[advanced sound options]] menu.
+
+==OPL cores==
+The OPL core emulates a number of OPL chips. ZDoom extends them with features that did not exist on the emulated hardware, notably full [[MIDI]] stereo panning (OPL2 is normally mono, and OPL3 limited to 3 panning positions), though such enhancements can be turned off from the [[advanced sound options]] menu. There are four different cores available:
+
+;MAME OPL2:
+:This OPL2 core comes from the {{wp|MAME}} project. It is available under the {{wp|GNU General Public License|GNU GPL}}. This core is the oldest present in ZDoom and the default choice.
+
+;DOSBox OPL3:
+:This OPL3 core comes from the {{wp|DOSBox}} project. Note that DOSBox features two different OPL emulators: one (dbopl.cpp/h + adlib.cpp/h) is available under the terms of the GPL, while the other (opl.cpp/h) is derived from Ken Silverman's ADLIBEMU and available under the terms of the {{wp|GNU Lesser General Public License|GNU LGPL}}; ZDoom uses the latter.
+
+;Java OPL3:
+:This OPL3 core is a {{wp|C++}} port of "[http://opl3.cozendey.com/ That Vintage Tone]", Robson Cozendey's OPL emulator written in {{wp|Java (programming language)|Java}}.
+
+;Nuked OPL3:
+:This OPL3 core was contributed by Alexey Khokholov.
+
+==Advantages and drawbacks==
+* Despite the [[GENMIDI]] lump's best efforts, OPL synthesis does not sound like real musical instruments.
+* Although the emulation of the OPL chip's inner working is bit-accurate, the output can still differ because it has to be resampled to be mixed with the rest of the audio, and OPL chips used a very nonstandard sample rate of 49716 Hz. Further, many of the cheaper sound cards did not use actual Yamaha OPL chips, but compatible clones that differed slightly. Finally, several sound cards applied additional filters to the output of the OPL chip to achieve various effects.
+
+==See also==
+* [[DRO]]
+* [[GENMIDI]]
+* [[IMF]]
+* [[RAW]]
+* [[Sound options]]
+
+==External links==
+* [http://mamedev.org/ MAME]
+* [http://www.dosbox.com/ DOSBox project]
+* [http://www.advsys.net/ken/ Ken Silverman's homepage] (ADLIBEMU)
+* [http://opl3.cozendey.com/ Robson Cozendey's OPL emulator] 
+[[Category:Audio systems]]</text>
+    <sha1>nkv05gpts73f3xebh49zrh13lvi4dnl</sha1>
+  </revision>
+</page>

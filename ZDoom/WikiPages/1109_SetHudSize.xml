@@ -1,0 +1,104 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>SetHudSize</title>
+  <ns>0</ns>
+  <id>1109</id>
+  <revision>
+    <id>35982</id>
+    <parentid>35760</parentid>
+    <timestamp>2013-03-01T02:29:41Z</timestamp>
+    <contributor>
+      <username>Deded007</username>
+      <id>1392</id>
+    </contributor>
+    <minor />
+    <comment>templates</comment>
+    <origin>35982</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="5309" sha1="3nyczvsswaxi8r0gaf6qmfjo1d3tyen" xml:space="preserve">void '''SetHudSize'''(int ''width'', int ''height'', bool ''statusbar'');
+
+==Usage==
+
+Causes text messages to be stretched or shrunk to match the size they would appear if the user's resolution was width by height.
+
+Note that it only applies to the 4:3 area of the screen in the center; this command will not cause text to be distorted in non-4:3 resolutions. '''SetHudSize''' does not interpret the given values in any way to match it to other aspect ratios.
+
+'''SetHudSize''' is designed to be used for hudmessages that are really graphics, using a font which contains images instead of letters. It can also be used to make text appear the same size at all resolutions, for example a title with a special font or something.
+
+After using '''SetHudSize''', [[HudMessage]] and [[HudMessageBold]] coordinates also behave differently.
+
+Using '''SetHudSize''' with either the width or height set to 0 will reset the [[HudMessage]] behavior to the default.
+
+===Parameters===
+
+* ''width'': Width of simulated drawing area
+* ''height'': Height of simulated drawing area
+* ''statusbar'':
+** {{c|FALSE}}: height does not include status bar
+** {{c|TRUE}}: height includes status bar, and it can be drawn on
+
+
+If ''statusbar'' is {{c|TRUE}}, then [[HudMessage]] will be stretched differently depending on whether the status bar is visible or not, because the height available to draw in is shorter when the status bar is visible. However, a value of {{c|FALSE}} will still let you draw on the status bar if the [[HudMessage]] extends below the height you specified.
+
+===Coordinate Behavior===
+
+After '''SetHudSize''', you need to specify actual pixel coordinates and not numbers in the [0.0, 1.0] or similar ranges. However, they are still [[definitions|fixed point]], so you need to keep the decimal point. If you used &lt;code&gt;'''SetHudSize'''(320, 200, TRUE);&lt;/code&gt; and want to draw a hudmessage at the center of the screen, you should pass it the coordinates (160.0, 100.0) and not (0.5, 0.5). 
+
+The fractional part of the coordinates affect what part of the hudmessage you are positioning:
+
+For x:
+* .0 = positions center of box 
+* .1 = positions left edge of box 
+* .2 = positions right edge of box 
+* .4 = centers text inside box and aligns center
+* .5 = centers text and aligns left edge
+* .6 = centers text and aligns right edge
+
+For y:
+* .0 = positions center of box 
+* .1 = positions top edge of box 
+* .2 = positions bottom edge of box 
+
+So if you used {{c|'''SetHudSize'''(320, 200, TRUE)}}, then the coordinates (160.1, 100.1) will position the upper-left corner of the hud message. The coordinates (160.2, 100.2) will position its lower-right corner instead. 
+
+To make [[HudMessage]] behave as normal, use {{c|'''SetHudSize'''(0, 0, FALSE)}}.
+
+==Examples==
+
+This script uses '''SetHudSize''' to make a boss health display. It does not use any external graphics, only the default font, so it is a little primitive. It uses a row of ‘]’ characters to build up the scale, and a ‘&gt;’ to mark the bosses health. It takes the [[TID]] of the monster which is the boss as its parameter.
+
+ script 1 (int monster)
+ {
+ 	[[SetFont]]("BIGFONT");
+ 	[[SetHudSize]](320, 200, 0);
+ 	
+ 	int h, maxh = [[GetActorProperty]](monster, {{const|APROP_HEALTH}});
+ 	
+ 	while([[ThingCount]]({{const|T_NONE}}, monster) &gt; 0)
+ 	{
+ 		h = 175 - (([[GetActorProperty]](monster, {{const|APROP_HEALTH}}) * 150)/maxh);
+ 		
+ 		[[HudMessage]](s:"]\n]\n]\n]\n]\n]\n]\n]\n]\n]\n]\n]\n]";
+ 			{{const|HUDMSG_PLAIN}}, 1, {{const|CR_RED}}, 300.0, 100.0, 5.0);
+ 		[[HudMessage]](s:"&gt;";
+ 			{{const|HUDMSG_PLAIN}}, 2, {{const|CR_RED}}, 280.0, h&lt;&lt;16, 5.0);
+ 		
+ 		[[Delay]](5);
+ 	}
+ 	
+ 	[[HudMessage]](s:"&gt;";
+ 		{{const|HUDMSG_PLAIN}}, 2, {{const|CR_RED}}, 280.0, 175.0, 4.86);
+ }
+
+The first two lines set up the HUD. Next, the variables are prepared, ''h'' storing the current health, and ''maxh'' storing the maximum health which the monster is assumed to have at the start of the script. The ''while'' loop keeps the display updated whilst the monster is still alive.
+
+The line that calculates the value of ''h'' is a typical rule of three. The method that it uses is called rearranging a scale. The variable ''h'' starts at ''maxh'' and then, during the battle, will eventually drop to 0. However, we want to display the mark starting at 25 pixels from the top of the HUD and finishing at 175 pixels from the top (25 from the bottom). So, as the health goes from ''maxh'' to 0, ''h'' needs to go from 25 to 175.
+
+The first step is done by taking percentages. If ''h'' is the current health of the monster, then ''(h / maxh)'' is the fraction between 25 and 175 the &gt;  must be placed. Now, the number of pixels between 25 and 175 is 175 - 25 = 150. So, (150 * (''h'' / ''maxh'')) is the actual amount of pixels between 25 and 175 to place the &gt; marker. Due to integer division, this must be refactored to ((150 * ''h'') / ''maxh''). Finally, it starts at 25 and ends at 175, so the value must be subtracted from 175 to get the final formula.
+
+The two HudMessages render the counter. The delay stops a runaway script and sets to update every fifth frame. Finally, after the loop, the ‘&gt;’ marker is drawn once more at 0% health just to give a good representation of the monster's death to the player.
+
+[[category:ACS HUD functions]]__NOTOC__</text>
+    <sha1>3nyczvsswaxi8r0gaf6qmfjo1d3tyen</sha1>
+  </revision>
+</page>

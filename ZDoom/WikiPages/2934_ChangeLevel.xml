@@ -1,0 +1,62 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>ChangeLevel</title>
+  <ns>0</ns>
+  <id>2934</id>
+  <revision>
+    <id>43453</id>
+    <parentid>40859</parentid>
+    <timestamp>2016-12-04T00:35:11Z</timestamp>
+    <contributor>
+      <username>Coamarona</username>
+      <id>2509</id>
+    </contributor>
+    <minor />
+    <comment>Typo. (CHANGLELEVEL -&gt; CHANGELEVEL)</comment>
+    <origin>43453</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="2207" sha1="le03mdnlgd0glctgv1fw45xf62ft1y5" xml:space="preserve">void '''ChangeLevel''' (str ''mapname'', int ''position'', int ''flags'',[ int ''skill''])
+
+==Usage==
+
+Changes to a new map, places the player at the specified start spot, and optionally changes the skill level at the same time.
+
+==Parameters==
+
+*''mapname''
+:The map (by lump name) to change to.
+*''position''
+:The player start number to use.  This should match the number specified as the first argument of the player start thing.  If there is only one player start, this parameter should be set to 0.
+*''flags''
+:The following flags are supported:
+::'''CHANGELEVEL_KEEPFACING''': The player's facing angle will not be adjusted during the map change.
+::'''CHANGELEVEL_NOINTERMISSION''': Do not display the intermission screen during the map change.
+::'''CHANGELEVEL_NOMONSTERS''': Start the new map with nomonsters in effect.
+::'''CHANGELEVEL_PRERAISEWEAPON''': The player's weapon will already be raised upon entering the new map.
+::'''CHANGELEVEL_RESETHEALTH''': The player's health is reset as if they had started a new game.
+::'''CHANGELEVEL_RESETINVENTORY''': The player's inventory is reset as if they had started a new game.
+*''skill''
+:Sets the skill level to start the new map at.  This can be useful to create skill-choice maps such as that seen at the beginning of Quake 1.
+:To keep the skill level unchanged on the new map, use -1 for this parameter. Note that omitting this parameter will change the skill level to 0 (SKILL_VERY_EASY), which is probably not what you want.
+
+==Examples==
+When this script is activated, the player is sent to MAP01 (without intermission), his inventory is reset to default and the skill is set to normal (Hurt Me Plenty).
+ #include "zcommon.acs"
+ 
+ script 22 (VOID)
+ {
+   ChangeLevel ("MAP01", 1, CHANGELEVEL_RESETINVENTORY|CHANGELEVEL_NOINTERMISSION, SKILL_NORMAL);
+ }
+&lt;hr&gt;
+This example will warp the player to map E3M1 at the default player start, will change the skill to Hard (Ultra-Violence) and reset the player's inventory. It will also use the player's current facing.
+ #include "zcommon.acs"
+ 
+ script 1 (VOID)
+ {
+   ChangeLevel ("E3M1", 0, CHANGELEVEL_RESETINVENTORY|CHANGELEVEL_KEEPFACING, SKILL_HARD);
+ }
+
+[[category:ACS Level alteration functions]]</text>
+    <sha1>le03mdnlgd0glctgv1fw45xf62ft1y5</sha1>
+  </revision>
+</page>

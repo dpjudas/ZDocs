@@ -1,0 +1,54 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>Savegame</title>
+  <ns>0</ns>
+  <id>6711</id>
+  <revision>
+    <id>50465</id>
+    <parentid>37856</parentid>
+    <timestamp>2023-08-13T20:17:23Z</timestamp>
+    <contributor>
+      <username>Inkoalawetrust</username>
+      <id>2604</id>
+    </contributor>
+    <comment>Specified that this is the old save format.</comment>
+    <origin>50465</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="3302" sha1="i1c8vu5v1nsx54520clbsycmhhu7wsf" xml:space="preserve">{{note|This page documents the save format used by GZDoom prior to late 2016. The save format has been changed to {{wp|JSON}} since then.}}
+
+[[ZDoom]]'s '''savegame''' files are contained with [[PNG]] files since [[version history#2.0 Beta 13|v2.0 Beta 13]]. The game snapshot is the image itself, and the game data is contained in various custom ancillary chunks: huBs, ptIc, snAp, viSt, pcLs and raNd. Since build{{rev|666}}, the SVN revision number is used to mark the savegame (earlier, an arbitrary number was used).
+
+The snapshot can be disabled by setting the {{CVAR|C|storesavepic}} variable to {{c|false}}. This replaces the snapshot by a single black pixel.
+==Autosaves==
+By default, ZDoom automatically creates savegames whenever the player enters a new level. This is needed for playing through [[hub]]s correctly, as a normal respawn (also known as "pistol start", or "wand start" in [[Heretic]]) would potentially break the ongoing game by resetting all levels in the hub. The number of autosave slots is commanded by the {{c|{{CVAR|C|autosavecount}}}} [[console variable]], and whether autosaves are performed is decided by the {{c|{{CVAR|C|disableautosave}}}} variable. Both can be changed from the [[miscellaneous options]] menu.
+
+==Backward compatibility==
+ZDoom features some measure of backward compatibility in loading savegames, but sometimes the addition of new features or architectural changes in subsystems force a compatibility break.
+*2.1.0{{rev|204}}: up from {{rev|34}}
+*2.1.1{{rev|226}}: up from {{rev|34}}
+*2.1.2{{rev|257}}: up from {{rev|250}}
+*2.1.3{{rev|265}}: up from {{rev|250}}
+*2.1.4{{rev|273}}: up from {{rev|250}}
+*2.1.5{{rev|321}}: up from {{rev|289}}
+*2.1.6{{rev|346}}: up from {{rev|289}}
+*2.1.7{{rev|524}}: up from {{rev|289}}
+*2.2.0{{rev|748}}: up from {{rev|714}}
+*2.3.0{{rev|1455}}: up from {{rev|1452}}
+*2.3.1{{rev|1480}}: up from {{rev|1452}}
+*2.4.0{{rev|2075}}: up from {{rev|1848}}
+*2.4.1{{rev|2126}}: up from {{rev|1848}}
+*2.5.0{{rev|2508}}: up from {{rev|1848}}
+*2.6.0{{rev|3730}}: up from {{rev|3100}}
+*2.6.1{{rev|3794}}: up from {{rev|3100}}
+
+;Revisions which broke backward compatibility
+:The MINSAVEVER constant was increased in the following revisions:
+{{rev|4}}, {{rev|30}}, {{rev|250}}, {{rev|289}}, {{rev|437}}, {{rev|506}}, {{rev|666}}, {{rev|667}}, {{rev|714}}, {{rev|796}}, {{rev|810}}, {{rev|817}}, {{rev|825}}, {{rev|832}}, {{rev|836}}, {{rev|837}}, {{rev|853}}, {{rev|855}}, {{rev|880}}, {{rev|887}}, {{rev|889}}, {{rev|894}}, {{rev|924}}, {{rev|932}}, {{rev|954}}, {{rev|964}}, {{rev|992}}, {{rev|1001}}, {{rev|1020}}, {{rev|1027}}, {{rev|1028}}, {{rev|1033}}, {{rev|1034}}, {{rev|1036}}, {{rev|1044}}, {{rev|1055}}, {{rev|1060}}, {{rev|1061}}, {{rev|1065}}, {{rev|1076}}, {{rev|1107}}, {{rev|1114}}, {{rev|1129}}, {{rev|1179}}, {{rev|1181}}, {{rev|1190}}, {{rev|1209}}, {{rev|1215}}, {{rev|1253}}, {{rev|1271}}, {{rev|1304}}, {{rev|1397}}, {{rev|1448}}, {{rev|1452}}, {{rev|1507}}, {{rev|1583}}, {{rev|1587}}, {{rev|1599}}, {{rev|1619}}, {{rev|1636}}, {{rev|1643}}, {{rev|1823}}, {{rev|1848}}, {{rev|3030}}, {{rev|3085}}, {{rev|3100}}, {{plainlink|&lt;sup&gt;&lt;s&gt;[http://zdoom.org/Changelog/3427/files r3427]&lt;/s&gt; (restored in [http://zdoom.org/Changelog/3435/files r3435])&lt;/sup&gt;}}
+
+==See also==
+* [[Version history]]
+
+[[Category:Glossary]]</text>
+    <sha1>i1c8vu5v1nsx54520clbsycmhhu7wsf</sha1>
+  </revision>
+</page>

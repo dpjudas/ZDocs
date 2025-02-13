@@ -1,0 +1,52 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>SetMusic</title>
+  <ns>0</ns>
+  <id>952</id>
+  <revision>
+    <id>38157</id>
+    <parentid>38152</parentid>
+    <timestamp>2014-08-18T02:05:24Z</timestamp>
+    <contributor>
+      <username>Blue Shadow</username>
+      <id>2021</id>
+    </contributor>
+    <minor />
+    <comment>/* Parameters */</comment>
+    <origin>38157</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="1353" sha1="mhfe1sqaui20uzqqbcbj5su8ubod0jb" xml:space="preserve">void '''SetMusic''' (str ''song'' [, int ''order'' [, int ''unused'']]);
+
+== Usage ==
+
+'''SetMusic''' changes the music in the game.
+
+=== Parameters ===
+* ''song'':
+:* The name of a music file to be played.
+:* If ''song'' contains a {{c|/}}, then it is assumed to be a full path in a [[PK3]] including {{c|music/}} and the file extension. The file name may be longer than 8 characters.
+:* If ''song'' is {{c|"*"}}, then the default music as defined in [[MAPINFO]] will be played.
+* ''order'':
+:* If ''song'' refers to a tracker module (MOD), then ''order'' specifies the so-called order in the song to start playing at.
+:* If ''song'' refers to a multi-track [[music format|music file]], then ''order'' is the track number belonging to the song you want to play.
+:* If ''song'' is not a tracker module or a multi-track file, then ''order'' can be omitted.
+* ''unused'': This parameter is currently defined but not used by ZDoom. It is recommended that you do not specify the third parameter at all.
+
+== Examples ==
+
+ Script 100 (int tid) // Boss battle
+ {
+    [[SetMusic]]("BosFight", 0);
+ 
+    [[ACS_Execute]](666, 0, tid, 0, 0); // Starts a health tracker for the boss
+ 
+    while ([[ThingCount]]({{const|T_NONE}}, tid) &gt; 0) [[delay]](35);
+ 
+    [[SetMusic]]("*", 0); // Restore the level's default music
+ }
+
+[[category:ACS Sound functions]]
+__NOTOC__</text>
+    <sha1>mhfe1sqaui20uzqqbcbj5su8ubod0jb</sha1>
+  </revision>
+</page>

@@ -1,0 +1,130 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>Classes:Korax</title>
+  <ns>0</ns>
+  <id>4595</id>
+  <revision>
+    <id>39650</id>
+    <parentid>34383</parentid>
+    <timestamp>2015-05-02T21:19:39Z</timestamp>
+    <contributor>
+      <username>Blue Shadow</username>
+      <id>2021</id>
+    </contributor>
+    <minor />
+    <comment>/* DECORATE definition */ Updated</comment>
+    <origin>39650</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="4646" sha1="hkn1019r1k3o6rgekw5l2yfg1m08wzn" xml:space="preserve">{{actor|
+| type = Monster
+| name = Korax
+| class = Korax
+| game = Hexen
+| doomednum = 10200
+}}[[Classes]]: &lt;u&gt;Korax&lt;/u&gt;&lt;br&gt;
+
+Korax, the middle brother of the three Serpent Riders, is far more powerful than his cadet [[Classes:Sorcerer2|D'Sparil]]. Within his castle, he uses the [[ACS|magic of the Chaos Sphere]] to summon hordes of phantasmal monsters ([[Classes:EttinMash|ettins]], [[Classes:CentaurMash|centaurs]], and [[Classes:Demon1|chaos]] [[Classes:Demon2|serpents]]) and trigger all sorts of traps against his foe.
+
+==== Using Korax in a map ====
+
+Korax, like his brother and the [[Classes:Dragon|death wyvern]], is a monster that should not be used in a map without the proper accommodations. Korax will call several [[ACS]] scripts and these scripts require several reserved [[TID]]s:
+
+===== Korax scripts =====
+This does not explain the exact details of what the scripts do in MAP40 of Hexen.wad, and instead merely overview quickly what type of effects they have so that a modder might provide equivalent scripts that will be activated by Korax.
+:''249'': Started by [[A_KoraxChase]] when Korax's health is reduced to half its full value. Used by Korax to retreat to safety until all ettins are killed.
+:''250'': Randomly started by [[A_KoraxCommand]]. Activates a series of [[Classes:ThrustFloorDown|spikes]].
+:''251'': Randomly started by [[A_KoraxCommand]]. Temporarily turns the floor to lava and spawns a number of [[Classes:FireBall|fireballs]].
+:''252'': Randomly started by [[A_KoraxCommand]]. Provokes an [[earthquake]] and opens doors to rooms full of [[Classes:Demon1|chaos serpents]] and [[Classes:Bishop|dark bishops]].
+:''253'': Randomly started by [[A_KoraxCommand]]. Temporarily lowers four cross-shaped devices that throw a large number of [[Classes:FireBall|fireballs]].
+:''254'': Randomly started by [[A_KoraxCommand]] if Korax is severely wounded. Provokes an earthquake and spawns a [[Classes:Demon1Mash|randomly]]-[[Classes:Demon2Mash|chosen]] [[Classes:EttinMash|phantasmal]] [[Classes:CentaurMash|monster]] on a randomly-chosen spawn point.
+:''255'': Death script started by [[A_KoraxBonePop]]. Provokes an earthquake and opens the door to the end of level.
+
+===== Korax TIDs =====
+:''245'': Korax himself, used by script 249 and as the center point of the earthquake by all control scripts.
+:''248'': Initial teleport destination, used by [[A_KoraxChase]] when his health is lowered to one half.
+:''249'': Secondary teleport destinations, used by [[A_KoraxChase]] after the first teleportation
+TIDs 250 to 255 are marked as reserved for the same-numbered scripts in the source code, but aren't actually used by the ACS in the map.
+
+==== [[DECORATE]] definition ====
+ ACTOR &lt;u&gt;Korax&lt;/u&gt;
+ {
+   {{Property|Health}} 5000
+   {{Property|PainChance}} 20
+   {{Property|Speed}} 10
+   {{Property|Radius}} 65
+   {{Property|Height}} 115
+   {{Property|Mass}} 2000
+   {{Property|Damage}} 15
+   {{Property|Monster}}
+   +{{Flag|BOSS}}
+   +{{Flag|FLOORCLIP}}
+   +{{Flag|TELESTOMP}}
+   +{{Flag|DONTMORPH}}
+   +{{Flag|NOTARGET}}
+   +{{Flag|NOICEDEATH}}
+   {{Property|SeeSound}} "KoraxSight"
+   {{Property|AttackSound}} "KoraxAttack"
+   {{Property|PainSound}} "KoraxPain"
+   {{Property|DeathSound}} "KoraxDeath"
+   {{Property|ActiveSound}} "KoraxActive"
+   {{Property|Obituary}} "$OB_KORAX" // "%o was swept from the board by Korax."
+ 
+   action native [[A_KoraxChase]]();
+   action native [[A_KoraxDecide]]();
+   action native [[A_KoraxBonePop]]();
+   action native [[A_KoraxMissile]]();
+   action native [[A_KoraxCommand]]();
+ 
+   States
+   {
+   Spawn:
+     KORX A 5 [[A_Look]]
+     Loop
+   See:
+     KORX AAA 3 [[A_KoraxChase]]
+     KORX B 3 [[A_Chase]]
+     KORX BBB 3 [[A_KoraxChase]]
+     KORX C 0 [[A_PlaySound]]("KoraxStep")
+     KORX C 3 [[A_Chase]]
+     KORX CCC 3 [[A_KoraxChase]]
+     KORX D 3 [[A_Chase]]
+     KORX DDD 3 [[A_KoraxChase]]
+     KORX A 0 [[A_PlaySound]]("KoraxStep")
+     KORX A 3 [[A_Chase]]
+     Loop
+   Pain:
+     KORX H 5 [[A_Pain]]
+     KORX H 5
+     Goto See
+   Missile:
+     KORX E 2 Bright [[A_FaceTarget]]
+     KORX E 5 Bright [[A_KoraxDecide]]
+     Wait
+   Death:
+     KORX I 5
+     KORX J 5 [[A_FaceTarget]]
+     KORX K 5 [[A_Scream]]
+     KORX LMNOP 5
+     KORX Q 10
+     KORX R 5 [[A_KoraxBonePop]]
+     KORX S 5 [[A_NoBlocking]]
+     KORX TU 5
+     KORX V -1
+     Stop
+   Attack:
+     KORX E 4 Bright [[A_FaceTarget]]
+     KORX F 8 Bright [[A_KoraxMissile]]
+     KORX E 8 Bright
+     Goto See
+   Command:
+     KORX E 5 Bright [[A_FaceTarget]]
+     KORX W 10 Bright [[A_FaceTarget]]
+     KORX G 15 Bright [[A_KoraxCommand]]
+     KORX W 10 Bright
+     KORX E 5 Bright
+     Goto See
+   }
+ }</text>
+    <sha1>hkn1019r1k3o6rgekw5l2yfg1m08wzn</sha1>
+  </revision>
+</page>

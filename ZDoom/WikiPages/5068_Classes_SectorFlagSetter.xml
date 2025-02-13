@@ -1,0 +1,52 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>Classes:SectorFlagSetter</title>
+  <ns>0</ns>
+  <id>5068</id>
+  <revision>
+    <id>39791</id>
+    <parentid>37011</parentid>
+    <timestamp>2015-05-03T22:58:02Z</timestamp>
+    <contributor>
+      <username>Blue Shadow</username>
+      <id>2021</id>
+    </contributor>
+    <minor />
+    <comment>/* DECORATE definition */ Updated</comment>
+    <origin>39791</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="1306" sha1="3pw5d4fpp0k7v02f4wdy5tnyqx0yf6w" xml:space="preserve">{{Actor|
+| type = Internal
+| name = Sector Flag-Setter
+| class = SectorFlagSetter
+| doomednum = 9041
+}}[[Classes]]: &lt;u&gt;SectorFlagSetter&lt;/u&gt;&lt;br&gt;
+
+This actor sets extra flags for the sector it is placed within. These flags cannot be defined in the normal way for Hexen-format maps because there is no space left in the WAD format for them, so this actor allows mappers access to these flags without having to use the [[UDMF]] format.
+
+To use, place the actor within the target sector and set its first argument to the desired flag value. If setting more than one flag, add their values together and place the result in the actor's first argument.
+
+Currently the following flags can be used:
+
+* SECF_SILENT (1)
+: Actors in this sector make no noise.
+* SECF_NOFALLINGDAMAGE (2)
+: Actors don't take [[falling damage]] from hitting this sector's floor.
+* SECF_FLOORDROP (4)
+: Actors in this sector always fall with the floor, even if it is lowering very fast.
+* SECF_NORESPAWN (8)
+: When the "Spawn at same spot" [[DMFlags|DMFlag]] is set, players will not be allowed to respawn in this sector.
+
+[[category:Special ZDoom things]]
+
+==== [[DECORATE]] definition ====
+ ACTOR &lt;u&gt;SectorFlagSetter&lt;/u&gt; native
+ {
+   +{{Flag|NOBLOCKMAP}}
+   +{{Flag|NOGRAVITY}}
+   +{{Flag|DONTSPLASH}}
+   {{Property|RenderStyle}} None
+ }</text>
+    <sha1>3pw5d4fpp0k7v02f4wdy5tnyqx0yf6w</sha1>
+  </revision>
+</page>

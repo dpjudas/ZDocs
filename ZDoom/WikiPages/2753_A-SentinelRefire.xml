@@ -1,0 +1,69 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>A SentinelRefire</title>
+  <ns>0</ns>
+  <id>2753</id>
+  <revision>
+    <id>53986</id>
+    <parentid>34236</parentid>
+    <timestamp>2024-11-30T12:08:51Z</timestamp>
+    <contributor>
+      <username>Jekyll Grim Payne</username>
+      <id>2175</id>
+    </contributor>
+    <comment>Removed redirect to [[A MonsterRefire]]</comment>
+    <origin>53986</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="1443" sha1="g9hl6u0qr9y3mngpw7dgc2ix2b6zbdd" xml:space="preserve">{{DISPLAYTITLE:A_SentinelRefire}}
+{{BuiltInFunctionNote|A_MonsterRefire}}
+
+'''{{class|Actor}}'''
+
+{{c|void '''A_SentinelRefire'''()}}
+
+== Usage ==
+Used by {{class|Sentinel}}, {{class|Beggar}}, {{class|Macil1}}, {{class|Macil2}} and {{class|CeilingTurret}}. Calls [[A_FaceTarget]] and then lets the monster refire. If the target is dead, or out of sight, or the monster has no "Missile" state sequence and the target is outside of its melee range, has a chance to abort the attack and go back to its "See" state sequence with a 10 out of 255 chance. Also aborts if the monster hit its ally.
+
+== Examples ==
+From {{class|Sentinel}}'s code:
+&lt;syntaxhighlight lang="csharp"&gt;
+	Missile:
+		SEWR B 4 A_FaceTarget;
+		SEWR C 8 Bright A_SentinelAttack;
+		SEWR C 4 Bright A_SentinelRefire;
+		Goto Missile+1;
+&lt;/syntaxhighlight&gt;
+
+== [[ZScript]] definition ==
+{{ZScriptDefinitionNote|actors/strife/sentinel.zs}}
+&lt;syntaxhighlight lang="csharp"&gt;
+	void A_SentinelRefire()
+	{
+		A_FaceTarget ();
+		if (HitFriend())
+		{
+			SetState(SeeState);
+			return;
+		}
+
+		if (random[SentinelRefire]() &gt;= 30)
+		{
+			if (target == NULL ||
+				target.health &lt;= 0 ||
+				!CheckSight (target, SF_SEEPASTBLOCKEVERYTHING|SF_SEEPASTSHOOTABLELINES) ||
+				(MissileState == NULL &amp;&amp; !CheckMeleeRange()) ||
+				random[SentinelRefire]() &lt; 40)
+			{
+				SetState (SeeState);
+			}
+		}
+	}
+&lt;/syntaxhighlight&gt;
+
+== See also ==
+* [[A_MonsterRefire]]
+
+[[Category:Decorate Generic Attack functions]]</text>
+    <sha1>g9hl6u0qr9y3mngpw7dgc2ix2b6zbdd</sha1>
+  </revision>
+</page>

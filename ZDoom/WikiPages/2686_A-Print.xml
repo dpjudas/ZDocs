@@ -1,0 +1,59 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>A Print</title>
+  <ns>0</ns>
+  <id>2686</id>
+  <revision>
+    <id>35745</id>
+    <parentid>35068</parentid>
+    <timestamp>2013-02-10T06:30:25Z</timestamp>
+    <contributor>
+      <username>Deded007</username>
+      <id>1392</id>
+    </contributor>
+    <minor />
+    <comment>formatting, see also</comment>
+    <origin>35745</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="1204" sha1="tr9m11zo6ofkppq6isw1co5w8w13lfm" xml:space="preserve">{{codepointer|Special action}}
+'''A_Print''' (string ''text''[, float ''time''[, string ''fontname'']])
+
+==Usage==
+[[Print]]s a text to the caller's screen. This means the caller has to either be a [[player]] or be used as a [[camera]] by a player.
+
+It can also be used from {{Class|Inventory|inventory items}} or {{Class|Weapon|weapons}}. In these cases the text will be printed to the screen of the player using this item.
+
+The text can be formatted text.
+
+Optionally, a duration for how long the message must be displayed can be passed. The default value of 0 means to use {{CVAR|M|con_midtime}}.
+
+Also optionally, a different [[font]] can be selected. By default, or if the font name given is invalid, it will use SmallFont.
+
+== Examples ==
+
+This inventory item prints a message to the player when it is picked up.
+
+ actor goldenticket : {{Class|CustomInventory}}
+ {
+   {{property|Inventory.Amount}} 1
+   {{property|Inventory.MaxAmount}} 1
+   +{{flag|INVBAR}}
+   States
+   {
+   Spawn:
+     GTIK ABCD 4
+     Loop
+   Pickup:
+     GTIK A 0 '''A_Print'''("You got the golden ticket! Escape to the chocolate factory!")
+     Stop
+   }
+ }
+
+== See also ==
+*[[Print]]
+*[[A_Log]]
+*[[A_LogInt]]
+*[[A_PrintBold]]</text>
+    <sha1>tr9m11zo6ofkppq6isw1co5w8w13lfm</sha1>
+  </revision>
+</page>

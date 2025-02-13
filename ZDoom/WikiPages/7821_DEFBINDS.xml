@@ -1,0 +1,42 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>DEFBINDS</title>
+  <ns>0</ns>
+  <id>7821</id>
+  <revision>
+    <id>44295</id>
+    <parentid>41072</parentid>
+    <timestamp>2017-03-20T13:26:17Z</timestamp>
+    <contributor>
+      <username>Gez</username>
+      <id>1283</id>
+    </contributor>
+    <minor />
+    <comment>removing "new" for GZDoom 2.4.0 release</comment>
+    <origin>44295</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="1203" sha1="espfgiu1f9vm8487wuq4zn035a8c3xm" xml:space="preserve">'''DEFBINDS''' is a cumulative, text-based lump that sets the default key binds for the game. The syntax is as follows:
+
+ &lt;bind_command&gt; &lt;key&gt; &lt;command&gt;
+
+*''bind_command'': the bind command to use. They are [[CCMDs:Customization#Bindings|''bind'', ''doublebind'' and ''mapbind'']]. Specifying no bind command defaults to ''bind''.
+*''key'': the key to bind.
+*''command'': the [[CCMD|command]] to bind the key to.
+
+The key binds from this lump are only set if their corresponding sections are absent from the [[configuration file]], with the sections being: {{c|[&lt;game&gt;.Bindings]}}, {{c|[&lt;game&gt;.DoubleBindings]}} and {{c|[&lt;game&gt;.AutomapBindings]}}. The engine will create and populate these sections with the defaults upon being run for the first time with each game.
+
+==Examples==
+
+This binds ''tab'' to {{c|{{CCMD|P|togglemap}}}}; double-binds ''r'' to {{c|{{CCMD|P|+reload}}}}; and map-binds ''c'' to {{c|{{CCMD|P|am_clearmarks}}}}.
+ bind tab togglemap
+ doublebind r +reload
+ mapbind c am_clearmarks
+
+
+For commands that take arguments, quotation marks are required around the command and passed arguments:
+ bind t "{{CCMD|D|summon}} {{Class|PlasmaRifle|plasmarifle}}"
+
+[[Category:ZDoom special lumps]]</text>
+    <sha1>espfgiu1f9vm8487wuq4zn035a8c3xm</sha1>
+  </revision>
+</page>

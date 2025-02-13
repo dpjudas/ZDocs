@@ -1,0 +1,260 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>SNDINFO</title>
+  <ns>0</ns>
+  <id>811</id>
+  <revision>
+    <id>53328</id>
+    <parentid>53295</parentid>
+    <timestamp>2024-10-12T11:11:40Z</timestamp>
+    <contributor>
+      <username>Blue Shadow</username>
+      <id>2021</id>
+    </contributor>
+    <minor />
+    <comment>{{git}} -&gt; {{new}} for 4.13.0</comment>
+    <origin>53328</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="21608" sha1="fjct8urxg3nrg96ktfnl82pbm64rj46" xml:space="preserve">{{doomwiki}}'''SNDINFO''' contains many sound-related definitions. It allows any sound referred to by its lump name (DSSAWHIT, DSBAREXP, etc.) to be associated with any game event sound such as player pain, death, and revealing of secrets. The names by which the predefined sounds are referred to in SNDINFO are fairly self-explanatory, so we will not cover them now.
+
+SNDINFO lumps are cumulative. All SNDINFO lumps found are read in WAD directory order. This means that you do not have to&amp;nbsp;&amp;mdash; in fact you must not&amp;nbsp;&amp;mdash; copy all information from the original SNDINFO lump if you want to change something.
+
+==Sound assignment==
+A sound definition is written in one of two syntaxes.
+
+Old syntax:
+ logicalname lumpname
+New syntax:
+ logicalname = lumpname
+The difference between the two is the requirement of the assignment operator (=) by the new syntax. Just write the two names on one line in the file, the logical name (that is, the name that it uses in the other commands here, in the game or in other lumps that use sound name) first and the lumpname of the sound that is to be used second.
+
+The new syntax is preferred to use over the old one as it is more robust, since it avoids the problems with the old one not being able to detect badly formatted names.
+
+{{warning|The two syntaxes can NOT to be mixed together within the same file. If the first sound definition in the file uses the old syntax, for example, then all other sound definitions in that file must also use the old syntax, or they won't be recognized.}}
+
+SNDINFO supports '''full file paths'''. They can be used for any sound, but they MUST be used if the name of the sound file is longer than 8 characters. File paths must be enclosed with quotation marks ("") amd can be defined using either the old or the new syntax:
+ {{comment|old syntax:}}
+ logicalname "sounds/&lt;some subfolders&gt;/&lt;filename&gt;.&lt;file extension&gt;" {{comment|File extension MUST be provided and MUST be correct!}}
+
+ {{comment|new syntax:}}
+ logicalname = "sounds/&lt;some subfolders&gt;/&lt;filename&gt;.&lt;file extension&gt;" {{comment|File extension MUST be provided and MUST be correct!}}
+
+=== Examples of valid and invalid definitions ===
+Since sounds can be defined in multiple ways, below are a few examples of how sounds can and can ''not'' be defined in SNDINFO.
+
+'''{{color|blue|VALID}} definitions''':
+ {{comment|short name, short path:}}
+ weapons/pistol/fire DSPISTOL
+ 
+ {{comment|short name, full path (using full path here is not required but possible):}}
+ weapons/pistol/fire "sounds/weapons/pistol/DSPISTOL.ogg"
+ 
+ {{comment|long name, full path:}}
+ weapons/pistol/fire "sounds/weapons/pistol/pistol_fire.ogg"
+
+The same definitions using new syntax:
+ weapons/pistol/fire = DSPISTOL
+ weapons/pistol/fire = "sounds/weapons/pistol/DSPISTOL.ogg"
+ weapons/pistol/fire = "sounds/weapons/pistol/pistol_fire.ogg"
+ 
+'''{{color|red|INVALID}} definitions''' (these will not work!):
+ {{color|red|&lt;i&gt;// shot names can NOT use extensions:&lt;/i&gt;}}
+ weapons/pistol/fire DSPISTOL.ogg
+ 
+ {{color|red|&lt;i&gt;// long file names can NOT be used without full paths:&lt;/i&gt;}}
+ weapons/pistol/fire pistol_fire.ogg
+ 
+ {{color|red|&lt;i&gt;// you can NOT omit quotation marks in full paths:&lt;/i&gt;}}
+ weapons/pistol/fire sounds/weapons/pistol/pistol_fire.ogg
+ 
+ {{color|red|&lt;i&gt;// if the sound file has an extension, you can NOT omit it in full paths:&lt;/i&gt;}}
+ weapons/pistol/fire "sounds/weapons/pistol/pistol_fire"
+
+As mentioned earlier, it's also not possible to mix the old and the new syntax within one file:
+ {{color|red|&lt;i&gt;// defining different sounds with different syntax will NOT work:&lt;/i&gt;}}
+ weapons/pistol/fire = "sounds/weapons/pistol/pistol_fire.ogg"
+ weapons/pistol/reload "sounds/weapons/pistol/pistol_reload.ogg"
+
+==Commands==
+SNDINFO supports the following commands:
+
+('''Note:''' for many commands, using '''*''' as the sound name will mean that the command will apply to all sounds that do not specify otherwise.)
+
+*'''${{LE|alias}}''' aliasname soundname
+:Assigns a second logical name to an already existing sound. The existing sound can also be a random sound or another alias. Any change to the original sound in subsequent SNDINFO lumps is automatically transferred to the new sound.
+*'''${{LE|ambient}}''' &lt;index&gt; &lt;logicalsound&gt; [type] &lt;mode&gt; &amp;lt;volume&amp;gt;
+:Defines an [[ambient sound]] which is played when an [[Classes:AmbientSound|ambient sound thing]] (14065) is placed in a map. &amp;lt;index&amp;gt; specifies which thing or which parameter for the generic ambient sound thing has to be used. &amp;lt;logicalsound&amp;gt; specifies the sound to be played, &amp;lt;volume&amp;gt; the volume at which it is played.
+:{| {{prettytable}}
+|
+:{{c|type}} can be one of the following:
+:*point &amp;lt;atten&amp;gt;
+::Defines a positional sound. The volume at which the sound is played decreases with distance. The optional parameter &amp;lt;atten&amp;gt; specifies how quickly this decrease occurs, with larger values meaning a faster falloff in volume. This is specified as a floating point value. The default for &amp;lt;atten&amp;gt; is 1.0.
+:*surround
+::Plays the sound at full volume in surround mode.
+:*world
+::Plays the sound at full volume regardless of distance. The keyword “world” is optional.
+:{{c|mode}} can be one of the following:
+:*continuous
+::Plays the sound as a repeating endless loop.
+:*random &amp;lt;minsecs&amp;gt; &amp;lt;maxsecs&amp;gt;
+::Plays the sound at random intervals. The minimum and maximum length of this interval can be specified in seconds. Both values are floating point numbers.
+:*periodic &amp;lt;secs&amp;gt;
+::Plays the sound at regular intervals. The length of these intervals is specified in seconds as a floating point value.
+|}
+*'''${{LE|archivepath}} string
+:Ignored. In ''[[Hexen]]'', this works in concert with a {{c|-devsnd}} command line parameter, to indicate from where to load sound files instead of the sound lumps in the archive. ZDoom, having the ability to load directories as archives and loose files as lumps, does not need this Hexen feature; which was ignored in normal conditions anyway.
+*'''${{LE|attenuation}}''' aliasname value
+:Defines a multiplication factor for sound attenuation. Giving a value of zero will result in a sound that is always played with no attenuation, that is to say at full volume.
+:{| {{prettytable}}
+|
+:Attenuation is done by multiplying the sound's distance by the attenuation value and using that as the distance in volume calculations.
+:For example:
+:*If attenuation is 2, then the sound will fade out with distance 2x faster. In other words, you can only hear it 2x closer.
+:*If attenuation is 0.5, then the sound will fade out with distance half as fast; you can hear it 2x further.
+|}
+*'''${{LE|edfoverride}}'''
+:This command is defined for [[Eternity Engine]] compatibility but completely ignored. (In EE, it means that the SNDINFO lump takes precedence over what is defined in Eternity's {{dw|EDF|native definition files}}.)
+*'''${{LE|ifdoom}}'''
+*'''${{LE|ifheretic}}'''
+*'''${{LE|ifhexen}}'''
+*'''${{LE|ifstrife}}'''
+:Reads the following definitions up to the next $endif only if the specified game is played.
+*'''${{LE|limit}}''' soundname &amp;lt;amount&amp;gt; [limitdistance]
+:Specifies that at most &amp;lt;amount&amp;gt; instances can be played at once. A value of 0 means no limit at all. Defaults to 2.
+:limitdistance specifies how far the limit takes effect. It defaults to 256, as in, two sounds further than 256 units apart can be played even if $limit would cause them to be evicted otherwise.
+*'''${{LE|map}}''' mapnumber musicname
+:This was the way level music was defined in ''[[Hexen]]''. It is merely provided for compatibility and should not be used anymore. Level music should be defined in the [[MAPINFO]] lump with the rest of the level's parameters.
+*'''${{LE|mididevice}}''' musicname device [parameter]
+:Sets the default device to use to play a given song file, which can be useful if the song only sounds good using one of the playback methods. Valid device names include {{c|default}} (does not change the user's choice), {{c|standard}} (uses the Windows API), {{c|sndsys}}, [[TiMidity++|{{c|timidity}}]], [[OPL synth emulation|{{c|opl}}]], {{c|adl}}, {{c|opn}}, [[GUS|{{c|gus}}]], [[FluidSynth|{{c|fluidsynth}}]], and finally [[WildMIDI|{{c|wildmidi}}]].
+:An optional parameter can be passed. The options available depend on the device and work as override to a console variable, so the parameter should have the same form as the console variable it replaces.
+:*opl: overrides {{c|{{CVAR|S|opl_core}}}}
+:*adl: overrides {{c|{{CVAR|S|adl_bank}}}} (if {{c|{{CVAR|S|adl_use_custom_bank}}}} is set to ''true'', it overrides {{c|{{CVAR|S|adl_custom_bank}}}} instead) {{verification}}
+:*opn: overrides {{c|{{CVAR|S|opn_custom_bank}}}} if {{c|{{CVAR|S|opn_use_custom_bank}}}} is set to ''true'' {{verification}}
+:*fluidsynth: overrides {{c|{{CVAR|S|fluid_patchset}}}}
+:*gus: overrides {{c|{{CVAR|S|midi_config}}}} {{verification}}
+:*timidity: overrides {{c|{{CVAR|S|timidity_config}}}}
+:*wildmidy: overrides {{c|{{CVAR|S|wildmidi_config}}}}
+:*{{c|standard}} and {{c|sndsys}} do not make use of the optional parameter.
+*'''${{LE|modplayer}}''' musicname player {{new|4.13.0}}
+:Sets the default [[module replayer|MOD player]] to use to play a given song file, which can be useful if the song only sounds good using one of the playback methods. Valid MOD player names include {{c|XMP}} (alternatively, {{c|libXMP}}) and {{c|dumb}} (alternatively, {{c|libdumb}}).
+*'''${{LE|musicalias}}''' musicname remappedname
+:Allows remapping of music tracks. Can be used, for example, with high quality replacement soundtrack to avoid duplicate tracks and reducing its size. Mapping a track to 'none' means that starting the remapped song will have no effect at all. There's one limitation though: If you load a WAD with the same music name after the one with the SNDINFO lump the mapping will be ignored. This is so that music resources can use this command without interfering with WADs that replace the music with their own.
+*'''${{LE|musicvolume}}''' musicname factor
+:Sets a volume scaling factor for music tracks. This is used to compensate for music that has audibly different volume.
+:Alternatively, the volume level can be set in {{wp|decibel}}s instead of being set as a factor, by appending {{c|dB}} to the specifid value, e.g. {{c|40dB}}.
+*'''${{LE|pitchset}}''' soundname &amp;lt;float-value&amp;gt; [range]
+:Specifies the direct pitch of a sound to play at. Overrides $pitchshift, but is overridden by [[A_StartSound]]'s pitch parameter.
+:Unlike $pitchshift, the value is a floating point value. Standard pitch is 1.0. Lower values will make the sound play slower, and vice versa.
+: If a second value is set to something other than 0.0, the engine will treat it as a random range between the two.
+:Default is 0.0. Values at 0.0 or lower means the engine will not set a direct pitch and resort to using $pitchshift if applicable.
+:'''Note:''' If setting a specific sound that will be used inside of a '$random', this must be defined '''before''' the $random definition in order to take effect.
+*'''${{LE|pitchshift}}''' soundname &amp;lt;range&amp;gt;
+:Specifies how much the pitch of the specified sound may be randomly altered when it is played. &amp;lt;range&amp;gt; may be in the range of 0 to 7.
+*'''${{LE|pitchshiftrange}}''' &amp;lt;range&amp;gt;
+:Sets a default pitch shift value that is applied to all subsequent sound definitions.
+*'''${{LE|playeralias}}''' playerclass gender logicalname otherlogicalsound
+:Creates an alias to the existing logical sound. 
+*'''${{LE|playercompat}}''' playerclass gender logicalname compatibilityname
+:Defines a compatibility alias for a specific player sound. If any sounds with these compatibility names are defined later, they will redefine the corresponding player sounds instead. Likewise, if they are played, they will play the corresponding player sound instead.
+*'''${{LE|playersound}}''' playerclass gender logicalname lumpname
+:Defines a sound used by a player. &amp;lt;playerclass&amp;gt; must be 'player' if the sound is used for a stock Doom, Strife, or Heretic class. If it is for a custom class, it can be named anything, so long as [[Classes:PlayerPawn#Player.SoundClass|Player.SoundClass]] uses the same name. In Hexen, it can be either “fighter”, “mage” or “cleric”, in addition to any custom classes for the game. Gender can be "male", "female", "neutral", "neuter", "other", "object" or "cyborg". [[Player Sounds|Here]] you can find a list of all known player sounds and their meaning. If you wish to use additional sounds for [[S_SKIN|custom skins]], you use this like custom classes by defining the sounds that you wish to use, but instead you put the skin name into the &amp;lt;playerclass&amp;gt; string.
+{{note|An interesting note: ZDoom supports different player pain sounds depending on health. In Doom, Heretic and Hexen there is only one player pain sound, so it is handled like this in SNDINFO:
+
+ $playersound           player	male	*pain100	dsplpain
+ $playersounddup        player	male	*pain75		*pain100
+ $playersounddup        player	male	*pain50		*pain100
+ $playersounddup        player	male	*pain25		*pain100
+
+The *pain100 used instead of a lump name for pain75, pain50, and pain25 tells those sounds to refer to pain100 for a sound lump to play.
+If you want you can change this, though, so you really have different pain sounds.
+----
+
+Another feature of the player sounds is that you can specify a custom damage type for pain and death sounds. You do this by defining the sound as follows:
+
+ $playersound           player  male    *death-fire     dsburn
+
+When the player takes damage, ZDoom will attempt to find a sound with the matching damagetype first, and then will fall back to the generic sound (e.g. *death) if it is not found.
+
+----
+Finally, if a player sound is explicitly set to {{c|dsempty}}, no sound will be played. Setting it to another empty or invalid sound will make the engine look for a valid sound to play in the default or a parent player class.}}
+*'''${{LE|playersounddup}}''' playerclass gender logicalname otherplayersound
+:Creates an alias to the existing player sound. 
+*'''${{LE|random}}''' aliasname { logicalname1 logicalname2 logicalname3 ... }
+:Defines a random sound. The newly defined alias can be used like a regular sound but any time it is used one of the sounds specified in the list is randomly selected. The number of sounds in the list is unlimited. Note that for this to work, the logicalnames within the brackets must be assigned to real lumpnames on separate lines. (See example below.)
+*'''${{LE|registered}}'''
+:This command is defined for ''[[Hexen]]'' compatibility but completely ignored.
+*'''${{LE|rolloff}}''' soundname &amp;lt;mindist&amp;gt; &amp;lt;maxdist&amp;gt;
+*'''$rolloff''' soundname &amp;lt;type&amp;gt;
+:Sets the attenuation for the sound. &amp;lt;mindist&amp;gt; (default 200) is the distance from the center of the sound trigger at which the sound is played at full volume, after which the sound drops off in volume until it hits &amp;lt;maxdist&amp;gt; (default 1200) is the distance at which the sound becomes inaudible. This allows different sound curves to be defined on a per-item basis.
+:If a type is specified, then ZDoom uses one of the predefined methods to compute rolloff. Available types are:
+:*'''custom''' &amp;mdash; Uses a [[SNDCURVE|lookup table]].
+:*'''linear''' &amp;lt;min distance&amp;gt; &amp;lt;max distance&amp;gt; &amp;mdash; Uses a linear method to adjust the sound volume to the distance.
+:*'''log''' &amp;lt;min distance&amp;gt; &amp;lt;rolloff factor&amp;gt; &amp;mdash; Uses a logarithmic method to adjust the sound volume to the distance; anything closer than min distance is full volume and beyond that it has a scalar that controls how quickly the volume drops off.
+*'''${{LE|singular}}''' soundname
+:Specifies that this sound can only be played once at a time over the entire map. This differs from using {{sndinfo|limit}} 1 in that $limit will prevent other sounds from being played if they would be heard; $singular will prevent the sound from playing if it is already playing somewhere in the map, even if it is too far to be heard.
+*'''${{LE|volume}}''' soundname &amp;lt;volume&amp;gt;
+:Specifies a modifier to apply to this sound's volume whenever it is played. This value is multiplied by the volume specified in the script or actor definition triggering the sound to determine the final volume. The default and maximum value is 1.0. It is not possible to amplify a sound's volume with this instruction, only decrease it.
+
+==Examples==
+This adds a new custom sound with a logical name "mymonster/death" pointing to a file called MMONDIE (which can be in any format):
+ {{color|blue|mymonster/death}}  {{color|orange|MMONDIE}}
+
+This picks one of the three sounds randomly to play for "mymonster/death":
+
+ {{color|green|$random}} {{color|blue|mymonster/death}} { {{color|blue|mymonster/death1 mymonster/death2 mymonster/death3}} }
+ {{color|blue|mymonster/death1}} {{color|orange|MMONDIE1}}
+ {{color|blue|mymonster/death2}} {{color|orange|MMONDIE2}}
+ {{color|blue|mymonster/death3}} {{color|orange|MMONDIE3}}
+
+
+This is an example of adding a sound file with a long file name:
+ {{color|blue|mymonster/death}} {{color|orange|"sounds/monsters/MyMonster/mymonster_death.ogg"}}
+
+This example randomizes the player's death sound to one of three different sounds:
+
+ {{color|green|$random}} {{color|blue|pl_death}} { {{color|blue|player/death1 player/death2 player/death3}} }
+ 
+ {{color|blue|player/death1}} {{color|orange|pldth1}}
+ {{color|blue|player/death2}} {{color|orange|pldth2}}
+ {{color|blue|player/death3}} {{color|orange|pldth3}}
+ 
+ {{color|green|$playeralias}}  {{color|darkgreen|player  male  *death }} {{color|blue|pl_death}}
+ 
+ {{comment|example for long file names}}
+ {{color|blue|shield/confirm}} {{color|orange|"sounds/player/ShieldConfirm.ogg"}}
+
+Note that the actual sounds that will be played when a player dies are pldth1, pldth2 and pldth3.
+
+==Multiple SNDINFO Lumps==
+
+The #include directive cannot be used with SNDINFO, but WADs may include multiple SNDINFO lumps. In [[PK3]] format, multiple SNDINFO lumps can be used by giving them unique extension names. For example, SNDINFO.weapons, SNDINFO.monsters, SNDINFO.ambient, et cetera.
+
+==Diagnosing issues with sounds==
+Sometimes modders may encounter an issue where the the sound they've defined in SNDINFO doesn't play in the game. There are a few common steps that should be taken in this case.
+
+First and foremost: open the [[console]] and type &lt;code&gt;playsound mysoundname&lt;/code&gt;, where {{c|mysoundname}} is the name defined in SNDINFO, such as {{c|weapons/pistol/shoot}}.
+
+'''If the sound plays''' from the console but not in game:
+* Find the place where you're trying to play the sound in the code and simply check that you've input the SNDINFO name correctly. If you made a typo, GZDoom won't be able to retrieve the correct sound but will not show any errors.
+* If the name is correct, make sure the channel you're trying to play the sound on isn't being immediately occupied by another sound. Remember that all sounds play on {{c|CHAN_BODY}} by default (this concerns all vanilla sound functions like [[A_Pain]] or [[A_Scream]]). [[A_StartSound]] allows specifying a custom channel. If you want it to pick the first unoccupied channel, use {{c|CHAN_AUTO}} for the channel. Remember that certain functions occupy a sound channel even without playing an actual sound, for example [[A_Quake]].
+* If the sound doesn't play only ''sometimes'', you might be running into the limit of how many instances of the same sound can be played at once. Remember, GZDoom's default limit for simultaneous instances of the same sound is 2. Use the {{c|$limit}} SNDINFO instruction to set the limit to 0 (which means infinite) or to a high value.
+
+'''If the sound doesn't play''', then you made a mistake in your SNDINFO definition. Possible causes:
+* You're trying to use a short path but the name of the sound file is over 8 characters long. For example, if you have a sound file {{c|pistolfire.ogg}}, it can not be defined as &lt;code&gt;weapons/pistol/shoot pistolfire&lt;/code&gt;, you have to use the full path, such as &lt;code&gt;weapons/pistol/shoot "sounds/weapons/pistol/pistolfire.ogg"&lt;/code&gt;.
+* You're using a full path in SNDINFO but your path is incorrect. For example, you have &lt;code&gt;weapons/pistol/shoot "sounds/weapons/pistolfire.ogg"&lt;/code&gt; but in actuality the sound is located at {{c|sounds/weapons/pistol/pistolfire.ogg}}.
+* You're using a full path but you forgot the file extension, or you're using a wrong file extension. For example, if you have a sound file called {{c|pistolfire.ogg}} located under {{c|sounds/weapons/pistol/}}, your full path to the sound must be &lt;code&gt;sounds/weapons/pistol/pistolfire.ogg&lt;/code&gt; — the {{c|.ogg}} part is NOT optional, and it cannot replaced with a different extension like {{c|.wav}}.
+* You're mixing new and old SNDINFO syntax. The new syntax (&lt;code&gt;logicalname = soundname&lt;/code&gt;) and the old syntax (&lt;code&gt;logicalname soundname&lt;/code&gt;) can NOT be mixed together within the same file. If you use new syntax, all old syntax definitions will be ignored.
+* If ALL of the above is definitely correct but the sound still won't play, you might be having an issue with your sound drivers or openAL. Head to the forums to diagnose it and possibly make a bug report.
+
+See [[#Examples of valid and invalid definitions|examples of valid and invalid definitions]] for common mistakes in SNDINFO.
+
+==See also==
+* [[Predefined sounds]] - A copy of the SNDINFO lump included with ZDoom.
+* [[REVERBS]]
+* [[SNDCURVE]]
+* [[SNDSEQ]]
+* [[Sound format]]s
+[[Category:ZDoom special lumps]][[Category:Audio lumps]]</text>
+    <sha1>fjct8urxg3nrg96ktfnl82pbm64rj46</sha1>
+  </revision>
+</page>

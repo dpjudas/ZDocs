@@ -1,0 +1,238 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>Classes:PSprite</title>
+  <ns>0</ns>
+  <id>9635</id>
+  <revision>
+    <id>53722</id>
+    <parentid>52094</parentid>
+    <timestamp>2024-11-13T12:04:30Z</timestamp>
+    <contributor>
+      <username>Jekyll Grim Payne</username>
+      <id>2175</id>
+    </contributor>
+    <origin>53722</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="9841" sha1="mwgzijjsnqmx4bgal7rujo9vs88qebe" xml:space="preserve">The PSprite class is a dedicated class designed to process and handle states and sprite animations for classes based on {{class|StateProvider}}—namely, {{class|Weapon}} and {{class|CustomInventory}}. While the states and animations are defined in the Weapon/CustomInventory directly, they're displayed by a PSprite. A new instance of a PSprite is created for each new sprite layer.
+
+PSprites are stored in the '''psprites''' [[linked list]] in the {{struct|PlayerInfo}} struct.
+
+PSprites have their own coordinate system compared to the HUD and are drawn underneath it. Unlike HUD elements, world lighting can directly affect PSprites. Players support multiple layers of PSprites denoted by their id. They are also ordered by id meaning layers with greater ids are drawn on top of other layers. For this reason what id you give you a PSprite should be considered carefully when adding overlays. PSprites can be created via PlayerInfo's '''GetPSprite'''(), '''SetPSprite'''(), and '''SetSafeFlash'''() functions. PSprites with an id of 0 are invalid and cannot be created.
+
+Certain rules are preserved when players are ticking their PSprites:
+*If the Caller is '''null''', the PSprite is destroyed.
+*If the Caller is an Inventory item and its owner is not the same as the PSprite's owner, the PSprite is destroyed.
+*If the Caller is a Weapon and it's not the PSprite owner's current '''ReadyWeapon''', the PSprite is destroyed.
+
+These rules can be changed by creating a custom player class that overrides '''TickPSprites'''().
+
+Functions that are intended to be called from a PSprite (e.g. a function in a weapon's state) should have the &lt;code&gt;action&lt;/code&gt; keyword. This allows the PSprite to properly set up the '''self''', '''invoker''', and '''stateInfo''' parameters to pass to it.
+
+There are a few default layer ids that should be noted:
+*'''PSP_STRIFEHANDS''' (-1) - Used for displaying the player's hand in Strife. This has special caller and state functionality and should be avoided entirely.
+*'''PSP_WEAPON''' (1) - Displays the player's current '''ReadyWeapon'''.
+*'''PSP_FLASH''' (1000) - Displays the muzzle flash when firing a weapon.
+*'''PSP_TARGETCENTER''' (0x7FFFFFFF - 2) - Displays the center of the targeting powerup reticle from Strife. This should be avoided unless using from the appropriate powerup.
+*'''PSP_TARGETLEFT''' (0x7FFFFFFF - 1) - Displays the left-hand side of the targeting powerup reticle from Strife. This should be avoided unless using from the appropriate powerup.
+*'''PSP_TARGETRIGHT''' (0x7FFFFFFF) - Displays the right-hand side of the targeting powerup reticle from Strife. This should be avoided unless using from the appropriate powerup.
+
+==Fields==
+===Readonly===
+*{{c|''readonly'' State '''CurState'''}}
+:{{struct|State|State data}} for the PSprite's current state.
+*{{c|''readonly'' PSprite '''Next'''}}
+:A pointer to the next PSprite in the linked list. The head of the list is stored the owner's {{struct|PlayerInfo}}, reachable with &lt;code&gt;player.psprites&lt;/code&gt;.
+*{{c|''readonly'' PlayerInfo '''Owner'''}}
+:The {{struct|PlayerInfo}} struct of the player that owns this PSprite.
+*{{c|''readonly'' int '''ID'''}}
+:The ID given to the PSprite on creation.
+===Modifiable===
+*{{c|Actor '''Caller'''}}
+:The actor that owns the state this PSprite is using.
+*{{c|SpriteID '''Sprite'''}}
+:The current [[sprite]] being displayed by the PSprite. This is the same as {{c|[[GetSpriteIndex]]("SPRT")}}.
+*{{c|int '''Frame'''}}
+:The current frame of the sprite being displayed by the PSprite. In this case A = 0, B = 1, etc.
+*{{c|bool '''processPending'''}}
+:If set to false, the PSprite will not call its [[|Tick|Tick()]]. Usually only relevant when first creating a PSprite so it does not tick on the same frame.
+*{{c|double '''x'''}}
+:The current x offset from the center of the screen. Positive values shift right.
+*{{c|double '''y'''}}
+:The current y offset from the center of the screen. Positive values shift down.
+*{{c|double '''oldx'''}}
+:The x offset on the previous frame. Used for interpolation.
+*{{c|double '''oldy'''}}
+:The y offset on the previous frame. Used for interpolation.
+*{{c|Vector2 '''baseScale'''}}
+:The base scalar to apply to the PSprite before any other transformations. Used by the {{property|Weapon.WeaponScaleX}}/{{property|Weapon.WeaponScaleY}} properties.
+*{{c|Vector2 '''pivot'''}}
+:The pivot point to transform the PSprite about. This is relative to the PSprite's alignment. If &lt;code&gt;bPivotPercent&lt;/code&gt;. is set to true, this acts instead like a scalar of the sprite's texture size.
+*{{c|Vector2 '''scale'''}}
+:The x and y scalars. This scales about the PSprite's pivot point.
+*{{c|double '''rotation'''}}
+:The angle the PSprite it rotated by. This rotates it around its pivot point. Positive values rotate counter-clockwise.
+*{{c|int '''HAlign'''}}
+:The horizontal alignment of the PSprite.
+:*{{c|'''PSPA_LEFT'''}}
+::Align to the leftmost part of the sprite's texture.
+:*{{c|'''PSPA_CENTER'''}}
+::Align to the sprite texture's horizontal center.
+:*{{c|'''PSPA_RIGHT'''}}
+::Align to the rightmost part of the sprite's texture.
+*{{c|int '''VAlign'''}}
+:The vertical alignment of the PSprite.
+:*{{c|'''PSPA_TOP'''}}
+::Align to the top of the sprite's texture.
+:*{{c|'''PSPA_CENTER'''}}
+::Align to the sprite texture's vertical center.
+:*{{c|'''PSPA_BOTTOM'''}}
+::Align to the bottom of the sprite's texture.
+*{{c|Vector2 '''Coord0'''}}
+:The offset for the top left coordinate of the sprite's texture.
+*{{c|Vector2 '''Coord1'''}}
+:The offset for the bottom left coordinate of the sprite's texture.
+*{{c|Vector2 '''Coord2'''}}
+:The offset for the top right coordinate of the sprite's texture.
+*{{c|Vector2 '''Coord3'''}}
+:The offset for the bottom right coordinate of the sprite's texture.
+*{{c|double '''alpha'''}}
+:The current transparency. The PSprite must have a [[renderstyle]] set that can use it.
+*{{c|bool '''firstTic'''}}
+:Denotes that it's the first tic of the PSprite. This is used to disable interpolation.
+*{{c|bool '''InterpolateTic'''}}
+:All transformations of this PSprite should be interpolated for this tic only.
+*{{c|int '''Tics'''}}
+:The number of tics remaining in the current state.
+*{{c|uint '''Translation'''}}
+:The [[Translation|color translation]] to apply to the sprite.
+*{{c|bool '''bAddWeapon'''}}
+:Apply the [[A_WeaponOffset|weapon layer's offsets]] to this PSprite.
+*{{c|bool '''bAddBob'''}}
+:Weapon bobbing offsets apply to this PSprite.
+*{{c|bool '''bPowDouble'''}}
+:Allow the duration of all states to be cut in half if the owner has the powerup.
+*{{c|bool '''bCVarFast'''}}
+:Allow the [[CVARs:Configuration#sv_fastweapons|{{c|sv_fastweapons}}]] cheat to apply to this PSprite.
+*{{c|bool '''bFlip'''}}
+:The sprite is mirrored across the y axis.
+*{{c|bool '''bMirror'''}}
+:The offsets for the PSprite are mirrored across the y axis.
+*{{c|bool '''bPlayerTranslated'''}}
+:Applies the same translation rules as the player to the PSprite.
+*{{c|bool '''bPivotPercent'''}}
+:If true, the &lt;code&gt;pivot&lt;/code&gt; field is read as a scale of the sprite's texture size instead of a coordinate offset.
+*{{c|bool '''bInterpolate'''}}
+:If true, all actions are interpolated (offsetting, rotating, scaling).
+
+==Methods==
+===Non-static===
+*{{c|void '''SetState'''(State ''newstate'', bool ''pending'' }}={{c| false)}}
+:Same as [[SetState]] but for the PSprite. The same can be achieved with [[Structs:PlayerInfo#Methods|{{c|player.SetPSprite()}}]].
+*{{c|void '''Tick'''()}}
+:PSprite's [[Tick]].
+*{{c|void '''ResetInterpolation'''()}}
+
+{{: PlayerInfo PSprite methods}}
+
+==[[ZScript]] definition==
+{{ZScriptDefinitionNote|actors/player/player.zs}}
+&lt;syntaxhighlight lang="csharp"&gt;
+class PSprite : Object native play
+{
+	enum PSPLayers
+	{
+		STRIFEHANDS = -1,
+		WEAPON = 1,
+		FLASH = 1000,
+		TARGETCENTER = 0x7fffffff - 2,
+		TARGETLEFT,
+		TARGETRIGHT,
+	};
+
+	native readonly State CurState; 
+	native Actor Caller;
+	native readonly PSprite Next;
+	native readonly PlayerInfo Owner;
+	native SpriteID Sprite;
+	native int Frame;
+	//native readonly int RenderStyle;	had to be blocked because the internal representation was not ok. Renderstyle is still pending a proper solution.
+	native readonly int ID;
+	native Bool processPending;
+	native double x;
+	native double y;
+	native double oldx;
+	native double oldy;
+	native Vector2 baseScale;
+	native Vector2 pivot;
+	native Vector2 scale;
+	native double rotation;
+	native int HAlign, VAlign;
+	native Vector2 Coord0;		// [MC] Not the actual coordinates. Just the offsets by A_OverlayVertexOffset.
+	native Vector2 Coord1;
+	native Vector2 Coord2;
+	native Vector2 Coord3;
+	native double alpha;
+	native Bool firstTic;
+	native bool InterpolateTic;
+	native int Tics;
+	native TranslationID Translation;
+	native bool bAddWeapon;
+	native bool bAddBob;
+	native bool bPowDouble;
+	native bool bCVarFast;
+	native bool bFlip;	
+	native bool bMirror;
+	native bool bPlayerTranslated;
+	native bool bPivotPercent;
+	native bool bInterpolate;
+
+	native void SetState(State newstate, bool pending = false);
+
+	//------------------------------------------------------------------------
+	//
+	//
+	//
+	//------------------------------------------------------------------------
+
+	void Tick()
+	{
+		if (processPending)
+		{
+			if (Caller)
+			{
+				Caller.PSpriteTick(self);
+				if (bDestroyed)
+					return;
+			}
+
+			if (processPending)
+			{
+				// drop tic count and possibly change state
+				if (Tics != -1)	// a -1 tic count never changes
+				{
+					Tics--;
+					// [BC] Apply double firing speed.
+					if (bPowDouble &amp;&amp; Tics &amp;&amp; (Owner.mo.FindInventory ("PowerDoubleFiringSpeed", true))) Tics--;
+					if (!Tics &amp;&amp; Caller != null) SetState(CurState.NextState);
+				}
+			}
+		}
+	}
+	
+	void ResetInterpolation() 
+	{ 
+		oldx = x; 
+		oldy = y; 
+	}
+		
+}
+&lt;/syntaxhighlight&gt;
+
+== See also ==
+* [[Structs:PlayerInfo]]
+* [[Classes:StateProvider]]
+
+[[Category:ZScript]]</text>
+    <sha1>mwgzijjsnqmx4bgal7rujo9vs88qebe</sha1>
+  </revision>
+</page>

@@ -1,0 +1,48 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>ALTHUDCF</title>
+  <ns>0</ns>
+  <id>5077</id>
+  <revision>
+    <id>47617</id>
+    <parentid>20901</parentid>
+    <timestamp>2020-06-03T17:34:33Z</timestamp>
+    <contributor>
+      <username>Blue Shadow</username>
+      <id>2021</id>
+    </contributor>
+    <comment>added more info</comment>
+    <origin>47617</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="1535" sha1="mf3a7czxo0rqu0nx4festx4qedapnbn" xml:space="preserve">__NOTOC__
+'''ALTHUDCF''' is an optional text lump that can change the appearance of GZDoom's [[Alternate HUD|Alternative HUD]]. It currently offers one functionality; the ability to set {{Property|Inventory.AltHUDIcon|alternative icons}} for [[inventory]] items to be used by the HUD. This is achieved by the following commands:
+*'''&lt;item&gt;''' ''icon''
+*'''Health''' ''icon''
+*'''Berserk''' ''icon''
+:'''&lt;item&gt;''' is the class name of an inventory item. '''Health''' and '''Berserk''' are for setting the health and {{Class|berserk}} mode icons, respectively. ''icon'' is the icon to set. For {{Class|key}}, {{Class|ammo}} and [[artifact]] items only, if ''icon'' is 0, {{c|null}} or "" (empty string), the HUD does not draw the HUD elements associated with those items.
+
+Note that while any inventory item can be given an alternative icon, the HUD does not necessarily make use of that icon for certain elements, and instead uses the {{Property|Inventory.Icon|standard icon}}.
+
+== Examples ==
+The following changes the ammo counter icons in the lower right to show the large boxes instead of their smaller variants.
+ {{Class|Clip}} AMMOA0
+ {{Class|Shell}} SBOXA0
+ {{Class|RocketAmmo}} BROKA0
+ {{Class|Cell}} CELPA0
+
+
+This one removes the ammo counters altogether.
+ Clip ""
+ Shell ""
+ RocketAmmo ""
+ Cell ""
+
+
+This uses the sprites of the {{Class|Soulsphere|soul}} and {{Class|InvulnerabilitySphere|invulnerability}} spheres as the health and berserk icons, respectively.
+ Health SOULA0
+ Berserk PINVA0
+
+[[Category:ZDoom special lumps]]</text>
+    <sha1>mf3a7czxo0rqu0nx4festx4qedapnbn</sha1>
+  </revision>
+</page>

@@ -1,0 +1,45 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>SpawnParticle</title>
+  <ns>0</ns>
+  <id>7882</id>
+  <revision>
+    <id>47182</id>
+    <parentid>44310</parentid>
+    <timestamp>2020-03-18T06:00:21Z</timestamp>
+    <contributor>
+      <username>Bauul</username>
+      <id>2596</id>
+    </contributor>
+    <origin>47182</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="2026" sha1="hz05ppnkjpj4upbz59w8236y759vh73" xml:space="preserve">void '''SpawnParticle''' (int ''color'' [, bool ''fullbright'' [, int ''lifetime'' [, int ''size'' [, fixed ''x'' [, fixed ''y'' [, fixed ''z'' [, fixed ''velx'' [, fixed ''vely'' [, fixed ''velz'' [, fixed ''accelx'' [, fixed ''accely'' [, fixed ''accelz'' [, int ''startalpha'' [, int ''fadestep'']]]]]]]]]]]]]]);
+
+== Usage ==
+Spawns a single [[Particles|particle]] at the x, y and z coordinates.
+
+=== Parameters ===
+*''color'': The color of the particle. This is a hexadecimal value, e.g. {{c|0xFF0000}} (which is bright red).
+*''fullbright'': If {{c|true}}, it renders the particle fully bright. Default is {{c|false}}.
+*''lifetime'': The lifetime of the particle in [[tics]]. This ranges from 0 to 255. Default is 35.
+*''size'': The size of the particle, up to a maximum value of 65535. Default is 1.
+*''x/y/z'': The absolute map coordinates at which to spawn the particle. Default is 0.
+*''velx/vely/velz'': The velocity along the x/y/z axis. This is in absolute direction, not relative. Default is 0.
+*''accelx/accely/accelz'': Defines how much to accelerate this particle by over its lifespan. Default is 0.
+*''startalpha'': Specifies the alpha upon spawning. This ranges from 0 to 255. Default is 255.
+*''fadestep'': The amount the particle fades each tic. This ranges from -1 to 255, with -1 indicating ''automatic'' mode (a complete fadeout over the length of lifetime). The particle is automatically removed early if it fades completely before lifetime expires. Default is -1.
+
+== Examples ==
+This a simplified version of the script that spawns the yellow "portal particles" at the start of Map01 of Eviternity.  The particles are spawned randomly across the width and height of a linedef and slowly fade out.
+
+ Script "Eviternity_PortalParticles" [[Script types#ENTER|ENTER]]
+ { 
+  [[SpawnParticle]] (0xFFE74B, 1, [[Random]](30,45), 7 , [[Random]](-184.0,-72.0), -736.0, [[Random]](8.0, 120.0), 0.0, 3.0, 0.0, 0.0, 0.0, 0.0, 1.0, -1);
+  [[Delay]](1);
+  [[Restart]];
+ }
+
+[[category:ACS Level alteration functions]]</text>
+    <sha1>hz05ppnkjpj4upbz59w8236y759vh73</sha1>
+  </revision>
+</page>

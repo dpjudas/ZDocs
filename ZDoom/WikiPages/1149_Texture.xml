@@ -1,0 +1,60 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>Texture</title>
+  <ns>0</ns>
+  <id>1149</id>
+  <revision>
+    <id>50298</id>
+    <parentid>36103</parentid>
+    <timestamp>2023-05-12T08:41:18Z</timestamp>
+    <contributor>
+      <username>JSO x</username>
+      <id>2479</id>
+    </contributor>
+    <minor />
+    <comment>/* Texture scaling */ Space added...</comment>
+    <origin>50298</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="6191" sha1="hef49dfbjdu9armkpaxv0qphu4f4jy8" xml:space="preserve">:''For information specifically about the TEXTURES lump, which contains texture definitions, see [[TEXTURES]]. For the TEXTURE1 and TEXTURE2 lumps, see [[TEXTUREx]].''
+
+Typically, the term '''texture''' refers to a graphic that is displayed on a geometric face in a 3D or fake-3D game. In Doom, specifically, it is a graphic that is displayed on a [[sidedef]], as opposed to the graphics displayed on sector floors and ceilings, which are called [[flat]]s.
+
+==The three types==
+Textures may be upper, lower, or middle textures:
+* Upper textures are the graphic displayed when a sector's ceiling height on one side of the linedef is higher than the ceiling height of the sector on the other side. An example of this is the wall above a doorframe.
+* A lower texture can be best explained by comparing it to the front of a step on a set of stairs: the vertical face of the step.
+* A middle texture is what is displayed on either the space between two sectors, below the upper texture and above the lower texture, or on a one-sided impassable wall.
+
+==Tiling behavior==
+Upper and lower textures will tile horizontally and vertically, and should do so without any notable anomalies or discrepancies. Middle textures, though, tile differently based on the number of sidedefs on the [[linedef]] in question. If the line has only one sidedef&amp;mdash;the usual flat, impassable wall&amp;mdash;the texture will tile horizontally and vertically. However, if the line has two sidedefs&amp;mdash;a sector on both sides of the line (even if they are the same sector)&amp;mdash;the texture will only tile horizontally. This is often used to achieve things like the "crossbeam" effect or to make simple fences.
+
+If you would like a 2-sided line to tile vertically, you may use the extra flags (specifically, flag 16) available to the action special [[Line_SetIdentification]] or [[TranslucentLine]]. [[UDMF]] supports this natively, however, rendering the flags for the previously mentioned specials unnecessary.
+
+==Formats==
+===Doom's original texture format===
+The common texture format used by Doom and most of its [[source port]]s involves creating a list of [[patch]]es from applicable graphical resources to be used as parts of textures, and then arranging selected patches in a user-defined window of sorts. A texture consists of several pieces of information: the height and width of the texture, a list of patches used on the texture, and the offset information for each patch used. The list of patches usable for Doom-format textures is contained in the [[PNAMES]] lump, while individual textures are defined in [[TEXTUREx]].
+
+Good examples of the benefit of this format are switches and monitors seen in Doom maps. The switch graphic is a patch laid over a normal wall texture, and the unit yet exists as a single texture. A drawback of this method of defining textures is the need for a texture to contain at least one patch. For example, if you have a simple texture consisting of a single graphic and do not need multiple patches, you still have to create a texture by which that one patch will be used.
+
+===ZDoom-specific texture formats===
+With ZDoom, these limitations have been remedied. All graphics ([[sprite]]s, [[flat]]s, [[patch]]es, and miscellaneous graphics like [[TITLEPIC]] and [[CONBACK]]) can be used interchangeably.
+
+Placing lumps between [[TX_START]] and [[TX_END]] will immediately designate entries as graphics that can be used on walls, floors, and ceilings. These textures may be in any supported [[image format]]. Using TX_START and TX_END to designate textures is not without its drawbacks, however. It does not currently provide any means of specifying texture scale or multiple patches and offsets, so scaled textures and multi-patch textures cannot be accommodated by this format.
+
+ZDoom supports the legacy PNAMES and TEXTUREx formats, but it also has a far more robust texture-definition language known as [[TEXTURES]] which can be used to define textures, flats, sprites, and graphics. It can also apply [[translation]]s, color blends, flips and rotations for patches, and different rendering modes. See the TEXTURES article for more information.
+
+====Texture scaling====
+ZDoom supports scaling of textures in order to fit what would be a smaller or larger texture in to a smaller or larger space. This can be used to achieve a high-resolution texture effect by making a larger texture fit in a smaller area or to stretch a smaller texture over a greater area. High-resolution textures composed of a single image can be placed between [[HI_START]] and [[HI_END]] markers if they replace an existing low-resolution texture (no matter how the latter is defined). The engine will automatically scale the hi-res image to the dimension of the original one. Texture scale can also be directly specified in a [[TEXTUREx]] (TEXTURE1 and TEXTURE2) lump thanks to a ZDoom-specific extension of the specifications, though the [[TEXTURES]] lump supports this as well in a simpler and less limited way.
+
+Images scaled with any of these methods are scaled globally. Any time the scaled images are used, they will appear at that scale. However, with the use of [[Line_SetIdentification]] and [[Line_SetTextureScale]], or the equivalent native scaling capabilities of UDMF, textures can be scaled on a per-usage basis. Doom Builder 2 can show this scaling in its visual editing mode.
+
+=====Alignment issue=====
+When a texture is scaled, the way it is aligned is affected. If the texture is scaled to be half-size, the offset (in the map editor, not the texture definition) for that texture must be doubled in order to achieve desired results. If the texture is quarter-size, the offset must be quadrupled, and so on. A modern editor which supports ZDoom features, such as Doom Builder 2, will handle it automatically.
+
+====Texture animation====
+ZDoom supports the [[ANIMATED]] and [[SWITCHES]] lumps from [[Boom]] for animations and switches, respectively, but you are encouraged to use instead the [[ANIMDEFS]] language which is simpler to use and allows for far more flexible and robust editing, such as defining menu cursors, sounds on switches, and graphic warping.
+
+[[Category:Glossary]]</text>
+    <sha1>hef49dfbjdu9armkpaxv0qphu4f4jy8</sha1>
+  </revision>
+</page>

@@ -1,0 +1,75 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>ACS Suspend</title>
+  <ns>0</ns>
+  <id>712</id>
+  <revision>
+    <id>35857</id>
+    <parentid>32865</parentid>
+    <timestamp>2013-02-11T02:15:32Z</timestamp>
+    <contributor>
+      <username>Deded007</username>
+      <id>1392</id>
+    </contributor>
+    <minor />
+    <comment>formatting</comment>
+    <origin>35857</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="2004" sha1="q5y8c21oif3hc4z9i8qs5cfjg85x6ex" xml:space="preserve">{{DISPLAYTITLE:ACS_Suspend}}
+{{Special|81|script, map|ACS|Suspend}}
+
+* ''script'': Script to suspend 
+* ''map'': Map which contains the script 
+
+==Usage==
+
+Suspends execution of a script until an [[ACS_Execute]] or [[ACS_LockedExecute]] special starts it. If the specified script is not currently running, then it will be immediately suspended the next time it is run.
+
+==Examples==
+
+The following rather long example displays the use of '''ACS_Suspend''' to hold a script for a short time. The first piece of code tells the player a bomb has been activated and displays that it will detonate after a set amount of time.
+
+ script 1 {{SType|Enter}}
+ {
+ 	[[Thing_ChangeTID]](0, 999);
+ }
+ 
+ script 17 (int time)
+ {
+ 	[[Print]](s:"A bomb has been triggered!");
+ 	[[SetFont]]("BIGFONT");
+ 
+ 	while (time &gt; 0)
+ 	{
+ 		[[HudMessageBold]](i:time--, s:" seconds remain!";
+ 			{{const|HUDMSG_PLAIN}}, 1, {{const|CR_RED}}, 0.5, 0.95, 1.0);
+ 		
+ 		[[Delay]](35);
+ 	}
+ 	
+ 	[[Thing_Damage]](999, 300, 0);
+ }
+
+The first script sets every player's [[TID]] to 999. For the second block, the first two lines introduce the scenario for the player. The while loop runs the countdown. Finally, after the countdown, a [[Thing_Damage]] is executed which damages every player 300 points and thus hopefully killing them, to represent the bomb going off.
+
+The following script uses '''ACS_Suspend''':
+
+ script 50 (int hold)
+ {
+ 	[[ACS_Suspend]](17, 0);
+ 	[[Print]](s:"You bought yourself ", i:hold,
+ 		s:" seconds!");
+ 	[[Delay]](35*hold);
+ 	[[ACS_Execute]](17, 0, 0, 0, 0);
+ }
+
+This holds the countdown script for the specified amount of time. It uses '''ACS_Suspend''' to stop it, waits for the amount of time, and then uses '''ACS_Execute''' to resume the script. The reason this works is because '''ACS_Suspend''' and '''ACS_Execute''' always remember where in the script it has been suspended.
+
+If you wanted to stop the script completely, you would use [[ACS_Terminate]].
+
+{{script functions}}
+==External links==
+* {{oldref}}</text>
+    <sha1>q5y8c21oif3hc4z9i8qs5cfjg85x6ex</sha1>
+  </revision>
+</page>

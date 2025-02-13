@@ -1,0 +1,53 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>PostBeginPlay</title>
+  <ns>0</ns>
+  <id>9736</id>
+  <revision>
+    <id>51955</id>
+    <parentid>51006</parentid>
+    <timestamp>2024-03-13T12:31:43Z</timestamp>
+    <contributor>
+      <username>Jekyll Grim Payne</username>
+      <id>2175</id>
+    </contributor>
+    <comment>/* Usage */</comment>
+    <origin>51955</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="1769" sha1="q9q8zzkxjg75rj0eqoow0iub1whuy6o" xml:space="preserve">__NOTOC__
+
+'''[[Thinker]]'''
+
+{{c|virtual void '''PostBeginPlay'''()}}
+
+==Usage==
+
+A virtual function used by the [[Thinker]] class (which includes actors). It's called right after [[BeginPlay]] and before the first [[Tick]] call. For actors, it happens after the actor has already spawned, but before they actually enter their Spawn state.
+
+This function can be overridden to perform one-time setups, like giving local variables a value, setting flags and such, before any of that data gets overridden or referenced in the states.
+
+'''WARNING:''' Due to the way GZDoom handles calling a state's function (a state change immediately calls the function attached to the new state), there is no guarantee that '''PostBeginPlay''' runs before any state, especially in weapons/inventory items. Timing-critical operations should not rely on this assumption, and would be better deferred for a few tics into the weapon/inventory's existence.
+
+{{warning|On [[PlayerPawn]] actors, weird quirks can occur if [[Voodoo doll|voodoo dolls]] are present and '''PostBeginPlay''' is overridden without proper handling, because both the original PlayerPawn and its voodoo doll will execute the override at the same time. See the [[Voodoo doll]] page for information on how to check if a PlayerPawn is a voodoo doll or not.}}
+
+==Examples==
+This version of the [[Classes:Zombieman|Zombieman]] defines an integer field &lt;code&gt;foo&lt;/code&gt; which is set to 15 as soon as this actor spawns:
+&lt;syntaxhighlight lang="csharp"&gt;
+class MyZombieman : Zombieman
+{
+	int foo;
+
+	override void PostBeginPlay()
+	{
+		Super.PostBeginPlay();
+		foo = 15;
+	}
+}&lt;/syntaxhighlight&gt;
+
+[[Category:ZScript]]
+[[Category:ZScript virtual functions]]
+[[Category:Actor virtual functions]]
+[[Category:Thinker virtual functions]]</text>
+    <sha1>q9q8zzkxjg75rj0eqoow0iub1whuy6o</sha1>
+  </revision>
+</page>

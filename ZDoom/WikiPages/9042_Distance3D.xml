@@ -1,0 +1,66 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>Distance3D</title>
+  <ns>0</ns>
+  <id>9042</id>
+  <revision>
+    <id>52378</id>
+    <parentid>52372</parentid>
+    <timestamp>2024-04-11T13:10:02Z</timestamp>
+    <contributor>
+      <username>Jekyll Grim Payne</username>
+      <id>2175</id>
+    </contributor>
+    <origin>52378</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="1145" sha1="1c3wii4vhmkz5n1m4oi388m86jitf5y" xml:space="preserve">{{ZScriptNote}}
+
+'''{{class|Actor}}'''
+
+{{c|native clearscope double '''Distance3D'''(Actor ''other'') const}}
+
+==Usage==
+
+This returns the distance from the calling actor to other, including Z position (if Z difference is unwanted, [[Distance2D]] can be used). Unlike something like {{c|(a.pos-b.pos).length()}}, this function is [[Stacked sectors|portal]]-sensitive.
+
+===Parameters===
+
+*{{c|Actor '''other'''}}
+:A pointer to the actor we are getting the distance to.
+
+===Return Value===
+
+The distance to the other actor on all axes.
+
+==Examples==
+
+This Imp will check if the target is under 128 units away in its [[Tick|Tick() virtual override]] and halve its walking speed:
+
+&lt;syntaxhighlight lang="csharp"&gt;
+class WaryImp : DoomImp
+{
+    override void Tick() 
+    {
+        // if we are less than 128 units away:
+        if (target &amp;&amp; Distance3D(target) &lt; 128) 
+        {
+            speed = default.speed * 0.5;
+        }
+        // otherwise:
+        else
+        {
+            speed = default.speed;
+        }
+        Super.Tick();
+    }     
+}
+&lt;/syntaxhighlight&gt;
+
+== See also ==
+*[[Distance2D]]
+*[[Distance3DSquared]]
+
+[[Category:ZScript]]</text>
+    <sha1>1c3wii4vhmkz5n1m4oi388m86jitf5y</sha1>
+  </revision>
+</page>

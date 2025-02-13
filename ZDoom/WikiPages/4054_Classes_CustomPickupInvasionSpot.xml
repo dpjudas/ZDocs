@@ -1,0 +1,74 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>Classes:CustomPickupInvasionSpot</title>
+  <ns>0</ns>
+  <id>4054</id>
+  <revision>
+    <id>21492</id>
+    <parentid>16216</parentid>
+    <timestamp>2009-04-20T11:59:30Z</timestamp>
+    <contributor>
+      <username>Gez</username>
+      <id>1283</id>
+    </contributor>
+    <minor />
+    <origin>21492</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="2218" sha1="moovy4rwfdtt464wbfkmnmjkfg03wtc" xml:space="preserve">{{Actor|
+| type = Internal
+| name = Invasion Pickup Spawner
+| class = CustomPickupInvasionSpot
+| game = Skulltag
+}}
+&lt;u&gt;CustomPickupInvasionSpot&lt;/u&gt; is the base class for custom Invasion pickups. By inheriting from it you can create spawn spots for new [[DECORATE]] powerups, ammo, weapons and other inventory items.
+
+
+==== Using in [[DECORATE]] ====
+The &lt;u&gt;CustomPickupInvasionSpot&lt;/u&gt; base class only needs one property for it to work, which is dropitem.
+
+:*'''dropitem''' ''class''
+::The class of the pickup you want the Invasion spot to spawn. Can be used more than once to spawn more than one pickup picked at random.
+
+===== Examples: =====
+Example of a single custom invasion spot:
+
+ actor UltrasphereSpot : CustomPickupInvasionSpot 12345
+ {
+ dropitem "UltraSphere"
+ }
+Example of a random custom invasion spot:
+
+ actor NewSpheresSpot : CustomPickupInvasionSpot 123456
+ {
+ dropitem "UltraSphere"
+ dropitem "BlackSphere"
+ }
+
+==== Using in a map editor ====
+CustomPickupInvasionSpot, like all invasion spots, take 5 special arguments.
+
+:*'''Start Spawn Number'''
+::The number of things spawned in the first wave they appear.
+:*'''Spawn Delay'''
+::The spawn delay in seconds between spawning things.
+:*'''Round Spawn Delay'''
+::The delay in seconds from the start of the wave before spawning things.
+:*'''First Appear Wave'''
+::The wave that the things start spawning in.
+:*'''Max Spawn'''
+::The maximum number of pickups that can be spawned by this spot.
+
+=== Invasion Formula ===
+On any given wave, the number of pickups that will be spawned is determined by this formula:
+: '''(Difficulty Modifier ^ Wave Age) * Starting Amount'''
+:: The difficulty modifier is 2 for ''I'm too young to die'' and ''Hey, not too rough'', 1.75 for ''Hurt me plenty'', and 1.6225 for ''Ultra-Violence'' and ''Nightmare!''.
+:: Wave age is determined by using the current wave and substracting First Appear Wave (with a minimum of 0).
+:: The starting amount is the value given in the first argument, Start Spawn Number.
+The given value is then limited to Max Spawn Number.
+
+== See Also ==
+[[Classes:CustomMonsterInvasionSpot|CustomMonsterInvasionSpot]] - Custom Invasion Spot used for monsters.&lt;br&gt;
+[[Classes:Skulltag|Skulltag Classes]]</text>
+    <sha1>moovy4rwfdtt464wbfkmnmjkfg03wtc</sha1>
+  </revision>
+</page>

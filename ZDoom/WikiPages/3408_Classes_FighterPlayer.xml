@@ -1,0 +1,140 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>Classes:FighterPlayer</title>
+  <ns>0</ns>
+  <id>3408</id>
+  <revision>
+    <id>40249</id>
+    <parentid>40248</parentid>
+    <timestamp>2015-07-07T03:57:29Z</timestamp>
+    <contributor>
+      <username>TheMightyHeracross</username>
+      <id>2101</id>
+    </contributor>
+    <origin>40249</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="7186" sha1="6ke029c2y3un09c2cz42n1v6u2mmmnq" xml:space="preserve">{{Actor|
+| type = Player
+| name = Baratus
+| class = FighterPlayer
+| game = Hexen
+}}[[Classes:PlayerPawn|PlayerPawn]] &amp;rarr;&lt;u&gt; FighterPlayer&lt;/u&gt;
+
+The Fighter is one of the three character classes available for play in Hexen. He's the toughest and fastest character, and is heavily biased toward melee combat. His weapons are:
+* [[Classes:FWeapFist|Spiked gauntlets]]: A powerful melee attack capable of killing most monster within a single combo of attacks. The first two punches wears down the target and readies the fighter for a final crushing blow. The Spiked Gaunlets is, arguably, the strongest melee weapon that doesn't use mana (even more powerful than the [[Classes:FWeapAxe|Timon's axe]] and [[Classes:FWeapHammer|Hammer of Retribution]] when they dont have enough mana).
+* [[Classes:FWeapAxe|Timon's axe]]: A powerful melee weapon that uses [[Classes:Mana1|blue mana]]. While mana is sufficient, this weapon is more powerful than the [[Classes:FWeapFist|Spiked gauntlets]]. However, without mana, this weapon becomes the weakest of the Fighter's weapons, although it can still be used. This weapon only uses up mana when hitting enemies or killable objects in the map. Hitting walls and cracking glass does not use mana.
+* [[Classes:FWeapHammer|Hammer of Retribution]]: This mighty hammer fires magical hammers when [[Classes:Mana2|green mana]] is sufficient, although it never actually leaves your hand. It can also be used up close for a crushing blugeoning (although it's rather slow and the damage isn't much higher than the gauntlet). This weapon knocks enemies back, however, farther than all other weapons.
+* [[Classes:FWeapQuietus|Quietus]]: This rune sword is the most powerful weapon in the Fighter's arsenal. It uses [[Classes:Mana3|both mana types]] to throw out a diagonal volley of green "blades" that explode on contact, dealing splash damage. This weapon is best used up close or in mid-range, for the spread of the missiles make it ineffective for long distances. Surpisingly, the Quietus is the only weapon in the Figher's arsenal that cannot be used without mana. Before using Quietus in combat, the Fighter must first assemble it by finding the three relevant [[Classes:FighterWeaponPiece|weapon pieces]].
+
+Contrarily to other [[Classes:PlayerPawn|player classes]], the Hexen player classes can not easily use additional weapons. While it is possible in [[KEYCONF]] to change which weapon is associated to which slot, a Fighter can still only select these four weapons with the keys bound to weapon slots. (However, the keys bound to next and previous weapon, the &lt;code&gt;use&lt;/code&gt; [[Console Commands|console command]], and the automatic weapon switching when running out of ammo, can still equip another weapon.) A Fighter picking up a Cleric or Mage weapon will only gain ammunitions from them, though it is still possible to give him the illegal weapons with the [[Console Commands|console]], [[ACS]], or [[DECORATE]].
+
+A Fighter gains no secondary power when under the effect of an [[Classes:ArtiInvulnerability|Icon of the Defender]]. He uses the [[Classes:ArtiPoisonBag|fléchettes]] like grenades, giving him a ranged attack at low level. When he uses a [[Classes:ArtiHealingRadius|Mystic Ambit Incant]], his nearby allies gain an increase to their [[Classes:HexenArmor|armor class]].
+
+====Character Summary====
+In a world named Chronos, Baratus the Fighter is the only remaining free member of his order, the Legion. All others have been turned into mind-controled slave under the command of the Legion's treacherous leader, [[Classes:FighterBoss|Zedek]], who is himself a thrall to the Serpent Rider [[Classes:Korax|Korax]]. Just like his similarly-fated friends [[Classes:ClericPlayer|Parias the Cleric]] and [[Classes:MagePlayer|Daedolon the Mage]], Baratus intends to free his world from [[Classes:Korax|Korax]] and the Serpent Rider's hellish hordes by personally eliminating each and every one of his enemies.
+
+In game, Baratus appears as a typical fantasy barbarian: nearly naked, extremely muscular, and sporting a horned helmet. He's pictured wielding a mundane-looking sword, hinting that maybe, during early development, he was planned to have a sword for his starting weapon. 
+
+==== [[DECORATE]] definition ====
+ ACTOR &lt;u&gt;FighterPlayer&lt;/u&gt; : {{Class|PlayerPawn}}
+ {
+   {{Property|Health}} 100
+   {{Property|PainChance}} 255
+   {{Property|Radius}} 16
+   {{Property|Height}} 64
+   {{Property|Speed}} 1
+   +{{Flag|NOSKIN}}
+   +{{Flag|NODAMAGETHRUST}}
+   +{{Flag|PLAYERPAWN.NOTHRUSTWHENINVUL|NOTHRUSTWHENINVUL}}
+   {{Property|PainSound}} "PlayerFighterPain"
+   {{Property|RadiusDamageFactor}} 0.25
+   {{Property|Player.JumpZ}} 9
+   {{Property|Player.Viewheight}} 48
+   {{Property|Player.SpawnClass}} "Fighter"
+   {{Property|Player.DisplayName}} "Fighter"
+   {{Property|Player.SoundClass}} "fighter"
+   {{Property|Player.ScoreIcon}} "FITEFACE"
+   {{Property|Player.HealRadiusType}} "Armor"
+   {{Property|Player.HexenArmor}} 15, 25, 20, 15, 5
+   {{Property|Player.StartItem}} "{{Class|FWeapFist}}"
+   {{Property|Player.ForwardMove}} 1.08, 1.2
+   {{Property|Player.SideMove}} 1.125, 1.475
+   {{Property|Player.Portrait}} "P_FWALK1"
+   {{Property|Player.WeaponSlot}} 1, {{Class|FWeapFist}}
+   {{Property|Player.WeaponSlot}} 2, {{Class|FWeapAxe}}
+   {{Property|Player.WeaponSlot}} 3, {{Class|FWeapHammer}}
+   {{Property|Player.WeaponSlot}} 4, {{Class|FWeapQuietus}}
+ 
+   {{Property|Player.ColorRange}} 246, 254
+   {{Property|Player.ColorSet}}     0, "Gold",          246, 254,    253
+   {{Property|Player.ColorSetFile}} 1, "Red",           "TRANTBL0",  0xAC
+   {{Property|Player.ColorSetFile}} 2, "Blue",          "TRANTBL1",  0x9D
+   {{Property|Player.ColorSetFile}} 3, "Dull Green",    "TRANTBL2",  0x3E
+   {{Property|Player.ColorSetFile}} 4, "Green",         "TRANTBL3",  0xC8
+   {{Property|Player.ColorSetFile}} 5, "Gray",          "TRANTBL4",  0x2D
+   {{Property|Player.ColorSetFile}} 6, "Brown",         "TRANTBL5",  0x6F
+   {{Property|Player.ColorSetFile}} 7, "Purple",        "TRANTBL6",  0xEE
+ 
+   States
+   {
+   Spawn:
+     PLAY A -1
+     Stop
+   See:
+     PLAY ABCD 4
+     Loop
+   Missile:
+   Melee:
+     PLAY EF 8
+     Goto Spawn
+   Pain:
+     PLAY G 4
+     PLAY G 4 [[A_Pain]]
+     Goto Spawn
+   Death:
+     PLAY H 6
+     PLAY I 6 [[A_PlayerScream]]
+     PLAY JK 6
+     PLAY L 6 [[A_NoBlocking]]
+     PLAY M 6
+     PLAY N -1
+     Stop
+   XDeath:
+     PLAY O 5 [[A_PlayerScream]]
+     PLAY P 5 [[A_SkullPop]]("{{Class|BloodyFighterSkull}}")
+     PLAY R 5 [[A_NoBlocking]]
+     PLAY STUV 5
+     PLAY W -1
+     Stop
+   Ice:
+     PLAY X 5 [[A_FreezeDeath]]
+     PLAY X 1 [[A_FreezeDeathChunks]]
+     Wait
+   Burn:
+     FDTH A 5 Bright [[A_PlaySound]]("*burndeath")
+     FDTH B 4 Bright
+     FDTH G 5 Bright
+     FDTH H 4 Bright [[A_PlayerScream]]
+     FDTH I 5 Bright
+     FDTH J 4 Bright
+     FDTH K 5 Bright
+     FDTH L 4 Bright
+     FDTH M 5 Bright
+     FDTH N 4 Bright
+     FDTH O 5 Bright
+     FDTH P 4 Bright
+     FDTH Q 5 Bright
+     FDTH R 4 Bright
+     FDTH S 5 Bright [[A_NoBlocking]]
+     FDTH T 4 Bright
+     FDTH U 5 Bright
+     FDTH V 4 Bright
+     ACLO E 35 [[A_CheckPlayerDone]]
+     Wait
+     ACLO E 8
+     Stop
+   }
+ }</text>
+    <sha1>6ke029c2y3un09c2cz42n1v6u2mmmnq</sha1>
+  </revision>
+</page>

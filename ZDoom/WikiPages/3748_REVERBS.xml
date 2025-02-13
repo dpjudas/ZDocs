@@ -1,0 +1,366 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>REVERBS</title>
+  <ns>0</ns>
+  <id>3748</id>
+  <revision>
+    <id>43350</id>
+    <parentid>43349</parentid>
+    <timestamp>2016-11-04T08:20:16Z</timestamp>
+    <contributor>
+      <username>MaxED</username>
+      <id>2179</id>
+    </contributor>
+    <minor />
+    <comment>A space was missing...</comment>
+    <origin>43350</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="8824" sha1="2dearnplkfvldzfp6yoe699n50pvivg" xml:space="preserve">The '''REVERBS''' lump is used in [[ZDoom]] to make realistic sound environments. The basic idea of reverb is to have echoes and re-pitched sounds in rooms to make them sound like what they actually are, like a cliff edge or warehouse.
+
+==Switching underwater reverb on==
+If {{CVAR|S|snd_waterreverb}} is true, [[ZDoom]] automatically applies an underwater reverb to [[deep water]] areas created with [[Transfer_Heights]], [[3D floors]], or a {{Class|WaterZone}} thing. You can change this option from the [[sound options]] menu. Underwater reverb is automatic, and does not require any special behavior in the maps for its use.  You can also force the underwater reverb effect on in any area of your map by using a {{Class|SoundEnvironment}} thing with its first two arguments set to 255 (see below).
+
+Note that this menu option is only for enabling automatic underwater effects in [[swimmable water]]. Any reverb environments that have been placed in the map will always be heard, regardless of this option.
+
+==Using reverb in your maps==
+To use reverb in your maps, you need to place the {{Class|SoundEnvironment}} thing (ednum 9048) into your map, and then change its arguments. The first two values are used.
+
+Because only one reverb can be used at a time, you may want to block off a reverb thing from taking over the whole map. To do this, border the area with lines set to be zone boundaries. In a [[UDMF]] map, set ''zoneboundary'' to be true. In the Hexen [[map format]], use [[Line_SetIdentification]], with argument 2 set to 1.
+
+If you set the reverb thing to inactive in your map editor, the reverb effect will not take effect immediately.  You can then activate it via ACS to "turn on" the reverb effect.  However, you cannot simply deactivate the thing to disable the reverb effect; instead, you must activate another one in the same area.  If you want the reverb to turn off completely, you can add a reverb thing with its properties set to 0 0 (See below) and activate it when you'd like to disable all reverb effects.
+
+An example map is found here: http://zdoom.org/files/examples/eax.zip
+
+==Defining a reverb environment==
+An environment definition takes a fancy name within strings and two numbers as identifiers, the number combination must be unique. The rest is a list of named parameters within curly braces. On Windows, ZDoom includes an interactive reverb editor accessible with the [[reverbedit]] console command that lets you adjust these settings and get feedback in realtime.
+:*'''AirAbsorptionHF''' ''float''
+::Change in level per meter at high frequencies. 
+:*'''bDecayHFLimit''' ''bool''
+::AirAbsorptionHF affects DecayHFRatio. 
+:*'''bDecayTimeScale''' ''bool''
+::EnvironmentSize affects reverberation decay time. 
+:*'''bEchoTimeScale''' ''bool''
+::EnvironmentSize affects echo time.
+:*'''bModulationTimeScale''' ''bool''
+::EnvironmentSize affects modulation time.
+:*'''bReflectionsDelayScale''' ''bool''
+::EnvironmentSize affects initial reflection delay time.
+:*'''bReflectionsScale''' ''bool''
+::EnvironmentSize affects reflection level.
+:*'''bReverbDelayScale''' ''bool''
+::EnvironmentSize affects late reverberation delay time. 
+:*'''DecayHFRatio''' ''float''
+::High-frequency to mid-frequency decay time ratio.
+:*'''DecayLFRatio''' ''float''
+::Low-frequency to mid-frequency decay time ratio.
+:*'''DecayTime''' ''float''
+::Reverberation decay time at mid frequencies.
+:*'''Density''' ''float''
+::Value that controls the modal density in the late reverberation decay.
+:*'''Diffusion''' ''float'' 100.000
+::Value that controls the echo density in the late reverberation decay.
+:*'''EchoDepth''' ''float'' 1.000
+::Echo depth.
+:*'''EchoTime''' ''float'' 0.095
+::Echo time.
+:*'''Environment''' ''int''
+::???
+:*'''EnvironmentDiffusion''' ''float''
+::Environment diffusion.
+:*'''EnvironmentSize''' ''float''
+::Environment size in meters.
+:*'''HFReference''' ''float''
+::Reference high frequency in Hertz.
+:*'''LFReference''' ''float''
+::Reference low frequency in Hertz.
+:*'''ModulationDepth''' ''float''
+::Modulation depth.
+:*'''ModulationTime''' ''float''
+::Modulation time.
+:*'''Reflections''' ''int''
+::Early reflections level relative to room effect.
+:*'''ReflectionsDelay''' ''float''
+::Initial reflection delay time.
+:*'''ReflectionsPanX''' ''float''
+:*'''ReflectionsPanY''' ''float''
+:*'''ReflectionsPanZ''' ''float''
+::Early reflections panning vector.
+:*'''Reverb''' ''int''
+::Late reverberation level relative to room effect. 
+:*'''ReverbDelay''' ''float''
+::Late reverberation delay time relative to initial reflection.
+:*'''ReverbPanX''' ''float''
+:*'''ReverbPanY''' ''float''
+:*'''ReverbPanZ''' ''float''
+::Late reverberation panning vector.
+:*'''Room''' ''int''
+::Room effect level at mid-frequencies.
+:*'''RoomHF''' ''int''
+::Relative room effect level at high frequencies.
+:*'''RoomLF''' ''int''
+::Relative room effect level at low frequencies. 
+:*'''RoomRolloffFactor''' ''float''
+::Logarithmic distance attenuation rolloff scale factor for reverb room size effect.
+
+===Example===
+This is the "Castle Alcove" environment defined in ZDoom.pk3's REVERBS lump. 
+ "Castle Alcove" 30 0
+ {
+   Environment 20
+   EnvironmentDiffusion 0.890
+   RoomHF -600
+   RoomLF -2000
+   DecayTime 1.640
+   DecayHFRatio 0.870
+   DecayLFRatio 0.310
+   Reflections -100
+   ReflectionsDelay 0.007
+   Reverb -500
+   ReverbDelay 0.034
+   EchoTime 0.138
+   EchoDepth 0.080
+   HFReference 5168.600
+   LFReference 139.500
+   bDecayHFLimit true
+   bEchoTimeScale true
+ }
+
+==List of reverb IDs==
+{|class="wikitable sortable"
+|+Predefined sound environments
+!Name
+!ID
+|-
+||Off||  0 0
+|-
+||Alley|| 14 0
+|-
+||Arena||  9 0
+|-
+||Auditorium||  6 0
+|-
+||Bathroom||  3 0
+|-
+||Carpetted Hallway|| 11 0
+|-
+||Castle Alcove|| 30 0
+|-
+||Castle Courtyard|| 30 1
+|-
+||Castle Cupboard|| 30 2
+|-
+||Castle Hall|| 30 3
+|-
+||Castle Large Room|| 30 4
+|-
+||Castle Long Passage|| 30 5
+|-
+||Castle Medium Room|| 30 6
+|-
+||Castle Short Passage|| 30 7
+|-
+||Castle Small Room|| 30 8
+|-
+||Cave||  8 0
+|-
+||Chapel|| 31 0
+|-
+||City|| 16 0
+|-
+||City Abandoned|| 32 0
+|-
+||City Library|| 32 1
+|-
+||City Museum|| 32 2
+|-
+||City Streets|| 32 3
+|-
+||City Subway|| 32 4
+|-
+||City Underpass|| 32 5
+|-
+||Concert Hall||  7 0
+|-
+||Dizzy|| 24 0
+|-
+||Dome Saint Paul|| 33 0
+|-
+||Dome Tomb|| 33 1
+|-
+||Driving Commentator|| 34 0
+|-
+||Driving Empty Grandstand|| 34 1
+|-
+||Driving Full Grandstand|| 34 2
+|-
+||Driving In-Car Luxury|| 34 3
+|-
+||Driving In-Car Pit Garage|| 34 6
+|-
+||Driving In-Car Racer|| 34 4
+|-
+||Driving In-Car Sports|| 34 5
+|-
+||Driving Tunnel|| 34 7
+|-
+||Drugged|| 23 0
+|-
+||Dusty Room|| 35 0
+|-
+||Factory Alcove|| 36 0
+|-
+||Factory Courtyard|| 36 1
+|-
+||Factory Cupboard|| 36 2
+|-
+||Factory Hall|| 36 3
+|-
+||Factory Large Room|| 36 4
+|-
+||Factory Long Passage|| 36 5
+|-
+||Factory Medium Room|| 36 6
+|-
+||Factory Short Passage|| 36 7
+|-
+||Factory Small Room|| 36 8
+|-
+||Forest|| 15 0
+|-
+||Generic||  0 1
+|-
+||Hallway|| 12 0
+|-
+||Hangar|| 10 0
+|-
+||Ice Palace Alcove|| 37 0
+|-
+||Ice Palace Courtyard|| 37 1
+|-
+||Ice Palace Cupboard|| 37 2
+|-
+||Ice Palace Hall|| 37 3
+|-
+||Ice Palace Large Room|| 37 4
+|-
+||Ice Palace Long Passage|| 37 5
+|-
+||Ice Palace Medium Room|| 37 6
+|-
+||Ice Palace Short Passage|| 37 7
+|-
+||Ice Palace Small Room|| 37 8
+|-
+||Living Room||  4 0
+|-
+||Mood Heaven|| 38 0
+|-
+||Mood Hell|| 38 1
+|-
+||Mood Memory|| 38 2
+|-
+||Mountains|| 17 0
+|-
+||Outdoors Backyard|| 39 0
+|-
+||Outdoors Creek|| 39 1
+|-
+||Outdoors Deep Canyon|| 39 2
+|-
+||Outdoors Rolling Plains|| 39 3
+|-
+||Outdoors Valley|| 39 4
+|-
+||Padded Cell||  1 0
+|-
+||Parking Lot|| 20 0
+|-
+||Pipe Large|| 40 0
+|-
+||Pipe Long Thin|| 40 1
+|-
+||Pipe Resonant|| 40 2
+|-
+||Pipe Small|| 40 3
+|-
+||Plain|| 19 0
+|-
+||Prefab Caravan|| 41 0
+|-
+||Prefab Outhouse|| 41 1
+|-
+||Prefab Practise Room|| 41 2
+|-
+||Prefab School Room|| 41 3
+|-
+||Prefab Workshop|| 41 4
+|-
+||Psychotic|| 25 0
+|-
+||Quarry|| 18 0
+|-
+||Room||  2 0
+|-
+||Sewer Pipe|| 21 0
+|-
+||Small Water Room|| 42 0
+|-
+||Spacestation Alcove|| 43 0
+|-
+||Spacestation Cupboard|| 43 1
+|-
+||Spacestation Hall|| 43 2
+|-
+||Spacestation Large Room|| 43 3
+|-
+||Spacestation Long Passage|| 43 4
+|-
+||Spacestation Medium Room|| 43 5
+|-
+||Spacestation Short Passage|| 43 6
+|-
+||Spacestation Small Room|| 43 7
+|-
+||Sport Empty Stadium|| 44 0
+|-
+||Sport Full Stadium|| 44 1
+|-
+||Sport Gymnasium|| 44 2
+|-
+||Sport Small Swimming Pool|| 44 3
+|-
+||Sport Squash Court|| 44 4
+|-
+||Sport Stadium Tannoy|| 44 5
+|-
+||Stone Corridor|| 13 0
+|-
+||Stone Room||  5 0
+|-
+||Underwater|| 22 0
+|-
+||Wooden Alcove|| 45 0
+|-
+||Wooden Courtyard|| 45 1
+|-
+||Wooden Cupboard|| 45 2
+|-
+||Wooden Hall|| 45 3
+|-
+||Wooden Large Room|| 45 4
+|-
+||Wooden Long Passage|| 45 5
+|-
+||Wooden Medium Room|| 45 6
+|-
+||Wooden Short Passage|| 45 7
+|-
+||Wooden Small Room|| 45 8
+|-
+||DSP Water||255 255
+|-
+|}
+[[Category:ZDoom special lumps]][[Category:Audio lumps]]</text>
+    <sha1>2dearnplkfvldzfp6yoe699n50pvivg</sha1>
+  </revision>
+</page>

@@ -1,0 +1,45 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>Structs:SectorPortal</title>
+  <ns>0</ns>
+  <id>9630</id>
+  <revision>
+    <id>50164</id>
+    <parentid>49749</parentid>
+    <timestamp>2023-03-16T19:33:12Z</timestamp>
+    <contributor>
+      <username>Inkoalawetrust</username>
+      <id>2604</id>
+    </contributor>
+    <comment>Added see also section.</comment>
+    <origin>50164</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="2025" sha1="kva17oifpubqxngvrz3yl68l52jjwr1" xml:space="preserve">SectorPortals contain information about all the portals that currently exist within a map, including skyboxes. They can be accessed through the global [[LevelLocals|level]] variable via '''level.SectorPortals[index]'''. The first one, 0, is used for the default skybox. The second one, 1, is used for displaying the regular sky when used with the [[Classes:SkyPicker|SkyPicker]]. [[Structs:Sector|Sectors]] store their portal indices via their '''Portals''' variable (the first is the floor and the second is the ceiling).
+
+==Fields==
+*int '''mType''' - The type of sector portal being used. Can be one of the following:
+**'''SectorPortal.TYPE_SKYVIEWPOINT''' - Used for standard skyboxes.
+**'''SectorPortal.TYPE_STACKEDSECTORTHING''' - Sector portals were linked via a portal thing.
+**'''SectorPortal.TYPE_PORTAL''' - Standard sector portal.
+**'''SectorPortal.TYPE_LINKEDPORTAL''' - Interactive sector portal.
+**'''SectorPortal.TYPE_PLANE''' - Skybox renders plane infinitely at a fixed distance from the camera.
+**'''SectorPortal.TYPE_HORIZON''' - Skybox renders plane infinitely at the plane's height.
+*int '''mFlags''' - The flags for the sector portal.
+**'''SectorPortal.FLAG_SKYFLATONLY''' - This portal only appears on surfaces with the sky texture.
+**'''SectorPortal.FLAG_INSKYBOX''' - Used to avoid recursion while rendering skyboxes.
+*uint '''mPartner''' - The index of the portal in '''level.SectorPortals''' that the portal is linked to. Only used with stacked skyboxes.
+*int '''mPlane''' - Whether this is the ceiling or floor of the sector.
+*Sector '''mOrigin''' - The sector this portal resides in.
+*Sector '''mDestination''' - The sector this portal goes to.
+*Vector2 '''mDisplacement''' - The xy coordinate shift that is applied to any Actors when moving through the portal.
+*double '''mPlaneZ''' - The absolute z coordinate where the portal resides.
+*Actor '''mSkybox''' - The skybox viewer this portal is linked to, if any.
+
+== See also ==
+*[[Structs:LinePortal]]
+
+[[Category:ZScript]]
+[[Category:Structs]]</text>
+    <sha1>kva17oifpubqxngvrz3yl68l52jjwr1</sha1>
+  </revision>
+</page>

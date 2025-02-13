@@ -1,0 +1,50 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>SetUserVariable</title>
+  <ns>0</ns>
+  <id>5594</id>
+  <revision>
+    <id>45355</id>
+    <parentid>45183</parentid>
+    <timestamp>2017-05-31T18:43:20Z</timestamp>
+    <contributor>
+      <username>Blue Shadow</username>
+      <id>2021</id>
+    </contributor>
+    <minor />
+    <comment>Remove {{new}}</comment>
+    <origin>45355</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="1172" sha1="89iowb9are3m8yvqenofspt3zcnlpya" xml:space="preserve">__NOTOC__int '''SetUserVariable''' (int ''tid'', str ''name'', ''value'')
+
+== Usage==
+Sets one of the affected actor's [[user variable]]s. Native variables, variables which are preceded by the keyword {{c|native}} when declared, cannot be set by this function.
+
+=== Parameters ===
+* ''tid'': the [[TID]] of the affected actors. If 0, the script's activator is used.
+* ''name'': the name of the variable. Acceptable variable types are ''int'', ''double'' and ''bool''.
+* ''value'': the value to give to the variable. If the type of the variable is ''double'', this must be passed as a [[fixed point number|fixed-point]] value.
+
+=== Return value ===
+The total number of actors the function iterated through in an attempt to set their variable.
+
+== Examples ==
+This script increases the amount of XP that the activating enemy rewards upon death.
+ script "EnemyExp" (int amt)
+ {
+     '''SetUserVariable'''(0, "user_rewardxp", amt + [[GetUserVariable]](0, "user_rewardxp"));
+ }
+
+== See also ==
+* [[A_SetUserArray]]
+* [[A_SetUserArrayFloat]]
+* [[A_SetUserVar]]
+* [[A_SetUserVarFloat]]
+* [[GetUserArray]]
+* [[GetUserVariable]]
+* [[SetUserArray]]
+
+[[category:ACS Actor functions]]</text>
+    <sha1>89iowb9are3m8yvqenofspt3zcnlpya</sha1>
+  </revision>
+</page>

@@ -1,0 +1,72 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>Classes:CWeapWraithverge</title>
+  <ns>0</ns>
+  <id>4552</id>
+  <revision>
+    <id>39469</id>
+    <parentid>34218</parentid>
+    <timestamp>2015-04-30T21:19:35Z</timestamp>
+    <contributor>
+      <username>Blue Shadow</username>
+      <id>2021</id>
+    </contributor>
+    <minor />
+    <comment>/* DECORATE definition */ Updated</comment>
+    <origin>39469</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="1642" sha1="bdb0ok0dxvidk3oqjxgm6a0pwfmr74r" xml:space="preserve">{{actor|
+| type = Weapon
+| name = Wraithverge
+| class = CWeapWraithverge
+| game = Hexen
+}}[[Classes]]: [[Classes:ClericWeapon|ClericWeapon]]&amp;rarr;&lt;u&gt;CWeapWraithverge&lt;/u&gt;&lt;br&gt;
+The [[Classes:ClericPlayer|Cleric]]'s ultimate weapon, the Wraithverge is the most powerful weapon in Hexen. It fires a white ball which splits into various ghosts. They tear enemies apart.
+==== [[DECORATE]] definition ====
+ ACTOR &lt;u&gt;CWeapWraithverge&lt;/u&gt; : {{Class|ClericWeapon}} native
+ {
+   {{Property|Health}} 3
+   {{Property|Weapon.SelectionOrder}} 3000
+   +{{Flag|WEAPON.PRIMARY_USES_BOTH}}
+   +{{Flag|INVENTORY.NOATTENPICKUPSOUND}}
+   {{Property|Weapon.AmmoUse1}} 18
+   {{Property|Weapon.AmmoUse2}} 18
+   {{Property|Weapon.AmmoGive1}} 20
+   {{Property|Weapon.AmmoGive2}} 20
+   {{Property|Weapon.KickBack}} 150
+   {{Property|Weapon.AmmoType1}} "{{Class|Mana1}}"
+   {{Property|Weapon.AmmoType2}} "{{Class|Mana2}}"
+   {{Property|Inventory.PickupMessage}} "$TXT_WEAPON_C4"
+   {{Property|Tag}} "$TAG_CWEAPWRAITHVERGE"
+   {{Property|Inventory.PickupSound}} "WeaponBuild"
+ 
+   action native [[A_CHolyAttack]]();
+   action native [[A_CHolyPalette]]();
+ 
+   States
+   {
+   Spawn:
+     TNT1 A -1
+     Stop
+   Ready:
+     CHLY A 1 [[A_WeaponReady]]
+     Loop
+   Select:
+     CHLY A 1 [[A_Raise]]
+     Loop
+   Deselect:
+     CHLY A 1 [[A_Lower]]
+     Loop
+   Fire:
+     CHLY AB 1 Bright [[Offset]](0, 40)
+     CHLY CD 2 Bright [[Offset]](0, 43)
+     CHLY E 2 Bright [[Offset]](0, 45)
+     CHLY F 6 Bright [[Offset]](0, 48) [[A_CHolyAttack]]
+     CHLY GG 2 Bright [[Offset]](0, 40) [[A_CHolyPalette]]
+     CHLY G 2 [[Offset]](0, 36) [[A_CHolyPalette]]
+     Goto Ready
+   }
+ }</text>
+    <sha1>bdb0ok0dxvidk3oqjxgm6a0pwfmr74r</sha1>
+  </revision>
+</page>

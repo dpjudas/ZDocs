@@ -1,0 +1,86 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>A RemoveSiblings</title>
+  <ns>0</ns>
+  <id>5455</id>
+  <revision>
+    <id>46799</id>
+    <parentid>44195</parentid>
+    <timestamp>2019-07-16T06:00:04Z</timestamp>
+    <contributor>
+      <username>Quaker540</username>
+      <id>2135</id>
+    </contributor>
+    <minor />
+    <comment>Replaced the deprecated action function</comment>
+    <origin>46799</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="3412" sha1="p1mlx3hrf79lbax0hwfektsiubpkxep" xml:space="preserve">{{codepointer|Monster AI}}
+'''A_RemoveSiblings''' [(bool ''all'' [, int ''flags'' [, string ''filter'' [, string ''species'']]])]
+
+==Usage==
+Called by monsters to completely remove all monsters spawned by the calling actor's master. If ''all'' is false or not specified, only dead siblings are removed. Currently the only function that sets the necessary information is [[A_SpawnItemEx]].
+
+Monsters spawned with [[A_SpawnProjectile]] are not affected by this. [[A_SpawnProjectile]] was never designed to spawn monsters.
+
+This function can target actors that are non-monsters, but only by using flags.
+
+=== Parameters ===
+*''all'': if this is {{c|false}}, only dead siblings are removed. Otherwise, if {{c|true}}, all siblings are removed, dead and alive. Default is {{c|false}}.
+*''flags'': the following flags can be combined using the {{!}} character between name constants:
+**'''RMVF_MISSILES''' - Allows removal of missiles associated with the pointer.
+**'''RMVF_NOMONSTERS''' - The function will not remove monsters and simply skip them. By default, before the introduction of assigning masters to missiles, similar functions would only work on monsters. To ensure consistency, only monsters are allowed for removal by default.
+**'''RMVF_MISC''' - Allows removal of things that are neither missile nor monster.
+**'''RMVF_EVERYTHING''' - Overrides all other flags. Disables discrimination and removes the actor of any type regardless of what it is.
+**'''RMVF_EXFILTER''' — inverts the case of the class name filter; the calling actor's siblings are only removed if their class name does not match the value passed to ''filter''.
+**'''RMVF_EXSPECIES''' — inverts the case of the [[species]] filter; the calling actor's siblings are only removed if their species does not match the value passed to ''species''.
+**'''RMVF_EITHER''' — the calling actor's siblings are removed if either of their class name or [[species]] matches the values passed to ''filter'' and ''species'', respectively.
+*''filter'': the actor class to remove. The calling actor's siblings are only removed if their class name matches the specified filter class. Default is {{c|"None"}}.
+*''species'': the actor [[species]] to remove. The calling actor's siblings are only removed if their species matches the specified species filter. Default is {{c|"None"}}.
+
+== Examples ==
+The following is a variant on the {{Class|DoomImp|doom imp}}, a monster spawned by a different monster using the master/child flag.
+If it dies from [[damage types|damage type]] "Banish", its death state triggers [[A_RemoveSiblings]], completely removing all
+the other clones who were spawned by their master.
+ ACTOR SoldierImp : {{Class|DoomImp}}
+ {
+   States
+   {
+   Pain.Voodoo:
+     TROO H 2 [[A_Pain]]
+     TROO H 50
+     Goto See
+   Pain.Curse:
+     TROO H 2 [[A_Pain]]
+     TROO H 2 [[A_DamageSiblings]](15)
+     Goto See
+   Death:
+     TROO I 8 [[A_DamageMaster]](-25)
+     TROO J 8 [[A_Scream]]
+     TROO K 6
+     TROO L 6 [[A_NoBlocking]]
+     TROO M -1
+     Stop
+   Death.Curse:
+     TROO I 8 [[A_KillMaster]]
+     TROO J 8 [[A_Scream]]
+     TROO K 6 [[A_KillSiblings]]
+     TROO L 6 [[A_NoBlocking]]
+     TROO M -1
+     Stop
+   Death.Banish:
+     TROO I 8 [[A_RemoveMaster]]
+     TROO J 8 [[A_Scream]]
+     TROO K 6 [[A_RemoveSiblings]]
+     TROO L 6 [[A_NoBlocking]]
+     TROO M 6
+     TNT1 A -1
+     Stop
+   }
+ }
+
+--------
+{{Planned Parenthood}}</text>
+    <sha1>p1mlx3hrf79lbax0hwfektsiubpkxep</sha1>
+  </revision>
+</page>

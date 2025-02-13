@@ -1,0 +1,62 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>SpawnPuff</title>
+  <ns>0</ns>
+  <id>9958</id>
+  <revision>
+    <id>53299</id>
+    <parentid>53226</parentid>
+    <timestamp>2024-10-12T10:40:00Z</timestamp>
+    <contributor>
+      <username>Blue Shadow</username>
+      <id>2021</id>
+    </contributor>
+    <minor />
+    <comment>{{git}} -&gt; {{new}} for 4.13.0</comment>
+    <origin>53299</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="2680" sha1="npbm00tyg9wd32kejap230ksaiwfbsj" xml:space="preserve">'''{{class|Actor}}'''
+
+native Actor '''SpawnPuff'''(class&lt;Actor&gt; ''pufftype'', vector3 ''pos'', double ''hitdir'', double ''particledir'', int ''updown'', int ''flags'' = 0, Actor ''victim'' = null)
+
+== Usage ==
+Spawns an actor as a [[puff]]. This should always be used when manually spawning puffs rather than the base [[Spawn (ZScript)|'''Spawn''']] function, because this will properly signal it to the game that the actor is a puff. Using this function ties into a number of internal behaviors; among other things, this lets the puff be replaced by particles if it has the {{flag|ALLOWPARTICLES}} flag.
+
+{{new|4.13.0}} Spawning with this function will also give the actor a readonly {{flag|ISPUFF}} flag and will store the actor responsible for the attack in the puff's &lt;code&gt;DamageSource&lt;/code&gt; field.
+
+=== Parameters ===
+*{{c|class&lt;Actor&gt; '''pufftype'''}}
+:The actor class to spawn. This technically can be any actor, although only actors explicitly designed to be puffs are recommended.
+*{{c|vector3 '''pos'''}}
+:The absolute position to spawn the puff at.
+*{{c|double '''hitdir'''}}
+:The absolute angle that the spawned puff will receive. For hitscan attacks, the shooter's own angle is typically passed here.
+*{{c|double '''particledir'''}}
+:{{moreinfo}}
+*{{c|int '''updown'''}}
+:Gives the spawned puff vertical velocity.
+*{{c|int '''flags'''}}
+:Flags to modify the spawned puff's behavior. Multiple flags can be combined with &lt;code&gt;|&lt;/code&gt;. Available flags:
+:*{{c|'''PF_HITTHING'''}} — spawn the puff as if the attack hit an actor (will follow its hitting an actor rules)
+:*{{c|'''PF_MELEERANGE'''}} — spawn the puff as if from a melee attack (will follow the melee attack puff state/sound rules)
+:*{{c|'''PF_TEMPORARY'''}} — the puff will not play sounds and will not be replaced by particles {{verification}}
+:*{{c|'''PF_HITTHINGBLEED'''}} — spawn the puff as if the attack hit a bleeding actor (will follow its hitting a bleeding actor rules)
+:*{{c|'''PF_NORANDOMZ'''}} — disable random vertical offset on the spawned puff's position
+:*{{c|'''PF_HITSKY'''}} — spawn the puff as if the attack hit a sky (will try to enter its Death.Sky state)
+:These flags define the conditions for spawning the puff; the exact state it enters and sound it plays will be determined by what flags, states and sounds are defined in it (see '''[[Puff#Puff_usage_and_behavior|Puff usage and behavior]]''' for details).
+*{{c|Actor '''victim'''}}
+:Actor pointer. Allows to manually tell the puff that the attack hit this actor.
+
+=== Return values ===
+*Actor — returns the pointer to the spawned puff.
+
+== Examples ==
+{{noexamples}}
+
+== See also ==
+* Puff
+
+[[Category:ZScript]]</text>
+    <sha1>npbm00tyg9wd32kejap230ksaiwfbsj</sha1>
+  </revision>
+</page>

@@ -1,0 +1,39 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>A GiveToSiblings</title>
+  <ns>0</ns>
+  <id>7768</id>
+  <revision>
+    <id>44270</id>
+    <parentid>43068</parentid>
+    <timestamp>2017-03-20T13:20:03Z</timestamp>
+    <contributor>
+      <username>Gez</username>
+      <id>1283</id>
+    </contributor>
+    <minor />
+    <comment>removing "new" for GZDoom 2.4.0 release</comment>
+    <origin>44270</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="1535" sha1="cja5nq2sj6xpuqtbcrvc9rpbwuubhw5" xml:space="preserve">__NOTOC__{{codepointer|Inventory}}
+int '''A_GiveToSiblings''' (string ''type'' [, int ''count''])
+
+==Usage==
+Adds ''count'' items of type ''type'' to the calling actor's ''siblings''' inventory. This function will not add more items than can be carried.
+
+An actor's ''siblings'' are actors which share a common ''master'' actor with said actor. These ''siblings'' are considered the ''children'' of the ''master''. This relationship is formed when those ''children'' actors are spawned by the ''master'' actor through {{c|[[A_SpawnItemEx]]}} with the SXF_SETMASTER flag passed to the function, or if a child spawns another child with SXF_TRANSFERPOINTERS ''without'' the SXF_SETMASTER flag. This is needed because SXF_SETMASTER will otherwise cause the child of the child to be its child instead of a sibling, as the calling actor with that flag makes it the master instead of its own master.
+
+If ''type'' is an item derived from {{c|{{Class|Health}}}}, then the amount received is the result of multiplying ''count'' by the item's {{Property|Inventory.Amount|amount}}, e.g. if ''type'' is {{c|{{Class|Medikit}}}} and ''count'' is 2, then the amount of health received would be 50 points, not 2.
+
+===Parameters===
+*''type'': the item to give. This should be a valid {{Class|Inventory|inventory item}}.
+*''count'': the number of samples of this item to give. Default is 0, which is interpreted as 1.
+
+=== Return value ===
+The function returns the total number of actors which successfully received the item.
+
+==Examples==
+{{noexamples}}</text>
+    <sha1>cja5nq2sj6xpuqtbcrvc9rpbwuubhw5</sha1>
+  </revision>
+</page>

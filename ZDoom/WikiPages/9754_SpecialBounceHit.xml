@@ -1,0 +1,77 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>SpecialBounceHit</title>
+  <ns>0</ns>
+  <id>9754</id>
+  <revision>
+    <id>53276</id>
+    <parentid>52993</parentid>
+    <timestamp>2024-10-12T09:01:36Z</timestamp>
+    <contributor>
+      <username>Blue Shadow</username>
+      <id>2021</id>
+    </contributor>
+    <minor />
+    <comment>remove {{new}}</comment>
+    <origin>53276</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="2466" sha1="6x7mt06sx6zczzak83oe1r0kzsbmh1d" xml:space="preserve">'''[[Classes:Actor|Actor]]'''
+
+{{c|virtual int '''SpecialBounceHit'''(Actor ''bounceMobj'', Line ''bounceLine'', readonly&lt;SecPlane&gt; ''bouncePlane'')}}
+
+== Usage ==
+Called by bouncing [[projectile|projectiles]] when they hit an actor, a [[Structs:Line|line]] or a [[Structs:SecPlane|plane]]. This function will only be called if one of the [[Actor_flags#Bouncing|bouncing flags]] is set (either directly or through the {{property|BounceType}} property):
+
+*{{flag|BOUNCEONACTORS}}: trigger the function by colliding with an actor
+*{{flag|BOUNCEONWALLS}}: trigger the function by colliding with [[Structs:Line|lines]]
+*{{flag|BOUNCEONFLOORS}}: trigger the function by colliding with [[Structs:SecPlane|floor planes]]
+*{{flag|BOUNCEONCEILINGS}}: trigger the function by colliding with [[Structs:SecPlane|ceiling planes]]
+
+=== Parameters ===
+*{{c|Actor '''bounceMobj'''}}
+:The actor the projectile collided with. Requires the {{flag|BOUNCEONACTORS}} flag.
+*{{c|[[Structs:Line|Line]] '''bounceLine'''}}
+:The line the projectiled collided with. Requires the {{flag|BOUNCEONWALLS}} flag.
+*{{c|[[Structs:SecPlane|SecPlane]] '''bouncePlane'''}}
+:The plane the projectiled collided with. Requires {{flag|BOUNCEONFLOORS}} for floors and {{flag|BOUNCEONCEILINGS}} for ceilings.
+
+=== Return values ===
+Note: the {{const|MHIT*}} constants were added in GZDoom 4.12.0. Prior to that, numbers had to be used directly.
+
+*'''{{c|-1}}'''
+:'''{{c|MHIT_DEFAULT}}'''
+:(Default) The projectile utilizes its default bouncing behavior in accordance with its {{property|BounceFactor}}/{{property|WallBounceFactor}}
+*'''{{c|0}}'''
+:'''{{c|MHIT_DESTROY}}'''
+:For actors and lines: the projectile explodes (enters its Death sequence).
+:For planes: the projectile slides along the plane instead of bouncing.
+*'''{{c|1}}'''
+:'''{{c|MHIT_PASS}}'''
+:For actors: the projectile explodes (enters its Death sequence).
+:For planes and lines: the projectile slides along the plane/line instead of bouncing.
+
+== Examples ==
+This version of {{class|DoomImpBall}} is affected by gravity and will slide along the floor instead of exploding or bouncing:
+
+&lt;syntaxhighlight lang="csharp"&gt;
+class BowlingBall : DoomImpBall
+{
+	Default
+	{
+		+BOUNCEONFLOORS
+		-NOGRAVITY
+	}
+
+	override int SpecialBounceHit(Actor bounceMobj, Line bounceLine, readonly&lt;SecPlane&gt; bouncePlane)
+	{
+		return MHIT_PASS;
+	}
+}
+&lt;/syntaxhighlight&gt;
+
+[[Category:ZScript]]
+[[Category:ZScript virtual functions]]
+[[Category:Actor virtual functions]]</text>
+    <sha1>6x7mt06sx6zczzak83oe1r0kzsbmh1d</sha1>
+  </revision>
+</page>

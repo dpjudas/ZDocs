@@ -1,0 +1,212 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>Optimizing GZDoom projects</title>
+  <ns>0</ns>
+  <id>9840</id>
+  <revision>
+    <id>53033</id>
+    <parentid>53032</parentid>
+    <timestamp>2024-08-30T22:37:53Z</timestamp>
+    <contributor>
+      <username>Phantombeta</username>
+      <id>2116</id>
+    </contributor>
+    <origin>53033</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="16205" sha1="00vca779c5dmwhkh6oc7nx71cfiu3em" xml:space="preserve">Performance and the need for optimization are common concerns when creating GZDoom projects. This guide aims to touch upon the most common issues and methods related to these concepts.
+
+= General performance concerns =
+GZDoom as an engine comes with a host of limitations that prevent it from being very well optimized. Very generally, the primary reasons why GZDoom cannot be very optimized are as follows:
+* GZDoom is always developed with backwards compatibility in mind. All mods and maps made for it, provided they were made without relying on bugs and broken features, should work in any version of GZDoom. This puts a cap on optimization efforts, because there are plenty of things that ''could'' function better, but achieving that would require completely rewriting certain feature, which would break backwards compatibility. As such, some changes cannot be implemented.
+* GZDoom's core gameplay loop is single-threaded. Multi-threading is not something that can be easily implemented in software that wasn't written from the ground up with multi-threading in mind; even if it were added to GZDoom now, the engine as-is would not be able to utilize it to increase performance. GZDoom uses multithreading for rendering and audio, however.
+* GZDoom is not Doom. It offers a very large number of graphical and other features compared to the vanilla game, and all of those features cost performance. A single {{class|Actor|actor}} in GZDoom, for example, performs many more operations every [[tic]] than the same actor in vanilla Doom or [[Boom]], such as interacting with [[TERRAIN|terrain]], [[3D floor|3D floors]] and [[Slope|slopes]], calling a host of [[ZScript virtual functions|virtual functions]] and other things. 
+
+The most important point is that, regardless of how optimized GZDoom itself is, custom mods can easily perform a large number of operations that cause performance issues simply because they run into engine limitations (for example, spawning a large number of actors at the same time). These issues often result from the authors of those mods not having a very good idea of what methods can cause issues and how to work around them. This guide aims to increase awareness of these issues and provide some general tips and solutions.
+
+= Common causes of low performance and how to deal with them =
+== High actor count ==
+Actor count is, probably, the most common source of performance issues. This problem often arises in gameplay mods that utilize [[ZScript]] or [[DECORATE]] to spawn actors to create visual effects, such as debris or gibs. For example, if monsters in your mod explode into multiple gib pieces when killed, a single actor dying may lead to dozens of new actors spawning. These numbers can get very high very quickly.
+
+{{class|Actor|Actors}} are ''very'' performance-intensive in GZDoom. They perform a ton of logic operations every game [[tic]].
+
+=== How to detect ===
+Most of the time you will see a direct effect on your framerate. Use &lt;code&gt;vid_fps true&lt;/code&gt; [[CCMDs|console command]] to enable a FPS counter in GZDoom.
+
+However, if you have a high-end machine, the performance impact may not be as obvious to you as it will be to people on weaker systems. Here are some other tricks:
+* Enter &lt;code&gt;stat vm&lt;/code&gt; and &lt;code&gt;stat gc&lt;/code&gt; into the console.
+:*&lt;code&gt;stat vm&lt;/code&gt; displays the think time of the virtual machine. On regular Doom levels, without gameplay mods, most of the time you will see VM time of 1.0 ms or lower. It is difficult to say exactly when this number signifies a problem, but at around 4-5 you should be getting concerned.
+:*&lt;code&gt;stat gc&lt;/code&gt; provides information about the garbage collector. {{moreinfo}}
+* Enter &lt;code&gt;profilethinkers -7&lt;/code&gt; in the console. (Type &lt;code&gt;profilethinkers&lt;/code&gt; to see information about other options besides 7).
+:This command profiles all {{class|Thinker}}-based classes (primarily actors) that are present, and their think times. If multiple thinkers of the same type exist, their think times will be combined. This command is a useful method for ''detecting'' which thinker exactly is causing the greatest performance impact. If you spot that some classes are showing times that are significantly larger than others, it might signify that either you have too many of those at the same time, or their code is doing something in a less-than-optimal manner.
+
+=== How to solve ===
+The rule of thumb is: &lt;u&gt;do not spawn actors willy-nilly&lt;/u&gt;. Actors are performance-intensive, and even the most optimized actors will hog performance at a certain point.
+
+Here are some other general tips:
+* Don't use actors when you can avoid it:
+:*If you want to create non-interactive effects (for example, smoke particles, flame and such) that don't need collision, utilize [[SpawnParticle (ZScript)|textured particles]] or {{class|VisualThinker}}. Both of those are ''vastly'' more performant than actors, while still offering a lot of options to give them a graphic, velocity, animation, and such.
+:*Don't use {{class|Inventory}} items as tokens. [[ZScript]] has access to real [[ZScript variables|variables]] to properly store data and perform conditional checks.
+:*If you need a separate dedicated data container, don't use actors for it. Create a custom {{class|Thinker}} or a [[Structs|struct]] instead, those will be much more performant.
+* Get a good understanding of the {{flag|NOINTERACTION}} and {{flag|NOBLOCKMAP}} flags. Both of those significantly reduce performance impact of the actors. Do remember, however, that NOINTERACTION disables all collision, and NOBLOCKMAP removes the actors from [[blockmap]], which means that, for example, {{class|BlockThingsIterator}} will not be able to detect them.
+* Limit the total number of special-effect actors you have. Define a hard limit (for example, through a custom [[CVARINFO|console variable]], so that the player can set it up), then use an {{class|EventHandler}} to put newly-spawned debris into a [[Dynamic arrays|dynamic array]], and once the size of that array starts to exceed the value of the CVar you defined, begin calling &lt;code&gt;myarray[0].Destroy()&lt;/code&gt; to remove the oldest actors (don't forget to null-check to make sure the actor in question still exists). A basic example of a management handler could look like this:
+&lt;syntaxhighlight lang = "csharp"&gt;
+class SFXManagementHandler : EventHandler
+{
+	const MAXDEBRIS = 1000; //maximum number of debris
+	array &lt;Actor&gt; debris; //array of debris
+
+	override void WorldThingSpawned(worldEvent e)
+	{
+		// Example class name. This assumes that all your
+		// debris actors inherit from a class called
+		// DebrisBase:
+		if (e.thing is 'DebrisBase')
+		{
+			debris.Push(e.thing);
+		}
+	}
+
+	override void WorldTick()
+	{
+		// While the array size is too large,
+		// keep destroying the oldest entry:
+		while (debris.Size() &gt; MAXDEBRIS)
+		{
+			if (debris[0])
+			{
+				debris[0].Destroy();
+			}
+		}
+	}
+
+	override void WorldThingDestroyed(worldEvent e)
+	{
+		// Remove the thing from the array once
+		// it's destroyed:
+		int id = debris.Find(e.thing);
+		if (id != debris.Size())
+		{
+			debris.Delete(id);
+		}
+	}
+}&lt;/syntaxhighlight&gt;
+* Certain things don't need to happen when the player doesn't see them. For example, if you use actor-based gibs, don't spawn them if an enemy is gibbed out of sight of any player. For example:
+&lt;syntaxhighlight lang="csharp"&gt;
+bool CanPlayersSeeMe()
+{
+	if (!self)
+	{
+		return false;
+	}
+
+	for (int i = 0; i &lt; MAXPLAYERS; i++)
+	{
+		if (PlayerInGame[i])
+		{
+			continue;
+		}
+		let pmo = players[i].mo;
+		if (!pmo)
+		{
+			continue;
+		}
+		if (pmo.CheckSight(self, SF_IGNOREWATERBOUNDARY))
+		{
+			return true;
+			break;
+		}
+	}
+	return false;
+}&lt;/syntaxhighlight&gt;
+:Be aware that [[CheckSight (ZScript)|CheckSight]] by itself is a fairly expensive function call. Don't utilize if often.
+* If you need to create an actor with limited functionality and you have a solid enough understanding of ZScript, you can override its [[Tick]] and ''not'' call {{c|Super.Tick()}} in it. Instead, only define the functionality you actually want the actor to perform.
+
+== High-definition assets ==
+GZDoom is not able to dynamically unload assets from memory. As such, all assets have to be loaded into RAM (and, in case of graphics, VRAM) to be accessible. When a sound is played for the first time in a running game, or a graphic is loaded, they will be added into memory and will not leave it until the map change. 
+
+=== How to detect ===
+You will see your FPS dropping. Use &lt;code&gt;vid_fps true&lt;/code&gt; [[CCMDs|console command]] to enable an FPS counter in GZDoom.
+
+=== How to solve ===
+* For graphics, there's no practical solution outside of optimizing your assets. There are no exact numbers to follow, but as a very broad rule of thumb, going beyond x4 of Doom fidelity for ''all'' graphical assets is likely going to cause issues on some systems.
+* For [[MODELDEF|3D models]], use optimized formats. Avoid [[MD3]] for animated models in GZDoom, because its size grows geometrically with the number of frames. Use [[IQM]] for animated models. MD3 is a decent choice for static models (although [[OBJ]] is more convenient to work with).
+* [[VOXELDEF|Voxels]], when used directly, are not particularly well optimized either. You will likely not notice the effect with limited application, but filling your game with voxel objects is going to affect performance, because GZDoom cannot utilize them directly; instead, it converts them to 3D models in a very inefficient manner. Manually converting voxels to [[OBJ]] is going to yield visually identical but more performant results.
+
+== Alpha overdraw ==
+Alpha overdraw is an effect that occurs when multiple translucent graphics are overlayed on top of one another on the user's screen. A simple example of this would be using [[A_CustomRailgun]] with translucent actors or particles, and then looking through the resulting "beam."&lt;br&gt;
+Any source of translucency will cause the same amount of alpha overdraw, whether it's an actor, particle, visual thinker or 3D model.  
+
+Drawing of translucent objects is an expensive operation in any engine. Each translucent object must be drawn in order, and has to be blended with the existing colors. This forces the GPU to enforce stricter ordering when drawing, and requires it to read the existing contents of the screen rather than simply overwriting them.  
+
+=== How to detect ===
+You will see your FPS dropping when looking at translucent effects, with higher drops as they take up more of the screen. Use &lt;code&gt;vid_fps true&lt;/code&gt; [[CCMDs|console command]] to enable an FPS counter in GZDoom.&lt;br&gt;
+Large and dense smoke effects are a common source of large amounts of alpha overdraw.
+
+=== How to solve ===
+Avoid overusing multiple translucent effects that may overlap on screen. Performance impact is tied to both how much overlap there is within a pixel, and how much of the screen these overlaps take up; A lot of overlapping translucent objects that take up the whole screen will generally cause a bigger performance drop than a larger number of small objects.&lt;br&gt;
+For "beam" effects, it's vastly preferable to use 3D models, as they don't require overlapping to look like a cohesive beam. Libraries exist that make this process simple, for example, [https://github.com/Lewisk3/GZBeamz the GZBeamz library by Lewisk3].&lt;br&gt;
+
+== Expensive operations ==
+There are certain operations (primarily in [[ZScript]]) that are by their nature performance-intensive. Here are some broad examples:
+{| class="wikitable" 
+|-
+! Operation
+! How to optimize
+|-
+| Line-of-sight/fire checks. Functions like [[CheckSight (ZScript)|CheckSight]], [[CheckLOF]] and similar are expensive.
+| Simply don't use them too often. Avoid using them needlessly. If you have cheaper checks you also need to execute, execute them first and only execute the more expensive checks once those have passed.
+|-
+| Random number generation. While a single operation is not particularly intensive, it can get problematic if you perform a very large number of RNG calls at once. For example, spawning multiple actors per [[tic]] over the course of multiple tics, and randomizing position/velocity/other values of each actor can eat up performance.
+| Be aware of this and avoid performing excessive RNG calls frequently. If you need a very large number of random numbers, it may be worth implementing a custom RNG that's simpler and faster.
+|-
+| Frequent creation of UI elements. This may become a concern of custom menus or, sometimes, {{class|BaseStatusBar|HUDs}}.
+| It's preferable to repurpose existing elements than to create new ones. Remember that UI elements update with the user's framerate, which is a much higher frequency than ticrate.
+|-
+| Iteration over lines, such as using a [[BlockLinesIterator]]. By its nature it's not a cheap operation.
+| Limit the radius of iteration, and execute cheaper checks first.
+|-
+| Spawning large numbers of actors at a time. Actors themselves are expensive, but spawning large numbers at a time can cause hitching and stuttering, as creating them is an expensive process, and it causes increased pressure on the garbage collector.
+| It's better to stagger spawning and perform it over the span of a few tics when spawning very large numbers of actors.
+|-
+| Creating instances of a class (with [[New|new]]) requires allocating memory and increases the work the garbage collector has to do. 
+| Use structs where possible, as they're not stored separately in memory and don't need to be allocated like classes. 
+|}
+
+== Complex geometry ==
+Very complex geometry can cause performance issues with GZDoom. The most common offenders are:
+* A large number of very small [[Sector|sectors]]
+:The more sectors there are, the more computationally expensive many things will become. For example, [[Dynamic light|dynamic lights]] become increasingly expensive the more geometry they touch.
+* A large number of [[3D floor|3D floors]] visible at the same time.
+* Large moving floors and ceilings (planes). Actors placed on sectors with moving planes become significantly more performance-intensive, and moving planes with very large numbers of actors can cause significant performance loss.
+
+=== How to detect ===
+You will see your FPS dropping. Use &lt;code&gt;vid_fps true&lt;/code&gt; [[CCMDs|console command]] to enable an FPS counter in GZDoom
+
+=== How to solve ===
+There are 2 primary tips to improve performance in terms of geometry:
+* Avoid using large numbers of small sectors to create details.
+:If you want to use sectors to create, for example, texture-based patterns on the floor, consider creating new textures instead. Note, you can use the [[TEXTURES]] lump to create composite textures out of existing images instead of having to create new graphics.
+* Reduce the number of geometry visible at the same time
+:You can cull visible geometry by using solid walls (either void walls, with nothing behind them, or walls that extend from ceiling to floor, such as doors). Note, [[Polyobject|polyobjects]] and [[3D floor|3D floors]] don't cull geometry.
+:Consider splitting a very large map into multiple maps and combining them into a [[Hub|hub]]. This can allow for fairly seamless transition between maps and improve performance drastically.
+
+== Dynamic lights ==
+[[Dynamic light|Dynamic lights]] have to traverse level geometry when created or moving, and they become increasingly expensive the more geometry they have to cover.&lt;br&gt;
+Bigger lights also take more GPU power to render. Very large numbers of lights in a single sector can also cause performance loss, particularly with large sectors.
+
+=== How to detect ===
+You will see your FPS dropping. Use &lt;code&gt;vid_fps true&lt;/code&gt; [[CCMDs|console command]] to enable an FPS counter in GZDoom.
+
+=== How to solve ===
+* All lights:
+** Avoid making extremely large sectors, or placing lots of lights in such sectors.
+** Avoid making extremely large lights.
+* Moving lights:
+** Avoid using moving dynamic lights with a very large radius. There's simply no way to make this work well.
+** Try to avoid creating a multitude of small sectors or very dense geometry in your map (see [[#Complex geometry]]).
+
+[[Category:Guides]]
+[[Category:Technical aspects]]</text>
+    <sha1>00vca779c5dmwhkh6oc7nx71cfiu3em</sha1>
+  </revision>
+</page>

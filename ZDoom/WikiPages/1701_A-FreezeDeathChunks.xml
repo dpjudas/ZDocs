@@ -1,0 +1,54 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>A FreezeDeathChunks</title>
+  <ns>0</ns>
+  <id>1701</id>
+  <revision>
+    <id>43264</id>
+    <parentid>36249</parentid>
+    <timestamp>2016-10-14T17:32:41Z</timestamp>
+    <contributor>
+      <username>Gez</username>
+      <id>1283</id>
+    </contributor>
+    <minor />
+    <comment>note about boss death</comment>
+    <origin>43264</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="1486" sha1="4zp9mct0jp2cjgzhkfjrrk6gv1lk47w" xml:space="preserve">{{codepointer|Freeze death}}'''A_FreezeDeathChunks'''
+
+'''A_IceGuyDie'''
+
+(no parameters)
+
+
+Bursts the calling actor into chunks ({{Class|IceChunk}} and for players also {{Class|IceChunkHead}}) after a short random delay. The actor only bursts if it does not move. [[A_IceGuyDie]] immediately bursts the calling actor without any delay. The size box of the spawned shards will conform to the defined {{Property|Radius|radius}} and {{Property|Height|height}} of the object.
+
+If the calling actor has the {{Flag|BOSSDEATH}} flag, it also calls [[A_BossDeath]].
+
+== Examples ==
+This is an ice zombie, a frozen-solid {{Class|ZombieMan|zombie}} that continues to live. When killed, its death state triggers [[A_FreezeDeathChunks]], bursting it into chunks of ice. A 100 frame delay was given to assure the zombie was not moving when this function was called
+(in case the corpse ends up sliding down a flight of stairs, off a ledge, etc.).
+[[A_NoBlocking]] was removed to prevent the monster from dropping 2 {{Class|clip}}s, since [[A_FreezeDeathChunks]] makes the monster drop its [[item]] upon death as well. Its XDeath state triggers [[A_IceGuyDie]], causing it to instantly burst into chunks.
+
+ ACTOR IceZombie : {{Class|ZombieMan}}
+ { 
+   {{Property|Translation}} "Ice"
+   States
+   {
+   Death:
+     POSS H 5
+     POSS I 5 [[A_Scream]]
+     POSS J 5
+     POSS K 5
+     POSS L 100
+     POSS L 10 [[A_FreezeDeathChunks]]
+     Stop
+   XDeath:
+     POSS M 5 [[A_IceGuyDie]]
+     Stop
+   }
+ }</text>
+    <sha1>4zp9mct0jp2cjgzhkfjrrk6gv1lk47w</sha1>
+  </revision>
+</page>

@@ -1,0 +1,109 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>Switch/Case</title>
+  <ns>0</ns>
+  <id>7672</id>
+  <revision>
+    <id>51781</id>
+    <parentid>42681</parentid>
+    <timestamp>2024-02-15T17:43:28Z</timestamp>
+    <contributor>
+      <username>Jekyll Grim Payne</username>
+      <id>2175</id>
+    </contributor>
+    <comment>formatting</comment>
+    <origin>51781</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="2522" sha1="ghhqpul7holgskldz0q18x75pxe52um" xml:space="preserve">Let's say you want a script that checks for multiple possible results. You ''could'' do a lot of if/elses, but that's too messy and too easy to mess up. Luckily, we have a different command we can use. This would be the
+'''Switch Block.''' The switch block checks the value of the condition specified and jumps to the respective '''Case Block.'''
+There is also the '''default block.''', which is jumped to if the value in question does not fit any of the cases.
+
+For example:
+&lt;syntaxhighlight lang="csharp"&gt;
+#include "zcommon.acs"
+
+int x = 0;
+//This script defines x
+script "VariableAssign" OPEN
+{
+  switch(random(1, 3))
+  {
+  case 1:
+    x = 1;
+    break;
+	
+  case 2:
+    x = 2;
+    break;
+	
+  case 3:
+    x = 3;
+    break;
+  }
+  ACS_NamedExecute("VariableCheck", 0, 0, 0, 0);
+}
+
+//This script checks it
+script "VariableCheck" (void)
+{
+  switch(x) //If the x variable is...
+  {
+  case 1:
+    Print(s:"1 was selected");
+    break; //Stops it there
+ 
+  case 2:
+    Print(s:"2 was selected");
+    break;
+ 
+  case 3:
+    Print(s:"3 was selected");
+    break; 
+  }
+}&lt;/syntaxhighlight&gt;
+Here's a more blank template:
+&lt;syntaxhighlight lang="csharp"&gt;
+#include "zcommon.acs"
+
+script "CaseScript" OPEN
+{
+  switch(condition)
+  {
+  case result:
+    //functions here
+    break; //If you want to do the next case block as well, omit this
+                      //Keep this space blank
+  case anotherresult:
+    //other functions here
+    break;
+    //and so on
+  }
+}&lt;/syntaxhighlight&gt;
+Example of the default block:
+&lt;syntaxhighlight lang="csharp"&gt;
+#include "zcommon.acs"
+
+script "OtherCaseScript" OPEN
+{
+  switch(monsterCount)
+  {
+  case 0:
+    log(s:"The monsters have fallen");
+    break;
+
+  case 1:
+    log(s:"One monster remains, Kill it!");
+    break;
+
+  default: //If the number is neither 0 or 1, then this block is executed.
+    log(s:"There are still monsters out there!")
+    break;
+  }
+}&lt;/syntaxhighlight&gt;
+
+In the examples above, it is very important to note the presence of '''break;''' at the end of each case. Without it, the next case would be executed, and in fact ''all'' subsequent cases would be executed until the either a break or the end of the switch block is reached. In other words, the switch/case command does not pick a single case to execute; it instead skips over some number of cases and then executes all the others unless told otherwise by means of the break command. This is useful in many situations, but forgetting to include breaks when they are needed will certainly cause problems.
+
+[[Category:ACS]]</text>
+    <sha1>ghhqpul7holgskldz0q18x75pxe52um</sha1>
+  </revision>
+</page>

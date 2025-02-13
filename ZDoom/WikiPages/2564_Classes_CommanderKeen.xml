@@ -1,0 +1,68 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>Classes:CommanderKeen</title>
+  <ns>0</ns>
+  <id>2564</id>
+  <revision>
+    <id>40378</id>
+    <parentid>39290</parentid>
+    <timestamp>2015-09-06T17:30:15Z</timestamp>
+    <contributor>
+      <username>Blue Shadow</username>
+      <id>2021</id>
+    </contributor>
+    <minor />
+    <comment>/* DECORATE definition */ A_NoBlocking removal from git commit bca50c5</comment>
+    <origin>40378</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="1038" sha1="5q40qr2ecwsei4wvjq5r9w2dfhrezlo" xml:space="preserve">{{Actor|
+| type = Monster
+| name = Commander Keen
+| class = CommanderKeen
+| game = Doom2
+| doomednum = 72
+}}[[Classes]]: &lt;u&gt;CommanderKeen&lt;/u&gt;
+
+A character from the Commander Keen series, he just hangs from the ceiling and doesn't do anything. When all Keens present on a level are killed, any door tagged 666 is opened.
+
+
+==== [[DECORATE]] definition ====
+ ACTOR &lt;u&gt;CommanderKeen&lt;/u&gt;
+ {
+   {{Property|Health}} 100
+   {{Property|Radius}} 16
+   {{Property|Height}} 72
+   {{Property|Mass}} 10000000
+   {{Property|PainChance}} 256
+   +{{Flag|SOLID}}
+   +{{Flag|SPAWNCEILING}}
+   +{{Flag|NOGRAVITY}}
+   +{{Flag|SHOOTABLE}}
+   +{{Flag|COUNTKILL}}
+   +{{Flag|NOICEDEATH}}
+   +{{Flag|ISMONSTER}}
+   {{Property|PainSound}} "keen/pain"
+   {{Property|DeathSound}} "keen/death"
+   States
+   {
+   Spawn:
+     KEEN A -1
+     Loop
+   Death:
+     KEEN AB 6
+     KEEN C 6 [[A_Scream]]
+     KEEN DEFGH	6
+     KEEN I 6
+     KEEN J 6
+     KEEN K 6 [[A_KeenDie]]
+     KEEN L -1
+     Stop
+   Pain:
+     KEEN M 4
+     KEEN M 8 [[A_Pain]]
+     Goto Spawn
+   }
+ }</text>
+    <sha1>5q40qr2ecwsei4wvjq5r9w2dfhrezlo</sha1>
+  </revision>
+</page>

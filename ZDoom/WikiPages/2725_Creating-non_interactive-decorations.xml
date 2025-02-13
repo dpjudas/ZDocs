@@ -1,0 +1,58 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>Creating non-interactive decorations</title>
+  <ns>0</ns>
+  <id>2725</id>
+  <revision>
+    <id>52206</id>
+    <parentid>52205</parentid>
+    <timestamp>2024-04-02T15:05:38Z</timestamp>
+    <contributor>
+      <username>Jekyll Grim Payne</username>
+      <id>2175</id>
+    </contributor>
+    <origin>52206</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="1147" sha1="mrap6z0d2caqvehji447a15sba3zdmj" xml:space="preserve">{{OutdatedGuide|Creating non-interactive decorations (ZScript)}}
+
+Non-interactive decorations are the simplest form of actor that can be defined. They usually consist of a single sprite with one frame or a looping animation. Therefore they only define a '''Spawn''' [[Actor states|state]] which defines the entire visual appearance.
+
+You may set any [[Actor properties|property]] and [[Actor flags|flag]] as needed.
+
+This is an example of a simple decoration:
+ actor CEye 10242
+ {
+   {{Property|Height}} 40
+   {{Property|Radius}} 20
+   +{{Flag|SOLID}}
+   States
+   {
+   Spawn:
+     HAW6 A 10
+     HAW6 B 10 Bright
+     HAW6 C 10
+     Loop
+   }
+ }
+
+Simple decorations can use [[Action functions|code pointers]] just as any other actor. This is an example of a decoration that uses actions:
+ actor Pulsar 10239 
+ {
+   {{Property|PainSound}} "pulsar/pulse"
+   +{{Flag|NODAMAGETHRUST}}
+   States
+   {
+   Spawn:
+     HAX7 A 15 bright
+     HAX7 B 15 bright [[A_Pain]]
+     HAX7 C 20 bright [[A_Explode]]
+     Loop
+   }
+ }
+
+For a step by step detailed guide, please view [https://www.doomworld.com/vb/post/815562 this post].
+
+[[Category:DECORATE guides]]</text>
+    <sha1>mrap6z0d2caqvehji447a15sba3zdmj</sha1>
+  </revision>
+</page>

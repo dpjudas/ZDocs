@@ -1,0 +1,55 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>A Raise</title>
+  <ns>0</ns>
+  <id>2695</id>
+  <revision>
+    <id>47269</id>
+    <parentid>47083</parentid>
+    <timestamp>2020-03-18T15:58:23Z</timestamp>
+    <contributor>
+      <username>Gez</username>
+      <id>1283</id>
+    </contributor>
+    <minor />
+    <comment>doomwiki link</comment>
+    <origin>47269</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="1635" sha1="t3h73b2xbq898n1kkpq7n7lupw5vipe" xml:space="preserve">__NOTOC__{{codepointer|Weapon}}:''Note: this function should not be confused with the [[Template:Planned Parenthood|resurrection functions]] which have similar naming.''
+{{doomwiki|A_Raise}}
+
+void '''A_Raise''' [(int ''raisespeed'')]
+
+== Usage ==
+This function must be called in a [[weapon]]'s Select state sequence. It should not be used anywhere else. It is responsible for raising the weapon and for entering the Ready state sequence when it is done.
+
+Each time the function is called, the weapon moves further up the screen as it approaches the ready position. You can therefore make a weapon raise faster than the default by calling the function more than once within the same tic, or by passing the desired speed directly.
+
+
+{{Warning|Do not call this function repeatedly in the same state inside another function, [[anonymous functions|anonymous]] or otherwise. All calls to A_Raise are executed fully inside the other function, even if the weapon has reached its ready position, resulting in unwanted side effects.}}
+
+=== Parameters ===
+*''raisespeed'': how much the weapon is raised by. Default is 6.
+
+== Examples ==
+Here is an example of a basic Select state that makes use of this function to bring the weapon up to the ready position:
+
+ Select:
+    SHTG A 1 [[A_Raise]]
+    Loop
+
+This will raise the weapon up from the bottom of the screen when it is selected. Once it has reached the ready position, {{c|[[A_Raise]]}} will automatically jump to the Ready state.
+
+
+This weapon raises into view twice as fast as normal:
+
+ Select:
+    FAST A 1 [[A_Raise]](12)
+    Loop
+
+== See also ==
+* [[A_Lower]]
+* [[Creating new weapons]]</text>
+    <sha1>t3h73b2xbq898n1kkpq7n7lupw5vipe</sha1>
+  </revision>
+</page>

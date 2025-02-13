@@ -1,0 +1,91 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>A ScaleVelocity</title>
+  <ns>0</ns>
+  <id>5423</id>
+  <revision>
+    <id>54051</id>
+    <parentid>54050</parentid>
+    <timestamp>2024-12-09T16:25:25Z</timestamp>
+    <contributor>
+      <username>Jekyll Grim Payne</username>
+      <id>2175</id>
+    </contributor>
+    <comment>/* ZScript definition */</comment>
+    <origin>54051</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="2185" sha1="jpya5ki8sjfdwkqvtnujpzjyvb4xlcg" xml:space="preserve">{{DISPLAYTITLE:A_ScaleVelocity}}
+{{note|This function is effectively deprecated in [[ZScript]], since an actor's &lt;code&gt;vel&lt;/code&gt; field can be modified directly, for example: &lt;code&gt;vel *{{=}} 0.5&lt;/code&gt;.}}
+'''{{class|Actor}}'''
+
+{{c|void '''A_ScaleVelocity'''(double ''scale'', int ''ptr'' }}={{c| AAPTR_DEFAULT)}}
+
+==Usage==
+Multiplies the specified actor's velocity on each axis by ''scale''. It can be used to "speed up" or "slow down" an actor.
+
+By default modifies the calling actor's velocity, but this can be changed with the ''ptr'' argument.
+
+===Parameters===
+*{{c|double '''scale'''}}
+:The value by which to scale the actor's velocity.
+*{{c|int '''ptr'''}}
+:The actor whose velocity to scale. This is an [[Actor_pointer#DECORATE_&amp;_ACS|AAPTR actor pointer]]. Default is {{c|{{const|AAPTR_DEFAULT}}}}, which corresponds to the calling actor.
+
+== [[ZScript]] definition ==
+{{ZScriptDefinitionNote|actors/actions.zs#L35C2-L35C61}}
+&lt;syntaxhighlight lang="csharp"&gt;
+	void A_ScaleVelocity(double scale, int ptr = AAPTR_DEFAULT)
+	{
+
+		let ref = GetPointer(ptr);
+
+		if (ref == NULL)
+		{
+			return;
+		}
+
+		bool was_moving = ref.Vel != (0, 0, 0);
+
+		ref.Vel *= scale;
+
+		// If the actor was previously moving but now is not, and is a player,
+		// update its player variables. (See A_Stop.)
+		if (was_moving)
+		{
+			ref.CheckStopped();
+		}
+	}&lt;/syntaxhighlight&gt;
+(See also {{c|[[GetPointer]]}})
+
+=== Setting to explicit value ===
+Note, this function can only multiply the actor's current &lt;code&gt;vel&lt;/code&gt; without an ability to set it to an explicit value. To do the latter, you can call, for example, &lt;code&gt;vel = vel.Unit() * &lt;desired speed&gt;&lt;/code&gt; where &lt;desired speed&gt; is a numeric value like 10.
+
+== Examples ==
+This lazy {{Class|rocket}} slows down and eventually stops.
+
+ class LazyRocket : {{Class|Rocket}}
+ {
+   States
+   {  
+   Spawn:
+     MISL A 1 Bright [[A_ScaleVelocity]](0.95);
+     Loop;
+   }
+ }
+
+In ZScript the same can be achieved without this function:
+ class LazyRocket : {{Class|Rocket}}
+ {
+   States
+   {  
+   Spawn:
+     MISL A 1 Bright { vel *= 0.95; }
+     Loop;
+   }
+ }
+
+[[Category:ZScript]]
+{{DEFAULTSORT:ScaleVelocity}}[[category:Decorate Status change functions]]</text>
+    <sha1>jpya5ki8sjfdwkqvtnujpzjyvb4xlcg</sha1>
+  </revision>
+</page>

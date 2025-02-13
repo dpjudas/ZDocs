@@ -1,0 +1,72 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>Data types</title>
+  <ns>0</ns>
+  <id>3588</id>
+  <revision>
+    <id>52328</id>
+    <parentid>45950</parentid>
+    <timestamp>2024-04-09T18:22:57Z</timestamp>
+    <contributor>
+      <username>Jekyll Grim Payne</username>
+      <id>2175</id>
+    </contributor>
+    <comment>Added a note</comment>
+    <origin>52328</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="3405" sha1="qx5me9jybg43l3yp4hur9k0z5nvdf3x" xml:space="preserve">{{note|This page is for [[ACS]]. For [[ZScript]] see '''[[ZScript data types]]'''.}}
+
+ACS supports various types of data that you can use. Of these, most are handled as hacks. In reality ACS only supports one data type and that is the integer type.
+
+== Integer ==
+The integer data type is your basic data type. An integer is any whole number and can be negative, positive or zero. The range for an integer is from -2,147,483,648 to 2,147,483,647. To declare a variable to hold this type you use the ''int'' keyword.
+
+== Boolean ==
+ACS has a hacked support for the boolean data type. This data type can hold either a true or false value or a 1 or 0 value. In ACS you use the ''bool'' keyword to declare a boolean variable. Even though you use a different name, it is the same thing as an integer and has all the same properties.
+ //This is legal
+ bool bTest = 7;
+
+== Character ==
+Support for character data type is virtually the same as C/C++ except that you have to use the integer type. When assigning characters to a variable, you have to enclose them in single quotes and would look like this example:
+ //This assigns a variable to the letter a
+ int Test = 'a';
+
+You can also make use of the special characters: ASCII NUL &lt;tt&gt;'\0'&lt;/tt&gt;, &lt;tt&gt;'\\'&lt;/tt&gt;, &lt;tt&gt;'\n'&lt;/tt&gt; for newline and &lt;tt&gt;'\t'&lt;/tt&gt; for a horizontal tab.
+
+== String ==
+In ACS you can define string literals which look like this:
+ //this is a string literal
+ "OMG its a string"
+When the compiler sees this what it does is add the string to its string table and then assigns an index number to it. The string variable, declared using the ''str'' keyword, does not hold the string, but rather, the index to string table, similar to how string literals in C decay into pointers in certain contexts. In other words, the string variable is the same as the integer and has all its properties. The only way that ACS can tell that it is a string is when used by special functions that expect a string.
+ //This function actually gets passed this strings index in the string table 
+ //but the function knows to take this number and use it to look up the string table
+ [[CheckInventory]]("{{class|Fist}}");
+This is another example on how strings are handled:
+ //Here we try to add two strings together
+ str Test = "omg its a " + "string!";
+ [[print]](s:Test); //This prints "string!" and NOT "omg its a string!"
+ //what really happened was this
+ Test = 0 + 1;
+ //so you see that the index is what is being stored
+To concatenate strings, don't use +, but [[StrParam]] instead.
+
+== Fixed point ==
+ACS has a very basic support for fixed point types. What happens is you have to assign them to integer types. The integral part is located in bits 16&amp;ndash;31 of the integer and the fractional part is located in bits 0&amp;ndash;15.
+
+    3                   2                   1                   0
+  1 0 9 8 7 6 5 4 3 2 1 0 9 8 7 6 5 4 3 2 1 0 9 8 7 6 5 4 3 2 1 0
+ +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+ |          Integral Part        |        Fractional Part        |
+ +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+
+To see this in action we have this example:
+ //This assigns 1.0 to an integer
+ int Test = 1.0;
+ //The actual integer value is 65536 as shown by the following command
+ [[PrintBold]](d:Test);
+ [[PrintBold]](f:Test); // This prints it as a fixed-point, and will show "1"
+
+[[category:ACS guides]]</text>
+    <sha1>qx5me9jybg43l3yp4hur9k0z5nvdf3x</sha1>
+  </revision>
+</page>

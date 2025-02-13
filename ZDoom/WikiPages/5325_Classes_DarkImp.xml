@@ -1,0 +1,77 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>Classes:DarkImp</title>
+  <ns>0</ns>
+  <id>5325</id>
+  <revision>
+    <id>21513</id>
+    <timestamp>2009-04-20T13:39:48Z</timestamp>
+    <contributor>
+      <username>Gez</username>
+      <id>1283</id>
+    </contributor>
+    <comment>New page</comment>
+    <origin>21513</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="1211" sha1="l4h4sgrvzugyeogclfi3b80kuqypgh4" xml:space="preserve">{{Actor|
+| type = Monster
+| name = Dark imp
+| class = DarkImp
+| game = Skulltag
+| doomednum = 5006
+| spawnid = 155
+| spawnname = T_DARKIMP
+}}
+[[Classes]]: {{Class|DoomImp}}&amp;rarr;&lt;u&gt;DarkImp&lt;/u&gt;&lt;br&gt;
+
+Twice as tough as their {{Class|DoomImp|lesser cousins}}, and with a more dangerous attack.
+==== [[DECORATE]] definition ====
+ ACTOR &lt;u&gt;DarkImp&lt;/u&gt; : {{Class|DoomImp}} 5003
+ {
+   Game Doom
+   SpawnID 155
+   Obituary "$OB_DARKIMP" // "%o was burned by a dark imp."
+   HitObituary "$OB_DARKIMP_MELEE" // "%o was slashed by a dark imp."
+   Health 120
+   MissileType {{Class|DarkImpBall}}
+   States
+   {
+   Spawn:
+     DIMP AB 10 [[A_Look]]
+     Loop
+   See:
+     DIMP AABBCCDD 3 [[A_Chase]]
+     Loop
+   Melee:
+   Missile:
+     DIMP EF 8 [[A_FaceTarget]]
+     DIMP G 6 [[A_ComboAttack]]  // See {{Class|DarkImpBall}}
+      Goto See
+   Pain:
+     DIMP H 2
+     DIMP H 2 [[A_Pain]]
+     Goto See
+   Death:
+     DIMP I 8
+     DIMP J 8 [[A_Scream]]
+     DIMP K 6
+     DIMP L 6 [[A_NoBlocking]]
+     DIMP M -1
+     Stop
+   XDeath:
+     DIMP N 5
+     DIMP O 5 [[A_XScream]]
+     DIMP P 5
+     DIMP Q 5 [[A_NoBlocking]]
+     DIMP RST 5
+     DIMP U -1
+     Stop
+   Raise:
+     DIMP ML 8
+     DIMP KJI 6
+     Goto See
+   }
+ }</text>
+    <sha1>l4h4sgrvzugyeogclfi3b80kuqypgh4</sha1>
+  </revision>
+</page>

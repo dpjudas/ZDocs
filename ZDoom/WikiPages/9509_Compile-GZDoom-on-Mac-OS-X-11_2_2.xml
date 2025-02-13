@@ -1,0 +1,94 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>Compile GZDoom on Mac OS X 11.2.2</title>
+  <ns>0</ns>
+  <id>9509</id>
+  <revision>
+    <id>49059</id>
+    <parentid>48405</parentid>
+    <timestamp>2022-03-23T05:07:21Z</timestamp>
+    <contributor>
+      <username>Rachael</username>
+      <id>81</id>
+    </contributor>
+    <comment>format port install command, add +universal parameter</comment>
+    <origin>49059</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="4840" sha1="bnzwzjj5059k0o6wn41bichn6lj7fk8" xml:space="preserve">This guide is for the compilation of git dev builds above ''GZDoom 4.5.0,'' or for ''GZDoom 4.6.0'' and above (including the git dev builds).  For older builds, go [https://zdoom.org/wiki/Compile_GZDoom_on_Mac_OS_X here].  For discussion, go to [https://forum.zdoom.org/viewtopic.php?f=50&amp;t=71687 this thread]
+
+== Requirements ==
+* A Mac computer supporting OpenGL 3.3 and above (a list is available [https://support.apple.com/en-us/HT202823 here])
+* Mac OS X 11.2.2 Big Sur and above
+* Xcode 12.4 and above, the latest one is available [https://developer.apple.com/xcode/ here] (requires free registration)
+** Xcode Command Line Tools, which contains the compilers and git tools
+* Macports or Homebrew (this must be installed after Xcode Command Line Tools)
+* CMake 3.20.0 or later, available [https://cmake.org/download/ here]
+* ''libjpeg''
+* ''FluidSynth'', ''OpenAL-Soft'', ''libsndfile'' and ''mpg123'' (note that OpenAL-Soft is different from the ''OpenAL'' framework already provided by Apple, not compatible with GZDoom).
+
+== Install dependencies ==
+In case you don't have ''Xcode Command Line Tools'', this can be installed with this command line on the terminal:
+&lt;pre&gt;xcode-select --install&lt;/pre&gt;
+
+After installing xcodetools, set the compiler for make.  To do this, run
+&lt;pre&gt;sudo xcode-select --reset&lt;/pre&gt;
+
+Then
+
+&lt;pre&gt;sudo xcodebuild -license accept&lt;/pre&gt;
+
+To get Macports, download the package installer [https://www.macports.org/install.php here] and install.
+
+Once that’s done, type &lt;pre&gt;sudo port install libjpeg-turbo fluidsynth openal-soft libsndfile mpg123 +universal&lt;/pre&gt;
+
+
+== Source code ==
+
+It is recommended that you use a recent version from the [[Git repository]] to compile, but you may use an older version's source from the {{plainlink|[https://zdoom.org/downloads ZDoom Downloads Page]}} if desired.
+
+If the zmusic library is not included with the gzdoom repository, get ZMusic [https://github.com/coelckers/ZMusic here]
+
+Cd to the zmusic directory and type make.
+
+Or create a build folder within the directory, open cmake, set the source code folder to zmusic and the output folder to build, press configure, then generate.
+
+It should create the latest libzmusic.dylib and libzmusiclite.dylib with dynamic links.  There should also be an include folder within the base zmusic folder.  Place the dynamic library and include folder where you would like them for configuring with CMake.
+
+== Configuring with CMake ==
+
+When you run the CMake application, you will be greeted with a window asking for a source code path and a build directory. It is recommended that the build directory is created inside the source code.
+
+When you click configure, it will ask for a project generator to use.  If you would like to program with an Xcode project, choose Xcode.  If not, standard make file generator is the default that you can use to build the project via command line.
+
+After this, you will end up having to tell CMake where the sound libraries are located, so some options must be changed  (you may need to switch to advanced view to see these options).  It may set many dynamic linked library locations to homebrew directories by default, so if you are using Macports, you will need to change them to /opt/local/lib/(library name).dylib.  Otherwise, if you are using homebrew, leave all paths to homebrew folders alone.  Either way you will need to make sure the include directory paths point to the include folders with the gzdoom source code.  The following list of configuration changes assumes you installed the libraries via macports:
+
+*Set BZIP2_INCLUDE_DIR to (path to your gzdoom source code directory)/gzdoom/libraries/bzip2
+
+*Set BZIP2_LIBRARY_RELEASE to /opt/local/lib/libbz2.dylib
+
+*Set JPEG_INCLUDE_DIR to (path to your gzdoom source code directory)/libraries/jpeg
+
+*Set JPEG_LIBRARY_RELEASE to /opt/local/lib/libturbojpeg.dylib
+
+*Set PKG_CONFIG_EXECUTABLE to /opt/local/bin/pkg-config
+
+*Set ZLIB_INCLUDE_DIR to (path to your gzdoom source code directory)/libraries/zlib
+
+*Set ZLIB_LIBRARY_RELEASE to /opt/local/lib/libz.dylib
+
+*Set ZMUSIC_INCLUDE_DIR to (path to your gzdoom source code directory)/bin/windows/zmusic/include. (This may seem silly, but that’s where the zmusic include directory is at the time of writing and works for all systems)
+
+*Set ZMUSIC_LIBRARIES to (path to your zmusic dynamic library directory.  I placed it in bin/osx/zmusic/apple silicon for an M1 chip machine.  For Intel builds you can make a folder called intel if you wish)/libzmusic.dylib
+
+Uncheck OPENAL_DY and Press configure again
+
+*Set OPENAL_INCLUDE_DIR to /opt/local/include/AL
+
+*Set OPENAL_LIBRARY to /opt/local/lib/libopenal.dylib
+
+Press configure one last time to make sure there are no errors, and Generate.
+
+You should now have a working Xcode project (or make file) in the build folder ready to work!</text>
+    <sha1>bnzwzjj5059k0o6wn41bichn6lj7fk8</sha1>
+  </revision>
+</page>

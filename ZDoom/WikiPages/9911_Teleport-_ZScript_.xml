@@ -1,0 +1,57 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>Teleport (ZScript)</title>
+  <ns>0</ns>
+  <id>9911</id>
+  <revision>
+    <id>54070</id>
+    <parentid>52692</parentid>
+    <timestamp>2024-12-18T22:19:33Z</timestamp>
+    <contributor>
+      <username>Inkoalawetrust</username>
+      <id>2604</id>
+    </contributor>
+    <comment>Added mention of the teleport virtuals.</comment>
+    <origin>54070</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="1805" sha1="muop6l9bknabwemf294n6xjyuef68so" xml:space="preserve">{{SameNameNote|ZScript|ACS|Teleport}}
+
+'''{{class|Actor}}'''
+
+{{c|bool '''Teleport'''(Vector3 ''pos'', double ''angle'', int ''flags'')}}
+
+== Usage ==
+Teleports the calling actor the specified position. In contrast to [[SetOrigin]], it allows adding some extra effects specific to teleports, and calls the [[ZScript virtual functions#Actor|Pre/PostTeleport() virtuals]].
+
+=== Parameters ===
+*{{c|Vector3 '''pos'''}}
+:Position to teleport to as a [[ZScript_data_types#Vectors|Vector3]] value.
+*{{c|double  '''angle'''}}
+:Absolute angle to set the actor's angle to after teleporting.
+*{{c|int '''flags'''}}
+:Flags used by the function. Multiple flags can be combined with &lt;code&gt;|&lt;/code&gt;. Available flags:
+:*{{c|TF_TELEFRAG}} - Allow telefrag in order to teleport.
+:*{{c|TF_RANDOMDECIDE}} - Randomly fail based on health like [[A_Srcr2Decide]] does.
+:*{{c|TF_FORCED}} - Forget what's in the way. {{c|TF_Telefrag}} takes precedence over this.
+:*{{c|TF_KEEPVELOCITY}} - Preserve velocity.
+:*{{c|TF_KEEPANGLE}} - Keep angle.
+:*{{c|TF_USESPOTZ}} - Set the z to the spot's z, instead of the floor.
+:*{{c|TF_NOSRCFOG}} - Don't leave any fog behind when teleporting.
+:*{{c|TF_NODESTFOG}} - Don't spawn any fog at the arrival position.
+:*{{c|TF_USEACTORFOG}} - Use the actor's {{property|TeleFogSourceType}} and {{property|TeleFogDestType}} fogs.
+:*{{c|TF_NOJUMP}} - Don't jump after teleporting.
+:*{{c|TF_OVERRIDE}} - Ignore {{flag|NOTELEPORT}}.
+:*{{c|TF_SENSITIVEZ}} - Fail if the actor wouldn't fit in the position (for Z).
+:*{{c|TF_KEEPORIENTATION}} - Combines {{c|TF_KEEPVELOCITY}} and {{c|TF_KEEPANGLE}}
+:*{{c|TF_NOFOG}} - Combines {{c|TF_NOSRCFOG}} and {{c|TF_NODESTFOG}}
+
+=== Return values ===
+*bool - Returns &lt;code&gt;true&lt;/code&gt; if teleportation succeeded.
+
+== Examples ==
+{{noexamples}}
+
+[[Category:ZScript]]</text>
+    <sha1>muop6l9bknabwemf294n6xjyuef68so</sha1>
+  </revision>
+</page>

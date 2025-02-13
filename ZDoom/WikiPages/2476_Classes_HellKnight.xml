@@ -1,0 +1,148 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>Classes:HellKnight</title>
+  <ns>0</ns>
+  <id>2476</id>
+  <revision>
+    <id>48918</id>
+    <parentid>48436</parentid>
+    <timestamp>2021-12-27T11:15:32Z</timestamp>
+    <contributor>
+      <username>Jekyll Grim Payne</username>
+      <id>2175</id>
+    </contributor>
+    <comment>updated in accordance with updated ZScriptDefinitionNote template</comment>
+    <origin>48918</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="2984" sha1="4ucb8126lvr9wf0kdq8ppyc56l1c440" xml:space="preserve">{{Actor|
+| type = Monster
+| name = Hell Knight
+| class = HellKnight
+| game = Doom2
+| doomednum = 69
+| thingindex = 18
+| spawnid = 113
+| spawnname = T_HELLKNIGHT
+}}
+[[Classes]]: [[Classes:BaronOfHell|BaronOfHell]]&amp;rarr;&lt;u&gt;HellKnight&lt;/u&gt;&lt;br&gt;
+&amp;ensp;&amp;rarr;[[Classes:StealthHellKnight|StealthHellKnight]]
+
+
+Hell Knights are a satyr-like monster similar to the [[classes:BaronOfHell|Baron of Hell]]. Like the Baron, their primary attack is a [[classes:BaronBall|green fireball]]. However, they only have half as much health as their big brothers.
+
+==== [[ZScript]] definition ====
+{{ZScriptDefinitionNote|actors/doom/bruiser.zs#L59}}
+ class HellKnight : BaronOfHell
+ {
+ 	Default
+ 	{
+ 		{{Property|Health}} 500;
+ 		-{{Flag|BOSSDEATH}};
+ 		{{Property|SeeSound}} "knight/sight";
+ 		{{Property|ActiveSound}} "knight/active";
+ 		{{Property|PainSound}} "knight/pain";
+ 		{{Property|DeathSound}} "knight/death";
+ 		{{Property|HitObituary}} "$OB_KNIGHTHIT";
+ 		{{Property|Obituary}} "$OB_KNIGHT";
+ 		{{Property|Tag}} "$FN_HELL";
+ 	}
+ 	States
+ 	{
+ 	Spawn:
+ 		BOS2 AB 10 [[A_Look]];
+ 		Loop;
+ 	See:
+ 		BOS2 AABBCCDD 3 [[A_Chase]];
+ 		Loop;
+ 	Melee:
+ 	Missile:
+ 		BOS2 EF 8 [[A_FaceTarget]];
+ 		BOS2 G 8 [[A_BruisAttack]];
+ 		Goto See;
+ 	Pain:
+ 		BOS2 H  2;
+ 		BOS2 H  2 [[A_Pain]];
+ 		Goto See;
+ 	Death:
+ 		BOS2 I  8;
+ 		BOS2 J  8 [[A_Scream]];
+ 		BOS2 K  8;
+ 		BOS2 L  8 [[A_NoBlocking]];
+ 		BOS2 MN 8;
+ 		BOS2 O -1;
+ 		Stop;
+ 	Raise:
+ 		BOS2 O 8;
+ 		BOS2 NMLKJI  8;
+ 		Goto See;
+ 	}
+ }
+[[A_BruisAttack]] is defined only once in GZDoom (since both Baron of Hell and Hell Knight are in the same file), this is repeated here for illustration purposes.
+ extend class Actor
+ {
+ 	void [[A_BruisAttack]]()
+ 	{
+ 		let targ = target;
+ 		if (targ)
+ 		{
+ 			if (CheckMeleeRange())
+ 			{
+ 				int damage = random[pr_bruisattack](1, 8) * 10;
+ 				[[A_StartSound]] ("baron/melee", CHAN_WEAPON);
+ 				int newdam = target.DamageMobj (self, self, damage, "Melee");
+ 				targ.TraceBleed (newdam &gt; 0 ? newdam : damage, self);
+ 			}
+ 			else
+ 			{
+ 				// launch a missile
+ 				SpawnMissile (target, "BaronBall");
+ 			}
+ 		}
+ 	}
+ }
+
+==== [[DECORATE]] definition ====
+{{DecorateDefinitionNote}} ACTOR &lt;u&gt;HellKnight&lt;/u&gt; : {{Class|BaronOfHell}}
+ {
+   {{Property|Health}} 500
+   -{{Flag|BOSSDEATH}}
+   {{Property|SeeSound}} "knight/sight"
+   {{Property|ActiveSound}} "knight/active"
+   {{Property|PainSound}} "knight/pain"
+   {{Property|DeathSound}} "knight/death"
+   {{Property|HitObituary}} "$OB_KNIGHTHIT"
+   {{Property|Obituary}} "$OB_KNIGHT"
+   States
+   {
+   Spawn:
+     BOS2 AB 10 [[A_Look]]
+     Loop
+   See:
+     BOS2 AABBCCDD 3 [[A_Chase]]
+     Loop
+   Melee:
+   Missile:
+     BOS2 EF 8 [[A_FaceTarget]]
+     BOS2 G 8 [[A_BruisAttack]]
+     Goto See
+   Pain:
+     BOS2 H 2
+     BOS2 H 2 [[A_Pain]]
+     Goto See
+   Death:
+     BOS2 I 8
+     BOS2 J 8 [[A_Scream]]
+     BOS2 K 8
+     BOS2 L 8 [[A_NoBlocking]]
+     BOS2 MN 8
+     BOS2 O -1
+     Stop
+   Raise:
+     BOS2 O 8
+     BOS2 NMLKJI 8
+     Goto See
+   }
+ }</text>
+    <sha1>4ucb8126lvr9wf0kdq8ppyc56l1c440</sha1>
+  </revision>
+</page>

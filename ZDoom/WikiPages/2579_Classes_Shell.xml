@@ -1,0 +1,71 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>Classes:Shell</title>
+  <ns>0</ns>
+  <id>2579</id>
+  <revision>
+    <id>53608</id>
+    <parentid>39186</parentid>
+    <timestamp>2024-11-08T11:37:40Z</timestamp>
+    <contributor>
+      <username>Jekyll Grim Payne</username>
+      <id>2175</id>
+    </contributor>
+    <origin>53608</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="1235" sha1="7o6u9owku62uv9bmncf2y4456cdxfi8" xml:space="preserve">{{Actor|
+| type = Ammo
+| name = Shells
+| class = Shell
+| game = Doom
+| doomednum = 2008
+| spawnid = 12
+| spawnname = T_SHELLS 
+}}[[Classes]]: [[Classes:Inventory|Inventory]]&amp;rarr;[[Classes:Ammo|Ammo]]&amp;rarr;&lt;u&gt;Shell&lt;/u&gt;&lt;br&gt;
+&amp;ensp;&amp;rarr;[[Classes:ShellBox|ShellBox]]
+
+Shell ammo for the [[Classes:Shotgun|Doom shotgun]] and [[Classes:SuperShotgun|super shotgun]]. Gives four shells when picked up.
+
+=== [[ZScript]] definition ===
+{{ZScriptDefinitionNote|actors/doom/doomammo.zs}}
+&lt;syntaxhighlight lang="cs"&gt;
+class Shell : Ammo
+{
+	Default
+	{
+		Inventory.PickupMessage "$GOTSHELLS";
+		Inventory.Amount 4;
+		Inventory.MaxAmount 50;
+		Ammo.BackpackAmount 4;
+		Ammo.BackpackMaxAmount 100;
+		Inventory.Icon "SHELA0";
+		Tag "$AMMO_SHELLS";
+	}
+	States
+	{
+	Spawn:
+		SHEL A -1;
+		Stop;
+	}
+}
+&lt;/syntaxhighlight&gt;
+=== [[DECORATE]] definition ===
+{{DecorateDefinitionNote}}
+ ACTOR &lt;u&gt;Shell&lt;/u&gt; : {{Class|Ammo}}
+ {
+   {{Property|Inventory.PickupMessage}} "$GOTSHELLS" // "Picked up 4 shotgun shells."
+   {{Property|Inventory.Amount}} 4
+   {{Property|Inventory.MaxAmount}} 50
+   {{Property|Ammo.BackpackAmount}} 4
+   {{Property|Ammo.BackpackMaxAmount}} 100
+   {{Property|Inventory.Icon}} "SHELA0"
+   States
+   {
+   Spawn:
+     SHEL A -1
+     Stop
+   }
+ }</text>
+    <sha1>7o6u9owku62uv9bmncf2y4456cdxfi8</sha1>
+  </revision>
+</page>

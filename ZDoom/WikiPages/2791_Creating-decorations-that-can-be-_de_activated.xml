@@ -1,0 +1,55 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>Creating decorations that can be (de)activated</title>
+  <ns>0</ns>
+  <id>2791</id>
+  <revision>
+    <id>52199</id>
+    <parentid>51718</parentid>
+    <timestamp>2024-04-02T14:53:02Z</timestamp>
+    <contributor>
+      <username>Jekyll Grim Payne</username>
+      <id>2175</id>
+    </contributor>
+    <origin>52199</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="1960" sha1="omm7yes6gx5etdkrp8n4eqp9jzxj2wh" xml:space="preserve">{{warning|'''This guide is outdated.''' It relies on the functionality of [[DECORATE]] which is currently [[Deprecation|deprecated]]. For an up-to-date method in [[ZScript]], see the [[Used|'''Used()''']] virtual function page, it has examples of the same feature.}}
+
+You can also define objects that change their state when being activated or deactivated.
+
+For this purpose, two base classes exist: {{Class|SwitchableDecoration}} and {{Class|SwitchingDecoration}}.
+
+Switchable decoration can be activated and deactivated; whereas switching decorations can only be activated but not deactivated again.
+
+These classes use two special state labels: '''Active''' and '''Inactive'''. You must of course include a spawn state in addition to these two special states to have the actor work properly when spawned.
+
+Activation and deactivation can be controlled by the action specials [[Thing_Activate]] (130) and [[Thing_Deactivate]] (131). In addition, the {{Property|Activation}} property and the {{Flag|BUMPSPECIAL}} and {{Flag|USESPECIAL}} flags can be used to make it possible to control how the actor is activated even without [[ACS]].
+
+An example: this torch starts unlit (TRCHA0), but if the player presses "use" in front of it, it is lighted (TRCHB0). With a switchable decoration and the THINGSPEC_Switch activation flag as well, then it would be possible to make a torch that can be lit and unlit several times.
+
+ Actor Torch : SwitchingDecoration 10242
+ {
+   {{Property|Height}} 40
+   {{Property|Radius}} 20
+   {{Property|Activation}} THINGSPEC_Activate
+   +{{Flag|SOLID}}
+   +{{Flag|USESPECIAL}} 
+   States
+   {
+   Spawn:
+     TRCH A 10
+     Loop
+   Active:
+     TRCH B 10 [[A_PlaySound]]("torch/start")
+     TRCH B 10
+     Wait
+   }
+ }
+
+== External links ==
+* [http://www.realm667.com/index.php?option=com_content&amp;task=view&amp;id=852&amp;pop=1&amp;page=20&amp;Itemid=163 Switchable tech lamp] - a working, full fledged example for Doom 2.
+
+[[Category:DECORATE guides]]</text>
+    <sha1>omm7yes6gx5etdkrp8n4eqp9jzxj2wh</sha1>
+  </revision>
+</page>

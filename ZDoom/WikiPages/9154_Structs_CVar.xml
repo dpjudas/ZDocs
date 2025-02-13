@@ -1,0 +1,131 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>Structs:CVar</title>
+  <ns>0</ns>
+  <id>9154</id>
+  <revision>
+    <id>52417</id>
+    <parentid>51972</parentid>
+    <timestamp>2024-04-12T10:36:05Z</timestamp>
+    <contributor>
+      <username>Jekyll Grim Payne</username>
+      <id>2175</id>
+    </contributor>
+    <comment>/* Examples */ Server cvars don't need FindCVar. Removed it from the example</comment>
+    <origin>52417</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="4640" sha1="9emf32mxp591jkjt2ugki9ohcis0114" xml:space="preserve">{{ZScriptNote}}
+
+The '''CVar''' [[Structs|struct]] is a container of functions (methods) used to access and manipulate [[console variables]].
+
+== Methods ==
+=== Static ===
+*{{c|CVar '''{{LE|FindCVar}}''' (Name ''name'')}}
+:({{Color|red|'''Warning:'''}} using this function to get and manipulate user-[[CVARINFO#scope|scoped]] variables can cause demos and multiplayer games to desync. It's recommended to use '''GetCVar'''() instead and pass a specific player's info.)
+:Returns a pointer to the specified console variable by name. If the variable could not be found, the function returns {{c|null}}.
+
+*{{c|CVar '''{{LE|GetCVar}}''' (Name ''name'', PlayerInfo ''player'' {{=}} null)}}
+:Returns a pointer to the specified console variable by name. For user-[[CVARINFO#scope|scoped]] variables, ''player'' is the player whose copy of the variable to get. For server-scoped variables, ''player'' is meaningless and thus ignored. If the variable could not be found, or it is user-scoped and ''player'' is {{c|null}}, the function returns {{c|null}}.
+
+'''Note:''' Server-scoped CVars and GZDoom's internal CVars can be directly accessed through their name. '''Find'''/'''GetCVar'''() are not necessary in those instances.
+
+=== Non-static ===
+*{{c|bool '''{{LE|GetBool}}''' ()}}
+:Returns the value of the console variable as a [[CVARs#boolean|boolean]] value.
+
+*{{c|double '''{{LE|GetFloat}}''' ()}}
+:Returns the value of the console variable as a [[CVARs#float|floating-point]] value.
+
+*{{c|int '''{{LE|GetInt}}''' ()}}
+:Returns the value of the console variable as an [[CVARs#integer|integer]] value. For [[CVARs#color|color]] console variables this will return an RGB value in the form of three integers, such as &lt;code&gt;255, 0, 0&lt;/code&gt; for red. It can then be directly passed to a '''color'''-type field.
+
+*{{c|int '''{{LE|GetRealType}}''' ()}}
+:Returns the type of the console variable. The types are as follows:
+:*'''CVAR_Bool'''
+:*'''CVAR_Int'''
+:*'''CVAR_Float'''
+:*'''CVAR_String'''
+:*'''CVAR_Color'''
+
+*{{c|String '''{{LE|GetString}}''' ()}}
+:Returns the value of the console variable as a [[CVARs#string|string]]. For [[CVARs#color|color]] console variables, this is in the form of {{c|"RR GG BB"}}, e.g. &lt;code&gt;"00 ff 00"&lt;/code&gt; for green.
+
+{{note|Engine-defined console variables can only be set or reset from [[ZScript menus|menus]].}}
+
+*{{c|int '''{{LE|ResetToDefault}}''' ()}}
+:Resets the console variable's value to its default value.
+
+*{{c|void '''{{LE|SetBool}}''' (bool ''b'')}}
+:Sets the value of a boolean console variable to the specified value.
+
+*{{c|void '''{{LE|SetFloat}}''' (double ''v'')}}
+:Sets the value of a floating-point console variable to the specified value.
+
+*{{c|void '''{{LE|SetInt}}''' (int ''v'')}}
+:Sets the value of an integer or color console variable to the specified value. For color console variables, this can be done by passing the value as a hexadecimal value, e.g. {{c|0x00ff00}} for ''green''.
+
+*{{c|void '''{{LE|SetString}}''' (String ''s'')}}
+:Sets the value of a string or color console variable to the specified string. For color console variables, this can be done by passing the value in the form of {{c|"RR GG BB"}}, e.g. {{c|"00 ff 00"}} for ''green''. Color names from the [[X11R6RGB]] lump are also acceptable.
+
+== Handlers ==
+Custom CVars are capable of having "handlers" associated with them, which directly control the variables of the CVars. There are five classes in total:
+* CustomIntCvar
+* CustomFloatCvar
+* CustomStringCvar
+* CustomBoolCvar
+* CustomColorCvar
+
+In CVARINFO:
+ User HandlerClass(SomeValueClamper) Float SomeValueCVar
+
+In ZScript:
+&lt;syntaxhighlight lang="csharp"&gt;
+class SomeValueClamper : CustomFloatCVar
+{
+    override double ModifyValue(Name CVarName, double val)
+    {
+        return clamp(val, 0.05, 1.0);
+    }
+}
+&lt;/syntaxhighlight&gt;
+
+This allows finer control over what values a cvar can be at any given time.
+
+== Examples ==
+The attack this {{Class|DoomImp|imp}} does depends on the value of the {{c|specialimpattack}} custom console variable.
+ // In [[CVARINFO]]:
+ server int specialimpattack;
+
+ // In ZScript:
+ class ExampleImp : {{Class|DoomImp}}
+ {
+     Default
+     {
+         +{{Flag|DONTHARMCLASS}}
+     }
+ 
+     void A_SpecialTroopAttack ()
+     {
+         switch (specialimpattack)
+         {
+             default:[[A_TroopAttack]](); break;
+             case 1: [[A_BruisAttack]](); break;
+             case 2: [[A_CyberAttack]](); break;
+         }
+     }
+ 
+     States
+     {
+     Melee:
+     Missile:
+         TROO EF 8 [[A_FaceTarget]];
+         TROO G 6 A_SpecialTroopAttack;
+         Goto See;
+     }
+ }
+
+[[Category:ZScript]]
+[[Category:Structs]]</text>
+    <sha1>9emf32mxp591jkjt2ugki9ohcis0114</sha1>
+  </revision>
+</page>

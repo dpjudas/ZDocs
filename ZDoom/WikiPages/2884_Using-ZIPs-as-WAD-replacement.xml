@@ -1,0 +1,144 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>Using ZIPs as WAD replacement</title>
+  <ns>0</ns>
+  <id>2884</id>
+  <revision>
+    <id>53469</id>
+    <parentid>52332</parentid>
+    <timestamp>2024-10-31T11:08:38Z</timestamp>
+    <contributor>
+      <username>Jekyll Grim Payne</username>
+      <id>2175</id>
+    </contributor>
+    <origin>53469</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="15687" sha1="3okmz8k9rv5icaaghph52d0jzimbe5j" xml:space="preserve">{{doomwiki|PK3}}
+:''PK3 redirects here. The PK3 file format is the same as the [[ZIP]] file format, and is treated exactly the same by ZDoom.''
+
+[[ZDoom]] allows using several compressed [[archive format]]s instead of the traditional [[WAD]]s. Most notably:
+;{{wp|ZIP_(file_format)|ZIP}}
+:A .zip file used as the container for a ZDoom mod is  usually given either the .pk3 extension (originally used by Quake 3,) .pkz (for ZDoom,) .pke (for [[Eternity Engine]]) or .ipk3 (for full-game ZIPs) instead of .zip. While there is no technical difference, this helps avoid potential confusion from users thinking the mod should be extracted from it, and also prevents Windows from presenting it as a directory. ZDoom supports several ZIP archiving methods: stored (no compression), shrunk, imploded, {{wp|DEFLATE|deflated}} (the most commonly used), {{wp|bzip2}} and {{wp|LZMA}} algorithms. Note that many ZIP utilities only partially implement the ZIP standard and as a result their support is limited to "store" and "DEFLATE" files. This partial implementation also affects some [[editing tools]] which normally support the PK3 format, such as (GZ) [[Doom Builder]] and [[SLADE]].
+;{{wp|7z}} — ''use with caution''
+:A .7z file used as the container for a ZDoom mod is usually given the .pk7, .pkz or .ipk7 extension, for similar reasons. This format offers a much better compression ratio, but it also increases the memory footprint on the engine, so caution must be taken when choosing between the 7z and ZIP format. A possibility would be to develop a mod as a ZIP file, then convert it to a 7z once finished, to decrease the size of the archive to be distributed. However, keep in mind that decompression is quite a bit slower than ZIP files, so loading times are increased, including during run-time when, for instance, new sounds are loaded. Increasing load times in favor of reduced file size is arguably not worth it nowadays.
+;Folders
+:Folders can be loaded directly by ZDoom, as if they were a ZIP or 7z file. This is most useful when creating a mod without using an editor such as [[SLADE]], as it allows the creator to make changes to their mod with their own set of tools, and quickly load it into ZDoom.
+
+Compressed archives have many advantages over (P)WADs, even for storing content for Doom:
+* Smaller file size due to compression.
+* Greatly reduced memory usage during play.
+* Proper use of directories instead of WAD namespaces.
+* You no longer need dedicated WAD management tools like XWE for manipulating your data.
+* More flexibility due to the ability to use full path names instead of 8-character ones in many systems.
+
+== How to ==
+You can embed WADs inside archives. Any WAD file found in the root directory will be added to the lump directory as well. This allows loading many of the ZIPs distributed through /idgames without the need to extract them. If several wads are included in an archive, they will be loaded in alphabetical order.
+
+{{warning|With the exception of WAD files containing maps placed under the {{c|/maps/}} subfolder of a PK3, loading WAD files inside of an archive will cause memory issues to arise. ZDoom will unpack each WAD file and use more memory to access the contents. This effect will quickly add up the more WAD files there are, potentially causing the user's PC to run out of memory. Thus, it is '''highly''' recommended to completely unpack the entire contents of any WADs inside, or part of the mod, into the sorted directories. 
+Furthermore, ZDoom supports and promotes sub-directories under the main ones for sorting purposes (i.e. sprites/Weapons/Cannon, sprites/Monsters/Technodemon, etc). No extra effort is needed to indicate the sprites are present, as ZDoom automatically scans all sub-directories.}}
+
+Unlike WADs which do not have a true directory structure, the placement of data within archives is much more strictly enforced in order to allow the engine to recognize it as a default lump. Any special data must be placed in the respective directory inside the archive or it will not be found. For the [[lump]] name, the first 8 characters of the file name are used, the extension is stripped. So for example, to place a [[MAPINFO]] into an archive, you may name your file '''MAPINFO.txt''', '''MAPINFO.lmp''', or whatever extension you like, including none, and place it in the archive's root directory. The following sub-directories are used to assign data to the existing WAD [[namespace]]s in ZDoom:
+
+{| {{prettytable}}
+|-
+| '''Directory''' || '''Description'''
+|-
+| '''acs/''' || contains [[Libraries|ACS libraries]] normally found between '''A_START''' and '''A_END'''
+|-
+| '''colormaps/''' || contains [[Boom]] colormaps normally found between '''C_START''' and '''C_END'''. New ZDoom WADs should not need to use this.
+|-
+| '''filter/''' || contains lumps and directories that will only be loaded with specific games. See [[Lump_filtering|lump filtering]].
+|-
+| '''flats/''' || contains [[flat]]s normally found between '''FF_START''' and '''FF_END'''
+|-
+| '''graphics/''' || All special graphics like title pictures or font characters must go here. ''This namespace does not exist in WADs.''
+|-
+| '''hires/''' || contains high-resolution textures normally found between [[HI_START]] and [[HI_END]]
+|-
+| '''maps/''' || contains levels in form of WADs. These WADs must only contain the data for one single level (including GL nodes lumps if required). Any other data in such a WAD will be ignored. Note that the file name and not the map label inside the WAD determines how the map is named in the game.
+|-
+| '''music/''' || contains all data that is used as music. ''This namespace does not exist in WADs.''
+|-
+| '''patches/''' || contains [[patch]]es normally found between '''PP_START''' and '''PP_END'''
+|-
+| '''sounds/''' || contains all sound files that are referenced by [[SNDINFO]]. ''This namespace does not exist in WADs.''
+|-
+| '''sprites/''' || contains [[sprite]]s normally found between '''[[S_START]]''' and '''[[S_END]]''' (also known as '''SS_START''', '''SS_END''')
+|-
+| '''textures/''' || contains [[texture]]s normally found between [[TX_START]] and [[TX_END]] (texture override [[namespace]])
+|-
+| '''voices/''' || contains ''[[Strife]]'' dialog sounds normally found between '''V_START''' and '''V_END'''
+|-
+| '''voxels/''' || contains [[voxel]] objects normally found between '''VX_START''' and '''VX_END'''
+|-
+| '''/''' || contains objects in the global namespace, such as [[MAPINFO]] and [[ZScript]] files
+|}
+
+== Tips ==
+* [[SLADE]] or similar programs are recommended for creating the actual archive file, to ensure programs like WinZIP or WinRAR do not create them with unsupported file compression. Otherwise, they may appear to be damaged, which may hinder modifications of the file with SLADE, Slumped, etc.
+
+* [[SLADE]] is also capable of editing many file types with special syntax highlighting similar to an integrated development environment, thus making it very useful for writing [[DECORATE]] and the like.
+
+* The archive file's directory is sorted alphabetically before adding it to the lump directory; any WAD files in the root are then loaded afterwards. Keep that in mind when creating data that relies on file name ordering. For most things, there is no need to depend on ordering, with the exception of texture animations of type ''range'' that animate textures from the flats/ or textures/ sub-directories.
+
+* Any file not in one of the reserved directories is not added to the WAD directory and can only be used by code that looks for full path names, which includes many things. The full extent of this is not listed here as it is often changing, so you will have to find which things support it yourself.
+
+* Sprite lumps for the '''\''' frame in a WAD (such as '''VILE\*''' for one of the Arch-Vile's healing frames) can be put in an archive, the backslash character just has to be changed to a caret character ('''^'''). So, '''VILE^1''' to '''VILE^8''' in an archive will be interpreted as the '''VILE\1''' to '''VILE\8''' lumps. This replacement only works for sprites, any other lump name should not contain backslashes anywhere. As it is possible to use multiple sprite names for an actor with [[DECORATE]], frames beyond '''Z''' need not be used however.
+
+* It is ''strongly'' recommended to use the .pk3, .pk7 or .pkz extension, not .zip or .7z, when creating a file meant to be loaded directly into ZDoom. The average user is used to opening a .zip file and extracting a .wad from it, so naming the actual game file a .zip will often cause unwanted confusion.
+
+* '''The contents of the files inside the archive must be identical to the lumps in a WAD.''' This is especially important for graphics. '''ZDoom does not read .BMP files!''' Even though that is the most likely format you will encounter, importing them with a WAD manager will convert them to Doom's internal format. [[XWE]] converts graphics encoded in Doom's internal format to .BMP during export. [[SLumpEd]] and [[SLADE]] can export these graphics as raw Doom lumps, and [[SLADE]] can also export them as [[PNG]]. In order for ZDoom to recognize graphics as such, they have to be either in Doom's internal format or a supported [[image format]] such as [[PNG]].
+
+* '''Beware of hidden files!''' If you add a full directory or directory tree to an archive, it is possible that unwanted system files (such as Windows' &lt;tt&gt;thumbs.db&lt;/tt&gt; file that tends to be created in any folder containing pictures) will be included as well. They will needlessly increase the file size and can trigger warning messages when loading ZDoom. [[Slumped]] frequently crashes when browsing through an archive's resources, as it expects thumbs.db to be a graphic and obtain incoherent values.
+
+== Using folders instead of archives ==
+
+A PK3/ZIP mod doesn't have to be packed to be usable. If it's unpacked in a folder with the same internal structure as a PK3 would have, it'll work in the same manner. GZDoom can run folders just like PK3 archives, for example:
+ gzdoom.exe -iwad doom2.wad -file mods\mymod
+"mymod" in this example is the name of a folder that contains all the same lumps and subfolders, such as '''Sprites''', '''Textures''', etc. 
+Lumps can use any extension or even no extension, so for example ''MAPINFO.txt'', ''MAPINFO.mod'' or just ''MAPINFO'' will all work fine.
+
+Long paths are also supported:
+ gzdoom.exe -iwad tnt.wad -file "C:\Doom\My Projects\MyWipMod"
+
+SLADE can also open folders and parse them in the same manner as WAD or PK3 by using File &gt; Open Directory.
+
+There's a number of significant advantages to using folders instead of PK3, so it's often a very good idea to keep work-in-progress mods in a folder and only pack them when you're ready to ship them for other players to use. Here are some of those advantages:
+
+* You don't have to use SLADE for editing everything; instead you can use your favorite software to edit whichever part of the mod you like. For example, you can edit your ZScript/DECORATE code files with your favorite code editing software. Notepad++ and TextPad can even use ZScript/DECORATE syntax highlighting (see [https://forum.zdoom.org/viewtopic.php?f=3&amp;t=46674 this forum thread]).
+* You don't have to open the whole archive when you only need to edit a specific part of it. Accessing a folder with Windows Explorer or another file manager is much faster than unpacking a PK3 with SLADE, and when you make a change to a specific lump (such as ZScript.txt), you only have to save changes to that lump instead of saving the whole archive and waiting when the changes get applied to it.
+* SLADE is prone to occasional crashes and data corruption. Using a folder method significantly diminishes the chances of that happening.
+* SLADE is still necessary to do things like sprite offseting. However, using File &gt; Open Directory in SLADE you can open a specific sprite subdirectory (such as "Mymod\sprites\weapons\shotgun\") instead of opening the whole archive. This is faster, and also in case of a crash or power outage the possible data corruption will only affect that specific folder and not the whole project.
+* You can turn your folder into a [https://help.github.com/en/github/getting-started-with-github GitHub repository]. This allows very easy version control, releases, tools for collaboration between multiple authors, and also ensures that your work won't be lost because it'll be kept in a cloud storage. Also this way your repository will be downloadable and runnable at any point.
+
+Notes:
+* External script editing software, such as Notepad++, doesn't have built-in pop-up tips for ZScript/DECORATE functions.
+* GZDoom will take a bit longer to load a folder into memory to run it compared to a PK3.
+* Bear in mind that most visual editing software removes offset metadata from images when they're edited, so if you edit a sprite, you'll have to use SLADE to set its offsets again. (This is true for PK3 as well but becomes more apparent and easier to miss with a folder method.) This can be circumvented by defining sprite offsets in the [[TEXTURES]] lump rather than directly in the sprites. Note that you'll still need SLADE to use TEXTURES visual editor.
+* SLADE does not create backups for folders, as opposed to WADs and PK3s. If you're using GitHub, however, this won't matter, since GitHub client will track all changes and allow to revert them.
+
+== Storing maps in a PK3 ==
+The maps themselves can only exist inside WAD files, whereas all other assets and code are best stored in a PK3. If you're making a project that contains both custom assets and custom maps, it's important to know how exactly they can be combined. While it's possible to ship your project as 2 separate files (a WAD containing all of your maps, and a PK3 containing all the assets) and ask the users to run them together, it's arguably more convenient to package everything in a single PK3. To achieve that, you need the following:
+
+1. Every map has to be saved in a separate WAD file, and the name of that file must match the internal name of the map, as defined in [[MAPINFO]]: for example MAP01.wad, MAP02.wad, or E1M1.wad, EM1M2.wad, and such. (Note, more customized and/or longer names are possible as well.)
+
+2. All WAD files containing maps must be placed under the {{c|maps/}} subfolder in your PK3 archive.
+
+3. Your [[MAPINFO]] lump, containing definitions for the maps, must be placed at the root of your PK3 archive (alongside other text lumps, such as ZScript, MODELDEF, ANIMDEFS, etc.).
+
+Note, this only applies to packaging the final project when you're ready to ship it; you're not required to use this method of storing while your project is in development. While working on your project, you can store maps and assets separately (and, as described above, the assets can be stored in an unpacked folder as well).
+
+'''Putting the maps at the root of your PK3 should be avoided''': this will make GZDoom load all the maps into memory at once, which may lead to poor performance.
+
+== Compatibility ==
+All modern editing tools are capable of handling raw folders and ZIP files, although none support 7z files so far.
+
+[[Vavoom]] and [[Doomsday]] also use ZIP files for their resources; however their sub-directory organization differ. Adapting a mod from one of these ports to work in ZDoom may therefore require repackaging, in addition to conversion of enhanced features to their ZDoom equivalent. The [[Eternity Engine]] adopted a model mostly similar to ZDoom's, but different enough for incompatibility to be possible in both ways.
+
+== See also ==
+* [[Tips for using ZIPs as WAD replacement]]
+
+[[Category: Guides]][[Category:Technical aspects]]</text>
+    <sha1>3okmz8k9rv5icaaghph52d0jzimbe5j</sha1>
+  </revision>
+</page>

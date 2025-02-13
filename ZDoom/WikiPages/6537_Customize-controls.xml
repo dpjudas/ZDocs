@@ -1,0 +1,227 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>Customize controls</title>
+  <ns>0</ns>
+  <id>6537</id>
+  <revision>
+    <id>44225</id>
+    <parentid>41158</parentid>
+    <timestamp>2017-03-20T13:03:59Z</timestamp>
+    <contributor>
+      <username>Gez</username>
+      <id>1283</id>
+    </contributor>
+    <minor />
+    <comment>removing "new" for GZDoom 2.4.0 release</comment>
+    <origin>44225</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="11001" sha1="p6hojrpe23tkc4f0z0iai6mitdczdto" xml:space="preserve">{{menutrail|Main menu|Options menu}}
+[[File:CustomizeControls.png|thumb|The customize controls menu in [[Strife]].]]The '''customize controls''' menu allows to bind and unbind actions to keys and buttons from the keyboard, mouse or joystick. Its [[MENUDEF]] name is {{c|CustomizeControls}} and it can be summoned with the {{c|{{CCMD|O|menu_keys}}}} console command.
+
+While in the menu, the "Enter" key selects a command for adding a bound key, the "Escape" key cancels the change, and the "Backspace" key unbinds all keys bound to this command. Controls that are bound to an action with a + prefix (e.g. "+attack") are continuous: they start being executed when the corresponding key is pressed, and will continue until the key is released, issuing the reverse command ("-attack" in this example). Any [[console command]] can be bound to a key; custom sections with additional commands can be added to the standard customize controls menu with a [[KEYCONF]] lump. 
+
+The controls are listed in this order:
+:*Controls &amp;mdash; generic movement, action and attack keys
+:*Chat &amp;mdash; say and team say
+:*Weapons &amp;mdash; next and previous
+:*Inventory &amp;mdash; next and previous, use, drop
+:*Others &amp;mdash; [[automap]], [[chasecam]], coop [[spying]], [[screenshot]], [[console]]
+:*Strife popup screens &amp;mdash; the [[Strife]] HUD has three popup screens revealing various info
+:*''Custom'' &amp;mdash; mods may feature additional functions through a [[KEYCONF]] lump; if so they will be displayed there.
+
+==Controls==
+*'''{{LE|Fire|+attack}}'''
+:{{c|{{CCMD|P|+attack}}}}
+:Activates the current weapon's primary fire.
+*'''{{LE|Secondary Fire|+altattack}}'''
+:{{c|{{CCMD|P|+altattack}}}}
+:Activates the current weapon's secondary fire.
+*'''{{LE|Weapon Reload|+reload}}'''
+:{{c|{{CCMD|P|+reload}}}}
+:Activates the current weapon's reload function.
+*'''{{LE|Weapon Zoom|+zoom}}'''
+:{{c|{{CCMD|P|+zoom}}}}
+:Activates the current weapon's zoom function.
+*'''{{LE|Weapon State 1|+user1}}'''
+:{{c|{{CCMD|P|+user1}}}}
+:Activates the current weapon's custom state #1.
+*'''{{LE|Weapon State 2|+user2}}'''
+:{{c|{{CCMD|P|+user2}}}}
+:Activates the current weapon's custom state #2.
+*'''{{LE|Weapon State 3|+user3}}'''
+:{{c|{{CCMD|P|+user3}}}}
+:Activates the current weapon's custom state #3.
+*'''{{LE|Weapon State 4|+user4}}'''
+:{{c|{{CCMD|P|+user4}}}}
+:Activates the current weapon's custom state #4.
+*'''{{LE|Use / Open|+use}}'''
+:{{c|{{CCMD|P|+use}}}}
+:Attempts to trigger switches, open doors or otherwise activate things in front of the player.
+*'''{{LE|Move forward|+forward}}'''
+:{{c|{{CCMD|P|+forward}}}}
+:Move forward. If the [[#Keyboard look|keyboard look key]] is pressed, look downward instead.
+*'''{{LE|Move backward|+back}}'''
+:{{c|{{CCMD|P|+back}}}}
+:Move backward. If the [[#Keyboard look|keyboard look key]] is pressed, look upward instead.
+*'''{{LE|Strafe left|+moveleft}}'''
+:{{c|{{CCMD|P|+moveleft}}}}
+:Move to the left without turning. When moving forward or backward and strafing at the same time, the player avatar's overall speed is increased, a technique known as {{dw|straferrunning}}. This can be even more increased by combining it with the [[#Strafe|strafe key]] and a turn in the same direction.
+*'''{{LE|Strafe right|+moveright}}'''
+:{{c|{{CCMD|P|+moveright}}}}
+:Move to the right without turning. See [[#Strafe left|strafe left]] above for more details.
+*'''{{LE|Turn left|+left}}'''
+:{{c|{{CCMD|P|+left}}}}
+:Rotate towards the left. If the [[#Strafe|strafe key]] is pressed, moves towards the left instead.
+*'''{{LE|Turn right|+right}}'''
+:{{c|{{CCMD|P|+right}}}}
+:Rotate towards the right. If the [[#Strafe|strafe key]] is pressed, moves towards the right instead.
+*'''{{LE|Quick Turn|turn180}}'''
+:{{c|{{CCMD|P|turn180}}}}
+:Do an instant 180° turn.
+*'''{{LE|Jump|+jump}}'''
+:{{c|{{CCMD|P|+jump}}}}
+:Jump. Jumping may be disabled by [[gameplay options]] and [[MAPINFO]] [[map definition]]s.
+*'''{{LE|Crouch|+crouch}}'''
+:{{c|{{CCMD|P|+crouch}}}}
+:Crouch. Crouching may be disabled by [[gameplay options]] and [[MAPINFO]] [[map definition]]s.
+*'''{{LE|Crouch Toggle|crouch}}'''
+:{{c|{{CCMD|P|crouch}}}}
+:Toggles crouch mode on and off.
+*'''{{LE|Fly / Swim up|+moveup}}'''
+:{{c|{{CCMD|P|+moveup}}}}
+:Move upwards when flying or swimming.
+*'''{{LE|Fly / Swim down|+movedown}}'''
+:{{c|{{CCMD|P|+movedown}}}}
+:Move downwards when flying or swimming.
+*'''{{LE|Stop flying|land}}'''
+:{{c|{{CCMD|P|land}}}}
+:Stop using a {{Class|PowerFlight}} item. As long as it is still active, however, jumping or moving up will resume flight. In [[Heretic]] and [[Hexen]], the {{Class|ArtiFly|Wings of Wrath}} icon will stop rotating as long as the powerup is active but flight is suspended.
+*'''{{LE|Mouse look|+mlook}}'''
+:{{c|{{CCMD|P|+mlook}}}}
+:Allows to look up and down with the mouse while this key is pressed. The [[mouse options]] menu can toggle permanent mouse look on or off.
+*'''{{LE|Keyboard look|+klook}}'''
+:{{c|{{CCMD|P|+klook}}}}
+:Allows to look up and down with the backward and forward move keys.
+*'''{{LE|Look up|+lookup}}'''
+:{{c|{{CCMD|P|+lookup}}}}
+:Look upward.
+*'''{{LE|Look down|+lookdown}}'''
+:{{c|{{CCMD|P|+lookdown}}}}
+:Look downward.
+*'''{{LE|Center view|centerview}}'''
+:{{c|{{CCMD|P|centerview}}}}
+:Reset view pitch to the horizontal.
+*'''{{LE|Run|+speed}}'''
+:{{c|{{CCMD|P|+speed}}}}
+:Changes player speed from walk speed to run speed while pressed. If "always run" is on ({{c|{{CCMD|P|cl_run}}}} [[console variable]]), this operates in reverse and allow to walk while pressed.
+*'''{{LE|Strafe|+strafe}}'''
+:{{c|{{CCMD|P|+strafe}}}}
+:Changes the [[#Turn left|turn left]] and [[#Turn right|turn right]] commands from turning to strafing. This can be combined with direct strafe moves to artificially increase the player speed.
+*'''{{LE|Show Scoreboard|+showscores}}'''
+:{{c|{{CCMD|P|+showscores}}}}
+:Display the [[multiplayer]] [[scoreboard]]. Customizing the scoreboard can be achieved with the [[scoreboard options]] menu.
+*'''{{LE|Toggle Scoreboard|togglescoreboard}}'''
+:{{c|{{CCMD|P|togglescoreboard}}}}
+:Toggles the [[multiplayer]] [[scoreboard]] on and off.
+
+==Chat==
+*'''{{LE|Say|messagemode}}'''
+:{{c|{{CCMD|P|messagemode}}}}
+:Pressing this key opens a small text input field which intercepts the next keystrokes until the message is finished by hitting the "Enter" key or canceled by hitting the "Escape" key. When finished, the message is sent to all other players.
+*'''{{LE|Team say|messagemode2}}'''
+:{{c|{{CCMD|P|messagemode2}}}}
+:This works the same as [[#Say|say]], with the difference that the message is only sent to other players on the same team.
+
+==Weapons==
+*'''{{LE|Next weapon|weapnext}}'''
+:{{c|{{CCMD|P|weapnext}}}}
+:Selects the next weapon in slot order. For example, if the Doom {{Class|chainsaw}} is selected, hitting this key will switch to the {{Class|pistol}}.
+*'''{{LE|Previous weapon|weapprev}}'''
+:{{c|{{CCMD|P|weapprev}}}}
+:Selects the next weapon in slot order. For example, if the Heretic {{Class|crossbow}} is selected, hitting this key will switch to the {{Class|GoldWand|gold wand}}.
+*'''{{LE|Weapon Slot 1|slot 1}}'''
+:{{c|{{CCMD|P|slot}} 1}}
+:Selects the next weapon in the first slot. For example, Doom's {{Class|chainsaw}} or {{Class|fist}}, Heretic's {{Class|staff}}, and so on.
+*'''{{LE|Weapon Slot 2|slot 2}}'''
+:{{c|{{CCMD|P|slot}} 2}}
+:Selects the next weapon in the second slot. For example, Doom's {{Class|pistol}}, Heretic's {{Class|GoldWand|gold wand}}, and so on.
+*'''{{LE|Weapon Slot 3|slot 3}}'''
+:{{c|{{CCMD|P|slot}} 3}}
+:Selects the next weapon in the third slot. For example, Doom's {{Class|shotgun}} or {{Class|superShotgun|super shotgun}}, Heretic's {{Class|crossbow}}, and so on.
+*'''{{LE|Weapon Slot 4|slot 4}}'''
+:{{c|{{CCMD|P|slot}} 4}}
+:Selects the next weapon in the fourth slot. For example, Doom's {{Class|chaingun}}, Heretic's {{Class|Blaster|dragon claw}}, and so on.
+*'''{{LE|Weapon Slot 5|slot 5}}'''
+:{{c|{{CCMD|P|slot}} 5}}
+:Selects the next weapon in the fifth slot. For example, Doom's {{Class|RocketLauncher|rocket launcher}}, Heretic's {{Class|SkullRod|Hell staff}}, and so on.
+*'''{{LE|Weapon Slot 6|slot 6}}'''
+:{{c|{{CCMD|P|slot}} 6}}
+:Selects the next weapon in the sixth slot. For example, Doom's {{Class|PlasmaRifle|plasma rifle}}, Heretic's {{Class|PhoenixRod|phoenix rod}}, and so on.
+*'''{{LE|Weapon Slot 7|slot 7}}'''
+:{{c|{{CCMD|P|slot}} 7}}
+:Selects the next weapon in the seventh slot. For example, Doom's {{Class|BFG9000}}, Heretic's {{Class|Mace|firemace}}, and so on.
+*'''{{LE|Weapon Slot 8|slot 8}}'''
+:{{c|{{CCMD|P|slot}} 8}}
+:Selects the next weapon in the eighth slot.
+*'''{{LE|Weapon Slot 9|slot 9}}'''
+:{{c|{{CCMD|P|slot}} 9}}
+:Selects the next weapon in the ninth slot.
+*'''{{LE|Weapon Slot 0|slot 0}}'''
+:{{c|{{CCMD|P|slot}} 0}}
+:Selects the next weapon in the tenth slot.
+
+==Inventory==
+*'''{{LE|Activate item|invuse}}'''
+:{{c|{{CCMD|P|invuse}}}}
+:Activate the currently selected item.
+*'''{{LE|Activate all items|invuseall}}'''
+:{{c|{{CCMD|P|invuseall}}}}
+:Activate one of each item currently in the inventory.
+*'''{{LE|Next item|invnext}}'''
+:{{c|{{CCMD|P|invnext}}}}
+:Selects the next item on the inventory bar. The order depends on the order in which they were picked up.
+*'''{{LE|Previous item|invprev}}'''
+:{{c|{{CCMD|P|invprev}}}}
+:Selects the previous item on the inventory bar. The order depends on the order in which they were picked up.
+*'''{{LE|Drop item|invdrop}}'''
+:{{c|{{CCMD|P|invdrop}}}}
+:Drops one sample of the currently selected item.
+*'''{{LE|Query item|invquery}}'''
+:{{c|{{CCMD|P|invquery}}}}
+:Prints to the console the name ({{Property|Tag}} or class name) of the currently selected item, as well as its amount in the inventory.
+*'''{{LE|Drop weapon|weapdrop}}'''
+:{{c|{{CCMD|P|weapdrop}}}}
+:Drops the currently equipped weapon.
+
+==Other==
+*'''{{LE|Toggle automap|togglemap}}'''
+:{{c|{{CCMD|P|togglemap}}}}
+:Switch to [[automap]] mode, overlaid automap mode, or back to normal, depending on the {{c|{{CCMD|P|am_overlay}}}} setting in the [[automap options]] menu.
+*'''{{LE|Chasecam|chase}}'''
+:{{c|{{CCMD|P|chase}}}}
+:Toggle third-person view on or off. Note that the [[chasecam]] is considered a [[cheat]].
+*'''{{LE|Coop spy|spynext}}'''
+:{{c|{{CCMD|P|spynext}}}}
+:[[spying|Switch the screen]] to what the next coop player is viewing. The [[HUD]], however, remains your own.
+*'''{{LE|Screenshot|screenshot}}'''
+:{{c|{{CCMD|P|screenshot}}}}
+:Takes a [[screenshot]].
+*'''{{LE|Open console|toggleconsole}}'''
+:{{c|{{CCMD|P|toggleconsole}}}}
+:Opens the [[console]].
+
+==Strife popup screens==
+*'''{{LE|Mission objectives|showpop 1}}'''
+:{{c|{{CCMD|P|showpop}} 1}}
+:Displays a summary of the current mission objectives.
+*'''{{LE|Keys list|showpop 2}}'''
+:{{c|{{CCMD|P|showpop}} 2}}
+:Shows the full list of all keys in the inventory. This can take several pages.
+*'''{{LE|Weapons/ammo/stats|showpop 3}}'''
+:{{c|{{CCMD|P|showpop}} 3}}
+:Displays all standard [[Strife]] weapons and ammo types, with their status in the player's inventory.
+
+[[Category:Menus]]</text>
+    <sha1>p6hojrpe23tkc4f0z0iai6mitdczdto</sha1>
+  </revision>
+</page>

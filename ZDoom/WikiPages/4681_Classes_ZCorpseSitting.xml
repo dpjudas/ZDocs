@@ -1,0 +1,53 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>Classes:ZCorpseSitting</title>
+  <ns>0</ns>
+  <id>4681</id>
+  <revision>
+    <id>39633</id>
+    <parentid>34743</parentid>
+    <timestamp>2015-05-02T21:08:45Z</timestamp>
+    <contributor>
+      <username>Blue Shadow</username>
+      <id>2021</id>
+    </contributor>
+    <minor />
+    <comment>/* DECORATE definition */ Updated</comment>
+    <origin>39633</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="623" sha1="dsmoep2qjsf22ai4wcalqkkdkm4z8kx" xml:space="preserve">{{Actor|
+| type = Gore
+| name = Sitting corpse
+| class = ZCorpseSitting
+| game = Hexen
+| doomednum = 110
+}}[[Classes]]: &lt;u&gt;ZCorpseSitting&lt;/u&gt;&lt;br&gt;
+{{desc}}
+==== [[DECORATE]] definition ====
+ ACTOR &lt;u&gt;ZCorpseSitting&lt;/u&gt;
+ {
+   {{Property|Health}} 30
+   {{Property|Radius}} 15
+   {{Property|Height}} 35
+   +{{Flag|SOLID}}
+   +{{Flag|SHOOTABLE}}
+   +{{Flag|NOBLOOD}}
+   +{{Flag|NOICEDEATH}}
+   {{Property|DeathSound}} "FireDemonDeath"
+ 
+   action native [[A_CorpseExplode]]();
+ 
+   States
+   {
+   Spawn:
+     CPS6 A -1
+     Stop
+   Death:
+     CPS6 A 1 [[A_CorpseExplode]]
+     Stop
+   }
+ }
+[[Category:Breakable|ZCorpseSitting]]</text>
+    <sha1>dsmoep2qjsf22ai4wcalqkkdkm4z8kx</sha1>
+  </revision>
+</page>

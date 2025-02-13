@@ -1,0 +1,346 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>Sound sequence</title>
+  <ns>0</ns>
+  <id>7287</id>
+  <revision>
+    <id>43163</id>
+    <parentid>32606</parentid>
+    <timestamp>2016-09-22T16:18:55Z</timestamp>
+    <contributor>
+      <username>Gez</username>
+      <id>1283</id>
+    </contributor>
+    <minor />
+    <comment>moved information to the front of the article, before the reference tables, and added mention of Sector_ChangeSound.</comment>
+    <origin>43163</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="8761" sha1="b9pvnc5ravkqvw6myk3s94jccdrau1e" xml:space="preserve">A '''sound sequence''' is as the name implies a series of sounds that are played sequentially. The most common sound sequences are used for [[sector]] movement, such as doors opening or platform lowering: these typically have a sequence made of a "start" sound played once, followed by a "moving" sound played on a loop until the sector stops moving the a "stop" sound is played once.
+
+However, sound sequences can be used for other purposes. ''[[Heretic]]'' uses sound sequences for its [[ambient sound]]s, and they can be scripted with [[ACS]] functions such as [[SoundSequence]] and its variants. The console command {{c|{{CCMD|D|playsequence}}}} can be used to test sound sequences.
+
+To override a [[sector]]'s default sound sequences, use the [[UDMF]] {{c|soundsequence}} property with the sound sequence name, a [[sound sequence thing]] with the relevant sequence index, or the [[Sector_ChangeSound]] special with the sequence index. For [[polyobject]]s, use the ''sound'' parameter in [[Polyobj_StartLine]] or [[Polyobj_ExplicitLine]].
+
+Note that a sector has only one sound sequence. If a sector behaves both as a door and a platform, it will use the same sound sequence name (in UDMF) or index (with sound sequence thing) for both its door movements and its platform movements. Sector_ChangeSound can be used to attempt to work around this limitation, setting a door sound before running a door special and a platform sound before running a platform special.
+
+==Standard sound sequences==
+The following sequences are defined in ZDoom:
+&lt;div class="references-small" style="-moz-column-width: 15em; column-width: 15em;"&gt;
+* [[AFX_Bells]]
+* [[AFX_Drops]]
+* [[AFX_FastFootsteps]]
+* [[AFX_Growl]]
+* [[AFX_Heartbeat]]
+* [[AFX_Laughter]]
+* [[AFX_Magic]]
+* [[AFX_Scream]]
+* [[AFX_SlowFootsteps]]
+* [[AFX_Squish]]
+* [[CeilingNormal]]
+* [[CeilingSemiSilent]]
+* [[DoorAirlock]]
+* [[DoorChain]]
+* [[DoorCloseAirlock]]
+* [[DoorCloseBlazing]]
+* [[DoorCloseChain]]
+* [[DoorCloseLargeMetal]]
+* [[DoorCloseLargeWood]]
+* [[DoorCloseNormal]]
+* [[DoorCloseSmallMetal]]
+* [[DoorCloseSmallWood]]
+* [[DoorCloseStone]]
+* [[DoorLargeMetal]]
+* [[DoorLargeWood]]
+* [[DoorNormal]]
+* [[DoorOpenAirlock]]
+* [[DoorOpenBlazing]]
+* [[DoorOpenChain]]
+* [[DoorOpenLargeMetal]]
+* [[DoorOpenLargeWood]]
+* [[DoorOpenNormal]]
+* [[DoorOpenSmallMetal]]
+* [[DoorOpenSmallWood]]
+* [[DoorOpenStone]]
+* [[DoorSmallMetal]]
+* [[DoorSmallWood]]
+* [[DoorStone]]
+* [[Floor]]
+* [[HereticAmbience]]
+* [[HereticDoor]]
+* [[HereticDoorClose]]
+* [[HereticDoorOpen]]
+* [[Platform]]
+* [[Silence]]
+&lt;/div&gt;
+The following sequences are defined in the ''[[Hexen]]'' [[IWAD]]:
+&lt;div class="references-small" style="-moz-column-width: 15em; column-width: 15em;"&gt;
+* [[DoorCreak]]
+* [[DoorHeavy]]
+* [[DoorMetal]]
+* [[DoorMetal2]]
+* [[DoorNormal]]
+* [[Earth]]
+* [[Ice]]
+* [[Lava]]
+* [[Platform]]
+* [[PlatformMetal]]
+* [[PlatformMetal2]]
+* [[Silence]]
+* [[Water]]&lt;/div&gt;
+When playing ''Hexen'', the DoorNormal, Platform, and Silence sequences are overridden by those from the ''Hexen'' IWAD. The Silence sequence is identical for obvious reasons, so only DoorNormal and Platform are redefined.
+
+==Sector movement==
+The default sound sequence used for sector movement depends on the type of movement. Sector movement sequences are caused by the following specials:
+{| {{prettySortable}}
+!Special!!Default sequence||Notes
+|-
+|[[Ceiling_CrushAndRaise]]||CeilingNormal
+|-
+|[[Ceiling_CrushAndRaiseA]]||CeilingNormal
+|-
+|[[Ceiling_CrushAndRaiseDist]]||CeilingNormal
+|-
+|[[Ceiling_CrushAndRaiseSilentA]]||CeilingSemiSilent
+|-
+|[[Ceiling_CrushRaiseAndStay]]||CeilingNormal
+|-
+|[[Ceiling_CrushRaiseAndStayA]]||CeilingNormal
+|-
+|[[Ceiling_CrushRaiseAndStaySilA]]||CeilingSemiSilent
+|-
+|[[Ceiling_LowerAndCrush]]||CeilingNormal
+|-
+|[[Ceiling_LowerAndCrushDist]]||CeilingNormal
+|-
+|[[Ceiling_LowerByValue]]||CeilingNormal
+|-
+|[[Ceiling_LowerByValueTimes8]]||CeilingNormal
+|-
+|[[Ceiling_LowerInstant]]||CeilingNormal
+|-
+|[[Ceiling_LowerToFloor]]||CeilingNormal
+|-
+|[[Ceiling_LowerToHighestFloor]]||CeilingNormal
+|-
+|[[Ceiling_LowerToLowest]]||CeilingNormal
+|-
+|[[Ceiling_MoveToValue]]||CeilingNormal
+|-
+|[[Ceiling_MoveToValueTimes8]]||CeilingNormal
+|-
+|[[Ceiling_RaiseByValue]]||CeilingNormal
+|-
+|[[Ceiling_RaiseByValueTimes8]]||CeilingNormal
+|-
+|[[Ceiling_RaiseInstant]]||CeilingNormal
+|-
+|[[Ceiling_RaiseToNearest]]||CeilingNormal
+|-
+|[[Door_Animated]]||||Animated door, uses the sequences defined in [[ANIMDEFS]] with {{c|OpenSound}} and {{c|CloseSound}}
+|-
+|[[Door_Close]]||||Door, see below
+|-
+|[[Door_CloseWaitOpen]]||||Door, see below
+|-
+|[[Door_LockedRaise]]||||Door, see below
+|-
+|[[Door_Open]]||||Door, see below
+|-
+|[[Door_Raise]]||||Door, see below
+|-
+|[[Elevator_LowerToNearest]]||Floor||
+|-
+|[[Elevator_MoveToFloor]]||Floor||
+|-
+|[[Elevator_RaiseToNearest]]||Floor||
+|-
+|[[Floor_Donut]]||Floor||
+|-
+|[[Floor_LowerByValue]]||Floor||
+|-
+|[[Floor_LowerByValueTimes8]]||Floor||
+|-
+|[[Floor_LowerInstant]]||Floor||
+|-
+|[[Floor_LowerToHighest]]||Floor||
+|-
+|[[Floor_LowerToLowest]]||Floor||
+|-
+|[[Floor_LowerToLowestTxTy]]||Floor||
+|-
+|[[Floor_LowerToNearest]]||Floor||
+|-
+|[[Floor_MoveToValue]]||Floor||
+|-
+|[[Floor_MoveToValueTimes8]]||Floor||
+|-
+|[[Floor_RaiseByTexture]]||Floor||
+|-
+|[[Floor_RaiseByValue]]||Floor||
+|-
+|[[Floor_RaiseByValueTimes8]]||Floor||
+|-
+|[[Floor_RaiseByValueTxTy]]||Floor||
+|-
+|[[Floor_RaiseInstant]]||Floor||
+|-
+|[[Floor_RaiseToHighest]]||Floor||
+|-
+|[[Floor_RaiseToLowestCeiling]]||Floor||
+|-
+|[[Floor_RaiseToNearest]]||Floor||
+|-
+|[[Floor_RaiseAndCrush]]||Floor||
+|-
+|[[FloorAndCeiling_LowerByValue]]||Floor||
+|-
+|[[FloorAndCeiling_LowerRaise]]||CeilingNormal||Also plays "Floor" sequence, though see [[Boom]] emulation note in [[FloorAndCeiling_LowerRaise|article]]
+|-
+|[[FloorAndCeiling_RaiseByValue]]||Floor||
+|-
+|[[Generic_Ceiling]]||CeilingNormal
+|-
+|[[Generic_Crusher]]||CeilingNormal||Use sequence "Silence" instead if {{c|arg3}} is true
+|-
+|[[Generic_Crusher2]]||CeilingNormal||Use sequence "Silence" instead if {{c|arg3}} is true
+|-
+|[[Generic_Door]]||||Door, see below
+|-
+|[[Generic_Floor]]||Floor||
+|-
+|[[Generic_Lift]]||Platform||Use sequence "Floor" instead if {{c|arg3}} is 4
+|-
+|[[Generic_Stairs]]||Floor||
+|-
+|[[Pillar_Build]]||Floor||
+|-
+|[[Pillar_BuildAndCrush]]||Floor||
+|-
+|[[Pillar_Open]]||Floor||
+|-
+|[[Plat_DownByValue]]||Floor||
+|-
+|[[Plat_DownWaitUpStay]]||Platform||
+|-
+|[[Plat_DownWaitUpStayLip]]||Platform||Use sequence "Floor" instead if {{c|arg4}} is true
+|-
+|[[Plat_PerpetualRaise]]||Platform||
+|-
+|[[Plat_PerpetualRaiseLip]]||Platform||
+|-
+|[[Plat_RaiseAndStayTx0]]||Floor||
+|-
+|[[Plat_ToggleCeiling]]||Silence||
+|-
+|[[Plat_UpByValue]]||Floor||
+|-
+|[[Plat_UpByValueStayTx]]||Floor||
+|-
+|[[Plat_UpNearestWaitDownStay]]||Platform||
+|-
+|[[Plat_UpWaitDownStay]]||Platform||
+|-
+|[[Polyobj_DoorSlide]]||||Door, see below
+|-
+|[[Polyobj_DoorSwing]]||||Door, see below
+|-
+|[[Polyobj_Move]]||||Door, see below
+|-
+|[[Polyobj_MoveTimes8]]||||Door, see below
+|-
+|[[Polyobj_OR_Move]]||||Door, see below
+|-
+|[[Polyobj_OR_MoveTimes8]]||||Door, see below
+|-
+|[[Polyobj_OR_RotateLeft]]||||Door, see below
+|-
+|[[Polyobj_OR_RotateRight]]||||Door, see below
+|-
+|[[Polyobj_RotateLeft]]||||Door, see below
+|-
+|[[Polyobj_RotateRight]]||||Door, see below
+|-
+|[[Stairs_BuildDown]]||Floor||
+|-
+|[[Stairs_BuildDownSync]]||Floor||
+|-
+|[[Stairs_BuildUp]]||Floor||
+|-
+|[[Stairs_BuildUpDoom]]||Floor||
+|-
+|[[Stairs_BuildUpSync]]||Floor||
+|}
+
+Door sound sequences also depend on the game played.
+{| {{prettytable}}
+!Game!!Door
+|-
+!''[[Doom]]''
+|DoorNormal
+|-
+!''[[Heretic]]''
+|HereticDoor
+|-
+!''[[Hexen]]''
+|DoorNormal
+|-
+!''[[Strife]]''
+|See table below
+|}
+''Strife'' door sound sequences also depend on the upper texture name, as shown in the table below:
+{| {{prettytable}}
+!DORS*
+|DoorStone
+|-
+!DORM*
+|DoorLargeMetal
+|-
+!DORWL*
+|DoorLargeWood
+|-
+!DORW*
+|DoorSmallWood
+|-
+!Default
+|DoorSmallMetal
+|}
+
+Hexen does not specifically assign door or platform sequence indices in [[SNDSEQ]], since the number of supported sequences is limited to the existing types. Instead, it uses the following hardcoded indices:
+{| {{prettytable}}
+!Index!!Door!!Platform!!Theme
+|-
+|0||DoorNormal||Platform||Stone
+|-
+|1||DoorHeavy||Platform||Heavy
+|-
+|2||DoorMetal||PlatformMetal||Metal
+|-
+|3||DoorCreak||Platform||Creak
+|-
+|4||Silence||Silence||Silence
+|-
+|5||Lava||Lava||Lava
+|-
+|6||Water||Water||Water
+|-
+|7||Ice||Ice||Ice
+|-
+|8||Earth||Earth||Earth
+|-
+|9||DoorMetal2||PlatformMetal2||Metal 2
+|}
+
+== See also ==
+* [[Ambient sound]]
+* [[SNDSEQ]]
+* {{Class|SoundSequence}} (actor)
+* {{CCMD|D|playsequence}}
+* [[SoundSequence]] ([[ACS]] function)
+* [[SoundSequenceOnActor]]
+* [[SoundSequenceOnSector]]
+* [[SoundSequenceOnPolyobj]]
+* [[Sound sequence thing]]
+[[Category:Sound sequences]][[Category:Editing references]]</text>
+    <sha1>b9pvnc5ravkqvw6myk3s94jccdrau1e</sha1>
+  </revision>
+</page>

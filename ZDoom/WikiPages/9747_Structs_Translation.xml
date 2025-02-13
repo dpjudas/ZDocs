@@ -1,0 +1,45 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>Structs:Translation</title>
+  <ns>0</ns>
+  <id>9747</id>
+  <revision>
+    <id>51150</id>
+    <parentid>50916</parentid>
+    <timestamp>2024-01-01T11:42:53Z</timestamp>
+    <contributor>
+      <username>Jekyll Grim Payne</username>
+      <id>2175</id>
+    </contributor>
+    <minor />
+    <origin>51150</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="1076" sha1="irco5426ick7nne43qmp8k6649jbdnh" xml:space="preserve">{{ZScriptNote}}
+
+Translation is a [[Structs|struct]] that contains methods that deal with [[Translation|color translations]].
+
+==Usage==
+Color translations can be modified in [[ZScript]] dynamically but cannot be created at runtime.
+
+Each color translation has a numeric ID that can be stored in [[Classes:Actor|actors]], in their &lt;code&gt;translation&lt;/code&gt; field. This allows to easily copy translation from one actor to another with &lt;code&gt;&lt;a1&gt;.translation = &lt;a2&gt;.translation&lt;/code&gt; (where &lt;code&gt;a1&lt;/code&gt; and &lt;code&gt;a2&lt;/code&gt; are actor pointers).
+
+Translations can also be applied at runtime if they're defined in the [[TRNSLATE]] lump.
+
+==Methods==
+===Static===
+*static int '''MakeID'''(int ''group'', int ''num'')
+:{{moreinfo}}
+*native static bool '''SetPlayerTranslation'''(int ''group'', int ''num'', int ''plrnum'', PlayerClass ''pclass'')
+:{{moreinfo}}
+*native static int '''GetID'''(Name ''transname'')
+:Retrieves the ID of a translation name as defined in [[TRNSLATE]].
+===Dynamic===
+*native int '''AddTranslation'''()
+
+==Examples==
+{{noexamples}}
+
+[[Category:ZScript]]</text>
+    <sha1>irco5426ick7nne43qmp8k6649jbdnh</sha1>
+  </revision>
+</page>

@@ -1,0 +1,94 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>DrawString (BaseStatusBar)</title>
+  <ns>0</ns>
+  <id>9716</id>
+  <revision>
+    <id>52627</id>
+    <parentid>50736</parentid>
+    <timestamp>2024-05-12T10:43:24Z</timestamp>
+    <contributor>
+      <username>Jekyll Grim Payne</username>
+      <id>2175</id>
+    </contributor>
+    <comment>/* See also */ added HUDFont</comment>
+    <origin>52627</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="4129" sha1="5obeap7uxie66ln1nwlk1nzox1zsvk7" xml:space="preserve">__NOTOC__
+[[Classes:BaseStatusBar|'''BaseStatusBar''']]
+
+void '''DrawString'''(HUDFont ''font'', String ''string'', Vector2 ''pos'', int ''flags'' = 0, int ''translation'' = Font.CR_UNTRANSLATED, double ''Alpha'' = 1., int ''wrapwidth'' = -1, int ''linespacing'' = 4, Vector2 ''scale'' = (1, 1))
+
+==Usage==
+Can be used in a [[Classes:BaseStatusBar|ZScript HUD]] to draw a text string on the screen.
+
+===Parameters===
+*{{c|HUDFont '''font'''}}
+:A pointer to a previously created [[Classes:HUDFont|HUDFont]].
+*{{c|String '''string'''}}
+:The text string to print. If you want to pass a reference from the [[LANGUAGE]] lump, pass &lt;code&gt;StringTable.Localize("$LANGUAGECODE")&lt;/code&gt;.
+*{{c|Vector2 '''pos'''}}
+:The position of the string on the screen. Note that the vertical alignment can't be modified in the function, and the text is always drawn downward from the specified &lt;code&gt;pos.y&lt;/code&gt;.
+*{{c|int '''flags'''}}
+:Flags can be used to alter the starting position and the aligment of the string. Use &lt;code&gt;|&lt;/code&gt; to combine multiple flags.
+{{: BaseStatusBar SCREEN flags}}
+{{: BaseStatusBar TEXT flags}}
+*{{c|int '''translation'''}}
+:Allows applying a color translation to the whole string. Colors are defined [[Structs:Font#Font_colors|in the Font struct]].
+:If translation is specified but the string also uses color escape codes (like &lt;code&gt;\cW&lt;/code&gt;), the codes will take priority. However, the specified translation will still apply to the parts of the string that are not colorized with the code (note, the &lt;code&gt;\c-&lt;/code&gt; instruction can be used to remove previously set color; the text following this instruction will use the translation as specified by this argument).
+*{{c|double '''Alpha'''}}
+:Opacity of the string.
+*{{c|int '''wrapwidth'''}}
+:The width in pixels at which the string should wrap to the next line.
+*{{c|int '''linespacing'''}}
+:Spacing between the lines of a multi-line text.
+*{{c|Vector2 '''scale'''}}
+:Scale of the text.
+
+==Examples==
+Prints the text "A quick brown fox" using SMALLFONT in gold at the center of the screen:
+&lt;syntaxhighlight lang="csharp"&gt;
+HUDFont hfnt = HUDFont.Create(smallfont); //smallfont is a constant which can be used directly
+DrawString(hfnt, "A quick brown fox", (0, 0), DI_SCREEN_CENTER|DI_TEXT_ALIGN_CENTER, Font.CR_Gold);
+&lt;/syntaxhighlight&gt;
+
+
+Prints "A quick brown fox jumps over the lazy dog" using BigUpper font in green at the top left corner of the screen, with the maximum line width of 200 (which splits it into 3 lines using the standard 320x200 HUD resolution):
+&lt;syntaxhighlight lang="csharp"&gt;
+Font fnt = "BigUpper";
+HUDFont hfnt = HUDFont.Create(fnt);
+DrawString(hfnt, "A quick brown fox jumps over the lazy dog", (0, 0), DI_SCREEN_LEFT_TOP|DI_TEXT_ALIGN_LEFT, Font.CR_Green, wrapwidth: 200);
+&lt;/syntaxhighlight&gt;
+
+
+Prints the text "Health: AAA/BBB" in CONFONT centered exactly around the point 32 units below the center of the screen, where AAA is the current health value, and BBB is the maximum health value. The AAA part will be colorized in either green, yellow, orange or red depending on how much health the player has compared to their max health, while the rest of the string will be colored in green (thanks to the use of the &lt;code&gt;\cC&lt;/code&gt; code):
+&lt;syntaxhighlight lang="csharp"&gt;
+Font fnt = "Confont";
+HUDFont hfnt = HUDFont.Create(fnt);
+int health = CPlayer.health;
+int maxHealth = CPlayer.mo.GetMaxHealth(true);
+// Modify color based on the ratio of health to maxhealth:
+int col;
+if (health &gt;= maxhealth * 0.8)
+	col = Font.CR_Green;
+else if (health &gt;= maxhealth * 0.5)
+	col = Font.CR_Yellow;
+else if (health &gt;= maxhealth * 0.25)
+	col = Font.CR_Orange;
+else
+	col = Font.CR_Red;
+// Note that the first %d is escaled with \c- which allows the translation col to be applied to it,
+// while the rest of the string is explicitly colorized with \cC:
+DrawString(hfnt, String.Format("\cCHealth: \c-%d\cC/%d", health, maxhealth), (0, 32 - fnt.GetHeight() * 0.5), DI_SCREEN_CENTER|DI_TEXT_ALIGN_CENTER, col);
+&lt;/syntaxhighlight&gt;
+
+==See also==
+*[[Classes:BaseStatusBar]]
+*[[Classes:HUDFont]]
+*[[Structs:Font]]
+
+[[Category:ZScript]]
+[[Category:BaseStatusBar]]</text>
+    <sha1>5obeap7uxie66ln1nwlk1nzox1zsvk7</sha1>
+  </revision>
+</page>

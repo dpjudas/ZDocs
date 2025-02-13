@@ -1,0 +1,99 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>Structs:TexMan</title>
+  <ns>0</ns>
+  <id>9637</id>
+  <revision>
+    <id>50879</id>
+    <parentid>50448</parentid>
+    <timestamp>2023-10-22T09:05:21Z</timestamp>
+    <contributor>
+      <username>Inkoalawetrust</username>
+      <id>2604</id>
+    </contributor>
+    <minor />
+    <comment>Fixed formatting error.</comment>
+    <origin>50879</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="7156" sha1="6xx956mmnjwedxsj4767z99fc1ggscu" xml:space="preserve">{{ZScriptNote}}
+
+The ''TexMan'' [[Structs|struct]] contains methods with which to use GZDooms' texture manager, along with enums containing all the flags those methods use. Contrary to what the name might suggest, TexMan works with ANY type of graphic GZDoom uses, not just map textures and flats. This also includes ZDooms' [[Startup lumps]].
+
+== Methods ==
+=== Static ===
+
+*{{c|[[Structs:TextureID|TextureID]] '''{{LE|CheckForTexture}}'''(String ''name'', int ''usetype'' &lt;nowiki&gt;=&lt;/nowiki&gt; Type_Any, int ''flags'' &lt;nowiki&gt;=&lt;/nowiki&gt; TryAny)}}
+*:Checks for a graphic with the matching name, and if it finds one, returns its' [[Structs:TextureID|TextureID]].
+*:* ''name'': The name of the graphic to look for.
+*:* ''usetype'': The namespace to search for the graphic in. See also: [[Namespaces]]
+*::* '''Type_Any''': Search for a graphic with the specified ''name'' in every namespace, this is the default.
+*::* '''Type_Wall''': Search for wall textures.
+*::* '''Type_Flat''': Search for sector [[flat]] textures.
+*::* '''Type_Sprite''': Search for [[sprite]] graphics.
+*::* '''Type_WallPatch''': Search for [[patch]] graphics that are used to composite new textures with [[TEXTURES]].
+*::* '''Type_Build''': Search for image types contained within Build engine .art files. See [[Build tiles]] for more information. Doesn't actually do anything.
+*::* '''Type_SkinSprite''': Search for player [[skin]] sprites. {{verification}}
+*::* '''Type_Decal''': Search for [[decal]] graphics defined in [[DECALDEF]].
+*::* '''Type_MiscPatch''': Search for miscellaneous graphics, e.g menu and automap graphics.
+*::* '''Type_FontChar''': Search for [[font]] character graphics.
+*::* '''Type_Override''': {{moreinfo}}
+*::* '''Type_Autopage''': Search for [[automap]] backgrounds. {{verification}}
+*::* '''Type_SkinGraphic''': {{moreinfo}}
+*::* '''Type_Null''': Search for null (Non existent) graphics. {{verification}}
+*::* '''Type_FirstDefined''': Search for textures that are the first ones defined in the [[TEXTUREx]] files, such as {{dw|AASTINKY}}. 
+*:* ''flags'': The flags to use for the search.
+*::* '''TryAny''': Return the first texture that was found with the specified name {{verification}}, this is the default.
+*::* '''Overridable''': Return whatever graphic the original one was overridden by, instead of only returning the original. {{verification}}
+*::* '''ReturnFirst''': Allow the graphic to be returned if it's a ''Type_FirstDefined'' type graphic.
+*::* '''AllowSkins''': Allow the found graphic to be returned if it's a ''Type_SkinGraphic'' type graphic.
+*::* '''ShortNameOnly''': Only look for textures with short names, and ignore textures with full names. (Textures whose name is actually their full file path, instead of an 8 character or less name.)
+*::* '''DontCreate''': Used by the search for full name textures, if on, then texture manager will not create a long named texture if it can't find one yet. {{verification}}
+*::* '''Localize''': Does nothing.
+*::* '''ForceLookup''': Force the lookup of a long name texture even if it's in the archives' root directory. {{verification}}
+*::* '''NoAlias''': Does nothing.
+*{{c|String '''{{LE|GetName}}'''([[Structs:TextureID|TextureID]] ''tex'')}}
+*:Does the inverse of ''CheckForTexture'', and returns the string name of a graphic based on its' [[Structs:TextureID|TextureID]].
+*:* ''tex'': The [[Structs:TextureID|TextureID]] to find the name of.
+*{{c|int, int '''{{LE|GetSize}}'''([[Structs:TextureID|TextureID]] ''tex'')}}
+*:Gets the size of the specified graphic in pixels. This method returns two values, the first one is the width of the graphic, and the second one is its' height.
+*:* ''tex'': The [[Structs:TextureID|TextureID]] to find the size of.
+*{{c|Vector2 '''{{LE|GetScaledSize}}'''([[Structs:TextureID|TextureID]] ''tex'')}}
+*:{{moreinfo}}
+*:* ''tex'': The [[Structs:TextureID|TextureID]] to check.
+*{{c|Vector2 '''{{LE|GetScaledOffset}}'''([[Structs:TextureID|TextureID]] ''tex'')}}
+*:{{moreinfo}}
+*:* ''tex'': The [[Structs:TextureID|TextureID]] to check.
+*{{c|int '''{{LE|CheckRealHeight}}'''([[Structs:TextureID|TextureID]] ''tex'')}}
+*:Gets the real height of the graphic (Plus one), by ignoring rows of full empty pixels starting from the bottom of the image until it reaches a row with at least one non-empty pixel.
+*:* ''tex'': The [[Structs:TextureID|TextureID]] to find the true height of.
+*{{c|bool '''{{LE|OkForLocalization}}'''([[Structs:TextureID|TextureID]] ''patch'', String ''textSubstitute'')}}
+*:Checks if there is a text substitute of the specified graphic for localization. {{verification}}
+*:* ''patch'': The patch graphic to check.
+*:* ''textSubstitute'': The texture to substitute the graphic with, preferably, this should be a a string from the [[LANGUAGE]] file.
+*{{c|bool '''{{LE|UseGamePalette}}'''([[Structs:TextureID|TextureID]] ''tex'')}}
+*:Returns true if the graphic uses the games' [[palette]] instead of its' own palette. For example, PNG graphics either use no palette (True color), or use their own built-in palette (8-bit color).
+*:* ''tex'': The [[Structs:TextureID|TextureID]] to check.
+*{{c|Canvas '''{{LE|GetCanvas}}'''(String ''texture'')}}
+*:Returns the [[Classes:Canvas|canvas]] object used to draw on a canvas texture. This only works with canvas textures created through [[ANIMDEFS]] with the '''CANVASTEXTURE''' keyword.
+*{{c|void '''{{LE|SetCameraToTexture}}'''(Actor ''viewpoint'', String ''texture'', double ''fov'')}}
+*:Changes a camera textures' viewport to that of the specified actor. This only works with textures created through ANIMDEFS with the '''CAMERATEXTURE''' keyword.
+*:* ''viewpoint'': A pointer to the actor to use as the viewpoint of the camera.
+*:* ''texture'': The name of the cameratexture whose view should be changed.
+*:* ''fov'': The FOV to use for the actors' camera. To get the camera FOV of the actor itself, use the actors' {{property|CameraFOV}} property. Or if the actor is a player pawn, you can also use the players' FOV by plugging in the ''FOV'' or ''DesiredFOV'' variables from their [[Structs:PlayerInfo|PlayerInfo]] struct. Instead of using the player pawns' ''CameraFOV'' property.
+*{{c|void '''{{LE|SetCameraTextureAspectRatio}}'''(String ''texture'', double ''aspectScale'', bool ''useTextureRatio'' &lt;nowiki&gt;=&lt;/nowiki&gt; true)}}
+*:Changes a camera textures' aspect ratio.
+*:* ''texture'': The name of the camera texture whose aspect ratio should be changed.
+*:* ''aspectScale'': How much the textures' aspect ratio should be changed. Positive values squish the texture horizontally, negative ones widen it vertically. {{verification}}
+*:* ''useTextureRatio'':  If false, the textures' aspect ratio can be scaled independently of its' original ratio. If true, ''aspectScale'' is simply a multiplier to the existing aspect ratios' size. Default is true.
+*{{c|void '''{{LE|ReplaceTextures}}'''(String ''from'', String ''to'', int ''flags)}} {{deprecated}}
+*:Deprecated, use the [[ReplaceTextures (ZScript)|ReplaceTextures]] method found in the [[Structs:LevelLocals|LevelLocals]] struct instead.
+
+== See also ==
+
+*[[Structs:TextureID|TextureID struct]]
+
+[[Category:ZScript]]
+[[Category:Structs]]</text>
+    <sha1>6xx956mmnjwedxsj4767z99fc1ggscu</sha1>
+  </revision>
+</page>

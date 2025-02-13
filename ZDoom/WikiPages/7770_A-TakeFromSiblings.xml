@@ -1,0 +1,37 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>A TakeFromSiblings</title>
+  <ns>0</ns>
+  <id>7770</id>
+  <revision>
+    <id>44272</id>
+    <parentid>43077</parentid>
+    <timestamp>2017-03-20T13:20:22Z</timestamp>
+    <contributor>
+      <username>Gez</username>
+      <id>1283</id>
+    </contributor>
+    <minor />
+    <comment>removing "new" for GZDoom 2.4.0 release</comment>
+    <origin>44272</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="1337" sha1="14r5zxhpnuowug5uslbrhwzmwxvvtol" xml:space="preserve">__NOTOC__{{codepointer|Inventory}}
+int '''A_TakeFromSiblings''' (string ''type'' [, int ''count''])
+
+==Usage==
+Removes ''count'' items of type ''type'' from the calling actor's ''siblings''' inventory. The minimum amount of item of a type in an inventory is zero, removing a greater amount than what a ''sibling'' actually possesses will not result in a negative amount.
+
+An actor's ''siblings'' are actors which share a common ''master'' actor with said actor. These ''siblings'' are considered the ''children'' of the ''master''. This relationship is formed when those ''children'' actors are spawned by the ''master'' actor through {{c|[[A_SpawnItemEx]]}} with the SXF_SETMASTER flag passed to the function.
+
+===Parameters===
+*''type'': the item to take. This should be a valid {{Class|Inventory|inventory item}}.
+*''count'': the number of samples of this item to take. If this is 0 or a value which is equal to or greater than the number of samples in the inventory, the item is cleared from the inventory unless it has the {{Flag|INVENTORY.KEEPDEPLETED}} flag set, and in which case, its amount is merely reduced to 0. Default is 0.
+
+===Return value===
+The function returns the total number of ''sibling'' actors which have one or more samples of ''type'' (before attempting removal) in their inventory.
+
+==Examples==
+{{noexamples}}</text>
+    <sha1>14r5zxhpnuowug5uslbrhwzmwxvvtol</sha1>
+  </revision>
+</page>

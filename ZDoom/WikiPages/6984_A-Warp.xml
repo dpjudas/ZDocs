@@ -1,0 +1,106 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>A Warp</title>
+  <ns>0</ns>
+  <id>6984</id>
+  <revision>
+    <id>50912</id>
+    <parentid>50911</parentid>
+    <timestamp>2023-11-02T13:29:13Z</timestamp>
+    <contributor>
+      <username>Jekyll Grim Payne</username>
+      <id>2175</id>
+    </contributor>
+    <minor />
+    <comment>/* Return values */</comment>
+    <origin>50912</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="6803" sha1="f3d2ttajywlp0zl8eodkp5eqynvz8u1" xml:space="preserve">{{DISPLAYTITLE:A_Warp}}
+'''[[Classes:Actor|Actor]]'''
+
+action native state, bool '''A_Warp'''(int ''ptr_destination'', double ''xofs'' = 0, double ''yofs'' = 0, double ''zofs'' = 0, double ''angle'' = 0, int ''flags'' = 0, statelabel ''success_state'' = null, double ''heightoffset'' = 0, double ''radiusoffset'' = 0, double ''pitch'' = 0)
+
+==Usage==
+Warps the calling actor (by default) to the specified actor pointer. Originally designed as a more versatile analog to [[A_Fire]] (used by [[Classes:ArchvileFire|Arch-Vile flame]]).
+
+===Parameters===
+*'''ptr_destination''': Moves the calling actor to the specified actor pointer. See [[actor pointers]] for more information.
+*'''xofs''': Specifies how far forward/backward in front/behind of the warped-to actor the warping actor will appear. Positive numbers are further forward, and negative numbers will go backward.
+*'''yofs''': Specifies how far to the side the warping actor will appear to the warped-to. Positive numbers are further to the right, while negative numbers spawn them more to the left.
+*'''zofs''': Specifies how far upward the warping actor will appear to the warped-to actor. Positive numbers are further upward, while negative means under the actor and possibly into the ground.
+*'''angle''': Specifies an offset from the warped-to actor's angle to set the warping actor's angle to. Default (zero) is to just use the warped-to actor's angle exactly.
+*'''flags''': 
+:Flags that affect the behavior:
+:*{{c|WARPF_ABSOLUTEOFFSET}} — By default the ''xofs'' and ''yofs'' parameters apply the warped-to actor's angle; this flag disables this behaviour.
+:*{{c|WARPF_ABSOLUTEANGLE}} — Use the angle parameter as an absolute angle, instead of an offset.
+:*{{c|WARPF_ABSOLUTEPOSITION}} — Treat x, y and z offset parameters as absolute coordinates for the warping actor's position, instead of being relative to the warped-to actor's. This flag overrides WARPF_ABSOLUTEOFFSET, but can still add the z offset of floorz when used with WARPF_TOFLOOR.
+:*{{c|WARPF_USECALLERANGLE}} — Use the warping actor's angle instead of the warped-to actor's. The ''angle'' parameter will instead add itself to the warping's angle and cause it to orbit around the warped-to actor's. The greater the ''angle'' parameter, the faster it will orbit. &lt;!-- This looks really amusing in-game. --&gt;
+:*{{c|WARPF_NOCHECKPOSITION}} — Blindly accept any resultant position, instead of checking for the warp being a valid movement.
+:*{{c|WARPF_STOP}} — Reduce warping actor's velocity to 0 when the move is completed, similar to A_Stop.
+:*{{c|WARPF_TOFLOOR}} — Makes the ''zofs'' parameter relative to the floor, rather than relative to the warped-to actor.
+:*{{c|WARPF_TESTONLY}} — Does not perform any warping, but still jumps to the success state if it is able to warp. This flag ignores all other flags and properties, including but not limited to pitch and angle changes, with the exception of WARPF_NOCHECKPOSITION which always jumps to the success state.
+:*{{c|WARPF_BOB}} — Makes the warping actor's {{Flag|FLOATBOB|floatbob}} phase follow the warped-to actor's.
+:*{{c|WARPF_MOVEPTR}} — The target is set to warp instead of the calling actor. The calling actor is still responsible for performing a state jump and determining success, however.
+:*{{c|WARPF_USETID}} — If set, the first parameter changes to accept a {{c|[[TID|tid]]}} instead of an actor pointer.
+:*{{c|WARPF_COPYVELOCITY}} — Copies the warped-to actor's velocity exactly, regardless of how the warping actor is moving.
+:*{{c|WARPF_COPYPITCH}} — Copies the warped-to actor's pitch, and then adds the pitch parameter to it.
+
+:Flags to customize appearance of the warp:
+:*{{c|WARPF_INTERPOLATE}} — Keeps the warping actor's default interpolation data.
+:*{{c|WARPF_WARPINTERPOLATION}} — Modify interpolation data with the vector PlayerNewPosition - PlayerOldPosition. &lt;!-- TODO: what the hell? --&gt;
+:*{{c|WARPF_COPYINTERPOLATION}} — Copies the warped-to actor's interpolation data, allowing the warping actor to mimic it.
+*'''success_state''': An optional state to jump to if the warp succeeds.
+*'''heightoffset''': Adds the warped-to actor's {{Property|Height|height}} multiplied by ''heightoffset'' to the ''zofs'' parameter. Default is 0.
+*'''radiusoffset''': Adds the warped-to actor's {{Property|Radius|radius}} multiplied by ''radiusoffset'' to the ''xofs'' and ''yofs'' parameters. Default is 0.
+*'''pitch''': With WARPF_COPYPITCH, this parameter works exactly as ''angle'', but with pitch instead. Without WARPF_COPYPITCH, this parameter merely adds to the warping actor's pitch.
+
+'''Note:''' If the actor being warped to does not exist or has stopped existing, and the success state is defined, it will always fail to jump. Even if success state is left undefined, though, it will fail to move at all. The success state can be useful for getting rid of orbiting/external actors when the main actor is no longer being used.
+{{JumpNotice}}
+
+===Return values===
+{{ZScriptNote}}
+This function has 2 return values:
+# ''state'' — The state to jump to, if &lt;code&gt;success_state&lt;/code&gt; was defined and the jump is possible.
+# ''bool'' — Returns true if the warping succeeded. Warping may fail if the {{c|WARPF_NOCHECKPOSITION}} flag is ''not'' passed and there's no space for the warped actor to move.
+
+==Examples==
+The following example is a replication of [[A_Fire]]:&lt;br&gt;
+ [[A_Warp]]({{const|AAPTR_TRACER}}, 24, 0, 0, 0, {{const|WARPF_NOCHECKPOSITION}}|{{const|WARPF_INTERPOLATE}})
+
+
+A useful application of this function is to have "orbiters". This example {{Class|BaronOfHell|baron}} has a projectile circulating it all the time.
+
+ ACTOR SpecialBaronOfHell : {{Class|BaronOfHell}}
+ {
+   States
+   {
+   Spawn:
+     BOSS A 0 [[actor states#NoDelay|NoDelay]] [[A_CustomMissile]]("OrbitBall", 32, 0, 0, {{const|CMF_AIMDIRECTION}})
+   Idle:
+     Goto Super::Spawn
+   }
+ }
+ 
+ ACTOR OrbitBall
+ {
+   {{Property|RenderStyle}} "Add"
+   {{Property|Translation}} "0:255=%[0,0,0]:[0.93,2,0.87]" // Makes it green-colored
+   +{{Flag|MISSILE}}
+   +{{Flag|NOINTERACTION}}
+ 
+   var int user_angle; // See [[user variable]]s
+ 
+   States
+   {
+   Spawn:
+     BAL1 A 1 [[actor states#Bright|Bright]] [[actor states#NoDelay|NoDelay]] [[A_Warp]]({{const|AAPTR_TARGET}}, 32, 0, 32, user_angle, {{const|WARPF_ABSOLUTEANGLE}}|{{const|WARPF_NOCHECKPOSITION}}|{{const|WARPF_INTERPOLATE}})
+     TNT1 A 0 [[A_SetUserVar]]("user_angle", user_angle + 8)
+     Loop
+   }
+ }
+
+When choosing the [[actor pointer|pointer]] for the function, i.e, the actor the projectile should warp to, {{c|target}} is what to go for, in this case, since a projectile's target is usually the actor which fires it.
+[[category:Decorate Missile movement functions]][[category:Decorate Jump functions]]{{DEFAULTSORT:Warp}}</text>
+    <sha1>f3d2ttajywlp0zl8eodkp5eqynvz8u1</sha1>
+  </revision>
+</page>

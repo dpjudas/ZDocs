@@ -1,0 +1,81 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>Using OPL music in ZDoom</title>
+  <ns>0</ns>
+  <id>3085</id>
+  <revision>
+    <id>37699</id>
+    <parentid>37697</parentid>
+    <timestamp>2014-02-24T05:06:59Z</timestamp>
+    <contributor>
+      <username>Gez</username>
+      <id>1283</id>
+    </contributor>
+    <minor />
+    <origin>37699</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="4798" sha1="5ix4vuqnznj7vmqh8i57ztwovrquaxe" xml:space="preserve">ZDoom supports playing [[OPL]] (AdLib) tunes.
+
+To implement [[IMF]] files, used by Apogee, you can simply try loading it into your [[WAD]] like any other musical piece. If, however, that gives no musical output, there are three ways to try to solve this.
+
+== Method 1 ==
+You need [[SLADE 3]] to use this method.
+# Open the archive containing your IMF file.
+# Select the IMF file in the entry list.
+# Open the SLADE 3 console (Ctrl-2).
+# Enter the console command &lt;tt&gt;[https://github.com/sirjuddington/SLADE/wiki/addimfheader-Console-Command addimfheader]&lt;/tt&gt;.
+# You can now copy/paste the modified entry into your mod and save.
+
+== Method 2 ==
+You need a hexadecimal editor to do this.
+* If either of the first two bytes of the file are non-zero, insert two zero bytes after the first two bytes. Otherwise, add four zero bytes at the start of the file.
+* At the start of the file, insert the following nine bytes (in hexadecimal): 41 44 4C 49 42 01 00 00 01 ({{c|ADLIB}}, followed by 1, 0, 0, and 1).
+* If you did steps 1 and 2 correctly, your file should now be eleven or thirteen bytes larger than it was before.
+
+Example, from a ''Corridor 7'' song.
+
+For this song, the first 32 bytes are:
+ &lt;font color="green"&gt;00 00 00 00&lt;/font&gt; &lt;font color="blue"&gt;BD 00 00 00&lt;/font&gt; &lt;font color="green"&gt;08 00 00 00&lt;/font&gt; &lt;font color="blue"&gt;20 00 00 00&lt;/font&gt; ....½....... ... 
+ &lt;font color="green"&gt;23 00 00 00&lt;/font&gt; &lt;font color="blue"&gt;40 0B 00 00&lt;/font&gt; &lt;font color="green"&gt;43 00 00 00&lt;/font&gt; &lt;font color="blue"&gt;60 A8 00 00&lt;/font&gt; #...@...C...`¨..
+
+This is headerless, so we need to convert it using steps 1 and 2 above.
+
+''Step 2.'' The first two bytes of this file are both zero, so add four more zero bytes to the start of the file. The first 32 bytes of the file now look like this:
+ &lt;font color="green"&gt;00 00 00 00&lt;/font&gt; &lt;font color="blue"&gt;00 00 00 00&lt;/font&gt; &lt;font color="green"&gt;BD 00 00 00&lt;/font&gt; &lt;font color="blue"&gt;08 00 00 00&lt;/font&gt; ........½.......
+ &lt;font color="green"&gt;20 00 00 00&lt;/font&gt; &lt;font color="blue"&gt;23 00 00 00&lt;/font&gt; &lt;font color="green"&gt;40 0B 00 00&lt;/font&gt; &lt;font color="blue"&gt;43 00 00 00&lt;/font&gt;  ...#...@...C...
+
+''Step 3.'' Insert nine bytes at the start of the file. The first 32 bytes of the file now look like this:
+ &lt;font color="green"&gt;41 44 4C 49&lt;/font&gt; &lt;font color="blue"&gt;42 01 00 00&lt;/font&gt; &lt;font color="green"&gt;01 00 00 00&lt;/font&gt; &lt;font color="blue"&gt;00 00 00 00&lt;/font&gt; ADLIB...........
+ &lt;font color="green"&gt;00 BD 00 00&lt;/font&gt; &lt;font color="blue"&gt;00 08 00 00&lt;/font&gt; &lt;font color="green"&gt;00 20 00 00&lt;/font&gt; &lt;font color="blue"&gt;00 23 00 00&lt;/font&gt; .½....... ...#..
+
+This song has now been converted to the IMF-with-header format. It has grown thirteen bytes in size.
+
+Here is another example from a different song (titlermx.imf).
+
+This time, the first 32 bytes are:
+ &lt;font color="green"&gt;90 2F 00 00&lt;/font&gt; &lt;font color="blue"&gt;00 00 01 00&lt;/font&gt; &lt;font color="green"&gt;00 00 02 00&lt;/font&gt; &lt;font color="blue"&gt;00 00 03 00&lt;/font&gt; ./..............
+ &lt;font color="green"&gt;00 00 04 00&lt;/font&gt; &lt;font color="blue"&gt;00 00 05 00&lt;/font&gt; &lt;font color="green"&gt;00 00 06 00&lt;/font&gt; &lt;font color="blue"&gt;00 00 07 00&lt;/font&gt; ................
+
+''Step 2.'' The first two bytes are not both zero, so insert two zero bytes after them. The first 32 bytes of the file now look like this:
+ &lt;font color="green"&gt;90 2F 00 00&lt;/font&gt; &lt;font color="blue"&gt;00 00 00 00&lt;/font&gt; &lt;font color="green"&gt;01 00 00 00&lt;/font&gt; &lt;font color="blue"&gt;02 00 00 00&lt;/font&gt; ./..............
+ &lt;font color="green"&gt;03 00 00 00&lt;/font&gt; &lt;font color="blue"&gt;04 00 00 00&lt;/font&gt; &lt;font color="green"&gt;05 00 00 00&lt;/font&gt; &lt;font color="blue"&gt;06 00 00 00&lt;/font&gt; ................
+
+''Step 3.'' Add the nine header bytes to the start of the file, which leaves the first 32 bytes looking like this:
+ &lt;font color="green"&gt;41 44 4c 49&lt;/font&gt; &lt;font color="blue"&gt;42 01 00 00&lt;/font&gt; &lt;font color="green"&gt;01 90 2f 00&lt;/font&gt; &lt;font color="blue"&gt;00 00 00 00&lt;/font&gt; ADLIB...../.....
+ &lt;font color="green"&gt;00 01 00 00&lt;/font&gt; &lt;font color="blue"&gt;00 02 00 00&lt;/font&gt; &lt;font color="green"&gt;00 03 00 00&lt;/font&gt; &lt;font color="blue"&gt;00 04 00 00&lt;/font&gt; ................
+
+This file is now also in IMF-with-header format. Unlike the first example, it has grown only eleven bytes because we only needed to insert two zero bytes for step 2.
+
+==Method 3==
+You need WinAmp and the AdPlug plugin for this to work.
+Load up your desired song in WinAmp. Go to WinAmp preferences -&gt; Plug-ins -&gt; Input and configure AdPlug from the list. In the output tab, choose Disk Writer ([[RAW]] format), press OK and play your song. When it's finished playing, it's in the folder you may or may not have specified (default C:\) as '''''filename.imf''.raw'''. Load it into your WAD and it should play.
+
+==Forum links==
+* {{forum|t=7809|&amp;#91;Added&amp;#93; IMF support suggestion}}
+
+==See also==
+[[Tutorials]]
+[[category:Guides]]</text>
+    <sha1>5ix4vuqnznj7vmqh8i57ztwovrquaxe</sha1>
+  </revision>
+</page>

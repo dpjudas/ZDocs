@@ -1,0 +1,50 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>Classes:Megasphere</title>
+  <ns>0</ns>
+  <id>2488</id>
+  <revision>
+    <id>39198</id>
+    <parentid>33860</parentid>
+    <timestamp>2015-04-27T17:30:43Z</timestamp>
+    <contributor>
+      <username>Blue Shadow</username>
+      <id>2021</id>
+    </contributor>
+    <minor />
+    <comment>/* DECORATE definition */ Updated</comment>
+    <origin>39198</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="1142" sha1="1mjmkxb8v6ufjgzghm7vvd6nsyn3owp" xml:space="preserve">{{Actor|
+| type = Powerup
+| name = Megasphere
+| class = Megasphere
+| game = Doom2
+| doomednum = 83
+| spawnid = 132
+| spawnname = T_MEGASPHERE 
+}}[[Classes]]: [[Classes:Inventory|Inventory]]&amp;rarr;[[Classes:CustomInventory|CustomInventory]]&amp;rarr;&lt;u&gt;Megasphere&lt;/u&gt;
+
+A powerup found in Doom 2.  While the [[Classes:Soulsphere|Soulsphere]] gives 100 health points up to a maximum of 200, the megasphere boosts the player's health to 200% instantly, no matter how low it was. In addition, it also provides the player with 200% armor and sets their armor absorption rate to 50% as if they had picked up a [[Classes:BlueArmor|blue armor vest]] item.
+
+==== [[DECORATE]] definition ====
+ ACTOR &lt;u&gt;Megasphere&lt;/u&gt; : {{Class|CustomInventory}}
+ {
+   +{{Flag|COUNTITEM}}
+   +{{Flag|INVENTORY.ALWAYSPICKUP}}
+   {{Property|Inventory.PickupMessage}} "$GOTMSPHERE" // "MegaSphere!"
+   {{Property|Inventory.PickupSound}} "misc/p_pkup"
+   States
+   {
+   Spawn:
+     MEGA ABCD 6 Bright
+     Loop
+   Pickup:
+     TNT1 A 0 [[A_GiveInventory]]("{{Class|BlueArmorForMegasphere}}", 1)
+     TNT1 A 0 [[A_GiveInventory]]("{{Class|MegasphereHealth}}", 1)
+     Stop
+   }
+ }</text>
+    <sha1>1mjmkxb8v6ufjgzghm7vvd6nsyn3owp</sha1>
+  </revision>
+</page>

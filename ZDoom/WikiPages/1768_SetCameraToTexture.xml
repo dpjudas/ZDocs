@@ -1,0 +1,63 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>SetCameraToTexture</title>
+  <ns>0</ns>
+  <id>1768</id>
+  <revision>
+    <id>54037</id>
+    <parentid>35797</parentid>
+    <timestamp>2024-12-07T13:00:45Z</timestamp>
+    <contributor>
+      <username>Jekyll Grim Payne</username>
+      <id>2175</id>
+    </contributor>
+    <origin>54037</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="2345" sha1="tf37m2e58wi5tj547fj7uwumubvs0x0" xml:space="preserve">{{SameNameNote|ACS|ZScript|Structs:TexMan#SetCameraToTexture}}
+void '''SetCameraToTexture'''(int ''cameratid'', str ''texturename'', int ''fov''); 
+
+== Usage ==
+
+Binds the named texture to the specified camera (which does not have to be an actual camera thing).
+From this point on, whatever the camera sees in the specified FOV will be drawn onto the specified texture every frame. Apparently, there is no way to "unbind" the texture, but it can be bound to a different camera.
+
+{{forum|Camera textures are only recalculated when they are viewed|t=7423}}. Therefore, you may make liberal use of camera textures, as long as there are not several on-screen at once.
+
+Note that the texture used must be defined as a “cameratexture” in the [[ANIMDEFS]] lump.
+
+== Examples ==
+
+Sample [[ANIMDEFS]] entry:
+
+ cameratexture TCAMTEX1 128 64 fit 80 56
+
+This will make available a texture called “TCAMTEX1”, 80 pixels wide and 56 high (but with a slightly higher, horizontally-compressed resolution), that can be applied to any wall or set of walls in a map. Next, a [[Classes:SecurityCamera|camera]] thing is put in an interesting spot in the map and is given a [[TID]] (7 in this example). Afterwards, paste the following in the map's [[ACS]] script:
+
+  script 1 {{SType|Open}} {
+    [[SetCameraToTexture]]( 7, "TCAMTEX1", 90 );
+  }
+
+Now, all surfaces with TCAMTEX1 on them will be video screens showing what the camera with TID 7 sees. One could re-assign the texture to a different camera with a trigger somewhere in the level:
+
+  script 2 (int camera_tid, int fov) {
+    [[SetCameraToTexture]]( camera_tid, "TCAMTEX1", fov );
+  }
+
+Triggered by walk-over lines, this would allow to re-use the same camera texture over and over again at different points in the level, possibly saving a bit of memory and lines in ANIMDEFS. Another use is to have a script that periodically changes the screen's view:
+
+  script 3 {{SType|Open}} {
+    int inter_delay = 70; // 2 seconds between switching
+    while( {{const|TRUE}} ) {
+      [[SetCameraToTexture]]( 7, "TCAMTEX1", 90 );
+      [[Delay]]( inter_delay );
+      [[SetCameraToTexture]]( 12, "TCAMTEX1", 90 );
+      [[Delay]]( inter_delay );
+      [[SetCameraToTexture]]( 15, "TCAMTEX1", 40 ); // this one's zoomed in!
+      [[Delay]]( inter_delay );
+    }
+  }
+
+[[category:ACS Level alteration functions]]</text>
+    <sha1>tf37m2e58wi5tj547fj7uwumubvs0x0</sha1>
+  </revision>
+</page>

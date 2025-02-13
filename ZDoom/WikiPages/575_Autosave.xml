@@ -1,0 +1,52 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>Autosave</title>
+  <ns>0</ns>
+  <id>575</id>
+  <revision>
+    <id>44573</id>
+    <parentid>44557</parentid>
+    <timestamp>2017-04-02T16:34:02Z</timestamp>
+    <contributor>
+      <username>Gez</username>
+      <id>1283</id>
+    </contributor>
+    <minor />
+    <comment>/* Conversions from linedef types */</comment>
+    <origin>44573</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="1147" sha1="le7u86mgl5ufxq8rwhlsqotgk5uii6u" xml:space="preserve">{{Special|15|No parameters required|Miscellaneous}}
+
+==Usage==
+
+Automatically saves the game to an autosave slot.
+A common usage is to split levels into pieces, so that if the player dies, he or she does not have to start from the very beginning.
+
+*Note: using this will notify the player, so that using it right before an event will let the player know something may happen.
+
+==Examples==
+
+Usually this is set on a line making sure not to set it to be repeatable. If you were to be generous, you could set up a safety script like this:
+
+ script 10 (void)
+ {
+ 	if ([[GetActorProperty]](0, {{Const|APROP_HEALTH}}) &gt; 10)
+ 		[[Autosave]]();
+ }
+
+This sort of script will prevent the game from saving when the player's health is too low, as it can be considered annoying to overwrite a previous save when the player is in a dire situation.
+==External links==
+* {{oldref}}
+
+== Conversions from linedef types ==
+The following Doom map format types can be converted as Autosave:
+{| {{prettytable}}
+!Type!!Conversion!!Trigger
+|-
+|{{icon|ZDoom}}	348:W1 Autosave	|| Autosave() || Player Cross
+|-
+|{{icon|ZDoom}}	349:S1 Autosave	|| Autosave() || Player Use
+|}</text>
+    <sha1>le7u86mgl5ufxq8rwhlsqotgk5uii6u</sha1>
+  </revision>
+</page>

@@ -1,0 +1,46 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>Sector Attach3dMidtex</title>
+  <ns>0</ns>
+  <id>3593</id>
+  <revision>
+    <id>44584</id>
+    <parentid>44571</parentid>
+    <timestamp>2017-04-02T16:37:48Z</timestamp>
+    <contributor>
+      <username>Gez</username>
+      <id>1283</id>
+    </contributor>
+    <minor />
+    <comment>/* Conversions from linedef types */</comment>
+    <origin>44584</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="1418" sha1="2uk5wtigrvowu4r0wv1kbmsdd0xain3" xml:space="preserve">{{DISPLAYTITLE:Sector_Attach3dMidtex}}
+{{Special|48|lineid, tag, floororceiling|Miscellaneous|use=line}}
+
+* ''lineid'': ID of lines to attach
+* ''tag'': Tag of sector which lines to attach
+* ''floororceiling'': Which plane of the sector to attach to (0=floor, 1=ceiling)
+
+Attaches lines with the [[3D middle texture|3dMidtex]] flag to the front sector of this linedef. If the floor or ceiling of this sector moves, all attached linedefs will move their mid texture accordingly. This allows to create lifts or other moving things purely out of mid textures.
+
+There are 3 modes:
+
+* If ''tag'' is 0, and ''lineid'' is not, attach all lines with the 3dMidtex flag and the matching line ID.
+* If ''lineid'' is 0, and ''tag'' is not, attach all lines with the 3dMidtex flag in the sector(s) with the matching tag.
+* If ''tag'' and ''lineid'' are both non-zero, attach all lines with the 3dMidtex flag and the matching line ID in the sector(s) with the matching tag.
+
+This special cannot be used in a script. It has to be placed on a linedef of the controlling sector in the map.
+
+== Conversions from linedef types ==
+The following Doom map format types can be converted as Sector_Attach3dMidtex:
+{| {{prettytable}}
+!Type!!Conversion!!Trigger
+|-
+|{{icon|Eternity}} 281:3DMidTex_MoveWithFloor || Sector_Attach3DMidtex(tag, 0, 0) || 
+|-
+|{{icon|Eternity}} 282:3DMidTex_MoveWithCeiling || Sector_Attach3DMidtex(tag, 0, 1) || 
+|}</text>
+    <sha1>2uk5wtigrvowu4r0wv1kbmsdd0xain3</sha1>
+  </revision>
+</page>

@@ -1,0 +1,85 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>Font</title>
+  <ns>0</ns>
+  <id>5968</id>
+  <revision>
+    <id>51172</id>
+    <parentid>51154</parentid>
+    <timestamp>2024-01-03T12:24:33Z</timestamp>
+    <contributor>
+      <username>Jekyll Grim Payne</username>
+      <id>2175</id>
+    </contributor>
+    <comment>/* GZDoom */ Added information about indexfont</comment>
+    <origin>51172</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="3929" sha1="n51ua2xbvr7q60oh2pnw80ff1fyube9" xml:space="preserve">[[ZDoom]] uses fonts in several [[font format]]s for console messages, menu titles and options, HUD messages and so on.
+
+==GZDoom==
+
+In [[GZDoom]], all main fonts except INDEXFONT are [[Unicode font|Unicode fonts]] (although INDEXFONT also has a Unicode version). At runtime, fonts are controlled by the [[Structs:Font|Font struct]].
+* '''BIGFONT''' is stored as a series of glyphs under ''{{c|game_support.pk3/filter/doom.id/fonts/bigfont/}}''. It can be replaced {{verification}} with a custom [[Unicode font]] placed under ''{{c|/fonts/bigfont/}}'' in your [[PK3]] archive. 
+* '''BIGUPPER''' fills the same role as '''BIGFONT''', but supports both uppercase and lowercase (smallcaps) letters, and is based under ''{{c|gzdoom.pk3/filter/doom.id/fonts/bigupper/}}''.
+: BigUpper is used as the header text in GZDoom's option menus.
+* '''CONFONT''' is based on images located in ''{{c|gzdoom.pk3/fonts/consolefont/}}'', each reflecting a block of Unicode characters.
+* '''SMALLFONT''' is located under ''{{c|game_support.pk3/filter/&lt;game&gt;/fonts/defsmallfont/}}'' (where &lt;game&gt; represents a specific game ID, like {{c|doom.id}}, {{c|game-chex}}, {{c|game-hexen}}, etc.)
+* '''SMALLFONT2''' is located under ''{{c|game_support.pk3/filter/&lt;game&gt;/fonts/defsmallfont2/}}'' (where &lt;game&gt; represents a specific game ID, like {{c|doom.id}}, {{c|game-chex}}, {{c|game-hexen}}, etc.)
+* '''INDEXFONT''' is located under ''{{c|game_support.pk3/fonts/indexfont/}}''. However, main games utilize their own versions of INDEXFONT that don't rely on this one.
+
+In addition, all assets using the aforementioned formats are based on and named after Unicode instead of ISO 8859-1.
+
+This new font format also allows for an additional text lump, font.inf, which can contain the following keys:
+{{list|Property|Description|content=
+{{-|{{LE|Kerning}} &lt;int&gt;
+|How close characters are to each other. Positive values seperate them out while negative values bring them closer together.}}
+{{-|{{LE|Scale}} &lt;float&gt;
+|Changes the visual size of the font. Default is 1.0. Larger values are smaller, smaller values are larger.}}
+{{-|{{LE|SpaceWidth}} &lt;int&gt;
+|Changes the width of spaces in text using the font.}}
+{{-|{{LE|FontHeight}} &lt;int&gt;
+|Changes how tall the font is for the purposes of line height.}}
+{{-|{{LE|CellSize}} &lt;int&gt;,&lt;int&gt;
+|Defines the width and height of each cell in a old-style ZDoom console font.}}
+{{-|{{LE|TranslationType}} &lt;string&gt;
+|Changes how translations are applied to the font. Can be set to either "Standard" or "Console".}}
+}}
+
+==ZDoom fonts {{deprecated}}==
+{{Note|This describes the fonts in [[ZDoom]], now deprecated. For [[GZDoom]] fonts see below.}}
+By default, ZDoom defines five fonts directly in the executable:
+* '''BIGFONT'''
+:Large font used for menus and level names on the intermission screen if graphics are not used instead. Defined from the FONTB* lumps in Heretic and Hexen and the DBIGFONT and SBIGFONT files in Doom and Strife, both provided in ''zdoom.pk3''.
+
+:Heretic and Hexen big fonts can be overridden by a font named HBIGFONT. Also, a font named BIGFONT will override the big font for every game.
+* '''CONFONT'''
+:Fixed width used in the console. Provided in ''zdoom.pk3''.
+* '''INDEXFONT'''
+:Fixed width, contains characters 0 to 9. Provided in ''zdoom.pk3''.
+* '''SMALLFONT'''
+:The standard small font. Default. Defined from the FONTA* or STCFN* lumps.
+* '''SMALLFONT2'''
+:An alternate small font, found only in Strife. In other games, this is an alias to SMALLFONT. Defined from the STBFN* lumps.
+
+==Composite fonts==
+
+Additional [[composite font]]s are added in a default [[FONTDEFS]] lump:
+* '''HUDFONT_DOOM'''
+* '''HUDFONT_RAVEN'''
+* '''INDEXFONT_RAVEN'''
+* '''INDEXFONT_DOOM'''
+* '''IntermissionFont_Doom'''
+
+==See also==
+* [[Font format]]
+* [[FONTDEFS]]
+* [[Structs:Font]]
+* [[Classes:HUDFont]]
+* [[SetFont]]
+* [[SBARINFO]]
+[[Category:Glossary]]
+[[Category:Technical aspects]]
+[[Category:Use of fonts]]</text>
+    <sha1>n51ua2xbvr7q60oh2pnw80ff1fyube9</sha1>
+  </revision>
+</page>

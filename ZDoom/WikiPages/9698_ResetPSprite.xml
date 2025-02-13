@@ -1,0 +1,49 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>ResetPSprite</title>
+  <ns>0</ns>
+  <id>9698</id>
+  <revision>
+    <id>50493</id>
+    <parentid>50492</parentid>
+    <timestamp>2023-09-01T10:38:25Z</timestamp>
+    <contributor>
+      <username>Jekyll Grim Payne</username>
+      <id>2175</id>
+    </contributor>
+    <comment>/* Usage */ clarified usage</comment>
+    <origin>50493</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="866" sha1="2nb3umwloa0dmp9p32p1k75xfazjwzd" xml:space="preserve">{{ZScriptNote}}
+__NOTOC__
+&lt;small style="opacity:.8"&gt;{{c|[[Classes:Weapon]]}}&lt;/small&gt;&lt;br /&gt;
+action void '''ResetPSprite'''(PSprite ''psp'')
+
+== Usage ==
+This is a [[Classes:Weapon|Weapon]] function that can be called from a Weapon state on a [[Classes:PSprite|PSprite]] pointer to reset its position, scale, rotation and pivot.
+
+== [[ZScript]] definition ==
+{{ZScriptDefinitionNote|actors/inventory/weapons.zs#L232C2-L232C39}}
+&lt;syntaxhighlight lang="csharp"&gt;
+	action void ResetPSprite(PSprite psp)
+	{
+		if (!psp)	return;
+		psp.rotation = 0;
+		psp.baseScale.x = invoker.WeaponScaleX;
+		psp.baseScale.y = invoker.WeaponScaleY;
+		psp.scale.x = 1;
+		psp.scale.y = 1;
+		psp.pivot.x = 0;
+		psp.pivot.y = 0;
+		psp.valign = 0;
+		psp.halign = 0;
+		psp.Coord0 = (0,0);
+		psp.Coord1 = (0,0);
+		psp.Coord2 = (0,0);
+		psp.Coord3 = (0,0);
+	}&lt;/syntaxhighlight&gt;
+
+[[category:ZScript]]</text>
+    <sha1>2nb3umwloa0dmp9p32p1k75xfazjwzd</sha1>
+  </revision>
+</page>

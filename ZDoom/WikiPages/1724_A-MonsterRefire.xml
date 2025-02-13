@@ -1,0 +1,50 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>A MonsterRefire</title>
+  <ns>0</ns>
+  <id>1724</id>
+  <revision>
+    <id>53989</id>
+    <parentid>53988</parentid>
+    <timestamp>2024-11-30T12:18:55Z</timestamp>
+    <contributor>
+      <username>Jekyll Grim Payne</username>
+      <id>2175</id>
+    </contributor>
+    <origin>53989</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="1486" sha1="larfs9jnnhjdh846bdgouenrgfhvu9b" xml:space="preserve">{{DISPLAYTITLE:A_MonsterRefire}}
+
+'''{{class|Actor}}'''
+
+{{c|native State '''A_MonsterRefire''' (int ''chance'', statelabel ''label'')}}
+
+== Usage ==
+Calls [[A_FaceTarget]] and then checks whether the monster should abort its attack sequence and go to a different [[Actor states|state]]. If the target is out of sight or dead, has a '''chance'''/255 chance to not jump to the ''label'' state sequence. Also aborts the attack if it hit the monster's ally.
+
+Monster-specific functions such as [[A_CPosRefire]], [[A_CrusaderRefire]], [[A_SpidRefire]] and [[A_SentinelRefire]], are variations of this function with predetermined chances (they also all jump to the "See" state sequence if the attack is to be aborted).
+
+=== Parameters ===
+*{{c|int '''chance'''}}
+:Chance in the 0-255 range that the actor will ''continue'' attacking even if its target is dead or out of sight.
+*{{c|StateLabel '''label'''}}
+:Name of the state sequence to go to if the actor aborts its attack, for example {{c|"See"}}.
+
+== Example ==
+ Class SuperZombie : {{Class|ZombieMan}}
+ {
+ 	States
+ 	{
+ 	Missile:
+ 		POSS E 10 [[A_FaceTarget]];
+ 	MissileLoop: {{comment|Intentional fall-through}}
+ 		POSS FE 2 Bright [[A_PosAttack]];
+ 		POSS F 1 [[A_MonsterRefire]](128, "See"); {{comment|50% chance to jump to "See" if target is out of sight.}}
+ 		loop; {{comment|If the jump ''doesn't'' happen, loops back to the start of MissileLoop}}
+ 	}
+ }
+
+[[category:Decorate Generic Attack functions]]{{DEFAULTSORT:MonsterRefire}}</text>
+    <sha1>larfs9jnnhjdh846bdgouenrgfhvu9b</sha1>
+  </revision>
+</page>

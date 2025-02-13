@@ -1,0 +1,95 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>GiveInventory (Actor)</title>
+  <ns>0</ns>
+  <id>9821</id>
+  <revision>
+    <id>52117</id>
+    <parentid>52116</parentid>
+    <timestamp>2024-03-27T17:01:29Z</timestamp>
+    <contributor>
+      <username>Jekyll Grim Payne</username>
+      <id>2175</id>
+    </contributor>
+    <origin>52117</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="2870" sha1="s1xrg0tx93mbl84i0lpqkx6i962cnqa" xml:space="preserve">{{note|This is a [[ZScript]] Actor function. For a static function with similar functionality, see '''[[GiveInventory (ScriptUtil)]]'''. For the [[ACS]] function of the same name, see '''[[GiveInventory]]'''.}}
+
+'''{{class|Actor}}'''
+
+{{c|bool '''GiveInventory'''(Class&lt;Inventory&gt; ''type'', int ''amount'', bool ''givecheat'' }}={{c| false)}}
+
+==Usage==
+A non-action version of [[A_GiveInventory]]. Adds &lt;code&gt;amount&lt;/code&gt; items of type &lt;code&gt;type&lt;/code&gt; to the calling actor's inventory. This function will not add more items than can be carried.
+
+If &lt;code&gt;type&lt;/code&gt; is an [[armor]] item, be it a {{Class|BasicArmorPickup}} or a {{Class|BasicArmorBonus}}, then &lt;code&gt;amount&lt;/code&gt; is treated as a multiplier to the item's {{Property|Armor.SaveAmount|save amount}}, e.g. if &lt;code&gt;type&lt;/code&gt; is {{c|{{Class|BlueArmor}}}} and &lt;code&gt;amount&lt;/code&gt; is &lt;code&gt;3&lt;/code&gt;, then a combat armor with 600 armor points is given.
+
+===Parameters===
+*{{c|Class&lt;Inventory&gt; '''type'''}}
+:the class name of the item to give. This should be a valid {{Class|Inventory|inventory item}}.
+*{{c|int '''amount'''}}
+:The number of samples of this item to give.
+*{{c|bool '''givecheat'''}}
+:If true, treats the item as being given by the {{c|{{CCMD|D|give}}}} [[console command]]. Default is false.
+
+===Return value===
+The function returns &lt;code&gt;true&lt;/code&gt; if the item is successfully received, otherwise it returns &lt;code&gt;false&lt;/code&gt;.
+
+== [[ZScript]] definition ==
+{{ZScriptDefinitionNote|actors/inventory_util.zs#L62}}
+&lt;syntaxhighlight lang="csharp"&gt;
+	bool GiveInventory(Class&lt;Inventory&gt; type, int amount, bool givecheat = false)
+	{
+		bool result = true;
+		let player = self.player;
+
+		// This can be called from places which do not check the given item's type.
+		if (type == null || !(type is 'Inventory')) return false;
+
+		Weapon savedPendingWeap = player != NULL ? player.PendingWeapon : NULL;
+		bool hadweap = player != NULL ? player.ReadyWeapon != NULL : true;
+
+		Inventory item;
+		if (!givecheat)
+		{
+			item = Inventory(Spawn (type));
+		}
+		else
+		{
+			item = Inventory(Spawn (type, Pos, NO_REPLACE));
+			if (item == NULL) return false;
+		}
+
+		// This shouldn't count for the item statistics.
+		item.ClearCounters();
+		if (!givecheat || amount &gt; 0)
+		{
+			item.SetGiveAmount(self, amount, givecheat);
+		}
+		if (!item.CallTryPickup (self))
+		{
+			item.Destroy ();
+			result = false;
+		}
+		// If the item was a weapon, don't bring it up automatically
+		// unless the player was not already using a weapon.
+		// Don't bring it up automatically if this is called by the give cheat.
+		if (!givecheat &amp;&amp; player != NULL &amp;&amp; savedPendingWeap != NULL &amp;&amp; hadweap)
+		{
+			player.PendingWeapon = savedPendingWeap;
+		}
+		return result;
+	}&lt;/syntaxhighlight&gt;
+
+==Examples==
+{{noexamples}}
+
+==See also==
+* [[GiveInventory (ScriptUtil)]]
+* [[A_GiveInventory]]
+
+[[Category:ZScript]]
+[[Category:Inventory]]</text>
+    <sha1>s1xrg0tx93mbl84i0lpqkx6i962cnqa</sha1>
+  </revision>
+</page>

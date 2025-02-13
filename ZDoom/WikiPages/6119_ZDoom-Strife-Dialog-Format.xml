@@ -1,0 +1,95 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>ZDoom Strife Dialog Format</title>
+  <ns>0</ns>
+  <id>6119</id>
+  <revision>
+    <id>46339</id>
+    <parentid>46338</parentid>
+    <timestamp>2018-12-13T02:40:03Z</timestamp>
+    <contributor>
+      <username>Thekins</username>
+      <id>987</id>
+    </contributor>
+    <comment>Additional tweaks, fixes and content</comment>
+    <origin>46339</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="3051" sha1="2e5p20mr9vxghwgyu5n2kykf0dgg1vg" xml:space="preserve">The '''ZDoom Strife Dialog Format''' is a variant of the [[Universal Strife Dialog Format]]. It is not a proper USDF dialect since it changes the semantic of the '''actor''' field from an integer into a string corresponding to the [[classes|actor class name]], resulting in a type mismatch in a strict parser. This deviation from the standard was deemed necessary to avoid forcing modders to use the {{Property|ConversationID}} property on all actors, which would also require redefining any standard actor without this property.
+
+==Changes from USDF==
+* '''Namespace:''' This ''must'' be set to "ZDoom" to switch from USDF to ZSDF.
+* '''Actor:''' Now uses a class name instead of a mobj ID.
+* '''Drop:''' Now uses a class name instead of a mobj ID.
+* '''Item:''' Now uses a class name instead of a mobj ID.
+* '''GiveItem:''' Now uses a class name instead of a mobj ID.
+
+== New Fields ==
+=== Conversation ===
+* '''ID''': Allows you to still use a {{property|ConversationID}}.
+* '''Class''': Override the default conversation menu class for this conversation.
+
+=== Page ===
+* '''Goodbye''': Specify a unique replacement for the default randomised Strife "Thanks, bye!" end-conversation option.
+* '''Userstring''': Not used by default, but can be used to pass page-specific data to be interpreted by a custom conversation menu class.
+
+=== Choice ===
+* '''SpecialName:''' Allows the scripter to specify a special to call by name, instead of by number.
+
+==== Require ====
+A Choice block with a Require block will only become visible once the player has at least a specific amount of a specific inventory item.
+
+* '''Item:''' The class name of the inventory item.
+* '''Amount:''' The amount of that item needed for the choice to appear.
+
+==== Exclude ====
+A Choice block with an Exclude block will only become visible once the player has ''less than'' a specific amount of a specific inventory item.
+
+* '''Item:''' The class name of the inventory item.
+* '''Amount:''' The amount of that item needed for the choice to be removed from the conversation.
+
+==Examples==
+
+This script will let you trade your {{class|shotgun}} for a {{class|chaingun}}.
+
+ namespace = "ZDoom";
+ 
+ conversation
+ {
+     actor = "{{class|ChaingunGuy}}"; // Not a number!
+     page
+     {
+          name = "Chaingun Guy";
+          dialog = "I have a cool chaingun! I want a shotgun though...";
+          choice
+          {
+              text = "Deal!";
+              giveitem = "{{class|Chaingun}}";
+              nextpage = 2;
+              nomessage = "No shotgun, no chaingun!";
+              cost
+              {
+                  item = "{{class|Shotgun}}";
+                  amount = 1;
+              }
+          }
+     }
+     page
+     {
+          name = "Chaingun Guy";
+          dialog = "I love this!";
+     }
+ }
+
+==See also==
+* [[DIALOGUE]]
+* [[Universal Strife Dialog Format]]
+
+==Forum threads==
+* {{forum|t=26823|USDF branch question}}
+
+==External links==
+* [https://github.com/coelckers/gzdoom/blob/master/specs/usdf_zdoom.txt ZSDF specifications]
+[[Category:Features]]</text>
+    <sha1>2e5p20mr9vxghwgyu5n2kykf0dgg1vg</sha1>
+  </revision>
+</page>

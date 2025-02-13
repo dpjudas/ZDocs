@@ -1,0 +1,113 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>A RadiusGive</title>
+  <ns>0</ns>
+  <id>7181</id>
+  <revision>
+    <id>52881</id>
+    <parentid>50288</parentid>
+    <timestamp>2024-08-14T06:45:16Z</timestamp>
+    <contributor>
+      <username>Gez</username>
+      <id>1283</id>
+    </contributor>
+    <minor />
+    <comment>/* Examples */</comment>
+    <origin>52881</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="6192" sha1="1nkeoami83fw0l6kuoncwraga1mjpj2" xml:space="preserve">__NOTOC__{{codepointer|Inventory}}
+int '''A_RadiusGive''' (str ''item'', float ''distance'', int ''flags'' [, int ''amount'' [, str ''filter'' [, str ''species'' [, float ''mindist'' [, int ''limit'']]]]])
+==Usage==
+Gives an item to all eligible actors within range. Note that the receiving actor's center point must be within the radius specified by the ''distance'' parameter, otherwise it won't receive the item.
+
+Can be used to ''take'' the item, if the {{c|amount}} is negative.
+
+Note that for very large distances, attempting to give to specific things map-wide may fail. A good range for the entirety of the map would be 16383. A dummy actor can [[A_Warp|warp]] to (0,0,0) coordinates to ensure the radius does not overflow from being too close to the map boundaries. Experimentation may be required.
+
+Since A_RadiusGive returns an int, [[CustomInventory]] actors can set success or failure of an item's reception. This allows for accurate measuring of actors having successfully received the item or not.
+
+==Parameters==
+* ''item'' is the item to give.
+* ''distance'' is the radius of range. A value of 0 or less causes the function to do nothing, and ''does not'' imply infinite range.
+* ''flags'' determines which actors are eligible of getting the item:
+**'''RGF_GIVESELF''': The calling actor is eligible. 
+::'''Note:''' This always succeed at giving the calling actor the item if specified, and is not subject to filtering, nor types of eligible actors.
+:*'''RGF_PLAYERS''': Any [[player]] actor is eligible.
+:*'''RGF_MONSTERS''': Any [[monster]], be it friend or foe, is eligible.
+:*'''RGF_OBJECTS''': Any {{Flag|SHOOTABLE|shootable}} or {{Flag|VULNERABLE|vulnerable}} object is eligible. This does not include players and monsters.
+:*'''RGF_VOODOO''': Any voodoo doll is eligible.
+:*'''RGF_CORPSES''': Any {{Flag|CORPSE|corpse}} is eligible.
+:*'''RGF_MISSILES''': [[Missile]] actors are eligible.&lt;br /&gt;
+:*'''RGF_ITEMS''': [[Inventory]] items are eligible.
+:*'''RGF_KILLED''': Monsters which are truly dead may receive the item. Killed enemies may not always have the corpse flag, and corpse flagged monster may not always be killed (such as the DONTCORPSE flag). This should be kept in mind when using this flag for things like body removal, as they may not have time to drop their items or execute specials. This may prevent maps like Doom II's MAP07 from working their specials, so caution is advised.
+::'''Note:''' At least one of the above flags must be specified for the giving to have any effect.
+:*'''RGF_NOTARGET''': The calling actor's [[actor pointer|target]] may not get the item.
+:*'''RGF_NOTRACER''': The calling actor's [[actor pointer|tracer]] may not get the item.
+:*'''RGF_NOMASTER''': The calling actor's [[actor pointer|master]] may not get the item.
+:*'''RGF_INCLUSIVE''': By default, if a same actor occupies more than one of the calling actor's pointer fields, such as target and tracer, specifying either RGF_NOTARGET or RGF_NOTRACER is enough to prevent them from receiving the item. This flag changes the behavior around to be inverse, which would require both RGF_NOTARGET and RGF_NOTRACER to prevent them from getting the item. This flag is only useful with RGF_NO(TARGET/MASTER/TRACER).
+:*'''RGF_EXFILTER''': Inverts the actor filter from a whitelisted actor to a blacklist; the actor type specified will not receive the item, while everyone else will.
+:*'''RGF_EXSPECIES''': Inverts the species filter from a whitelisted species to a blacklist; the species specified will not receive the item, while all other species will.
+:*'''RGF_CUBE''': Use a cube for the range check rather than a circle.
+:*'''RGF_NOSIGHT''': The actor is given the item regardless of whether it is in the line of sight of the caller or not.
+* ''amount'' is how much of this item will be given to actors. If ''item'' is a {{Class|Health|health item}}, the amount of health to be given is the health item's amount multiplied by this parameter. Can be either positive or negative (in the latter case, the item will be taken instead). Default is 0 (which is interpreted as 1).
+* ''filter'' determines which actors may receive this item.
+* ''species'' determines which particular species may receive this item.
+* ''mindist'' actor must be this far away to receive the item. This must be less than ''distance''. Default is 0.
+* ''limit'' will stop the function from performing after successfully delivering the item this amount of times to actors within range. The actors which receive the items are random -- they are not found closest or furthest away from the calling actor.
+
+== Return value ==
+The function returns the total number of actors which successfully received the item.
+
+== Examples ==
+The following example shows a projectile that gives health to any ally players that come near to it. Could be useful in cooperative.
+
+ ACTOR HealingPlasma : {{class|PlasmaBall}}
+ {
+   +{{flag|RIPPER}}
+   {{property|Damage}} (0)
+   {{property|Translation}} "192:207=168:176", "240:247=177:184" // blue -&gt; red
+   States
+   {
+   Spawn:
+     PLSS AABB 3 Bright [[A_RadiusGive]]("{{class|Health}}", 96.0, {{Const|RGF_PLAYERS}}, 5)
+     Loop
+   }
+ }
+
+
+This {{Class|ExplosiveBarrel|barrel}} gives any player standing in its vicinity one point of {{Class|Cell|energy cells}} every six [[tics]]. However, the barrel has a limited amount to give, and once it runs out of cells to give, it harmlessly explodes and disappears.
+ ACTOR CellsBarrel : {{Class|ExplosiveBarrel}}
+ {
+     var int user_cellinstock; // See [[user variable]]s
+ 
+     States
+     {
+     Spawn:
+         BAR1 A 6 NoDelay [[A_SetUserVar]]("user_cellinstock", 80)
+         BAR1 B 6
+ 
+     GiveCells:
+         BAR1 AB 6
+         { // See [[anonymous functions]]
+             [[A_SetUserVar]]("user_cellinstock", user_cellinstock - [[A_RadiusGive]]("{{Class|Cell}}", 128.0, {{const|RGF_PLAYERS}}));
+ 
+             If(user_cellinstock &lt;= 0)
+             {
+                 return state("Explode");
+             }
+ 
+             return state("");
+         }
+         Loop
+ 
+     Explode:
+         BEXP A 5 Bright
+         BEXP B 5 Bright [[A_Scream]]
+         BEXP CD 5 Bright
+         BEXP E 10 Bright
+         Stop
+     }
+ }</text>
+    <sha1>1nkeoami83fw0l6kuoncwraga1mjpj2</sha1>
+  </revision>
+</page>

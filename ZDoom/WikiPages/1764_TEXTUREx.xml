@@ -1,0 +1,85 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>TEXTUREx</title>
+  <ns>0</ns>
+  <id>1764</id>
+  <revision>
+    <id>32202</id>
+    <parentid>32199</parentid>
+    <timestamp>2012-03-22T16:23:50Z</timestamp>
+    <contributor>
+      <username>Gez</username>
+      <id>1283</id>
+    </contributor>
+    <minor />
+    <origin>32202</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="4539" sha1="g3tj9toy50htrz9tcwpii8r25g18ncf" xml:space="preserve">{{doomwiki|TEXTURE1_and_TEXTURE2|TEXTURE1 and TEXTURE2}}{{Tip|For [[ZDoom]]-specific projects, it is recommended to use the [[TEXTURES]] lump instead, as it offers more powerful features.}}
+
+'''TEXTUREx''' refers to the naming format of the original Doom engine's [[texture]] specification lumps, traditionally named TEXTURE1 and TEXTURE2. A TEXTUREx entry defines the width, height, patches that compose the texture, etc. Textures are created from [[patch]]es which are enumerated in a [[PNAMES]] lump.
+
+[[Vanilla Doom]] only loads one PNAMES, one TEXTURE1 and one TEXTURE2 lumps; each being the last encountered. [[ZDoom]] allows cumulative loading, though only one TEXTURE1 and one TEXTURE2 lump will be loaded for each archive; and in each archive TEXTURE1 is loaded before TEXTURE2. Each TEXTUREx lump uses the last previously-loaded PNAMES lump as a reference (so for example, the IWAD textures always use the IWAD patches).
+
+A single texture can be redefined by a later TEXTUREx lump, however if a texture is defined more than once in the ''same'' TEXTUREx lump, the later definitions are skipped. In other words, a texture uses its first definition in the last lump.
+
+Textures defined in this way are stored in the "Wall" graphics [[namespace]].
+
+==Specification==
+ZDoom added an extension to the TEXTUREx format, allowing to scale textures. This use an inverse scale system were the normal is 8: 16 is double resolution (and half the dimension); 4 is half the resolution (and double the dimension). For example, a texture "HIRES100" that should be 64x by 128y but is 256x by 512y would be xscale 32 yscale 32.
+
+'''Note:''' the first defined texture of each TEXTURE1 lump is turned into a null texture. See {{dw|AASTINKY}} for further explanations on this subject.
+
+{| {{prettytable}}
+! colspan="4" | Header
+|-
+! width="50m"|Offset !! Length !! Name !! Content
+|-
+|Lump +0x00 || 4 (sint32) || numtextures || An integer holding a the number of map textures.
+|-
+|Lump +0x04 || nowrap | 4 * numtextures  ||offset[ ]||An array of integers containing the offsets to the map textures (see below) in this lump.
+|-
+! colspan="4" | maptexture_t
+|-
+|Texture +0x00 || 8 (char*) || name || The texture's name, as a string of eight ASCII characters. Only the characters A-Z (uppercase), 0-9, and [ ] - _ should be used.
+|-
+|Texture +0x08 || 2 (uint16) || flags || Texture flags. There is only one flag implemented: WORLDPANNING, with a value of 0x8000.
+|-
+|Texture +0x0A || 1 (uint8) || scalex || The texture's horizontal scaling. 8 is normal, 16 is double resolution, etc.
+|-
+|Texture +0x0B || 1 (uint8) || scaley || The texture's vertical scaling. 8 is normal, 16 is double resolution, etc.
+|-
+|Texture +0x0C || 2 (sint16) || width || A short integer defining the total width of the map texture.
+|-
+|Texture +0x0E || 2 (uint16) || height || A short integer defining the total height of the map texture.
+|-
+|Texture&amp;nbsp;+0x10&amp;nbsp;|| 4 (uint8*) || columndirectory || Obsolete, ignored. This entry is absent from the Strife texture specification, so ZDoom tests the lump format by the value of the bytes at offsets 0x12 and 0x13 (along with the value of patchcount), if they are non-zero it is assumed to ''not'' be the unused "columndirectory" data and the format is identified as the Strife one. Garbage values at this place in a Doom-format TEXTUREx lump will therefore cause malfunction.
+|-
+|Texture +0x14 || 2 (sint16) || patchcount || the number of map patches that make up this map texture.
+|-
+|Texture +0x16 || nowrap | (10 or 6) * patchcount || patches[ ] || array with the map patch structures for this texture, see below. Patches are composited in the order they are listed, with the latter one drawing over the former ones in case of overlap.
+|-
+! colspan="4" | mappatch_t
+|-
+|Patch +0x00 || 2 (sint16) || originx || A short int defining the horizontal offset of the patch relative to the upper-left of the texture
+|-
+|Patch +0x02 || 2 (sint16) || originy || A short int defining the vertical offset of the patch relative to the upper-left of the texture
+|-
+|Patch +0x04 || 2 (sint16) || patch || A short int defining the patch number (as listed in [[PNAMES]]) to draw
+|-
+|Patch +0x06 || 2 (sint16) || stepdir || Unused value. This is altogether omitted from the Strife specification.
+|-
+|Patch +0x08 || 2 (sint16) || colormap || Unused value. This is altogether omitted from the Strife specification.
+|}
+
+==See also==
+*[[TEXTURES]]
+*[[Texture]]
+*[[Patch]]
+*[[PNAMES]]
+*[[DeePsea]]
+*[[SLADE 3]]
+*[[XWE]]
+[[Category:Graphics lumps]]</text>
+    <sha1>g3tj9toy50htrz9tcwpii8r25g18ncf</sha1>
+  </revision>
+</page>

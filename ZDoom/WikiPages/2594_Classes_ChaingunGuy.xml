@@ -1,0 +1,152 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>Classes:ChaingunGuy</title>
+  <ns>0</ns>
+  <id>2594</id>
+  <revision>
+    <id>48926</id>
+    <parentid>48442</parentid>
+    <timestamp>2021-12-27T11:16:19Z</timestamp>
+    <contributor>
+      <username>Jekyll Grim Payne</username>
+      <id>2175</id>
+    </contributor>
+    <comment>updated in accordance with updated ZScriptDefinitionNote template</comment>
+    <origin>48926</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="3087" sha1="3fuc6ud1gpg20dgskgnzlk7yxau496t" xml:space="preserve">{{Actor|
+| type = Monster
+| name = Heavy Weapon Dude
+| class = ChaingunGuy
+| game = Doom2
+| doomednum = 65
+| thingindex = 11
+| spawnid = 2
+| spawnname = T_CHAINGUY
+}}
+[[Classes]]: &lt;u&gt;ChaingunGuy&lt;/u&gt;&lt;br&gt;
+&amp;ensp;&amp;rarr;[[Classes:StealthChaingunGuy|StealthChaingunGuy]]
+
+
+The Chaingun Zombie, aka "Former Human Commando", totes a huge chaingun and can whittle a player's health down in seconds.  Luckily, they can't take much damage and can be easily dispatched.  They drop their [[classes:Chaingun|chaingun]] when they die.  They will even mow through their own ranks if you can get around them.
+
+
+==== [[ZScript]] definition ====
+{{ZScriptDefinitionNote|actors/doom/possessed.zs#L129}} 
+ class ChaingunGuy : Actor
+ {
+ 	Default
+ 	{
+ 		{{Property|Health}} 70;
+ 		{{Property|Radius}} 20;
+ 		{{Property|Height}} 56;
+ 		{{Property|Mass}} 100;
+ 		{{Property|Speed}} 8;
+ 		{{Property|PainChance}} 170;
+ 		{{Property|Monster}};
+ 		+{{Flag|FLOORCLIP}}
+ 		{{Property|SeeSound}} "chainguy/sight";
+ 		{{Property|PainSound}} "chainguy/pain";
+ 		{{Property|DeathSound}} "chainguy/death";
+ 		{{Property|ActiveSound}} "chainguy/active";
+ 		{{Property|AttackSound}} "chainguy/attack";
+ 		{{Property|Obituary}} "$OB_CHAINGUY";
+ 		{{Property|Tag}} "$FN_HEAVY";
+ 		{{Property|Dropitem}} "Chaingun";
+ 	}
+ 	States
+ 	{
+ 	Spawn:
+ 		CPOS AB 10 [[A_Look]];
+ 		Loop;
+ 	See:
+ 		CPOS AABBCCDD 3 [[A_Chase]];
+ 		Loop;
+ 	Missile:
+ 		CPOS E 10 [[A_FaceTarget]];
+ 		CPOS FE 4 BRIGHT [[A_CPosAttack]];
+ 		CPOS F 1 [[A_CPosRefire]];
+ 		Goto Missile+1;
+ 	Pain:
+ 		CPOS G 3;
+ 		CPOS G 3 [[A_Pain]];
+ 		Goto See;
+ 	Death:
+ 		CPOS H 5;
+ 		CPOS I 5 [[A_Scream]];
+ 		CPOS J 5 [[A_NoBlocking]];
+ 		CPOS KLM 5;
+ 		CPOS N -1;
+ 		Stop;
+ 	XDeath:
+ 		CPOS O 5;
+ 		CPOS P 5 [[A_XScream]];
+ 		CPOS Q 5 [[A_NoBlocking]];
+ 		CPOS RS 5;
+ 		CPOS T -1;
+ 		Stop;
+ 	Raise:
+ 		CPOS N 5;
+ 		CPOS MLKJIH 5;
+ 		Goto See;
+ 	}
+ }
+==== [[DECORATE]] definition ====
+{{DecorateDefinitionNote}}
+ ACTOR &lt;u&gt;ChaingunGuy&lt;/u&gt;
+ {
+   {{Property|Health}} 70
+   {{Property|Radius}} 20
+   {{Property|Height}} 56
+   {{Property|Mass}} 100
+   {{Property|Speed}} 8
+   {{Property|PainChance}} 170
+   {{Property|Monster}}
+   +{{Flag|FLOORCLIP}}
+   {{Property|SeeSound}} "chainguy/sight"
+   {{Property|PainSound}} "chainguy/pain"
+   {{Property|DeathSound}} "chainguy/death"
+   {{Property|ActiveSound}} "chainguy/active"
+   {{Property|AttackSound}} "chainguy/attack"
+   {{Property|Obituary}} "$OB_CHAINGUY"
+   {{Property|Dropitem}} "{{Class|Chaingun}}"
+   States
+   {
+   Spawn:
+     CPOS AB 10 [[A_Look]]
+     Loop
+   See:
+     CPOS AABBCCDD 3 [[A_Chase]]
+     Loop
+   Missile:
+     CPOS E 10 [[A_FaceTarget]]
+     CPOS FE 4 Bright [[A_CPosAttack]]
+     CPOS F 1 [[A_CPosRefire]]
+     Goto Missile+1
+   Pain:
+     CPOS G 3
+     CPOS G 3 [[A_Pain]]
+     Goto See
+   Death:
+     CPOS H 5
+     CPOS I 5 [[A_Scream]]
+     CPOS J 5 [[A_NoBlocking]]
+     CPOS KLM 5
+     CPOS N -1
+     Stop
+   XDeath:
+     CPOS O 5 
+     CPOS P 5 [[A_XScream]]
+     CPOS Q 5 [[A_NoBlocking]]
+     CPOS RS 5
+     CPOS T -1
+     Stop
+   Raise:
+     CPOS N 5
+     CPOS MLKJIH 5
+     Goto See
+   }
+ }</text>
+    <sha1>3fuc6ud1gpg20dgskgnzlk7yxau496t</sha1>
+  </revision>
+</page>

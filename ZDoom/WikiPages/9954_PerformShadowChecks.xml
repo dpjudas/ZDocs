@@ -1,0 +1,39 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>PerformShadowChecks</title>
+  <ns>0</ns>
+  <id>9954</id>
+  <revision>
+    <id>53159</id>
+    <timestamp>2024-10-01T14:54:41Z</timestamp>
+    <contributor>
+      <username>Inkoalawetrust</username>
+      <id>2604</id>
+    </contributor>
+    <comment>Documented PerformShadowChecks(), as I had apparently forgot to document my own function for months lol.</comment>
+    <origin>53159</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="1392" sha1="84nz44apri7jnq7wkhqajz0v2t3a9cv" xml:space="preserve">__NOTOC__
+{{ZScriptNote}}
+
+bool, Actor, double '''PerformShadowChecks''' (Actor ''other'', Vector3 ''pos'')
+== Usage ==
+Returns information related to whether or not the callers' aim should be affected by ''Other'' having {{flag|SHADOW}} (If they do have it), or, if {{flag|DOSHADOWBLOCK}} is on, what {{flag|SHADOWBLOCK}} actor is in the way, if any, and how it should affect their aim.
+
+=== Parameters ===
+*''other'': The actor the check is looking for, i.e the actor the caller is aiming for. This parameter CAN be null, and if it is, the function will just check for any {{flag|SHADOWBLOCK}} actors that are in the line of fire of the caller.
+*''pos'': Where the check trace (For {{flag|SHADOWBLOCK}} actors) should be fired from, these are absolute coordinates. And allow for checking for shadow blockers from a specific firing position.
+
+=== Return value ===
+Returns 3 values:
+* Did the check find ANY kind of {{flag|SHADOW}} or {{flag|SHADOWBLOCK}} actor at all? If not, returns false.
+* A pointer to the shadow actor the check found, shadow blockers take precedence, so if one was in the line of fire, they'll be returned instead of ''Other'', even if the latter has {{flag|SHADOW}}.
+* The {{property|ShadowPenaltyFactor}} of the actor returned by the second return. Again, shadow blockers take precedence over the ''Other'' actor.
+
+== Examples ==
+{{noexamples}}
+
+[[Category:ZScript]]</text>
+    <sha1>84nz44apri7jnq7wkhqajz0v2t3a9cv</sha1>
+  </revision>
+</page>

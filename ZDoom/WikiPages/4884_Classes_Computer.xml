@@ -1,0 +1,64 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>Classes:Computer</title>
+  <ns>0</ns>
+  <id>4884</id>
+  <revision>
+    <id>40149</id>
+    <parentid>36475</parentid>
+    <timestamp>2015-05-22T07:03:44Z</timestamp>
+    <contributor>
+      <username>Blue Shadow</username>
+      <id>2021</id>
+    </contributor>
+    <minor />
+    <comment>/* DECORATE definition */ Updated</comment>
+    <origin>40149</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="956" sha1="e78t7bezlkr7dt2zerrwj0t9xu8bc5h" xml:space="preserve">{{Actor|
+| type = Breakable
+| name = Computer
+| class = Computer
+| game = Strife
+| doomednum = 182
+| convid = 124
+}}[[Classes]]: &lt;u&gt;Computer&lt;/u&gt;&lt;br&gt;
+{{desc}}
+==== [[DECORATE]] definition ====
+ ACTOR &lt;u&gt;Computer&lt;/u&gt;
+ {
+   {{Property|Health}} 80
+   {{Property|Speed}} 27
+   {{Property|Radius}} 26
+   {{Property|Height}} 128
+   {{Property|Mass}} 10000000
+   +{{Flag|SOLID}}
+   +{{Flag|SHOOTABLE}}
+   +{{Flag|NOBLOOD}}
+   +{{Flag|FLOORCLIP}}
+   +{{Flag|INCOMBAT}}
+   {{Property|DeathSound}} "misc/explosion"
+   States
+   {
+   Spawn:
+     SECR ABCD 4 Bright
+     Loop
+   Death:
+     SECR E 5 Bright [[A_Bang4Cloud]]
+     SECR F 5 Bright [[A_NoBlocking]]
+     SECR G 5 Bright [[A_GiveQuestItem]]({{Class|QuestItem27|27}})
+     SECR H 5 Bright [[A_TossGib]]
+     SECR I 5 Bright [[A_Bang4Cloud]]
+     SECR J 5
+     SECR K 5 [[A_Bang4Cloud]]
+     SECR L 5
+     SECR M 5 [[A_Bang4Cloud]]
+     SECR N 5
+     SECR O 5 [[A_Bang4Cloud]]
+     SECR P -1
+     Stop
+   }
+ }</text>
+    <sha1>e78t7bezlkr7dt2zerrwj0t9xu8bc5h</sha1>
+  </revision>
+</page>

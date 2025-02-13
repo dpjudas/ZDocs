@@ -1,0 +1,130 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>A CustomPunch</title>
+  <ns>0</ns>
+  <id>2707</id>
+  <revision>
+    <id>53772</id>
+    <parentid>53771</parentid>
+    <timestamp>2024-11-19T10:42:42Z</timestamp>
+    <contributor>
+      <username>Jekyll Grim Payne</username>
+      <id>2175</id>
+    </contributor>
+    <comment>/* DECORATE */</comment>
+    <origin>53772</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="7032" sha1="cuyf466xbpdh661u1nsqtuwwyk0039h" xml:space="preserve">{{DISPLAYTITLE:A_CustomPunch}}
+
+'''[[Classes:StateProvider|StateProvider]]'''
+
+action void '''A_CustomPunch'''(int ''damage'', bool ''norandom'' = false, int ''flags'' = CPF_USEAMMO, class&lt;Actor&gt; ''pufftype'' = "BulletPuff", double ''range'' = 0, double ''lifesteal'' = 0, int ''lifestealmax'' = 0, class&lt;BasicArmorBonus&gt; ''armorbonustype'' = "ArmorBonus", sound ''MeleeSound'' = 0, sound ''MissSound'' = "")
+
+==Usage==
+Defines a generic melee attack for [[Classes:Weapon|weapons]]. Damage can either be random or fixed and it is possible to specify whether ammo is used or the puff that is spawned when hitting the wall or a non-bleeding actor. It is also possible to define the maximum distance of the attack and its capacity to steal life from the target.
+
+This function is, essentially, a hitscan attack with limited range and additional options for sounds and lifesteal.
+
+===Parameters===
+*''damage''
+:The damage to inflict. This can be a number or expression. If the second argument, ''norandom'', is false then whatever number is given in ''damage'' is then multiplied by a random number between 1 and 8. If you want the number in ''damage'' to be the final damage output of the punch, or to use your own custom expression, set ''norandom'' to &lt;code&gt;true&lt;/code&gt;.
+*''flags''
+:The following flags can be combined by using the | character between the constant names:
+:*'''CPF_USEAMMO''' — Use ammo: the attack drains ammo as indicated by the appropriate {{c|{{Property|Weapon.AmmoUse}}}} property.
+:*'''CPF_DAGGER''' — Act like a {{Class|PunchDagger}}: Monsters with the {{Flag|SEESDAGGERS}} flag are woken up if they see the attack, even if the weapon has the {{Flag|WEAPON.NOALERT}} flag. This replicates an element of [[A_JabDagger]]. Note that using this flag will cause struck enemies to be unconditionally placed into their pain state. (Or Pain.Dagger if they have it defined.)
+:*'''CPF_PULLIN''' — Pull in: Successful hit pulls the player forward like Doom's {{Class|Chainsaw}} or Heretic's {{Class|Gauntlets}}. This flag only affects whether the player's velocity will be modified; they will still turn to face the struck actor, unless CPF_NOTURN is set.
+:*'''CPF_NORANDOMPUFFZ''' — The random z offset given to the [[Puff|puff]] when spawned is disabled.
+:*'''CPF_NOTURN''' — No turn: the player's facing angle is not adjusted towards their struck target on successful hits.
+:*'''CPF_STEALARMOR''' — When ''lifesteal'' is used, the stolen health is converted to armor points, repairing the player's armor, instead of healing the player like normal.
+*''pufftype''
+:The [[Puff|puff actor]] to use when striking a wall or non-bleeding actor. The default is {{Class|BulletPuff}}.
+*''range'': The range of the attack. The default value is 0, which is interpreted as 64. Note, this is counted from the center of the player actor, so if the value is above 0 but below their radius, it won't connect with anything.
+*''lifesteal''
+:If positive, is the value used as a factor for giving back the inflicted damage as hit points to the actor using the calling weapon. The value works as a multiplier, so '''1.0''' will give the player exactly as much health as they dealt damage; higher values will give more, lower values will give a smaller fraction. (The resulting value is still an integer number, since health and damage are always integer numbers).
+*''lifestealmax''
+:The limit of how much the player heals when stealing health from the victim. This works for when stealing health for health and health for armor. Positive values set an explicit limit. If a value of zero is passed, the player is healed up to their maximum health when stealing for health, and up to the ''armorbonustype'' item's {{c|{{Property|Armor.MaxSaveAmount}}}} (see below) when stealing for armor. Default value is 0.
+*''armorbonustype''
+:The armor bonus item to use for repairing armor when life-stealing. This must be an item derived from {{Class|BasicArmorBonus}}. When stealing for armor, the item's {{c|{{Property|Armor.SaveAmount}}}} property is taken into account; the life stolen value will be multiplied by that property's value. If this is not specified, {{Class|ArmorBonus}} will be used as the default item. Note, this argument has no effect without the {{c|CPF_STEALARMOR}} flag.
+*''meleesound''
+:If the attack hits anything, the weapon will play this sound effect. If unspecified, the weapon's AttackSound property is used instead.
+*''misssound''
+:The sound to play if the weapon does not hit anything tangible.
+
+Note that [[Berserk]] powerup does not work with &lt;code&gt;A_CustomPunch()&lt;/code&gt; out of the box; checking for [[PowerStrength]] must be implemented manually (see examples).
+== Examples ==
+=== [[ZScript]] ===
+This recreates the behavior of [[Classes:Fist|Doomguy's fist]]:
+&lt;syntaxhighlight lang="csharp"&gt;
+class ZSFist : Fist
+{
+	States
+	{
+	Fire:
+		PUNG B 4;
+		PUNG C 4 
+		{
+			int dmg = 2 * random(1,10);
+			if (FindInventory("PowerStrength"))
+			{
+				dmg *= 10;
+			}
+			A_CustomPunch(dmg, norandom:true, range: meleeRange + 20, meleesound: "*fist");
+		}
+		PUNG D 5;
+		PUNG C 4;
+		PUNG B 5 A_ReFire;
+		Goto Ready;
+	}
+}&lt;/syntaxhighlight&gt;
+
+Note, this example utilizes [[ZScript named arguments]] and an [[Anonymous functions|anonymous function]] for better readability.
+
+=== [[DECORATE]] {{deprecated}} ===
+ Fire:
+   KNIF B 4
+   KNIF C 4 [[A_CustomPunch]](20, {{const|FALSE}}, 0) // 20 * random(1, 8) since norandom is false, uses no ammo, will 
+                                        // spawn a {{Class|BulletPuff}}, has a range of 64, and doesn't steal life.
+   KNIF D 5
+   KNIF C 4
+   KNIF B 5 [[A_ReFire]]
+   Goto Ready
+
+ Fire:
+   SWRD B 4
+   SWRD C 4 [[A_CustomPunch]]([[DECORATE_expressions#Mathematical_functions|random]](4, 8) * 10, {{const|TRUE}}, 0, "SwordPuff", 96) // Uses a custom damage formula, spawns
+                                                                       // a custom puff, and has a longer range of 96.
+   SWRD D 4
+   SWRD C 6
+   SWRD B 6 [[A_ReFire]]
+   Goto Ready
+
+
+As mentioned above, [[A_CustomPunch]] does not work with the {{Class|Berserk|berserk pack}} "out of the box". The following example provides a workaround for this using Doom's {{Class|fist}} as an example:
+
+ ACTOR CustomFist : {{Class|Fist}}
+ {
+   States
+   {
+   Fire:
+     PUNG B 4
+     TNT1 A 0 [[A_JumpIfInventory]]("{{Class|PowerStrength}}", 1, "Berserked")
+   Normal:
+     PUNG C 4 [[A_CustomPunch]](2 * [[DECORATE_expressions#Mathematical_functions|random]](1, 10), {{const|TRUE}})
+     Goto FireEnd
+   Berserked:
+     PUNG C 4 [[A_CustomPunch]](20 * [[DECORATE_expressions#Mathematical_functions|random]](1, 10), {{const|TRUE}})
+   FireEnd:
+     PUNG D 5
+     PUNG C 4
+     PUNG B 5 [[A_ReFire]]
+     Goto Ready
+   }
+ }
+
+By checking for the presence of the {{Class|PowerStrength}} {{Class|powerup}} in the player's inventory, which is given by the {{Class|Berserk|berserk pack}}, the damage of the punch can be "adjusted".
+
+[[category:Decorate Weapon attack functions|CustomPunch]]
+[[Category:StateProvider]]</text>
+    <sha1>cuyf466xbpdh661u1nsqtuwwyk0039h</sha1>
+  </revision>
+</page>

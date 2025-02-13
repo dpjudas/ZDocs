@@ -1,0 +1,80 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>GAMEMODE</title>
+  <ns>0</ns>
+  <id>8995</id>
+  <revision>
+    <id>43676</id>
+    <timestamp>2017-01-08T21:41:01Z</timestamp>
+    <contributor>
+      <username>Tiger</username>
+      <id>2074</id>
+    </contributor>
+    <comment>Imported article from the Zandronum wiki; this feature allows game mode alterations - but is not so commonly utilized.  Do note that I unlinked the game modes, unsure if the page should be mirrored.</comment>
+    <origin>43676</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="1754" sha1="1wfc2inzybixfkbubzmhobks3ph59um" xml:space="preserve">{{STFeature}}
+This special lump allows the current SkullTag game modes to be reconfigured.  Such game modes can be Deathmatch, Duel, SkullTag, Capture the Flag, Possession, etc....
+The hard coded game modes internally use a bunch of flags to configure certain stuff and to share code. The GAMEMODE lump allows you to alter the flags a game mode uses so that you can combine game mode traits. The syntax for the lump is as follows:
+
+&lt;pre&gt;
+GAMEMODENAME {
+    removeflag FLAGNAME1
+    addflag FLAGNAME2
+}
+&lt;/pre&gt;
+
+=Flags=
+*''COOPERATIVE''
+Cooperative is a flag that distinguishes the coop modes (Cooperative, Survival, Invasion) from others game modes.
+*''DEATHMATCH''
+Players are spawned at deathmatch starts (needs Zandronum 3.0 to work properly).
+*''TEAMGAME''
+Players are spawned at team starts (needs Zandronum 3.0 to work properly).
+*''USEFLAGASTEAMITEM''
+*''PLAYERSEARNKILLS''
+Display the players kills (monsters) on the scoreboard
+*''PLAYERSEARNFRAGS''
+Display the players frags on the scoreboard
+*''PLAYERSEARNPOINTS''
+Display the players points (score in ctf)
+*''PLAYERSEARNWINS''
+Display the players wins on the scoreboard (used in lms)
+*''DONTSPAWNMAPTHINGS''
+Items and weapons aren't spawned (monsters are still spawned)
+*''MAPRESETS''
+*''DEADSPECTATORS''
+*''PLAYERSONTEAMS''
+Display the team selection menu when pressing the spacebar (joining)
+*''USEMAXLIVES''
+*''USETEAMITEM''
+*''MAPRESET_RESETS_MAPTIME''
+
+=Gamemode names=
+*Cooperative
+*Survival
+*Invasion
+*Deathmatch
+*Teamplay
+*Duel
+*Terminator
+*LastManStanding
+*TeamLMS
+*Possession
+*TeamPossession
+*TeamGame
+*CTF
+*OneFlagCTF
+*Skulltag
+*Domination
+
+=Example=
+For instance, if you would like to have teams in coop, the lump needs to be:
+&lt;pre&gt;
+cooperative {
+    addflag PLAYERSONTEAMS
+}
+&lt;/pre&gt;</text>
+    <sha1>1wfc2inzybixfkbubzmhobks3ph59um</sha1>
+  </revision>
+</page>

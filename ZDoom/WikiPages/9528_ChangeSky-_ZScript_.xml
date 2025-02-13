@@ -1,0 +1,54 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>ChangeSky (ZScript)</title>
+  <ns>0</ns>
+  <id>9528</id>
+  <revision>
+    <id>49514</id>
+    <parentid>48573</parentid>
+    <timestamp>2022-08-18T17:29:19Z</timestamp>
+    <contributor>
+      <username>Inkoalawetrust</username>
+      <id>2604</id>
+    </contributor>
+    <comment>This isn't static either.</comment>
+    <origin>49514</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="1558" sha1="p9v3fxq90mqswyumzmhr73gheg18gm5" xml:space="preserve">__NOTOC__{{ZScriptNote}}
+
+&lt;small style="opacity:.8"&gt;{{c|struct [[LevelLocals]]}}&lt;/small&gt;&lt;br /&gt;
+{{c|Void '''ChangeSky'''(TextureID &lt;var&gt;sky1&lt;/var&gt;, TextureID &lt;var&gt;sky2&lt;/var&gt;);}}
+&lt;br /&gt;
+
+== Usage ==
+
+Changes the sky textures of the map, similar to the [[ChangeSky]] [[ACS]] function. Unlike it however, Level.ChangeSky() directly uses TextureIDs instead of texture name strings.
+
+=== Parameters ===
+*{{c|TextureID &lt;var&gt;sky1&lt;/var&gt;}}
+:The TextureID of the first sky layer.
+*{{c|TextureID &lt;var&gt;sky2&lt;/var&gt;}}
+:The TextureID of the second sky layer, useful in maps that use a [[Sky#Double_sky | double sky]], have [[lightning]], or have sectors of the [[Sector_specials#Hexen_sector_specials | type 200]].
+
+To use this function to simply change the sky textures on a map, like the equivalent ACS function, you need to retrieve the TextureIDs of the textures you want to change the sky layers to, to do that you need to write the ChangeSky() function like below:
+
+ Level.ChangeSky(TexMan.CheckForTexture("texturename1",TexMan.Type_Any),TexMan.CheckForTexture("texturename2",TexMan.Type_Any));
+
+== Examples ==
+
+Below is the code for a special Zombieman who when spawned, changes the levels' sky1 to the FWATER1 texture, and sky2 to NUKAGE1.
+
+ Class SkyChangingZombieman : {{Class|Zombieman}}
+ {
+ 	Override Void [[ZScript_virtual_functions#Actor |PostBeginPlay]]()
+ 	{
+ 		Super.PostBeginPlay();
+ 		Level.ChangeSky(TexMan.CheckForTexture("FWATER1",TexMan.Type_Any),TexMan.CheckForTexture("NUKAGE1",TexMan.Type_Any));
+ 	}
+ }
+
+[[Category:ZScript]]
+[[Category:LevelLocals]]</text>
+    <sha1>p9v3fxq90mqswyumzmhr73gheg18gm5</sha1>
+  </revision>
+</page>

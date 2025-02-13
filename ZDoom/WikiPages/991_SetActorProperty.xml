@@ -1,0 +1,76 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>SetActorProperty</title>
+  <ns>0</ns>
+  <id>991</id>
+  <revision>
+    <id>44527</id>
+    <parentid>36018</parentid>
+    <timestamp>2017-03-23T21:17:44Z</timestamp>
+    <contributor>
+      <username>Arkore</username>
+      <id>2094</id>
+    </contributor>
+    <comment>/* Examples */</comment>
+    <origin>44527</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="2263" sha1="aj73t83ldgb8sxfmqnaq1130398mrgj" xml:space="preserve">__NOTOC__
+void '''SetActorProperty''' (int ''tid'', int ''property'', int ''value'')&lt;br&gt;
+void '''SetActorProperty''' (int ''tid'', int ''property'', float ''value'')&lt;br&gt;
+void '''SetActorProperty''' (int ''tid'', int ''property'', str ''value'')
+
+=== Parameters ===
+
+* ''tid'': TID of the actor.  Use 0 to refer to the activator.
+* ''property'': One of the properties listed below.
+* ''value'': The value to which the property must be set.
+
+===Actor Properties===
+{{:ACS actor properties||noset}}
+==Examples==
+
+ script 1 (void)
+ {
+    //makes things with tid 13 fuzzy, have 1000 health, the 
+    //boss brain death sound and doubles their current speed
+    //(try it, it's fun! ;) )
+    [[SetActorProperty]](13, {{const|APROP_RenderStyle}}, {{const|STYLE_Fuzzy}});
+    [[SetActorProperty]](13, {{const|APROP_Health}}, 1000);
+    [[SetActorProperty]](13, {{const|APROP_DeathSound}}, "brain/death");
+    [[SetActorProperty]](13, {{const|APROP_Speed}}, ([[GetActorProperty]](13, {{const|APROP_Speed}}) * 2));
+ }
+
+===Monster health===
+
+Setting the monster's health may cause issues, especially if you're setting it 0 when a monster is already dead.
+=====Do not do this=====
+ int mon_hp = GetActorProperty(mon_tid, APROP_Health);
+ if (mon_hp &lt; 0) {
+    mon_hp = 0;
+    SetActorProperty(mon_tid, APROP_Health, mon_hp); // Do not do this.
+ }
+
+===Player speed===
+
+Setting the player's speed is an operation that seems to frequently be done incorrectly. As an example, consider an enter script that gives the player 75% of normal speed:
+=====The wrong way=====
+ script 1 {{SType|Enter}}
+ {
+    [[SetActorProperty]](0, {{const|APROP_Speed}}, ([[GetActorProperty]](0, {{const|APROP_Speed}}) * 3 / 4));
+ }
+The problem with this script is that it alters the player's previous speed. If this script is used on multiple maps in a hub or even just a single map that gets revisited in a hub, players will find themselves going slower and slower as they switch maps in the hub. There is a much simpler way to do this, knowing that a player's normal speed is ''always'' 1.0:
+
+=====The right way=====
+ script 1 {{SType|Enter}}
+ {
+    [[SetActorProperty]](0, {{const|APROP_Speed}}, 0.75);
+ }
+
+==See also==
+*[[CheckActorProperty]]
+*[[GetActorProperty]]
+
+[[category:ACS Actor functions]]</text>
+    <sha1>aj73t83ldgb8sxfmqnaq1130398mrgj</sha1>
+  </revision>
+</page>

@@ -1,0 +1,80 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>CanPickup</title>
+  <ns>0</ns>
+  <id>9802</id>
+  <revision>
+    <id>51960</id>
+    <parentid>51692</parentid>
+    <timestamp>2024-03-13T12:44:11Z</timestamp>
+    <contributor>
+      <username>Jekyll Grim Payne</username>
+      <id>2175</id>
+    </contributor>
+    <comment>/* Usage */</comment>
+    <origin>51960</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="1981" sha1="9lue4lxwassd6aebrxqgtvap13v8iw9" xml:space="preserve">'''{{class|Inventory}}'''
+
+{{c|virtual bool '''CanPickup'''(Actor ''toucher'')}}
+
+== Usage ==
+A [[ZScript virtual functions|virtual function]] called by {{class|Inventory}} items from their [[CallTryPickup]] function to determine if the actor who is trying to receive this item (the toucher) is allowed to receive it.
+
+Can be overridden to add specific conditions to when the item can be picked up. By default items use it to handle the inner workings behind the {{property|Inventory.RestrictedTo}} and {{property|Inventory.ForbiddenTo}} properties.
+
+If you want to modify the pickup rules from the ''recipient'' of the item rather than the item itself, see '''[[CanReceive]]'''.
+
+{{note|If this function returns &lt;code&gt;false&lt;/code&gt; but the item does NOT have the {{c|{{flag|INVENTORY.RESTRICTABSOLUTELY}}}} flag, its result may be overridden by {{c|[[TryPickupRestricted]]}}.}}
+
+=== Parameters ===
+*{{c|Actor '''toucher'''}}
+:The actor who is trying to receive this item.
+
+=== Return values ===
+Returning &lt;code&gt;true&lt;/code&gt; tells the game that toucher can pick up this item.
+
+== [[ZScript]] definition ==
+{{ZScriptDefinitionNote|actors/inventory/inventory.zs#L595}}
+This function can be overridden, but the base {{class|Inventory}} class defines it as follows:
+&lt;syntaxhighlight lang="csharp"&gt;
+	virtual bool CanPickup(Actor toucher)
+	{
+		if (toucher == null) return false;
+
+		int rsize = RestrictedToPlayerClass.Size();
+		if (rsize &gt; 0)
+		{
+			for (int i=0; i &lt; rsize; i++)
+			{
+				if (toucher is RestrictedToPlayerClass[i]) return true;
+			}
+			return false;
+		}
+		rsize = ForbiddenToPlayerClass.Size();
+		if (rsize &gt; 0)
+		{
+			for (int i=0; i &lt; rsize; i++)
+			{
+				if (toucher is ForbiddenToPlayerClass[i]) return false;
+			}
+		}
+		return true;
+	}
+&lt;/syntaxhighlight&gt;
+
+== Examples ==
+{{noexamples}}
+
+== See also ==
+* [[CallTryPickup]]
+* [[TryPickup]]
+* [[Touch]]
+* [[Inventory virtual functions]]
+
+[[Category:ZScript]]
+[[Category:Inventory]]
+[[Category:ZScript virtual functions]]</text>
+    <sha1>9lue4lxwassd6aebrxqgtvap13v8iw9</sha1>
+  </revision>
+</page>

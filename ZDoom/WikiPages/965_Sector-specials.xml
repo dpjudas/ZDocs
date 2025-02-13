@@ -1,0 +1,213 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>Sector specials</title>
+  <ns>0</ns>
+  <id>965</id>
+  <revision>
+    <id>47769</id>
+    <parentid>45250</parentid>
+    <timestamp>2020-07-05T19:41:55Z</timestamp>
+    <contributor>
+      <username>Gez</username>
+      <id>1283</id>
+    </contributor>
+    <minor />
+    <comment>/* {{LE|Hexen sector specials|Hexen &amp; UDMF sector specials}} */</comment>
+    <origin>47769</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="8853" sha1="3hai3hrb29clcrgzbjx4gdulfkaqwlu" xml:space="preserve">{{doomwiki|Sector}}__FORCETOC__
+== Doom sector specials ==
+In the [[Doom format]] maps, these are the same as the sector types used by [[Boom]] with the following four new specials: 
+
+;21 Light_Phased
+;22 LightSequenceStart 
+;23 LightSequenceSpecial1 
+;24 LightSequenceSpecial2
+
+Note that Doom format maps for Heretic do not have access to these specials since Heretic features sector types up to 51.
+
+== {{LE|Hexen sector specials|Hexen &amp; UDMF sector specials}} ==
+In [[Hexen format]] and [[UDMF]] maps, the sector specials available are: 
+
+;1 Light_Phased 
+;2 LightSequenceStart 
+;3 LightSequenceSpecial1 
+;4 LightSequenceSpecial2 
+
+These specials deal with phased lighting ("moving lights"). Two different ways to go about doing phased lighting are: automatic, or by-hand. The automatic method is (obviously) more convenient, but the by-hand method is more flexible. Light_Phased is the by-hand special. Place it on a sector, then set the sector's lightlevel to a phase index (0-63). As you place the special on nearby sectors, increment the index for each sector. 
+
+Or, to use the LightSequence specials, just place the LightSequenceStart special on a sector. Then, for each additional sector, alternate between LightSequenceSpecial1 &amp; LightSequenceSpecial2. The resulting phased lighting will appear to move toward the sector marked with LightSequenceStart. 
+
+For instance, if you wanted phased lighting to flow up a staircase, you could either place Light_Phased on each step, and change the phase index (lightlevel) accordingly. Or, you could place LightSequenceStart on the bottom step (and set that step's lightlevel to something mid-ranged), and then let the game calculate the phase indices for each step by placing the LightSequenceSpecial specials on all other steps. Note that for the LightSequenceSpecial specials to have proper lighting, set their lightlevels to zero, which causes it to use the previous sector's lightlevel. Hence, that "nice value" which was placed on the first step will iterate through all the other steps. If a step's lightlevel is not zero, then that value will filter down to all other steps after it. 
+
+;26 Stairs_Special1 
+;27 Stairs_Special2 
+
+These specials are used by the stair building line specials Stairs_BuildDown, Stairs_BuildUp, Stairs_BuildDownSync, and Stairs_BuildUpSync. The are not used by the Generic_Stairs and Stairs_BuildUpDoom specials, which follow the normal Doom convention for building stairs.
+
+To build stairs using any of the four stair-builders listed above, set the first sector's type to Stairs_Special1. Then alternate between Stairs_Special2 and Stairs_Special1 for the remaining sectors you want in the staircase. 
+
+;40 Wind east weak 
+;41 Wind east medium 
+;42 Wind east strong 
+;43 Wind north weak 
+;44 Wind north medium 
+;45 Wind north strong 
+;46 Wind south weak 
+;47 Wind south medium 
+;48 Wind south strong 
+;49 Wind west weak 
+;50 Wind west medium 
+;51 Wind west strong 
+
+These are Heretic's wind specials. They affect the player and anything that has the {{flag|WINDTHRUST}} flag set. Most of Heretic's projectiles are affected by wind.
+
+;65 dLight_Flicker 
+;66 dLight_StrobeFast 
+;67 dLight_StrobeSlow 
+;68 dLight_Strobe_Hurt 
+;69 dDamage_Hellslime 
+;71 dDamage_Nukage 
+;72 dLight_Glow 
+;74 dSector_DoorCloseIn30 
+;75 dDamage_End 
+;76 dLight_StrobeSlowSync 
+;77 dLight_StrobeFastSync 
+;78 dSector_DoorRaiseIn5Mins
+
+These are the same sector specials as Doom, except that they are numbered beginning at 65 instead of 1. 
+
+;79 Sector_LowFriction 
+Lowers the [[friction]] in the sector to create icy terrain.
+
+;80 dDamage_SuperHellslime 
+;81 dLight_FireFlicker 
+
+These are the same sector specials as Doom, except that they are numbered beginning at 65 instead of 1. 
+
+;82 dDamage_LavaWimpy 
+;83 dDamage_LavaHefty 
+;84 dScroll_EastLavaDamage 
+
+These are from Heretic. Unlike Doom's damage specials the radiation suit does not protect from damage by these sector types. The damage from these sectors is of type 'fire' so if a player has a burning death sequence it will be used. Furthermore, each time these specials inflict damage a terrain splash will be created.
+
+;85 hDamage_Sludge
+This is also from Heretic; however it works like the Doom damage specials: slime damage, radiation suit protects from it.
+
+;87 Sector_Outside
+Set the sector to always use outside fog regardless of ceiling texture.
+
+;89 GLSector_NoSkyDraw
+Prevents drawing by the GL renderer of the sky above or below the sector. This can be used to fake some 3D floor effects by letting geometry be drawn behind what would normally be a column of sky, similar to the effect used often in {{dw|Doom 64}} (for example, the hovering pods in the start room of {{dw|MAP01: Staging Area (Doom 64)|Staging Area}}).
+
+;90 GLSector_Skybox
+Tell the GL renderer that the sector is a [[skybox]], causing it to change texture clamping mode. Useful for cube skyboxes created in map geometry (rather than through [[GLDEFS]] by preventing thin lines caused by texture tiling from appearing between the seams of the box.
+
+;105 sDamage_Hellslime 
+;115 Damage_InstantDeath 
+;116 sDamage_SuperHellslime 
+
+Strife's sector specials. The instant death effect kills the player instantly. The other two damage types don't start hurting the player immediately. Instead they accumulate a certain amount of 'poisoning' and when a certain threshold is reached they start hurting the player. Such damage infliction does not stop when the player leaves the sector. It will continue a little longer.
+
+;118 Scroll_StrifeCurrent 
+
+Carries the player in a direction determined by the sector's tag. There are better means to achieve this so use of this special in new maps is not recommended.
+
+;195 Sector_Hidden
+Hides the sector from the textured [[automap]] display. In the [[Universal Doom Map Format]], this can be set instead with the "hidden" flag.
+
+;196 Sector_Heal 
+Heals the player slowly up to 100 health points. This was originally added to allow playing the [[Caverns of Darkness]] mod.
+
+;197 Light_OutdoorLightning 
+;198 Light_IndoorLightning1 
+;199 Light_IndoorLightning2 
+
+Set [[lightning]] properties for sectors without a [[sky]] ceiling
+
+;200 Sky2 
+
+If this sector contains a sky the secondary sky will be used.
+
+;201 Scroll_North_Slow 
+;202 Scroll_North_Medium 
+;203 Scroll_North_Fast 
+;204 Scroll_East_Slow 
+;205 Scroll_East_Medium 
+;206 Scroll_East_Fast 
+;207 Scroll_South_Slow 
+;208 Scroll_South_Medium 
+;209 Scroll_South_Fast 
+;210 Scroll_West_Slow 
+;211 Scroll_West_Medium 
+;212 Scroll_West_Fast 
+;213 Scroll_NorthWest_Slow 
+;214 Scroll_NorthWest_Medium 
+;215 Scroll_NorthWest_Fast 
+;216 Scroll_NorthEast_Slow 
+;217 Scroll_NorthEast_Medium 
+;218 Scroll_NorthEast_Fast 
+;219 Scroll_SouthEast_Slow 
+;220 Scroll_SouthEast_Medium 
+;221 Scroll_SouthEast_Fast 
+;222 Scroll_SouthWest_Slow 
+;223 Scroll_SouthWest_Medium 
+;224 Scroll_SouthWest_Fast 
+
+These specials scroll the sector's floor in the direction and speed indicated and also carry anything on it in the same direction. These are intended mainly for compatibility with Hexen levels because they also exhibit the odd Hexen behavior of carrying things faster than they scroll the floor.
+
+;225 Carry_East5 
+;226 Carry_East10 
+;227 Carry_East25 
+;228 Carry_East30 
+;229 Carry_East35 
+
+The east carry specials will also scroll the floor texture.
+
+;230 Carry_North5 
+;231 Carry_North10 
+;232 Carry_North25 
+;233 Carry_North30 
+;234 Carry_North35 
+;235 Carry_South5 
+;236 Carry_South10 
+;237 Carry_South25 
+;238 Carry_South30 
+;239 Carry_South35 
+;240 Carry_West5 
+;241 Carry_West10 
+;242 Carry_West25 
+;243 Carry_West30 
+;244 Carry_West35
+
+These carry specials from Heretic do not scroll the floor texture.
+
+== Sector flags==
+===Generalized flags===
+The following flags can be logically &lt;tt&gt;or&lt;/tt&gt;ed into the value for further effects. Note that in a Doom-format map, the bits are downshifted three places: [[Boom]] uses bits 5 to 9, not 8 to 12. This prevents from having more than 16 normal types of sectors, therefore in the [[UDMF]] and Hexen [[map format]]s ZDoom pushed them away.
+
+{| {{prettytable}}
+! colspan="2" | Boom !! colspan="2" | Hexen/UDMF !! rowspan="2"| Effect
+|-
+!Bits!!Value!!Bits!!Value
+|-
+|5||32||8||256||2/5ths damage per 31 ticks
+|-
+|6||64||9||512||5/10ths damage per 31 ticks
+|-
+|5+6||96||8+9||768||10/20ths damage per 31 ticks
+|-
+|7||128||10||1024||Sector is a secret
+|-
+|8||256||11||2048||Friction is enabled for this sector
+|-
+|9||512||12||4096||[[Wind]]/[[current]]/{{class|PointPusher|pushers}}/{{class|PointPuller|pullers}} are enabled for this sector
+|}
+
+===True flags===
+These flags are used as normal flags rather than being inserted into the sector's special effect number. They can only be set directly on a [[UDMF]] map. They can also be changed by the [[Sector_ChangeFlags]] action.
+{{:Sector flags}}
+[[Category:Editing references]]</text>
+    <sha1>3hai3hrb29clcrgzbjx4gdulfkaqwlu</sha1>
+  </revision>
+</page>

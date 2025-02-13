@@ -1,0 +1,48 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>Classes:InterpolationPoint</title>
+  <ns>0</ns>
+  <id>4286</id>
+  <revision>
+    <id>39762</id>
+    <parentid>36102</parentid>
+    <timestamp>2015-05-03T22:42:48Z</timestamp>
+    <contributor>
+      <username>Blue Shadow</username>
+      <id>2021</id>
+    </contributor>
+    <minor />
+    <comment>/* DECORATE definition */ Updated</comment>
+    <origin>39762</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="1690" sha1="g8veq6dua7wezozyav7hohxsggapk8u" xml:space="preserve">{{Actor|
+| type = Script thing
+| name = Interpolation point
+| class = InterpolationPoint
+| doomednum = 9070
+}}[[Classes]]: &lt;u&gt;InterpolationPoint&lt;/u&gt;
+
+'''Interpolation points''' define a path to follow. They operate similarly to the {{Class|PatrolPoint|patrol points}} of a monster patrol route.
+===Arguments===
+Interpolation points take five arguments:
+
+{{TArgs|0}} [[Definitions#Byte pitches|pitch]] of camera in degrees, '''''equal to the angle subtracted from 256'''''.
+{{TArgs|1}} time (in octics) to travel to next node.
+{{TArgs|2}} time (in octics) to stop at this node before continuing
+{{TArgs|3}} low byte of tid of next {{Class|InterpolationPoint}} in the path.
+{{TArgs|4}} high byte of tid of next {{Class|InterpolationPoint}} in the path. 
+
+{{c|args[3]}} has the low byte, and {{c|args[4]}} has the high byte, so the tid is args[3]+(args[4]*256). This lets you use more than 255 points for all paths. For example, if the next point had a tid of 4 then the low byte is 4 and the high byte is 0. But if the next point has a tid of 3027, the low byte is 211 and the high byte is 11 (11&amp;times;256 + 211 = 3027).
+
+Since an interpolation point needs parameters to work, it cannot have a thing special. To have a thing special executed when an interpolation point is used by one of the moving objects ({{Class|ActorMover}}, {{Class|MovingCamera}} or {{Class|PathFollower}}), you need to create a an {{Class|InterpolationSpecial|interpolation special}} with the same [[TID]] as the interpolation point.
+==== [[DECORATE]] definition ====
+ ACTOR &lt;u&gt;InterpolationPoint&lt;/u&gt; native
+ {
+   +{{flag|NOBLOCKMAP}}
+   +{{flag|NOGRAVITY}}
+   +{{flag|DONTSPLASH}}
+   {{property|RenderStyle}} None
+ }</text>
+    <sha1>g8veq6dua7wezozyav7hohxsggapk8u</sha1>
+  </revision>
+</page>

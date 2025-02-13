@@ -1,0 +1,53 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>Line SetTextureOffset</title>
+  <ns>0</ns>
+  <id>3601</id>
+  <revision>
+    <id>36015</id>
+    <parentid>33568</parentid>
+    <timestamp>2013-03-01T06:55:15Z</timestamp>
+    <contributor>
+      <username>Deded007</username>
+      <id>1392</id>
+    </contributor>
+    <minor />
+    <comment>links, templates, clean up</comment>
+    <origin>36015</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="1290" sha1="i4srhikxlqfbwjpbnifg0v5ss5f7our" xml:space="preserve">{{DISPLAYTITLE:Line_SetTextureOffset}}
+{{Special|53|lineid, x, y, side, flags|Renderer|TextureOffset|use=script}}
+
+==Usage==
+
+Changes the offset of a texture at run-time. This can be used during runtime for special effects, and it is possible to set the offsets of upper, mid, and lower textures seperately. This special cannot be used directly on a line in the map, but must be called from an ACS script instead.
+
+''side'' can be '''SIDE_FRONT''' or '''SIDE_BACK'''.
+
+''x'' and ''y'' are fixed point values; using '''NO_CHANGE''' leaves it alone.
+
+''flags'' can be a combination of the following flags:
+* '''TEXFLAG_TOP''' (1): upper texture
+* '''TEXFLAG_MIDDLE''' (2): mid texture
+* '''TEXFLAG_BOTTOM''' (4): lower texture
+* '''TEXFLAG_ADDOFFSET''' (8): add to offset (as opposed to directly setting it)
+
+== Examples ==
+This script will move the middle texture on a line with an id of 1 in a clockwise circular pattern.
+ script 1 {{SType|Open}}
+ {
+     int a, x, y;
+     while({{const|TRUE}})
+     {
+         for(a=0; a&lt;1.0; a+=512)
+         {
+             x = [[FixedMul]]([[cos]](a), 128.0);
+             y = [[FixedMul]]([[sin]](a), 128.0);
+             [[Line_SetTextureOffset]](1, x, y, {{const|SIDE_FRONT}}, {{const|TEXFLAG_MIDDLE}});
+             [[delay]](1);
+         }
+     }
+ }</text>
+    <sha1>i4srhikxlqfbwjpbnifg0v5ss5f7our</sha1>
+  </revision>
+</page>

@@ -1,0 +1,53 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>ThrustThingZ</title>
+  <ns>0</ns>
+  <id>912</id>
+  <revision>
+    <id>52807</id>
+    <parentid>52806</parentid>
+    <timestamp>2024-07-13T20:11:29Z</timestamp>
+    <contributor>
+      <username>CravenCoyote</username>
+      <id>2643</id>
+    </contributor>
+    <minor />
+    <comment>/* ZScript example */</comment>
+    <origin>52807</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="1332" sha1="rpvztmu0rslsavwf4gs4dnpq2wqh2ud" xml:space="preserve">{{Special|128|tid, force, up/down, set/add|Thing}}
+
+* ''tid'': Thing ID of the thing to thrust. If 0, this will thrust the activator (usually the player).
+* ''force'': The force, in units per tic (1 second = 35 tics) divided by 4, to apply to the thing.
+* ''up''/''down'': The direction to thrust the thing. (0 = up, 1 = down)
+* ''set''/''add'': If 0, sets the thing's vertical speed to 0 and only then applies the force. If 1, adds the speed resulting from the special's force to the thing's current vertical speed.
+
+Thrusts the thing vertically, given the specified force. It can either apply the force to the thing's current vertical speed or it can set the thing's vertical speed to 0 before applying the force. Can easily be combined with [[ThrustThing]].
+
+==Examples==
+==== [[ZScript]] example ====
+ class FloatingStimpack : {{Class|Health}}
+ {
+  Default
+  {
+   Tag "Floating Stimpack";
+   {{Property|Inventory.Amount}} 10; //Give the player 10 health on pickup
+   {{Property|Inventory.PickupMessage}} "$GOTSTIM"; //Give the player a notice they've picked up the Stimpack
+   +NOGRAVITY //Turn off gravity for this item
+  }
+ 
+  States
+  {
+   Spawn:
+   STIM A 25 ThrustThingZ (0, 1, 0, 1); //Thrust the Stimpack Up
+   STIM A 25 ThrustThingZ (0, 1, 1, 0); //Thrust the Stimpack Down
+   Loop;
+  }
+ }
+
+==See also==
+
+[[ThrustThing]]</text>
+    <sha1>rpvztmu0rslsavwf4gs4dnpq2wqh2ud</sha1>
+  </revision>
+</page>

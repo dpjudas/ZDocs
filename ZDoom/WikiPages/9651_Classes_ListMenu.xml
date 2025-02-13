@@ -1,0 +1,117 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>Classes:ListMenu</title>
+  <ns>0</ns>
+  <id>9651</id>
+  <revision>
+    <id>49854</id>
+    <parentid>49845</parentid>
+    <timestamp>2022-11-21T09:31:02Z</timestamp>
+    <contributor>
+      <username>Boondorl</username>
+      <id>2606</id>
+    </contributor>
+    <minor />
+    <comment>/* List Menu Descriptors */</comment>
+    <origin>49854</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="5728" sha1="tu492scqvc70was24yatvmq2hhecgc9" xml:space="preserve">ListMenus are a subclass of [[Classes:Menu|Menu]] that are used as a core interface for MENUDEF. They present the user with a list of basic options, some of which are selectable. They don't offer any way to modify CVars and, if that's desired, an [[Classes:OptionMenu|option menu]] should be used instead. Most general menus such as the main menu inherit from this class.
+
+== Fields ==
+*ListMenuDescriptor '''mDesc''' - The menu descriptor for this menu. Contains important information such as what labels are in it
+*MenuItemBase '''mFocusControl''' - Tracks which option is the current focus of the menu
+
+== Methods ==
+=== Virtual ===
+*void '''Init'''(Menu ''parent'' = null, ListMenuDescriptor ''desc'' = null)
+
+=== Overrides ===
+*bool '''OnUIEvent'''(UIEvent ''ev'')
+*bool '''MenuEvent'''(int ''mkey'', bool ''fromcontroller'')
+*bool '''MouseEvent'''(int ''type'', int ''x'', int ''y'')
+*void '''Ticker'''()
+*void '''Drawer'''()
+*void '''SetFocus'''(MenuItemBase ''fc'')
+*void '''CheckFocus'''(MenuItemBase ''fc'')
+*void '''ReleaseFocus'''(MenuItemBase ''fc'')
+
+=== Non-static ===
+*ListMenuItem '''GetItem'''(Name ''name'')
+*void '''ChangeLineSpacing'''(int ''newspace'')
+
+== List Menu Descriptors ==
+&lt;code&gt;ListMenuDescriptor&lt;/code&gt; is a subclass of MenuDescriptor and stores all the information about the items that exist within the list menu as specified by the MENUDEF file.
+
+=== Fields ===
+*Array&lt;ListMenuItem&gt; '''mItems''' - The list of all items that exist in the list menu, selectable or not.
+*int '''mSelectedItem''' - The index of the currently selected item in the menu
+*double '''mSelectOfsX''' - The x offset to give to the selector next to the selected item
+*double '''mSelectOfsY''' - The y offset to give to the selector next to the selected item
+*TextureID '''mSelector''' - The texture to use for the selector
+*int '''mDisplayTop''' - Does nothing by default
+*double '''mXpos''' - Stores the current x offset of the menu
+*double '''mYpos''' - Stores the current y offset of the menu
+*int '''mWLeft''' - Defines the lefthand x coordinate the mouse must be within as defined by the &lt;code&gt;MouseWindow&lt;/code&gt; term in MENUDEF
+*int '''mWRight''' - Defines the righthand x coordinate the mouse must be within as defined by the &lt;code&gt;MouseWindow&lt;/code&gt; term in MENUDEF
+*int '''mLinespacing''' - The vertical height of each label in pixels
+*int '''mAutoselect''' - The index of the item that's automatically activated when the menu is opened (-1 if not set)
+*Font '''mFont''' - The Font to use for drawing text
+*int '''mFontColor''' - The Font translation to use when drawing text
+*int '''mFontColor2''' - The Font translation to use when drawing text of a selected item
+*bool '''mCenter''' - If true, the menu is centered as set by the &lt;code&gt;CenterMenu&lt;/code&gt; term in MENUDEF. This is only used in the menu's '''Init'''()
+*bool '''mAnimatedTransition''' - If set to true, the menu supports animated transitions. This is only used in the menu's '''Init'''()
+*bool '''mAnimated''' - If set to true, the menu is animated and should be interpolated. This is only used in the menu's '''Init'''()
+*int '''mVirtWidth''' - The virtual width to use when drawing
+*int '''mVirtHeight''' - The virtual height to use when drawing
+:*If set to '''ListMenuDescriptor'''.'''OptCleanScale''', this will return '''ListMenuDescriptor'''.'''CleanScale''' if '''m_cleanscale''' is set to true, otherwise returning 320 for the width and 200 for the height
+
+=== Non-static Methods ===
+*void '''Reset'''()
+*int '''DisplayWidth'''()
+*int '''DisplayHeight'''()
+
+== List Menu Items ==
+&lt;code&gt;ListMenuItem&lt;/code&gt; is a subclass of MenuItemBase and is the core class for adding items to list menus. If you plan on adding any custom list types to use with MENUDEF, they must inherit from this class.
+
+=== Virtual Methods ===
+*void '''DrawSelector'''(double ''xofs'', double ''yofs'', TextureID ''tex'', ListMenuDescriptor ''desc'' = null)
+*void '''Draw'''(bool ''selected'', ListMenuDescriptor ''desc'')
+
+=== Non-static Methods ===
+*''protected'' void '''DrawText'''(ListMenuDescriptor ''desc'', Font ''fnt'', int ''color'', double ''x'', double ''y'', string ''text'', bool ''ontop'' = false)
+*''protected'' void '''DrawTexture'''(ListMenuDescriptor ''desc'', TextureID ''tex'', double ''x'', double ''y'', bool ''ontop'' = false)
+
+=== Derived Classes ===
+Below is a list of all of the derived classes that use this. All of them are prefixed with '''ListMenuItem''' as this is how custom items are defined for lists.
+*'''StaticPatch'''
+*'''StaticPatchCentered'''
+*'''StaticText'''
+*'''StaticTextCentered'''
+*'''CaptionItem'''
+
+== Selectable List Items ==
+&lt;code&gt;ListMenuItemSelectable&lt;/code&gt; is the ListMenuItem subclass that acts as a base for all selectable labels. This should be used if you want something similar to the TextItem specifier in MENUDEF.
+
+=== Fields ===
+*int '''mHotkey''' - The character code for the keyboard shortcut assigned to selecting this label
+*int '''mHeight''' - The height of the label when checking if the mouse is colliding with it vertically
+*int '''mParam''' - The parameter to pass when setting the menu
+
+=== Overridden Methods ===
+*bool '''CheckCoordinate'''(int ''x'', int ''y'')
+*bool '''Selectable'''()
+*bool '''CheckHotkey'''(int ''c'')
+*bool '''Activate'''()
+*bool '''MouseEvent'''(int ''type'', int ''x'', int ''y'')
+*Name, int '''GetAction'''()
+
+=== Non-static Methods ===
+*''protected'' void '''Init'''(double ''x'', double ''y'', int ''height'', Name ''childmenu'', int ''param'' = -1)
+
+=== Derived Classes ===
+Below is a list of all of the derived classes that use this. All of them are prefixed with '''ListMenuItem''' as this is how custom items are defined for lists.
+*'''TextItem'''
+*'''PatchItem'''</text>
+    <sha1>tu492scqvc70was24yatvmq2hhecgc9</sha1>
+  </revision>
+</page>

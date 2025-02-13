@@ -1,0 +1,97 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>Classes:WeaponPiece</title>
+  <ns>0</ns>
+  <id>2739</id>
+  <revision>
+    <id>38106</id>
+    <parentid>37873</parentid>
+    <timestamp>2014-07-27T15:24:05Z</timestamp>
+    <contributor>
+      <username>Blue Shadow</username>
+      <id>2021</id>
+    </contributor>
+    <comment>/* DECORATE definition */ Updated with change(s) from git commit 6d4eb7f.</comment>
+    <origin>38106</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="2447" sha1="e16zlpem8q16naf5m11yqe2syh112ux" xml:space="preserve">{{Actor|
+| type = Internal
+| name = Weapon piece
+| class = WeaponPiece
+}}[[Classes]]: [[Classes:Inventory|Inventory]]&amp;rarr;&lt;u&gt;WeaponPiece&lt;/u&gt;
+
+&amp;ensp;&amp;rarr;[[Classes:ClericWeaponPiece|ClericWeaponPiece]]&lt;br&gt;
+&amp;ensp;&amp;rarr;[[Classes:FighterWeaponPiece|FighterWeaponPiece]]&lt;br&gt;
+&amp;ensp;&amp;rarr;[[Classes:MageWeaponPiece|MageWeaponPiece]]&lt;br&gt;
+
+
+'''WeaponPieces''' are items that can be used to create weapons with multiple parts that have to be assembled, like the big weapons in Hexen. The base class WeaponPiece is never used directly. It is always the base class for items defined in [[DECORATE]].
+
+
+==== Using in [[DECORATE]] ====
+There are a few points to observe when using weapon pieces:
+* The piece's pickup sound and message are only used when the weapon is still incomplete.
+* If picking up a piece that completes the weapon, the weapon's pickup sound and message are being used.
+* Picking up a piece the player already owns gives some [[Classes:Ammo|ammo]]. The amount is taken from the respective fields in the [[Classes:Weapon|weapon]] definition.
+* Any weapon used with weapon pieces must use the {{Property|Health}} property to define the number of pieces the weapon has.
+* This class is designed with the assumption that the whole weapon does not exist as a complete pickup item. It wouldn't do any harm to do it anyway but some messages would be obviously wrong.
+
+
+&lt;u&gt;WeaponPiece&lt;/u&gt; uses some of the basic [[Classes:Inventory|Inventory properties]] to define their behavior as inventory items. They also define a few new properties:
+{{:WeaponPiece properties}}
+
+==== [[DECORATE]] definition ====
+ ACTOR &lt;u&gt;WeaponPiece&lt;/u&gt; : {{Class|Inventory}} native
+ {
+   +{{Flag|WEAPONSPAWN}}
+ }
+
+==Examples==
+
+ ACTOR Ferkulator : [[Classes:Weapon|Weapon]]
+ {
+   {{Property|Health}} 3 
+   ...
+ }
+ 
+ actor FerkWeaponPiece1 : &lt;u&gt;WeaponPiece&lt;/u&gt; 10012
+ {
+   {{Property|Inventory.PickupSound}} "misc/w_pkup"
+   {{Property|Inventory.PickupMessage}} "A Piece of the Ferkulator"
+   {{Property|WeaponPiece.Weapon}} "Ferkulator"
+   {{Property|WeaponPiece.Number}} 1
+   States
+   {
+   Spawn:
+     FRK1 A -1
+     Stop
+   }
+ }
+ 
+ actor FerkWeaponPiece2 : FerkWeaponPiece1 10013
+ {
+   {{Property|Weaponpiece.Number}} 2
+   States
+   {
+   Spawn:
+     FRK2 A -1
+     Stop
+   }
+ }
+ 
+ actor FerkWeaponPiece3 : FerkWeaponPiece1 10016
+ {
+   {{Property|WeaponPiece.Number}} 3
+   States
+   {
+   Spawn:
+     FRK3 A -1
+     Stop
+   }
+ }
+
+==See also==
+* [[Making weapon pieces]]</text>
+    <sha1>e16zlpem8q16naf5m11yqe2syh112ux</sha1>
+  </revision>
+</page>

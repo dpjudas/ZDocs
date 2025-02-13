@@ -1,0 +1,99 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>Sector SetPortal</title>
+  <ns>0</ns>
+  <id>5792</id>
+  <revision>
+    <id>51874</id>
+    <parentid>44585</parentid>
+    <timestamp>2024-02-26T09:52:21Z</timestamp>
+    <contributor>
+      <username>Itszads</username>
+      <id>2637</id>
+    </contributor>
+    <minor />
+    <comment>Extended the description a little bit to include that this is used on a linedef. Changed 'alpha' to 'opacity' since that's how it is referenced in UDB and majority of folk are going to probably edit maps from that or similar.</comment>
+    <origin>51874</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="4828" sha1="khcprjos5225e5k6kiyrpfrlx52wzqf" xml:space="preserve">{{DISPLAYTITLE:Sector_SetPortal}}
+{{Special|57|tag, type, plane, misc, opacity|Renderer|use=line}}
+
+Linedef action used to establish a one-way portal between two sectors.
+
+=== Parameters ===
+* ''tag:'' Tag of sectors in which the portal must be seen. Note that the sectors seen through the portal must not share this tag. For the 'copy to line' type this will be a line id, not a sector tag.
+* ''type:'' The type of portal. 
+* ''plane:'' Whether the portal is set on the floor (0), the ceiling (1), or both planes (2). For the copy portal type, setting this to 3 will copy any portal with the given tag.
+* ''misc:'' The meaning of this argument depends on the type.
+:: For a normal view portal (type 0): Specifies whether the line belongs to the sector viewed through the portal (1) or the sector in which the portal is seen (0).
+:: For a transferred portal (type 1): Specifies the sector tag of the portal to copy.
+:: For a skybox portal (type 2): Ignored.
+* ''opacity:'' Gives a translucency value to the portal plane (0-255). 
+
+=== Types ===
+* ''0:'' Normal view portal. This is what will generally be used. Two linedefs must be defined, one in the "source" sector and one in the "destination" sector; the first three arguments for both of these linedefs must be identical while the fourth must be different. Any number of sectors can share this link by having the same tag. To make a two-way portal, another pair of linedef must be used.
+* ''1:'' Copied portal. 'misc' specifies the tag of the portal to copy. This copies the given portal to all sectors tagged with 'tag' or the line's front sector if 'tag' is 0. Use this for sectors which need to have a different tag, such as a lift, yet should share the portal. 
+* ''2:'' [[Skybox]] portal. The linedef's front sector is the skybox and must contain a {{Class|SkyCamCompat}} object. The sky from this skybox will be visible on the concerned plane of all tagged sectors; even if the sky flat is not used.
+{{Gzdoomfeature}}
+* ''3:'' Plane portal. Renders the linedef's frontsector's planes into infinity at a fixed distance from the camera.
+* ''4:'' Horizon portal. Renders the linedef's frontsector's planes into infinity at the planes' heights.
+* ''5:'' Copy portal to line: 'misc' specifies the portal to copy. If 'tag' is non-zero, copy the portal to all lines with the given ID, otherwise affects the line itself.
+* ''6:'' Interactive portal. Actors can move through it. Although implemented in ZDoom, it is of more use with GZDoom's renderer which is far less limited.
+
+
+== Conversions from linedef types ==
+The following Doom map format types can be converted as Sector_SetPortal:
+{| {{prettytable}}
+!Type!!Conversion!!Trigger
+|-
+|{{icon|Eternity}} 283:Portal_PlaneCeiling || Sector_SetPortal (tag, 3, 1, 0, 0) ||
+|-
+|{{icon|Eternity}} 284:Portal_PlaneFloor || Sector_SetPortal (tag, 3, 0, 0, 0) ||
+|-
+|{{icon|Eternity}} 285:Portal_PlaneFloorCeiling || Sector_SetPortal (tag, 3, 2, 0, 0) ||
+|-
+|{{icon|Eternity}} 286:Portal_HorizonCeiling || Sector_SetPortal (tag, 4, 1, 0, 0) ||
+|-
+|{{icon|Eternity}} 287:Portal_HorizonFloor || Sector_SetPortal (tag, 4, 0, 0, 0) ||
+|-
+|{{icon|Eternity}} 288:Portal_HorizonFloorCeiling || Sector_SetPortal (tag, 4, 2, 0, 0) ||
+|-
+|{{icon|Eternity}} 289:Portal_LineTransfer || Sector_SetPortal (0, 5, 0, tag) ||
+|-
+|{{icon|Eternity}} 290:Portal_SkyboxCeiling || Sector_SetPortal (tag, 2, 1, 1, 0) ||
+|-
+|{{icon|Eternity}} 291:Portal_SkyboxFloor || Sector_SetPortal (tag, 2, 0, 1, 0) ||
+|-
+|{{icon|Eternity}} 292:Portal_SkyboxFloorCeiling || Sector_SetPortal (tag, 2, 2, 1, 0) ||
+|-
+|{{icon|Eternity}} 295:Portal_AnchoredCeiling || Sector_SetPortal (tag, 0, 1, 1, 0) ||
+|-
+|{{icon|Eternity}} 296:Portal_AnchoredFloor || Sector_SetPortal (tag, 0, 0, 1, 0) ||
+|-
+|{{icon|Eternity}} 297:Portal_AnchoredFloorCeiling || Sector_SetPortal (tag, 0, 2, 1, 0) ||
+|-
+|{{icon|Eternity}} 298:Portal_AnchorLine || Sector_SetPortal (tag, 0, 1, 0, 0) ||
+|-
+|{{icon|Eternity}} 299:Portal_AnchorLineFloor || Sector_SetPortal (tag, 0, 0, 0, 0) ||
+|-
+|{{icon|Eternity}} 344:Portal_AnchoredCeiling || Sector_SetPortal (tag, 0, 1, 1, 0) ||
+|-
+|{{icon|Eternity}} 345:Portal_AnchoredFloor || Sector_SetPortal (tag, 0, 0, 1, 0) || 
+|-
+|{{icon|Eternity}} 346:Portal_AnchorLine || Sector_SetPortal (tag, 0, 1, 0, 0) || 
+|-
+|{{icon|Eternity}} 347:Portal_AnchorLineFloor || Sector_SetPortal (tag, 0, 0, 0, 0) || 
+|-
+|{{icon|Eternity}} 358:Portal_AnchoredCeiling || Sector_SetPortal (tag, 6, 1, 1, 0) || 
+|-
+|{{icon|Eternity}} 359:Portal_AnchoredFloor || Sector_SetPortal (tag, 6, 0, 1, 0) || 
+|-
+|{{icon|Eternity}} 360:Portal_AnchorLine || Sector_SetPortal (tag, 6, 1, 0, 0) || 
+|-
+|{{icon|Eternity}} 361:Portal_AnchorLineFloor || Sector_SetPortal (tag, 6, 0, 0, 0) || 
+|-
+|{{icon|Eternity}} 385:Apply_PortalToFrontsector || Sector_SetPortal (0, 1, 3, tag) || 
+|}</text>
+    <sha1>khcprjos5225e5k6kiyrpfrlx52wzqf</sha1>
+  </revision>
+</page>

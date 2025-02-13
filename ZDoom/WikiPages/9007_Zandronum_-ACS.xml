@@ -1,0 +1,97 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>Zandronum: ACS</title>
+  <ns>0</ns>
+  <id>9007</id>
+  <revision>
+    <id>48145</id>
+    <parentid>48141</parentid>
+    <timestamp>2020-11-25T20:28:03Z</timestamp>
+    <contributor>
+      <username>Threesaster</username>
+      <id>2609</id>
+    </contributor>
+    <origin>48145</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="3830" sha1="fbnvju5kwlaoeolkx4zndkqhx0dt5ej" xml:space="preserve">{{STFeature}}
+This is an '''incomplete''' list of Zandronum-'''only''' ACS functions and extensions. See [[Built-in_ACS_functions|here]] for a list of ZDoom-supported ACS functions. Note that not all of them are supported by Zandronum.
+
+==Features==
+Zandronum supports [[Database|databases]], powered by [http://sqlite.org/ SQLite].
+
+==Script Types==
+'''&lt;code&gt;[[EVENT_scripts|EVENT]]&lt;/code&gt;''' scripts are executed when specific game events occur.
+
+There are additional script types that can be appended to regular script types:
+* &lt;code&gt;'''NET'''&lt;/code&gt; scripts are server-side and can be executed by clients using the puke command.
+* &lt;code&gt;'''CLIENTSIDE'''&lt;/code&gt; scripts client-side and can not be executed by the puke command.
+* &lt;code&gt;'''NET CLIENTSIDE'''&lt;/code&gt; scripts are client-side and can be executed by the puke command.
+&lt;br&gt;
+In this example, when someone picks up the enemy item it will start this script on the Client side:
+ Script 1 PICKUP CLIENTSIDE
+ {
+    [[Print]](s:"Someone got the flag!");
+ }
+
+
+It is worth reading [[Clientside Scripting]] if you intend on using CLIENTSIDE scripts.
+
+==ACS Functions==
+* &lt;code&gt;[[AnnouncerSound]]&lt;/code&gt;
+* &lt;code&gt;[[Database|BeginDBTransaction]]&lt;/code&gt;
+* &lt;code&gt;[[ConsoleCommand]]&lt;/code&gt;
+* &lt;code&gt;[[ConsolePlayerNumber]]&lt;/code&gt;
+* &lt;code&gt;[[Database|CountDBResults]]&lt;/code&gt;
+* &lt;code&gt;[[Database|EndDBTransaction]]&lt;/code&gt;
+* &lt;code&gt;[[Database|FreeDBResults]]&lt;/code&gt;
+* &lt;code&gt;[[Zandronum: GameType|GameType (Zandronum)]]&lt;/code&gt;
+* &lt;code&gt;[[Database|GetDBEntries]]&lt;/code&gt;
+* &lt;code&gt;[[Database|GetDBEntry‎]]&lt;/code&gt;
+* &lt;code&gt;[[Database|GetDBEntryRank]] &lt;/code&gt;
+* &lt;code&gt;[[Database|GetDBEntryString‎]]&lt;/code&gt;
+* &lt;code&gt;[[Database|GetDBResultKeyString]]&lt;/code&gt;
+* &lt;code&gt;[[Database|GetDBResultValue]]&lt;/code&gt;
+* &lt;code&gt;[[Database|GetDBResultValueString]]&lt;/code&gt;
+* &lt;code&gt;[[GetGameModeState]]&lt;/code&gt;
+* &lt;code&gt;[[GetInvasionState]]&lt;/code&gt;
+* &lt;code&gt;[[GetInvasionWave]]&lt;/code&gt;
+* &lt;code&gt;[[GetPlayerAccountName]]&lt;/code&gt;
+* &lt;code&gt;[[GetPlayerLivesLeft]]&lt;/code&gt;
+* &lt;code&gt;[[GetTeamProperty]]&lt;/code&gt;
+* &lt;code&gt;[[GetTimeProperty]]&lt;/code&gt; (Dev. 3.0 | 150831-1814)
+* &lt;code&gt;[[Database|IncrementDBEntry]]&lt;/code&gt;
+* &lt;code&gt;[[IsNetworkGame]]&lt;/code&gt;
+* &lt;code&gt;[[IsOneFlagCTF]]&lt;/code&gt;
+* &lt;code&gt;[[KickFromGame]]&lt;/code&gt;
+* &lt;code&gt;[[RequestScriptPuke|NamedRequestScriptPuke]]&lt;/code&gt;
+* &lt;code&gt;[[PlayerArmorpoints]]&lt;/code&gt;
+* &lt;code&gt;[[PlayerHealth]]&lt;/code&gt;
+* &lt;code&gt;[[PlayerIsLoggedIn]]&lt;/code&gt;
+* &lt;code&gt;[[PlayerIsSpectator]]&lt;/code&gt;
+* &lt;code&gt;[[PlayerTeam]]&lt;/code&gt;
+* &lt;code&gt;[[RequestScriptPuke]]&lt;/code&gt;
+* &lt;code&gt;[[ResetMap]]&lt;/code&gt;
+* &lt;code&gt;[[Database|SetDBEntry]]&lt;/code&gt;
+* &lt;code&gt;[[Database|SetDBEntryString]]&lt;/code&gt;
+* &lt;code&gt;[[SetPlayerLivesLeft]]&lt;/code&gt;
+* &lt;code&gt;[[Database|SortDBEntries]]&lt;/code&gt;
+* &lt;code&gt;[[Strftime]]&lt;/code&gt; (Dev. 3.0 | 150831-1814)
+* &lt;code&gt;[[SystemTime (Skulltag)|SystemTime]]&lt;/code&gt; (Dev. 3.0 | 150831-1814)
+
+==Deprecated==
+These functions are '''deprecated'''. They still work, but will be removed eventually. It is recommended you use more up to date functions.
+
+* &lt;code&gt;BlueCount&lt;/code&gt; {{Deprecated}} See: &lt;code&gt;[[GetTeamProperty]]&lt;/code&gt;
+* &lt;code&gt;BlueScore&lt;/code&gt; {{Deprecated}} See: &lt;code&gt;[[GetTeamProperty]]&lt;/code&gt;
+* &lt;code&gt;GetTeamScore&lt;/code&gt; {{Deprecated}} See: &lt;code&gt;[[GetTeamProperty]]&lt;/code&gt;
+* &lt;code&gt;Music_Change&lt;/code&gt; {{Deprecated}} See: &lt;code&gt;[[SetMusic]]&lt;/code&gt;
+* &lt;code&gt;RedCount&lt;/code&gt; {{Deprecated}} See: &lt;code&gt;[[GetTeamProperty]]&lt;/code&gt;
+* &lt;code&gt;RedScore&lt;/code&gt; {{Deprecated}} See: &lt;code&gt;[[GetTeamProperty]]&lt;/code&gt;
+* &lt;code&gt;SinglePlayer&lt;/code&gt; {{Deprecated}} See: &lt;code&gt;[[Zandronum: GameType]]&lt;/code&gt;
+* &lt;code&gt;BlueTeamCount&lt;/code&gt; {{Deprecated}} See: &lt;code&gt;[[GetTeamProperty]]&lt;/code&gt;
+* &lt;code&gt;BlueTeamScore&lt;/code&gt; {{Deprecated}} See: &lt;code&gt;[[GetTeamProperty]]&lt;/code&gt;
+* &lt;code&gt;RedTeamCount&lt;/code&gt; {{Deprecated}} See: &lt;code&gt;[[GetTeamProperty]]&lt;/code&gt;
+* &lt;code&gt;RedTeamScore&lt;/code&gt; {{Deprecated}} See: &lt;code&gt;[[GetTeamProperty]]&lt;/code&gt;</text>
+    <sha1>fbnvju5kwlaoeolkx4zndkqhx0dt5ej</sha1>
+  </revision>
+</page>

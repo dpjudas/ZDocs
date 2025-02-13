@@ -1,0 +1,72 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>ZNODES</title>
+  <ns>0</ns>
+  <id>5932</id>
+  <revision>
+    <id>38645</id>
+    <parentid>38644</parentid>
+    <timestamp>2014-12-31T23:29:35Z</timestamp>
+    <contributor>
+      <username>Gez</username>
+      <id>1283</id>
+    </contributor>
+    <minor />
+    <comment>uncompressed extended nodes</comment>
+    <origin>38645</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="2453" sha1="el8ntvgmrsvkvnn41ysxfbh62lutsnr" xml:space="preserve">'''ZNODES''' is an optional lump built by the nodebuilder for a map in the [[Universal Doom Map Format]]. It contains data that correspond to the [[NODES]], [[SSECTORS]] and [[SEGS]] lump from the classic binary [[map format]]s.
+
+ZNODES are necessarily GL nodes, normal nodes are not supported. Given that [[ZDBSP]] is the only nodebuilder in existence that can parse UDMF maps, this requirement is reasonable. Nodes can be indifferently in the XGLN, ZGLN, XGL2, or ZGL2 formats, but no other. If the lump is not present, [[ZDoom]] will use its internal nodebuilder, which is an integrated version of ZDBSP.
+
+====GL nodes (“XGLN” or “ZGLN” signature)====
+{| {{prettytable}}
+|-
+|DWORD||''NumSegs''||Number of segs
+|-
+|colspan="3" bgcolor="#dddddd"|Repeat ''NumSegs'' times:
+|-
+|DWORD||''v1''||Seg's first vertex
+|-
+|DWORD||''partner''||Seg's partner seg (0xFFFFFFFF if none)
+|-
+|WORD||''line''||The linedef this seg came from (0xFFFF if none)
+|-
+|BYTE||''side''||The linedef's side this seg came from (0=front, 1=back) (ignored if no line)
+|}
+====GL nodes (“XGL2” or “ZGL2” signature)====
+{| {{prettytable}}
+|-
+|DWORD||''NumSegs''||Number of segs
+|-
+|td bgcolor="#dddddd" colspan="3"|Repeat ''NumSegs'' times:
+|-
+|DWORD||''v1''||Seg's first vertex
+|-
+|DWORD||''partner''||Seg's partner seg (0xFFFFFFFF if none)
+|-
+|DWORD||''line''||The linedef this seg came from (0xFFFFFFFF if none)
+|-
+|BYTE||''side''||The linedef's side this seg came from (0=front, 1=back) (ignored if no line)
+|}
+Unlike standard GL nodes, each seg's second vertex is not stored. This is because GL subsectors must form a closed area. In other words, one seg's second vertex is the same as the next seg's first vertex. The subsector information contains everything you need to know to close each area and start a new one.
+
+Example: Suppose you have not read any segs yet, and the first subsector has four segs. Therefore, the second vertex for the first four segs can be determined to be:
+
+{| {{prettytable}}
+|-
+|Seg 0||Second vertex is Seg 1's first vertex
+|-
+|Seg 1||Second vertex is Seg 2's first vertex
+|-
+|Seg 2||Second vertex is Seg 3's first vertex
+|-
+|Seg 3||Second vertex is Seg 0's first vertex (because this is the last seg in the subsector)
+|}
+So for each subsector, all but the last seg's second vertex will be the same as the next seg's first vertex. The last seg's second vertex will be the same as the first seg's first vertex.
+
+
+[[Category:Map lumps]]</text>
+    <sha1>el8ntvgmrsvkvnn41ysxfbh62lutsnr</sha1>
+  </revision>
+</page>

@@ -1,0 +1,57 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>SetClipRect (BaseStatusBar)</title>
+  <ns>0</ns>
+  <id>9746</id>
+  <revision>
+    <id>52668</id>
+    <parentid>52667</parentid>
+    <timestamp>2024-05-17T10:56:21Z</timestamp>
+    <contributor>
+      <username>Jekyll Grim Payne</username>
+      <id>2175</id>
+    </contributor>
+    <minor />
+    <origin>52668</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="2008" sha1="4f5ezpuq6leu5rq39o2z6upjtq2nk7x" xml:space="preserve">{{note|This function is for the BaseStatusBar class. For the {{struct|Screen}} function of the same name, see '''[[SetClipRect]]'''.}}
+
+'''[[Classes:BaseStatusBar|BaseStatusBar]]'''
+
+void '''SetClipRect'''(double ''x'', double ''y'', double ''w'', double ''h'', int ''flags'' = 0)
+
+==Usage==
+Can be used in a [[Classes:BaseStatusBar|ZScript HUD]] to create a clipping rectangle. Clipping rectangles prevent anything outside of the specified bounding box from being drawn. This can be used to clip the edges of graphics if they leave a specific area. Note that this will only clip things that are drawn on the screen ''after'' the clipping rectangle is specified. Anything drawn before it's set, even if they lie outside of the rectangle, will not be clipped.
+
+Everything drawn on the screen after calling this function will be clipped, until the clipping rectangle is cleared with '''[[ClearClipRect (BaseStatusBar)|ClearClipRect()]]'''.
+
+===Parameters===
+*{{c|double '''x'''}}
+:Horizontal starting position.
+*{{c|double '''y'''}}
+:Vertical starting position.
+*{{c|double '''w'''}}
+:Width of the clipping rectangle (directed to the right along the X axis).
+*{{c|double '''h'''}}
+:Height of the clipping rectangle (directed downward along the Y axis).
+*{{c|int '''flags'''}}
+:{{: BaseStatusBar SCREEN flags}}
+:{{c|DI_ITEM*}} flags have no effect on this function. The  clipping rectangle is always anchored at its top left corner.
+
+== Example ==
+This will drawn the FIREBLU1 texture at the center of the screen, but its lower half will be clipped:
+&lt;syntaxhighlight lang="csharp"&gt;
+TextureID tex = TexMan.CheckForTexture("FIREBLU1");
+vector2 size = TexMan.GetScaledSize(tex);
+vector2 pos = (size.x * -0.5, size.y * -0.5);
+SetClipRect(pos.x, pos.y, size.x, size.y*0.5, DI_SCREEN_CENTER);
+DrawTexture(tex, pos, DI_SCREEN_CENTER|DI_ITEM_LEFT_TOP);
+ClearClipRect();
+&lt;/syntaxhighlight&gt;
+Note, this has to be called in &lt;code&gt;Draw()&lt;/code&gt; after &lt;code&gt;BeginHUD()&lt;/code&gt;.
+
+[[Category:ZScript]]
+[[Category:BaseStatusBar]]</text>
+    <sha1>4f5ezpuq6leu5rq39o2z6upjtq2nk7x</sha1>
+  </revision>
+</page>

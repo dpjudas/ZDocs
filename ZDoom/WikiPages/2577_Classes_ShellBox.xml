@@ -1,0 +1,63 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>Classes:ShellBox</title>
+  <ns>0</ns>
+  <id>2577</id>
+  <revision>
+    <id>53607</id>
+    <parentid>39187</parentid>
+    <timestamp>2024-11-08T11:37:14Z</timestamp>
+    <contributor>
+      <username>Jekyll Grim Payne</username>
+      <id>2175</id>
+    </contributor>
+    <origin>53607</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="1022" sha1="61j6mooiyj6p5lykxs9sf8wbuweqm23" xml:space="preserve">{{Actor|
+| type = Ammo
+| name = Shell box
+| class = ShellBox
+| game = Doom
+| doomednum = 2049
+| spawnid = 143
+| spawnname = T_SHELLBOX 
+}}[[Classes]]: [[Classes:Inventory|Inventory]]&amp;rarr;[[Classes:Ammo|Ammo]]&amp;rarr;[[Classes:Shell|Shell]]&amp;rarr;&lt;u&gt;ShellBox&lt;/u&gt;
+
+
+A box of shells, for use with the [[classes:Shotgun|Shotgun]] or [[classes:SuperShotgun|SuperShotgun]]. Gives five times the amount of ammo from the smaller [[Classes:Shell|shell pickup]].
+
+
+=== [[ZScript]] definition ===
+{{ZScriptDefinitionNote|actors/doom/doomammo.zs}}
+&lt;syntaxhighlight lang="cs"&gt;
+class ShellBox : Shell
+{
+	Default
+	{
+		Inventory.PickupMessage "$GOTSHELLBOX";
+		Inventory.Amount 20;
+	}
+	States
+	{
+	Spawn:
+		SBOX A -1;
+		Stop;
+	}
+}
+&lt;/syntaxhighlight&gt;
+=== [[DECORATE]] definition ===
+{{DecorateDefinitionNote}}
+ ACTOR &lt;u&gt;ShellBox&lt;/u&gt; : {{Class|Shell}}
+ {
+   {{Property|Inventory.PickupMessage}} "$GOTSHELLBOX" // "Picked up a box of shotgun shells."
+   {{Property|Inventory.Amount}} 20
+   States
+   {
+   Spawn:
+     SBOX A -1
+     Stop
+   }
+ }</text>
+    <sha1>61j6mooiyj6p5lykxs9sf8wbuweqm23</sha1>
+  </revision>
+</page>

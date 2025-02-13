@@ -1,0 +1,66 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>Classes:CircleFlame</title>
+  <ns>0</ns>
+  <id>4548</id>
+  <revision>
+    <id>34212</id>
+    <parentid>18704</parentid>
+    <timestamp>2012-09-05T11:06:03Z</timestamp>
+    <contributor>
+      <username>Blue Shadow</username>
+      <id>2021</id>
+    </contributor>
+    <comment>/* DECORATE definition */ Updated.</comment>
+    <origin>34212</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="1069" sha1="kskg912hkuqsxw8hu968xfjkmrifzx1" xml:space="preserve">{{Actor|
+| type = Explosive
+| name = Firestorm circle flame
+| class = CircleFlame
+| game = Hexen
+}}[[Classes]]: &lt;u&gt;CircleFlame&lt;/u&gt;&lt;br&gt;
+{{desc}}
+==== [[DECORATE]] definition ====
+ ACTOR &lt;u&gt;CircleFlame&lt;/u&gt;
+ {
+   {{Property|Radius}} 6
+   {{Property|Damage}} 2
+   {{Property|DamageType}} "Fire"
+   {{Property|Projectile}}
+   -{{Flag|ACTIVATEIMPACT}}
+   -{{Flag|ACTIVATEPCROSS}}
+   {{Property|RenderStyle}} Add
+   {{Property|DeathSound}} "ClericFlameCircle"
+   {{Property|Obituary}} "$OB_MPCWEAPFLAME"
+ 
+   action native [[A_CFlameRotate]]();
+ 
+   States
+   {
+   Spawn:
+     CFCF A 4 Bright
+     CFCF B 2 Bright [[A_CFlameRotate]]
+     CFCF C 2 Bright
+     CFCF D 1 Bright
+     CFCF E 2 Bright
+     CFCF F 2 Bright [[A_CFlameRotate]]
+     CFCF G 1 Bright
+     CFCF HI 2 Bright
+     CFCF J 1 Bright [[A_CFlameRotate]]
+     CFCF K 2 Bright
+     CFCF LM 3 Bright
+     CFCF N 2 Bright [[A_CFlameRotate]]
+     CFCF O 3 Bright
+     CFCF P 2 Bright
+     Stop
+   Death:
+     CFCF QR 3 Bright
+     CFCF S 3 Bright [[A_Explode]](20, 20, 0)
+     CFCF TUVWXYZ 3 Bright
+     Stop
+   }
+ }</text>
+    <sha1>kskg912hkuqsxw8hu968xfjkmrifzx1</sha1>
+  </revision>
+</page>

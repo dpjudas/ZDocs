@@ -1,0 +1,44 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>SetAirControl</title>
+  <ns>0</ns>
+  <id>1106</id>
+  <revision>
+    <id>50322</id>
+    <parentid>42606</parentid>
+    <timestamp>2023-06-05T21:43:19Z</timestamp>
+    <contributor>
+      <username>Jekyll Grim Payne</username>
+      <id>2175</id>
+    </contributor>
+    <comment>Clarified that the function applies to the level, added MAPINFO link</comment>
+    <origin>50322</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="939" sha1="saauooez6roe33ws5myg4cm8v5wcsh3" xml:space="preserve">__NOTOC__
+void '''SetAirControl''' (fixed ''amount'');
+
+== Usage ==
+
+Modifies the value of {{c|aircontrol}} which can initially be set in [[MAPINFO/Map_definition#AirControl|MAPINFO]]. Aircontrol determines how well the player can move while falling or jumping through the air.
+
+Air control is multiplied (using [[FixedMul]]) to the default friction when the player is not on the ground in an area that has gravity, and is not underwater. This gives the player very limited mobility while in the air. The friction is calculated based on the type of floor the player is on, such as icy or muddy.
+
+=== Parameters ===
+
+* ''amount'': How much control the player should have while in the air.  Amount is a fixed-point value.  The default is 0.00390625.
+
+== Examples ==
+Gives players near full air control.
+
+ Script 1 {{SType|OPEN}}
+ {
+     [[SetAirControl]](1.0);
+ }
+
+== See also ==
+* [[SetGravity]]
+
+[[category:ACS Level alteration functions]]</text>
+    <sha1>saauooez6roe33ws5myg4cm8v5wcsh3</sha1>
+  </revision>
+</page>

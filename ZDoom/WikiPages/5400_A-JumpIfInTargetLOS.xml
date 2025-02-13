@@ -1,0 +1,61 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>A JumpIfInTargetLOS</title>
+  <ns>0</ns>
+  <id>5400</id>
+  <revision>
+    <id>42406</id>
+    <parentid>42327</parentid>
+    <timestamp>2016-02-25T18:35:16Z</timestamp>
+    <contributor>
+      <username>Marisa Heit</username>
+      <id>5</id>
+    </contributor>
+    <comment>Add return type</comment>
+    <origin>42406</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="3664" sha1="0o337zknoh5fiv37j2si7kde6ll4ou5" xml:space="preserve">__NOTOC__
+{{codepointer|Jump}}
+state '''A_JumpIfInTargetLOS''' (int ''offset''[, float ''fov''[, int ''flags''[, float ''dist_max''[, float ''dist_close'']]]])&lt;br /&gt;
+state '''A_JumpIfInTargetLOS''' (str "''state''"[, float ''fov''[, int ''flags''[, float ''dist_max''[, float ''dist_close'']]]])
+{{JumpNotice}}
+==Usage==
+Jumps if the calling actor is in the field of view of its target. The ''flags'' parameter is used to determine the target of the calling actor's target. In the rest of the description, "target" will refer to either:
+* the target's {{c|master}}, if the '''JLOSF_CHECKMASTER''' flag is set;
+* the target's {{c|tracer}}, if the actor is a missile with the '''{{Flag|SEEKERMISSILE}}''' flag and '''JLOSF_PROJECTILE''' is set;
+* the target's {{c|target}}, in all other cases. This corresponds to a monster's current enemy or a projectile's shooter.
+
+If the calling actor has a valid target (as explained above) and can currently be seen by it, then a jump is performed. If {{c|fov}} is given, it is an angle representing the size (in degrees) of the sight cone. Actors outside of this cone (the center of which is the actor's current facing direction) are not considered to be “visible”. If omitted, no sight cone is used and instead this function jumps if the view between the target and the caller is unobstructed (the target can see the caller, regardless of facing direction, given there are no walls between the two).
+
+===Parameters===
+* ''state'' is label of the state to which the jump must be made.
+* ''offset'' corresponds to the number of states that must be skipped to make the jump.
+* ''fov'' corresponds to the field of vision used by the calling actor. The default value of 0 gives an all-around field of vision.
+* ''flags'': The following flags can be combined by using the {{c|{{!}}}} character between the constant names:
+** '''JLOSF_PROJECTILE'''&amp;nbsp;&amp;mdash; if set, the actor checks sight with the target it is seeking (the {{c|tracer}} field) instead of the normal {{c|target}} field (that, for projectiles, corresponds to the actor that fired it). If the actor is a projectile ''and'' does not have the {{flag|SEEKERMISSILE}} flag set, the target will be considered {{c|NULL}}, otherwise, if it is not a missile, the flag is ignored.
+** '''JLOSF_NOSIGHT'''&amp;nbsp;&amp;mdash; disables the sight check.
+** '''JLOSF_CLOSENOFOV'''&amp;nbsp;&amp;mdash; disables the FOV check if the target is within ''dist_close'' distance.
+** '''JLOSF_CLOSENOSIGHT'''&amp;nbsp;&amp;mdash; disables the sight check if the target is within ''dist_close'' distance.
+** '''JLOSF_CLOSENOJUMP'''&amp;nbsp;&amp;mdash; does not perform a jump if the target is within ''dist_close'' distance.
+** '''JLOSF_DEADNOJUMP'''&amp;nbsp;&amp;mdash; does not perform a jump if the target is dead.
+** '''JLOSF_CHECKMASTER'''&amp;nbsp;&amp;mdash; use the {{c|master}} field; overrides all other flags that specify the target.
+* ''dist_max'': the maximum distance between the calling actor and the target, no jumps are performed beyond it. The default value of 0 means there are no distance checks.
+* ''dist_close'': the function of this parameter depends on the ''flags'' used; it has otherwise no effect. The default value is 0.
+
+== Examples ==
+This [[revenant]] will dodge its target's attacks:
+   See:
+     TNT1 A 0 [[A_JumpIfInTargetLOS]](1, 30, {{const|JLOSF_DEADNOJUMP}}, 500) // if close and we're under their crosshair, jump!
+     Goto See+3 // skip the evasion code.
+     TNT1 A 0 [[A_FaceTarget]]
+     SKEL A 4 [[A_ChangeVelocity]](6, 0, 0, {{const|CFV_RELATIVE}})
+     SKEL AABBCCDDEEFF 2 [[A_Chase]]
+     Loop
+
+== See also ==
+* [[A_CheckSight]]
+* [[A_CheckSightOrRange]]
+* [[A_JumpIfTargetInLOS]]</text>
+    <sha1>0o337zknoh5fiv37j2si7kde6ll4ou5</sha1>
+  </revision>
+</page>

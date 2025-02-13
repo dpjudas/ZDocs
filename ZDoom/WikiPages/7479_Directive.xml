@@ -1,0 +1,41 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>Directive</title>
+  <ns>0</ns>
+  <id>7479</id>
+  <revision>
+    <id>40991</id>
+    <parentid>35166</parentid>
+    <timestamp>2016-02-13T11:07:36Z</timestamp>
+    <contributor>
+      <username>Blue Shadow</username>
+      <id>2021</id>
+    </contributor>
+    <comment>#region and #endregion directives</comment>
+    <origin>40991</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="2212" sha1="qcgsard4puvqgz6b6b6928gprz87ij5" xml:space="preserve">A '''directive''' in an [[ACS]] command beginning with a hash (or sharp) character (#); in the fashion of the {{wp|C preprocessor}} directives. Existing directives include:
+
+*'''&lt;nowiki&gt;#include&lt;/nowiki&gt;''' ''&lt;filename&gt;''
+:Includes the content of the given filename. It is generally used to include the common definition file zcommon.acs.
+*'''&lt;nowiki&gt;#library&lt;/nowiki&gt;'''
+:Defines the following code as a [[library]]. If used, it should be the very first directive, above even {{c|#include "zcommon.acs"}}.
+*'''&lt;nowiki&gt;#import&lt;/nowiki&gt;''' ''&lt;library name&gt;''
+:Imports a [[library]]. This allows to use [[ACS|scripts]], [[functions]], and [[constants]] defined in the library. Libraries should not be #included!
+*'''&lt;nowiki&gt;#define&lt;/nowiki&gt;''' ''&lt;constant name&gt;'' ''&lt;value&gt;''
+:This gives a text name to a value, allowing to make the code more readable and easier to update if a same value has to be used in several places. Constant names should only include uppercase letters, numerals, and underscores.
+*'''&lt;nowiki&gt;#libdefine&lt;/nowiki&gt;''' ''&lt;constant name&gt;'' ''&lt;value&gt;''
+:This is an alternative to #define which is used in libraries. A #libdefined constant can be used by scripts that #import the library that defined it.
+*'''&lt;nowiki&gt;#nocompact&lt;/nowiki&gt;'''
+:This directive prevents the compiler from "compacting" or "shrinking" the bytecode where possible. In effect, this forces it to use the ACSE format instead of the ACSe format. It has no effect if compiling in ACS0 format.
+*'''&lt;nowiki&gt;#wadauthor&lt;/nowiki&gt;'''
+:Forces the compiler to create a "valid" ACS0 stub (in addition to the ACSe or ACSE bytecode) so that {{dw|WadAuthor}}'s error checker will not report ACS errors.
+*'''&lt;nowiki&gt;#nowadauthor&lt;/nowiki&gt;'''
+:Forces the compiler ''not'' to create a valid ACS0 stub. The bytecode will be slightly smaller as a result, but WadAuthor's error checker will mistakenly report that the compiled ACS is broken.
+*'''&lt;nowiki&gt;#region&lt;/nowiki&gt;'''
+*'''&lt;nowiki&gt;#endregion&lt;/nowiki&gt;'''
+:Define the start ({{c|#region}}) and end ({{c|#endregion}}) of a fold-able block of code. This is of use with text editors which support the ability to define ''code folders'' such as [[GZDoom Builder]]'s script editor.
+[[Category:ACS]]</text>
+    <sha1>qcgsard4puvqgz6b6b6928gprz87ij5</sha1>
+  </revision>
+</page>

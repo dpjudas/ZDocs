@@ -1,0 +1,75 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>Dynamic TID Assigner</title>
+  <ns>0</ns>
+  <id>2942</id>
+  <revision>
+    <id>36287</id>
+    <parentid>36286</parentid>
+    <timestamp>2013-05-08T00:54:09Z</timestamp>
+    <contributor>
+      <username>Marisa Heit</username>
+      <id>5</id>
+    </contributor>
+    <minor />
+    <comment>Bold?</comment>
+    <origin>36287</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="1715" sha1="pyw3o9krpcjuos208fbzetpsib2zmol" xml:space="preserve">{{Note|The functionality provided by the '''NextTID''' function shown here can also be found directly in the engine. You should use [[UniqueTID]] instead of this function, as it will be faster.}}
+== Assumed Knowledge ==
+
+It is assumed that before you begin this tutorial, you are familiar with the following concepts:
+{|border="0" cellpadding="10"
+|- valign="top"
+|
+*[[Functions]]
+*[[Thing_ChangeTID]]
+|}
+== The Function ==
+We'll start with a map level integer for the base TID to start assigning.  For this example we'll use the negative range, from -32767 to -1.
+
+ int GiveTID = -32767;
+ 
+ function int NextTID (void)
+ {
+     for ( ; GiveTID &lt; 0; GiveTID++)
+     {
+         if (![[ThingCount]] ({{const|T_NONE}}, GiveTID))
+             return GiveTID;
+     }
+     return 0;
+ }
+
+== The Script ==
+This is the script your actor will need to activate to give itself a genuine TID.  There are several ways to go about the activation.  The script checks for the activator to have no TID, then generates a new one to give it.  So, if you have a special TID you need to preserve, the script will not overwrite it.  If used correctly, this can be a handy tool for individual actor identification for large scale scenarios.
+
+ Script 999 (void)
+ {
+     if (![[ActivatorTID]] ())
+     {
+         [[Thing_ChangeTID]] (0, NextTID ());
+     }
+ }
+
+== Application ==
+This is an example of how to use [[DECORATE]] to modify your Imps so that they will assign themselves unique tids.
+
+ ACTOR NewDoomImp : {{class|DoomImp}} replaces {{class|DoomImp}}
+ {
+ 	States
+ 	{
+ 	Spawn:
+ 		TROO A 0
+ 		TROO A 0 [[ACS_ExecuteAlways]] (999, 0)
+ 		TROO AB 10 [[A_Look]]
+ 		Goto Spawn+2
+ 	}
+ }
+
+== See Also ==
+[[Tutorials]]
+
+[[category:ACS guides]]</text>
+    <sha1>pyw3o9krpcjuos208fbzetpsib2zmol</sha1>
+  </revision>
+</page>

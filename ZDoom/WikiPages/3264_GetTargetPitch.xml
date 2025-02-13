@@ -1,0 +1,36 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>GetTargetPitch</title>
+  <ns>0</ns>
+  <id>3264</id>
+  <revision>
+    <id>38129</id>
+    <parentid>38127</parentid>
+    <timestamp>2014-08-12T16:35:47Z</timestamp>
+    <contributor>
+      <username>Cpt. Carmack</username>
+      <id>2022</id>
+    </contributor>
+    <origin>38129</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="606" sha1="5z9l8wcb7qeozuqin89pvddbr1tzx7d" xml:space="preserve">This function acts as an extension to [[VectorAngle]], it returns the relative pitch of a thing with tid2, from a thing with tid1.
+ function int GetTargetPitch (int tid1, int tid2)
+ {
+     int x, y, z, xy, a;
+     x = [[GetActorX]](tid2) - [[GetActorX]](tid1);
+     y = [[GetActorY]](tid2) - [[GetActorY]](tid1);
+     z = [[GetActorZ]](tid2) - [[GetActorZ]](tid1);
+     a = [[VectorAngle]](x, y);
+ 
+     if ((a + 0.125) % 0.5 &gt; 0.25)
+         xy = [[FixedDiv]](y, [[sin]](a));
+     else
+         xy = [[FixedDiv]](x, [[cos]](a));
+ 
+     return -[[VectorAngle]](xy, z);
+ }
+
+[[Category:Sample ACS functions]]</text>
+    <sha1>5z9l8wcb7qeozuqin89pvddbr1tzx7d</sha1>
+  </revision>
+</page>

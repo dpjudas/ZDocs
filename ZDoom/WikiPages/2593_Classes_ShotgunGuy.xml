@@ -1,0 +1,153 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>Classes:ShotgunGuy</title>
+  <ns>0</ns>
+  <id>2593</id>
+  <revision>
+    <id>48919</id>
+    <parentid>48445</parentid>
+    <timestamp>2021-12-27T11:15:38Z</timestamp>
+    <contributor>
+      <username>Jekyll Grim Payne</username>
+      <id>2175</id>
+    </contributor>
+    <comment>updated in accordance with updated ZScriptDefinitionNote template</comment>
+    <origin>48919</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="2925" sha1="6vzpz34y1iqefq9xujpi34pexd7l09b" xml:space="preserve">{{Actor|
+| type = Monster
+| name = Sergeant
+| class = ShotgunGuy
+| game = Doom
+| doomednum = 9
+| thingindex = 3
+| spawnid = 1
+| spawnname = T_SHOTGUY
+}}
+[[Classes]]: &lt;u&gt;ShotgunGuy&lt;/u&gt;&lt;br&gt;
+&amp;ensp;&amp;rarr;[[Classes:StealthShotgunGuy|StealthShotgunGuy]]&lt;br&gt;
+&amp;ensp;&amp;rarr;[[Classes:DeadShotgunGuy|DeadShotgunGuy]]
+
+
+The Shotgun Zombie, more commonly known as Sergeants or Shotgunners, are zombies with a shotgun. They can be particularly dangerous to the player at close range.
+
+
+==== [[ZScript]] definition ====
+{{ZScriptDefinitionNote|actors/doom/possessed.zs#L65}} 
+ class ShotgunGuy : Actor
+ {
+ 	Default
+ 	{
+ 		{{Property|Health}} 30;
+ 		{{Property|Radius}} 20;
+ 		{{Property|Height}} 56;
+ 		{{Property|Mass}} 100;
+ 		{{Property|Speed}} 8;
+ 		{{Property|PainChance}} 170;
+ 		{{Property|Monster}};
+ 		+{{Flag|FLOORCLIP}}
+ 		{{Property|SeeSound}} "shotguy/sight";
+ 		{{Property|AttackSound}} "shotguy/attack";
+ 		{{Property|PainSound}} "shotguy/pain";
+ 		{{Property|DeathSound}} "shotguy/death";
+ 		{{Property|ActiveSound}} "shotguy/active";
+ 		{{Property|Obituary}} "$OB_SHOTGUY";
+ 		{{Property|Tag}} "$FN_SHOTGUN";
+ 		{{Property|DropItem}} "Shotgun";
+ 	}
+ 	States
+ 	{
+ 	Spawn:
+ 		SPOS AB 10 [[A_Look]];
+ 		Loop;
+ 	See:
+ 		SPOS AABBCCDD 3 [[A_Chase]];
+ 		Loop;
+ 	Missile:
+ 		SPOS E 10 [[A_FaceTarget]];
+ 		SPOS F 10 BRIGHT [[A_SposAttackUseAtkSound]];
+ 		SPOS E 10;
+ 		Goto See;
+ 	Pain:
+ 		SPOS G 3;
+ 		SPOS G 3 [[A_Pain]];
+ 		Goto See;
+ 	Death:
+ 		SPOS H 5;
+ 		SPOS I 5 [[A_Scream]];
+ 		SPOS J 5 [[A_NoBlocking]];
+ 		SPOS K 5;
+ 		SPOS L -1;
+ 		Stop;
+ 	XDeath:
+ 		SPOS M 5;
+ 		SPOS N 5 [[A_XScream]];
+ 		SPOS O 5 [[A_NoBlocking]];
+ 		SPOS PQRST 5;
+ 		SPOS U -1;
+ 		Stop;
+ 	Raise:
+ 		SPOS L 5;
+ 		SPOS KJIH 5;
+ 		Goto See;
+ 	}
+ }
+==== [[DECORATE]] definition ====
+{{DecorateDefinitionNote}}
+ ACTOR &lt;u&gt;ShotgunGuy&lt;/u&gt;
+ {
+   {{Property|Health}} 30
+   {{Property|Radius}} 20
+   {{Property|Height}} 56
+   {{Property|Mass}} 100
+   {{Property|Speed}} 8
+   {{Property|PainChance}} 170
+   {{Property|Monster}}
+   +{{Flag|FLOORCLIP}}
+   {{Property|SeeSound}} "shotguy/sight"
+   {{Property|AttackSound}} "shotguy/attack"
+   {{Property|PainSound}} "shotguy/pain"
+   {{Property|DeathSound}} "shotguy/death"
+   {{Property|ActiveSound}} "shotguy/active"
+   {{Property|Obituary}} "$OB_SHOTGUY"
+   {{Property|DropItem}} "{{Class|Shotgun}}"
+   States
+   {
+   Spawn:
+     SPOS AB 10 [[A_Look]]
+     Loop
+   See:
+     SPOS AABBCCDD 3 [[A_Chase]]
+     Loop
+   Missile:
+     SPOS E 10 [[A_FaceTarget]]
+     SPOS F 10 Bright [[A_SPosAttackUseAtkSound]]
+     SPOS E 10
+     Goto See
+   Pain:
+     SPOS G 3
+     SPOS G 3 [[A_Pain]]
+     Goto See
+   Death:
+     SPOS H 5
+     SPOS I 5 [[A_Scream]]
+     SPOS J 5 [[A_NoBlocking]]
+     SPOS K 5
+     SPOS L -1
+     Stop
+   XDeath:
+     SPOS M 5
+     SPOS N 5 [[A_XScream]]
+     SPOS O 5 [[A_NoBlocking]]
+     SPOS PQRST 5
+     SPOS U -1
+     Stop
+   Raise:
+     SPOS L 5
+     SPOS KJIH 5
+     Goto See
+   }
+ }</text>
+    <sha1>6vzpz34y1iqefq9xujpi34pexd7l09b</sha1>
+  </revision>
+</page>

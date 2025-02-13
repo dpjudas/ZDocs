@@ -1,0 +1,138 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>Classes:Demon</title>
+  <ns>0</ns>
+  <id>1629</id>
+  <revision>
+    <id>48917</id>
+    <parentid>48440</parentid>
+    <timestamp>2021-12-27T11:15:27Z</timestamp>
+    <contributor>
+      <username>Jekyll Grim Payne</username>
+      <id>2175</id>
+    </contributor>
+    <comment>updated in accordance with updated ZScriptDefinitionNote template</comment>
+    <origin>48917</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="2703" sha1="oyttaab14kfyqyscgsjl5tgqitbpsta" xml:space="preserve">{{Actor|
+| type = Monster
+| name = Demon
+| class = Demon
+| game = Doom
+| doomednum = 3002
+| thingindex = 13
+| spawnid = 8
+| spawnname = T_DEMON
+}}
+[[Classes]]: &lt;u&gt;Demon&lt;/u&gt;&lt;br&gt;
+&amp;ensp;&amp;rarr;[[Classes:DeadDemon|DeadDemon]]&lt;br&gt;
+&amp;ensp;&amp;rarr;[[Classes:Spectre|Spectre]]&lt;br&gt;
+&amp;ensp;&amp;rarr;[[Classes:StealthDemon|StealthDemon]]
+
+
+The Demon also known as Pinky Demon, is the first and only monster which won't shoot or fire at you from a distance. Instead, it will hunt you down and get up close and personal to bite you. Can be a low to high threat, depending on the number of Demons.
+
+
+==== [[ZScript]] definition ====
+{{ZScriptDefinitionNote|actors/doom/demon.zs}} 
+ class Demon : Actor
+ {
+ 	Default
+ 	{
+ 		{{Property|Health}} 150;
+ 		{{Property|PainChance}} 180;
+ 		{{Property|Speed}} 10;
+ 		{{Property|Radius}} 30;
+ 		{{Property|Height}} 56;
+ 		{{Property|Mass}} 400;
+ 		{{Property|Monster}};
+ 		+{{Flag|FLOORCLIP}}
+ 		{{Property|SeeSound}} "demon/sight";
+ 		{{Property|AttackSound}} "demon/melee";
+ 		{{Property|PainSound}} "demon/pain";
+ 		{{Property|DeathSound}} "demon/death";
+ 		{{Property|ActiveSound}} "demon/active";
+ 		{{Property|Obituary}} "$OB_DEMONHIT";
+ 		{{Property|Tag}} "$FN_DEMON";
+ 	}
+ 	States
+ 	{
+ 	Spawn:
+ 		SARG AB 10 [[A_Look]];
+ 		Loop;
+ 	See:
+ 		SARG AABBCCDD 2 Fast [[A_Chase]];
+ 		Loop;
+ 	Melee:
+ 		SARG EF 8 Fast [[A_FaceTarget]];
+ 		SARG G 8 Fast [[A_SargAttack]];
+ 		Goto See;
+ 	Pain:
+ 		SARG H 2 Fast;
+ 		SARG H 2 Fast [[A_Pain]];
+ 		Goto See;
+ 	Death:
+ 		SARG I 8;
+ 		SARG J 8 [[A_Scream]];
+ 		SARG K 4;
+ 		SARG L 4 [[A_NoBlocking]];
+ 		SARG M 4;
+ 		SARG N -1;
+ 		Stop;
+ 	Raise:
+ 		SARG N 5;
+ 		SARG MLKJI 5;
+ 		Goto See;
+ 	}
+ }
+==== [[DECORATE]] definition ====
+{{DecorateDefinitionNote}}
+ ACTOR &lt;u&gt;Demon&lt;/u&gt;
+ {
+   {{Property|Health}} 150
+   {{Property|PainChance}} 180
+   {{Property|Speed}} 10
+   {{Property|Radius}} 30
+   {{Property|Height}} 56
+   {{Property|Mass}} 400
+   {{Property|Monster}}
+   +{{Flag|FLOORCLIP}}
+   {{Property|SeeSound}} "demon/sight"
+   {{Property|AttackSound}} "demon/melee"
+   {{Property|PainSound}} "demon/pain"
+   {{Property|DeathSound}} "demon/death"
+   {{Property|ActiveSound}} "demon/active"
+   {{Property|Obituary}} "$OB_DEMONHIT" // "%o was bit by a demon."
+   States
+   {
+   Spawn:
+     SARG AB 10 [[A_Look]]
+     Loop
+   See:
+     SARG AABBCCDD 2 Fast [[A_Chase]]
+     Loop
+   Melee:
+     SARG EF 8 Fast [[A_FaceTarget]]
+     SARG G 8 Fast [[A_SargAttack]]
+     Goto See
+   Pain:
+     SARG H 2 Fast
+     SARG H 2 Fast [[A_Pain]]
+     Goto See
+   Death:
+     SARG I 8
+     SARG J 8 [[A_Scream]]
+     SARG K 4
+     SARG L 4 [[A_NoBlocking]]
+     SARG M 4
+     SARG N -1
+     Stop
+   Raise:
+     SARG N 5
+     SARG MLKJI 5
+     Goto See
+   }
+ }</text>
+    <sha1>oyttaab14kfyqyscgsjl5tgqitbpsta</sha1>
+  </revision>
+</page>

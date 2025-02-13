@@ -1,0 +1,54 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>Classes:ZSuitOfArmor</title>
+  <ns>0</ns>
+  <id>4685</id>
+  <revision>
+    <id>39643</id>
+    <parentid>34862</parentid>
+    <timestamp>2015-05-02T21:14:45Z</timestamp>
+    <contributor>
+      <username>Blue Shadow</username>
+      <id>2021</id>
+    </contributor>
+    <minor />
+    <comment>/* DECORATE definition */ Updated</comment>
+    <origin>39643</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="952" sha1="87az4bc6vj2mp94bgrlcvbsn3nwe6cn" xml:space="preserve">{{Actor|
+| type = Breakable
+| name = Suit of armor
+| class = ZSuitOfArmor
+| game = Hexen
+| doomednum = 8064
+}}[[Classes]]: &lt;u&gt;ZSuitOfArmor&lt;/u&gt;&lt;br&gt;
+A knight's suit of armor on display. It can be smashed, causing it to spawn (through [[A_SoAExplode]]) {{Class|ZArmorChunk}} pieces upon its destruction as well as having the option of [[Hexen breakable items|containing a hidden item]].&lt;br&gt;
+In Hexen.wad, the sprite is actually named SUITA0 and is [[Sprite renaming|renamed at load-time]] by ZDoom.
+==== [[DECORATE]] definition ====
+ ACTOR &lt;u&gt;ZSuitOfArmor&lt;/u&gt;
+ {
+   {{Property|Health}} 60
+   {{Property|Radius}} 16
+   {{Property|Height}} 72
+   {{Property|Mass}} 0x7fffffff
+   +{{Flag|SOLID}}
+   +{{Flag|SHOOTABLE}}
+   +{{Flag|NOBLOOD}}
+   +{{Flag|NOICEDEATH}}
+   {{Property|DeathSound}} "SuitofArmorBreak"
+ 
+   action native [[A_SoAExplode]]();
+ 
+   States
+   {
+   Spawn:
+     ZSUI A -1
+     Stop
+   Death:
+     ZSUI A 1 [[A_SoAExplode]]
+     Stop
+   }
+ }</text>
+    <sha1>87az4bc6vj2mp94bgrlcvbsn3nwe6cn</sha1>
+  </revision>
+</page>

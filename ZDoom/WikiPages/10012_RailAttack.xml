@@ -1,0 +1,129 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>RailAttack</title>
+  <ns>0</ns>
+  <id>10012</id>
+  <revision>
+    <id>53905</id>
+    <timestamp>2024-11-27T09:56:14Z</timestamp>
+    <contributor>
+      <username>Jekyll Grim Payne</username>
+      <id>2175</id>
+    </contributor>
+    <comment>Created page with "'''{{class|Actor}}'''  {{c|native void '''RailAttack'''(FRailParams ''p'')}}  == Usage == The most generalized function to fire a railgun attack that is available to all actors. Functions like {{c|[[A_RailAttack]]}} utilize this function internally.  An {{c|FRailParams}} struct is used to transfer data to the function due to a large list of values.  === Parameters === *{{c|FRailParams '''p'''}} :A pointer to the {{c|FRailParams}} struct (the struct is implied to be decla..."</comment>
+    <origin>53905</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="6537" sha1="iq40lc15km2whe7xv4f8qqjrljj4jss" xml:space="preserve">'''{{class|Actor}}'''
+
+{{c|native void '''RailAttack'''(FRailParams ''p'')}}
+
+== Usage ==
+The most generalized function to fire a railgun attack that is available to all actors. Functions like {{c|[[A_RailAttack]]}} utilize this function internally.
+
+An {{c|FRailParams}} struct is used to transfer data to the function due to a large list of values.
+
+=== Parameters ===
+*{{c|FRailParams '''p'''}}
+:A pointer to the {{c|FRailParams}} struct (the struct is implied to be declared and configured before this function is called).
+
+=== FRailParams ===
+{{note|As with all [[Structs|structs]], there are NO default values; unless explicitly modified, all fields below will evaluate to their implicit values according to their data type (for example, all ints and doubles will be 0, and class&lt;Actor&gt; fields will be null.)}}
+
+The '''FRailParams''' struct contains data required to set up a railgun attack. It has the following fields:
+*{{c|int '''damage'''}}
+:The damage to inflict; this can be a fixed value or an expression.
+*{{c|double '''offset_xy'''}}
+:The horizontal offset (from the actor's center) where the railgun will emerge from. Negative values shift the beam to the actor's left, positive values shift it right. Default is 0.
+*{{c|double '''offset_z'''}}
+:The vertical offset (from the actor's center) where the railgun will emerge from. Negative values shift the beam down, positive values shift it up. Default is 0.
+*{{c|int '''color1'''}}
+*{{c|int '''color2'''}}
+:The color of the particles that form the spiral ({{c|color1}}) and the core beam ({{c|color2}}) of the railgun's ray. This can be given as {{c|RRGGBB}}, a color defined in the [[X11R6RGB]] lump or any other [[ZScript_data_types#Color|supported color format]]. If the string is invalid, the particles will be black. &lt;code&gt;""&lt;/code&gt; will make the respective part of the ray (spiral or core) invisible.
+:A value of 0  is treated specially, drawing the particles in one of three shades of gray, picked randomly.
+*{{c|double '''maxdiff'''}}
+:This is used to make the rail more jagged, or lightning-like, with higher numbers. At 0 the beam is straight.
+*{{c|int '''flags'''}}
+:The following flags can be combined with &lt;code&gt;|&lt;/code&gt;
+:* '''RGF_SILENT''' — The railgun will not play an attack sound when firing.
+:* '''RGF_NOPIERCING''' — The railgun will stop at the first enemy hit, rather than passing through.
+:* '''RGF_EXPLICITANGLE''' — The spread parameters are taken as explicit angles rather than maximum random amplitude.
+:* '''RGF_FULLBRIGHT''' — Rail particles will be rendered at maximum brightness, ignoring sector lighting.
+:* '''RGF_CENTERZ''' — Z offset originates from half of the player's height (adjusted when crouched), instead of using the [[Actor_properties#Player.AttackZOffset|Player.AttackZOffset property]].
+:* '''RGF_NORANDOMPUFFZ''' — Disables the random z-offset of spawned puffs.
+*{{c|Class&lt;Actor&gt; '''puff'''}}
+:The '''[[puff]]''' actor to use. By default, the puff will only spawn in rare circumstances (e.g. when hitting a dormant monster) unless the puff actor has the {{Flag|'''ALWAYSPUFF'''}} flag set. Even if not shown, the selected puff will still be used for applying [[Damage type|custom damagetypes]] and other properties. Puffs with the '''{{Flag|ALWAYSPUFF}}''' flag spawn on floors and ceilings. If this is {{c|null}}, {{class|BulletPuff}} will be used.
+*{{c|double '''angleoffset'''}}
+:Maximum angle of random horizontal spread.
+*{{c|double '''pitchoffset'''}}
+:Maximum angle of random vertical spread.
+*{{c|double '''distance'''}}
+:Maximum distance covered by the rail. For reference, player hitscan attaks use {{const|PLAYERMISSILERANGE}} by default, which is equal to 8192.
+*{{c|int '''duration'''}}
+*{{c|double '''sparsity'''}}
+:Distance between individial particles. Implemented as a multiplier.
+*{{c|double '''drift'''}}
+:Speed at which particles "drift" away from their initial spawn point.
+*{{c|Class&lt;Actor&gt; '''spawnclass'''}}
+:Actor to spawn in place of trail particles. If non-null, the specified actor will be spaced ''sparsity'' units apart instead of the usual trail. It will also inherit the pitch of the shooter and track the owner, allowing for explosive trails to not hurt the owner. Particle-specific properties such as ''duration'', ''driftspeed'', and rail color are ignored in such a case.
+:'''{{color|red|Warning:}}''' Using actors for beam particles is generally discouraged, especially when the beam is long and/or the actors in question use additive [[renderstyle]]. Spawning multiple actors per a single [[tic]] can cause significant performance drops. For highly customized beams, using [[SpawnParticle (ZScript)|custom particles in ZScript]] is recommended.
+*{{c|int '''SpiralOffset'''}}
+:The angle from which the outer ring starts spiraling.
+*{{c|int '''limit'''}}
+:Sets the maximum number of actors to pierce through, if they are applicable for damaging. 0 means no limit.
+
+== Examples ==
+The source code for [[A_RailAttack]] is an example of using this function:
+&lt;syntaxhighlight lang="csharp"&gt;
+	action void A_RailAttack(int damage, int spawnofs_xy = 0, bool useammo = true, color color1 = 0, color color2 = 0, int flags = 0, double maxdiff = 0, class&lt;Actor&gt; pufftype = "BulletPuff", double spread_xy = 0, double spread_z = 0, double range = 0, int duration = 0, double sparsity = 1.0, double driftspeed = 1.0, class&lt;Actor&gt; spawnclass = "none", double spawnofs_z = 0, int spiraloffset = 270, int limit = 0)
+	{
+		if (range == 0) range = 8192;
+		if (sparsity == 0) sparsity=1.0;
+
+		let player = self.player;
+		if (!player) return;
+
+		let weapon = player.ReadyWeapon;
+
+		if (useammo &amp;&amp; weapon != NULL &amp;&amp; stateinfo != null &amp;&amp; stateinfo.mStateType == STATE_Psprite)
+		{
+			if (!weapon.DepleteAmmo(weapon.bAltFire, true))
+				return;	// out of ammo
+		}
+
+		if (!(flags &amp; RGF_EXPLICITANGLE))
+		{
+			spread_xy = spread_xy * Random2[crailgun]() / 255.;
+			spread_z = spread_z * Random2[crailgun]() / 255.;
+		}
+
+		FRailParams p;
+		p.damage = damage;
+		p.offset_xy = spawnofs_xy;
+		p.offset_z = spawnofs_z;
+		p.color1 = color1;
+		p.color2 = color2;
+		p.maxdiff = maxdiff;
+		p.flags = flags;
+		p.puff = pufftype;
+		p.angleoffset = spread_xy;
+		p.pitchoffset = spread_z;
+		p.distance = range;
+		p.duration = duration;
+		p.sparsity = sparsity;
+		p.drift = driftspeed;
+		p.spawnclass = spawnclass;
+		p.SpiralOffset = SpiralOffset;
+		p.limit = limit;
+		self.RailAttack(p);
+	}
+&lt;/syntaxhighlight&gt;
+
+== See also ==
+* [[LineAttack (ZScript)]]
+* [[A_RailAttack]]
+* [[A_CustomRailgun]]
+
+[[Category:ZScript]]</text>
+    <sha1>iq40lc15km2whe7xv4f8qqjrljj4jss</sha1>
+  </revision>
+</page>

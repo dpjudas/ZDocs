@@ -1,0 +1,168 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>ACS PCodes</title>
+  <ns>0</ns>
+  <id>7764</id>
+  <revision>
+    <id>38394</id>
+    <parentid>38389</parentid>
+    <timestamp>2014-10-22T14:29:38Z</timestamp>
+    <contributor>
+      <username>Gez</username>
+      <id>1283</id>
+    </contributor>
+    <minor />
+    <comment>short introduction, categories, and link to document</comment>
+    <origin>38394</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="8815" sha1="0m8jz0qihxx8yg4vmk5ez8s0k4dirzb" xml:space="preserve">The following is a list of [[ACS]] {{wp|p-code machine|p-code}}.
+
+{| class="wikitable sortable"
+|-
+! # !! PCode !! Arguments !! Stack Offset !! Extension !! Description
+|-
+| 0 || NOP || 0 || 0 || Hexen || Does nothing.
+|-
+| 1 || TERMINATE || 0 || 0 || Hexen || Finishes the current script.
+|-
+| 2 || SUSPEND || 0 || 0 || Hexen || Holds the execution of the script until it is executed again, at which point it will resume.
+|-
+| 3 || PUSHNUMBER || 1 || 1 || Hexen || Pushes an integer onto the stack.
+|-
+| 4 || LSPEC1 || 1 || -1 || Hexen || Executes the line special, popping one argument from the stack.
+|-
+| 5 || LSPEC2 || 1 || -2 || Hexen || Executes the line special, popping two arguments from the stack.
+|-
+| 6 || LSPEC3 || 1 || -3 || Hexen || Executes the line special, popping three arguments from the stack.
+|-
+| 7 || LSPEC4 || 1 || -4 || Hexen || Executes the line special, popping four arguments from the stack.
+|-
+| 8 || LSPEC5 || 1 || -5 || Hexen || Executes the line special, popping five arguments from the stack.
+|-
+| 9 || LSPEC1DIRECT || 2 || 0 || Hexen || Executes the line special given by the first argument with a constant parameter given by the second argument.
+|-
+| 10 || LSPEC2DIRECT || 3 || 0 || Hexen || Executes the line special given by the first argument with two constant parameters given by the rest of the arguments.
+|-
+| 11 || LSPEC3DIRECT || 4 || 0 || Hexen || Executes the line special given by the first argument with three constant parameters given by the rest of the arguments.
+|-
+| 12 || LSPEC4DIRECT || 5 || 0 || Hexen || Executes the line special given by the first argument with four constant parameters given by the rest of the arguments.
+|-
+| 13 || LSPEC5DIRECT || 6 || 0 || Hexen || Executes the line special given by the first argument with five constant parameters given by the rest of the arguments.
+|-
+| 14 || ADD || 0 || -1 || Hexen || Pops two integers from the stack, adds them, and pushes the result.
+|-
+| 15 || SUBTRACT || 0 || -1 || Hexen || Pops two integers from the stack, subtracts them, and pushes the result.
+|-
+| 16 || MULTIPLY || 0 || -1 || Hexen || Pops two integers from the stack, multiplies them, and pushes the result.
+|-
+| 17 || DIVIDE || 0 || -1 || Hexen || Pops two integers from the stack, divides them, and pushes the result.  Division by zero causes an error.
+|-
+| 18 || MODULUS || 0 || -1 || Hexen || Pops two integers from the stack, divides them, and pushes the remainder.  Division by zero causes an error.
+|-
+| 19 || EQ || 0 || -1 || Hexen || Pops two integers from the stack and compares them for equality.  If they are equal, a 1 is pushed to the stack, otherwise 0.
+|-
+| 20 || NE || 0 || -1 || Hexen || Pops two integers from the stack and compares them for inequality.  If they are not equal, a 1 is pushed to the stack, otherwise 0.
+|-
+| 21 || LT || 0 || -1 || Hexen || Pops two integers from the stack and compares the second popped number to the first.  If the second number is less than the first, a 1 is pushed to the stack, otherwise 0.
+|-
+| 22 || GT || 0 || -1 || Hexen || Pops two integers from the stack and compares the second popped number to the first.  If the second number is greater than the first, a 1 is pushed to the stack, otherwise 0.
+|-
+| 23 || LE || 0 || -1 || Hexen || Pops two integers from the stack and compares the second popped number to the first.  If the second number is less than or equal to the first, a 1 is pushed to the stack, otherwise 0.
+|-
+| 24 || GE || 0 || -1 || Hexen || Pops two integers from the stack and compares the second popped number to the first.  If the second number is greater than or equal to the first, a 1 is pushed to the stack, otherwise 0.
+|-
+| 25 || ASSIGNSCRIPTVAR || 1 || -1 || Hexen || Pops an integer from the stack and assigns it to a local variable specified as the argument.
+|-
+| 26 || ASSIGNMAPVAR || 1 || -1 || Hexen || Pops an integer from the stack and assigns it to a map variable specified as the argument.
+|-
+| 27 || ASSIGNWORLDVAR || 1 || -1 || Hexen || Pops an integer from the stack and assigns it to a world variable specified as the argument.
+|-
+| 28 || PUSHSCRIPTVAR || 1 || 1 || Hexen || Pushes an integer from the local variable specified as the argument onto the stack.
+|-
+| 29 || PUSHMAPVAR || 1 || 1 || Hexen || Pushes an integer from the map variable specified as the argument onto the stack.
+|-
+| 30 || PUSHWORLDVAR || 1 || 1 || Hexen || Pushes an integer from the world variable specified as the argument onto the stack.
+|-
+| 31 || ADDSCRIPTVAR || 1 || -1 || Hexen || Pops an integer from the stack and adds it to the specified local variable.
+|-
+| 32 || ADDMAPVAR || 1 || -1 || Hexen || Pops an integer from the stack and adds it to the specified map variable.
+|-
+| 33 || ADDWORLDVAR || 1 || -1 || Hexen || Pops an integer from the stack and adds it to the specified world variable.
+|-
+| 34 || SUBSCRIPTVAR || 1 || -1 || Hexen || Pops an integer from the stack and subtracts it from the specified local variable.
+|-
+| 35 || SUBMAPVAR || 1 || -1 || Hexen || Pops an integer from the stack and subtracts it from the specified map variable.
+|-
+| 36 || SUBWORLDVAR || 1 || -1 || Hexen || Pops an integer from the stack and subtracts it from the specified world variable.
+|-
+| 37 || MULSCRIPTVAR || 1 || -1 || Hexen || Pops an integer from the stack and multiplies it with the specified local variable.
+|-
+| 38 || MULMAPVAR || 1 || -1 || Hexen || Pops an integer from the stack and multiplies it with the specified map variable.
+|-
+| 39 || MULWORLDVAR || 1 || -1 || Hexen || Pops an integer from the stack and multiplies it with the specified world variable.
+|-
+| 40 || DIVSCRIPTVAR || 1 || -1 || Hexen || Pops an integer from the stack and divides it from the specified local variable.  Division by zero causes an error.
+|-
+| 41 || DIVMAPVAR || 1 || -1 || Hexen || Pops an integer from the stack and divides it from the specified map variable.  Division by zero causes an error.
+|-
+| 42 || DIVWORLDVAR || 1 || -1 || Hexen || Pops an integer from the stack and divides it from the specified world variable.  Division by zero causes an error.
+|-
+| 43 || MODSCRIPTVAR || 1 || -1 || Hexen || Pops an integer from the stack and divides it from the specified local variable, leaving the remainder in the variable.  Division by zero causes an error.
+|-
+| 44 || MODMAPVAR || 1 || -1 || Hexen || Pops an integer from the stack and divides it from the specified map variable, leaving the remainder in the variable.  Division by zero causes an error.
+|-
+| 45 || MODWORLDVAR || 1 || -1 || Hexen || Pops an integer from the stack and divides it from the specified world variable, leaving the remainder in the variable.  Division by zero causes an error.
+|-
+| 46 || INCSCRIPTVAR || 1 || 0 || Hexen || Increments the specified local variable by 1.
+|-
+| 47 || INCMAPVAR || 1 || 0 || Hexen || Increments the specified map variable by 1.
+|-
+| 48 || INCWORLDVAR || 1 || 0 || Hexen || Increments the specified world variable by 1.
+|-
+| 49 || DECSCRIPTVAR || 1 || 0 || Hexen || Decrements the specified local variable by 1.
+|-
+| 50 || DECMAPVAR || 1 || 0 || Hexen || Decrements the specified map variable by 1.
+|-
+| 51 || DECWORLDVAR || 1 || 0 || Hexen || Decrements the specified world variable by 1.
+|-
+| 52 || GOTO || 1 || 0 || Hexen || Jumps to the specified offset in the script.
+|-
+| 53 || IFGOTO || 1 || -1 || Hexen || Pops an integer off the stack and jumps to the specified offset in the script if the popped number is not 0.
+|-
+| 54 || DROP || 0 || -1 || Hexen || Pops an item off the stack and discards it.
+|-
+| 55 || DELAY || 0 || -1 || Hexen || Pops an integer off the stack and delays the script by the popped number of tics.  See: [[Delay]].
+|-
+| 56 || DELAYDIRECT || 1 || 0 || Hexen || Delays the script by the number of tics specified by argument.  See: [[Delay]].
+|-
+| 57 || RANDOM || 0 || -1 || Hexen || Pops two numbers from the stack.  A random number between those two popped numbers is then pushed to the stack.  See: [[Random]].
+|-
+| 58 || RANDOMDIRECT || 2 || 1 || Hexen || Push a random number between the two numbers specified as arguments to the stack.  See: [[Random]].
+|}
+
+... to be continued ...
+
+== CALLFUNC Functions ==
+
+The CALLFUNC PCode references the following table to decide which function to call.  All functions push a single return value to the stack, and thus must be dropped by hand if the return value is ignored.
+
+{| class="wikitable sortable"
+|-
+! # !! Function !! Arguments !! Return Type
+|-
+| 1 || GetLineUDMFInt || 2 || integer
+|-
+| 2 || GetLineUDMFFixed || 2 || fixed
+|-
+| 3 || GetThingUDMFInt || 2 || integer
+|}
+
+... to be continued ...
+
+==External links==
+* [https://bitbucket.org/Blzut3/acc/src ACC++ repository] &amp;mdash; this article is sourced from /docs/manual.odt
+
+[[Category:ACS]][[Category:Technical aspects]]</text>
+    <sha1>0m8jz0qihxx8yg4vmk5ez8s0k4dirzb</sha1>
+  </revision>
+</page>

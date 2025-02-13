@@ -1,0 +1,61 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>Classes:BetaSkull</title>
+  <ns>0</ns>
+  <id>5579</id>
+  <revision>
+    <id>42513</id>
+    <parentid>39292</parentid>
+    <timestamp>2016-03-12T14:35:26Z</timestamp>
+    <contributor>
+      <username>Blue Shadow</username>
+      <id>2021</id>
+    </contributor>
+    <minor />
+    <comment>/* DECORATE definition */ Change(s) from git commit 346fae8</comment>
+    <origin>42513</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="1133" sha1="1yudcflz3jxo52rxsnnsyug3mfjqvsh" xml:space="preserve">{{Actor|
+| type = Monster
+| name = Beta Lost Soul
+| class = BetaSkull
+| doomednum = 9037
+}}
+[[Classes]]: {{Class|LostSoul}}&amp;rarr;&lt;u&gt;BetaSkull&lt;/u&gt;&lt;br&gt;
+
+The lost souls from the press-release beta version of Doom differs sensibly from their final counterpart, in their look and in their behavior. They appear as pure white skulls surrounded by glowing energy, and damage their targets at distance, through magic, rather than by charging at them. While technically they use the same sprite names as the final lost souls, the states do not correspond and they will look odd if the correct sprites are not provided.
+
+==== [[DECORATE]] definition ====
+ Actor &lt;u&gt;BetaSkull&lt;/u&gt; : {{Class|LostSoul}}
+ {
+   States
+   {
+   Spawn:
+     SKUL A 10 [[A_Look]]
+     Loop
+   See:
+     SKUL BCDA 5 [[A_Chase]]
+     Loop
+   Missile:
+     SKUL E 4 [[A_FaceTarget]]
+     SKUL F 5 [[A_BetaSkullAttack]]
+     SKUL F 4
+     Goto See
+   Pain:
+     SKUL G 4
+     SKUL H 2 [[A_Pain]]
+     Goto See
+     SKUL I 4
+     Goto See
+   Death:
+     SKUL JKLM 5
+     SKUL N 5 [[A_Scream]]
+     SKUL O 5
+     SKUL P 5 [[A_Fall]]
+     SKUL Q 5 [[A_Stop]]
+     Wait
+   }
+ }</text>
+    <sha1>1yudcflz3jxo52rxsnnsyug3mfjqvsh</sha1>
+  </revision>
+</page>

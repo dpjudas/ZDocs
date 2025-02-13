@@ -1,0 +1,63 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>MAPINFO options for GZDoom's GL renderer</title>
+  <ns>0</ns>
+  <id>5083</id>
+  <revision>
+    <id>52575</id>
+    <parentid>50904</parentid>
+    <timestamp>2024-04-30T16:31:40Z</timestamp>
+    <contributor>
+      <username>Jekyll Grim Payne</username>
+      <id>2175</id>
+    </contributor>
+    <origin>52575</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="3333" sha1="3efmbo6rvlskghe74o5pbx6ujyxumji" xml:space="preserve">{{OpenGL}}
+
+GZDoom's GL renderer has its own set of [[MAPINFO]] options. To ensure that such MAPINFOs can still be read by ZDoom and other engines not supporting these features these options must be used with the new "property = value" syntax, rather than the old "property value" syntax. This is necessary to let the parser determines reliably whether an unknown word is an unsupported property it should ignore, or a parameter for the previous property.
+
+{{note|These properties are specified in the &lt;code&gt;map&lt;/code&gt; or &lt;code&gt;defaultmap&lt;/code&gt; block, as described in [[MAPINFO/Map definition]].}}
+
+The GL renderer defines the following options:
+
+'''fogdensity = &lt;value&gt;'''
+:Sets a global [[fog]] density for the entire level and disables fog by light level as the software renderer does. This may be useful if you want to add fog to a level that already uses light levels without the fog looking odd. The default value is 255, with the value range being open-ended. Thus, 512 would be about “twice as thick” as the default.
+
+'''outsidefogdensity = &lt;value&gt;'''
+:Same as above but only applies to outside fog (sectors with [[sky]] as ceiling or the 'outside fog' [[sector type]].)
+
+'''skyfog = &lt;value&gt;'''
+:Applies [[fog]] to the [[sky]]. &lt;value&gt; specifies the density.
+
+'''lightadditivesurfaces  = &lt;value&gt;'''
+:Controls dynamic lighting of additive surfaces.
+:*0: disallows.
+:*1: allows.
+
+'''lightmode = &lt;value&gt;'''
+:Forces one of the lighting modes that can be set in the options menu. Values are:
+:* 0 (Standard): Bright lighting model and stronger fading in bright sectors.
+:* 1 (Bright): Bright lighting model and weaker fading in bright sectors.
+:* 2 (Doom): Dark lighting model and weaker fading in bright sectors plus some added brightening near the current position. Requires GLSL features to be enabled.
+:* 3 (Dark): Dark lighting model and weaker fading in bright sectors.
+:* 4 (Legacy): Emulates lighting of Legacy 1.4's GL renderer.
+:* 8 (Software): Emulates ZDoom software lighting. Requires GLSL 1.30 or greater (OpenGL 3.0+).
+:* 16 (Vanilla): Emulates vanilla Doom software lighting. Requires GLSL 1.30 or greater (OpenGL 3.0+).
+
+By default, this value is -1, meaning not set. When it's this way, &lt;code&gt;gl_maplightmode&lt;/code&gt; can be used to change the lighting. The cvar does not save and will reset upon starting GZDoom again.
+
+'''nocoloredspritelighting'''
+:Disables [[colored light]]s for sprites.
+
+'''skyrotate = &lt;x&gt; &lt;y&gt; &lt;z&gt;'''
+:Specifies an axis vector around which the sky rotates. The default is x=0, y=0, z=1. This only has an effect with Quake-2-style skyboxes.
+[[Category:MAPINFO]]
+
+'''pixelratio = &lt;value&gt;'''
+:Specifies the y-aspect ratio at which objects in the map will be scaled. Default is 1.2 to maintain compatibility with the stretched 320x200 [[set video mode|resolution]] which was prevalent in Doom's {{wp|MS-DOS|DOS}} days. Setting value to 1.0 would imply square pixels. Negative values are possible. In order to maintain compatibility with other {{dw|source_port|source ports}} such as [[Doomsday]], models will not be scaled in this manner, and must be changed to the new ratio independently using [[MODELDEF]].
+'''nolightfade'''
+:Disables light diminishing. Note that this only works for light modes 0-3. Modes 4 and 8 use special light math that would not work if such a setting was forced.</text>
+    <sha1>3efmbo6rvlskghe74o5pbx6ujyxumji</sha1>
+  </revision>
+</page>

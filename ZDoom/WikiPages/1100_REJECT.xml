@@ -1,0 +1,42 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>REJECT</title>
+  <ns>0</ns>
+  <id>1100</id>
+  <revision>
+    <id>31149</id>
+    <parentid>26503</parentid>
+    <timestamp>2011-07-30T14:42:02Z</timestamp>
+    <contributor>
+      <username>Gez</username>
+      <id>1283</id>
+    </contributor>
+    <comment>Trimmed down article, but added more explanation on why it's considered mostly obsolete</comment>
+    <origin>31149</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="2707" sha1="cdnp901foyiu444h89fwqovyaq4gapa" xml:space="preserve">{{doomwiki|Reject}}The '''REJECT''' lump is a now mostly-obsolete lump used by the original Doom engine to cut down on the number of monster line of sight (LOS) calculations that must be performed by the engine each tic.
+
+To create the REJECT lump, a number of bits is stored, equal to the number of sectors in the map squared. The bits are arranged in a table with each sector having a column and row, as follows (from the Doom Specs):
+
+&lt;tt&gt;
+&lt;pre&gt;
+      sector that the player is in
+              0  1  2  3  4
+            +---------------
+sector    0 | 0  1  0  0  0
+that      1 | 1  0  1  1  0
+the       2 | 0  1  0  1  0
+monster   3 | 0  1  1  1  0
+is in     4 | 0  0  1  0  0
+&lt;/pre&gt;
+&lt;/tt&gt;
+
+A value of 1 in the table means that any line of sight check between the two sectors should automatically fail. The original purpose was optimization, to avoid having to repeatedly traverse the BSP tree for monsters that would not be able, from their position, to see the player anyway; but it can also be used to create special effects with manual tweaking of the reject table to create places where the player is invisible to the monster AI despite being apparently in plain sight. It is important however to note that the reject map applies to sight only, and monsters will still hear player sounds and react to player attacks regardless of what the REJECT lump says.
+
+Since the size of the reject table is relative to the number of sectors squared, the reject lump scales poorly. For example, a map with a hundred sectors will have a REJECT lump weighing 1250 bytes, with a thousand sectors it's 125 000 bytes, and with ten thousand sectors it's 12 500 000 bytes. The time the nodebuilder needs to generate the table scales likewise, unless it uses a "lazy" approach and merely write a 0-filled table.
+
+Given the greatly augmented processing powers of modern computers compared to ''Doom'''s originally intended target platform, and given the fact [[ZDoom]] uses a much more efficient [[BLOCKMAP]]-based line of sight algorithm than the BSP traversal used by [[vanilla Doom]], a REJECT lump is not useful for ZDoom maps in most cases. Unless the map features extremely large quantities of monsters, the performance gain from a reject table will be barely noticeable. ZDoom is able to load maps without a REJECT lump, or with an empty, 0-length one. Certain other ports, such as [[PrBoom+]] or [[Eternity Engine]], are also able to load maps with empty reject lumps, though it must still be present. Others may still require a full length REJECT lump, refer to their documentation. The original game will refuse to load a map without a REJECT lump, or one with an improperly-sized lump.
+[[Category:Map lumps]]</text>
+    <sha1>cdnp901foyiu444h89fwqovyaq4gapa</sha1>
+  </revision>
+</page>

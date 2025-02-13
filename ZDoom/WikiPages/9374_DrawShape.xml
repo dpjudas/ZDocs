@@ -1,0 +1,65 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>DrawShape</title>
+  <ns>0</ns>
+  <id>9374</id>
+  <revision>
+    <id>52829</id>
+    <parentid>49804</parentid>
+    <timestamp>2024-08-06T15:29:45Z</timestamp>
+    <contributor>
+      <username>Jekyll Grim Payne</username>
+      <id>2175</id>
+    </contributor>
+    <comment>/* Examples */</comment>
+    <origin>52829</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="3941" sha1="m7zet7htphjxeu6ah24leuuwfd8ovhl" xml:space="preserve">{{ZScriptNote}}
+__NOTOC__
+
+'''[[Structs:Screen|Screen]]'''
+
+native static vararg void '''DrawShape'''(TextureID tex, bool animate, Shape2D s, ...)
+
+== Usage ==
+Similar to [[DrawTexture]] but instead of a position a predefined [[Classes:Shape2D|Shape]] can be passed. Using a custom shape allows for masking textures without having to put it in the texture itself. For instance, a square texture can be fitted into a circular shape to make it draw in a circle instead. This can be useful for things like shaping camera textures instead of having to use textures to mask the edges. The downside is that all scaling and texture coordinate mapping has to be done manually.
+
+'''Note:''' ARGB colors are best specified by a hex value. For instance, if a color of pure red with full opaqueness is desired, the value 0xFFFF0000 should be used. The first FF specifies the alpha, the second FF specifies the level of red, and the next two 00 specify the level of green and blue respectively. If a tag says only "RGB" then the first FF specifying the alpha can be completely left out. 
+
+'''Warning:''' This can only be called from within functions that are specifically designed to draw HUD elements (e.g. BaseStatusBar's [[Draw]] or EventHandler's RenderOverlay).
+
+=== Parameters ===
+*''tex'' - The id of the texture to draw. The id of a texture can be found by calling [[Structs:TexMan|TexMan]]'s [[CheckForTexture]] function
+*''animate'' - Whether or not to animate the image if it has a definition in ANIMDEFS
+*''s'' - The predefined shape to pass to the function. See [[Classes:Shape2D|Shape]] for creating custom shapes
+*''tags'' - Tags allow for any number of optional arguments to be specified in any order. Tags are set with the following syntax:
+ Screen.DrawShape(myTex, false, myShape, DTA_FillColor, 0xFF0000, DTA_AlphaChannel, true); // etc
+with the tag first followed by its value. Valid tags:
+:*(double) '''DTA_Alpha''' - Sets the alpha of the texture. A value of 1 is fully opaque while 0 is fully transparent. If less than 1 and DTA_LegacyRenderStyle is not specified then the render style is set to Translucent
+:*(int) '''DTA_Color''' - An ARGB color that the texture's final colors (after all other color operations) are blended with
+:*(int) '''DTA_FillColor''' - An RGB color to stencil on top of the texture. If DTA_LegacyRenderStyle is not specified then the render style is set to TranslucentStencil if DTA_Alpha is less than one, otherwise setting it to Stencil
+:*(bool) '''DTA_AlphaChannel''' - If DTA_LegacyRenderStyle is not specified then the render style is set to Shaded if a color was specified in DTA_FillColor
+:*(int) '''DTA_ColorOverlay''' - Applies an ARGB color overlay on top of the texture
+:*(int) '''DTA_Desaturate''' - If DTA_FillColor is set then completely desaturates the texture with a value greater than 0. Otherwise scales the desaturation. A value of 255 is fully desaturated while a value of 0 is fully saturated
+:*(int) '''DTA_TranslationIndex''' - Id for the [[translation]] to translate the color of the texture
+:*(int) '''DTA_LegacyRenderStyle''' - Sets the render style via the STYLE_* constants. See: [[A_SetRenderStyle#Parameters|render styles]]
+:*(bool) '''DTA_NoOffset''' - The shape ignores the global offsets for the screen when drawing it
+:*(int) '''DTA_ClipTop''' - Clip anything above this position on the screen
+:*(int) '''DTA_ClipBottom''' - Clip anything below this position on the screen
+:*(int) '''DTA_ClipLeft''' - Clip anything to the left of this position on the screen
+:*(int) '''DTA_ClipRight''' - Clip anything to the right of this position on the screen
+::*'''Note:''' Clipping rectangles take precedence over the DTA_Clip* tags
+:*(bool) '''DTA_Masked''' - If false, don't use the texture's mask
+
+== Examples ==
+See examples on the '''[[Classes:Shape2D#Examples|Shape2D page]]'''.
+
+== See also ==
+* [[DrawShapeFill]]
+* {{class|Shape2D}}
+
+[[Category:ZScript]]
+[[Category:Screen]]</text>
+    <sha1>m7zet7htphjxeu6ah24leuuwfd8ovhl</sha1>
+  </revision>
+</page>

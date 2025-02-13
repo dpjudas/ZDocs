@@ -1,0 +1,51 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>Classes:FireBomb</title>
+  <ns>0</ns>
+  <id>4667</id>
+  <revision>
+    <id>34559</id>
+    <parentid>34557</parentid>
+    <timestamp>2012-10-20T09:00:22Z</timestamp>
+    <contributor>
+      <username>Blue Shadow</username>
+      <id>2021</id>
+    </contributor>
+    <comment>Added a description.</comment>
+    <origin>34559</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="739" sha1="h52l0vaaaroh7vtfwb2eb4gwprbys8m" xml:space="preserve">{{Actor|
+| type = Explosive
+| name = Fléchette used by a mage
+| class = FireBomb
+| game = Hexen
+}}[[Classes]]: &lt;u&gt;FireBomb&lt;/u&gt;&lt;br&gt;
+
+A projectile spawned when a {{Class|ArtiPoisonBag2|mage fléchette}} is used, it stays in its position for very short period then explodes.
+==== [[DECORATE]] definition ====
+ ACTOR &lt;u&gt;FireBomb&lt;/u&gt;
+ {
+   {{Property|DamageType}} "Fire"
+   +{{Flag|NOGRAVITY}}
+   +{{Flag|FOILINVUL}}
+   {{Property|RenderStyle}} Translucent
+   {{Property|Alpha}} 0.6
+   {{Property|DeathSound}} "FlechetteExplode"
+ 
+   action native [[A_TimeBomb]]();
+ 
+   States
+   {
+   Spawn:
+     PSBG A 20
+     PSBG AA 10
+     PSBG B 4
+     PSBG C 4 [[A_Scream]]
+     XPL1 A 4 Bright [[A_TimeBomb]]
+     XPL1 BCDEF 4 Bright
+     Stop
+   }
+ }</text>
+    <sha1>h52l0vaaaroh7vtfwb2eb4gwprbys8m</sha1>
+  </revision>
+</page>

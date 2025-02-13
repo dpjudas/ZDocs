@@ -1,0 +1,83 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>A AttachLight</title>
+  <ns>0</ns>
+  <id>9351</id>
+  <revision>
+    <id>51101</id>
+    <parentid>51099</parentid>
+    <timestamp>2023-12-11T12:54:29Z</timestamp>
+    <contributor>
+      <username>Jekyll Grim Payne</username>
+      <id>2175</id>
+    </contributor>
+    <comment>/* Return value */</comment>
+    <origin>51101</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="3841" sha1="h7omnc5pcibjanqljh84gus4tnpn8hw" xml:space="preserve">__NOTOC__{{codepointer|Dynamic lights}}
+
+'''{{class|Actor}}'''
+
+native bool '''A_AttachLight'''(Name ''lightid'', int ''type'', Color ''lightcolor'', int ''radius1'', int ''radius2'', int ''flags'' = 0, Vector3 ''ofs'' = (0,0,0), double ''param'' = 0, double ''spoti'' = 10, double ''spoto'' = 25, double ''spotp'' = 0)
+
+{{note|this function is not fully supported by [[DECORATE]]. If used from DECORATE, all parameters starting from ''ofs'' should be omitted. Consider switching to [[ZScript]] to fully utilize this function.}}
+== Usage ==
+Creates and attaches a [[dynamic light]] to the calling actor.
+
+Can be removed with {{c|[[A_RemoveLight]]}}.
+
+=== Parameters ===
+*{{c|Name '''lightid'''}}
+:An identifier for the light. Can be any name. If a new light is created with the same id, it'll replace the old one.
+*{{c|int '''type'''}}
+:The type of the light, which can be one of the following:
+:*{{c|DynamicLight.PointLight}} - {{Class|PointLight}}. Default setting.
+:*{{c|DynamicLight.PulseLight}} - {{Class|PointLightPulse}}.
+:*{{c|DynamicLight.FlickerLight}} - {{Class|PointLightFlicker}}.
+:*{{c|DynamicLight.RandomFlickerLight}} - {{Class|PointLightFlickerRandom}}.
+:*{{c|DynamicLight.SectorLight}} - {{Class|SectorPointLight}}.
+:*{{c|DynamicLight.DummyLight}} - {{moreinfo}}
+:*{{c|DynamicLight.ColorPulseLight}} - {{moreinfo}}
+:*{{c|DynamicLight.ColorFlickerLight}} - {{moreinfo}}
+:*{{c|DynamicLight.RandomColorFlickerLight}} - {{moreinfo}}
+*{{c|Color '''lightcolor'''}}
+:The [[ZScript_variables#Types|color]] of the light. This can be a color variable or a string name (such as &lt;code&gt;"Red"&lt;/code&gt;).
+*{{c|int '''radius1'''}}
+:The primary radius of the light.
+*{{c|int '''radius2'''}}
+:The secondary radius of the light, primarily used for lights that flicker or pulse.
+*{{c|int '''flags'''}}
+:Flags that determine the behavior of the light. Multiple flags can be combined with &lt;code&gt;|&lt;/code&gt;:
+:*{{c|DYNAMICLIGHT.LF_SUBTRACTIVE}} - Light becomes subtractive (darkening effect).
+:*{{c|DYNAMICLIGHT.LF_ADDITIVE}} - Light becomes additive, making the colors whiter.
+:*{{c|DYNAMICLIGHT.LF_DONTLIGHTSELF}} - Actor does not light itself.
+:*{{c|DYNAMICLIGHT.LF_ATTENUATE}} - Light uses the angle attenuation formula, providing more realistic (if slightly dimmer) illumination on angled surfaces.
+:*{{c|DYNAMICLIGHT.LF_NOSHADOWMAP}} - Light will not create shadow maps, which are realistic shadows created from map geometry obscuring other surfaces.
+:*{{c|DYNAMICLIGHT.LF_DONTLIGHTACTORS}} - Light will not affect other actors.
+:*{{c|DYNAMICLIGHT.LF_SPOT}} - Light is a spot light. Spot lights are in cones like a lamp, or a flash light.
+:*{{c|DYNAMICLIGHT.LF_DONTLIGHTOTHERS}} - The light will not light other actors, only the actor that it is attached to.
+:*{{c|DYNAMICLIGHT.LF_DONTLIGHTMAP}} - The light will not light up the level geometry, only actors.
+*{{c|Vector3 '''ofs'''}}
+:The offset of the light as a [[ZScript_variables#Vectors|vector]]. Default is (0, 0, 0).
+*{{c|double '''param'''}}
+:If the light is a pulse light, this represents the interval to switch between the two radii in seconds. Otherwise, it is used for flicker lights (between 0 and 1) to represent the chance to be the first radius or the second. Default is 0.
+*{{c|double '''spoti'''}}
+:Sets the inner angle of a spot light. Ignored if not a spot light. Default is 10.
+*{{c|double '''spoto'''}}
+:Sets the outer angle of a spot light. Default is 25.
+*{{c|double '''spotp'''}}
+:Sets the pitch of the spot light. Default is 0. If set to &gt; 90 or &lt; -90, the light will use the pitch of the actor instead.
+
+=== Return value ===
+Returns &lt;code&gt;true&lt;/code&gt; when the dynamic light has been spawned. Currently, there are no situations where &lt;code&gt;false&lt;/code&gt; can be returned.
+
+== Examples ==
+{{noexamples}}
+
+== See also ==
+*[[GLDEFS]]
+*[[A_AttachLightDef]]
+*[[A_RemoveLight]]</text>
+    <sha1>h7omnc5pcibjanqljh84gus4tnpn8hw</sha1>
+  </revision>
+</page>

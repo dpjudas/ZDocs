@@ -1,0 +1,131 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>CheckActorClass</title>
+  <ns>0</ns>
+  <id>5760</id>
+  <revision>
+    <id>37309</id>
+    <parentid>35973</parentid>
+    <timestamp>2013-11-06T00:05:41Z</timestamp>
+    <contributor>
+      <username>Deded007</username>
+      <id>1392</id>
+    </contributor>
+    <minor />
+    <comment>See also, formatting</comment>
+    <origin>37309</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="4229" sha1="qf1p7xoxdcr5xu7ucjqfnypbo0mk0pd" xml:space="preserve">__NOTOC__
+bool '''CheckActorClass''' (int ''tid'', str ''class'')&lt;br&gt;
+
+== Usage ==
+
+=== Parameters ===
+
+* ''tid'': TID of the actor.  Use 0 to refer to the activator.
+* ''class'': The name to which the actor's class name must be compared.
+
+===Return value===
+True if the ''class'' given is the same as that of the actor, false otherwise.
+
+==Examples==
+This example tells you if the owner of the tid passed to script 1 is a {{class|DoomImp}} or not.
+ script 1 (int tid)
+ {
+   if ([[CheckActorClass]](tid, "{{class|DoomImp}}"))
+     [[print]](s:"It's an Imp!");
+   else
+     [[print]](s:"Not an Imp!");
+ }
+You can set this script to an {{Class|SecActEnter|Actor Enters Sector}} thing to warn the players when a certain type of monster is approaching.  Otherwise, you can specify a tid through direct execution.  If a tid is not specified it is resolved as 0 or the tid of the activator (getting the activating actor in either case).  The script cycles through the list of monster class names given in the monster_class array to find a match and prints a generic message for unlisted classes.
+ #define NUM_CLASSES       18
+ 
+ str monster_class[NUM_CLASSES] = {
+   "{{Class|Arachnotron}}", "{{Class|Archvile}}", "{{Class|BaronOfHell}}",
+   "{{Class|Cacodemon}}", "{{Class|ChaingunGuy}}", "{{Class|Cyberdemon}}",
+   "{{Class|Demon}}", "{{Class|DoomImp}}", "{{Class|Fatso}}",
+   "{{Class|HellKnight}}", "{{Class|LostSoul}}", "{{Class|PainElemental}}",
+   "{{Class|Revenant}}", "{{Class|ShotgunGuy}}", "{{Class|Spectre}}",
+   "{{Class|SpiderMastermind}}", "{{Class|WolfensteinSS}}", "{{Class|ZombieMan}}"  
+ };
+ 
+ script 1 (int tid)
+ {
+   int class_index = -1;
+ 
+   if (!tid &amp;&amp; [[ActivatorTID]]())
+     tid = [[ActivatorTID]]();
+ 
+   for (int i=0; i&lt;NUM_CLASSES; i++)
+     if ([[CheckActorClass]](tid, monster_class[i]))
+       class_index = i;
+  
+   if (class_index &gt; -1)
+     [[PrintBold]](s:"Look out for the ", s:monster_class[class_index], s:"!");
+   else
+     [[PrintBold]](s:"Look out for the... wait, what is that?");
+ }
+This example is slightly more complicated (and fun) in that it prints a custom phrase based on the class of the monster.
+ #define MONST_CLASS_NAME  0
+ #define MONST_CLASS_MSG   1
+ #define NUM_CLASSES       18
+ 
+ str monster_msg[NUM_CLASSES][2] = {
+   {"{{class|Arachnotron}}", "time to squash this spider!"},
+   {"{{class|Archvile}}", "I haaaaaate Arch-Viles..."},
+   {"{{class|BaronOfHell}}", "about 5 rockets oughta do the job."},
+   {"{{class|Cacodemon}}", "there's something very... 'Manual of the Planes'-ish about it..."},
+   {"{{class|ChaingunGuy}}", "even more annoying than the ShotgunGuy!"},
+   {"{{class|Cyberdemon}}", "*ca-chunk* *ca-chunk* *ca-chunk* BLAM! AAAH! SPLAT!"}, 
+   {"{{class|Demon}}", "watch as it runs to its death!"},
+   {"{{class|DoomImp}}", "an Imp, a shell..."},
+   {"{{class|Fatso}}", "LOLFATSO"},
+   {"{{class|HellKnight}}", "the Baron's red headed stepchild."},
+   {"{{class|LostSoul}}", "get the fly swatter!"},
+   {"{{class|PainElemental}}", "he won't spit Lost Souls if he can't see you!"},
+   {"{{class|Revenant}}", "time for a fist fight!"},
+   {"{{class|ShotgunGuy}}", "easy to take out but annoying in numbers."},
+   {"{{class|Spectre}}", "who does he think he's hiding from?"},
+   {"{{class|SpiderMastermind}}", "did he say 'RURURU'?"},
+   {"{{class|WolfensteinSS}}", "hey I didn't know he had a backside!"},
+   {"{{class|ZombieMan}}", "anybody need clips?"}
+ };
+ 
+ script 1 (int tid)
+ {
+   str prefix;
+   int class_index = -1;
+   
+   if (!tid &amp;&amp; [[ActivatorTID]]())
+     tid = [[ActivatorTID]]();
+   
+   for (int i=0; i&lt;NUM_CLASSES; i++)
+     if ([[CheckActorClass]](tid, monster_msg[i][MONST_CLASS_NAME]))
+       class_index = i;
+       
+   switch (monster_msg[class_index][MONST_CLASS_NAME])
+   {
+     case "{{class|Arachnotron}}":
+     case "{{class|Archvile}}":
+       prefix = "It's an ";
+     break;
+ 
+     default:
+       prefix = "It's a ";
+     break;
+   }
+       
+   if (class_index &gt; -1)
+     [[PrintBold]](s:prefix, s:monster_msg[class_index][MONST_CLASS_NAME], 
+       s:", ", s:monster_msg[class_index][MONST_CLASS_MSG]);
+   else
+     [[PrintBold]](s:"Uh... what is it?");
+ }
+
+== See also ==
+* [[GetActorClass]]
+
+[[category:ACS Information functions]]</text>
+    <sha1>qf1p7xoxdcr5xu7ucjqfnypbo0mk0pd</sha1>
+  </revision>
+</page>

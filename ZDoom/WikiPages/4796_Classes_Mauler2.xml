@@ -1,0 +1,62 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>Classes:Mauler2</title>
+  <ns>0</ns>
+  <id>4796</id>
+  <revision>
+    <id>40142</id>
+    <parentid>37174</parentid>
+    <timestamp>2015-05-22T06:59:58Z</timestamp>
+    <contributor>
+      <username>Blue Shadow</username>
+      <id>2021</id>
+    </contributor>
+    <minor />
+    <comment>/* DECORATE definition */ Updated</comment>
+    <origin>40142</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="1507" sha1="i6iat89cafoic5qy4budu0hqcxvcemy" xml:space="preserve">{{Actor|
+| type = Weapon
+| name = Mauler
+| class = Mauler2
+| game = Strife
+}}[[Classes]]: [[Classes:Inventory|Inventory]]&amp;rarr;[[Classes:Weapon|Weapon]]&amp;rarr;[[Classes:StrifeWeapon|StrifeWeapon]]&amp;rarr;[[Classes:Mauler|Mauler]]&amp;rarr;&lt;u&gt;Mauler2&lt;/u&gt;&lt;br&gt;
+This is one of the two types of Mauler in the game Strife, it fires a green projectile which, upon hitting an object, be it a wall or an enemy, releases a wave of smaller green projectiles which disintegrate foes upon contact, but beware, using this weapon drains your health. In Strife1.wad, the sprites are actually named BLST* and are [[Sprite renaming|renamed at load-time]] by ZDoom.
+==== [[DECORATE]] definition ====
+ ACTOR &lt;u&gt;Mauler2&lt;/u&gt; : {{Class|Mauler}}
+ {
+   {{Property|Weapon.SelectionOrder}} 3300
+   {{Property|Weapon.AmmoUse1}} 30
+   {{Property|Weapon.AmmoGive1}} 0
+   {{Property|Weapon.AmmoType1}} "{{Class|EnergyPod}}"
+   {{Property|Weapon.SisterWeapon}} "{{Class|Mauler}}"
+   {{Property|Tag}} "$TAG_MAULER2" // "Mauler"
+ 
+   action native [[A_FireMauler2Pre]]();
+   action native [[A_FireMauler2]]();
+ 
+   States
+   {
+   Ready:
+     MAUL IJKL 7 [[A_WeaponReady]]
+     Loop
+   Deselect:
+     MAUL I 1 [[A_Lower]]
+     Loop
+   Select:
+     MAUL I 1 [[A_Raise]]
+     Loop
+   Fire:
+     MAUL I 20 [[A_FireMauler2Pre]]
+     MAUL J 10 [[A_Light1]]
+     BLSF A 10 Bright [[A_FireMauler2]] // see {{Class|MaulerTorpedo}}
+     MAUL B 10 Bright [[A_Light2]]
+     MAUL C 2
+     MAUL D 2 [[A_Light0]]
+     MAUL E 2 [[A_ReFire]]
+     Goto Ready
+   }
+ }</text>
+    <sha1>i6iat89cafoic5qy4budu0hqcxvcemy</sha1>
+  </revision>
+</page>

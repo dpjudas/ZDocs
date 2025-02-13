@@ -1,0 +1,64 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>GetMaxHealth</title>
+  <ns>0</ns>
+  <id>9851</id>
+  <revision>
+    <id>52041</id>
+    <parentid>52038</parentid>
+    <timestamp>2024-03-19T17:03:22Z</timestamp>
+    <contributor>
+      <username>Jekyll Grim Payne</username>
+      <id>2175</id>
+    </contributor>
+    <comment>/* Parameters */</comment>
+    <origin>52041</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="1555" sha1="9tugvrzm9gudqicx7yxwxcvoht9yg1j" xml:space="preserve">__NOTOC__
+
+'''{{class|Actor}}'''
+
+{{c|virtual clearscope int '''GetMaxHealth'''(bool ''withupgrades'' }}={{c| false) const}}
+
+==Usage==
+Retrieves the spawn health of the calling actor. For regular actors, this behaves exactly like the {{c|[[SpawnHealth]]}} function.
+
+{{class|PlayerPawn}} actors override it to add special behaviors if ''withupgrades'' is &lt;code&gt;true&lt;/code&gt;.
+
+===Parameters===
+*{{c|bool '''withupgrades'''}}
+:If &lt;code&gt;true&lt;/code&gt; and the calling actor is a {{class|PlayerPawn}}, the values of &lt;code&gt;bonushealth&lt;/code&gt; and &lt;code&gt;stamina&lt;/code&gt; fields are added on top of {{property|MaxHealth}}.
+:If the calling actor is not a PlayerPawn, this is ignored.
+
+===Return value===
+*int - The health the actor spawns with, as an integer.
+
+==Examples==
+{{noexamples}}
+
+==[[ZScript]] definition==
+'''{{class|Actor}}''':
+&lt;syntaxhighlight lang="csharp"&gt;
+	virtual clearscope int GetMaxHealth(bool withupgrades = false) const	// this only exists to make checks for player health easier so they can avoid the type check and just call this method.
+	{
+		return SpawnHealth();
+	}&lt;/syntaxhighlight&gt;
+
+'''{{class|PlayerPawn|PlayerPawn's}}''' version:
+&lt;syntaxhighlight lang="csharp"&gt;
+	override int GetMaxHealth(bool withupgrades) const
+	{
+		int ret = MaxHealth &gt; 0? MaxHealth : ((Level.compatflags &amp; COMPATF_DEHHEALTH)? 100 : deh.MaxHealth);
+		if (withupgrades) ret += stamina + BonusHealth;
+		return ret;
+	}&lt;/syntaxhighlight&gt;
+
+==See also==
+*[[ZScript virtual functions]]
+*[[Actor virtual functions]]
+
+[[Category:ZScript]]
+[[Category:ZScript virtual functions]]</text>
+    <sha1>9tugvrzm9gudqicx7yxwxcvoht9yg1j</sha1>
+  </revision>
+</page>

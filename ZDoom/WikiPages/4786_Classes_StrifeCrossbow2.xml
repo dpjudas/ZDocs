@@ -1,0 +1,60 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>Classes:StrifeCrossbow2</title>
+  <ns>0</ns>
+  <id>4786</id>
+  <revision>
+    <id>40134</id>
+    <parentid>36455</parentid>
+    <timestamp>2015-05-22T06:56:03Z</timestamp>
+    <contributor>
+      <username>Blue Shadow</username>
+      <id>2021</id>
+    </contributor>
+    <minor />
+    <comment>/* DECORATE definition */ Updated</comment>
+    <origin>40134</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="1261" sha1="e26pvqnxdrpos4uchatpiz44bhoz0l8" xml:space="preserve">{{Actor|
+| type = Weapon
+| name = Crossbow
+| class = StrifeCrossbow2
+| game = Strife
+}}[[Classes]]: [[Classes:Inventory|Inventory]]&amp;rarr;[[Classes:Weapon|Weapon]]&amp;rarr;[[Classes:StrifeWeapon|StrifeWeapon]]&amp;rarr;[[Classes:StrifeCrossbow|StrifeCrossbow]]&amp;rarr;&lt;u&gt;StrifeCrossbow2&lt;/u&gt;&lt;br&gt;
+The crossbow's second mode, this fires [[Classes:PoisonBolts|poisoned bolts]]. These are about as useful as a scrunched up ball of paper against mechanical opponents, but are fatal (and stealthy!) to humans and humanoids.
+==== [[DECORATE]] definition ====
+ ACTOR &lt;u&gt;StrifeCrossbow2&lt;/u&gt; : {{Class|StrifeCrossbow}}
+ {
+   {{property|Weapon.SelectionOrder}} 2700
+   {{property|Weapon.AmmoUse1}} 1
+   {{property|Weapon.AmmoGive1}} 0
+   {{property|Weapon.AmmoType1}} "{{Class|PoisonBolts}}"
+   {{property|Weapon.SisterWeapon}} "{{Class|StrifeCrossbow}}"
+   {{property|Tag}} "$TAG_STRIFECROSSBOW2" // "Crossbow"
+   States
+   {
+   Ready:
+     XBOW H 1 [[A_WeaponReady]]
+     Loop
+   Deselect:
+     XBOW H 1 [[A_Lower]]
+     Loop
+   Select:
+     XBOW H 1 [[A_Raise]]
+     Loop
+   Fire:
+     XBOW H 3
+     XBOW B 6 [[A_FireArrow]]("{{Class|PoisonBolt}}")
+     XBOW C 4
+     XBOW D 6
+     XBOW E 3
+     XBOW I 5
+     XBOW J 5 [[A_CheckReload]]
+     Goto Ready
+   Flash:
+     Stop
+   }
+ }</text>
+    <sha1>e26pvqnxdrpos4uchatpiz44bhoz0l8</sha1>
+  </revision>
+</page>

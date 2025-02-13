@@ -1,0 +1,44 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>Structs:SecPlane</title>
+  <ns>0</ns>
+  <id>9617</id>
+  <revision>
+    <id>54043</id>
+    <parentid>52827</parentid>
+    <timestamp>2024-12-09T13:35:34Z</timestamp>
+    <contributor>
+      <username>TheMisterCat</username>
+      <id>1636</id>
+    </contributor>
+    <comment>ChangeHeight has been removed from the struct entirely, removing to avoid confusion</comment>
+    <origin>54043</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="1651" sha1="jmpvybzpc9d6oykj9opaa3gnnr62m7z" xml:space="preserve">{{ZScriptNote}}
+SecPlanes store information about the floor and ceiling planes that make up a sector. Each sector comes with two pointers, '''ceilingplane''' and '''floorplane'''. 3D floors instead use '''bottom''' and '''top''' to store their plane data respectively. When getting information about z heights at positions or slope data, SecPlanes must be used.
+
+'''Warning:''' SecPlanes are ''not'' serializable, meaning references to them cannot be saved in a save file. If you need to store them as a member variable in a class or struct, make sure said variable is defined as &lt;code&gt;transient&lt;/code&gt; and gets updated when loading a save.
+
+==Fields==
+*Vector3 '''Normal''' - A unit vector that is perpendicular to the plane.
+*double '''D''' - Contains the plane's distance from the world origin. See the [https://en.wikipedia.org/wiki/Plane_(geometry)#Point%E2%80%93normal_form_and_general_form_of_the_equation_of_a_plane general form of a plane] for more information.
+*double '''negiC''' - The same as '''-1 / Normal.z'''. Pre-computed to speed up certain tasks such as calculating the z height at an xy point on a plane.
+
+==Methods==
+===Non-static===
+*bool '''[[isSlope]]'''()
+*int '''[[PointOnSide]]'''(Vector3 ''pos'')
+*double '''[[ZatPoint]]'''(Vector2 ''v'')
+*double '''[[ZatPointDist]]'''(Vector2 ''v'', double ''dist'')
+*bool '''[[isEqual]]'''(SecPlane ''other'')
+*double '''[[GetChangedHeight]]'''(double ''hdiff'')
+*double '''[[HeightDiff]]'''(double ''oldd'', double ''newd'' = 1e37)
+*double '''[[PointToDist]]'''(Vector2 ''xy'', double ''z'')
+
+[[Category:ZScript]]
+[[Category:Structs]]
+[[Category:SecPlane]]
+[[Category:ZScript map data]]</text>
+    <sha1>jmpvybzpc9d6oykj9opaa3gnnr62m7z</sha1>
+  </revision>
+</page>

@@ -1,0 +1,101 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>ACS</title>
+  <ns>0</ns>
+  <id>555</id>
+  <revision>
+    <id>42833</id>
+    <parentid>40557</parentid>
+    <timestamp>2016-07-05T10:05:26Z</timestamp>
+    <contributor>
+      <username>Arookas</username>
+      <id>2066</id>
+    </contributor>
+    <minor />
+    <comment>updated runaway limit</comment>
+    <origin>42833</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="4625" sha1="ex0u29g9rch982p0faon1bbdb0k9d4e" xml:space="preserve">{{Doomwiki}}'''ACS''' (Action Code Script) is the scripting language that was originally created for [[Hexen]] by Raven Software and has been greatly expanded by [[ZDoom]].
+
+==Introduction==
+ACS enables level makers to script events during gameplay, making creating interactive environments even in [[Doom]]'s archaic engine infinitely more open-ended. With very basic commands, an author can modify the structure of a level in ways such as raising and lowering floors separately, simultaneously, in the same or opposite directions, and to any height or depth. One can even move certain walls given that they meet certain criteria (see [[PolyObjects]]). Textures displayed on floors and walls can be changed. Monsters&amp;nbsp;&amp;mdash; and any actors for that matter&amp;nbsp;&amp;mdash; can be placed, removed, monitored, have many of their properties altered, have objectives set, etc. ACS is a very possibility-opening scripting implementation, especially if the person using it is talented, patient, and imaginative.
+
+Somewhat more technically defined, a script is something a person writes in a text editor of some sort, that contains individual scripts (kind of like subroutines), commands, variable declarations, and so on. ACS is its very own miniature programming language, structured much like C/C++. The top-level items to recognize are scripts and their [[script types]], which are simply put the events that trigger the sequence of commands contained in a given script. A script is started by typing something such as the following:
+
+ // This is a comment
+ /* This too */
+ int AvailableToAllScripts = 101;
+ int ICanMakeArrays[3] = {3,6,9};
+ 
+ Script 1 {{SType|Open}} 
+ {
+     int ScriptVariable = 0;
+     while(AvailableToAllScripts == 101)
+     {
+         ScriptVariable++;
+         [[Delay]](1);
+     }
+ }
+
+Please note that looping a script without a delay will cause ZDoom to automatically terminate the script, because it would not give anything else in the map a chance to run. This is determined by counting the amount of actions called by the script and terminating if the amount reaches 2,000,000. Some functions, like [[distance]], can hit this limit when called in a large "for" loop. You will see a message like the following when this happens:
+
+ Runaway script 1 terminated
+
+Variables are dimensioned like in many programming languages. If you want a variable to be available to all scripts ("global" in scope), declare/define it outside any script declarations (by tradition, above them). [[Arrays]], (variables which allow you to store and refer to many values) are valid in [[ZDoom]]. Individual array elements can be differentiated by assigning index numbers. For example, to assign an integer value of 9 to the ICanMakeArrays array, element 2 (which is the THIRD element, as arrays begin counting at 0), you would use this statement: ICanMakeArrays[2] = 9;
+
+Note that a script is defined sort of like a function in C, including the fact that it does not have to be terminated after the bracket with a semicolon like statements inside scripts. "OPEN" as used in this example is a script type that tells [[ZDoom]] that the script is to be executed upon starting the level.
+
+Note also that ACS supports conditional ("if") statements, and therefore loops made with conditional statements. It supports most (if not all) C/C++ implementations of conditional statements and loops.
+
+ACS needs to be compiled before it can be used in a map. The [[ACC]] command-line tool is designed for this purpose.
+
+==Subpages==
+
+* [[A quick beginner's guide to ACS]]
+* [[Data types|Variables and data types]]
+* [[Definitions|Unit definitions]]
+* [[Action specials|Action Specials]]
+* [[Built-in ACS functions]]
+* [[ACS actor properties]]
+* [[FOR and WHILE loops]]
+* [[Doom Builder ACS Configuration]]
+* [[Libraries]]
+* [[Other useful functions]]
+* [[Script types]] (OPEN, ENTER, etc)
+* [[Named script]]s
+* [[About Multiplayer, Scripts, and TIDs]]
+
+==ACS tutorial==
+
+===ACS basics===
+* [[Structure of a script]]
+* [[Scope]]
+* [[Constants]]
+* [[Operators]]
+
+===Control structures===
+* [[Script types|Scripts]]
+* [[Functions]]
+* [[Switch/Case]]
+
+===Working with ACS===
+* [[Action specials|Action Specials]]
+* [[Built-in ACS functions]]
+* [[Loops]]
+* [[Libraries]]
+* [[Using ACS in Doom-format maps]]
+
+===Resources===
+* [[Definitions|Some Basic Definitions]]
+* [[Richard Clark's tutorials#Script Library|Rick Clark's Scripting Primer]]
+* [[Doom Builder ACS configuration]]
+* [[Other useful functions]]
+* [[Tutorials#ACS_Related|Tutorials]].
+
+[[Category:ACS| ]]
+[[Category:Editing concepts]]
+[[Category:Features]]
+[[Category:Glossary]]</text>
+    <sha1>ex0u29g9rch982p0faon1bbdb0k9d4e</sha1>
+  </revision>
+</page>

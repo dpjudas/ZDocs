@@ -1,0 +1,31 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>A DeathBallImpact</title>
+  <ns>0</ns>
+  <id>5533</id>
+  <revision>
+    <id>23833</id>
+    <timestamp>2009-08-11T06:59:26Z</timestamp>
+    <contributor>
+      <username>Gez</username>
+      <id>1283</id>
+    </contributor>
+    <comment>Created page with '{{DISPLAYTITLE:A_DeathBallImpact}} '''A_DeathBallImpact'''&lt;br /&gt; (no parameters)  Removes the calling actor without other effects if it landed in water or another liquid terrain …'</comment>
+    <origin>23833</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="1456" sha1="8qmmxg6p8iwa7hom27ooq70kcg1ph0d" xml:space="preserve">{{DISPLAYTITLE:A_DeathBallImpact}}
+'''A_DeathBallImpact'''&lt;br /&gt;
+(no parameters)
+
+Removes the calling actor without other effects if it landed in water or another liquid terrain effect.
+
+If the calling actor is in a bounce, its Z velocity is modified accordingly. If the resulting speed is at least 2, it then looks for its tracer target. If it is dead, this function clears the tracer field. If it had no tracer, it looks for a new victim (that isn't its master) within 640 map units, starting from the east and going counterclockwise. The calling actor's horizontal speed is then re-oriented towards its old or new tracer, if it has one. Finally, it is put back in its Spawn state (Heretic-type bounces puts the bouncing actors in their Death state at each rebound) and plays the sound "weapons/macestop" on the BODY channel.
+
+If it wasn't in a bounce, or if the vertical velocity was below 2, the calling actor instead acquires the NOGRAVITY flag, its velocity is set to 0 on all three axes, and it plays the sound "weapons/maceexplode" on the BODY channel.
+
+This codepointer assumes it is called in the first frame of a Death state from a homing projectile actor with the Heretic bounce style, and will not work logically otherwise. It is restricted to {{Class|MaceFX4}} and derived classes.
+
+[[Category:Decorate Heretic functions]] [[Category:Decorate Status change functions]] [[Category:Decorate Restricted functions]]{{DEFAULTSORT:DeathBallImpact}}</text>
+    <sha1>8qmmxg6p8iwa7hom27ooq70kcg1ph0d</sha1>
+  </revision>
+</page>

@@ -1,0 +1,68 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>Classes:MiniMissileLauncher</title>
+  <ns>0</ns>
+  <id>4789</id>
+  <revision>
+    <id>40137</id>
+    <parentid>36458</parentid>
+    <timestamp>2015-05-22T06:57:31Z</timestamp>
+    <contributor>
+      <username>Blue Shadow</username>
+      <id>2021</id>
+    </contributor>
+    <minor />
+    <comment>/* DECORATE definition */ Updated</comment>
+    <origin>40137</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="1348" sha1="5j0y6idsdxjdb91j6lniujttq5zbo4v" xml:space="preserve">{{Actor|
+| type = Weapon
+| name = Mini-missile launcher
+| class = MiniMissileLauncher
+| game = Strife
+| doomednum = 2003
+| convid = 192, 186, 190
+}}[[Classes]]: [[Classes:Inventory|Inventory]]&amp;rarr;[[Classes:Weapon|Weapon]]&amp;rarr;[[Classes:StrifeWeapon|StrifeWeapon]]&amp;rarr;&lt;u&gt;MiniMissileLauncher&lt;/u&gt;&lt;br&gt;
+Strife's equivalent of the [[Classes:RocketLauncher|Rocket Launcher]].
+==== [[DECORATE]] definition ====
+ ACTOR &lt;u&gt;MiniMissileLauncher&lt;/u&gt; : {{Class|StrifeWeapon}}
+ {
+   +{{Flag|FLOORCLIP}}
+   {{Property|Weapon.SelectionOrder}} 1800
+   {{Property|Weapon.AmmoUse1}} 1
+   {{Property|Weapon.AmmoGive1}} 8
+   {{Property|Weapon.AmmoType1}} "{{Class|MiniMissiles}}"
+   {{Property|Inventory.Icon}} "MMSLA0"
+   {{Property|Tag}} "$TAG_MMLAUNCHER" // "Mini Missile Launcher"
+   {{Property|Inventory.PickupMessage}} "$TXT_MMLAUNCHER" // "You picked up the mini missile launcher."
+ 
+   action native [[A_FireMiniMissile]]();
+ 
+   States
+   {
+   Spawn:
+     MMSL A -1
+     Stop
+   Ready:
+     MMIS A 1 [[A_WeaponReady]]
+     Loop
+   Deselect:
+     MMIS A 1 [[A_Lower]]
+     Loop
+   Select:
+     MMIS A 1 [[A_Raise]]
+     Loop
+   Fire:
+     MMIS A 4 [[A_FireMiniMissile]]
+     MMIS B 4 [[A_Light1]]
+     MMIS C 5 Bright
+     MMIS D 2 Bright [[A_Light2]]
+     MMIS E 2 Bright
+     MMIS F 2 Bright [[A_Light0]]
+     MMIS F 0 [[A_ReFire]]
+     Goto Ready
+   }
+ }</text>
+    <sha1>5j0y6idsdxjdb91j6lniujttq5zbo4v</sha1>
+  </revision>
+</page>

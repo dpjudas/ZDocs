@@ -1,0 +1,43 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>Lightning</title>
+  <ns>0</ns>
+  <id>7324</id>
+  <revision>
+    <id>32694</id>
+    <parentid>32691</parentid>
+    <timestamp>2012-05-05T16:58:09Z</timestamp>
+    <contributor>
+      <username>Gez</username>
+      <id>1283</id>
+    </contributor>
+    <minor />
+    <origin>32694</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="2534" sha1="jagzibh4ndushzzici8bl52sz069yjw" xml:space="preserve">'''Lightning''' is an effect originating from ''[[Hexen]]''. Lightning is present in a map if the {{c|lightning}} keyword is used in its [[map definition]]. Periodically, lightning will illuminate the [[sky]], affecting all outside [[sector]]s as well as inside sectors with a [[sector type]] of 197:Light_OutdoorLightning, 198:Light_IndoorLightning1, or 199:Light_IndoorLightning2.
+
+The illumination caused by a lightning flash correspond to a random light level between 200 and 231. In outside sectors and sectors of type Light_OutdoorLightning, light level is set to this. In sectors using type Light_IndoorLightning1, the new light level cannot go higher than this random value or 64 points above the sector's original light value. In sectors using type Light_IndoorLightning2, the maximum light level increase is 32 points. Note that if the sector's original light level was greater than the lightning flash (232 or above), then the lightning will have no effect on it, instead of lowering the light level.
+
+Other effects of lightning include playing the sound "world/thunder" at full volume, starting all [[LIGHTNING]] scripts, and replacing the sky texture with the secondary sky texture (unless {{c|doublesky}} is set in [[MAPINFO]]).
+
+'''Note:''' if [[Static_Init]] is used to set a sector's sky texture, during lightning flashes, the controlling [[linedef]]'s ''bottom'' texture, if valid, will be used instead of the top texture. This allows texture swapping during lightning flashes even if double skies are used.
+
+Lightning strikes randomly. The first lightning strike will happen between 5 and 20 seconds (5-to-20 &amp;times; 35 [[tic]]s) after map start. Afterwards, after each strike, the delay until the next is submitted to a double randomization:
+{| {{prettytable}}
+!Odds!!Percent!!Number of tics
+|-
+|50||20%||16&amp;mdash;31
+|-
+|51&amp;dagger;||20%||2&amp;mdash;9 &amp;times; 35
+|-
+|155||60%||5&amp;mdash;20 &amp;times; 35
+|}
+&amp;dagger; The odds on the random number generator are identical to the next option, but it will be rejected based on time spent in the level 32 out of 64 times.
+
+Illumination will decrease to their original level in all affected sectors by four points each tic after the lightning flash, over a period randomly set between 8 and 15 tics. On the last tic, all affected sectors have their light level reset to what it was before the lightning flash.
+
+[[Light_ForceLightning]] can be used to force a lightning flash to occur, as well as to enable or disable lightning in a map.
+[[Category:Features]][[Category:Glossary]]</text>
+    <sha1>jagzibh4ndushzzici8bl52sz069yjw</sha1>
+  </revision>
+</page>

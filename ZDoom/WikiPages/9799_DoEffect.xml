@@ -1,0 +1,59 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>DoEffect</title>
+  <ns>0</ns>
+  <id>9799</id>
+  <revision>
+    <id>51484</id>
+    <parentid>51476</parentid>
+    <timestamp>2024-02-01T23:53:20Z</timestamp>
+    <contributor>
+      <username>Jekyll Grim Payne</username>
+      <id>2175</id>
+    </contributor>
+    <origin>51484</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="1718" sha1="n9c8aab3menppgmppbt381nh18wggap" xml:space="preserve">'''{{class|Inventory}}'''
+
+{{c|virtual void '''DoEffect''' ()}}
+
+== Usage ==
+A [[ZScript virtual functions|virtual function]] called every [[tic|game tic]] by {{class|Inventory}} items as long as they're in an actor's inventory. It's similar to [[Tick]], except &lt;code&gt;Tick()&lt;/code&gt; is called every tic as long as the actor exists.
+
+The &lt;code&gt;owner&lt;/code&gt; pointer can be utilized here to do something with the actor who is holding the item.
+
+In the base {{class|Inventory}} class this function is empty. However, it's used in the {{class|Powerup}} class to constantly apply the powerup's effects to its owner.
+
+{{Warning|The &lt;code&gt;owner&lt;/code&gt; pointer CAN become null while this function runs. This can notably happen if the owner dies and its Death [[Actor states|state sequence]] is 0 tics long: the items in their inventory will persist for one extra tic while the owner is null.}}
+
+'''Note:''' This function will not be called if the owner has the {{flag|NOINTERACTION}} flag {{verification}}
+
+== Examples ==
+This item will restore 5 health to its ownner every second, similar to {{class|PowerRegeneration}}, but without duration or any other powerup effects:
+&lt;syntaxhighlight lang="csharp"&gt;
+class RegenerationItem : Inventory
+{
+    override void DoEffect()
+    {
+        Super.DoEffect();
+        if (owner &amp;&amp; owner.health &gt; 0 &amp;&amp; GetAge() % TICRATE == 0)
+        {
+            owner.GiveBody(5);
+        }
+    }
+}
+&lt;/syntaxhighlight&gt;
+
+(See [[GiveBody]] and the [[Operators_(ZScript)#.25_.28modulo.29|ZScript modulo operator]] for extra information)
+
+== See also ==
+* [[InitEffect]]
+* [[EndEffect]]
+* [[Inventory virtual functions]]
+
+[[Category:ZScript]]
+[[Category:Inventory]]
+[[Category:ZScript virtual functions]]</text>
+    <sha1>n9c8aab3menppgmppbt381nh18wggap</sha1>
+  </revision>
+</page>

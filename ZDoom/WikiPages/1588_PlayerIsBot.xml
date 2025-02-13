@@ -1,0 +1,51 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>PlayerIsBot</title>
+  <ns>0</ns>
+  <id>1588</id>
+  <revision>
+    <id>36026</id>
+    <parentid>15182</parentid>
+    <timestamp>2013-03-03T21:30:56Z</timestamp>
+    <contributor>
+      <username>Deded007</username>
+      <id>1392</id>
+    </contributor>
+    <minor />
+    <comment>links</comment>
+    <origin>36026</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="1199" sha1="kraose0x3mxsbhf42sb55vdnv8igyz1" xml:space="preserve">bool '''PlayerIsBot''' (int ''playernumber'')
+
+==Usage==
+
+Returns {{c|TRUE}} if the player [0..7] is a bot and {{c|FALSE}} if not.
+
+==Examples==
+
+Giving a vital piece of puzzle or ability to a player could cause the game to become impossible if it is given to a bot rather than a human. This command can protect against such an issue. For example:
+
+ script 55 (void)
+ {
+ 	int marine = [[Random]](0, [[PlayerCount]]());
+ 	
+ 	while ([[PlayerIsBot]](marine))
+ 		// Pick another marine
+ 		marine = [[Random]](0, [[PlayerCount]]()); 
+ 	
+ 	[[SetActorProperty]](1000 + marine, {{const|APROP_INVULNERABLE}}, {{const|TRUE}});
+ 	
+ 	[[PrintBold]](n:marine+1, s:" is totally invulnerable!");
+ }
+ 
+ script 1000 {{SType|Enter}}
+ {
+ 	[[Thing_ChangeTID]](0, 1000 + [[PlayerNumber]]());
+ }
+
+Script 1000 just gives the players [[TID]]s, in sequence 1000, 1001, 1002, etc. Script 55 is the important one here. First it sets ''marine'' to be the number of one of the players. However, if it picks a bot, it keeps picking a new number until it picks a non-bot player. Once it has a human player, it makes them totally invulnerable and reports to the other players that this is so.
+
+[[category:ACS Information functions]]</text>
+    <sha1>kraose0x3mxsbhf42sb55vdnv8igyz1</sha1>
+  </revision>
+</page>

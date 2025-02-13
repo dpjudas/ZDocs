@@ -1,0 +1,49 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>Spawnradius</title>
+  <ns>0</ns>
+  <id>2855</id>
+  <revision>
+    <id>35002</id>
+    <parentid>35001</parentid>
+    <timestamp>2012-11-19T00:14:28Z</timestamp>
+    <contributor>
+      <username>Gez</username>
+      <id>1283</id>
+    </contributor>
+    <minor />
+    <origin>35002</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="1139" sha1="5sh8bsvcv2quro7le9jds6zl5xombh2" xml:space="preserve">{{DISPLAYTITLE:spawnradius}}
+This function acts as an extension to [[Spawn]], used to spawn things in circular patterns.  It uses a {{Class|MapSpot}} (or any other thing) as a base, and will spawn the object at the appropriate angle and radius relative to the MapSpot as the center.  The radius and angle passed should be in [[fixed point]] format.  The function returns a non-zero value if the spawn was successful, 0 if not.
+
+ function int SpawnRadius(str type, int spotid, int radius, int angle, int newtid, bool fog)
+ {
+    int x = [[GetActorX]](spotid) + [[FixedMul]]([[cos]](angle), radius);
+    int y = [[GetActorY]](spotid) + [[FixedMul]]([[sin]](angle), radius);
+ 
+    int test = Spawn(type, x, y, [[GetActorZ]](spotid), newtid, angle &gt;&gt; 8);
+ 
+    if (test &amp;&amp; fog)
+      Spawn("[[Classes:TeleportFog|TeleportFog]]", x, y, GetActorZ(spotid), 0, 0);
+ 
+    if (test)
+      return TRUE;
+ 
+    return FALSE;
+ }
+
+Spawn 5 Imps around the player.
+
+ script 1 ENTER
+ {
+    for (int i=0; i&lt;5; i++)
+    {
+        int angle = 1.0 / 5 * i;
+        SpawnRadius("[[DoomImp]]", 0, 128.0, angle, 0, TRUE);
+    }
+ }
+[[category:Sample ACS functions]]</text>
+    <sha1>5sh8bsvcv2quro7le9jds6zl5xombh2</sha1>
+  </revision>
+</page>

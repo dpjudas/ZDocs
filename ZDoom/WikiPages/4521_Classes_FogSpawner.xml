@@ -1,0 +1,59 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>Classes:FogSpawner</title>
+  <ns>0</ns>
+  <id>4521</id>
+  <revision>
+    <id>39505</id>
+    <parentid>37370</parentid>
+    <timestamp>2015-05-01T20:39:48Z</timestamp>
+    <contributor>
+      <username>Blue Shadow</username>
+      <id>2021</id>
+    </contributor>
+    <minor />
+    <comment>/* DECORATE definition */ Updated</comment>
+    <origin>39505</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="964" sha1="3n4a97ipdsd2jx7zstkq62pimmg1zcw" xml:space="preserve">{{Actor|
+| type = Map spot
+| name = Fog spawner
+| class = FogSpawner
+| game = Hexen
+| doomednum = 10000
+}}[[Classes]]: &lt;u&gt;FogSpawner&lt;/u&gt;&lt;br&gt;
+A generator that creates [[Classes:FogPatchSmall|small]], [[Classes:FogPatchMedium|medium]] and [[Classes:FogPatchLarge|large]] patches of fog. Its arguments are used as such:
+{| {{prettytable}}
+!args[] !! Use
+|-
+|args[0] || Moving speed of spawned fog patches
+|-
+|args[1] || Angle spread of spawned fog patches' movement, in units of +/- 0.7°
+|-
+|args[2] || Countdown between calls of [[A_FogSpawn]] that actually spawn a fog patch
+|-
+|args[3] || Lifetime countdown for spawned fog patches, see [[A_FogMove]]
+|-
+|args[4] || Unused
+|}
+==== [[DECORATE]] definition ====
+ ACTOR &lt;u&gt;FogSpawner&lt;/u&gt;
+ {
+   +{{Flag|NOSECTOR}}
+   +{{Flag|NOBLOCKMAP}}
+   +{{Flag|FLOATBOB}}
+   +{{Flag|NOGRAVITY}}
+   +{{Flag|INVISIBLE}}
+ 
+   action native [[A_FogSpawn]]();
+ 
+   States
+   {
+   Spawn:
+     TNT1 A 20 [[A_FogSpawn]]
+     Loop
+   }
+ }</text>
+    <sha1>3n4a97ipdsd2jx7zstkq62pimmg1zcw</sha1>
+  </revision>
+</page>

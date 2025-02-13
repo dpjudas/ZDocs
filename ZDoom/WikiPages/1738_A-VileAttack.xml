@@ -1,0 +1,47 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>A VileAttack</title>
+  <ns>0</ns>
+  <id>1738</id>
+  <revision>
+    <id>47241</id>
+    <parentid>44126</parentid>
+    <timestamp>2020-03-18T15:35:16Z</timestamp>
+    <contributor>
+      <username>Gez</username>
+      <id>1283</id>
+    </contributor>
+    <minor />
+    <comment>doomwiki link</comment>
+    <origin>47241</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="2067" sha1="s93avjig7jenn9d17k04rlbbpzr2kh7" xml:space="preserve">{{codepointer|Classic attack}}'''A_VileAttack''' [(str ''sound'' [, int ''initialdamage'' [, int ''blastdamage'' [, int ''blastradius'' [, float ''thrustfactor'' [, str ''damagetype'' [, int ''flags'']]]]]])]
+{{doomwiki|A_VileAttack}}
+
+== Usage ==
+Performs the actual attack of the {{Class|Archvile|Arch-Vile}}.  To hit, the current actor must have a target and that target must be in line of sight.  If the hit is successful, the specified sound is played, the initial damage is dealt to the target and they are thrust vertically into the air.  If this actor has a tracer assigned (see [[A_VileTarget]]) then that actor also explodes and deals the blast damage to the target and surrounding actors.
+
+=== Parameters ===
+*''sound'': The sound that is played when the attack hits. Default is "vile/stop".
+*''initialdamage'': The amount of direct-damage to do to the target immediately on hit. Default is 20.
+*''blastdamage'': The damage done by the explosion spawned at the tracer. Default is 70.
+*''blastradius'': The radius of the explosion spawned at the tracer. Other actors within this range will take damage from the explosion. Default is 70.
+*''thrustfactor'': The amount of vertical thrust to apply to the target. Default is 1.0. Higher values will push the target further into the air, while lower values will lessen the effect.
+*''damagetype'': The type of damage to deal to actors hit by this effect. Applies only to the blast attack, unless the below flag is set. Default is "{{DamageType|Fire}}".
+*''flags'':
+**'''VAF_DMGTYPEAPPLYTODIRECT''' – If set, the specified damage type applies to both attacks. Otherwise, it only applies to the blast attack, and in which case, the initial/direct attack's damage type will be {{DamageType|None}}.
+
+== Examples ==
+This example is taken from Doom's {{Class|Archvile|Arch-Vile}}.
+
+  Missile:
+    VILE G 0 BRIGHT [[A_VileStart]]
+    VILE G 10 BRIGHT [[A_FaceTarget]]
+    VILE H 8 BRIGHT [[A_VileTarget]]
+    VILE IJKLMN 8 BRIGHT [[A_FaceTarget]]
+    VILE O 8 BRIGHT [[A_VileAttack]]
+    VILE P 20 BRIGHT
+    Goto See</text>
+    <sha1>s93avjig7jenn9d17k04rlbbpzr2kh7</sha1>
+  </revision>
+</page>

@@ -1,0 +1,60 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>Universal Doom Map Format</title>
+  <ns>0</ns>
+  <id>3772</id>
+  <revision>
+    <id>53894</id>
+    <parentid>47181</parentid>
+    <timestamp>2024-11-25T21:20:13Z</timestamp>
+    <contributor>
+      <username>SPZ</username>
+      <id>2640</id>
+    </contributor>
+    <minor />
+    <comment>/* Conversion utilities */</comment>
+    <origin>53894</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="4466" sha1="m4s9v423ooultmbmv23y6q0xzejkhz0" xml:space="preserve">{{doomwiki|link=UDMF|name=UDMF}}
+The '''Universal Doom Map Format''' ('''UDMF'''), also known as "'''TextMap'''" is a new [[map format]] described by text files. The format is the result of an ongoing cooperation between source port developers to create a standardized map format that is extensible and easy to code for. 
+
+== Compatible editors ==
+[[Doom Builder 2]], [[GZDoom Builder]] and [[SLADE 3]] are currently the only map editors known to support UDMF maps.
+
+== Compatible source ports ==
+[[ZDoom]], [[GZDoom]], [[Zandronum]], [[Eternity Engine]] and [[Vavoom]] support UDMF maps.
+
+== Conversion utilities ==
+* [[wad2udmf]], by z34chris, converts maps in a WAD file to textmap format.
+* [[UDMFConvert]], by CO2, contains three dedicated executables to convert Doom maps, Hexen maps, and ZDoom maps.
+* [https://github.com/PROPHESSOR/Boom2UDMF Boom2UDMF], by PROPHESSOR, as the name implies, a converter from Vanilla/Boom format to UDMF. It written on JavaScript, so first of all you need Node.JS to run it. After that you must place files "VERTEXES.lmp", "LINEDEFS.lmp", "SECTORS.lmp", "THINGS.lmp", "SIDEDEFS.lmp" to the "input" directory, execute command "''npm start''" (or "''node index.js''") and take the "TEXTMAP" file from the "output" directory.
+* [[SPZ Archive Tool]] can convert maps from Hexen format into UDMF format.
+
+== Specification ==
+The [https://github.com/coelckers/gzdoom/blob/master/specs/udmf.txt UDMF specification] and the [https://github.com/coelckers/gzdoom/blob/master/specs/udmf_zdoom.txt ZDoom extensions] to the specification can both be found in the [[Git repository]]. The ZDoom extensions allow many more properties for [[vertex|vertices]], [[things]], [[linedefs]], and [[sectors]].
+
+Note: UDMF-ZDoom allows to apply directly various transformations to textures. To display flat textures correctly in a port, editor or level viewer, the order of these transformation must be as follow: 1. UDMF scaling, 2. UDMF offsetting, 3. texture scaling (for hi-res textures), 4. UDMF rotating.
+
+== Map lumps ==
+An UDMF map is made of, at a minimum, three lumps: the map header, [[TEXTMAP]] and [[ENDMAP]]. The header and ENDMAP are empty markers, whereas TEXTMAP contains all the raw map data: things, vertexes, linedefs, sidedefs, and sectors.
+
+Other lumps can be present between TEXTMAP and ENDMAP. Recognized lumps include [[ZNODES]], [[REJECT]], [[DIALOGUE]], and [[BEHAVIOR]].
+
+== Differences for modders ==
+UDMF allows to define additional flags and parameters directly, rather than having to use dummy line specials for that. As a result, a few functions are slightly different:
+* [[Line_SetIdentification]]: Unavailable. This function is nothing more than a crutch for the Hexen map format, and therefore not needed in a textmap. All the properties that are set indirectly through this line special can be set directly instead.
+* [[REVERBS]]: lines that are zone boundaries are marked with the ''zoneboundary'' property set to true, rather than through Line_SetIdentification.
+* [[Polyobj_StartLine]], [[Polyobj_ExplicitLine]], [[Plane_Align]], [[Teleport_Line]], [[TranslucentLine]], [[Scroll_Texture_Model]]: the ''lineid'' parameter used in these line specials should remain set to 0 in UDMF. TranslucentLine also has a ''moreflags'' parameter which is likewise useless in UDMF and shouldn't be set.
+
+== Conversion from the binary formats to UDMF ==
+For historical reasons, ZDoom makes different assumptions depending on the map format. For this reason, when converting a map in Doom or Hexen format to UDMF in either of the ZDoom namespaces, it may induce blatant changes to the gameplay when comparing the original and the converted maps.
+=== Doom format to UDMF ===
+Every tagged sector needs to get added a 'dropactors = true;' line to remain compatible.
+
+=== Doom-in-Hexen format to UDMF ===
+ZDoom has two different types of line activation by monsters, lax and strict. In the lax mode, monsters can activate certain lines without the lines being tagged explicitly to allow them. ZDoom automatically assumes lax activation for non-Hexen maps in the Hexen format, but does not for UDMF. This part of the conversion can only be done in [[MAPINFO]] by adding the '''laxmonsteractivation''' property to the map. This only concerns games whose native format is the Doom format: [[Doom]], [[Heretic]], [[Strife]], [[Chex Quest]]. Hexen-in-Hexen maps use strict activation by default.
+
+[[Category:Map formats]][[Category:UDMF]]</text>
+    <sha1>m4s9v423ooultmbmv23y6q0xzejkhz0</sha1>
+  </revision>
+</page>

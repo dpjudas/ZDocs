@@ -1,0 +1,44 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>Image format</title>
+  <ns>0</ns>
+  <id>5921</id>
+  <revision>
+    <id>52958</id>
+    <parentid>50607</parentid>
+    <timestamp>2024-08-22T06:32:24Z</timestamp>
+    <contributor>
+      <username>Blue Shadow</username>
+      <id>2021</id>
+    </contributor>
+    <minor />
+    <comment>remove {{new}}</comment>
+    <origin>52958</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="2754" sha1="6gi620fja6vimjq9s3ap1cgnjpt83qv" xml:space="preserve">[[ZDoom]] supports the following image formats natively for any use; note however that some formats have intrinsic limitations that make them inadequate choices. Some formats are paletted, in this case they will use either the global [[palette]] or an internal one.
+
+* [[Patch|Doom's native patch/sprite format]]; paletted, supports offsets, translations and translucency
+* [[Raw image]], used by [[flat]]s, some [[Heretic]] and [[Hexen]] fullscreen pictures (including [[AUTOPAGE]]) and some of [[Strife]]'s [[startup lumps]]; paletted, supports translations but not translucency
+* [[PNG]]; paletted or true color, supports offsets and translucency, translations are unreliable - ZDoom also defines two additional chunks
+* {{wp|JPEG}}; true color, does not support translucency or translations
+* {{wp|DirectDraw_Surface|DDS}}; true color, mipmapped, supports translucency
+* {{wp|PCX}}; paletted or true color, supports translucency only in true color
+* {{wp|Truevision_TGA|TGA}}; paletted or true color, supports translucency
+* {{wp|QOI_(image_format)|QOI}}; true color, supports translucency in RGBA format
+* {{wp|WebP}};  true color, supports translucency in RGBA format, lossy and lossless compression, and animation, however the latter cannot be used by GZDoom
+* [[IMGZ]]; ZDoom-specific format, stores only an alpha map
+* [[Build tiles]]; the format native to games such as Duke Nukem 3D (see [[ZDuke]])
+
+In addition, ZDoom also supports different graphic formats but only for some specialized purposes, such as [[ENDOOM]] or the [[startup lumps]].
+
+* [[Planar]]; a VGA full screen image, in 4-bit, 16-color format and a resolution of 640x480, used by [[Hexen]]'s startup
+* [[ANSI]], a semi-graphic format used by the [[ENDOOM]] screen and [[Heretic]]'s startup
+[[Category:Data formats]][[Category:Image formats|*]]
+
+'''Important notes:''' 
+*The {{wp|BMP_file_format|BMP}} format is ''not'' supported. This is deliberate. This format does not support offsets, transparency, or compression, and is therefore cumbersome and useless. (The BMP specs actually allow for transparency in 32-bit mode, and compression is theoretically possible. However, the most common tool used for editing BMP files, MS Paint, does not, rendering the question irrelevant.)
+*Transparency is handled directly by the images themselves, depending on the format's possibilities. ''There are no transparent colors.''
+*In the software renderer, colors are remapped to their closest match from the game [[palette]]. ZDoom features a DirectX renderer which is used on Windows systems to display 2D graphics, allowing {{wp|truecolor}} for HUD and interface graphics (including HUD weapon sprites). [[OpenGL]] [[source port]]s such as [[GZDoom]] can render everything in truecolor.</text>
+    <sha1>6gi620fja6vimjq9s3ap1cgnjpt83qv</sha1>
+  </revision>
+</page>

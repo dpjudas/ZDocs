@@ -1,0 +1,158 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>A Explode</title>
+  <ns>0</ns>
+  <id>1747</id>
+  <revision>
+    <id>53326</id>
+    <parentid>53165</parentid>
+    <timestamp>2024-10-12T11:10:27Z</timestamp>
+    <contributor>
+      <username>Blue Shadow</username>
+      <id>2021</id>
+    </contributor>
+    <minor />
+    <comment>{{git}} -&gt; {{new}} for 4.13.0</comment>
+    <origin>53326</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="7706" sha1="n198y252odcdsrs67fjfx2ea1a7nj3s" xml:space="preserve">__NOTOC__{{codepointer|Generic Attack}}
+{{doomwiki|A_Explode}}
+
+'''{{class|Actor}}'''
+
+int '''A_Explode'''(int ''damage'' = -1, double ''distance'' = -1, int ''flags'' = XF_HURTSOURCE, bool ''alert'' = false, int ''fulldamagedistance'' = 0, int ''nails'' = 0, int ''naildamage'' = 10, class&lt;Actor&gt; ''pufftype'' = "BulletPuff", name ''damagetype'' = 'none')
+
+== Usage ==
+Performs an explosive (radius) attack. In [[ZScript]] this functions as a convenient wrapper for the native function '''[[RadiusAttack]]'''.
+
+=== Parameters ===
+
+*{{c|int '''damage'''}}
+:How much damage is inflicted at the center of the explosion. If this is set to a value that is less than 0, the {{c|{{Property|ExplosionDamage}}}} property is used for the damage. Default is -1.
+:Note: The default value of the {{c|{{Property|ExplosionDamage}}}} property is 128.
+*{{c|double '''distance'''}}
+:The area covered by the damage (damage inflicted drop linearly with distance). Note that a radius larger than 32767 extends beyond ZDoom's map space limitations, and will overflow with undesired results (such as becoming too small and damaging nothing). If {{c|distance}} is less than 0, the {{c|{{Property|ExplosionRadius}}}} property is used for the radius. In this case, if the {{c|{{Property|ExplosionRadius}}}} property is set to a value less than 0, it'll use the same value as the {{c|{{Property|ExplosionDamage}}}} property. 
+:Note: The default value of the {{c|{{Property|ExplosionRadius}}}} property is -1, which means it uses the same value as {{c|{{Property|ExplosionDamage}}}}.
+*{{c|int '''flags'''}}
+:Allows the alteration of the function's behavior. This parameter is ignored in favor of using the {{c|{{Property|DontHurtShooter}}}} property if {{c|damage}} is less than 0. The following flags can be combined by using the &lt;code&gt;|&lt;/code&gt; character between the constant names: 
+:* {{c|XF_HURTSOURCE}} — '''This flag is set by default.''' Hurts the source: if set, the source can be damaged by the explosion. Note that the source is not necessarily the calling actor. To unset the flag, either use &lt;code&gt;0&lt;/code&gt; for the {{c|flags}} argument, or pass other flags to it without passing this one.
+:* {{c|XF_NOTMISSILE}} — Not a missile: if set, the calling actor is considered to be the source. By default, the calling actor is assumed to be a projectile, and the source is therefore considered to be the calling actor's [[actor pointer|target]].
+:* {{c|XF_EXPLICITDAMAGETYPE}} — If set, the {{c|damagetype}} parameter will never change to the actor's {{Property|DamageType|damage type}}.
+:* {{c|XF_NOSPLASH}} — Disables splash: if set, the explosion does not create any [[TERRAIN]] splashes.
+:* {{c|XF_THRUSTZ}} — Applies vertical thrust: if set, the attack pushes the victim vertically, in addition to horizontally. Normally, vertical thrust is applied without the need of this flag, but it could be disabled by setting the {{c|{{CVAR|C|compat_explode1}}}} compatibility flag. This flag overrides the compatibility flag.
+:* {{c|XF_THRUSTLESS}} — The explosion produces no thrust whatsoever, only dealing pure damage. This can be used to supplement the native thrusting with a custom implementation.
+:* {{c|XF_NOALLIES}} — The explosion does not affect any actors friendly to the source of the explosion. Only works with {{flag|FRIENDLY}} monsters and players. Keep in mind that ''XF_HURTSOURCE'' still needs to be off to not affect the source.
+:* {{c|XF_CIRCULAR}} — Changes the shape of the explosion from the vanilla cuboid shape into a spherical shape.
+:* {{c|XF_CIRCULARTHRUST}} — Blast actors away with more physically accurate momentum. When enabled, XF_THRUSTZ is ignored. {{new|4.13.0}} 
+*{{c|bool '''alert'''}}
+:Whether or not the explosion rings the alarm. This parameter is always set to &lt;code&gt;false&lt;/code&gt; if {{c|damage}} is less than 0, regardless of what is passed to it. Default is &lt;code&gt;false&lt;/code&gt;.
+*{{c|int '''fulldamagedistance'''}}
+:The area within which full damage is inflicted. Default is &lt;code&gt;0&lt;/code&gt;.
+*{{c|int '''nails'''}}
+:The number of horizontal [[hitscan]] attacks performed in a ring, originating from the actor's center. A value of &lt;code&gt;30&lt;/code&gt; emulates the [[A_NailBomb]] function from [[SMMU]], while still allowing to modify all other parameters from {{c|A_Explode}}. Default is &lt;code&gt;0&lt;/code&gt;.
+*{{c|int '''naildamage'''}}
+:The amount of damage inflicted by the nail attack, if any. Default is &lt;code&gt;10&lt;/code&gt;. If {{c|nails}} is &lt;code&gt;0&lt;/code&gt;, this, obviously, has no effect.
+*{{c|class&lt;Actor&gt; '''pufftype'''}}
+:The name of the [[Puff|puff]] class to use for the nail attack. If nothing is supplied, {{c|{{Class|BulletPuff}}}} is used. Default is &lt;code&gt;"BulletPuff"&lt;/code&gt;.
+*{{c|name '''damagetype'''}}
+:The [[damage type]] to use for the damage of this function rather than the actor's own {{Property|DamageType|damage type}}. If left as is without {{c|XF_EXPLICITDAMAGETYPE}}, will use the actor's damage type instead. Default is &lt;code&gt;"none"&lt;/code&gt;.
+
+=== Return value ===
+
+Returns the number of actors damaged. Actors that absorb the damage completely are not counted.
+
+== [[ZScript]] definition ==
+{{ZScriptDefinitionNote|actors/attacks.zs#L572}}
+&lt;syntaxhighlight lang="csharp"&gt;
+	int A_Explode(int damage = -1, double distance = -1.0, int flags = XF_HURTSOURCE, bool alert = false, double fulldamagedistance = 0.0, int nails = 0, int naildamage = 10, class&lt;Actor&gt; pufftype = "BulletPuff", name damagetype = "none")
+	{
+
+		if (damage &lt; 0)	// get parameters from metadata
+		{
+			damage = ExplosionDamage;
+			distance = ExplosionRadius;
+			flags = !DontHurtShooter;
+			alert = false;
+		}
+		if (distance &lt;= 0) distance = damage;
+
+		// NailBomb effect, from SMMU but not from its source code: instead it was implemented and
+		// generalized from the documentation at http://www.doomworld.com/eternity/engine/codeptrs.html
+
+		if (nails)
+		{
+			double ang;
+			for (int i = 0; i &lt; nails; i++)
+			{
+				ang = i*360./nails;
+				// Comparing the results of a test wad with Eternity, it seems A_NailBomb does not aim
+				LineAttack(ang, MISSILERANGE, 0.,
+					//P_AimLineAttack (self, ang, MISSILERANGE), 
+					naildamage, 'Hitscan', pufftype, bMissile ? LAF_TARGETISSOURCE : 0);
+			}
+		}
+
+		if (!(flags &amp; XF_EXPLICITDAMAGETYPE) &amp;&amp; damagetype == 'None')
+		{
+			damagetype = self.DamageType;
+		}
+
+		int pflags = 0;
+		if (flags &amp; XF_HURTSOURCE)	pflags |= RADF_HURTSOURCE;
+		if (flags &amp; XF_NOTMISSILE)	pflags |= RADF_SOURCEISSPOT;
+		if (flags &amp; XF_THRUSTZ)	pflags |= RADF_THRUSTZ;
+		if (flags &amp; XF_THRUSTLESS) pflags |= RADF_THRUSTLESS;
+		if (flags &amp; XF_NOALLIES) pflags |= RADF_NOALLIES;
+		if (flags &amp; XF_CIRCULAR) pflags |= RADF_CIRCULAR;
+
+		int count = RadiusAttack (target, damage, distance, damagetype, pflags, fulldamagedistance);
+		if (!(flags &amp; XF_NOSPLASH)) CheckSplash(distance);
+		if (alert &amp;&amp; target != NULL &amp;&amp; target.player != NULL)
+		{
+			SoundAlert(target);
+		}
+		return count;
+	}&lt;/syntaxhighlight&gt;
+
+== Examples ==
+
+ class MyGrenade : {{Class|Grenade}}
+ {
+     Default
+     {
+         {{Property|Speed}} 17;
+         {{Property|BounceFactor}} 0.4;
+         {{Property|BounceCount}} 6;
+     }
+ 
+     States
+     {
+     Death:
+         QEX1 A 5 bright
+         {
+             [[A_Explode]](100, 128);
+             [[A_StartSound]]("Weapon/GenericExplode", {{const|CHAN_WEAPON}});
+         }
+         QEX1 BCDE 5 bright;
+         Stop;
+     }
+ }
+
+
+Whenever this rocket explodes, it logs the number of actors which got damaged by its splash effect.
+ class SmartRocket : {{Class|Rocket}}
+ {
+     States
+     {
+     Death:
+         MISL B 8 Bright [[A_LogInt]]([[A_Explode]]);
+         Goto Super::Death+1;
+     }
+ }
+
+== See also ==
+*[[RadiusAttack]]
+*[[A_RadiusThrust]]</text>
+    <sha1>n198y252odcdsrs67fjfx2ea1a7nj3s</sha1>
+  </revision>
+</page>

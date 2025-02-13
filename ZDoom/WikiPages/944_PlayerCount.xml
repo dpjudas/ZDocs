@@ -1,0 +1,80 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>PlayerCount</title>
+  <ns>0</ns>
+  <id>944</id>
+  <revision>
+    <id>36033</id>
+    <parentid>31148</parentid>
+    <timestamp>2013-03-03T23:12:50Z</timestamp>
+    <contributor>
+      <username>Deded007</username>
+      <id>1392</id>
+    </contributor>
+    <minor />
+    <comment>links, templates, clean up</comment>
+    <origin>36033</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="2412" sha1="9d18nlylcuep8rx53o0rvblxiy5vfwh" xml:space="preserve">int '''PlayerCount''' (void)
+
+==Usage==
+
+Returns the number of players currently in the game. For single-player games, this will always be 1. For multi-player games, it can also return 1 when all but one of the players has quit the game.
+
+==Examples==
+
+A common issue is how to check if all players have entered a certain area. That is, if the number of players that have entered the area is equal to the result of '''PlayerCount'''.
+
+Using “[[Thing executed specials|Actor enters sector]]” and “Actor leaves sector” things, it is possible to implement a primitive counter.
+
+ int count = 0;
+ 
+ // Use for Actor enters sector
+ script 10 (void)
+ {
+ 	count++;
+ }
+ 
+ // Use for Actor leaves sector
+ script 11 (void)
+ {
+ 	count--;
+ }
+ 
+ script 100 {{SType|Open}}
+ {
+ 	while (count &lt; [[PlayerCount]]())
+ 		[[Delay]](35);
+ 	
+ 	[[PrintBold]](s:"All players ready!");
+ 	
+ 	//etc.
+ }
+
+This counter will keep track of the number of players currently in the sector and when script 100 finds the counter to equal '''PlayerCount''', a special action occurs.
+
+Note that this does not account for such events as players dying in the sector, or players disconnecting from the game in the sector. It is possible to prevent these problems by using an array of boolean variables, one for each player, and checking the total against '''PlayerCount'''. {{SType|Death}} and {{SType|Disconnect}} scripts can reset the particular player's state.
+
+
+Another possible use of this function is to perform certain actions depending on player count.
+
+ script 12 (void)
+ {
+        if ([[PlayerCount]]()&gt;=6)
+                [[Thing_Spawn]](1, {{const|T_CYBERDEMON}}, 0, 0);
+ }
+
+This script 12 would spawn a Cyberdemon only in case there are 6 or more of active players on the server.
+
+ script 13 (void)
+ {
+ 	for (int i=0;i&lt;[[PlayerCount]]();i++)
+ 		[[Thing_Spawn]](i+2000, {{const|T_BARON}}, 0, 0);
+ }
+
+Script 13 would spawn as many Barons of Hell as number of active players on the server. Barons will be spawned in mapspots tagged 2000, 2001, 2002, etc so you have to create them on your map. Note that if the spawning location is blocked by heights of sectors or other objects, not all of Barons might be spawned. Consider tagging Barons with the last argument of [[Thing_Spawn]] function and using [[ThingCount]] to calculate how many of them were actually created to spawn the rest afterwards.
+
+[[category:ACS Information functions]]</text>
+    <sha1>9d18nlylcuep8rx53o0rvblxiy5vfwh</sha1>
+  </revision>
+</page>

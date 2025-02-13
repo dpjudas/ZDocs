@@ -1,0 +1,48 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>Classes:PowerHighJump</title>
+  <ns>0</ns>
+  <id>3259</id>
+  <revision>
+    <id>53728</id>
+    <parentid>53727</parentid>
+    <timestamp>2024-11-13T12:26:22Z</timestamp>
+    <contributor>
+      <username>Jekyll Grim Payne</username>
+      <id>2175</id>
+    </contributor>
+    <origin>53728</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="1277" sha1="pfirfg5tqun9jtctkyxd7btyn8159ev" xml:space="preserve">{{actor|
+| type = Power
+| name = High jump power
+| class = PowerHighJump
+}}[[Classes]]: {{Class|Inventory}}&amp;rarr;{{Class|Powerup}}&amp;rarr;&lt;u&gt;PowerHighJump&lt;/u&gt;&lt;br&gt;
+
+{{: Powerup definition}}
+
+'''PowerHighJump''' increases the player's jump height. Effective jump multiplier can be calculated with the following formula:
+ (((JumpZ*2)**2)/2+maxstepheight)/((JumpZ**2)/2+maxstepheight)
+
+The strength of the jump can be controlled with the {{c|{{Property|Powerup.Strength}}}} property, which acts as a multiplier. If multiple powerups of this type are in the inventory, the engine picks the one with the highest strength (so, they don't stack).
+
+The effects of this powerup are not handled by the powerup itself, but rather by the {{c|CheckJump}} virtual function of the {{class|PlayerPawn}} class (as can be seen [https://github.com/ZDoom/gzdoom/blob/1e4f17639556daed8ff44a4d85e7753fafd538c0/wadsrc/static/zscript/actors/player/player.zs#L1424 '''here''']).
+
+=== [[ZScript]] definition ===
+{{ZScriptDefinitionNote|actors/inventory/powerups.zs}}
+&lt;syntaxhighlight lang="csharp"&gt;
+class PowerHighJump : Powerup
+{
+	Default
+	{
+		Powerup.Strength 2;
+	}
+}
+&lt;/syntaxhighlight&gt;
+
+=== [[DECORATE]] definition ===
+{{DecorateDefinitionNote}}
+ ACTOR &lt;u&gt;PowerHighJump&lt;/u&gt; : {{Class|Powerup}} native {}</text>
+    <sha1>pfirfg5tqun9jtctkyxd7btyn8159ev</sha1>
+  </revision>
+</page>

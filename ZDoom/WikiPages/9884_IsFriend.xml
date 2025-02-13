@@ -1,0 +1,58 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>IsFriend</title>
+  <ns>0</ns>
+  <id>9884</id>
+  <revision>
+    <id>52815</id>
+    <parentid>52394</parentid>
+    <timestamp>2024-07-26T10:29:08Z</timestamp>
+    <contributor>
+      <username>Jekyll Grim Payne</username>
+      <id>2175</id>
+    </contributor>
+    <minor />
+    <comment>/* Return values */</comment>
+    <origin>52815</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="1839" sha1="601qav623raxb4yu4o1v49lbqarzgcb" xml:space="preserve">'''{{class|Actor}}'''
+
+{{c|native clearscope bool '''IsFriend'''(Actor ''other'') const}}
+
+== Usage ==
+Checks if the calling actor is friendly to the ''other'' actor. This is meant to be run on [[Monster|monsters]] to determine their allegiance.
+
+=== Parameters ===
+*{{c|Actor '''other'''}}
+:[[Actor pointers|Pointer]] to the actor, whose allegiance should be compared to.
+
+=== Return values ===
+The function performs a sequence of checks based on game mode:
+
+:In team deathmatch, the function returns &lt;code&gt;true&lt;/code&gt; if ANY of the below conditions are met:
+:*''other'' is the calling actor's [[IsTeammate|teammate]]
+:*The calling actor and ''other'' are allied to different players, but those players are [[IsTeammate|teammates]] (the allied players are determined by the value of the actors' &lt;code&gt;FriendPlayer&lt;/code&gt; fields)
+:If none of the conditions are met, returns &lt;code&gt;false&lt;/code&gt;.
+
+:In other game modes, the function returns &lt;code&gt;true&lt;/code&gt; if ANY of the below conditions are met:
+:*The game mode is NOT [[deathmatch]]
+:*Both the calling actor and ''other'' are allied to the same player (determined by the value of their &lt;code&gt;FriendPlayer&lt;/code&gt; fields)
+:*The calling actor is not allied to any players (its &lt;code&gt;FriendPlayer&lt;/code&gt; field is {{c|0}})
+:*The ''other'' actor is not allied to any players (its &lt;code&gt;FriendPlayer&lt;/code&gt; field is {{c|0}})
+:*The calling actor and ''other'' are allied to different players, but those players are [[IsTeammate|teammates]] (the allied players are determined by the value of the actors' &lt;code&gt;FriendPlayer&lt;/code&gt; fields)
+
+If none of the above mentioned conditions were met, the function returns &lt;code&gt;false&lt;/code&gt;.
+
+== Examples ==
+{{noexamples}}
+
+== See also ==
+* [[IsHostile]]
+* [[IsTeammate]]
+* [[ZScript actor functions]]
+* {{flag|FRIENDLY|FRIENDLY flag}}
+
+[[Category:ZScript]]</text>
+    <sha1>601qav623raxb4yu4o1v49lbqarzgcb</sha1>
+  </revision>
+</page>

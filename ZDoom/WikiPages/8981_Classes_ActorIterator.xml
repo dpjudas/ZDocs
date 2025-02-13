@@ -1,0 +1,49 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>Classes:ActorIterator</title>
+  <ns>0</ns>
+  <id>8981</id>
+  <revision>
+    <id>52621</id>
+    <parentid>52620</parentid>
+    <timestamp>2024-05-12T00:09:53Z</timestamp>
+    <contributor>
+      <username>Jekyll Grim Payne</username>
+      <id>2175</id>
+    </contributor>
+    <comment>/* Functions */ added LevelLocals link</comment>
+    <origin>52621</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="1356" sha1="77s9eqy2antt80exlow7wikd7tht3o8" xml:space="preserve">{{ZScriptNote}}
+
+ActorIterator is a lighter-in-comparison iterator compared to its brothers, [[ThinkerIterator]] and [[BlockThingsIterator]] which is much less resource intensive. However, actors require a TID in order for this to qualify them as part of the iteration. As such, a tid of 0 will not work at all.
+
+== Functions ==
+
+{| class="wikitable"
+|-
+! Return Type !! Function !! Arguments !! Use/Arguments
+|-
+| ActorIterator || '''Create''' {{deprecated}} || 
+#int tid,
+#class&lt;Actor&gt; type = "Actor"
+|| 
+'''Note''': as of GZDoom 4.0.0, this function has been deprecated in favor of &lt;code&gt;Level.CreateActorIterator&lt;/code&gt; (see [[Structs:LevelLocals#Dynamic|LevelLocals]]).
+Initializes the iterator, searching for an actor of ''type'' and with the specific ''tid''. TID must not be 0.
+*'''tid''' - The TID to search. Must not be 0 or it will not work.
+*'''type''' - Serves as a filter. Specifying a classname here will only search for this type of actor and descendants. Default is Actor.
+''Note: this function is static and should be called off the class name, i.e. ActorIterator.Create(...).''
+|-
+| Actor || '''Next''' || None || Cycles through the list of existing actors, filtered out by the '''Create()''' function.
+|-
+| void || '''Reinit''' || None || Restarts the search.
+|}
+
+== See Also ==
+* [[ZScript]]
+* [[ZScript classes]]
+
+[[Category:ZScript]]</text>
+    <sha1>77s9eqy2antt80exlow7wikd7tht3o8</sha1>
+  </revision>
+</page>

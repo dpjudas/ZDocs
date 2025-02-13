@@ -1,0 +1,51 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>A FireArrow</title>
+  <ns>0</ns>
+  <id>5605</id>
+  <revision>
+    <id>42811</id>
+    <parentid>24140</parentid>
+    <timestamp>2016-06-22T21:06:04Z</timestamp>
+    <contributor>
+      <username>JSO x</username>
+      <id>2479</id>
+    </contributor>
+    <comment>/* Examples */ edit</comment>
+    <origin>42811</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="1257" sha1="6e4dwxhqxhh9yogvlhop0ki7sjbt490" xml:space="preserve">{{DISPLAYTITLE:A_FireArrow}}
+'''A_FireArrow''' (string ''proj'')&lt;br&gt;
+
+
+Fires an actor of type ''proj'', with a spread of up to 5.625°. This is affected by the player's accuracy: every two {{Class|UpgradeAccuracy|accuracy upgrade}} decreases the spread by half. The player using the calling weapon is then put in the Melee state for the relevant {{Class|PlayerPawn}} class, if any, and the sound "weapons/xbowshoot" is played on the WEAPON channel.
+
+This codepointer is restricted to {{Class|StrifeCrossbow}} and derived classes.
+
+== Examples ==
+Taked from [[Classes:StrifeCrossbow|strife electric crossbow]] fire state:
+  Fire:
+    XBOW A 3 [[A_ClearFlash]]
+    XBOW B 6 A_FireArrow("[[Classes:ElectricBolt|ElectricBolt]]")
+    XBOW C 4
+    XBOW D 6
+    XBOW E 3
+    XBOW F 5
+    XBOW G 0 [[A_ShowElectricFlash]]
+    XBOW G 5 [[A_CheckReload]]
+    Goto Ready+1
+Same, but for [[Classes:StrifeCrossbow2|strife poison crossbow]]:
+ Fire:
+    XBOW H 3
+    XBOW B 6 A_FireArrow("[[Classes:PoisonBolt|PoisonBolt]]")
+    XBOW C 4
+    XBOW D 6
+    XBOW E 3
+    XBOW I 5
+    XBOW J 5 A_CheckReload
+    Goto Ready
+
+[[Category:Decorate Strife functions]] [[Category:Decorate Weapon attack functions]] [[Category:Decorate Restricted functions]]{{DEFAULTSORT:FireArrow}}</text>
+    <sha1>6e4dwxhqxhh9yogvlhop0ki7sjbt490</sha1>
+  </revision>
+</page>

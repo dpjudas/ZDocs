@@ -1,0 +1,73 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>Classes:SwitchableDecoration</title>
+  <ns>0</ns>
+  <id>3605</id>
+  <revision>
+    <id>51720</id>
+    <parentid>51343</parentid>
+    <timestamp>2024-02-11T10:18:05Z</timestamp>
+    <contributor>
+      <username>Jekyll Grim Payne</username>
+      <id>2175</id>
+    </contributor>
+    <comment>/* Use in ZScript or DECORATE */</comment>
+    <origin>51720</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="2362" sha1="4jas5v4via5yqtl1uulnc384q2el2at" xml:space="preserve">{{Actor|
+| type = Internal
+| name = Switchable decoration
+| class = SwitchableDecoration
+}}[[Classes]]: &lt;u&gt;SwitchableDecoration&lt;/u&gt;&lt;br&gt;
+&amp;ensp;&amp;rarr;[[Classes:BatSpawner|BatSpawner]]&lt;br&gt;
+&amp;ensp;&amp;rarr;[[Classes:FlameLarge|FlameLarge]]&lt;br&gt;
+&amp;ensp;&amp;ensp;&amp;rarr;[[Classes:FlameLarge2|FlameLarge2]]&lt;br&gt;
+&amp;ensp;&amp;rarr;[[Classes:FlameSmall|FlameSmall]]&lt;br&gt;
+&amp;ensp;&amp;ensp;&amp;rarr;[[Classes:FlameSmall2|FlameSmall2]]&lt;br&gt;
+&amp;ensp;&amp;rarr;[[Classes:SwitchingDecoration|SwitchingDecoration]]&lt;br&gt;
+&amp;ensp;&amp;ensp;&amp;rarr;[[Classes:ZGemPedestal|ZGemPedestal]]&lt;br&gt;
+&amp;ensp;&amp;ensp;&amp;rarr;[[Classes:ZWingedStatueNoSkull|ZWingedStatueNoSkull]]&lt;br&gt;
+&amp;ensp;&amp;rarr;[[Classes:ZCauldron|ZCauldron]]&lt;br&gt;
+&amp;ensp;&amp;ensp;&amp;rarr;[[Classes:ZCauldronUnlit|ZCauldronUnlit]]&lt;br&gt;
+&amp;ensp;&amp;rarr;[[Classes:ZFireBull|ZFireBull]]&lt;br&gt;
+&amp;ensp;&amp;ensp;&amp;rarr;[[Classes:ZFireBullUnlit|ZFireBullUnlit]]&lt;br&gt;
+&amp;ensp;&amp;rarr;[[Classes:ZTwinedTorch|ZTwinedTorch]]&lt;br&gt;
+&amp;ensp;&amp;ensp;&amp;rarr;[[Classes:ZTwinedTorchUnlit|ZTwinedTorchUnlit]]&lt;br&gt;
+&amp;ensp;&amp;rarr;[[Classes:ZWallTorch|ZWallTorch]]&lt;br&gt;
+&amp;ensp;&amp;ensp;&amp;rarr;[[Classes:ZWallTorchUnlit|ZWallTorchUnlit]]&lt;br&gt;
+
+A class derived from this one can be [[Activation|activated and deactivated]], making it alternate between the Active and Inactive [[actor states|state sequences]].
+
+== Use in [[ZScript]] or [[DECORATE]] ==
+An actor derived from SwitchableDecoration must have at least valid Spawn and Active states. A valid Inactive state is needed if the actor is to be switchable off as well.
+
+'''Note:''' Using this class in ZScript is largely unnecessary, because all actors have access to the [[Used|'''Used()''']] virtual function that can be set up to perform any custom logic. Alternatively, if there's a need to execute the actor's [[special]] on interaction, the [[Activate]] and [[Deactivate]] functions can be utilized as well.
+
+== [[ZScript]] definition ==
+{{ZScriptDefinitionNote|actors/shared/sharedmisc.zs#L192C1-L204C2}}
+&lt;syntaxhighlight lang="csharp"&gt;
+class SwitchableDecoration : Actor
+{
+	override void Activate (Actor activator)
+	{
+		SetStateLabel("Active");
+	}
+
+	override void Deactivate (Actor activator)
+	{
+		SetStateLabel("Inactive");
+	}	
+}&lt;/syntaxhighlight&gt;
+
+== [[DECORATE]] definition ==
+{{DecorateDefinitionNote}}
+ ACTOR &lt;u&gt;SwitchableDecoration&lt;/u&gt; native {}
+
+== See also ==
+*[[Activation]]
+* [[Thing_Activate]]
+* [[Thing_Deactivate]]
+* {{property|Activation|Activation property}}</text>
+    <sha1>4jas5v4via5yqtl1uulnc384q2el2at</sha1>
+  </revision>
+</page>

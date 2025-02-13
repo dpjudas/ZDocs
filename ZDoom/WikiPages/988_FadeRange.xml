@@ -1,0 +1,52 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>FadeRange</title>
+  <ns>0</ns>
+  <id>988</id>
+  <revision>
+    <id>46050</id>
+    <parentid>40597</parentid>
+    <timestamp>2018-05-09T05:21:29Z</timestamp>
+    <contributor>
+      <username>LordMisfit</username>
+      <id>1752</id>
+    </contributor>
+    <minor />
+    <origin>46050</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="1381" sha1="dvh5alhxlzd4tuc7yh0fwnl5py4b1p5" xml:space="preserve">void '''FadeRange''' (int ''red1'', int ''green1'', int ''blue1'', fixed ''amount1'', int ''red2'', int ''green2'', int ''blue2'', fixed ''amount2'', fixed ''seconds'');
+
+== Usage ==
+
+'''FadeRange''' sets the current flash to the first color set and then fades it to the second color set over the specified number of seconds.
+
+This is more or less the [[ACS]] equivalent of [[A_SetBlend]].
+
+If the function is run with no activator (for example an [[Script_types|OPEN script]] or removing an existing activator with [[SetActivator]]), it will run for and affect all active players in the game.
+
+=== Parameters ===
+* ''red1'': Amount of red in the initial flash from 0-255.
+* ''green1'': Amount of green in the initial flash from 0-255.
+* ''blue1'': Amount of blue in the initial flash from 0-255.
+* ''amount1'': Intensity of the initial flash from 0-1.0.
+* ''red2'': Amount of red in the final flash from 0-255.
+* ''green2'': Amount of green in the final flash from 0-255.
+* ''blue2'': Amount of blue in the final flash from 0-255.
+* ''amount2'': Intensity of the final flash from 0-1.0.
+* ''seconds'': Time needed to complete the fade in seconds. 
+
+== Examples ==
+
+   script 1 (void)
+   {
+      // fade from 80% green to 80% blue in two seconds
+      [[FadeRange]] (0, 255, 0, 0.8, 0, 0, 255, 0.8, 2.0);
+   }
+
+== See also ==
+* [[FadeTo]]
+[[category:ACS Actor functions]]
+__NOTOC__</text>
+    <sha1>dvh5alhxlzd4tuc7yh0fwnl5py4b1p5</sha1>
+  </revision>
+</page>

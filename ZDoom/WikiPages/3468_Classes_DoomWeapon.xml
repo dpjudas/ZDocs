@@ -1,0 +1,104 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>Classes:DoomWeapon</title>
+  <ns>0</ns>
+  <id>3468</id>
+  <revision>
+    <id>53773</id>
+    <parentid>49974</parentid>
+    <timestamp>2024-11-19T10:43:44Z</timestamp>
+    <contributor>
+      <username>Jekyll Grim Payne</username>
+      <id>2175</id>
+    </contributor>
+    <origin>53773</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="2218" sha1="saq7lbxyp78d0iwfr2ys8616wlb8f1v" xml:space="preserve">{{Actor|
+| type = Internal
+| name = Doom weapon
+| class = DoomWeapon
+| game = Doom
+}}
+[[Classes]]: [[Classes:Inventory|Inventory]]&amp;rarr;[[Classes:Weapon|Weapon]]&amp;rarr;&lt;u&gt;DoomWeapon&lt;/u&gt;&lt;br&gt;
+&amp;ensp;&amp;rarr;[[Classes:BFG9000|BFG9000]]&lt;br&gt;
+&amp;ensp;&amp;rarr;[[Classes:Chaingun|Chaingun]]&lt;br&gt;
+&amp;ensp;&amp;rarr;[[Classes:Pistol|Pistol]]&lt;br&gt;
+&amp;ensp;&amp;rarr;[[Classes:PlasmaRifle|PlasmaRifle]]&lt;br&gt;
+&amp;ensp;&amp;rarr;[[Classes:RocketLauncher|RocketLauncher]]&lt;br&gt;
+&amp;ensp;&amp;rarr;[[Classes:Shotgun|Shotgun]]&lt;br&gt;
+&amp;ensp;&amp;rarr;[[Classes:SuperShotgun|SuperShotgun]]&lt;br&gt;
+
+
+&lt;u&gt;DoomWeapon&lt;/u&gt; is the class that all Doom weapons except the [[Classes:Fist|fist]] and [[Classes:Chainsaw|chainsaw]] are based off. Currently, this class only sets the kickback factor of the weapons and defines some railgun-related functions.
+
+====[[ZScript]] definition====
+{{ZScriptDefinitionNote|actors/doomdoomweapons.zs}} 
+&lt;syntaxhighlight lang="csharp"&gt;
+class DoomWeapon : Weapon
+{
+	Default
+	{
+		Weapon.Kickback 100;
+	}
+}
+
+extend class StateProvider
+{
+
+	//
+	// [RH] A_FireRailgun
+	// [TP] This now takes a puff type to retain Skulltag's railgun's ability to pierce armor.
+	//
+	action void A_FireRailgun(class&lt;Actor&gt; puffType = "BulletPuff", int offset_xy = 0)
+	{
+		if (player == null)
+		{
+			return;
+		}
+
+		Weapon weap = player.ReadyWeapon;
+		if (weap != null &amp;&amp; invoker == weap &amp;&amp; stateinfo != null &amp;&amp; stateinfo.mStateType == STATE_Psprite)
+		{
+			if (!weap.DepleteAmmo (weap.bAltFire, true, 1))
+				return;
+			
+			State flash = weap.FindState('Flash');
+			if (flash != null)
+			{
+				player.SetSafeFlash(weap, flash, random[FireRail](0, 1));
+			}
+			
+		}
+
+		int damage = deathmatch ? 100 : 150;
+		A_RailAttack(damage, offset_xy, false, pufftype: puffType);	// note that this function handles ammo depletion itself for Dehacked compatibility purposes.
+	}
+
+	action void A_FireRailgunLeft()
+	{
+		A_FireRailgun(offset_xy: -10);
+	}
+
+	action void A_FireRailgunRight()
+	{
+		A_FireRailgun(offset_xy: 10);
+	}
+
+	action void A_RailWait() 
+	{
+		// only here to satisfy old Dehacked patches.
+	}
+
+}&lt;/syntaxhighlight&gt;
+
+====[[DECORATE]] definition====
+{{DecorateDefinitionNote}}
+ ACTOR &lt;u&gt;DoomWeapon&lt;/u&gt; : {{Class|Weapon}}
+ {
+   {{Property|Weapon.Kickback}} 100
+ }
+
+[[Category:StateProvider]]</text>
+    <sha1>saq7lbxyp78d0iwfr2ys8616wlb8f1v</sha1>
+  </revision>
+</page>

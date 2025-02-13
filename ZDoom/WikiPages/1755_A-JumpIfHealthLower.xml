@@ -1,0 +1,43 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>A JumpIfHealthLower</title>
+  <ns>0</ns>
+  <id>1755</id>
+  <revision>
+    <id>44128</id>
+    <parentid>42378</parentid>
+    <timestamp>2017-03-20T11:16:51Z</timestamp>
+    <contributor>
+      <username>Gez</username>
+      <id>1283</id>
+    </contributor>
+    <minor />
+    <comment>removing "new" for GZDoom 2.4.0 release</comment>
+    <origin>44128</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="875" sha1="f53khwiuhywu399rt266np4kfo4jzzb" xml:space="preserve">{{codepointer|Jump}}
+state '''A_JumpIfHealthLower''' (int ''health'', int ''offset'' [, int ''pointer''])&lt;br/&gt;
+state '''A_JumpIfHealthLower''' (int ''health'', str "''state''" [, int ''pointer''])
+{{JumpNotice}}
+== Usage ==
+Jumps ''offset'' amount of states forward, or to the state label ''state'', if the health of the calling actor (or calling actor's [[actor pointer|pointer]]) is lower than the given value.
+
+The default value for ''pointer'' is {{c|{{const|AAPTR_DEFAULT}}}}, which corresponds to the caller itself.
+
+== Examples ==
+This script would cause a boss monster to switch its mode of attack when it reaches 5000 health
+
+   States
+   {
+   Missile:
+      POSS E 2 [[A_FaceTarget]]
+      POSS E 2 [[A_JumpIfHealthLower]](5000, "LowHealthAttack")
+      POSS F 2 [[A_PosAttack]]
+      Goto See
+   LowHealthAttack:
+      POSS E 2 [[A_CPosAttack]]
+      Goto See
+   }</text>
+    <sha1>f53khwiuhywu399rt266np4kfo4jzzb</sha1>
+  </revision>
+</page>

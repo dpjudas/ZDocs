@@ -1,0 +1,217 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>Creating multiplayer-friendly ZScript</title>
+  <ns>0</ns>
+  <id>9639</id>
+  <revision>
+    <id>54207</id>
+    <parentid>54206</parentid>
+    <timestamp>2025-02-08T19:29:37Z</timestamp>
+    <contributor>
+      <username>Boondorl</username>
+      <id>2606</id>
+    </contributor>
+    <minor />
+    <comment>/* Sending Events */</comment>
+    <origin>54207</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="17870" sha1="8g5bwbkiw9cx99cnjdcle5yq2ktjcw2" xml:space="preserve">Making your ZScript code multiplayer-friendly can be intimidating at first but is usually easy to do once the rules are known. This guide will cover potential pitfalls and best practices to make sure your ZScript code is ready for multiplayer out of the box. Note that this applies to ZDoom's current peer-to-peer networking architecture and is susceptible to change in the future.
+
+==How does multiplayer work?==
+Much like the original Doom, ZDoom uses peer-to-peer networking to handle its multiplayer. This means every individual client (i.e. player) in the game runs the game on their own machine and messages are sent over the network to keep them synchronized. In the case of ZDoom this sends over all inputs and special event data. You can think of it similar to how a demo file works: all the inputs are recorded and, when played back, will always give the same result. Instead, inputs are sent over the network and gameplay will automatically synchronize since the outcome will always be the same. However, because determinism is the only barrier for safety, this means desynchronizing can occur if two machines do end up reacting differently thanks to some point of non-deterministic code. Desynchronizing, as the name implies, means two or more clients no longer have the same game state e.g. one enemy is alive on a client's machine but dead on the other. ZDoom will give a warning to all clients when this occurs, but the game is still technically playable and at the moment can only be fixed by reloading from a save file (and the file must be distributed from a single person so it's correct on all machines).
+
+GZDoom specifically has two types of modes for its networking: standard peer-to-peer and packet-server. Peer-to-peer works by having each client send out their commands to every other client. Their game will be idle until all inputs from the other clients arrive, then the game will tick like normal until the next set of commands arrive, etc. This is good for LAN play or when playing with only two players, but for more players this tends to cause issues with connectivity. In particular, since every client must be able to connect to every other client, NAT gating and routing can get in the way. This is where packet-server comes in. Instead of the previously mentioned method, clients send their commands to the host who then sends out that information to everyone else. This gives much better network stability but also creates more latency since each command has to arrive at the host's machine first before it can be sent back out. Commands also aren't sent in advance meaning high latency can lead to the game being prone to stuttering.
+
+==Understanding scoping==
+Scoping is meant to act as a safety measure to keep games synchronized. Things marked with the &lt;code&gt;ui&lt;/code&gt; scope are not synchronized across the network. Rather than every player running that code, only the client themself runs it while other players on their machine completely ignore it. &lt;code&gt;play&lt;/code&gt; is automatically synchronized since everyone will run the code on any client's machine. Assume '''PlayFunction'''() is &lt;code&gt;play&lt;/code&gt; scoped while '''UIFunction'''() is &lt;code&gt;ui&lt;/code&gt; scoped. For two different clients, A and B, the execution would look like this:
+
+'''A's Computer'''
+{| class="wikitable"
+|-
+! Player !! PlayFunction !! UIFunction
+|-
+| A || is called || is called
+|-
+| B || is called || isn't called
+|}
+
+'''B's Computer'''
+{| class="wikitable"
+|-
+! Player !! PlayFunction !! UIFunction
+|-
+| A || is called || isn't called
+|-
+| B || is called || is called
+|}
+
+You can probably see the potential pitfalls that can occur with &lt;code&gt;ui&lt;/code&gt; functions here: one player calls it while the other doesn't, and this changes based on whose machine it is. Functions in the &lt;code&gt;ui&lt;/code&gt; scope are also often called every frame the game renders instead of every tic like the play simulation. If one player is running at 200 FPS while the other is running at 100 FPS, the first client will call those functions twice as many times as the second client. This is the reason the &lt;code&gt;play&lt;/code&gt; scope isn't even allowed to read from the UI, while the UI can only read from the play sim and call &lt;code&gt;const&lt;/code&gt; functions. &lt;code&gt;data&lt;/code&gt; scope exists in neither context and is meant to be usable freely by either, but not between each other. Both the UI and play sim can freely read from and write to the &lt;code&gt;data&lt;/code&gt; scope, but not as a way to communicate from one to the other. Marking functions as &lt;code&gt;clearscope&lt;/code&gt; makes them &lt;code&gt;data&lt;/code&gt; scoped which is useful for getters or functions meant to do simple calculations.
+
+==What causes non-deterministic code?==
+This can be frustrating to debug if you're new to ZDoom's networking. Sometimes it appears to be completely random and it's hard to diagnose the issue when you don't even know what to look for. Below are some of the possible causes of desyncs:
+
+===RNG===
+RNG, or random number generation, is a possible cause of desyncs in networking. Each random function uses a seed that advances its state whenever it's called. The state of this seed determines what number is given. If a seed ends up in different states across clients, this can cause them to start generating different numbers and desynchronize. While normally you can't modify the play sim from the UI, modifying the RNG seed is the one exception. Recall that functions in the UI run on a per-frame basis instead of a per-tic one.
+
+The fix is simple: use the &lt;code&gt;CRandom()&lt;/code&gt; functions for UI code and the standard &lt;code&gt;Random()&lt;/code&gt; functions for the play sim. Standard random seeds are backed up so they can't desync even when called from the UI but this will give erroneous results as their seeds won't be able to advance unless the play sim does it. CRandom seeds are completely client-side and have their own set of unique identifiers that ensures they don't interact with the networked seeds in any way.
+
+ // In a ui-scoped function
+ FRandom(x, y); // This is a bad idea as this is a networked seed meaning it won't advance properly.
+ FRandom[MyIdentifier](x, y); // Same problem as above.
+ CFRandom(x, y); // This will work correctly.
+ CFRandom[MyIdentifier](x, y); // This is also fine since it's a separate identifier than the one above.
+ 
+ // In a play-scoped function
+ CFRandom[MyIdentifier](x, y); // This is a bad idea because this seed won't be synchronized meaning different outcomes can occur.
+ FRandom[MyIdentifier](x, y); // This is safe.
+
+In general it's good practice to use unique identifiers for all your actions.
+
+===Using consoleplayer in play scope===
+When a player joins a game they're automatically assigned a player number based on the order they joined the game. There are two important global variables in ZScript related to networking that track these: '''net_arbitrator''' and '''consoleplayer'''. '''net_arbitrator''' is the number of the player currently considered the "host" of the game (peer-to-peer networking has no true host but this player is in charge of setting server CVars). '''consoleplayer''' is the player number for the client. As you'd expect, this means that '''consoleplayer''' is different on every client's machine. For the person hosting the game it will be 0, for the first person to join, it's 1, etc. Since the UI only runs on the client's machine, using '''consoleplayer''' here makes sense, but using it in the play sim will cause desyncs.
+
+ // In the ui
+ players[consoleplayer].mo // Ok
+ 
+ // In the play sim
+ players[consoleplayer].mo // Not ok
+
+To fix this, always make sure you're using the correct player. There are a few main ways to tackle this. For starters, try and use generic pointers before relying on player numbers directly. For instance, if you have a monster, use its &lt;code&gt;target&lt;/code&gt; field to get what it's chasing. You can check its &lt;code&gt;player&lt;/code&gt; field to verify if it's a player:
+
+ if (target &amp;&amp; target.player)
+     FightPlayer(target.player.mo);
+
+If a specific player number is needed, you can get the player number from a reference:
+
+ // Warning: This will return 0 for non-players so always check they're a valid player first.
+ if (myActor.player)
+     DoThing(myActor.PlayerNumber());
+
+If an action should happen to every player in the game, they can be iterated against via the &lt;code&gt;players&lt;/code&gt; array. Use the &lt;code&gt;playeringame&lt;/code&gt; array to determine if that player is currently connected or not:
+
+ // This is commonly done in EventHandlers that have player logic in WorldTick.
+ for (int i; i &lt; MAXPLAYERS; i++)
+ {
+     if (!playerInGame[i] || !players[i].mo)
+         continue;
+ 
+     DoThing(players[i].mo);
+ }
+
+'''MAXPLAYERS''' represents the max amount of players that can be in a networked game. Remember that if generic gameplay logic should apply to any given player, it must be applied across all of them equally. Sometimes this means storing data for all of them instead of just an individual.
+
+ PlayerData pData[MAXPLAYERS]; // Use player number to know whose data goes where.
+
+===Events===
+EventHandlers are incredibly powerful but their player-specific functions can often be used wrong. Events that apply to a specific player (e.g. '''PlayerSpawned'''(), '''NetworkProcess'''()) give a player number but it's common to see '''consoleplayer''' used instead. To fix this, make sure to check you're applying things to the right player.
+
+ override void PlayerSpawned(PlayerEvent e)
+ {
+     // This is wrong.
+     players[consoleplayer].mo.GiveInventory("Item", 1);
+ 
+     // Use the passed argument.
+     players[e.PlayerNumber].mo.GiveInventory("Item", 1);
+ }
+ 
+ override void NetworkProcess(ConsoleEvent e)
+ {
+     if (e.Name ~== "MyAction")
+     {
+         // This is wrong.
+         players[consoleplayer].mo.GiveInventory("Item", 1);
+ 
+         // Use the passed argument.
+         players[e.Player].mo.GiveInventory("Item", 1); 
+     }
+ }
+
+Both '''ConsoleProcess'''() and '''InterfaceProcess'''() run in the UI so '''consoleplayer''' can be safely used in them.
+
+===FindCVar===
+'''FindCVar'''() can cause desyncs because it'll only get the CVar from the client's machine, not any given player's. If a &lt;code&gt;user&lt;/code&gt; CVar is being used to modify gameplay, this means that two clients with two different values for it will cause a conflict. Both player A and B will use A's value on A's machine while they'll use B's value on B's machine. The fix here is to use '''GetCVar'''() instead and pass the appropriate '''PlayerInfo''' to its second parameter. For instance, say an item modifies a player based on their user CVar:
+
+ // Assume player B is the item's owner but this is being called from A's computer.
+ // This is wrong because we want B's value, not A's.
+ let myCVar = CVar.FindCVar("mycvar");
+ 
+ // Instead, use the owner's player field.
+ let myCVar = CVar.GetCVar("mycvar", owner.player);
+
+Remember that &lt;code&gt;server&lt;/code&gt; and &lt;code&gt;nosave&lt;/code&gt; CVars can be accessed directly. If you have a server CVar called &lt;code&gt;sv_servercvar&lt;/code&gt;, in ZScript it can be directly accessed as '''sv_servercvar'''. &lt;code&gt;nosave&lt;/code&gt; CVars aren't synchronized at all over the network so only use them for truly client-side effects like particle limits or colors.
+
+===Client-side Prediction===
+This is by far the most complex topic and the most difficult to work with. Normally when trying to do something a client will have to wait for all other clients to verify their action over the network before it happens in their own game. This means if client B has a ping of 90 to client A, B trying to fire their weapon will have a minimum delay of 90ms. This can cause ZDoom to feel very uncomfortable to play online over long distances, but movement suffers greatly as all movement actions are delayed by the ping. To accommodate this, ZDoom has a lighter form of client-side prediction. In particular when the player moves, rather than waiting to verify the action, ZDoom will let the client move on their screen in real-time and, should their movements not match their verified ones, move them back to the correct place (this is referred to as rubberbanding). The result is that the client feels as though their movement actions are instant even though they still have to be verified by other clients first.
+
+This can also come with ''many'' pitfalls when programming custom player logic, however. While some functions are already protected against client-side prediction, movement ones aren't and custom logic in both '''PlayerThink'''() and a player's '''Tick'''() are incredibly prone to desyncing.
+
+Logic that can break while predicting includes:
+* Modifying the play sim in any way that isn't the direct player pawn or their player info (e.g. taking an inventory item, changing a global variable, etc.)
+* Triggering map actions and scripts that modify the map
+
+As such, caution must be taken to check if the player is predicting.
+
+ if (player.cheats &amp; CF_PREDICTING)
+     // Player is currently predicting their movement and is unverified.
+
+Naturally this will only need to be done in the player itself as any other logic from the play sim will only trigger when the client isn't predicting. The exception to this is '''CanCollideWith'''() as it needs to be called to check for proper movement prediction. If you have an Actor that does something when it gets hit, for instance, you should check against the thing it's colliding with to ensure it's a validated movement.
+
+ override bool CanCollideWith(Actor other, bool passive)
+ {
+     if (!other.player || !(other.player.cheats &amp; CF_PREDICTING))
+         DoThing(other);
+ 
+     return true;
+ }
+
+==Creating Prediction-safe Code==
+Due to the nature of client-side prediction, predictive code only has to be taken into account when programming player logic for the most part. All other playsim objects will be automatically synchronized across clients. GZDoom has some [[Classes:PlayerPawn#Client_Prediction_(ZScript_only)|built-in behaviors]] to guard against network desyncs, but manual guarding must be done for your own code. Even if GZDoom were to update to a client/server architecture, these same principles would still apply as the nature of client-side prediction isn't tied to any specific network architecture. Note that the UI does not need to care about prediction as it's already not synchronized over the network. Some of the basic principles for safe client-side code:
+*Do not modify anything that directly affects the world around the player (play objects, Actors, PSprites, level geometry, etc.). The world state should stay completely untouched while predicting.
+*Do not create anything that can affect the world. Client-side objects like data/UI scoped objects or particles are fine.
+*Do not change the State of the predicting player or their weapon.
+*Fields and properties on the predicting player itself and its PlayerInfo are safe to modify with a few restrictions:
+:*Strings, arrays, and maps should not be modified in any capacity.
+:*Objects the player has a reference to should not be modified as only the reference to them is backed up. Changing the view position is still safe, however.
+:These types cannot be backed up due to their nature and will not be kept synchronized correctly.
+*Do not call any play functions that can have an affect on the world unless they have a safe guard in place.
+*Properly safe guard your play functions if they are expected to be called while predicting. The player can think, move around, and teleport which involves all relevant code.
+*Both '''PlayerThink'''() and '''Tick'''() are predicted. Do not assume either are safe unless a function is listed as not being called while predicting (e.g. '''TickPSprite'''()).
+*If completely overriding '''PlayerThink'''() or '''Tick'''(), make sure to put back in the safety guards that the original code uses as this isn't automatic.
+
+While some actions can technically cause desyncs, they are unlikely to. This includes playing sounds and modifying rendering properties. These actions generally have no impact the world state in any meaningful way, so they remain fairly safe. As a word of warning, these things ''can'' be accessed from the playsim, so anyone could code logic around these that does affect the world. Programming logic around these should be avoided, however, unless that logic is also client-side safe. Never treat sound and rendering properties as network safe when creating world state altering logic.
+
+==Sending Events==
+Sometimes you're working on UI code and need to update the play sim. To do this, '''EventHandler'''.'''SendNetworkEvent'''() can be used. This will send the event over the network to every client and can then be processed in '''NetworkProcess'''(). The player number passed will be the client who called the event ensuring the logic can be applied to the correct player across all clients.
+
+ // In ui
+ EventHandler.SendNetworkEvent("blahblah");
+ 
+ // In the event handler
+ override void NetworkProcess(ConsoleEvent e)
+ {
+     if (e.Name ~== "blahblah")
+         DoThing(players[e.Player].mo);
+ }
+
+The reverse is '''EventHandler'''.'''SendInterfaceEvent'''() which can be used to send information from the play sim to the UI. A specific player number has to be passed since the code will run on everyone's machine and it must determine who specifically should accept the UI event.
+
+ // In a custom Actor
+ override void Activate(Actor activator)
+ {
+     if (activator &amp;&amp; activator.player)
+         EventHandler.SendInterfaceEvent(activator.PlayerNumber(), "blahblah");
+ }
+ 
+ // In the event handler
+ override void InterfaceProcess(ConsoleEvent e)
+ {
+     if (e.Name ~== "blahblah")
+         DoThing(players[consoleplayer].mo); // This is in the ui so it's safe to use consoleplayer.
+ }
+
+'''ConsoleProcess'''() also runs in the UI scope.
+
+[[Category:ZScript]] [[Category:ZScript_guides]]</text>
+    <sha1>8g5bwbkiw9cx99cnjdcle5yq2ktjcw2</sha1>
+  </revision>
+</page>

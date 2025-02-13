@@ -1,0 +1,43 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>CheckPlayerCamera</title>
+  <ns>0</ns>
+  <id>3627</id>
+  <revision>
+    <id>37061</id>
+    <parentid>21105</parentid>
+    <timestamp>2013-08-30T03:20:36Z</timestamp>
+    <contributor>
+      <username>Edward850</username>
+      <id>1492</id>
+    </contributor>
+    <comment>Updated to reflect changes to how player cameras are checked/returned</comment>
+    <origin>37061</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="783" sha1="b1st38lh3qfc0fyeh55lqiree1s6azv" xml:space="preserve">int '''CheckPlayerCamera''' (int ''player'')
+
+==Usage==
+
+Returns the TID of the camera that the specified player is currently viewing. If the player doesn't exist (or has no camera somehow) or the camera is currently using any player as a viewpoint, then this returns -1.
+
+==Examples==
+
+This script deactivates all actors with a TID of 60 while the player is using a camera.  This could be used to prevent enemies from attacking the player while he is doing so.
+
+ script 10 [[Script types#ENTER|ENTER]]
+ {
+    while ('''CheckPlayerCamera'''([[PlayerNumber]]()) == -1) [[Delay]](1);
+ 
+    [[Thing_Deactivate]](60);
+ 
+    while ('''CheckPlayerCamera'''([[PlayerNumber]]()) != -1) [[Delay]](1);
+ 
+    [[Thing_Activate]](60);
+ 
+    [[Restart]];
+ }
+
+[[category:ACS Information functions]]</text>
+    <sha1>b1st38lh3qfc0fyeh55lqiree1s6azv</sha1>
+  </revision>
+</page>

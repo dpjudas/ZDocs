@@ -1,0 +1,54 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>Classes:ArtiTomeOfPower</title>
+  <ns>0</ns>
+  <id>2788</id>
+  <revision>
+    <id>39353</id>
+    <parentid>38881</parentid>
+    <timestamp>2015-04-29T17:28:55Z</timestamp>
+    <contributor>
+      <username>Blue Shadow</username>
+      <id>2021</id>
+    </contributor>
+    <minor />
+    <comment>/* DECORATE definition */ Updated</comment>
+    <origin>39353</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="1590" sha1="amuzf2ssi9078wve7azqp7v4m3otkbe" xml:space="preserve">{{Actor|
+| type = Artifact
+| name = Tyketto's Tome of Power
+| class = ArtiTomeOfPower
+| game = Heretic
+| doomednum = 86
+| spawnid = 134
+| spawnname = T_ITEMTOME 
+}}[[Classes]]: [[Classes:Inventory|Inventory]]&amp;rarr;[[Classes:PowerupGiver|PowerupGiver]]&amp;rarr;&lt;u&gt;ArtiTomeOfPower&lt;/u&gt;
+
+
+The &lt;u&gt;tome of power&lt;/u&gt; is a magic artifact that enters the player's inventory when picked up and, when activated, gives the player's weapons [[Classes:PowerWeaponLevel2|much enhanced effectiveness]] for a period of time and also unmorphs the player if they are currently morphed. For the predefined Heretic weapons, this usually means that a full/semi-auto firing mode becomes available and/or more powerful single shots are fired; for example, the [[Classes:PhoenixRod|phoenix rod]] becomes a flamethrower-like weapon if the player has an active tome of power when firing it.
+
+
+==== Using in [[DECORATE]] ====
+When this (or inherited) actor is used it gives the player the [[Classes:PowerWeaponLevel2|WeaponLevel2]] power. Additionally, it cancels player morph and, if unmorph took place, plays the sound “&lt;code&gt;*evillaugh&lt;/code&gt;” (if defined).
+
+==== [[DECORATE]] definition ====
+ ACTOR &lt;u&gt;ArtiTomeOfPower&lt;/u&gt; : {{Class|PowerupGiver}} native
+ {
+   +{{Flag|COUNTITEM}}
+   +{{Flag|FLOATBOB}}
+   +{{Flag|INVENTORY.PICKUPFLASH}}
+   {{Property|Inventory.Icon}} "ARTIPWBK"
+   {{Property|Powerup.Type}} {{Class|PowerWeaponLevel2|Weaponlevel2}}
+   {{Property|Inventory.PickupMessage}} "$TXT_ARTITOMEOFPOWER"
+   {{Property|Tag}} "$TAG_ARTITOMEOFPOWER"
+   States
+   {
+   Spawn:
+     PWBK A 350
+     Loop
+   }
+ }</text>
+    <sha1>amuzf2ssi9078wve7azqp7v4m3otkbe</sha1>
+  </revision>
+</page>

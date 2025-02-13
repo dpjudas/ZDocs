@@ -1,0 +1,65 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>Classes:PoisonCloud</title>
+  <ns>0</ns>
+  <id>4628</id>
+  <revision>
+    <id>34566</id>
+    <parentid>26843</parentid>
+    <timestamp>2012-10-20T09:14:08Z</timestamp>
+    <contributor>
+      <username>Blue Shadow</username>
+      <id>2021</id>
+    </contributor>
+    <minor />
+    <comment>/* DECORATE definition */</comment>
+    <origin>34566</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="1169" sha1="i5vmmjh85fgf65hvrsgaq81qbsswhkn" xml:space="preserve">{{Actor|
+| type = Explosive
+| name = Poison cloud
+| class = PoisonCloud
+| game = Hexen
+}}[[Classes]]: &lt;u&gt;PoisonCloud&lt;/u&gt;&lt;br&gt;
+The cloud of poison gas that is created by a [[Classes:ArtiPoisonBag1|cleric's fléchette]] or by the destruction of a [[Classes:ZPoisonShroom|poison mushroom]].
+==== [[DECORATE]] definition ====
+ ACTOR &lt;u&gt;PoisonCloud&lt;/u&gt; native
+ {
+   {{Property|Radius}} 20
+   {{Property|Height}} 30
+   {{Property|Mass}} 0x7fffffff
+   +{{Flag|NOBLOCKMAP}}
+   +{{Flag|NOGRAVITY}}
+   +{{Flag|DROPOFF}}
+   +{{Flag|NODAMAGETHRUST}}
+   +{{Flag|DONTSPLASH}}
+   +{{Flag|FOILINVUL}}
+   +{{Flag|CANBLAST}}
+   +{{Flag|BLOODLESSIMPACT}}
+   +{{Flag|BLOCKEDBYSOLIDACTORS}}
+   {{Property|RenderStyle}} Translucent
+   {{Property|Alpha}} 0.6
+   {{Property|DeathSound}} "PoisonShroomDeath"
+   {{Property|DamageType}} PoisonCloud
+ 
+   action native [[A_PoisonBagDamage]]();
+   action native [[A_PoisonBagCheck]]();
+ 
+   States
+   {
+   Spawn:
+     PSBG D 1
+     PSBG D 1 [[A_Scream]]
+     PSBG DEEEFFFGGGHHHII 2 [[A_PoisonBagDamage]]
+     PSBG I 2 [[A_PoisonBagCheck]]
+     PSBG I 1 [[A_PoisonBagCheck]]
+     Goto Spawn+3
+   Death:
+     PSBG HG 7
+     PSBG FD 6
+     Stop
+   }
+ }</text>
+    <sha1>i5vmmjh85fgf65hvrsgaq81qbsswhkn</sha1>
+  </revision>
+</page>

@@ -1,0 +1,50 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>PlayMovie</title>
+  <ns>0</ns>
+  <id>938</id>
+  <revision>
+    <id>35658</id>
+    <parentid>23373</parentid>
+    <timestamp>2013-02-09T22:53:44Z</timestamp>
+    <contributor>
+      <username>Deded007</username>
+      <id>1392</id>
+    </contributor>
+    <minor />
+    <comment>formatting</comment>
+    <origin>35658</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="1490" sha1="a87glni3ppexuarweg57awinrwotua9" xml:space="preserve">int '''PlayMovie''' (str ''moviename'')
+
+{{WarnDeprecated}}
+
+This command is disabled in current ZDoom version. It is very unlikely that it ever gets re-enabled. The function will just fail and return '''MOVIE_Failed'''.
+
+The description below only applies to old ZDoom versions which still had this command working:
+
+== Usage ==
+
+Plays a video file.  This function uses DirectShow (the same media library that Windows Media Player uses), so it only works in Windows and it can play any files that WMP has the codecs for.
+* ''moviename'' is the filesystem address of the file, so if you have, say, blah.avi in the same directory as zdoom.exe you can do &lt;code&gt;PlayMovie("blah.avi")&lt;/code&gt;, but you can also play any movie on the filesystem, so &lt;code&gt;PlayMovie("c:\doom2\zdoom\blah.avi")&lt;/code&gt; would work as well.
+
+Depending on how playback proceeds, one of the following values will be returned:
+
+;MOVIE_Played
+: The movie was played through completely without problems.
+
+;MOVIE_Played_NoVideo
+:The movie played, but the proper video codec was not installed, so it was audio-only.
+
+;MOVIE_Played_Aborted
+:The user quit movie playback by pressing the escape key before it could finish.
+
+;MOVIE_Failed
+:The movie could not play at all, either because no audio or video codec was available, or because the operating system is not Windows.
+
+[[category:ACS Actor functions]]
+
+This is no longer available as a [[Console Commands|console command]] with the same name in the current version either.</text>
+    <sha1>a87glni3ppexuarweg57awinrwotua9</sha1>
+  </revision>
+</page>

@@ -1,0 +1,362 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>Structs:LevelLocals</title>
+  <ns>0</ns>
+  <id>9281</id>
+  <revision>
+    <id>53284</id>
+    <parentid>53109</parentid>
+    <timestamp>2024-10-12T09:09:24Z</timestamp>
+    <contributor>
+      <username>Blue Shadow</username>
+      <id>2021</id>
+    </contributor>
+    <minor />
+    <comment>remove {{new}}</comment>
+    <origin>53284</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="15960" sha1="r1spcnwmyd4ncuinvtg54xm34584lkf" xml:space="preserve">{{ZScriptNote}}
+
+The '''LevelLocals''' [[Structs|struct]] contains information and methods about the current [[level]]. These can be accessed through the global variable '''level'''.
+
+LevelLocals also has static methods for performing some geometry calculations, which account for [[Portal|portals]] in the level.
+
+== Methods ==
+=== Static ===
+Static methods are called through the name {{c|LevelLocals}} or {{c|Level}}, e.g. &lt;code&gt;LevelLocals.MakeScreenShot(…)&lt;/code&gt;.
+
+*{{c|void '''{{LE|MakeScreenShot}}'''()}}
+:Takes a [[screenshot]] of the current game window.
+
+*{{c|void '''{{LE|MakeAutoSave}}'''()}}
+:Creates an autosave.
+
+*{{c|clearscope bool IsPointInMap(vector3 p)}} {{deprecated}}
+:Superseded by &lt;code&gt;Level.IsPointInLevel&lt;/code&gt;
+
+=== Dynamic ===
+Dynamic methods are called on the global {{c|Level}} pointer, e.g. &lt;code&gt;Level.Vec3Diff(…)&lt;/code&gt;.
+
+*{{c|clearscope vector3 '''{{LE|Vec3Diff}}'''(vector3 ''v1'', vector3 ''v2'')}}
+:Computes the difference between two vectors (''v2 - v1''), accounting for portals.
+
+*{{c|clearscope vector2 '''{{LE|Vec2Diff}}'''(vector2 ''v1'', vector2 ''v2'')}}
+:Does the same as above, but with vector2 variables that only store the XY coordinates instead.
+
+*{{c|clearscope vector3 '''{{LE|Vec3Offset}}'''(vector3 ''pos'', vector3 ''dir'' [, bool ''absolute'' &lt;nowiki&gt;=&lt;/nowiki&gt; false])}}
+:Works exactly like the actor-based [[Vec3Offset]], except that it allows you to specify the origin coordinates with ''pos'', and the offset with ''dir''. Instead of the origin being the calling actors'.
+
+*{{c|clearscope vector3 '''{{LE|[[SphericalCoords]]}}'''(vector3 ''viewpoint'', vector3 ''targetPos'' [, vector2 ''viewAngles''] [, bool ''absolute''])}}
+:Computes [[Wikipedia:Spherical coordinate system|spherical coordinates]] (yaw, pitch, and distance) between two points in the level.
+
+*{{c|bool '''{{LE|IsJumpingAllowed}}'''()}}
+:Returns true if [[jumping]] is allowed in the current level.
+
+*{{c|bool '''{{LE|IsCrouchingAllowed}}'''()}}
+:Returns true if [[crouching]] is allowed in the current level.
+
+*{{c|bool '''{{LE|IsFreelookAllowed}}'''()}}
+:Returns true if [[freelook]] is allowed in the current level.
+
+*{{c|string '''{{LE|GetChecksum}}'''()}}
+:Retrieves the {{wp|MD5|MD5 checksum}} of the current level.
+
+*{{c|void '''{{LE|[[ChangeSky (ZScript) | ChangeSky]]}}'''(TextureID ''sky1'', TextureID ''sky2'')}}
+:Works similarly to the ACS [[ChangeSky]] function, but accepts TextureIDs instead of using texture names.
+
+*{{c|void '''{{LE|ForceLightning}}'''(int ''mode'' {{=}} 0, sound ''tempSound'' {{=}} "")}}
+:Forces the map to create a [[lightning]] strike. And can also have a custom sound play for that particular strike that's different from the maps' ''LightningSound''. The modes are the same as on the [[Light_ForceLightning]] special.
+
+*{{c|SectorTagIterator '''CreateSectorTagIterator'''(int ''tag'', line ''defline'' }}={{c| null)}}
+:Creates a {{class|SectorTagIterator}} to find {{struct|Sector|sectors}} with a specified [[tag]].
+
+*{{c|LineIdIterator '''CreateLineIdIterator''(int ''tag'')}}
+:Creates a {{class|LineIdIterator}}.
+
+*{{c|ActorIterator '''CreateActorIterator'''(int ''tid'', class&lt;Actor&gt; ''type'' }}={{c| "Actor")}}
+:Creates a {{class|ActorIterator}}. Functions as a replacement for &lt;code&gt;ActorIterator.Create()&lt;/code&gt;.
+
+*{{c|int '''{{LE|IsFrozen}}'''()}}
+:Returns 1 or above if the level is frozen. And 0 if it is not.
+
+*{{c|bool '''{{LE|SetFrozen}}'''(bool ''On'')}}
+:Freezes the level if the On boolean is set to true.
+
+*{{c|void '''{{LE|ExitLevel}}'''(int ''Position'', bool ''KeepFacing'')}}
+:Exits the level at the specified player spot of the next map defined in [[MAPINFO]], is 0 by default. If KeepFacing is true, the player retains the direction they were facing.
+
+*{{c|void '''{{LE|SecretExitLevel}}'''(int ''Position'')}}
+:Exits to the secret map defined for the current map in MAPINFO, position specifies which player start spot to start the new level in. Default is 0.
+
+*{{c|void '''[[ChangeLevel (ZScript) | ChangeLevel]]'''(string levelname, int position }}={{c| 0, int flags }}={{c| 0, int skill }}={{c| -1)}}
+:Changes the level to the one given to the LevelName parameter. Also includes parameters to specify the position to enter at, and the flags and skill level to use.
+
+*{{c|void '''{{LE|GiveSecret}}'''(Actor ''Activator'', bool ''PrintMsg'', bool ''PlaySound'')}}
+:Gives a secret to an actor, who is the actor that run the function by default. The PrintMsg and PlaySound booleans print the "A secret is revealed !" message and play the secret sound if set to true, respectively.
+
+*{{c|void '''{{LE|StartSlideshow}}'''(Name ''WhichOne'')}}
+:Starts a Strife slideshow, the name of the slideshow to start is defined on the WhichOne parameter.
+
+*{{c|void '''{{LE|SetInterMusic}}'''(string ''NextMap'')}}
+:Sets the music of the current level to that of the map specified in the NextMap parameter.
+
+*{{c|void '''{{LE|[[ReplaceTextures (ZScript) | ReplaceTextures]]}}'''(string ''From'',string ''To'',int ''Flags'')}}
+:Replace all the textures in the level specified in the ''From'' parameter to the ones specified in ''To'', also includes several flags to set exceptions for what instances of the ''From'' texture are replaced.
+
+*{{c|clearscope bool '''{{LE|IsPointInLevel}}'''(vector3 ''p'')}}
+:Returns true if the P vector is a within the level boundaries, false if it is in the void.
+
+*{{c|Sector '''{{LE|PointInSector}}'''(vector2 ''pt'')}}
+:Returns a pointer to the the sector where the specified coordinates are located. 
+
+*{{c|bool '''{{LE|[[SpawnParticle_(ZScript)|SpawnParticle]]}}'''(FSpawnParticleParams ''p'')}}
+:Spawns a particle with parameters passed by a ''FSpawnParticleParams'' struct.
+
+*{{c|VisualThinker '''[[SpawnVisualThinker]]''' (Class&lt;VisualThinker&gt; ''type'')}}
+:Spawns a {{class|VisualThinker}} and returns a pointer to it.
+
+*{{c|String '''GetUDMFString'''(int type, int index, Name key)}}
+
+*{{c|int '''GetUDMFInt'''(int type, int index, Name key)}}
+
+*{{c|double '''GetUDMFFloat'''(int type, int index, Name key)}}
+
+*{{c|play int '''ExecuteSpecial'''(int special, Actor activator, line linedef, bool lineside, int arg1 }}={{c| 0, int arg2 }}={{c| 0, int arg3 }}={{c| 0, int arg4 }}={{c| 0, int arg5 }}={{c| 0)}}
+
+*{{c|void '''WorldDone'''()}}
+
+*{{c|ui Vector2 '''GetAutomapPosition'''()}}
+
+*{{c|String '''FormatMapName'''(int mapnamecolor)}}
+
+*{{c|void '''StartIntermission'''(Name type, int state) const}}
+
+*{{c|play SpotState '''GetSpotState'''(bool create }}={{c| true)}}
+
+*{{c|int '''FindUniqueTid'''(int start }}={{c| 0, int limit }}={{c| 0)}}
+
+*{{c|uint '''GetSkyboxPortal'''(Actor actor)}}
+
+*{{c|clearscope HealthGroup '''FindHealthGroup'''(int id)}}
+
+*{{c|vector3, int '''PickDeathmatchStart'''()}}
+
+*{{c|vector3, int '''PickPlayerStart'''(int pnum, int flags }}={{c| 0)}}
+
+*{{c|string '''LookupString'''(uint index)}}
+
+*{{c|play bool '''CreateCeiling'''(sector sec, int type, line ln, double speed, double speed2, double height }}={{c| 0, int crush }}={{c| -1, int silent }}={{c| 0, int change }}={{c| 0, int crushmode }}={{c| 0)}}
+*{{c|play bool '''CreateFloor'''(sector sec, int floortype, line ln, double speed, double height }}={{c| 0, int crush }}={{c| -1, int change }}={{c| 0, bool crushmode }}={{c| false, bool hereticlower }}={{c| false)}}
+*{{c|String '''GetClusterName'''()}}
+*{{c|String '''GetEpisodeName'''()}}
+*{{c|clearscope Vector2 '''GetDisplacement'''(int pg1, int pg2)}}
+*{{c|clearscope int '''GetPortalGroupCount'''()}}
+*{{c|clearscope int '''PointOnLineSide'''(Vector2 pos, Line l, bool precise }}={{c| false)}}
+*{{c|clearscope int '''ActorOnLineSide'''(Actor mo, Line l)}}
+*{{c|clearscope int '''BoxOnLineSide'''(Vector2 pos, double radius, Line l)}}
+
+== Variables ==
+This is a list of all the level variables inside the LevelLocals struct, with descriptions of what each of them contains, they can be read to retrieve level info, and if they aren't set as read only, modify it as well.
+
+=== Level geometry arrays ===
+The arrays below store all the different parts of the levels' geometry.
+*{{c|Array&lt;@Sector&gt; '''Sectors'''}}
+:This array stores all of the [[Structs:Sector|sectors]] in the current map.
+
+*{{c|Array&lt;@Line&gt; '''Lines'''}}
+:This array stores all of the [[Structs:Line|linedefs]] in the current map.
+
+*{{c|ReadOnly Array&lt;@Side&gt; '''Sides'''}}
+:This array stores all of the [[Structs:Side|sidedefs]] in the current map.
+
+*{{c|Array&lt;@Vertex&gt; '''Vertexes'''}}
+:This array stores all of the [[Structs:Vertex|vertices]] in the current map.
+
+*{{c|Array&lt;@LinePortal&gt; '''LinePortals'''}}
+:This array stores all the [[Structs:LinePortal|line portals]] in the current map.
+
+*{{c|Array&lt;@SectorPortal&gt; '''SectorPortals'''}}
+:This array stores all of the [[Structs:SectorPortal|sector portals]] in the current map.
+
+=== Level data ===
+*{{c|readonly int '''Time'''}}
+:The time in [[tics]] that has elapsed in the current hub.
+
+*{{c|readonly int '''MapTime'''}}
+:The time in tics since the beginning of the current map.
+
+*{{c|readonly int '''TotalTime'''}}
+:The total time in tics that has elapsed inside the game, hubs included.
+
+*{{c|readonly int '''StartTime'''}}
+:The time in tics in which the current map begun.
+
+*{{c|readonly int '''ParTime'''}}
+:The par time of the current level, in seconds.
+
+*{{c|readonly int '''SuckTime'''}}
+:The suck time of the current level, in hours.
+
+*{{c|readonly int '''Cluster'''}}
+:The number of the [[cluster]] the map is in.
+
+*{{c|readonly int '''ClusterFlags'''}}
+:{{Template:Moreinfo}}
+
+*{{c|readonly int '''LevelNum'''}}
+:The identification number of the current level. Used by the [[Teleport_NewMap]] special.
+
+*{{c|readonly String '''Levelname'''}}
+:Contains the "nice" name of the current level. That is to say, the one that appears in places such as the intermission screens.
+
+*{{c|readonly String '''Mapname'''}}
+:Contains the lump/file name of the current level. e.g MAP32 
+
+*{{c|readonly String '''NextMap'''}}
+:The name of the next map that is defined in MAPINFO.
+
+*{{c|readonly String '''NextSecretMap'''}}
+:The name of the next secret map that is defined in MAPINFO.
+
+*{{c|readonly String '''F1Pic'''}}
+:The name of the graphic that appears when you press F1.
+
+*{{c|readonly int '''MapType'''}}
+:{{Template:Moreinfo}}
+
+*{{c|readonly String '''Authorname'''}}
+:The name of the maps' author.
+
+*{{c|readonly String '''Music'''}}
+:The name of the current music file playing on the map.
+
+*{{c|readonly int '''MusicOrder'''}}
+:The number of the current track playing on the map, useful if the map uses a music file that can contain multiple tracks. Otherwise returns 0.
+
+*{{c|readonly TextureID '''SkyTexture1'''}}
+:The TextureID of the texture currently used by the main sky layer.
+
+*{{c|readonly TextureID '''SkyTexture2'''}}
+:Same as above, but for the second/background sky layer.
+
+*{{c|float '''SkySpeed1'''}}
+:The speed which the main sky layer scrolls at. 0 by default.
+
+*{{c|float '''SkySpeed2'''}}
+:Same as above, but for the background sky layer.
+
+*{{c|String '''LightningSound'''}}
+:The sound that lightning makes on this map when it strikes, default is "world/thunder".
+
+*{{c|int '''Total_Secrets'''}}
+:The total amount of secrets on the map.
+
+*{{c|int '''Found_Secrets'''}}
+:The amount of secrets that have been found so far.
+
+*{{c|int '''Total_Items'''}}
+:The total amount of items on the map.
+
+*{{c|int '''Found_Items'''}}
+:The amount of items that have been acquired so far.
+
+*{{c|int '''Total_Monsters'''}}
+:The total monster count of the map.
+
+*{{c|int '''Killed_Monsters'''}}
+:The amount of monsters that have been killed so far.
+
+*{{c|double '''Gravity'''}}
+:The level-wide amount of [[gravity]] on the map. Defaults to 800.
+
+*{{c|double '''AirControl'''}}
+:The amount of control the player has over their movement while airborne. Defaults to 0.00390625.
+
+*{{c|double '''AirFriction'''}}
+:The amount of [[friction]] the player and other actors experience while airborne. Defaults to 65321 (99.67% of momentum is retained.)
+
+*{{c|int '''AirSupply'''}}
+:The amount of time in seconds the player can stay underwater before beginning to drown.
+
+*{{c|readonly double '''TeamDamage'''}}
+:A multiplier that increases or decreases the amount of damage players receive by other team mates in Team Deathmatch and Cooperative modes. Defaults to 1.
+
+*{{c|readonly Bool '''NoInventoryBar'''}}
+:Prevents the inventory bar from appearing in the map if set to true.
+
+*{{c|readonly Bool '''MonsterTelefrag'''}}
+:If true, allows all monsters to be able to telefrag each other and players, with the exception of monsters with the {{Flag|NOTELESTOMP}} flag.
+
+*{{c|readonly Bool '''ActOwnSpecial'''}}
+:If true, when an actor with a special dies, it is considered its' own activator instead of the actors' killer, which is the default behaviour.
+
+*{{c|readonly Bool '''SndSeqTotalCtrl'''}}
+:If true, the sound sequence that a sector plays when it moves is whichver has an ID of 0. Instead of whatever sound sequence is defined by the special used to move the sector playing.
+
+*{{c|Bool '''Allmap'''}}
+:Used to toggle display of unexplored lines in the [[Automap]]. Typically set to true when inventory items of the {{class|MapRevealer}} class are picked up. Setting to false after the pickup will cause the automap to no longer draw unexplored lines, thus reverting the effect.
+
+*{{c|readonly Bool '''MissilesActiveImpact'''}}
+:If true, the missile that hit a line is considered to be the lines' activator, instead of the missiles' shooter.
+
+*{{c|readonly Bool '''MonsterFallingDamage'''}}
+:If set to true, monsters will receive falling damage from falling from too high.
+
+*{{c|readonly Bool '''CheckSwitchRange'''}}
+:If set to true, a height check is performed when the player uses a switch, to prevent them from being able to activate switches far above their hitbox, false by default.
+
+*{{c|readonly Bool '''PolyGrind'''}}
+:If set to true, polyobjects crush monster and player corpses to gibs when crossing over them. False by default.
+
+*{{c|readonly Bool '''NoMonsters'''}}
+:If set to true, no monsters will spawn in the map.
+
+*{{c|readonly Bool '''AllowRespawn'''}}
+:If set to true, the player will respawn after being killed like in a co-op game.
+
+*{{c|readonly Bool '''Infinite_Flight'''}}
+:If set to true, flight powerups will last indefinitely in the map.
+
+*{{c|readonly Bool '''No_Dlg_Freeze'''}}
+:{{Template:Moreinfo}}
+
+*{{c|readonly Bool '''KeepFullInventory'''}}
+:If set to true, players will not have the quantity of all their inventory items reduced to 1 when they exit this map, if it isn't part of a hub.
+
+*{{c|readonly Bool '''RemoveItems'''}}
+:If set to true, the player loses all their items once leaving the map, except for those with the {{Flag|INVENTORY_UNDROPPABLE}} flag.
+
+*{{c|readonly int '''FogDensity'''}}
+:The level-wide fog density of a map.
+
+*{{c|readonly int '''OutsideFogDensity'''}}
+:The level-wide outside fog density of a map.
+
+*{{c|readonly int '''SkyFog'''}}
+:A fog density value for regular skies that is separate from {{c|FogDensity}} and {{c|OutsideFogDensity}}, giving mappers more control over how fog/fade gets applied to the [[Sky]]. This does not affect the six-sided [[Skybox]].
+
+*{{c|readonly double '''PixelStretch'''}}
+:The amount by which pixels are stretched in the level, used to emulate Dooms' aspect ratio correction. Is 1.2 by default.
+
+*{{c|readonly double '''MusicVolume'''}}
+:The volume at which the music on the map plays, is 1.0 by default and cannot go higher.
+
+*{{c|name '''DeathSequence'''}}
+:The intermission sequence the player goes in if they die in the current map.
+
+*{{c|readonly int '''CompatFlags'''}}
+:The field in which map-specific [[compatibility options]] are stored.
+
+*{{c|readonly int '''CompatFlags'''}}
+:Same as above, but this is the second field used by compatibility flags.
+
+*{{c|readonly LevelInfo '''info'''}}
+:A pointer to the [[Structs:LevelInfo|LevelInfo struct]] for the current map.
+
+[[Category:ZScript]]
+[[Category:Structs]]
+[[Category:LevelLocals]]
+[[Category:ZScript map data]]</text>
+    <sha1>r1spcnwmyd4ncuinvtg54xm34584lkf</sha1>
+  </revision>
+</page>

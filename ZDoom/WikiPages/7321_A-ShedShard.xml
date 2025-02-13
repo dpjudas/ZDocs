@@ -1,0 +1,40 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>A ShedShard</title>
+  <ns>0</ns>
+  <id>7321</id>
+  <revision>
+    <id>32698</id>
+    <parentid>32683</parentid>
+    <timestamp>2012-05-05T21:28:48Z</timestamp>
+    <contributor>
+      <username>Blzut3</username>
+      <id>413</id>
+    </contributor>
+    <minor />
+    <comment>Missing function protocol</comment>
+    <origin>32698</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="1663" sha1="enovmo6lzhxvn0axygjbb1q53gqhj80" xml:space="preserve">{{Codepointer|r=Hexen|Spawn}}
+'''A_ShedShard'''&lt;br&gt;
+(''no parameter'')&lt;br&gt;
+
+Creates new {{Class|FrostMissile}}s if the calling actor's {{c|special2}} counter is greater than zero. The direction in which these new missiles will be spawned depend on {{c|special1}}, used as a flag array:
+*1: Left
+*2: Right
+*4: Up
+*8: Down
+If {{c|special1}} is 15, four new missiles will be created. In any case, the newly-created missiles will have their {{c|special2}} set to one less than the calling actor's, and their first argument set to 2 or 0 depending on whether the calling actor's {{c|special2}} is 3 or not. The spawned missiles share the calling actor's {{c|target}}. Other aspects depend on the spawned missile's direction:
+
+;Left and right:
+:A new missile is created at the calling actor's position, going at a horizontal angle of 5° in the appropriate direction. The new missile's {{c|special1}} is set to only left or right, as appropriate. Its vertical velocity is the same as the calling actor's, but its horizontal velocity depends on the calling actor's {{c|special2}}, using this formula:
+::''velocity = 20 + 2 * ({{c|special2}} - 1)''
+
+;Up and down:
+:A new missile is created eight map units above or below the calling actor. The new missile's {{c|special1}} is set to up or down as appropriate, as well as left and right if the calling actor's {{c|special2}} is an even number. Its vertical velocity is the same as the calling actor's, but its horizontal velocity depends on the calling actor's {{c|special2}}, using this formula:
+::''velocity = 15 + 2 * ({{c|special2}} - 1)''
+
+This codepointer is restricted to {{Class|FrostMissile}} and derived classes.</text>
+    <sha1>enovmo6lzhxvn0axygjbb1q53gqhj80</sha1>
+  </revision>
+</page>

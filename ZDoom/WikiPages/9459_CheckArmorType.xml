@@ -1,0 +1,51 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>CheckArmorType</title>
+  <ns>0</ns>
+  <id>9459</id>
+  <revision>
+    <id>52310</id>
+    <parentid>47972</parentid>
+    <timestamp>2024-04-08T18:13:25Z</timestamp>
+    <contributor>
+      <username>Jekyll Grim Payne</username>
+      <id>2175</id>
+    </contributor>
+    <comment>Formatting</comment>
+    <origin>52310</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="858" sha1="5aye4g81aojp5z5jhdbuzx9x257kd3v" xml:space="preserve">{{ZScriptNote}}
+__NOTOC__
+
+'''{{class|Actor}}'''
+
+{{c|bool '''CheckArmorType'''(name ''Type'', int ''amount'' }}={{c| 1)}}
+
+== Usage ==
+Checks to see if the Actor has a certain amount of the provided armor type.
+
+=== Parameters ===
+*{{c|Name '''Type'''}}
+:The name of the armor class to check for.
+*{{c|int '''amount'''}}
+:Default is 1. The minimum amount of armor needed.
+
+=== Return value ===
+Returns true if the Actor has the correct armor type with at least the amount provided.
+
+== Examples ==
+{{noexamples}}
+
+== [[ZScript]] definition ==
+{{ZScriptDefinitionNote|actors/checks.zs#L111}}
+&lt;syntaxhighlight lang="csharp"&gt;
+bool CheckArmorType(name Type, int amount = 1)
+{
+    let myarmor = BasicArmor(FindInventory("BasicArmor"));
+    return myarmor != null &amp;&amp; myarmor.ArmorType == type &amp;&amp; myarmor.Amount &gt;= amount;
+}&lt;/syntaxhighlight&gt;
+
+[[Category:ZScript]]</text>
+    <sha1>5aye4g81aojp5z5jhdbuzx9x257kd3v</sha1>
+  </revision>
+</page>

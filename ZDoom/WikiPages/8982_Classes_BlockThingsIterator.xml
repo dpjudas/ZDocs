@@ -1,0 +1,169 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>Classes:BlockThingsIterator</title>
+  <ns>0</ns>
+  <id>8982</id>
+  <revision>
+    <id>53822</id>
+    <parentid>53587</parentid>
+    <timestamp>2024-11-22T10:16:02Z</timestamp>
+    <contributor>
+      <username>Jekyll Grim Payne</username>
+      <id>2175</id>
+    </contributor>
+    <minor />
+    <origin>53822</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="5260" sha1="peik2f1rt8i7u01kh1fchbeuf69tkh4" xml:space="preserve">{{ZScriptNote}}
+
+'''BlockThingsIterator''' is a type of iterator used to search for entities that are within the [[Blockmap]]. This excludes all actors with the NOBLOCKMAP flag. Any Actor in a blockmap square within the provided radius is taken, so this does not guarantee they are at radius distance or lower (manual checking will have to be done if a strict distance is necessary). Generally they are best used for getting surrounding Actors within a small area as opposed to every Actor. 
+
+== Variables ==
+*{{c|Actor '''thing'''}}
+:The [[actor]] the iterator is currently checking.
+*{{c|Vector3 '''position'''}}
+:The xy map position for the origin of the check relative to the Actor. The z value is the radius that was given
+*{{c|int '''portalflags'''}}
+:Used to signify what [[Portal]]-related flags were used when getting the Actor.
+
+== Methods ==
+=== Static ===
+The iterator can be initalized with either {{c|Create()}} or {{c|CreateFromPos()}} methods. Both are static methods and must be called as &lt;code&gt;BlockThingsIterator.Create&lt;/code&gt;/&lt;code&gt;BlockThingsIterator.CreateFromPos&lt;/code&gt;.
+
+*{{c|BlockThingsIterator '''Create'''(Actor ''origin'', double ''checkradius'' }}={{c| -1, bool ''ignorerestricted'' }}={{c| false)}}
+:Initializes the iterator upon a pointer.
+:*{{c|Actor '''origin'''}}
+::A pointer to an Actor to perform the search upon. To perform it on the calling actor, '''self''' can be used.
+:*{{c|double '''checkradius'''}}
+::The radius to search. Default is -1, interpreted as "use the pointer's radius".
+:*{{c|bool '''ignorerestricted'''}}
+::Does nothing.
+
+
+*{{c|BlockThingsIterator '''CreateFromPos'''(double ''checkx'', double ''checky'', double ''checkz'', double ''checkh'', double ''checkradius'', bool ''ignorerestricted'')}}
+:Initializes the iterator upon a vector.
+:*{{c|double '''checkx'''}}
+:*{{c|double '''checky'''}}
+:*{{c|double '''checkz'''}}
+::The map coordinates to set the origin of the search to.
+:*{{c|double '''checkh'''}}
+::The height to use for the origin point. Important for getting correct portal information.
+:*{{c|double '''checkradius'''}}
+::The radius to search from the origin.
+:*{{c|bool '''ignorerestricted'''}}
+::Does nothing.
+
+=== Non-static ===
+*{{c|bool '''Next'''()}}
+:Moves to the next actor found by the iterator. Returns &lt;code&gt;false&lt;/code&gt; if there are no more entities.
+
+== Examples ==
+This function returns how many solid Actors there are within ''rad'' distance.
+
+&lt;syntaxhighlight lang="csharp"&gt;
+int CountPotentialBlockers(double rad)
+{
+   // Create the iterator
+   BlockThingsIterator it = BlockThingsIterator.Create(self, rad);
+   Actor mo;
+   int blockers;
+
+   while (it.Next())
+   {
+       mo = it.thing; // Get the Actor it's currently on
+       if (!mo || !mo.bSolid || Distance2D(mo) &gt; rad)
+       {
+           continue;
+       }
+       ++blockers;
+   }
+
+   return blockers;
+}&lt;/syntaxhighlight&gt;
+
+This is a more detailed example: this projectile (reusing [[Classes:Cell|Cell]] sprites) explodes like a [[Classes:Rocket|Rocket]] when hitting a bleeding actor (by entering its [[Actor states|XDeath state sequence]]), but if it falls on the floor, it'll function as a proximity mine that can be activated by either players or monsters (aside from the projectile's target, i.e. whoever fired it):
+
+&lt;syntaxhighlight lang="csharp"&gt;
+class ProximityMineProjectile : Actor
+{
+	// This will the mine's activation radius:
+	const DETECTRADIUS = 160;
+	
+
+	Default
+	{
+		// This turns the green lights on the cell pack red:
+		Translation "117:117=176:176";
+		Projectile;
+		-NOGRAVITY;
+		gravity 0.6;
+		speed 15;
+	}
+	
+	States 
+	{
+	Spawn:
+		CELL A -1;
+		stop;
+	Death:
+		CELL A 1
+		{
+		
+			// Create an iterator to cover the effective radius:
+			BlockThingsIterator it = BlockThingsIterator.Create(self, DETECTRADIUS);
+			while (it.Next())
+			{
+				// Get a shorter pointer to the found actor (for convenience):
+				let obj = it.thing;
+				
+				// Check the object is either a monster or a player, isn't the same
+				// as the projectile's target (so that the shooter can't trigger it),
+				// then checks that it's alive and within distance:
+				if ((obj.bISMONSTER || obj.player) &amp;&amp; (!target || obj != target) &amp;&amp; obj.health &gt; 0 &amp;&amp; Distance3D(obj) &lt;= DETECTRADIUS)
+				{
+					// Go to the Boom state sequence if the check passes:
+					return ResolveState("Detected");
+				}
+			}
+			
+			// Once a second it'll play a DSTINK sound to emulate beeping:
+			if (GetAge() % TICRATE == 0)
+			{
+				A_StartSound("misc/chat2", volume: 0.4, attenuation: 5);
+			}
+			
+			// If the jump didn't happen, proceed to loop:
+			return ResolveState(null);
+		}
+		loop;
+	Detected:
+		// Make the mine jump up as a visual cue,
+		// then proceed to the explosion sequence:
+		CELL A 8 { vel.z += 8; }
+	XDeath:
+		TNT1 A 0 
+		{
+			// Enable NOGRAVITY so that the explosion animation
+			// isn't subjected to gravity:
+			bNOGRAVITY = true;
+			// Play the Rocket explosion sound:
+			A_StartSound("weapons/rocklx");
+			// Explode; explosion distance is slightly larger
+			// than the detection radius:
+			A_Explode(192, DETECTRADIUS * 1.2);
+		}
+		// Reused rocket explosion sprites:
+		MISL BCD 4 bright;
+		stop;
+	}
+}&lt;/syntaxhighlight&gt;
+
+== See Also ==
+* [[ZScript]]
+* [[ZScript classes]]
+
+[[Category:ZScript]]
+[[Category:ZScript iterators]]</text>
+    <sha1>peik2f1rt8i7u01kh1fchbeuf69tkh4</sha1>
+  </revision>
+</page>

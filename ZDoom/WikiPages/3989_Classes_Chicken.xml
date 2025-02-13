@@ -1,0 +1,76 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>Classes:Chicken</title>
+  <ns>0</ns>
+  <id>3989</id>
+  <revision>
+    <id>39327</id>
+    <parentid>34050</parentid>
+    <timestamp>2015-04-29T17:15:02Z</timestamp>
+    <contributor>
+      <username>Blue Shadow</username>
+      <id>2021</id>
+    </contributor>
+    <minor />
+    <comment>/* DECORATE definition */ Updated</comment>
+    <origin>39327</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="1484" sha1="enipil59e14phj7509rjvzet4rwl170" xml:space="preserve">{{Actor|
+| type = Monster
+| name = Chicken
+| class = Chicken
+| game = Heretic
+| spawnid = 122
+| spawnname = T_CHICKEN 
+}}[[Classes]]: [[Classes:MorphedMonster|MorphedMonster]]&amp;rarr;&lt;u&gt;Chicken&lt;/u&gt;&lt;br&gt;
+Monsters hit by a [[Classes:ArtiEgg|morph ovum]] [[Classes:EggFX|shot]], unless immune to morphing thanks to the {{flag|DONTMORPH}} flag, are turned into this. 
+
+==== [[DECORATE]] definition ====
+ ACTOR &lt;u&gt;Chicken&lt;/u&gt; : {{Class|MorphedMonster}}
+ {
+   {{Property|Health}} 10
+   {{Property|Radius}} 9
+   {{Property|Height}} 22
+   {{Property|Mass}} 40
+   {{Property|Speed}} 4
+   {{Property|PainChance}} 200
+   {{Property|Monster}}
+   -{{Flag|COUNTKILL}}
+   +{{Flag|WINDTHRUST}}
+   +{{Flag|DONTMORPH}}
+   +{{Flag|FLOORCLIP}}
+   {{Property|SeeSound}} "chicken/pain"
+   {{Property|AttackSound}} "chicken/attack"
+   {{Property|PainSound}} "chicken/pain"
+   {{Property|DeathSound}} "chicken/death"
+   {{Property|ActiveSound}} "chicken/active"
+   {{Property|Obituary}} "$OB_CHICKEN"
+   States
+   {
+   Spawn:
+     CHKN AB 10 [[A_Look]]
+     Loop
+   See:
+     CHKN AB 3 [[A_Chase]]
+     Loop
+   Pain:
+     CHKN D 5 [[A_Feathers]]
+     CHKN C 5 [[A_Pain]]
+     Goto See
+   Melee:
+     CHKN A 8 [[A_FaceTarget]]
+     CHKN C 10 [[A_CustomMeleeAttack]]([[DECORATE_expressions#Mathematical_functions|random]][ChicAttack](1,2))
+     Goto See
+   Death:
+     CHKN E 6 [[A_Scream]]
+     CHKN F 6 [[A_Feathers]]
+     CHKN G 6
+     CHKN H 6 [[A_NoBlocking]]
+     CHKN IJK 6
+     CHKN L -1
+     Stop
+   }
+ }</text>
+    <sha1>enipil59e14phj7509rjvzet4rwl170</sha1>
+  </revision>
+</page>

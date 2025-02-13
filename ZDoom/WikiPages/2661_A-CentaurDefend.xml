@@ -1,0 +1,51 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>A CentaurDefend</title>
+  <ns>0</ns>
+  <id>2661</id>
+  <revision>
+    <id>36251</id>
+    <parentid>36238</parentid>
+    <timestamp>2013-04-27T08:42:38Z</timestamp>
+    <contributor>
+      <username>Blue Shadow</username>
+      <id>2021</id>
+    </contributor>
+    <minor />
+    <comment>/* Examples */</comment>
+    <origin>36251</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="1257" sha1="lehf3yn9j8buwcc7oqzxt2bg3vsfqi3" xml:space="preserve">{{codepointer|Monster AI}}
+'''A_CentaurDefend'''
+
+(no parameters)
+
+== Usage ==
+
+Calls [[A_FaceTarget]]. If the target is within melee range of the calling actor, there is a 12.5% chance that the calling actor clears its {{Flag|REFLECTIVE}} and {{Flag|INVULNERABLE}} flags and goes into its Melee [[actor states|state]].
+
+== Examples ==
+
+ ACTOR MirrorImp : {{Class|DoomImp}}
+ {
+   States
+   {
+   Pain:
+     TROO H 6 [[A_Pain]]
+     TROO H 6 [[A_SetReflectiveInvulnerable]]
+     TROO FFF 15 [[A_CentaurDefend]]
+     TROO F 1 [[A_UnsetReflectiveInvulnerable]]
+     Goto See
+   Melee:
+     TROO EF 4 [[A_FaceTarget]]
+     TROO G 3 [[A_CustomMeleeAttack]](50, "skeleton/melee", "none")
+     Goto See
+   }
+ }
+
+This is a modified Imp using the same guard stance as the centaur when it enters the pain state. When the imp is hurt, it will stop moving and become invulnerable and reflective for a short time. But if the player is too close to it, '''A_CentaurDefend''' has a chance to make the imp switch to its melee state and deliver a dangerously powerful blow to the player.
+
+'''A_CentaurDefend''' works together with [[A_SetReflectiveInvulnerable]] and [[A_UnsetReflectiveInvulnerable]], and would not make much sense without the other two in the correct order.</text>
+    <sha1>lehf3yn9j8buwcc7oqzxt2bg3vsfqi3</sha1>
+  </revision>
+</page>

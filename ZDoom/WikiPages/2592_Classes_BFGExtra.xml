@@ -1,0 +1,64 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>Classes:BFGExtra</title>
+  <ns>0</ns>
+  <id>2592</id>
+  <revision>
+    <id>48898</id>
+    <parentid>48487</parentid>
+    <timestamp>2021-12-27T11:12:20Z</timestamp>
+    <contributor>
+      <username>Jekyll Grim Payne</username>
+      <id>2175</id>
+    </contributor>
+    <comment>updated in accordance with updated ZScriptDefinitionNote template</comment>
+    <origin>48898</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="909" sha1="4fjp4wkv5cprr093akp2kn3uer1ihmq" xml:space="preserve">{{Actor|
+| type = Explosive
+| name = BFG9000 tracer explosion
+| class = BFGExtra
+| game = Doom
+}}[[Classes]]: &lt;u&gt;BFGExtra&lt;/u&gt;
+
+
+The flash displayed when an actor falls into one of the [[A_BFGSpray|tracers]] of a [[Classes:BFGBall|BFG Ball]].
+==== [[ZScript]] definition ====
+{{ZScriptDefinitionNote|actors/doom/weaponbfg.zs#L164}}
+ class BFGExtra : Actor
+ {
+ 	Default
+ 	{
+ 		+{{Flag|NOBLOCKMAP}}
+ 		+{{Flag|NOGRAVITY}}
+ 		+{{Flag|ZDOOMTRANS}}
+ 		{{Property|RenderStyle}} "Add";
+ 		{{Property|Alpha}} 0.75;
+ 		{{Property|DamageType}} "BFGSplash";
+ 	}
+ 	States
+ 	{
+ 	Spawn:
+ 		BFE2 ABCD 8 Bright;
+ 		Stop;
+ 	}
+ }
+==== [[DECORATE]] definition ====
+{{DecorateDefinitionNote}}
+ ACTOR &lt;u&gt;BFGExtra&lt;/u&gt;
+ {
+   +{{Flag|NOBLOCKMAP}}
+   +{{Flag|NOGRAVITY}}
+   {{Property|RenderStyle}} Add
+   {{Property|Alpha}} 0.75
+   {{Property|DamageType}} "BFGSplash"
+   States
+   {
+   Spawn:
+     BFE2 ABCD 8 Bright
+     Stop
+   }
+ }</text>
+    <sha1>4fjp4wkv5cprr093akp2kn3uer1ihmq</sha1>
+  </revision>
+</page>

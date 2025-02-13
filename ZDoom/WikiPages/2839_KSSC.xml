@@ -1,0 +1,77 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>KSSC</title>
+  <ns>0</ns>
+  <id>2839</id>
+  <revision>
+    <id>38216</id>
+    <parentid>34444</parentid>
+    <timestamp>2014-08-30T17:47:17Z</timestamp>
+    <contributor>
+      <username>Kingcodefish</username>
+      <id>2148</id>
+    </contributor>
+    <minor />
+    <origin>38216</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="4052" sha1="qorx4v3w6aij22kgzwgwmoixl98r899" xml:space="preserve">'''KSSC''' is a [[DIALOGUE|conversation script]] compiler for Rogue Software's Strife with support for [[Vavoom]], [[ZDoom]] and SvStrife. 
+
+To compile a script, drag and drop a text file on KSSC.exe to compile it into a binary lump file. 
+Output file will be the named whatever your input file is. 
+To use the script for your wad, rename the lump to SCRIPTXX where XX is the number of the map you want to use it on. For example if you wish to use it on Map02, then rename the script to SCRIPT02.lmp. 
+Simply import the lump into your wad after your done renaming. 
+
+== Strife script breakdown ==
+Conversations are stored as dialog blocks for a NPC, each NPC can have multiple dialog blocks, and each block sets the text, name, choices etc for that NPC. 
+
+Each dialog block is divided into two sections: NPC info and Choice info. NPC info is used for the name, voice, panel, item thats dropped, and dialog text for the NPC. While the Choice info describes the various choices, items to check/buy, and used to jump to the next dialog block. 
+
+When a NPC jumps to the next block, it displays another set of text/info for the NPC. 
+
+Here are some of the tokens you must specify in the script. 
+Basic stuff: 
+    # - Comment 
+    &amp;&amp; - Quote. Note, you don't have to use quotes for strings with no spaces 
+    To make a blank string, add "&amp;&amp;" 
+
+== NPC info ==
+*ACTOR - {{Property|ConversationID}} for the NPC 
+*DROP - {{Property|ConversationID}} of the item to drop when killed 
+*IF_ITEM - {{Property|ConversationID}} of the item to check 
+*GOTO - Dialogue to jump to if IF_ITEM passes 
+*NAME - Name of NPC (16 character limit) 
+*VOICE - Voice file to play (8 character limit) 
+*PANEL - Panel to display (8 character limit) 
+*DIALOG - Text to display (320 character limit) 
+
+== Choice info==
+Note when writing choices, you must start off by adding the '{' token followed by these choice options: 
+
+*TEXT - Text for that choice (32 character limit) 
+*GIVEMOBJ - The {{Property|ConversationID}} of the item to give when the player selects this choice. This option is always called when the player selects the choice. To avoid this option from being called, you must specify a -1 for the value. 
+*IF_HAS - Item to check when selecting the choice. Followed after the item #, you must specify how much of that item is required. To do so you must add the '*' followed by the number amount. EX - (IF_HAS 168 * 20 -this means you must have 20 of item # 168) (COST can now do prices. COST uses the same syntax)
+*YES - the text to display on the hud when choosing the choice. NOTE: if not specified the text will default to "You got the %!" To leave it blank, you must add "_". Don't use &amp;&amp; (80 character limit) 
+*LINK - Dialog block to jump after selecting the choice 
+*LOG - Log lump file to display in hud (example: LOGXXXX.lmp, XXXX is the number to enter - 4 digit limit) 
+*NO - Text to display on hud if IF_HAS fails. Not specifying this will default to "No you don't have what I want for the %!" (80 character limit) 
+
+When done with the choice block, add the '}' token to end it. You may add up to 5 Choice infos 
+
+When done with the entire block, add the token $END 
+
+Basic rule is when making a block, you must always begin with ACTOR and end it with $END. Otherwise the compiler will not compile the script. 
+
+== Note about IF_ITEM and IF_HAS ==
+You may use up to three of these per block. For IF_ITEM, you may specify three different items that can be checked. If one of them is in the player's inventory, then the script will move on to the next block specified as normal. 
+
+IF_HAS is treated differently and can get confusing if not used properly. When using IF_HAS, it will display the text "for %" where % is the item amount. If you wish to NOT have the "for %" text shown, create two IF_HAS, but leave the first option blank (IF_HAS 0 * 0) and acually use the second option. It is unknown what the third one is used for. 
+
+== See also ==
+*[[DIALOGUE]]
+*[[Universal Strife Dialog Format]]
+*[[Strife dialog scripts and ACS]]
+
+[[Category:Dead software]]</text>
+    <sha1>qorx4v3w6aij22kgzwgwmoixl98r899</sha1>
+  </revision>
+</page>

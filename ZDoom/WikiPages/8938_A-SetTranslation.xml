@@ -1,0 +1,50 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>A SetTranslation</title>
+  <ns>0</ns>
+  <id>8938</id>
+  <revision>
+    <id>46206</id>
+    <parentid>46205</parentid>
+    <timestamp>2018-08-29T12:33:39Z</timestamp>
+    <contributor>
+      <username>Blue Shadow</username>
+      <id>2021</id>
+    </contributor>
+    <minor />
+    <origin>46206</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="1183" sha1="dzc1u5m7ul6qil4h83q1ef6rx53xjxd" xml:space="preserve">{{codepointer|Status change}}
+void '''A_SetTranslation''' (name ''transname'')
+
+==Usage==
+Applies a [[TRNSLATE]]-defined [[translation]] to the calling actor. Unlike {{c|[[Thing_SetTranslation]]}}, this accepts an actual name instead of an ID.
+
+===Parameters===
+*''transname'': the name of the translation to use.
+
+== Examples ==
+This is a regular {{Class|Zombieman|zombie}} which has a pain state that allows it to be "glitched", randomly changing its stats, as well as changing its translation.
+
+ ACTOR GlitchyZombie : {{Class|ZombieMan}}
+ { 
+     States
+     {
+     Pain.Glitch:
+         POSS G 1 [[A_PlaySound]]("Glitch/Explode")
+         POSS G 1 [[A_GiveInventory]]("Glitcho", 1)
+         POSS G 1 [[A_SetHealth]]([[DECORATE expressions|random]](1, 200))
+         POSS G 1 [[A_SetSpecies]]("Glitchy")
+         POSS G 1 [[A_SetMass]](random(0, 1000))
+         POSS G 1 [[A_SetSpeed]](random(10, 40))
+         POSS G 1 [[A_ChangeFlag]]("{{Flag|SPRITEFLIP}}", 1)
+         POSS G 1 A_ChangeFlag("{{Flag|NOTIMEFREEZE}}", 1)
+         POSS G 1 A_ChangeFlag("{{Flag|BRIGHT}}", 1)
+         POSS G 1 [[A_SetTranslation]]("Glitch")
+         POSS G 3 [[A_Pain]]
+         Goto See
+     }
+ }</text>
+    <sha1>dzc1u5m7ul6qil4h83q1ef6rx53xjxd</sha1>
+  </revision>
+</page>

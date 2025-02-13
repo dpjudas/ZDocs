@@ -1,0 +1,85 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>Classes:InvisibleBridge</title>
+  <ns>0</ns>
+  <id>4333</id>
+  <revision>
+    <id>53626</id>
+    <parentid>39725</parentid>
+    <timestamp>2024-11-08T11:59:42Z</timestamp>
+    <contributor>
+      <username>Jekyll Grim Payne</username>
+      <id>2175</id>
+    </contributor>
+    <comment>/* DECORATE definition */</comment>
+    <origin>53626</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="1667" sha1="5kp43ob4ii2a4b2qmwr7vzheorj3i54" xml:space="preserve">{{Actor|
+| type = Bridge
+| name = Invisible bridge thing
+| class = InvisibleBridge
+| doomednum = 9990
+}}[[Classes]]: &lt;u&gt;InvisibleBridge&lt;/u&gt;&lt;br&gt;
+&amp;ensp;&amp;rarr;[[Classes:InvisibleBridge8|InvisibleBridge8]]&lt;br&gt;
+&amp;ensp;&amp;rarr;[[Classes:InvisibleBridge16|InvisibleBridge16]]&lt;br&gt;
+&amp;ensp;&amp;rarr;[[Classes:InvisibleBridge32|InvisibleBridge32]]&lt;br&gt;
+
+The invisible bridge is a "3D" element that can be placed at any height and allows players and monsters alike to walk upon it. It is usually combined with midtextures in order to create an approximation of a [[3D floor]], and is in itself invisible.
+
+A bridge (and derived classes) can be customized by giving it non-zero arguments: the first argument is used as its radius, the second as its height. See also [[Classes:CustomBridge|CustomBridge]] for visible bridges.
+
+=== [[ZScript]] definition ===
+{{ZScriptDefinitionNote|actors/shared/bridge.zs}}
+&lt;syntaxhighlight lang="cs"&gt;
+class InvisibleBridge : Actor
+{
+	default
+	{
+		RenderStyle "None";
+		Radius 32;
+		RenderRadius -1;
+		Height 4;
+		+SOLID
+		+NOGRAVITY
+		+NOLIFTDROP
+		+ACTLIKEBRIDGE
+	}
+	States
+	{
+	Spawn:
+		TNT1 A -1;
+		Stop;
+	}
+	
+	override void BeginPlay ()
+	{
+		Super.BeginPlay ();
+		if (args[0] || args[1])
+		{
+			A_SetSize(args[0]? args[0] : radius, args[1]? args[1] : height);
+		}
+	}
+	
+}
+&lt;/syntaxhighlight&gt;
+=== [[DECORATE]] definition ===
+{{DecorateDefinitionNote}}
+ ACTOR &lt;u&gt;InvisibleBridge&lt;/u&gt; native
+ {
+   {{Property|RenderStyle}} None
+   {{Property|Radius}} 32 // Or args[0]
+   {{Property|Height}} 4 // Or args[1]
+   +{{Flag|SOLID}}
+   +{{Flag|NOGRAVITY}}
+   +{{Flag|NOLIFTDROP}}
+   +{{Flag|ACTLIKEBRIDGE}}
+   States
+   {
+   Spawn:
+     TNT1 A -1
+     Stop
+   }
+ }</text>
+    <sha1>5kp43ob4ii2a4b2qmwr7vzheorj3i54</sha1>
+  </revision>
+</page>

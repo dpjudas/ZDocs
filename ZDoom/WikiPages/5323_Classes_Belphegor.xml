@@ -1,0 +1,76 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>Classes:Belphegor</title>
+  <ns>0</ns>
+  <id>5323</id>
+  <revision>
+    <id>21511</id>
+    <timestamp>2009-04-20T13:34:05Z</timestamp>
+    <contributor>
+      <username>Gez</username>
+      <id>1283</id>
+    </contributor>
+    <comment>New page</comment>
+    <origin>21511</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="1482" sha1="cfr866g9y7kkgr50rded86rhwwy3qxp" xml:space="preserve">{{Actor|
+| type = Monster
+| name = Belphegor
+| class = Belphegor
+| game = Skulltag
+| doomednum = 5008
+| spawnid = 215
+| spawnname = T_BELPHEGOR
+}}
+[[Classes]]: {{Class|BaronOfHell}}&amp;rarr;{{Class|HellKnight}}&amp;rarr;&lt;u&gt;Belphegor&lt;/u&gt;&lt;br&gt;
+
+These red and black hell nobles are even stronger and tougher than the {{Class|BaronOfHell|Barons of Hell}}.
+==== [[DECORATE]] definition ====
+ ACTOR &lt;u&gt;Belphegor&lt;/u&gt; : {{Class|HellKnight}} 5008
+ {
+   SpawnID 215
+   Health 1500
+   PainChance 25
+   SeeSound "baron/sight"
+   PainSound "baron/pain"
+   DeathSound "baron/death"
+   ActiveSound "baron/active"
+   Obituary "$OB_BELPHEGOR" // "%o was slain by a Belphegor."
+   HitObituary "$OB_BELPHEGOR_MELEE" // "%o was slain by a Belphegor."
+   States
+   {
+   Spawn:
+     BOS3 AB 10 [[A_Look]]
+     Loop
+   See:
+     BOS3 AABBCCDD 3 [[A_Chase]]
+     Loop
+   Pain:
+     BOS3 H 2
+     BOS3 H 2 [[A_Pain]]
+     Goto See
+   Melee:
+   Missile:
+     BOS3 EF 6 [[A_FaceTarget]]
+     BOS3 G 6 [[A_BasicAttack]] (10, "baron/melee", "{{Class|BelphegorBall}}", 32)
+     BOS3 EF 6 [[A_FaceTarget]]
+     BOS3 G 6 [[A_BasicAttack]] (10, "baron/melee", "{{Class|BelphegorBall}}", 32)
+     BOS3 EF 6 [[A_FaceTarget]]
+     BOS3 G 6 [[A_BasicAttack]] (10, "baron/melee", "{{Class|BelphegorBall}}", 32)
+     Goto See
+   Death:
+     BOS3 I 8
+     BOS3 J 8 [[A_Scream]]
+     BOS3 K 8
+     BOS3 L 8 [[A_NoBlocking]]
+     BOS3 MN 8
+     BOS3 O -1 [[A_BossDeath]]
+     Stop
+   Raise:
+     BOS3 ONMLKJI 8
+     Goto See
+   }
+ }</text>
+    <sha1>cfr866g9y7kkgr50rded86rhwwy3qxp</sha1>
+  </revision>
+</page>

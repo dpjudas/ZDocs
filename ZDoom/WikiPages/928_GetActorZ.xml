@@ -1,0 +1,58 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>GetActorZ</title>
+  <ns>0</ns>
+  <id>928</id>
+  <revision>
+    <id>35809</id>
+    <parentid>33547</parentid>
+    <timestamp>2013-02-10T21:14:52Z</timestamp>
+    <contributor>
+      <username>Deded007</username>
+      <id>1392</id>
+    </contributor>
+    <minor />
+    <comment>formatting, see also</comment>
+    <origin>35809</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="1042" sha1="n3onvvzw8siht7a7pcxr9m2zpfh45jv" xml:space="preserve">__NOTOC__
+fixed '''GetActorZ''' (int ''tid'')
+
+== Usage ==
+
+This returns the Z coordinate of the actor. If ''tid'' is 0, the function uses the activator. It will return the absolute height of the actor, not the height relative to the floor. To calculate the height of the floor, subtract the result of [[GetActorFloorZ]] from this value.
+
+=== Parameters ===
+
+* ''tid'': [[TID]] of the actor.
+
+=== Return value ===
+
+The Z coordinate of the actor as a [[Definitions#Fixed point numbers|fixed point]] value world coordinate.
+
+== Examples ==
+
+This script rains health potions on the player from above for a while.
+
+ script 1 (int count)
+ {
+     while (count-- &gt; 0)
+     {
+         [[Delay]] ([[random]] (5, 15));
+         [[Spawn]] ("{{class|HealthBonus}}",
+             [[GetActorX]] (0),
+             [[GetActorY]] (0),
+             [[GetActorZ]] (0) + 256.0, 0, 0);
+     }
+ }
+
+Be careful as [[Spawn]] will not work when the spawning position is not valid.
+
+== See also ==
+* [[GetActorX]]
+* [[GetActorY]]
+
+[[category:ACS Information functions]]</text>
+    <sha1>n3onvvzw8siht7a7pcxr9m2zpfh45jv</sha1>
+  </revision>
+</page>

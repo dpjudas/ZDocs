@@ -1,0 +1,49 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>FON2</title>
+  <ns>0</ns>
+  <id>5939</id>
+  <revision>
+    <id>35589</id>
+    <parentid>31721</parentid>
+    <timestamp>2013-02-05T15:39:55Z</timestamp>
+    <contributor>
+      <username>Gez</username>
+      <id>1283</id>
+    </contributor>
+    <minor />
+    <origin>35589</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="2395" sha1="2otnfs30rppycrhtt7odq6zgnqu3ym7" xml:space="preserve">A '''FON2 font''', or '''big font''', contains an arbitrary amount of paletted characters. It is of this form:
+{| {{prettytable}}
+!Offset !! Length !! Name !! Content
+|-
+|0x0000 || 4*1 || Identifier || The characters 'F', 'O', 'N', and '2'.
+|-
+|0x0004 || 2 || Height || Unsigned value for character height.
+|-
+|0x0006 || 1 || First || ASCII number for the first character described in the font.
+|-
+|0x0007 || 1 || Last || ASCII number for the last character described in the font.
+|-
+|0x0008 || 1 || Constant width || 1 if the characters are of constant width, 0 otherwise.
+|-
+|0x0009 || 1 || Shading type || Seems unused.
+|-
+|0x000A || 1 || Palette size || Amount of active colors in the palette. The true palette size is one greater, as the last palette entry is for the inactive color.
+|-
+|0x000B || 1 || Flags || Technically used as a boolean, since there is only one flag. 1 if the font contains {{wp|kerning}} information, 0 otherwise.
+|}
+If there is kerning information, the header is followed by a signed two-byte value for it.
+
+After the header and the possible kerning info are the character widths. If the font is monospaced, this is a single two-byte unsigned value, used by all characters. Otherwise, this is a series of such values, one per character. A null value can be used to signify a character is skipped.
+
+Then comes the built-in palette for the font, with (''palette size'' + 1) &amp;times; 3 bytes describing the color value of each entry in standard RGB format. The first index is a transparent color, the last index is used to create "boxes" around each character and is considered transparent as well. They have no special purpose in ZDoom, but are used by [[imagetool]] to identify each character so as to convert back and forth between image format and FON2 format.
+
+Finally comes the RLE-encoded data for each described character in sequence. Each character form a single image of ''character width'' &amp;times; ''character height'' pixels, and there can be no RLE overflow between one character and the next. Unless the characters are monospaced, the font can not be directly displayed as an image.
+
+[[ZDoom]] provides three FON2 fonts in files named &lt;tt&gt;dbigfont.lmp&lt;/tt&gt;, &lt;tt&gt;sbigfont.lmp&lt;/tt&gt; and &lt;tt&gt;indexfont&lt;/tt&gt; in zdoom.pk3. They are used respectively as the big fonts for Doom and Strife, and as the index font for the [[alternate HUD]].
+[[Category:Font formats]]</text>
+    <sha1>2otnfs30rppycrhtt7odq6zgnqu3ym7</sha1>
+  </revision>
+</page>

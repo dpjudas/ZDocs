@@ -1,0 +1,49 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>Classes:RedAxe</title>
+  <ns>0</ns>
+  <id>3363</id>
+  <revision>
+    <id>39443</id>
+    <parentid>34169</parentid>
+    <timestamp>2015-04-30T21:03:11Z</timestamp>
+    <contributor>
+      <username>Blue Shadow</username>
+      <id>2021</id>
+    </contributor>
+    <minor />
+    <comment>/* DECORATE definition */ Updated</comment>
+    <origin>39443</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="842" sha1="7sq70tsysbc847phgw13zkbwaw4lzd7" xml:space="preserve">{{Actor|
+| type = Explosive
+| name = Blood-dripping axe
+| class = RedAxe
+| game = Heretic
+| spawnid = 128
+| spawnname = T_KNIGHTBLOODAXE 
+}}[[Classes]]: &lt;u&gt;RedAxe&lt;/u&gt;&lt;br&gt;
+A spinning axe, dripping with blood, tossed by [[Classes:KnightGhost|ghost warriors]] and sometimes, randomly, by [[Classes:Knight|undead warriors]]. Contrarily to the [[Classes:KnightAxe|ethereal axe]] of the same undead warriors, the blood-dripping axe is not affected by wind, current, or any other [[Carrying sector|type of "conveyor belt" sector]].
+
+==== [[DECORATE]] definition ====
+ ACTOR &lt;u&gt;RedAxe&lt;/u&gt; : {{Class|KnightAxe}}
+ {
+   +{{Flag|NOBLOCKMAP}}
+   -{{Flag|WINDTHRUST}}
+   {{Property|Damage}} 7
+ 
+   action native [[A_DripBlood]]();
+ 
+   States
+   {
+   Spawn:
+     RAXE AB 5 Bright [[A_DripBlood]]
+     Loop
+   Death:
+     RAXE CDE 6 Bright
+     Stop
+   }
+ }</text>
+    <sha1>7sq70tsysbc847phgw13zkbwaw4lzd7</sha1>
+  </revision>
+</page>

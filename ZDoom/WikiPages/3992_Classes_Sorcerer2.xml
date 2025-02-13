@@ -1,0 +1,104 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>Classes:Sorcerer2</title>
+  <ns>0</ns>
+  <id>3992</id>
+  <revision>
+    <id>39333</id>
+    <parentid>36277</parentid>
+    <timestamp>2015-04-29T17:18:52Z</timestamp>
+    <contributor>
+      <username>Blue Shadow</username>
+      <id>2021</id>
+    </contributor>
+    <minor />
+    <comment>/* DECORATE definition */ Updated</comment>
+    <origin>39333</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="3049" sha1="2p0k8ve4ssk9w4nq8mx5u8xk38wipce" xml:space="preserve">{{Actor|
+| type = Monster
+| name = D'Sparil
+| class = Sorcerer2
+| game = Heretic
+| spawnid = 143
+| spawnname = T_DSPARILALONE 
+}}[[Classes]]: &lt;u&gt;Sorcerer2&lt;/u&gt;&lt;br&gt;
+After [[Classes:Sorcerer1|D'Sparil's mount]] is slain, it appears for a moment that the Serpent Rider is dead, too. But he quickly rises to his feet and begins battle alone. It shouldn't be a surprise that he is a tougher opponent than his pet. The native action [[A_Srcr2Decide]] is used to determine whether he teleports before an attack, while [[A_Srcr2Attack]] will make him either perform a melee attack, throw a [[Classes:Sorcerer2FX1|devastating lightning bolt]] or summon forth two of [[Classes:Wizard|his Disciples]] through [[Classes:Sorcerer2FX2|summoning spells]]. When he dies, [[A_Sor2DthInit]] kills all remaining monsters on the level and sets his deathloop to loop seven times. [[A_Sor2DthLoop]] controls this looping behavior; an identical result could have been achieved with &lt;code&gt;SDTH DEFDEFDEFDEFDEFDEFDEF 7&lt;/code&gt;.
+
+==== [[DECORATE]] definition ====
+ ACTOR &lt;u&gt;Sorcerer2&lt;/u&gt;
+ {
+   {{Property|Health}} 3500
+   {{Property|Radius}} 16
+   {{Property|Height}} 70
+   {{Property|Mass}} 300
+   {{Property|Speed}} 14
+   {{Property|PainChance}} 32
+   {{Property|Monster}}
+   +{{Flag|DROPOFF}}
+   +{{Flag|BOSS}}
+   +{{Flag|DONTMORPH}}
+   +{{Flag|FULLVOLACTIVE}}
+   +{{Flag|NORADIUSDMG}}
+   +{{Flag|NOTARGET}}
+   +{{Flag|NOICEDEATH}}
+   +{{Flag|FLOORCLIP}}
+   +{{Flag|BOSSDEATH}}
+   {{Property|SeeSound}} "dsparil/sight"
+   {{Property|AttackSound}} "dsparil/attack"
+   {{Property|PainSound}} "dsparil/pain"
+   {{Property|ActiveSound}} "dsparil/active"
+   {{Property|Obituary}} "$OB_DSPARIL2"
+   {{Property|HitObituary}} "$OB_DSPARIL2HIT"
+ 
+   action native [[A_Srcr2Decide]]();
+   action native [[A_Srcr2Attack]]();
+   action native [[A_Sor2DthInit]]();
+   action native [[A_Sor2DthLoop]]();
+ 
+   States
+   {
+   Spawn:
+     SOR2 MN 10 [[A_Look]]
+     Loop
+   See:
+     SOR2 MNOP 4 [[A_Chase]]
+     Loop
+   Rise:
+     SOR2 AB 4
+     SOR2 C 4 [[A_PlaySound]]("dsparil/rise", {{Const|CHAN_BODY}}, 1, {{Const|FALSE}}, {{Const|ATTN_NONE}})
+     SOR2 DEF 4
+     SOR2 G 12 [[A_PlaySound]]("dsparil/sight", {{Const|CHAN_BODY}}, 1, {{Const|FALSE}}, {{Const|ATTN_NONE}})
+     Goto See
+   Pain:
+     SOR2 Q 3
+     SOR2 Q 6 [[A_Pain]]
+     Goto See
+   Missile:
+     SOR2 R 9 [[A_Srcr2Decide]]
+     SOR2 S 9 [[A_FaceTarget]]
+     SOR2 T 20 [[A_Srcr2Attack]]
+     Goto See
+   Teleport:
+     SOR2 LKJIHG 6
+     Goto See
+   Death:
+     SDTH A 8 [[A_Sor2DthInit]]
+     SDTH B 8
+     SDTH C 8 [[A_PlaySound]]("dsparil/scream", {{Const|CHAN_BODY}}, 1, {{Const|FALSE}}, {{Const|ATTN_NONE}})
+   DeathLoop:
+     SDTH DE 7
+     SDTH F 7 [[A_Sor2DthLoop]]
+     SDTH G 6 [[A_PlaySound]]("dsparil/explode", {{Const|CHAN_BODY}}, 1, {{Const|FALSE}}, {{Const|ATTN_NONE}})
+     SDTH H 6
+     SDTH I 18
+     SDTH J 6 [[A_NoBlocking]]
+     SDTH K 6 [[A_PlaySound]]("dsparil/bones", {{Const|CHAN_BODY}}, 1, {{Const|FALSE}}, {{Const|ATTN_NONE}})
+     SDTH LMN 6
+     SDTH O -1 [[A_BossDeath]]
+     Stop
+   }
+ }</text>
+    <sha1>2p0k8ve4ssk9w4nq8mx5u8xk38wipce</sha1>
+  </revision>
+</page>

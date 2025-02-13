@@ -1,0 +1,72 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>Scroll Floor</title>
+  <ns>0</ns>
+  <id>1103</id>
+  <revision>
+    <id>44660</id>
+    <parentid>32895</parentid>
+    <timestamp>2017-04-03T17:22:58Z</timestamp>
+    <contributor>
+      <username>Gez</username>
+      <id>1283</id>
+    </contributor>
+    <comment>xlat</comment>
+    <origin>44660</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="2749" sha1="k9jiq4iummkznjmoqeola7gkaqjytua" xml:space="preserve">{{DISPLAYTITLE:Scroll_Floor}}
+''line version:''&lt;br&gt;
+{{Special|223|tag, scrollbits, type, x-move, y-move|Scrolling|Floor}}
+
+''script version:''&lt;br&gt;
+{{Special|223|tag, x-move, y-move, type|Scrolling|Floor}}
+
+This special takes 5 arguments when placed on a line, but 4 arguments when used in a script.
+
+* ''tag'': tag of affected sector
+* ''scrollbits'': how the scrolling speed is determined (see below)
+* ''type'': set to 0 to scroll the floor texture. A setting of 1 pushes objects along the floor without scrolling the texture. 2 does both. When using it in a script, definitions exist for the &lt;i&gt;type&lt;/i&gt; field to allow easier readability.
+:* '''SCROLL'''&amp;nbsp;&amp;mdash; Scrolls the floor
+:* '''CARRY'''&amp;nbsp;&amp;mdash; Moves objects without scrolling
+:* '''SCROLL_AND_CARRY'''&amp;nbsp;&amp;mdash; Does both
+* ''x-move''/''y-move'': how quickly and in what directions to scroll.
+* ''scrollbits'': Selects the type of scroller and how the speed and angle is determined. (Only when placed on a line)
+:* bit 0(1): Displacement scroller
+:* bit 1(2): Accelerative scroller
+:* bit 2(4): Use this linedef to get dx and dy
+
+
+'''Scroll_Floor''' can also only scroll the flat, only carry objects, or scroll and carry objects depending on what the type argument is set to. ''x-move'' and ''y-move'' are only used if ''scrollbits'' does not indicate to use the linedef to determine the scroll rate. When placed on a line, 128 is subtracted from these values to determine the actual direction and rate of scroll. (So 128 would be no scroll.)  When used in a script, positive values move north/east, while negative values move south/west.
+
+==Examples==
+{{noexamples}}
+
+== Conversions from linedef types ==
+The following Doom map format types can be converted as Scroll_Floor:
+{| {{prettytable}}
+!Type!!Conversion!!Trigger
+|-
+|{{icon|Boom}} 215:Accel Tagged Floor w.r.t. 1st Side's Sector || Scroll_Floor (tag, 6, 0, 0, 0) || 
+|-
+|{{icon|Boom}} 216:Accel Objects on Tagged Floor wrt 1st Side's Sector || Scroll_Floor (tag, 6, 1, 0, 0) || 
+|-
+|{{icon|Boom}} 217:Accel Objects&amp;Tagged Floor wrt 1st Side's Sector || Scroll_Floor (tag, 6, 2, 0, 0) || 
+|-
+|{{icon|Boom}} 246:Scroll Tagged Floor w.r.t. 1st Side's Sector || Scroll_Floor (tag, 5, 0, 0, 0) || 
+|-
+|{{icon|Boom}} 247:Push Objects on Tagged Floor wrt 1st Side's Sector || Scroll_Floor (tag, 5, 1, 0, 0) || 
+|-
+|{{icon|Boom}} 248:Push Objects &amp; Tagged Floor wrt 1st Side's Sector || Scroll_Floor (tag, 5, 2, 0, 0) || 
+|-
+|{{icon|Boom}} 251:Scroll Tagged Floor || Scroll_Floor (tag, 4, 0, 0, 0) || 
+|-
+|{{icon|Boom}} 252:Carry Objects on Tagged Floor || Scroll_Floor (tag, 4, 1, 0, 0) || 
+|-
+|{{icon|Boom}} 253:Scroll Tagged Floor, Carry Objects || Scroll_Floor (tag, 4, 2, 0, 0) || 
+|}
+
+==External links==
+* {{oldref}}</text>
+    <sha1>k9jiq4iummkznjmoqeola7gkaqjytua</sha1>
+  </revision>
+</page>

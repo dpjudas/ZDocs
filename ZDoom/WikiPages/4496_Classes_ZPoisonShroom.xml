@@ -1,0 +1,64 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>Classes:ZPoisonShroom</title>
+  <ns>0</ns>
+  <id>4496</id>
+  <revision>
+    <id>39504</id>
+    <parentid>34577</parentid>
+    <timestamp>2015-04-30T21:40:16Z</timestamp>
+    <contributor>
+      <username>Blue Shadow</username>
+      <id>2021</id>
+    </contributor>
+    <minor />
+    <comment>/* DECORATE definition */ Updated</comment>
+    <origin>39504</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="1283" sha1="7tph9x7d0p2jadffocdbgywfhn6seq4" xml:space="preserve">{{Actor|
+| type = Hazard
+| name = Poison mushroom
+| class = ZPoisonShroom
+| game = Hexen
+| doomednum = 8104
+}}[[Classes]]: [[Classes:PoisonBag|PoisonBag]]&amp;rarr;&lt;u&gt;ZPoisonShroom&lt;/u&gt;&lt;br&gt;
+
+A type of mushroom that is poisonous; when destroyed, it releases a {{Class|PoisonCloud|green cloud}} the damages (or poisons, in player's case) any creature that is not immune to [[poison]] when it comes to contact with it. They often release small bursts of gas with a whistling noise; when several poison mushrooms are in an area the sound can become very noticeable.
+==== [[DECORATE]] definition ====
+ ACTOR &lt;u&gt;ZPoisonShroom&lt;/u&gt; : {{Class|PoisonBag}}
+ {
+   {{Property|Radius}} 6
+   {{Property|Height}} 20
+   {{Property|PainChance}} 255
+   {{Property|Health}} 30
+   {{Property|Mass}} 0x7fffffff
+   +{{Flag|SHOOTABLE}}
+   +{{Flag|SOLID}}
+   +{{Flag|NOBLOOD}}
+   +{{Flag|NOICEDEATH}}
+   -{{Flag|NOBLOCKMAP}}
+   -{{Flag|NOGRAVITY}}
+   {{Property|PainSound}} "PoisonShroomPain"
+   {{Property|DeathSound}} "PoisonShroomDeath"
+ 
+   action native [[A_PoisonShroom]]();
+ 
+   States
+   {
+   Spawn:
+     SHRM A 5 [[A_PoisonShroom]]
+     Goto Pain+1
+   Pain:
+     SHRM A 6
+     SHRM B 8 [[A_Pain]]
+     Goto Spawn
+   Death:
+     SHRM CD 5
+     SHRM E 5 [[A_PoisonBagInit]]
+     SHRM F -1
+     Stop
+   }
+ }</text>
+    <sha1>7tph9x7d0p2jadffocdbgywfhn6seq4</sha1>
+  </revision>
+</page>

@@ -1,0 +1,80 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>MAPINFO/Episode definition</title>
+  <ns>0</ns>
+  <id>5343</id>
+  <revision>
+    <id>49575</id>
+    <parentid>49362</parentid>
+    <timestamp>2022-09-30T22:09:28Z</timestamp>
+    <contributor>
+      <username>Blue Shadow</username>
+      <id>2021</id>
+    </contributor>
+    <minor />
+    <comment>remove {{new}} tags for 4.8.0</comment>
+    <origin>49575</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="3879" sha1="nlsjhnuvrj5mpq06zb86n4ctf2nb20n" xml:space="preserve">An episode definition begins with the keyword "episode".  You can also clear previous episodes by using the "clearepisodes" keyword. All an episode does is offer a choice when starting a new game; elements such as endgame text or picture are defined in a [[MAPINFO/Cluster definition|cluster]]. The Doom and Heretic episodes have therefore each a corresponding cluster definition. If there is only one episode, then the player will not be prompted to select it when starting a new game.
+
+== Episode commands==
+'''clearepisodes'''
+:This clears all previous episodes.  This could be used if you wish to have fewer episodes than are originally present in the IWAD that you are using.  It should be specified before any episode definitions and outside any other block.
+
+'''episode &lt;maplump&gt;''' { ''properties'' }&lt;br&gt;
+'''episode &lt;maplump&gt; teaser &lt;maplump&gt;''' { ''properties'' }
+:Substitute the map name of the map that you want the episode to start on for &lt;maplump&gt;.  &lt;maplump&gt; can be any lump in the WAD, as long as it is a valid map file. Instead of a map lump, you can also use &lt;tt&gt;&amp;wt@01&lt;/tt&gt;. Using this will make the episode start at the map using ''warptrans 1'' as defined in [[MAPINFO/Map definition|MAPINFO]].
+:You can also specify a second maplump with the teaser keyword as above to tell ZDoom what map to use if the first is unavailable.  This is used by Strife to determine which map to start at based on whether you're playing the Strife demo or the full version.  It has limited usage inside PWADs.
+
+==Episode properties==
+The following properties are supported within an episode definition:
+{{list|Property|Description|content=
+
+{{-|{{LE|Name}} {{=}} "&lt;nice name&gt;"
+|This is the episode's name as text. If you do not provide a {{c|[[#PicName|PicName]]}}, then ZDoom will convert this name to a graphic for you. If the given name starts with $, ZDoom will first try to interpret it as a keyword for the [[LANGUAGE]] lump.}}
+
+{{-|{{LE|Lookup}} {{=}} "&lt;keyword&gt;"
+|Alternatively, instead of {{c|[[#Name|Name]]}}, {{c|Lookup}} can be used to go seek the name in a [[LANGUAGE]] lump.}}
+
+{{-|{{LE|PicName}} {{=}} "&lt;piclump&gt;"
+|Replace &lt;piclump&gt; with the graphic lump that you wish to use on episode selection menu screen. If you specify an invalid lump, the invalid graphic image will be used. If you specify "", no graphic will be used. If you omit this property, then the name that you provided in {{c|[[#Name|Name]]}} will be converted into a graphic and used instead.}}
+
+{{-|{{LE|Key}} {{=}} "&lt;key&gt;"
+|This sets a shortcut key for the menu selection. Any key on the keyboard is valid.}}
+
+{{-|{{LE|Remove}}
+|This removes the episode that has just been defined.}}
+
+{{-|{{LE|NoSkillMenu}}
+|Disables the skill menu for this episode; instead, the episode starts at the skill marked with the {{c|[[skill_definition#DefaultSkill|DefaultSkill]]}} flag (or the median skill if no default is available). This is useful for WADs that implement skill selection by an introduction map.}}
+
+{{-|{{LE|Optional}}
+|Indicates that this episode should only appear in the list if the map lump specified after the episode keyword is present in the loaded IWAD/PWAD(s). This is used for the fourth episode of ''[[Doom|Ultimate Doom]]''.}}
+
+{{-|{{LE|Extended}}
+|Indicates that this episode should only appear in the list if the EXTENDED lump is present in a loaded WAD file. This is used for the fourth and fifth episodes of ''[[Heretic|Heretic: Shadow of the Serpent Riders]]''.}}
+
+{{-|{{LE|Intro}} { ... }
+|Specifies an introduction [[cutscene]] to play for this episode. This block supports the following commands:
+{{:Cutscene MAPINFO properties}}}}
+}}
+
+==Examples==
+Normal episode definition:
+ episode e1m1
+ {
+    picname = "M_EPI1"
+    key = "k"
+ }
+
+Episode starting at map with ''Warptrans 1'':
+ episode "&amp;wt@01"
+ {
+    name = "My cool episode"
+    key = "m"
+ }
+
+[[Category:MAPINFO|Episode]]</text>
+    <sha1>nlsjhnuvrj5mpq06zb86n4ctf2nb20n</sha1>
+  </revision>
+</page>

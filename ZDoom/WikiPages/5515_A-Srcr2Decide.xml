@@ -1,0 +1,45 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>A Srcr2Decide</title>
+  <ns>0</ns>
+  <id>5515</id>
+  <revision>
+    <id>23805</id>
+    <timestamp>2009-08-10T16:59:55Z</timestamp>
+    <contributor>
+      <username>Gez</username>
+      <id>1283</id>
+    </contributor>
+    <comment>Created page with '{{DISPLAYTITLE:A_Srcr2Decide}} '''A_Srcr2Decide'''&lt;br /&gt; (no parameters)  Decides if the calling actor teleports or not. The probability a teleportation happens increases as the …'</comment>
+    <origin>23805</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="1407" sha1="dbs6itzi0j8vyxhm7zyk3uasihtonsg" xml:space="preserve">{{DISPLAYTITLE:A_Srcr2Decide}}
+'''A_Srcr2Decide'''&lt;br /&gt;
+(no parameters)
+
+Decides if the calling actor teleports or not. The probability a teleportation happens increases as the actor's health decreases:
+{| border="1" cellspacing="0"
+!Health fraction !! Hit point range !! Teleportation chance
+|-
+|8/8 or more||3500+||0%
+|-
+|7/8||3063&amp;mdash;3499||6.25%
+|-
+|6/8||2625&amp;mdash;3062||12.5%
+|-
+|4/8||1750&amp;mdash;2624||25%
+|-
+|1/8||438&amp;mdash;1749||46.875%
+|-
+|Less than 1/8||1&amp;mdash;437||75%
+|}
+The hit point range is indicative only, corresponding to the results for D'Sparil's standard starting health of 3500. The function itself uses fractions of the actor's spawning health, whatever that is.
+
+If the actor does teleport, then a {{Class|BossSpot}} at least 128 map units away is randomly selected, if available. If no such spots are available, the teleportation is cancelled. Otherwise, the calling actor is teleported to the spot and in its stead a {{Class|Sorcerer2Telefade}} is spawned. Both the calling actor and the spawned telefade actor play the "misc/teleport" on their respective BODY channels, the calling actor's velocity is annuled and it is put in its Teleport state.
+
+This codepointer is restricted to {{Class|Sorcerer2}} and derived classes.
+
+[[Category:Decorate Heretic functions]] [[Category:Decorate Monster AI functions]] [[Category:Decorate Restricted functions]]{{DEFAULTSORT:Srcr2Decide}}</text>
+    <sha1>dbs6itzi0j8vyxhm7zyk3uasihtonsg</sha1>
+  </revision>
+</page>

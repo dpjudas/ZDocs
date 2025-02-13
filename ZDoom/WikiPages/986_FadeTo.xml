@@ -1,0 +1,46 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>FadeTo</title>
+  <ns>0</ns>
+  <id>986</id>
+  <revision>
+    <id>47784</id>
+    <parentid>40596</parentid>
+    <timestamp>2020-08-05T20:57:41Z</timestamp>
+    <contributor>
+      <username>Jekyll Grim Payne</username>
+      <id>2175</id>
+    </contributor>
+    <origin>47784</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="1181" sha1="jzb4oi9gahytzf9dad973oamum8iu1j" xml:space="preserve">void '''FadeTo''' (int ''red'', int ''green'', int ''blue'', fixed ''amount'', fixed ''seconds'');
+
+== Usage ==
+
+Fades the activator's view from the current palette flash to another one.  This will also work if the activator is looking through another viewpoint. (Using a camera, etc)
+
+If the function is run with no activator (for example an [[Script_types|OPEN script]] or removing an existing activator with [[SetActivator]]), it will run for and affect all active players in the game.
+
+=== Parameters ===
+* ''red'': Amount of red in the flash from 0-255.
+* ''green'': Amount of green in the flash from 0-255.
+* ''blue'': Amount of blue in the flash from 0-255.
+* ''amount'': Intensity of the flash from 0.0-1.0. Note this REQUIRES a decimal, or it will not work!
+* ''seconds'': Time needed to complete the fade in seconds. This requires a decimal as well, or the transition will be instant.
+
+== Examples ==
+
+ script 100 {{SType|Enter}}
+ {
+    //Fade to full intensity red in two seconds
+    [[FadeTo]] (255, 0, 0, 1.0, 2.0);
+    [[Delay]](35 * 2);
+ 
+    //Fade to half intensity black in two seconds, ...
+    [[FadeTo]] (0, 0, 0, 0.5, 2.0);
+ }
+
+[[category:ACS Actor functions]]</text>
+    <sha1>jzb4oi9gahytzf9dad973oamum8iu1j</sha1>
+  </revision>
+</page>

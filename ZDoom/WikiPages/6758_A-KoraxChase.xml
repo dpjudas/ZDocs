@@ -1,0 +1,38 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>A KoraxChase</title>
+  <ns>0</ns>
+  <id>6758</id>
+  <revision>
+    <id>35697</id>
+    <parentid>30000</parentid>
+    <timestamp>2013-02-10T04:01:00Z</timestamp>
+    <contributor>
+      <username>Deded007</username>
+      <id>1392</id>
+    </contributor>
+    <minor />
+    <comment>codepointer template</comment>
+    <origin>35697</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="1047" sha1="qrm6zl99w5my4kkevmen8hezef5w32i" xml:space="preserve">{{codepointer|Monster AI|Hexen|r=Korax}}
+'''A_KoraxChase'''
+
+(no parameters)
+
+==Usage==
+
+If the calling actor's &lt;tt&gt;special2&lt;/tt&gt; field is null and its {{Property|Health|health}} is reduced to half or less its starting value, teleports to the first destination with [[TID]] 248 and starts [[ACS]] script 249. The &lt;tt&gt;special2&lt;/tt&gt; field is then set to 1 to avoid using this effect more than once per actor.
+
+If the calling actor has no valid target, the function does nothing else.
+
+Otherwise, it has a 30/256 chance of setting the calling actor to its Missile state, and if not, another 30/256 chance of playing the sound "KoraxActive" on the VOICE channel.
+
+Afterwards, if the calling actor's health is reduced to half or less its starting value, it has a 10/256 chance of teleporting to the next destination with TID 249. These teleportations are done in sequence, using the calling actor's &lt;tt&gt;tracer&lt;/tt&gt; field to store the current choice.
+
+This codepointer is restricted to {{Class|Korax}} and derived classes. 
+== Examples ==
+{{noexamples}}</text>
+    <sha1>qrm6zl99w5my4kkevmen8hezef5w32i</sha1>
+  </revision>
+</page>

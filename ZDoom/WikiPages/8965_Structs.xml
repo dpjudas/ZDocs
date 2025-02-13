@@ -1,0 +1,99 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>Structs</title>
+  <ns>0</ns>
+  <id>8965</id>
+  <revision>
+    <id>54151</id>
+    <parentid>53170</parentid>
+    <timestamp>2025-01-25T14:47:02Z</timestamp>
+    <contributor>
+      <username>SPZ</username>
+      <id>2640</id>
+    </contributor>
+    <minor />
+    <comment>/* Native structs */</comment>
+    <origin>54151</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="2358" sha1="i5wbg90rcwhga6qmzgaykypdhionjp2" xml:space="preserve">{{ZScriptNote}}
+Structs behave similarly to their [http://www.cplusplus.com/doc/tutorial/structures/ C++ versions]. They are defined in the global space outside of a class and declared inside of actors, capable of holding functions and variables of any type. These are useful for passing large amounts of data around, or for doing external bookkeeping on existing classes.
+
+== Limitations ==
+Structs currently cannot be returned, nor can they be passed normally. They must be passed by reference.
+
+Using the [[ZScript special words|special word]] '''out''' in a function will enable anything with that qualifier being sent into the function to be sent only as a reference, which can then be modified.
+
+Furthermore, structs cannot be used with dynamic arrays. If returning or using an array is needed, a class should be used instead.
+
+ void CheckStruct(out SpecialConstants s)
+ {
+     // Perform modifications to the SpecialConstants struct 's' here.
+     s.somename = 'Zombieman';
+ }
+
+== Examples ==
+This is an example of defining a struct of constants and using them in actor classes.
+ struct SpecialConstants
+ {
+   Class&lt;Actor&gt; somename;
+   const Target = AAPTR_TARGET;
+   const Master = AAPTR_MASTER;
+   const Tracer = AAPTR_TRACER;
+   enum MyEnum
+   {
+      num1 = 1,
+      num2 = 2,
+      num3, // Auto-assigned the next incremented value. In this case, 3.
+      num4, // Auto-assigned the next incremented value. In this case, 4.
+   };
+ }
+ 
+ class Monstah : Actor
+ {
+   //...
+   States
+   {
+   Missile:
+      TNT1 A 0
+      {
+         SpecialConstants cns;
+         cns.somename = "ItemToken"; // Assuming this is a valid item, mind.
+         if (CountInv(cns.somename,cns.Target) == cns.num2)
+         { 
+            //Do something
+         }
+      }
+   }
+ }
+
+== Native structs ==
+* [[Structs:Console]]
+* [[Structs:CVar]]
+* [[Structs:LevelLocals]]
+* [[Structs:Sector]]
+* [[Structs:Screen]]
+* [[Structs:PlayerInfo]]
+* [[Structs:F3DFloor]]
+* [[Structs:Line]]
+* [[Structs:LinePortal]]
+* [[Structs:SecPlane]]
+* [[Structs:SectorPortal]]
+* [[Structs:Vertex]]
+* [[Structs:Wads]]
+* [[Structs:State]]
+* [[Structs:TexMan]]
+* [[Structs:Team]]
+* [[Structs:TerrainDef]]
+* [[Structs:UserCmd]]
+* [[Structs:WeaponSlots]]
+
+For a fuller list, check the Structs category at the bottom of the page.
+
+== See also ==
+* [[ZScript]]
+
+[[Category:ZScript]]
+[[Category:Structs]]</text>
+    <sha1>i5wbg90rcwhga6qmzgaykypdhionjp2</sha1>
+  </revision>
+</page>

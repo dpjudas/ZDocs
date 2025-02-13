@@ -1,0 +1,43 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>Classes:BeakPowered</title>
+  <ns>0</ns>
+  <id>4246</id>
+  <revision>
+    <id>34014</id>
+    <parentid>31230</parentid>
+    <timestamp>2012-08-29T16:24:01Z</timestamp>
+    <contributor>
+      <username>Blue Shadow</username>
+      <id>2021</id>
+    </contributor>
+    <minor />
+    <comment>/* DECORATE definition */</comment>
+    <origin>34014</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="924" sha1="klh92oot0qgu8c57kile29hp8vgp2nm" xml:space="preserve">{{Actor|
+| type = Weapon
+| name = Beak
+| class = BeakPowered
+| game = Heretic
+}}[[Classes]]: [[Classes:Weapon|Weapon]]&amp;rarr;[[Classes:Beak|Beak]]&amp;rarr;&lt;u&gt;BeakPowered&lt;/u&gt;&lt;br&gt;
+The powered-up beak is a more damaging version of the standart chicken beak, however, unlike other powered-up weapons, it is not obtained through the use of a {{class|ArtiTomeOfPower|Tome of Power}}, as using this artifact while morphed into a [[Classes:ChickenPlayer|chicken]] puts an end to the transformation. Instead, a morphed player must kill another player with the normal beak and the powered-up version of the chicken weapon is automatically earned.
+
+==== [[DECORATE]] definition ====
+ ACTOR &lt;u&gt;BeakPowered&lt;/u&gt; : {{Class|Beak}}
+ {
+   +{{Flag|WEAPON.POWERED_UP}}
+   {{Property|Weapon.SisterWeapon}} "{{Class|Beak}}"
+ 
+   action native [[A_BeakAttackPL2]]();
+ 
+   States
+   {
+   Fire:
+     BEAK A 12 [[A_BeakAttackPL2]]
+     Goto Ready
+   }
+ }</text>
+    <sha1>klh92oot0qgu8c57kile29hp8vgp2nm</sha1>
+  </revision>
+</page>

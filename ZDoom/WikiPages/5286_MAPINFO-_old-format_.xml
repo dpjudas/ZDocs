@@ -1,0 +1,492 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>MAPINFO (old format)</title>
+  <ns>0</ns>
+  <id>5286</id>
+  <revision>
+    <id>48201</id>
+    <parentid>21326</parentid>
+    <timestamp>2020-12-20T17:31:09Z</timestamp>
+    <contributor>
+      <username>Blue Shadow</username>
+      <id>2021</id>
+    </contributor>
+    <minor />
+    <comment>/* Map definitions */ defaultmaps don't persist across multiple files</comment>
+    <origin>48201</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="28869" sha1="27vdas3wog7taib1ttsw12n21w9t56o" xml:space="preserve">{{warning|text=This page describes the older and outdated MAPINFO format. This is documented for archival only and should not be used for new maps.  Please see the [[MAPINFO]] page for instructions on using the new format.}}
+
+ZDoom supports a special MAPINFO lump that can be used to define special characteristics for the different maps in a wad. This lump contains three types of entries: episode definitions, map definitions and cluster definitions, which are indicated by the keywords "episode", "map" and "clusterdef" respectively. Everything following one of these keywords up until the next "episode", "map" or "clusterdef" is considered to be part of the definition for a specific episode, map or cluster. 
+
+==Episode Definitions==
+An episode definition begins with the word "episode".  You can also clear previous episodes by using the "clearepisodes" word. If there is only one episode, then the player will not be prompted.
+
+'''episode &lt;maplump&gt;'''
+:Substitute the map name of the map that you want the episode to start on for &lt;maplump&gt;.  &lt;maplump&gt; can be any lump in the WAD, as long as it is a valid map file.
+
+'''name &lt;nice name&gt;'''
+:This is the episode's name as text.  If you do not provide a [[MAPINFO#picname_&lt;piclump&gt;|picname]], then ZDoom will convert this name to a graphic for you.  This value must be enclosed in quotation marks. If the given name starts with $, ZDoom will first try to interpret it as a keyword for the [[LANGUAGE]] lump.
+
+'''lookup &lt;keyword&gt;'''
+:Alternatively, instead of name, lookup can be used to go seek the name in a [[LANGUAGE]] lump.
+
+'''picname &lt;piclump&gt;'''
+:Replace &lt;piclump&gt; with the graphic lump that you wish to use on episode selection menu screen.  If you specify an invalid lump, the invalid graphic image will be used.  If you specify&amp;nbsp;"", no graphic will be used.  If you omit this word, then the name that you provided in [[MAPINFO#name_&lt;nice_name&gt;|name]] will be converted into a graphic and used instead.
+
+'''key &lt;key&gt;'''
+:This sets a shortcut key for the menu selection.  Any key on the keyboard is valid.
+
+'''remove'''
+:This removes the episode that has just been defined.
+
+'''noskillmenu'''
+:Disables the skill menu for this episode. Instead it always starts on skill 2. This is for WADs that implement skill selection by an introduction map.
+
+'''clearepisodes'''
+:This clears all previous episodes.  This could be used if you wish to have fewer episodes than are originally present in the IWAD that you are using.
+
+'''optional'''
+:Indicates that this episode should only appear in the list if the map lump specified after the episode keyword is present in the loaded IWAD/PWAD(s).  This is mainly used for Doom episode 4 and Heretic episodes 4 and 5.
+
+==Map definitions==
+
+A map definition begins with the word "map". You can also specify standard characteristics for later map definitions by using the word "defaultmap" or "adddefaultmap" instead (and leaving &lt;maplump&gt; and &lt;nice name&gt; blank): 
+
+'''map &lt;maplump&gt; &lt;nice name&gt;'''&lt;br&gt;
+'''lookup'''&lt;br&gt;
+'''defaultmap'''&lt;br&gt;
+'''adddefaultmap'''&lt;br&gt;
+'''gamedefaults'''
+:Substitute the name of the map in the wad for &lt;maplump&gt;, and the map's nice name (shown in the automap) for &lt;nice name&gt;. If &lt;nice name&gt; contains spaces, it must be enclosed in quotation marks ("). &lt;Maplump&gt; can be *any* lump in the wad, but since most editing utilities will only recognize maps of the form MAP?? or E?M?, you should probably stick to those if you want to be able to edit the levels easily. 
+
+:Defaultmap sets the defaults that will be automatically used for all subsequent map definitions. It resets the default information so anything specified in previous defaultmap sections is lost. Unlike gamedefaults, defaultmap definitions are only effective within the file they are placed.
+
+:Adddefaultmap is similar but keeps the existing defaultmap information and just adds to it.
+
+:Gamedefaults is used to define default settings that apply to an entire game, even when PWADs are loaded for it. This is mainly used by Hexen and Strife so that PWADs which define their own defaultmap don't override basic game settings. It has limited use with PWADs.
+
+After the map, [add]defaultmap or gamedefaults line, the following properties can be specified:
+
+'''levelnum &lt;levelnum&gt;'''
+:This is the map's identification number that is used to identify it to the Teleport_NewMap special. If the map's name is of the form MAPxx, then it will automatically have a levelnum of xx unless you specify differently. (i.e. MAP23's levelnum will be 23 unless you set it to something else.) 
+
+'''next &lt;maplump&gt;'''
+:&lt;maplump&gt; is the name of the map to move to when the normal exit (Exit_Normal special) is used. This is also the map to travel to when the timelimit or fraglimit is hit in a deathmatch game. This should be the name of the map in the wad and not the map's nice name.
+
+:Alternatively, you can also use one of the following directives in place of the lump name to indicate that ZDoom should end the game instead of continuing to another level. Valid names are: 
+::EndPic &lt;lump&gt; = Displays the specified lump as an image. This method should be used instead of the next four.
+::EndGame1 = Displays the credit picture used after Doom episode 1 and Heretic episodes 1 and 5
+::EndGame2 = Displays the picture used after Doom episode 2, or the credits screen for Doom 2
+::EndGameW = Displays the picture used after Heretic episode 2
+::EndGame4 = Displays the picture used after Doom and Heretic episode 4
+::EndGameC = Rolls the cast finale for Doom II
+::EndGame3 = The horizontal scroller (right to left) after Doom episode 3 
+::EndDemon = The vertical scroller (bottom to top) after Heretic episode 3
+::EndGameS = The conditional end game script for Strife
+
+:A third option is to specify an endgame structure.  This will end the game using completely customized ending screens and music.  The format is as follows:
+
+ [secret]next endgame
+ {
+     [pic &lt;lump&gt;] // displays a single image.
+     [hscroll &lt;lump1&gt; &lt;lump2&gt;] // scrolls horizontally from lump1 (left) to lump2 (right).
+     [vscroll &lt;lump1&gt; &lt;lump2&gt;] // scrolls vertically from lump1 (bottom) to lump2 (top).
+     [cast] // Rolls the Doom 2 cast sequence (Same as EndGameC).
+     [music &lt;lump&gt; [loop]] // Music to play.  If none specified, the level's music continues to play.
+        // [loop] can be 0 or 1, and specifies whether the music should loop continuously.  It defaults to 1.
+ }
+:Note exactly one of pic, hscroll, vscroll, or cast should be used.  Music may be used in addition to whichever option is selected.
+
+:Note also that using any of these options will not display any text. To do that, use an "exittext" for this level's cluster. (See clusterdef below.)
+
+'''secretnext &lt;maplump&gt;'''
+:&lt;maplump&gt; is the name of the map to move to when the secret exit is used. This should be the name of the map in the wad and not the map's nice name.  You can also specify one of the end game directives above in place of the lump name.
+
+'''cluster &lt;number&gt;'''
+:&lt;number&gt; is the cluster that this map belongs to. See cluster definitions below for more details. 
+
+'''doublesky'''
+:Specifies that both sky textures are drawn, with sky1 in front of sky2. Sky2 will show through wherever sky1 is color 0 (*not* cyan). 
+
+'''sky1 &lt;texture&gt; &lt;scrollspeed&gt;'''
+:&lt;texture&gt; is the name of the texture to use for the sky. &lt;scrollspeed&gt; is the rate at which the sky moves left or right (useful for clouds on windy maps). To keep the sky from moving, use a value of 0.0; to move it left, use a positive value; and to move it right, use a negative value. This is the number of steps that the sky moves each tic. 
+
+'''sky2 &lt;texture&gt; &lt;scrollspeed&gt;'''
+:Used the same as sky1, except it selects the properties for the background sky layer (if doublesky is used) or an alternate sky image that can be shown in selected sectors. 
+
+'''fade &lt;color&gt;'''
+:&lt;color&gt; is the color that things fade to the further away or "darker" they are. Normally, this is black, so that things seem darker as they get further away. To simulate fog (ala Hexen), set this to a gray instead. Other colors are also supported, but may not necessarily look very good. &lt;color&gt; can be either the name of a color (such as red or cyan) or a color descriptor of the form "RR GG BB". For example, to set the fade to red, both of the following will work: 
+ fade red
+ fade "ff 00 00"
+:To find a good fade within the game, you can use the testfade console command. 
+
+'''outsidefog &lt;color&gt;'''
+:This is like fade except that the &lt;color&gt; fade is only applied to sectors with a sky ceiling and not all sectors on the map. 
+
+'''titlepatch &lt;patch&gt;'''
+:This is the name of a graphic to display on the intermission screen for this level (such as CWILV00). It should contain the name of the level. If this is omitted, the intermission screen will create a graphic for. 
+
+'''par &lt;partime&gt;'''
+:Partime is the number of seconds shown as the level's par in the intermission screen. 
+
+'''music &lt;musiclump&gt;'''
+:&lt;musiclump&gt; is the name of the song to play while the player is playing the level. 
+
+'''cdtrack &lt;track number&gt;'''
+:If you want the level to play music off a CD, this is the track number to play.
+
+'''cdid &lt;CD identification number&gt;'''
+:If you know the ID for the CD you want to play, you can use this in conjunction with cdtrack to play the track only when a specific CD is in the drive. However, there is no easy way to find a CD's ID unless you write a program to do it yourself, which makes this somewhat useless. If you are planning on using a CD to provide the music for your map, you are strongly encouraged to consider the other music formats supported by ZDoom.
+
+'''nointermission'''
+:This indicates that when the current level is finished, ZDoom should continue immediately to the next level without showing the intermission screen. 
+
+'''exitpic &lt;picname&gt;'''
+:This defines the picture which is used as the backdrop for the 'Level finished' screen. If none is specified the current game's default will be used. If the name is preceded with a '$' the lump will be used as an [[intermission script]].
+
+'''enterpic &lt;picname&gt;'''
+:This defines the picture which is used as the backdrop for the 'entering Level' screen. If none is specified the current game's default will be used. If the name is preceded with a '$' the lump will be used as an [[intermission script]].
+
+'''intermusic &lt;musicname&gt;'''
+:This defines the music that will be played during the 'Level finished' and 'Entering level' screens.
+
+'''bordertexture &lt;picname&gt;'''
+:This defines the image that will be used to create a border around the viewable playing area if the user has their screenblocks cvar set to a value below 9.
+
+'''nosoundclipping'''
+:This indicates that sounds should not be clipped on the current level no matter how far away they are. It is best for camera title maps and level intermission screens, like Knee Deep in Zdoom.  It is the behavior Doom used on maps E1M8, E2M8, E3M8, and E4M8.
+
+'''allowmonstertelefrags'''
+:This indicates that monsters can telefrag each other or the player on the level. Normally, monsters will never telefrag anything. 
+
+'''specialaction &lt;monstertype&gt;, &lt;action special&gt;, &lt;arg1&gt;, ...''' 
+:Assigns an action to a monster class. This action is executed when all monsters of this type are dead. The monster needs to call [[A_BossDeath]] for this to take effect. Unlike the specialized death actions you can define as many special actions as you want and these special actions can call any [[action specials|action special]] they like.
+
+'''map07special'''
+:This level wants the special feature of Doom II MAP07. In this case, when every mancubus on the level dies, any sectors tagged 666 will have their floors lower to the next lowest floor, and when every arachnotron on the level is dead, any sectors tagged 667 will have their floors raised by the height of their lower textures.
+
+'''baronspecial'''
+:After every Baron of Hell on this level has died, a special action will be triggered. 
+
+'''cyberdemonspecial'''
+:After every Cyber Demon on this level has died, a special action will be triggered. 
+
+'''spidermastermindspecial'''
+:After every Spider Mastermind on this level has died, a special action will be triggered. 
+
+The above three specials should also be used with one of the following 
+three special actions: 
+
+'''specialaction_exitlevel'''
+:Exits the level after all of the specified monsters have died. 
+
+'''specialaction_opendoor'''
+:After all of the specified monsters have died, opens any doors tagged 666 with blazing speed. 
+
+'''specialaction_lowerfloor'''
+:After all of the specified monsters have died, lowers the floors of all sectors tagged 666 to the next lowest floor. 
+
+'''specialaction_killmonsters'''
+:After all of the specified monsters have died, all remaining monsters in the level are killed.
+
+'''lightning'''
+:Creates lightning in the map.
+
+'''fadetable &lt;colormap&gt;''' 
+:Included for Hexen compatibility. Please don't use it. Right now, it does what it's supposed to (specify a default colormap to use instead of the regular COLORMAP lump), but in the future it will probably just act like a fadeto line. 
+
+'''evenlighting''' 
+:Specifies that lighting should be applied to walls evenly no matter what their orientation. DOOM would use different light levels for walls that were vertical, horizontal, or diagonal (when viewed from above). This is done to give better definition to corners but can look bad in areas with many differently angled walls. You can disable that behavior by specifying this.
+
+:Note that using "evenlighting" is equivalent to using "vertwallshade 0" and "horizwallshade 0".
+
+'''smoothlighting'''
+:Specifies that different light levels should be used for every wall angle.
+
+'''vertwallshade &lt;amount&gt;'''
+:This controls how much the light level on vertical (north/south) walls differs from the sector's light level. The default is +16. Evenlighting sets this value to 0.
+
+'''horizwallshade &lt;amount&gt;'''
+:This controls how much the light level on horizontal (east/west) walls differs from the sector's light level. The default is -16. Evenlighting sets this value to 0.
+
+'''clipmidtextures'''
+:Normally middle textures are set to be clipped on a per linedef basis using the second parameter of [[Line_SetIdentification]].  This will apply clipping to middle textures globally, meaning middle textures will never be drawn into the floor or ceiling.
+
+'''forcenoskystretch'''
+:If you have a sky graphic that looks fine whether it tiles or not, you can use this, and the sky will never be stretched on this level, regardless of the value of r_stretchsky. 
+
+'''skystretch'''
+:Forces the sky texture to stretch when r_stretchsky is set to 1 if it's not large enough to fill the screen without tiling. This is the default setting
+
+'''noautosequences'''
+:By default, the sound sequence played in a sector when it moves is determined by the special used to activate it. If you specify this, whatever sound sequence has ID 0 will be used by default instead. In either case, placing a sound sequence thing (1400-1409) in a sector will cause the sound assigned to that thing to be played. 
+
+'''autosquences'''
+:Forces the ZDoom behavior of choosing the sound sequence for a moving sector based on the special used to activate it.  This is the default setting.
+
+'''strictmonsteractivation'''
+:By default ZDoom allows monsters to use certain line special types that are only flagged to be used by the player (slow doors, lifts and teleporters.) If you set this flag in MAPINFO monsters can only activate lines that are either of the activation type 'monster crosses' or have the 'monsters can activate' flag set. This gives you better control over the actions that monsters can perform. For example, with the default setting it is not possible to create teleporters that cannot be used by monsters. For new maps it is strongly recommended to use this and control this yourself with the 'monsters can activate' flag in your maps. strictmonsteractivation is the default when playing Hexen or for Doom format maps.
+
+'''laxmonsteractivation'''
+:Resets the activation checks to the default, allowing monsters to activate certain specials that are not flagged for them.
+
+'''missileshootersactivateimpactlines'''
+:Actors that fire missiles are considered the activator if the missile triggers an impact line.  This is the default ZDoom behavior.
+
+'''missilesactivateimpactlines'''
+:When a missile triggers an impact line, it is considered the activator rather than the actor who shot it.  This is Hexen's original behavior.
+
+'''fallingdamage'''
+:Enables falling damage on the level. This uses the exact same formula as Hexen. 
+:This overrides the dmflag in the gameplay options menu, so the player cannot turn it off for this map.
+
+'''monsterfallingdamage'''
+:Enables monsters to take falling damage.
+
+'''oldfallingdamage'''
+:Enables falling damage on the level.  This enables ZDoom's old algorithm which differs from the one Hexen uses. The differences between this and Hexen's falling damage style are small. The minimum falling speed at which you start to take damage is lower and minimum speed above which you die for sure is somewhat higher for this style. Another difference is that Hexen's falling damage requires the player to have a certain minimum speed in order to die at all while this old style does not so it can kill you even with a minor impact in case you are already badly hurt.
+
+'''strifefallingdamage'''
+:Enables Strife-style falling damage on the level. Unlike the two other types this is extremely punishing as you lose a lot of health when falling too far.
+
+'''forcefallingdamage'''
+:This is exactly the same as oldfallingdamage. The name comes from Skull Tag, which had it as a MAPINFO option first.
+
+'''nofallingdamage'''
+:Disables falling damage. Unlike fallingdamage, the player can still turn falling damage on using dmflags. In fact, this is the same as if you had not specified any sort of falling damage at all for a map. It is only here so that you can use a defaultmap entry to turn falling damage on for your maps by default but you want a few that don't have falling damage.
+
+'''teamdamage &lt;amount&gt;'''
+:This forces team damage to the specified level when the map is played in Team Deathmatch or Cooperative mode.  1 is normal damage, lower values cause lower damage to team mates and higher values increase damage done.  0 turns off team damage completely.  Note that this setting can be overridden by the host by changing the CVAR value after the map has started.
+
+'''gravity &lt;amount&gt;'''
+:Gravity is now accessible through the mapinfo lump. Set this for the amount of gravity. Standard gravity is 800, just like Quake.
+
+'''aircontrol &lt;amount&gt;'''
+:This specifies the amount of control the player has when airborne. A value of 1 means the player can move as freely in the air as he can on land, and 0 means the player has no control at all and must wait until landing before he can control his movements again. The standard aircontrol value is 0.00390625, which is just enough to allow you to easily jump up onto ledges.
+
+'''airsupply &lt;amount&gt;'''
+:Specifies the time in seconds the player can remain under water without taking damage. Setting this to 0 allows the player to stay under water indefinitely. The default is a ridiculously short 10 seconds so if you use extensive water areas you will most certainly need to change this.
+
+'''filterstarts'''
+:This filters out player starts based on skill and gametype settings.
+
+'''allowrespawn'''
+:If this flag is present, after the player dies in a single-player game, they may respawn without resetting the map or loading the most recent autosave, just as if they had respawned in a cooperative multiplayer game.
+
+'''teamplayon'''
+:Forces teamplay to true when this map is started. (Can be overridden by the host).
+
+'''teamplayoff'''
+:Forces teamplay to false when this map is started. (Can be overridden by the host).
+
+'''noinventorybar'''
+:This prevents the inventory bar from ever being drawn in a Doom map.
+
+'''keepfullinventory'''
+:Normally the amount of inventory items is reduced to 1 when the player is changing levels in a non-hub based game. This option switches that automatic behavior off.
+
+'''infiniteflightpowerup'''
+:Makes the flight powerup last for the duration of the level rather than a fixed amount of time.  This is the default behavior for Hexen.
+
+'''nojump'''
+:Disallows jumping in a map.
+
+'''allowjump'''
+:Allows jumping in a map. This is only needed when the default is set to nojump.
+
+'''nocrouch'''
+:Disallows crouching in a map.
+
+'''allowcrouch'''
+:Allows crouching in a map. This is only needed when the default is set to nocrouch.
+
+'''noinfighting'''
+:Monsters in this map will never turn on each other, even if they are hit by another monster's attacks which damage them.
+
+'''normalinfighting'''
+:Monsters will turn on each other as normal when they get caught in crossfire.  Monsters of the same type who are hit by each other's projectile attacks will not be damaged and will not infight.  This is the default behavior.
+
+'''totalinfighting'''
+:All monsters will potentially infight with each other, even monsters of the same species.
+
+'''f1 &lt;image&gt;'''
+:Enable Skulltag's [http://www.skulltag.com/wiki/index.php?title=F1_Screens custom F1 help screens].  If the user presses the F1 key, the specified image will be displayed over the UI.
+
+'''checkswitchrange'''
+:Enables checks whether switch textures are reachable. If a switch is completely above or below the player and this option is on the switch won't activate.
+
+'''nocheckswitchrange'''
+:Disables checks whether switch textures are reachable.
+
+'''translator &lt;lumpname&gt;'''
+:Sets a definition lump how Doom format maps' linedef and sector types are translated into the internal Hexen format representation. For details please have a look at the internal definition files located in the xlat/ folder of zdoom.pk3.
+
+'''unfreezesingleplayerconversations'''
+:Allows the game to continue while a Strife-style conversation window is open.  Normally, the game freezes in single-player mode while a conversation is ongoing.  Use this to disable that behavior.
+
+'''Compatibility options'''
+:You can alter some [[compatibility options]] in MAPINFO as well. Either specify ''compatibility_option'' 1 to force an option to be enabled or ''compatibility_option'' 0 to force it to be disabled. This setting will override the global CVAR to ensure that a map that requests a certain option to be on or off can be played correctly no matter what the user's settings are.
+
+==Cluster definitions==
+
+A cluster definition begins with the word "clusterdef". For purposes of ZDoom, clusters are used to displays messages when moving between maps and to optionally group different levels into a hub. 
+
+'''clusterdef &lt;cluster&gt;'''
+:&lt;Cluster&gt; is the cluster that this clusterdef defines. A cluster of 0 is used internally to mean "no cluster" and should be avoided. 
+
+After clusterdef, the following properties are valid: 
+
+'''entertext &lt;message&gt;'''
+:&lt;message&gt; is a message to be displayed when the player has just finished a level in another cluster and is entering a level in this cluster. 
+
+'''exittext &lt;message&gt;'''
+:&lt;message&gt; is a message to be displayed when the player has just finished a level in a different cluster from the next one. If the next level's cluster has an entertext defined, then it will be shown instead of this cluster's exittext. 
+
+'''music &lt;musiclump&gt;'''
+:This is the music to play while either the entertext or exittext of this cluster is displayed. For Doom I, this is normally D_VICTOR, and for Doom II, this is normally D_READ_M. 
+
+'''flat &lt;flatlump&gt;'''
+:This is the name of the flat to use as a background while this cluster's entertext or exittext is displayed.
+
+'''pic &lt;piclump&gt;'''
+:This is the pic to use as a background while this cluster's entertext or exittext is displayed.
+
+'''hub'''
+:Indicates that this cluster is a hub. When leaving a hub, the game will remember the contents of the level when the player left it and restore the level to that state when the player returns to it. Moving to a different cluster will cause the game to forget the state of the levels in this hub in order to save memory. Each level a player visits in a hub uses memory (about 20k for a typical level), so it's probably a good idea not to have too many levels in a single hub. Just how many is "too many" is arbitrary. Unless you use very large levels, you could probably use 50 levels in a hub, and only about 1 meg would be required to keep track of the state of each level. 
+
+==Skill Level Definitions &lt;br&gt;==
+Skill definitions begin with the word skill followed by the name of the skill.
+
+'''clearskills'''
+:Before defining any skills you may use this to clear off any and all skill levels that the game uses.
+
+'''ammofactor &lt;decimal number&gt;'''
+:This affects how much ammo you pick up in the skill level, by multiplying by the number. If the number is set to 2.0 for example, it will make you pick up double ammo, or if it were set to 0.5, you would pick up half of the normal ammo.
+
+'''dropammofactor &lt;decimal number&gt;'''
+:This affects how much ammo you pick up from fallen foes in the skill level, by multiplying by the number. If the number is set to 2.0 for example, it will make you pick up double ammo, or if it were set to 0.5, you would pick up half of the normal ammo. This value overrides '''ammofactor''' for ammo and weapons dropped by monsters. This affects both when an amount is specified in DropItem and when it's the default. For example, with DropAmmoFactor 4, a [[Classes:ZombieMan|former human]] will drop clips containing 40 bullets while a [[Classes:Mummy|golem]] will drop wand crystals containing 12 charges.
+
+'''doubleammofactor &lt;decimal number&gt;'''
+:This affects how much ammo you pick up when the Double Ammo [[DMFlags|DMFlag]] is set.
+
+'''damagefactor &lt;decimal number&gt;'''
+:This value affects how much damage you take from enemies. If the number was set to 0.5 for example, you would only take half damage in that skill level. However, if you set it to 2.0, you would take double damage from every enemy in the game.
+
+'''respawntime &lt;decimal time&gt;'''
+:Sets the amount of time in seconds it takes for monsters to respawn.
+
+'''respawnlimit &lt;value&gt;'''
+:Specifies how many times monsters respawn before staying permanently dead.
+
+'''aggressiveness &lt;decimal number&gt;'''
+:Factor for monster aggressiveness. 0 is normal, 1 is maximum.
+
+'''easybossbrain'''
+:This makes the BossEye shoot BossCubes at a decreased rate.
+
+'''spawnfilter &lt;filter name&gt;'''
+:This sets the skill's filter, meaning actors only appear on whatever filter is set here. For example if set to "Easy", all the easy actors would appear in the level. Setting it to "Normal" will make all the medium actors appear. If set to "Hard", all the hard actors would appear.
+
+'''acsreturn &lt;value&gt;'''
+:The value returned by the ACS [[GameSkill]] command.
+
+'''key &lt;key&gt;'''
+:Sets the hotkey for the skill level.
+
+'''fastmonsters'''
+:Makes all monsters with the +FASTER flag become faster in movement and attacking.
+
+'''disablecheats'''
+:Disables using cheats ingame.
+
+'''mustconfirm &lt;text&gt;'''
+:The player must confirm they wish to play the skill level, just like when you choose Nightmare.  If &lt;text&gt; is supplied, then it is used in place of the standard "Are you sure? This skill level isn't even remotely fair" when prompting the user.
+
+'''autousehealth'''
+:Enables automatic use of Raven's health items 
+
+'''name &lt;name&gt;'''
+:The name of the skill level in the menu.
+
+'''playerclassname &lt;class&gt; &lt;name&gt;'''
+:The name of the skill for the specified class.
+
+'''picname &lt;name&gt;'''
+:Graphic used in menu - this and Name are mutually exclusive
+
+'''textcolor &lt;color&gt;'''
+:Color that the skill level's name is displayed in.
+
+==Examples of MAPINFO Definitions==
+The mapinfos for the default episodes are found in ZDoom.pk3/mapinfo.
+
+'''Episode Definitions'''
+
+ episode e1m1
+ name "Knee Deep in the Dead"
+ picname m_epi1
+ key k
+
+'''Map Definitions'''
+
+ map E1M1 lookup HUSTR_E1M1
+ levelnum 1
+ titlepatch WILV00
+ next E1M2
+ secretnext E1M9
+ sky1 SKY1 0
+ cluster 1
+ par 30
+ music D_E1M1
+
+ map E1M8 lookup HUSTR_E1M8
+ levelnum 8
+ titlepatch WILV07
+ next EndGame1
+ secretnext E1M9
+ sky1 SKY1 0
+ cluster 1
+ par 30
+ nointermission
+ nosoundclipping
+ baronspecial
+ specialaction_lowerfloor
+ music D_E1M8
+
+'''Cluster Definitions'''
+
+ clusterdef 1
+ flat FLOOR4_8
+ music D_VICTOR
+ exittext lookup E1TEXT
+
+'''Skill Definitions'''
+
+ skill nightmare
+ Aggressiveness 1.0
+ SpawnFilter "Hard"
+ ACSReturn 5
+ MenuName "Extreme Aggression"
+
+ skill realnightmare
+ AmmoFactor 2
+ FastMonsters
+ DisableCheats
+ RespawnTime 12
+ SpawnFilter "Hard"
+ MenuLump "M_NMARE"
+ MustConfirm
+
+ skill baby
+ AmmoFactor 2
+ DamageFactor 0.5
+ EasyBossBrain
+ SpawnFilter "Easy"
+ PicName "M_JKILL"
+ Key i
+[[Category:ZDoom special lumps]]
+[[Category:Deprecated features]]</text>
+    <sha1>27vdas3wog7taib1ttsw12n21w9t56o</sha1>
+  </revision>
+</page>

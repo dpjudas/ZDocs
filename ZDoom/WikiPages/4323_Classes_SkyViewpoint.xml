@@ -1,0 +1,43 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>Classes:SkyViewpoint</title>
+  <ns>0</ns>
+  <id>4323</id>
+  <revision>
+    <id>39792</id>
+    <parentid>25554</parentid>
+    <timestamp>2015-05-03T22:58:58Z</timestamp>
+    <contributor>
+      <username>Blue Shadow</username>
+      <id>2021</id>
+    </contributor>
+    <minor />
+    <comment>/* DECORATE definition */ Updated</comment>
+    <origin>39792</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="1164" sha1="cfqx74d9348rq2siaznkjm45muaks9f" xml:space="preserve">{{Actor|
+| type = Map spot
+| name = Skybox camera
+| class = SkyViewpoint
+| doomednum = 9080
+}}[[Classes]]: {{Class|Actor}}&amp;rarr;&lt;u&gt;SkyViewpoint&lt;/u&gt;&lt;br&gt;
+&amp;ensp;&amp;rarr;{{Class|SkyCamCompat}}&lt;br&gt;
+&amp;ensp;&amp;rarr;{{Class|StackPoint}}&lt;br&gt;
+&amp;ensp;&amp;ensp;&amp;rarr;{{Class|LowerStackLookOnly}}&lt;br&gt;
+&amp;ensp;&amp;ensp;&amp;rarr;{{Class|UpperStackLookOnly}}&lt;br&gt;
+
+The sky viewpoint is used to make [[skybox|skyboxes]], it acts as the camera into the skybox. If, when the map is initialized, its TID is zero, it will replace the sky everywhere in the map. If its TID is not zero at that time, then corresponding [[Classes:SkyPicker|SkyPickers]] with the same TID must be placed in the sectors where the sky is to be replaced by the one in the skybox. If the TID changes after map initialization, the skies are not affected.
+
+The sky viewpoint takes one argument: visibility. The visibility for a skybox is equal to one-fourth the value of the first argument, so if you give it a value of 32 the visibility in the skybox will be 8.
+
+==== [[DECORATE]] definition ====
+ ACTOR &lt;u&gt;SkyViewpoint&lt;/u&gt; native
+ {
+   +{{Flag|NOSECTOR}}
+   +{{Flag|NOBLOCKMAP}}
+   +{{Flag|NOGRAVITY}}
+   +{{Flag|DONTSPLASH}}
+ }</text>
+    <sha1>cfqx74d9348rq2siaznkjm45muaks9f</sha1>
+  </revision>
+</page>

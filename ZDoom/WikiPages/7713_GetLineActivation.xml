@@ -1,0 +1,68 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>GetLineActivation</title>
+  <ns>0</ns>
+  <id>7713</id>
+  <revision>
+    <id>45911</id>
+    <parentid>45910</parentid>
+    <timestamp>2018-02-22T06:43:38Z</timestamp>
+    <contributor>
+      <username>Blue Shadow</username>
+      <id>2021</id>
+    </contributor>
+    <minor />
+    <origin>45911</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="2058" sha1="3uxyp1tuy1bsaf0tag1grt45z0r9zmm" xml:space="preserve">__NOTOC__
+int '''GetLineActivation''' (int ''lineid'');
+
+==Usage==
+Retrieves the line activation flags of the line with the specified [[Magic numbers#Line numbers|line ID]].
+
+===Parameters===
+*''lineid'': The ID of the line of which to get the activation flags.
+
+=== Return value ===
+The return value of the function is a bitfield where each bit in the result value corresponds to an activation flag value:
+*'''SPAC_None''' (0) — No flags.
+*'''SPAC_Cross''' (1) — Activated when crossed by player.
+*'''SPAC_Use''' (2) — Activated when used by player.
+*'''SPAC_MCross''' (4) — Activated when crossed by monster.
+*'''SPAC_Impact''' (8) — Activated when hit by projectile.
+*'''SPAC_Push''' (16) — Activated when bumped by player.
+*'''SPAC_PCross''' (32) — Activated when crossed by projectile.
+*'''SPAC_UseThrough''' (64) — Activated when used by player (with pass through).
+*'''SPAC_AnyCross''' (128) — Activated by anything crossing it which does not have the {{Flag|TELEPORT}} flag.
+*'''SPAC_MUse''' (256) — Activated by monsters using it.
+*'''SPAC_MPush''' (512) — Activated by monsters bumping into it.
+*'''SPAC_UseBack''' (1024) — The line can be used from the back side.
+
+Since the return value is a bitfield, the individual bits can be checked by using a bitwise AND ({{c|&amp;}}) comparison. More than one flag can be checked by using the bitwise OR ({{!}}) comparison.
+
+== Examples ==
+The following script will print a message on the screen if the tagged line can be activated by "using" it:
+ Script 1 (int id)
+ {
+     If([[GetLineActivation]](id) &amp; {{const|SPAC_Use}})
+     {
+         [[Print]](s:"You can open this door by 'using' it!");
+     }
+ }
+
+
+This script will print a message if the tagged line can be activated by "using" it or bumping into it:
+ Script 2 (int id)
+ {
+     If([[GetLineActivation]](id) &amp; ({{const|SPAC_Use}} | {{const|SPAC_Push}}))
+     {
+         [[Print]](s:"You can open this door by 'using' or bumping into it!");
+     }
+ }
+
+== See also ==
+* [[SetLineActivation]]
+[[category:ACS Information functions]]</text>
+    <sha1>3uxyp1tuy1bsaf0tag1grt45z0r9zmm</sha1>
+  </revision>
+</page>

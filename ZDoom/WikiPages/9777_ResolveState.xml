@@ -1,0 +1,76 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>ResolveState</title>
+  <ns>0</ns>
+  <id>9777</id>
+  <revision>
+    <id>52329</id>
+    <parentid>51882</parentid>
+    <timestamp>2024-04-09T18:26:26Z</timestamp>
+    <contributor>
+      <username>Jekyll Grim Payne</username>
+      <id>2175</id>
+    </contributor>
+    <minor />
+    <comment>/* See also */</comment>
+    <origin>52329</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="1967" sha1="pbfsir3ni8zhrdwqp9q3vfyenl5pf5a" xml:space="preserve">{{ZScriptNote}}
+
+'''{{class|Actor}}'''
+
+{{c|clearscope native state '''ResolveState'''(statelabel ''st'')}}
+
+== Usage ==
+Obtains a pointer to the first [[Structs:State|Actor state]] in the specified state sequence. This can be returned in an [[Anonymous functions|anonymous function]] or a function that returns a state.
+
+In contrast to '''[[FindState]]''', this is context-aware, which mainly means that it can be called just as &lt;code&gt;ResolveState&lt;/code&gt;, without any prefixes, not only in actors, but also in {{class|Weapon}}. (In contrast, [[FindState]] must be called as &lt;code&gt;invoker.FindState&lt;/code&gt; from weapon states or action functions). That said, '''{{c|ResolveState}} is ''not'' limited to weapons''' and can be safely used on any actor.
+
+=== Parameters ===
+*{{c|statelabel '''st'''}}
+:The name of the state sequence, such as "Ready", "Fire", etc.
+
+== Examples ==
+This version of the {{class|Pistol}} not only fires on the very first tic of Fire, but also lets the player manually refire by tapping (but not holding) the fire button anywhere during the PISG CCCBBBAAA part of the animation:
+
+&lt;syntaxhighlight lang="csharp"&gt;
+class FastPistol : Pistol
+{
+	States
+	{
+	Fire:
+		PISG B 3 A_FirePistol;
+		PISG C 3;
+		PISG CCCBBBAAA 1
+		{
+			// Check the player is pressing the Fire button now
+			// but wasn't pressing it during the previous tic:
+			if (player.cmd.buttons &amp; BT_ATTACK &amp;&amp; !(player.oldbuttons &amp; BT_ATTACK))
+			{
+				// If so, go back to Fire:
+				return ResolveState("Fire");
+			}
+			// Otherwise continue (and go to Ready):
+			return ResolveState(null);
+		}
+		Goto Ready;
+	Flash:
+		// This has to be modified in order to
+		// match the new duration of the main
+		// attack frame:
+		PISF A 3 Bright A_Light1;
+		Goto LightDone;
+	}
+}
+&lt;/syntaxhighlight&gt;
+
+Note, if you want to ''completely'' disable autofiring, you will also need to add {{flag|Weapon.NOAUTOFIRE}} flag.
+
+== See also ==
+*[[ZScript actor functions]]
+*[[FindState]]
+
+[[Category:ZScript]]</text>
+    <sha1>pbfsir3ni8zhrdwqp9q3vfyenl5pf5a</sha1>
+  </revision>
+</page>

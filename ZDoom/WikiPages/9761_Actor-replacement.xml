@@ -1,0 +1,360 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>Actor replacement</title>
+  <ns>0</ns>
+  <id>9761</id>
+  <revision>
+    <id>54193</id>
+    <parentid>54192</parentid>
+    <timestamp>2025-02-07T09:24:38Z</timestamp>
+    <contributor>
+      <username>Jekyll Grim Payne</username>
+      <id>2175</id>
+    </contributor>
+    <origin>54193</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="23562" sha1="6h0l95y9x1ya4x7z8czkw0opttmk8ta" xml:space="preserve">"Actor replacement" is the concept/method often applied in gameplay modifications that define their own {{class|Actor|actors}} (such as {{class|Weapon|weapons}}, {{class|Inventory|items}}, monsters, etc.) but do not feature their own maps.
+
+There are several ways to perform actor replacement in GZDoom, and a number of things to keep in mind.
+
+The most important thing to keep in mind is that '''&lt;u&gt;the term "replacement" does not imply a literal replacement of a class.&lt;/u&gt;''' There is, in fact, no way to ''replace'' one actor class with another actor class in such a way that the original class "stops existing." The methods outlined on this page only instruct the game to ''spawn'' one actor instead of the other. The original actor will still be loaded, will still exist in the game, and it will still be possible to make it spawn. As such, it's important to remember the following:
+* If you create a mod that replaces weapons with custom weapons but the player uses a cheat code like ''{{c|give all}}'', they will get both your mod's weapons and the original weapons in their inventory. This applies to all types of items, not just weapons. Normally, they won't be able to select them, but they may appear in their {{class|BaseStatusBar|HUD}}, and they may end up switching to them when they run out of ammo for a mod's weapon, unless all mod's weapons have low enough values for {{property|Weapon.SelectionOrder}}.
+* Player starting items (defined by the {{property|Player.StartItem}} property) do not spawn, they're placed in the player's inventory directly, and thus cannot be captured by replacement methods.
+* [[ACS]] scripts and [[ZScript]] functions that give, take or check for explicit item classes (such as {{function|TakeInventory}}, {{function|GiveInventory}}, {{function|CheckInventory}}) are not aware of replacements, and will check for the specific class they're intructed to look for, even if that class is supposed to be replaced on spawn with another one. For example, this means a map ACS script like &lt;code&gt;CheckInventory("Shotgun")&lt;/code&gt; will not work properly when played with a weapon mod that replaces Shotgun with another weapon.
+* The {{c|[[Spawn (ZScript)|Actor.Spawn()]]}} function by default does not allow replacements, but it can be controlled by its third argument. This is especially relevant when creating addons for other mods.
+
+= When actor replacement is '''NOT''' needed =
+==Spawning an actor for testing purposes==
+If you've defined a custom actor and just want to spawn it for testing purposes to see if it behaves correctly, you don't have to worry about creating a replacement. Simply use the &lt;code&gt;summon actorname&lt;/code&gt; console command where ''actorname'' is a class name, like ''DoomImp''. Class names are case-insensitive.
+
+==When you need to place actors in your custom maps==
+If a project comes with custom maps, custom actors can be placed in those maps directly, via a map editor. To do that, actors need to be given editor numbers (also known as DoomEdNums) with [[MAPINFO/Editor number definition|MAPINFO]]. You can also add [[Editor keys|editor keys]] to your actors in [[ZScript]]/[[DECORATE]], in order to customize the appearance of their markers in the map editor (color, size, arrow, and so on).
+
+In addition to that, if the actors are defined in [[ZScript]], the file '''gzdoom.pk3''' must be added as a resource in Ultimate Doom Builder. To do that, use ''{{c|Map Options (F2) &gt; Add resource... &gt; From PK3/PK7 &gt;}}'' navigate to the GZDoom folder and pick {{c|gzdoom.pk3}}. You must also tick the ''"Exclude this resource from testing parameters"'' checkbox. &lt;u&gt;If gzdoom.pk3 isn't added as a resource, actors defined in ZScript will not show up in Ultimate Doom Builder&lt;/u&gt; even if they have editor numbers defined properly.
+
+== Player classes ==
+Player classes '''cannot be replaced''' directly, so none of the standard replacement methods apply to them. Code like &lt;code&gt;class MyPlayer replaces DoomPlayer&lt;/code&gt; has no effect at all.
+
+If you want to add a player class to your project, you need to create a new actor based either on {{class|PlayerPawn}} or one of the existing classes, like {{class|DoomPlayer}}, and then add it via [[MAPINFO]]. You will find details on this page: '''[[Creating new player classes]]'''.
+
+==Modifying actor properties on the fly==
+If you want to only add minor changes to actors, consider modifying existing actors dynamically instead of creating new actors to serve as replacements. For example, let's say you want to modify the {{property|PickupSound}} of all keys in Doom. Using an [[Events and handlers|event handler]] you can do this much more easily than doing it via actor replacement:
+&lt;syntaxhighlight lang="csharp"&gt;
+// Runs whenever an actor spawns in the world:
+override void WorldThingSpawned(worldEvent e)
+{
+	// Try casting the spawned actor as the Key class:
+	let k = Key(e.thing);
+	// If the cast succeeded, this means this actor
+	// is based on the Key class, i.e. is a key:
+	if (k)
+	{
+		// Modify its pickupsound directly:
+		k.pickupsound = "pickups/keycard"; //(SNDINFO sound name)
+	}
+}&lt;/syntaxhighlight&gt;
+This code will modify the pickupsound of all actors based on the {{class|Key}} class (are more robust system that checks for specific key classes is, of course, possible too). This saves you the need to define multiple replacements, or worry about key-specific challenges, like lock numbers.
+
+This approach can be applied to all dynamically modifiable actor fields (most of them are), and is very useful for purely cosmetic changes (like changing sounds, {{property|PickupMessage}}, and so on). It improves compatibility because a change like this does not prevent actors from being replaced by gameplay mods. It's also very efficient for mass changes (like in the example above, where the change will apply to ''all'' actors based on the {{class|Key}} class, instead of having to manually go through every existing key).
+
+==Injecting new behaviors into existing actors via controllers==
+ZScript offers a lot of tools to add or modify actor behavior without replacing the actor. This can be a very beneficial choice when creating mods that need to affect other actors (for example, add weapons that can affect monsters in specific ways), because this lets them be universally compatible.
+
+Aside from modifying properties on spawn, as [[#Modifying actor properties on the fly|described above]], you can also modify them temporarily with the help of controllers—separate classes that are attached to the actor and affect it in some way. Usually those controllers are custom {{class|Inventory|Inventory items}} or {{class|Powerup|dummy Powerups}}.
+
+For example, say, you're creating a weapon that is supposed to set monsters on fire, and you want to do this for ''all'' monsters. While you could, of course, replace each and every monster and add a custom Pain state and activate it with [[Custom damage types|a custom damagetype]], it'd be ''much'' easier and more robust to handle it with a controller.
+
+Here's an example of a controller based on the {{class|Powerup}} class that [[SpawnParticle (ZScript)|spawns particles]] around the actor (meant to be a monster) who has it, and also deals damage to them every second:
+&lt;syntaxhighlight lang="csharp"&gt;
+class ActorFireController : Powerup
+{
+	// This will store a pointer to the player who fired the original
+	// projectile, so that the damage can be passed from this pointer
+	// and the player gets proper kill credit:
+	Actor fire_setter;
+
+	// These colors will be used for the particles:
+	static const color fireColors[] =
+	{
+		"fb8402",
+		"bb0e00",
+		"ffa103",
+		"790d0b"
+	};
+
+	Default
+	{
+		Powerup.Duration -10;
+	}
+
+	override void DoEffect()
+	{
+		Super.DoEffect();
+		// Null-check the owner just in case, and return
+		// if it's null:
+		if (!owner)
+		{
+			return;
+		}
+
+		// This block will spawn flame-like particles
+		// around the burning enemy:
+		FSpawnParticleParams fp;
+		// Pick a random color from the fireColors static array:
+		fp.color1 = fireColors[random(0,fireColors.Size()-1)];
+		fp.lifetime = random(30, 40);
+		fp.style = STYLE_Add;
+		fp.flags = SPF_FULLBRIGHT|SPF_REPLACE;
+		// Position the particles within the monster's hitbox:
+		fp.pos.x = owner.pos.x + frandom(-owner.radius, owner.radius) * 0.6;
+		fp.pos.y = owner.pos.y + frandom(-owner.radius, owner.radius) * 0.6;
+		fp.pos.z = owner.pos.z + frandom(owner.height * 0.25, owner.height * 0.8);
+		fp.startalpha = frandom(0.7, 1.0);
+		fp.fadestep = -1;
+		fp.size = frandom(8, 18);
+		// size reduces to 0 over lifetime:
+		fp.sizestep = -(fp.size / fp.lifetime);
+		// the particles will be slightly accelerated horizontally
+		// and pushed upwards:
+		fp.vel.xy = (frandom[fp](-2, 2), frandom[fp](-2, 2));
+		fp.vel.z = frandom[fp](2, 4);
+		fp.accel.xy = -(fp.vel.xy * 0.035); //acceleration is aimed to the opposite of velocity
+		fp.accel.z = -(fp.vel.z / fp.lifetime);
+		fp.startRoll = frandom[fp](0, 360);
+		fp.rollvel = frandom[fp](-15, 15);
+		fp.rollacc = -(fp.rollvel / fp.lifetime); //rollvel reduces to 0 over lifetime
+		Level.SpawnParticle(fp);
+
+		// Every second while the owner is alive and the fire_setter pointer is not null,
+		// the monster will receive damage:
+		if (owner.GetAge() % TICRATE == 0 &amp;&amp; fire_setter)
+		{
+			// fire_setter is passed as the source of the damage:
+			owner.DamageMobj(fire_setter, fire_setter, 5, 'Fire', DMG_THRUSTLESS);
+		}
+	}
+}&lt;/syntaxhighlight&gt;
+
+(See [[SpawnParticle (ZScript)|SpawnParticle]] and [[Operators_(ZScript)#.25_.28modulo.29|the modulo operator in ZScript]] for extra information)
+
+And here's how you could make your projectiles give this controller to monsters hit by them. In this example the projectile is based on {{class|DoomImpBall}}, but you can inject this [[DoSpecialDamage]] override into any projectile you like:
+&lt;syntaxhighlight lang="csharp"&gt;
+class DoomImpBall_Burn : DoomImpBall
+{
+	override int DoSpecialDamage (Actor victim, int damage, Name damagetype)
+	{
+		// Check the victim is valid, is a monster and is alive,
+		// and check that this projectile has a valid target (shooter):
+		if (victim &amp;&amp; victim.bISMONSTER &amp;&amp; victim.health &gt; 0 &amp;&amp; target)
+		{
+			// Give them the powerup and type-cast it to a pointer fc:
+			let fc = ActorFireController(victim.GiveInventoryType('ActorFireController'));
+			// If the cast was successfull, pass this projectile's
+			// target to controller's fire_setter:
+			if (fc)
+			{
+				fc.fire_setter = target;
+			}
+		}
+		// Damage stays unmodified:
+		return damage;
+	}
+}&lt;/syntaxhighlight&gt;
+
+This approach is vastly preferable to using actor replacements, because you have to implement it once, and then it'll just work on all actors. If you like, you can add more conditions to the controller or the [[DoSpecialDamage]] override, for example &lt;code&gt;if (!victim.bBOSS)&lt;/code&gt; to make it not work on bosses, or &lt;code&gt;if (!victim.bNOICEDEATH)&lt;/code&gt; to make it not work on monsters with the {{flag|NOICEDEATH}} flag (like {{class|ArchVile}} or {{class|LostSoul}}).
+
+=Replacing existing actors=
+If you want your custom weapons, items, monsters, etc. to appear in Doom (or Heretic, Hexen, Strife, etc.) maps, you will need to have your actors replace the actors already in those maps. There are several ways to do that.
+
+&lt;u&gt;It is not possible to generically combine replacements from multiple mods at  the same time.&lt;/u&gt; For example, if you load two mods that both replace the {{class|DoomImp|Doom's imp}}, you will only see the replacement from the latest mod in the autoload.
+
+== The &lt;code&gt;replaces&lt;/code&gt; keyword==
+Both ZScript and DECORATE support the &lt;code&gt;replaces&lt;/code&gt; keyword that can be utilized in the actor's definition:
+&lt;syntaxhighlight lang="csharp"&gt;
+class MyActor replaces ReplacementActor
+{ ... }&lt;/syntaxhighlight&gt;
+
+You can also [[Using inheritance|use inheritance]]:
+&lt;syntaxhighlight lang="csharp"&gt;
+class MyActor : ParentActor replaces ReplacementActor
+{ ... }&lt;/syntaxhighlight&gt;
+
+In the example above, MyActor will inherit all properties, states, functions and such of ParentActor, and it will spawn in the map instead of ReplacementActor. Note, ParentActor and Replacement actor ''can'' be the same actor class. For example:
+&lt;syntaxhighlight lang="csharp"&gt;
+class DoomImp_Strong : DoomImp replaces DoomImp
+{
+  Default
+  {
+    Health 1000;
+    +NOPAIN
+  }
+}
+&lt;/syntaxhighlight&gt;
+This creates a custom version of {{class|DoomImp}} that is identical to the default one, except it has 1000 {{property|health}} and will never enter its Pain state thanks to the {{flag|NOPAIN}} flag. It will also ''spawn'' in the maps instead of the default DoomImp.
+
+This method is easy to apply and is the most commonly used one (and before ZScript it was the only possible method). However, it has some downsides:
+# The &lt;code&gt;replaces&lt;/code&gt; method only offers 1:1 replacement: 1 original actor can be replaced with 1 new actor. You can't have 1 new actor replace multiple original ones, or vice versa.
+# If multiple mods are loaded and each contains a replacement for the same default actor, the one loaded last will take precedence. This may be undesirable, for example, if you're creating a complex monster pack and a player launches it alongside a map that has its own monster replacements, because if the map is loaded last, its monsters will be loaded instead of the ones from the monster pack.
+
+A common example of the latter is: imagine a map that contains replacements for monsters that serve only one purpose, to modify their {{property|BloodColor}}. To the author of the map this is a sensible stylistic choice, but it may cause issues when a player tries to load that map with a monster pack and accidentally put the mosnter pack earlier in the load order than the map.
+
+== CheckReplacement event ==
+[[Events and handlers|Event handlers]] offer a more robust method of replacement with the &lt;code&gt;CheckReplacement()&lt;/code&gt; event. For example:
+&lt;syntaxhighlight lang="csharp"&gt;
+class MyReplacementHandler : EventHandler
+{
+	override void CheckReplacement(ReplaceEvent e)
+	{
+		if (e.Replacee == 'Zombieman')
+		{
+			e.Replacement = 'CustomZombieman';
+		}
+	}
+}&lt;/syntaxhighlight&gt;
+
+This method is more flexible for a number of reasons. First, it takes priority over the &lt;code&gt;replaces&lt;/code&gt; keyword, so you can force your replacements to take priority.
+
+Second, it allows replacing multiple actors with the same one:
+&lt;syntaxhighlight lang="csharp"&gt;
+class MyReplacementHandler : EventHandler
+{
+	override void CheckReplacement(ReplaceEvent e)
+	{
+		let cls = e.Replacee;
+		if (cls == 'Zombieman' || cls == 'ShotgunGuy' || cls == 'ChaingunGuy')
+		{
+			e.Replacement = 'WalkingCorpse';
+		}
+	}
+}&lt;/syntaxhighlight&gt;
+This handler replaces {{class|Zombieman}}, {{class|ShotgunGuy}} and {{class|ChaingunGuy}} with the same new actor.
+
+Third, you can implement any kind of custom logic you want into this system. For example, this will replace the Zombieman with a {{class|Cyberdemon}} with ~20% chance:
+&lt;syntaxhighlight lang="csharp"&gt;
+class MyReplacementHandler : EventHandler
+{
+	override void CheckReplacement(ReplaceEvent e)
+	{
+		if (e.Replacee == 'Zombieman' &amp;&amp; random(0,10) &gt;= 8)
+		{
+			e.Replacement = 'Cyberdemon';
+		}
+	}
+}&lt;/syntaxhighlight&gt;
+
+More importantly, you can use &lt;code&gt;CheckReplacement()&lt;/code&gt; to make replacements custom by letting the player change a custom CVAR and check for the value of that CVAR in CheckReplacement() before applying it.
+
+Finally, the &lt;code&gt;CheckReplacement()&lt;/code&gt; event has the &lt;code&gt;e.IsFinal&lt;/code&gt; field. Some mods may set it to &lt;code&gt;true&lt;/code&gt; to determine that their replacements should be final; other mods may check for it and only apply their replacements when it's &lt;code&gt;false&lt;/code&gt;.
+
+Note, to make sure actors replaced this way property handle their [[Map_definition#SpecialAction_ExitLevel|map death specials]] (like Arachnotrons and Mancubi on "Dead Simple" in Doom 2), you will need another event: &lt;code&gt;CheckReplacee()&lt;/code&gt; This one is used to tell the game which actor exactly the new one replaces. For example:
+&lt;syntaxhighlight lang="csharp"&gt;
+class MyReplacementHandler : EventHandler
+{
+	override void CheckReplacement(ReplaceEvent e)
+	{
+		if (e.Replacee == 'Arachnotron')
+		{
+			e.Replacement = 'CustomArahnotron';
+		}
+	}
+	override void CheckReplacee (ReplacedEvent e)
+	{
+		if (e.Replacement == 'CustomArahnotron')
+		{
+			e.Replacee = 'Arachnotron';
+		}
+	}
+}&lt;/syntaxhighlight&gt;
+
+== RandomSpawner ==
+{{class|RandomSpawner}} is a class that can be utilized to have a random actor, from a specific list, spawn in place of another specific actor. RandomSpawner by itself doesn't offer any methods of replacement, it's just a way to define multiple replacements. After defining a custom RandomSpawner, you will still need to use one of the methods outlined above (either the &lt;code&gt;replaces&lt;/code&gt; keyword, or the &lt;code&gt;CheckReplacement()&lt;/code&gt; event) to have it spawn instead of one of the original actors.
+
+Aside from randomized replacements, RandomSpawner automatically handles [[Map_definition#SpecialAction_ExitLevel|map death specials]] (like Arachnotrons and Mancubi on "Dead Simple" in Doom 2).
+
+== Special cases ==
+=== Weapons ===
+When a new {{class|Weapon|weapon}} is created, simply having it replace one of the original weapons will ''not'' let the player properly use it. There are a few extra prerequisites:
+# The replacement weapon needs to have {{property|Weapon.SlotNumber}} defined. If it doesn't, the player won't be able to select that weapon. (They can auto-switch to it when they receive or, or when they run out of ammo for other weapons, but they won't be able to select it by pressing a slot key.)
+#:Note, other methods of assigning slot numbers exist: this can be done in the {{class|PlayerPawn}} actor (your player class), the [[MAPINFO/GameInfo_definition|GameInfo block in MAPINFO]], or even [[KEYCONF]] {{deprecated}}. Using the {{c|SlotNumber}} property, however, is the easiest, most visible and most compatible method.
+#:Don't forget that if there are multiple weapons in the same slot (like the default [[Shotgun]] and [[SuperShotgun]] in Doom), you will also need to specify their order with {{property|Weapon.SlotPriority}} property.
+# The replacement ''should'' also have {{property|Weapon.SelectionOrder}} defined. The lower this number, the higher the selection priority. When creating new weapons, make sure that their {{c|SelectionOrder}} is ''lower'' than that of the default weapons, otherwise the player may be auto-switched to one of the default weapons if they happen to have it in their inventory due to cheats, ACS scripts, etc.
+# If the weapon is meant to be present in the player's inventory from the start, it will have to be defined as StartItem in your custom player class—see [[#Starting player items|next section]].
+
+As such, if you've created, say, a Shotgun replacement, you will at the very least need this:
+&lt;syntaxhighlight lang="csharp"&gt;
+class Shotgun_new : Weapon replaces Shotgun
+{
+	Default
+	{
+		Weapon.SlotNumber 3;
+		Weapon.SelectionOrder 130; //default Shotgun has 1300
+
+		// the rest of the weapon code
+&lt;/syntaxhighlight&gt;
+
+=== Starting player items ===
+Starting items that are given to the {{class|PlayerPawn}} when it spawns in the map are defined with the help of the {{property|Player.StartItem}} property. They're more complicated than the other cases, because they are not spawned in the map ''and'' they're not considered to be "given" (so, [[HandlePickup|{{c|HandlePickup()}}]] cannot capture it). There are only two ways to replace starting items:
+
+[[Creating new player classes|Define a custom player class]] and define your own start items. Remember that, if you create your class based on an existing one, like {{class|DoomPlayer}}, once you add even one startitem, the list defined in the original actor will be completely cleared. That's why if you want to add a custom {{class|Pistol|pistol}} replacement, you will also need to add {{class|Fist}} and {{class|Clip}} again:
+&lt;syntaxhighlight lang="csharp"&gt;
+class MyPlayer : DoomPlayer
+{
+	Default
+	{
+		Player.StartItem "CustomPistol", 1; // a Pistol replacement
+		Player.StartItem "Clip", 50;
+		Player.StartItem "Fist", 1;
+	}
+}&lt;/syntaxhighlight&gt;
+This should normally be done via [[MAPINFO]], but some mods may rely on the deprecated method of doing that via [[KEYCONF]]. Note, if you're aiming for high compatibility with your mod and want it to be playable with other mods, if those mods define their own player classes via KEYCONF, you will not be able to override them via MAPINFO, because KEYCONF takes precedence (that's the main reason why using it is not recommended).
+
+The other method is to simply give starting items directly. There's no one correct way to do it, but one possible example is via an [[Events and handlers|event handler]]:
+&lt;syntaxhighlight lang="csharp"&gt;
+class StartingItemsHandler : EventHandler
+{
+	override void PlayerSpawned(PlayerEvent e)
+	{
+		PlayerPawn pmo = players[e.PlayerNumber].mo;
+		if (pmo)
+		{
+			pmo.ClearInventory(); //Remove all current items
+			pmo.GiveInventory('Fist', 1);
+			pmo.GiveInventory('Clip', 50);
+			pmo.GiveInventory('CustomPistol', 1); //Pistol replacement
+		}
+	}
+}&lt;/syntaxhighlight&gt;
+However, this specific example is not a good one because it will do this at the start of every map. Manual checks will need to be added to avoid this.
+
+=== Keys ===
+Replacing {{class|Key|keys}} directly will not let your key replacements to open the same doors. In order to "link" a new key to the old key and let it open the same locks, you will need to use the {{property|Species}} property, as shown in [[Classes:Key#Examples|'''this example''']].
+
+If you're making your own map with custom keys, use the [[LOCKDEFS]] lump instead to set up keys and locks. However, in a gameplay mod ''without'' maps you absolutely should not modify LOCKDEFS, because it'll make your mod incompatible with map packs that have their own LOCKDEFS definitions.
+
+Alternatively, if you want to add only minor cosmetic changes to your keys, you could [[#Modifying_actor_properties_on_the_fly|modify their properties dynamically]] instead of replacing them.
+
+In addition, it's also possible to use [[HandlePickup]] and a separate controller to simply make the player receive default keys (e.g. {{class|RedCard}}) whenever they're about to receive a custom key. See [[#Dynamic replacement of given items|below]].
+
+=== Dynamic replacement of given items ===
+If an item/weapon is given to the player directly (through an [[ACS]] script, a ''{{c|give}}'' console cheat, [[A_GiveInventory]], or otherwise), it will not be subject to spawning/replacement rules. However, it may be captured with the help of a control item with a &lt;code&gt;HandlePickup()&lt;/code&gt; override. You will find more information on the {{c|[[HandlePickup]]}} function page.
+
+Another option is to use the [[CanReceive]] virtual function inside your custom PlayerPawn.
+
+=Replacement-related issues=
+Using any of the actor replacement methods outlined above will most of the time cause issues if combined with methods that explicitly check class names. This is mostly relevant only for gameplay mods that are meant to be combined with any custom map.
+*[[ACS]] functions such as [[CheckActorClass]], [[GetActorClass]], [[GetAmmoCapacity]], [[GetArmorType]], [[GetWeapon]], [[ThingCountName]] and others.
+*[[ZScript]] functions such as [[FindInventory]].
+
+=See also=
+*[[Using inheritance]]
+*[[Creating new player classes]]
+*[[Events and handlers]]
+*[[HandlePickup]]
+
+[[Category:ZScript guides]]
+[[Category:Guides]]
+[[Category:Editing concepts]]
+[[Category:ZScript]]</text>
+    <sha1>6h0l95y9x1ya4x7z8czkw0opttmk8ta</sha1>
+  </revision>
+</page>

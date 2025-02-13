@@ -1,0 +1,48 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>Skybox</title>
+  <ns>0</ns>
+  <id>3138</id>
+  <revision>
+    <id>38478</id>
+    <parentid>29751</parentid>
+    <timestamp>2014-11-05T18:47:39Z</timestamp>
+    <contributor>
+      <username>Gez</username>
+      <id>1283</id>
+    </contributor>
+    <minor />
+    <origin>38478</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="3011" sha1="8eefxgpasfc6jfnn3mza87qgvx7wpzk" xml:space="preserve">{{Doomwiki}}A '''skybox''' is a method to easily create a [[sky]] background to make computer and video game levels look bigger than they really are, by creating the illusion of distant three-dimensional surroundings. This method is used in various 3D games.
+
+The illusion of open space is created by displaying the skybox at a fixed distance.  Regardless of how the player moves through the map, the skybox environment will stay the same distance away, thus giving the impression that it is quite far away.
+
+You can create skyboxes in ZDoom using the {{Class|SkyViewpoint}} actor and a dummy sector.  The SkyViewpoint is a camera placed within the sector.  It rotates in response to the player's rotation, but does not move, thus maintaining the required illusion of depth.  Whatever the camera sees is then drawn where the sky texture F_SKY1 would normally appear in the target sectors.
+
+The skybox which a sector uses is determined by placing a {{Class|SkyPicker}} thing in a sector with F_SKY1 on the ceiling and/or floor.  Set the thing's first argument to match the TID of a SkyViewpoint and instead of seeing the sky texture in that sector, the player will see the skybox pointed to.  You can use this to create a map with many different skies in it.
+
+== Skybox shape ==
+
+Depending on the images used inside the skybox, such as backdrop or mountain range textures, the skybox sector should have a given shape for best visual effect.
+
+When no dedicated skybox is used, the engine creates an implicit cylinder from the selected sky graphic. (In GL mode, a sphere seems to be used to account for full Z-axis [[freelook]].)
+
+The word “skybox” would normally suggest that they be boxed, or square. In such a scenario, the camera's distance to a corner would be 1.41 fold of the distance to the center of the wall. Sky textures may be distorted to account for this perspective type, in that they are more compressed on the left/right edges, or expanded in the center. This is recognizable, as lines are projected as “arcs” in the flat texture. Example image: see the cloud string above the sun; in-game, this would be “a line”.
+[[File:Tgen skybox.jpg]]
+
+For non-distorted textures, a cylindrical skybox is preferable, as the distance to the wall is supposed to be same for every column in the image. As there are no bezier linedefs in the Doom engine, an ''n''-linedef circle sector approximation will have to do.
+
+==OpenGL skyboxes==
+In [[OpenGL]] children ports of ZDoom, it is possible to define a sky texture as a skybox in the [[GLDEFS]] lump. This requires either four or six images that tile together to map the inside of a cube. This can be combined with normal ZDoom skybox by being used as the sky of a skybox.
+
+==See also==
+* [[Sky]]
+* [[GLDEFS#Skybox definitions|OpenGL skyboxes]]
+* [[Classes:SkyViewpoint|SkyViewpoint]]
+* [[Classes:SkyPicker|SkyPicker]]
+* [http://www.zdoom.org/zdkb/skybox.html Richard Clark's tutorial on creating skyboxes.]
+[[Category:Features]][[Category:Glossary]]</text>
+    <sha1>8eefxgpasfc6jfnn3mza87qgvx7wpzk</sha1>
+  </revision>
+</page>

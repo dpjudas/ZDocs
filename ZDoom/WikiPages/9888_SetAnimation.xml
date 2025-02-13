@@ -1,0 +1,169 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>SetAnimation</title>
+  <ns>0</ns>
+  <id>9888</id>
+  <revision>
+    <id>54182</id>
+    <parentid>54055</parentid>
+    <timestamp>2025-02-03T13:22:20Z</timestamp>
+    <contributor>
+      <username>Jekyll Grim Payne</username>
+      <id>2175</id>
+    </contributor>
+    <comment>/* A monster */ added missing DECOUPLEDANIMATIONS flag from the example</comment>
+    <origin>54182</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="7142" sha1="tnlyt6ei44edd1n3k9sfxb1k414h0q8" xml:space="preserve">'''{{class|Actor}}'''
+
+''Play-scoped version:''&lt;br&gt;
+{{c|native void '''SetAnimation'''(Name ''animName'', double ''framerate'' {{=}} -1, int ''startFrame'' {{=}} -1, int ''loopFrame''{{=}} -1, int ''endFrame'' {{=}} -1, int ''interpolateTics'' {{=}} -1, int ''flags'' {{=}} 0)}}
+
+''UI-scoped version:''&lt;br&gt;
+{{c|native ui void '''SetAnimationUI'''(Name ''animName'', double ''framerate'' {{=}} -1, int ''startFrame'' {{=}} -1, int ''loopFrame''{{=}} -1, int ''endFrame'' {{=}} -1, int ''interpolateTics'' {{=}} -1, int ''flags'' {{=}} 0)}}
+
+== Usage ==
+If the calling actor has a [[MODELDEF|3D model]] attached, and said model has named animation sequences in it, this function will play the specified animation sequence on the model. Note, currently IQM is the only model format that supports named animation sequences.
+
+This allows for a simple way to play a specific model animation without relying on the tedious process of binding separate key frames to sprite names in [[MODELDEF]]. For this to work, the model must include multiple named animation sequences. For example, in Blender they can be created through the use of [https://docs.blender.org/manual/en/latest/editors/nla/index.html Nonlinear Animation].
+
+{{note|There are several prerequisites in order to be able to use this feature:&lt;br&gt;&lt;br&gt;1. The actor must have the {{flag|DECOUPLEDANIMATIONS}} flag.&lt;br&gt;2. The model must include multiple named animation sequences.&lt;br&gt;3. The MODELDEF definition for the model must have the '''BaseFrame''' keyword.}}
+
+=== Scopes ===
+{{c|SetAnimation}} can be called on an actor pointer from play scope, while {{c|SetAnimationUI}} can be called from UI scope. This means that the latter cannot be called from an actor state (since those are play-scoped). The other difference is that {{c|SetAnimationUI}} allows for truly instant animation change, rather than on the next [[tic]].
+
+=== Parameters ===
+*{{c|Name '''animName'''}}
+:The name of the animation sequence to play.
+:Note: in Blender this is the name of the action (can be seen in the Dope Sheet), ''not'' the name of the Nonlinear Animation strip.
+*{{c|double '''framerate'''}}
+:The framerate at which the animation sequence should play. If not specified, the sequence's own framerate will be used.
+*{{c|int '''startFrame'''}}
+:The frame of the animation sequence to start at. By default starts at the beginning.
+*{{c|int '''loopFrame'''}}
+:If specified and the {{c|SAF_LOOP}} flag is used, after the animation has played in full once, it'll keep looping from this frame instead of ''startFrame''.
+*{{c|int '''endFrame'''}}
+:If specified, the model's animation will only play until this frame. Otherwise, will play until the end of the animation.
+:Note, this argument wasn't initially present when this function was originally added to the engine, but it is present in GZDoom 4.12.
+*{{c|int '''interpolateTics'''}}
+:The number of [[tic|tics]] to interpolate between the model's current animation sequence and the new sequence set with ''animName''. A negative value is interpeted as 1 tic.
+*{{c|int '''flags'''}}
+:Multiple flags can be combined with &lt;code&gt;|&lt;/code&gt;. The following flags are available:
+:*{{c|'''SAF_INSTANT'''}} - By default, when setting a new animation, the model will interpolate from its current animation to the new one for the duration set by ''interpolateTics''. This flag disables it.
+:*{{c|'''SAF_LOOP'''}} - If set, the animation will be looped until a new animation is set. If not set, the sequence will be played from start to end and stop at the final frame.
+:*{{c|'''SAF_NOOVERRIDE'''}} - If set, the animation will not start if the same animation is already playing. Mostly intended to be used alongside SAF_LOOP when the function is being repeatedly called with the same ''animName'', so it doesn't get continuously restarted.
+
+== Examples ==
+=== An actor with a single looped animation ===
+This actor will start the model's 'idlebreathing' animation action as soon as it spawns. Note, since this actor is meant to be a decoration and it uses no state logic, its states don't need any duration.
+
+[[MODELDEF]]:
+ Model PulsingThing
+ {
+    Path "models/props"
+    Model 0 "pulsingthing.iqm"
+    Skin 0 "pulsingthing.png"
+    BaseFrame {{comment|Decoupled animations REQUIRE this}}
+ }
+[[ZScript]]:
+&lt;syntaxhighlight lang="csharp"&gt;
+class PulsingThing : Actor
+{
+  Default
+  {
+    +DECOUPLEDANIMATIONS
+  }
+  States
+  {
+  Spawn:
+    M000 A -1 NoDelay SetAnimation('idlebreathing', flags:SAF_LOOP);
+    stop;
+  }
+}&lt;/syntaxhighlight&gt;
+
+=== A monster ===
+However, for any regular actor that needs state logic (such as a monster), normal state logic rules will still apply. For example, if a {{class|Zombieman}} was created using decoupled animations, its state code could look like this:
+&lt;syntaxhighlight lang="csharp"&gt;
+class Zombieman3D : Zombieman
+{
+	Default
+	{
+		+DECOULPLEDANIMATIONS
+	}
+
+	States
+	{
+	// This will call A_Look as usual, once per 10 tics,
+	// and the idle animation is looped. SAF_NOOVERRIDE
+	// makes sure the idle animation isn't constantly
+	// restarted:
+	Spawn:
+		M000 A 0 A_Look();
+		M000 A 10 SetAnimation('idle', flags: SAF_LOOP|SAF_NOOVERRIDE);
+		loop;
+
+	// Same logic with walking animation:
+	See:
+		M000 A 0 A_Chase();
+		M000 A 4 SetAnimation('walk', flags: SAF_LOOP|SAF_NOOVERRIDE);
+		loop;
+
+	// As usual, zombieman takes 10 tics to aim,
+	// then fires and returns to See 16 tics later.
+	// It is implied that you've crafted your animations
+	// in a way that they will match these durations.
+	// Splitting aiming and firing makes it easier:
+	Missile:
+		M000 A 10
+		{
+			SetAnimation('aim');
+			A_FaceTarget();
+		}
+		M000 A 16
+		{
+			SetAnimation('fire');
+			A_PosAttack();
+		}
+		goto See;
+	
+	// The pain animation is started right away,
+	// but the sound is delayed by 3 tics, since
+	// this is how the default Zombieman does it:
+	Pain:
+		M000 A 3 SetAnimation('pain');
+		M000 A 3 A_Pain;
+		goto See;
+
+	Death:
+		M000 A 5 SetAnimation('death');
+		M000 A 5 A_Scream;
+		// The remaining states can be combined
+		// into one, since nothing else needs
+		// to happen here logic-wise:
+		M000 A -1 A_NoBlocking;
+		stop;
+
+	XDeath:
+		M000 A 5 SetAnimation('gibbed');
+		M000 A 5 A_XScream;
+		M000 A -1 A_NoBlocking;
+		stop;
+		
+	Raise:
+		M000 A 20 SetAnimation('resurrect');
+		Goto See;
+	}
+}
+&lt;/syntaxhighlight&gt;
+
+'''Important note:''' All functions that change states (such as {{c|[[A_Look]]}} and {{c|[[A_Chase]]}} in the examples above) must be placed ''before'' a {{c|SetAnimation}} call, specifically, on a different state. The reason is, state changes can be performed instantly, and when a monster wakes up, it can easily call A_Look, then A_Chase, and then enter its Missile/Melee state on the ''same'' tic. If the {{c|SetAnimation}} call also happens on the same tic, the actor will try to start several animations on the same tic, which can cause issues such as the next animation not playing and the actor being stuck in its previous animation or not moving.
+
+== See also ==
+* [[MODELDEF]]
+* [[SetAnimationFrameRate]]
+* [https://forum.zdoom.org/viewtopic.php?t=79003 Guide on using decoupled animations on ZDoom Forums]
+
+[[Category:ZScript]]</text>
+    <sha1>tnlyt6ei44edd1n3k9sfxb1k414h0q8</sha1>
+  </revision>
+</page>

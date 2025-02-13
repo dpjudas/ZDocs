@@ -1,0 +1,105 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>Classes:EntityBoss</title>
+  <ns>0</ns>
+  <id>4764</id>
+  <revision>
+    <id>39848</id>
+    <parentid>35212</parentid>
+    <timestamp>2015-05-04T22:11:00Z</timestamp>
+    <contributor>
+      <username>Blue Shadow</username>
+      <id>2021</id>
+    </contributor>
+    <minor />
+    <comment>/* DECORATE definition */ Updated</comment>
+    <origin>39848</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="2612" sha1="eqofznsj4qkn9c51n2cxj28us2vuv83" xml:space="preserve">{{Actor|
+| type = Monster
+| name = Alien entity
+| class = EntityBoss
+| game = Strife
+| doomednum = 128
+| convid = 74
+}}[[Classes]]: [[Classes:SpectralMonster|SpectralMonster]]&amp;rarr;&lt;u&gt;EntityBoss&lt;/u&gt;&lt;br&gt;
+The One God of the Sigil, the Entity uses all the sigil attacks. Dying while fighting it and recieving the bad ending is relevant to the level it is in, and not the Entity itself. The Entity splits into three {{Class|EntitySecond|sub-entities}} upon dying.
+==== [[DECORATE]] definition ====
+ ACTOR &lt;u&gt;EntityBoss&lt;/u&gt; : {{Class|SpectralMonster}}
+ {
+   {{property|Health}} 2500
+   {{property|PainChance}} 255
+   {{property|Speed}} 13
+   {{property|Radius}} 130
+   {{property|Height}} 200
+   {{property|FloatSpeed}} 5
+   {{property|Mass}} 1000
+   {{property|Monster}}
+   +{{flag|SPECIAL}}
+   +{{flag|NOGRAVITY}}
+   +{{flag|FLOAT}}
+   +{{flag|SHADOW}}
+   +{{flag|NOTDMATCH}}
+   +{{flag|DONTMORPH}}
+   +{{flag|NOTARGET}}
+   +{{flag|NOBLOCKMONST}}
+   +{{flag|INCOMBAT}}
+   +{{flag|LOOKALLAROUND}}
+   +{{flag|SPECTRAL}}
+   +{{flag|NOICEDEATH}}
+   {{property|MinMissileChance}} 150
+   {{property|RenderStyle}} Translucent
+   {{property|Alpha}} 0.5
+   {{property|SeeSound}} "entity/sight"
+   {{property|AttackSound}} "entity/melee"
+   {{property|PainSound}} "entity/pain"
+   {{property|DeathSound}} "entity/death"
+   {{property|ActiveSound}} "entity/active"
+   {{property|Obituary}} "$OB_ENTITY" // "%o felt the wrath of The One God."
+ 
+   action native [[A_EntityAttack]]();
+   action native [[A_EntityDeath]]();
+ 
+   States
+   {
+   Spawn:
+     MNAM A 100
+     MNAM B 60 Bright
+     MNAM CDEFGHIJKL 4 Bright
+     MNAL A 4 Bright [[A_Look]]
+     MNAL B 4 Bright [[A_SentinelBob]]
+     Goto Spawn+12
+   See:
+     MNAL AB 4 Bright [[A_Chase]]
+     MNAL C 4 Bright [[A_SentinelBob]]
+     MNAL DEF 4 Bright [[A_Chase]]
+     MNAL G 4 Bright [[A_SentinelBob]]
+     MNAL HIJ 4 Bright [[A_Chase]]
+     MNAL K 4 Bright [[A_SentinelBob]]
+     Loop
+   Melee:
+     MNAL J 4 Bright [[A_FaceTarget]]
+     MNAL I 4 Bright [[A_CustomMeleeAttack]](([[DECORATE_expressions#Mathematical_functions|random]][SpectreMelee](0, 255)&amp;9)*5)
+     MNAL C 4 Bright
+     Goto See+2
+   Missile:
+     MNAL F 4 Bright [[A_FaceTarget]]
+     MNAL I 4 Bright [[A_EntityAttack]]
+     MNAL E 4 Bright
+     Goto See+10
+   Pain:
+     MNAL J 2 Bright [[A_Pain]]
+     Goto See+6
+   Death:
+     MNAL L 7 Bright [[A_SpectreChunkSmall]]
+     MNAL M 7 Bright [[A_Scream]]
+     MNAL NO 7 Bright [[A_SpectreChunkSmall]]
+     MNAL P 7 Bright [[A_SpectreChunkLarge]]
+     MNAL Q 64 Bright [[A_SpectreChunkSmall]]
+     MNAL Q 6 Bright [[A_EntityDeath]]
+     Stop
+   }
+ }</text>
+    <sha1>eqofznsj4qkn9c51n2cxj28us2vuv83</sha1>
+  </revision>
+</page>

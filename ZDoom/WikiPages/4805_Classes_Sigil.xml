@@ -1,0 +1,151 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>Classes:Sigil</title>
+  <ns>0</ns>
+  <id>4805</id>
+  <revision>
+    <id>39932</id>
+    <parentid>35339</parentid>
+    <timestamp>2015-05-17T14:55:17Z</timestamp>
+    <contributor>
+      <username>Blue Shadow</username>
+      <id>2021</id>
+    </contributor>
+    <minor />
+    <comment>/* DECORATE definition */ Updated</comment>
+    <origin>39932</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="3699" sha1="437ogbc403zs1mpoilv656i1o7i5v39" xml:space="preserve">{{Actor|
+| type = Weapon
+| name = The Sigil
+| class = Sigil
+| game = Strife
+}}[[Classes]]: [[Classes:Weapon|Weapon]]&amp;rarr;&lt;u&gt;Sigil&lt;/u&gt;&lt;br&gt;
+&amp;ensp;&amp;rarr;[[Classes:Sigil1|Sigil1]]&lt;br&gt;
+&amp;ensp;&amp;rarr;[[Classes:Sigil2|Sigil2]]&lt;br&gt;
+&amp;ensp;&amp;rarr;[[Classes:Sigil3|Sigil3]]&lt;br&gt;
+&amp;ensp;&amp;rarr;[[Classes:Sigil4|Sigil4]]&lt;br&gt;
+&amp;ensp;&amp;rarr;[[Classes:Sigil5|Sigil5]]&lt;br&gt;
+The Sigil of the One God is a sentient weapon, worshiped by the Order. This weapon is upgradeable by finding the other pieces. It uses the player's health as ammo.
+
+This uses a lot of Strife-specific functions to decide what sprite to display and what action to do, things that are easier and more flexible to accomplish using [[A_Jump]] and other ZDoom functions, so use this code as a point of reference only.
+==== [[DECORATE]] definition ====
+ ACTOR &lt;u&gt;Sigil&lt;/u&gt; : {{Class|Weapon}} native
+ {
+   {{property|Weapon.Kickback}} 100
+   {{property|Weapon.SelectionOrder}} 4000
+   {{property|Health}} 1
+   +{{flag|FLOORCLIP}}
+   +{{flag|WEAPON.CHEATNOTWEAPON}}
+   {{property|Inventory.PickupSound}} "weapons/sigilcharge"
+   {{property|Tag}} "$TAG_SIGIL" // "SIGIL"
+   {{property|Inventory.Icon}} "I_SGL1"
+   {{property|Inventory.PickupMessage}} "$TXT_SIGIL" // "You picked up the SIGIL."
+ 
+   action native [[A_SelectPiece]]();
+   action native [[A_SelectSigilView]]();
+   action native [[A_SelectSigilDown]]();
+   action native [[A_SelectSigilAttack]]();
+   action native [[A_SigilCharge]]();
+   action native [[A_FireSigil1]]();
+   action native [[A_FireSigil2]]();
+   action native [[A_FireSigil3]]();
+   action native [[A_FireSigil4]]();
+   action native [[A_FireSigil5]]();
+ 
+   States
+   {
+   Spawn:
+     SIGL A 1
+     SIGL A -1 [[A_SelectPiece]]
+     Stop
+     SIGL B -1
+     Stop
+     SIGL C -1
+     Stop
+     SIGL D -1
+     Stop
+     SIGL E -1
+     Stop
+   Ready:
+     SIGH A 0 Bright [[A_SelectSigilView]]
+     Wait
+     SIGH A 1 Bright [[A_WeaponReady]]
+     Wait
+     SIGH B 1 Bright [[A_WeaponReady]]
+     Wait
+     SIGH C 1 Bright [[A_WeaponReady]]
+     Wait
+     SIGH D 1 Bright [[A_WeaponReady]]
+     Wait
+     SIGH E 1 Bright [[A_WeaponReady]]
+     Wait
+   Deselect:
+     SIGH A 1 Bright [[A_SelectSigilDown]]
+     Wait
+     SIGH A 1 Bright [[A_Lower]]
+     Wait
+     SIGH B 1 Bright [[A_Lower]]
+     Wait
+     SIGH C 1 Bright [[A_Lower]]
+     Wait
+     SIGH D 1 Bright [[A_Lower]]
+     Wait
+     SIGH E 1 Bright [[A_Lower]]
+     Wait
+   Select:
+     SIGH A 1 Bright [[A_SelectSigilView]]
+     Wait
+     SIGH A 1 Bright [[A_Raise]]
+     Wait
+     SIGH B 1 Bright [[A_Raise]]
+     Wait
+     SIGH C 1 Bright [[A_Raise]]
+     Wait
+     SIGH D 1 Bright [[A_Raise]]
+     Wait
+     SIGH E 1 Bright [[A_Raise]]
+     Wait
+   Fire:
+     SIGH A 0 Bright [[A_SelectSigilAttack]]
+     // Sigil1 attack
+     SIGH A 18 Bright [[A_SigilCharge]]
+     SIGH A 3 Bright [[A_GunFlash]]
+     SIGH A 10 [[A_FireSigil1]]
+     SIGH A 5
+     Goto Ready
+     // Sigil2 attack
+     SIGH B 18 Bright [[A_SigilCharge]]
+     SIGH B 3 Bright [[A_GunFlash]]
+     SIGH B 10 [[A_FireSigil2]]
+     SIGH B 5
+     Goto Ready
+     // Sigil3 attack
+     SIGH C 18 Bright [[A_SigilCharge]]
+     SIGH C 3 Bright [[A_GunFlash]]
+     SIGH C 10 [[A_FireSigil3]]
+     SIGH C 5
+     Goto Ready
+     // Sigil4 attack
+     SIGH D 18 Bright [[A_SigilCharge]]
+     SIGH D 3 Bright [[A_GunFlash]]
+     SIGH D 10 [[A_FireSigil4]]
+     SIGH D 5
+     Goto Ready
+     // Sigil5 attack
+     SIGH E 18 Bright [[A_SigilCharge]]
+     SIGH E 3 Bright [[A_GunFlash]]
+     SIGH E 10 [[A_FireSigil5]]
+     SIGH E 5
+     Goto Ready
+   Flash:
+     SIGF A 4 Bright [[A_Light2]]
+     SIGF B 6 Bright [[A_LightInverse]]
+     SIGF C 4 Bright [[A_Light1]]
+     SIGF C 0 Bright [[A_Light0]]
+     Stop
+   }
+ }</text>
+    <sha1>437ogbc403zs1mpoilv656i1o7i5v39</sha1>
+  </revision>
+</page>

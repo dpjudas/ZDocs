@@ -1,0 +1,93 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>Generic Door</title>
+  <ns>0</ns>
+  <id>732</id>
+  <revision>
+    <id>40635</id>
+    <parentid>40631</parentid>
+    <timestamp>2016-01-03T01:02:07Z</timestamp>
+    <contributor>
+      <username>Eevee</username>
+      <id>44</id>
+    </contributor>
+    <minor />
+    <comment>add defaults to arg list, matching Door_Raise</comment>
+    <origin>40635</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="2637" sha1="dt9t46drgvijs32lrvseiadf0asizkx" xml:space="preserve">{{DISPLAYTITLE:Generic_Door}}
+{{Special|202|tag, speed, kind, delay, lock|General BOOM linetype|Door|type2=Door}}
+
+* ''tag'': Tag of affected sector, or 0 to use the line's back sector.
+* ''speed'': Door's [[Definitions#Sector_movement_speed|movement speed]].  Doom's standard doors move at 16, and blazing doors move at 64.
+* ''kind'': Type of movement to apply to the door.
+* ''delay'': [[Octic#Units of time|Octics]] until door is automatically closed/opened.  Doom waits about 34 octics.
+* ''lock'': Required key, if any (see [[Key types]]).
+
+This special encapsulates [[Boom]]'s generalized doors.
+
+== Parameters ==
+===Tag===
+If ''tag'' is 0, then the sector on the line's back side is used.
+
+If 128 is added to the ''kind'' parameter, the tag is used as a light tag, not a door tag; see below.
+
+===Kind===
+''Kind'' can be one of four values:
+
+* 0&amp;nbsp;&amp;mdash; Raise door and close it after ''delay'' octics 
+* 1&amp;nbsp;&amp;mdash; Open door and leave it open 
+* 2&amp;nbsp;&amp;mdash; Close door and open it after ''delay'' octics 
+* 3&amp;nbsp;&amp;mdash; Close door and leave it closed
+
+If 64 is added to the ''kind'' parameter, the door is not retriggerable even if it is a manual door. This is consistent with Boom's behavior for generalized door.
+
+If 128 is added to the ''kind'' parameter, the tag is used as a light tag, not a door tag. In this case, this special only opens the door on the line's back side.
+Instead, a gradual lighting effect is done in the tagged sectors. The light is gradually changed between the darkest neighboring sector when the door is fully closed and the brightest neighboring sector when the door is fully open.
+
+===Delay===
+Because the largest values used in Boom maps could not fit in tics in the Hexen map format, this generalized line uses values in octics. For reference, the following table provides equivalence for the values available in Boom. Use the values from the octics column. You can also use any arbitrary value you want.
+{| {{prettytable}}
+! Seconds !! Tics !! Octics !! Notes
+|-
+| 1 || 35 || 8 ||
+|-
+| 4 || 150 || 34 || Equivalent to vanilla door delay
+|-
+| 9 || 300 || 69 ||
+|-
+| 30 || 1050 || 240 ||
+|}
+
+===Lock===
+For reference, Boom allows twelve possible lock types, but it is also possible to use any defined [[LOCKDEFS|custom lock value]].
+{| {{prettytable}}
+! Value !! Key needed to unlock
+|-
+| 100 || Any key
+|-
+| 130 || Any blue key
+|-
+| 129 || Any red key
+|-
+| 131 || Any yellow key
+|-
+| 2 || Blue key card
+|-
+| 1 || Red key card
+|-
+| 3 || Yellow key card
+|-
+| 5 || Blue skull key
+|-
+| 4 || Red skull key
+|-
+| 6 || Yellow skull key
+|-
+| 229 || All three colors
+|-
+| 101 || All six keys
+|}</text>
+    <sha1>dt9t46drgvijs32lrvseiadf0asizkx</sha1>
+  </revision>
+</page>

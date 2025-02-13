@@ -1,0 +1,70 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>ANIMATED</title>
+  <ns>0</ns>
+  <id>810</id>
+  <revision>
+    <id>37520</id>
+    <parentid>34582</parentid>
+    <timestamp>2014-01-07T18:04:20Z</timestamp>
+    <contributor>
+      <username>Gez</username>
+      <id>1283</id>
+    </contributor>
+    <minor />
+    <origin>37520</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="2724" sha1="943lra2q5sbr88npe9f9acauo7i0r2c" xml:space="preserve">{{doomwiki}}{{Warning|text=This page describes a feature created for Boom that is maintained in ZDoom for backwards-compatibility purposes only. It is not recommended that new projects make use of this feature. Everything that can be done with the ANIMATED lump can be done better and more easily by using [[ANIMDEFS]].}}
+
+The '''ANIMATED''' lump was originally [[Boom]]'s method of defining additional animated textures. Although some modern editors such as [[SLADE 3]] allow to create and edit this lump directly in binary form, the original method devised by [[TeamTNT]] involved creating a text file and converting it with a small utility called {{c|swantbls}} (''sw''itch and ''an''imation ''t''a''bl''e''s'').
+
+Contrarily to [[ANIMDEFS]], ANIMATED lumps are not cumulative. Only the last one loaded will be used.
+
+== Format ==
+The ANIMATED lump makes the names of the animated flats and textures known to the engine. It consists of a list of records, each 23 bytes long, terminated by a record (not used) whose first byte is -1 (255). The terminating record does not need to be complete and may be only the first byte; the rest will be ignored.
+
+{| {{prettytable}}
+! Length !! Description 
+|-
+| 1 byte || 255 to terminate list, 0 if a [[flat]], 1 if a [[texture]], 3 if a texture allowing [[decal]]s.
+|-
+| 9 bytes || Null-terminated string naming last texture/flat in animation.
+|-
+| 9 bytes || Null-terminated string naming first texture/flat in animation.
+|- 
+| 4 bytes || Animation speed, number of frames between animation changes (little-endian). [[SMMU]] and the [[Eternity Engine]] use a speed value of 65536 or greater to define warping textures (similar to warp2 in ANIMDEFS). This feature is also supported by ZDoom.
+|}
+
+== Swantbls syntax ==
+The {{c|swantbls}} tool converts a plain text file into an ANIMATED and [[SWITCHES]] lump. The format of the plain text file prior to conversion is as follows (quoth defswani.dat):
+
+ # This file is input for SWANTBLS.EXE, it specifies the switchnames
+ # and animated textures and flats usable with BOOM. The output of
+ # SWANTBLS is two lumps, SWITCHES.LMP and ANIMATED.LMP that should
+ # be inserted in the PWAD as lumps.
+ #
+ #switches usable with each IWAD, 1=SW, 2=registered DOOM, 3=DOOM2
+ [SWITCHES]
+ #epi    texture1        texture2
+ 1       SW1BRCOM        SW2BRCOM
+ ...
+
+ #animated flats, spd is number of frames between changes
+ [FLATS]
+ #spd    last        first
+ 8       NUKAGE3     NUKAGE1
+ ...
+
+ #animated textures, spd is number of frames between changes
+ [TEXTURES]
+ #spd    last        first
+ 8       BLODGR4     BLODGR1
+ ...
+
+== External links ==
+* {{idgames|id=9463||Boom editing utilities}}, including {{c|swantbls}}.
+
+[[category:Graphics lumps]]</text>
+    <sha1>943lra2q5sbr88npe9f9acauo7i0r2c</sha1>
+  </revision>
+</page>

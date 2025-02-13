@@ -1,0 +1,127 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>Classes:HUDFont</title>
+  <ns>0</ns>
+  <id>9179</id>
+  <revision>
+    <id>53122</id>
+    <parentid>52549</parentid>
+    <timestamp>2024-09-26T21:54:37Z</timestamp>
+    <contributor>
+      <username>Jekyll Grim Payne</username>
+      <id>2175</id>
+    </contributor>
+    <comment>/* Static */</comment>
+    <origin>53122</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="4425" sha1="6b8xo9e2448zr80s722g59jpold84jp" xml:space="preserve">{{ZScriptNote}}
+
+'''HUDFont''' is an internal class in ZScript, for use in [[ZScript status bars]].
+
+This class is used in text-drawing functions (such as [[DrawString (BaseStatusBar)|DrawString]]) as the font to use when drawing text. It also controls how the text is displayed, such as spacing and shadows.
+
+== Members ==
+*{{c|Font '''mFont'''}}
+:The {{struct|Font}} struct object that the HUDFont is using for drawing text.
+
+== Methods ==
+=== Static ===
+*{{c|static HUDFont '''Create'''(Font ''fnt'', int ''spacing'' }}={{c| 0, EMonospacing ''monospacing'' }}={{c| Mono_Off, int ''shadowx'' }}={{c| 0, int ''shadowy'' }}={{c| 0)}}
+:*{{c|Font '''fnt'''}}
+::The font to use. This is a {{struct|Font}} object that can be found with &lt;code&gt;Font.FindFont("&lt;your font name&gt;")&lt;/code&gt;.
+:*{{c|int '''spacing'''}}
+::The amount of spacing between letters that will be displayed. A spacing of 0 would draw all the characters on top of each other, otherwise this controls the spacing added on to the width of the character.
+::If the '''monospaced''' arguement is ''not'' {{c|Mono_Off}}, this argument must be specified. This can be done by calling &lt;code&gt;myfont.GetCharWidth("0")&lt;/code&gt; ("0" is used here as it's usually the widest, but other characters can be used too), where &lt;code&gt;myfont&lt;/code&gt; is the same {{struct|Font}} object that is passed to the '''fnt''' argument.
+:*{{c|EMonospacing '''monospaced'''}}
+::Controls whether the font is monospaced, or uses the width of each character as spacing. Possible values:
+::*'''Mono_Off''' — not monospaced (default)
+::*'''Mono_CellLeft''' — monospaced, characters placed at the left side of the cell
+::*'''Mono_CellCenter''' — monospaced, characters placed at the center of the cell
+::*'''Mono_CellRight''' — monospaced, characters placed at the right side of the cell
+:*{{c|int '''shadowx'''}}
+::Controls how far to the right drawn texts' shadows are drawn, in pixels. Negative values will position the shadow to the left.
+:*{{c|int '''shadowy'''}}
+::Controls how far down the drawn texts' shadows are drawn, in pixels. Negative values will position the shadow upwards.
+
+== Example ==
+
+In this example, 3 strings will be drawn to the screen, each in a different fashion.
+
+&lt;syntaxhighlight lang="csharp"&gt;
+class MyStatusBar : BaseStatusBar 
+{
+	HUDFont noMonospaceSmallfont;
+	HUDFont monospaceSmallfont;
+	HUDFont shadowSmallfont;
+	
+	override void Init() 
+	{
+		Super.Init();
+		SetSize(32, 320, 200);
+		
+		// smallfont is a built in Font object in ZScript - if you have your own font
+		// and want to use that instead, you should initialize it like this:
+		// Font myFont = "&lt;FONT NAME&gt;";
+		
+		// this font will not be monospaced when drawn
+		noMonospaceSmallfont = HUDFont.Create(smallfont);
+		// this font will be monospaced when drawn,
+		// and each character will be spaced based on the width of the "0" character
+		monospaceSmallfont = HUDFont.Create(smallfont, smallfont.GetCharWidth("0"), true);
+		// this font will not be monospaced, but will cast a shadow 8 pixels to the right and 8 pixels to the left
+		shadowSmallfont = HUDFont.Create(smallfont, 0, false, 8, 8);
+	}
+	
+	override void Draw (int state, double TicFrac)
+	{
+		Super.Draw (state, TicFrac);
+		
+		if (state == HUD_StatusBar)
+		{
+			BeginStatusBar();
+			DrawMainBar();
+		}
+		else if (state == HUD_Fullscreen)
+		{
+			BeginHUD();
+			DrawFullScreenStuff();
+		}
+	}
+	
+	void DrawMainBar()
+	{
+		DrawSomeText();
+	}
+	
+	void DrawFullScreenStuff()
+	{
+		DrawSomeText();
+	}
+	
+	void DrawSomeText()
+	{
+		// get the height of the font (we could get the height of any of the 3 HUDFonts we defined,
+		// but they all use the same font internally so it shouldn't matter)
+		// this is used to position each string below the last one
+		int fontHeight = noMonospaceSmallfont.mFont.GetHeight();
+		
+		// this string will have no monospacing - the "I" will be far skinnier than other characters.
+		DrawString(noMonospaceSmallfont, "TEXT DISPLAY", (0, 0 * fontHeight));
+		// this string will be monospaced - the "I" will be displayed very awkwardly
+		DrawString(monospaceSmallfont, "TEXT DISPLAY", (0, 1 * fontHeight));
+		// this string will have a shadow 8 pixels to the right and 8 pixels to the bottom
+		DrawString(shadowSmallfont, "TEXT DISPLAY", (0, 2 * fontHeight));
+	}
+}
+&lt;/syntaxhighlight&gt;
+
+== See also ==
+* [[Structs:Font]]
+* [[Classes:BaseStatusBar]]
+* [[DrawString (BaseStatusBar)]]
+
+[[Category:ZScript]]
+[[Category:Use of fonts]]</text>
+    <sha1>6b8xo9e2448zr80s722g59jpold84jp</sha1>
+  </revision>
+</page>

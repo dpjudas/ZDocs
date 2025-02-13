@@ -1,0 +1,50 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>Classes:ForceFieldGuard</title>
+  <ns>0</ns>
+  <id>4878</id>
+  <revision>
+    <id>40125</id>
+    <parentid>36441</parentid>
+    <timestamp>2015-05-22T06:48:12Z</timestamp>
+    <contributor>
+      <username>Blue Shadow</username>
+      <id>2021</id>
+    </contributor>
+    <minor />
+    <comment>/* DECORATE definition */ Updated</comment>
+    <origin>40125</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="550" sha1="7prryp5kal11ahrf06iiktevbuwr5l7" xml:space="preserve">{{Actor|
+| type = Map spot
+| name = Force field
+| class = ForceFieldGuard
+| game = Strife
+| doomednum = 25
+| convid = 0
+}}[[Classes]]: &lt;u&gt;ForceFieldGuard&lt;/u&gt;&lt;br&gt;
+{{desc}}
+==== [[DECORATE]] definition ====
+ ACTOR &lt;u&gt;ForceFieldGuard&lt;/u&gt; native
+ {
+   {{Property|Health}} 10
+   {{Property|Radius}} 2
+   {{Property|Height}} 1
+   {{Property|Mass}} 10000
+   +{{Flag|SHOOTABLE}}
+   +{{Flag|NOSECTOR}}
+   +{{Flag|NOBLOOD}}
+   +{{Flag|INCOMBAT}}
+   States
+   {
+   Spawn:
+     TNT1 A -1
+     Stop
+   Death:
+     TNT1 A 1 [[A_RemoveForceField]]
+     Stop
+   }
+ }</text>
+    <sha1>7prryp5kal11ahrf06iiktevbuwr5l7</sha1>
+  </revision>
+</page>

@@ -1,0 +1,54 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>GetActorVelZ</title>
+  <ns>0</ns>
+  <id>5430</id>
+  <revision>
+    <id>35625</id>
+    <parentid>35624</parentid>
+    <timestamp>2013-02-08T17:08:18Z</timestamp>
+    <contributor>
+      <username>Deded007</username>
+      <id>1392</id>
+    </contributor>
+    <minor />
+    <comment>/* Examples */  Links, newer sqrt function</comment>
+    <origin>35625</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="788" sha1="2u2ww2ncun6ollqadoa8nohg1u36z2u" xml:space="preserve">__NOTOC__
+fixed '''GetActorVelZ''' (int ''tid'')
+
+== Usage ==
+
+This returns the velocity of the actor along the Z axis. Positive values means upward movement; negative values are downward.
+
+=== Parameters ===
+
+* ''tid'': TID of the actor.
+
+=== Return value ===
+
+The Z velocity of the actor, as a [[Definitions|fixed point]] value.
+
+== Examples ==
+This example prints the current speed of the player, using the [[FixedSqrt]] function.
+
+ script 1 enter
+ {
+   int x, y, z, speed;
+   [[Loops#While|while]] (TRUE)
+   {
+     x = [[GetActorVelX]](0);
+     y = [[GetActorVelY]](0);
+     z = '''GetActorVelZ'''(0);
+     speed = [[FixedMul]](x, x) + [[FixedMul]](y, y) + [[FixedMul]](z, z);
+     [[print]](f:[[FixedSqrt]](speed));
+     [[delay]](1);
+   }
+ }
+
+
+[[Category:ACS Information functions]]</text>
+    <sha1>2u2ww2ncun6ollqadoa8nohg1u36z2u</sha1>
+  </revision>
+</page>

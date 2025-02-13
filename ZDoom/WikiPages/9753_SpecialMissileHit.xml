@@ -1,0 +1,71 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>SpecialMissileHit</title>
+  <ns>0</ns>
+  <id>9753</id>
+  <revision>
+    <id>53420</id>
+    <parentid>53277</parentid>
+    <timestamp>2024-10-22T22:06:33Z</timestamp>
+    <contributor>
+      <username>Jekyll Grim Payne</username>
+      <id>2175</id>
+    </contributor>
+    <comment>/* Usage */</comment>
+    <origin>53420</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="2348" sha1="3q96b0s2l4amk5cekaw9qfgaoaqw2px" xml:space="preserve">'''[[Classes:Actor|Actor]]'''
+
+{{c|virtual int '''SpecialMissileHit'''(Actor victim)}}
+
+== Usage ==
+Called by [[projectile|projectiles]] when they hit another actor. Overriding it allows creating custom collision behavior.
+
+=== Parameters ===
+*{{c|Actor '''victim'''}}
+:The actor that the projectile is colliding with. This can be literally actor, including the ones that the projectile wouldn't collide with normally. The shooter of the projectile is ''not'' excluded from this, so it's important to check &lt;code&gt;if (victim != target)&lt;/code&gt; if the overridden behavior shouldn't apply to the shooter.
+
+=== Return values ===
+Note: the {{const|MHIT*}} constants were added in GZDoom 4.12.0. Prior to that, numbers had to be used directly.
+
+*'''{{c|-1}}'''
+:'''{{c|MHIT_DEFAULT}}'''
+:(Default) The projectile utilizes its standard collision behavior and does whatever it would normally do based on its own and the victim's flags and properties.
+*'''{{c|0}}'''
+:'''{{c|MHIT_DESTROY}}'''
+:The projectile is destroyed but doesn't deal damage, enter its Death state or perform any other special behavior.
+*'''{{c|1}}'''
+:'''{{c|MHIT_PASS}}'''
+:The projectile passes through the actor without interacting with it. NOTE: this should not be confused with {{flag|RIPPER}}. The {{flag|RIPPER}} flag adds special ripping behavior that only activates if this function returns {{c|-1}} (the default value) and will be completely bypassed if this function returns {{c|1}}
+
+== Examples ==
+This version of the [[Classes:PlasmaBall|PlasmaBall]] doesn't deal any damage but instead pushes enemies it hits away and upwards:
+&lt;syntaxhighlight lang="csharp"&gt;
+class BowlingBall : PlasmaBall
+{
+	array&lt;Actor&gt; victims;
+
+	override int SpecialMissileHit(Actor victim)
+	{
+		// Check that victim is a valid victim, not the same actor
+		// as the shooter, is shootable and isn't yet present
+		// in the victims array:
+		if (victim &amp;&amp; (!target || victim != target) &amp;&amp; victim.bSHOOTABLE &amp;&amp; !victim.bDONTTHRUST &amp;&amp; victims.Find(victim) == victims.Size())
+		{
+			// Push horizontally away from self:
+			victim.vel.xy = self.Vec2To(victim).Unit() * 15;
+			// Push vertically:
+			victim.vel.z += 8;
+			// Add to array:
+			victims.Push(victim);
+		}
+		return MHIT_PASS;
+	}
+}&lt;/syntaxhighlight&gt;
+
+[[Category:ZScript]]
+[[Category:ZScript virtual functions]]
+[[Category:Actor virtual functions]]</text>
+    <sha1>3q96b0s2l4amk5cekaw9qfgaoaqw2px</sha1>
+  </revision>
+</page>

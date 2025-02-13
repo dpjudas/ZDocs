@@ -1,0 +1,146 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>Transfer Heights</title>
+  <ns>0</ns>
+  <id>722</id>
+  <revision>
+    <id>45877</id>
+    <parentid>44650</parentid>
+    <timestamp>2018-02-06T13:08:57Z</timestamp>
+    <contributor>
+      <username>Faroukthehedge</username>
+      <id>2176</id>
+    </contributor>
+    <comment>/* Limitations */</comment>
+    <origin>45877</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="10538" sha1="mg023anyzcvefi02eensuc4cboss7y1" xml:space="preserve">{{DISPLAYTITLE:Transfer_Heights}}
+{{Special|209|tag, flags|Renderer|use=line}}
+
+* ''tag'': Tag of affected sector 
+* ''flags'': Defines the properties of the effect
+
+This is [[Boom]]'s 242 linedef. It is used to divide a sector into upper, lower, and middle regions. The drawn heights of the tagged sector's floor and ceiling come from the heights of the sector on the line's front side, used as the [[control sector]]. The line's texture names can be used to specify a special color map or [[palette blend]] to be used in those regions. Palette blends are of the form “AARRGGBB”. You can use the testblend command to find a good blend from inside the game.
+
+[[ZDoom]] supports the internal name “'''WATERMAP'''”. If you place this on your linedef instead of a blend value, ZDoom will create a blend of the value “80004FA5”, which is a nice misty underwater blue: {{color|#004FA5}}.
+
+The ''flags'' parameter determines how the fake floor and ceiling are rendered and can have values such as:
+
+* 0&amp;nbsp;&amp;mdash; There will be situations when the sector's real ceiling and floor heights will be used instead of the fake heights (this is the way Boom does it).
+* 1&amp;nbsp;&amp;mdash; The [[fake ceiling]] and [[fake floor|floor]] heights will always be used.
+* 2&amp;nbsp;&amp;mdash; Only the fake floor will be drawn; also allows the real ceiling to be drawn below the fake floor (useful for multi-sector [[underwater]] areas).
+* 4&amp;nbsp;&amp;mdash; Improved texture control -
+::The real floor and ceiling will be drawn with the real sector's flats.
+::The fake floor and ceiling (from either side) will be drawn with the control sector's flats.
+::The real floor and ceiling will be drawn even when in the middle part, allowing lifts into and out of deep water to render correctly (not possible in Boom).
+:This flag does not work properly with sloped ''floors'', and, if flag 2 is not set, with sloped ''ceilings'' either.
+* 8&amp;nbsp;&amp;mdash; Make the target sector [[swimmable]] under the fake floor (no need for the {{Class|WaterZone}} actor)
+* 16&amp;nbsp;&amp;mdash; Do not draw the fake floor or ceiling; however, they can still be used in conjunction with the sector action things that correspond to them (useful for making the player fall down a deep hole or similar).
+* 32&amp;nbsp;&amp;mdash; Do not transfer the control sector's lighting to the affected sector(s).
+
+These values can also be combined by adding them. For example a value of 6 would combine values 2 and 4, and a value of 29 would combine values 16, 8, 4 and 1.
+
+The following description is an excerpt from boomref.txt:
+
+This allows the tagged sector to have two levels&amp;nbsp;&amp;mdash; an actual floor and ceiling, and another floor or ceiling where more flats are rendered. Things will stand on the actual floor or hang from the actual ceiling, while this function provides another rendered floor and ceiling at the heights of the sector on the first sidedef of the linedef. Typical use is “[[deep water]]” that can be over the player's head. [Note: See the {{Class|WaterZone}} thing (9045)] 
+
+     ----------------------------------  &lt; real sector's ceiling height
+    |         real ceiling             | &lt; [[control sector]]'s ceiling texture
+    |                                  |
+    |                                  | &lt; control sector's lightlevel
+    |              A                   |
+    |                                  | &lt; upper texture as colormap
+    |                                  |
+    |                                  | &lt; control sector's floor texture
+     ----------------------------------  &lt; control sector's ceiling height
+    |         [[fake ceiling]]             | &lt; real sector's ceiling texture
+    |                                  |
+    |                                  | &lt; real sector's lightlevel
+    |              B                   |
+    |                                  | &lt; normal texture as colormap
+    |                                  |
+    |          [[fake floor]]              | &lt; real sector's floor texture
+     ----------------------------------  &lt; control sector's floor height
+    |                                  | &lt; control sector's ceiling texture
+    |                                  |
+    |                                  | &lt; control sector's lightlevel
+    |              C                   |
+    |                                  | &lt; lower texture as colormap
+    |                                  |
+    |          real floor              | &lt; control sector's floor texture
+     ----------------------------------  &lt; real sector's floor height
+
+Boom sectors controlled by a 242 linedef are partitioned into 3 spaces. The viewer's Z coordinate uniquely determine which space they are in. 
+
+If they are in space B (normal space), then the floor and ceiling textures and lightlevel from the real sector are used, and the colormap from the 242 linedef's first sidedef's normal texture is used (COLORMAP is used if it is invalid or missing). The floor and ceiling are rendered at the control sector's heights. 
+
+If they are in space C (“underwater”), then the floor and ceiling textures and lightlevel from the control sector are used, and the lower texture in the 242 linedef's first sidedef is used as the colormap.
+
+If they are in space A (“head over ceiling”), then the floor and ceiling textures and lightlevel from the control sector are used, and the upper texture in the 242 linedef's first sidedef is used as the colormap.
+
+If only two of these adjacent partitions in z-space are used, such as underwater and normal space, one has complete control over floor textures, ceiling textures, light level, and colormaps, in each of the two partitions. The control sector determines the textures and lighting in the more “unusual” case (e.g. underwater).
+
+It is also possible for the fake floor to extend below the real floor, in which case an invisible platform/stair effect is created. In that case, the picture looks like this (barring any ceiling effects too):
+
+
+     ----------------------------------  &lt; real sector's ceiling texture
+    |   real ceiling = fake ceiling    |
+    |                                  |
+    |                                  |
+    |              B                   | &lt; real sector's lightlevel
+    |                                  | &lt; normal texture's colormap
+    |                                  |
+    |          real floor              |
+     ----------------------------------  &lt; invisible, no texture drawn
+    |                                  |
+    |                                  |
+    |                                  | &lt; real sector's lightlevel
+    |              C                   | &lt; normal texture's colormap
+    |                                  |
+    |                                  |
+    |          fake floor              | &lt; real sector's floor texture
+     ----------------------------------  &lt; fake sector's floor height
+
+In this case, since the viewer is always at or above the fake floor, no colormap/lighting/texture changes occur&amp;nbsp;&amp;mdash; the fake floor just gets drawn at the control sector's height, but at the real sector's lighting and texture, while objects stand on the higher height of the real floor.
+
+It is the viewer's position relative to the fake floor and/or fake ceiling which determines whether the control sector's lighting and textures should be used, and which colormap should be used. If the viewer is always between the fake floor and fake ceiling, then no colormap, lighting, or texture changes occur, and the view just sees the real sector's textures and light level drawn at possibly different heights.
+
+If the viewer is below the fake floor height set by the control sector, or is above the fake ceiling height set by the control sector, then the corresponding colormap is used (lower or upper texture name), and the textures and lighting are taken from the control sector rather than the real sector. They are still stacked vertically in standard order&amp;nbsp;&amp;mdash; the control sector's ceiling is always drawn above the viewer, and the control sector's floor is always drawn below the viewer.
+
+The kaleidoscope effect only occurs when F_SKY1 is used as the control sector's floor or ceiling. If F_SKY1 is used as the control sector's ceiling texture, then under water, only the control sector's floor appears, but it “envelops” the viewer. Similarly, if F_SKY1 is used as the control sector's floor texture, then when the player's head is over a fake ceiling, the control sector's ceiling is used throughout.
+
+F_SKY1 causes HOM when used as a fake ceiling between the viewer and normal space. Since there is no other good use for it, this kaleidescope is an option turned on by F_SKY1. Note that this does not preclude the use of sky REAL ceilings over deep water&amp;nbsp;&amp;mdash; this is the control sector's ceiling, the one displayed when the viewer is underwater, not the real one.
+
+A colormap has the same size and format as Doom's COLORMAP. Extra colormaps may be defined in Boom by adding them between C_START and C_END markers in WADs. Colormaps between C_START and C_END are automatically merged by Boom with any previously defined colormaps.
+
+Ceiling bleeding may occur if required upper textures are not used.
+
+== Limitations ==
+* There is some limited capability to look into the lower or middle part (but not the upper part) from a non-Transfer_Heights sector - but you will never be able to see both lower and middle parts of different sectors at the same time. This will always create a [[hall of mirrors]] effect.
+* As a corollary of the above, you cannot look from a lower part of a Transfer_Heights sector into the middle part of another one. This is an inherent limitation of how this feature works. 
+* A sector cannot have both transferred heights and [[Sector_Set3dFloor|3D floors]] (you can but it will cause some rendering issues).
+* [[Sector damage]] on the control sector are not transferred to the target sectors.
+
+==Examples==
+{{noexamples}}
+
+== Conversions from linedef types ==
+The following Doom map format types can be converted as :
+{| {{prettytable}}
+!Type!!Conversion!!Trigger
+|-
+|{{icon|Boom}} 242:Transfer Heights || Transfer_Heights (tag) || 
+|-
+|{{icon|Legacy}} 280:Swimmable Pool || Transfer_Heights (tag, 12) || 
+|-
+|{{icon|ZDoom}} 350:Fake Floor (real texture) || Transfer_Heights (tag, 2) || 
+|-
+|{{icon|ZDoom}} 351:Fake Floor (control texture) || Transfer_Heights (tag, 6) || 
+|}
+
+==External links==
+* {{oldref}}
+* {{idgames|id=12456||Example map}}</text>
+    <sha1>mg023anyzcvefi02eensuc4cboss7y1</sha1>
+  </revision>
+</page>

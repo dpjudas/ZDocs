@@ -1,0 +1,216 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>Classes:ArtiBlastRadius</title>
+  <ns>0</ns>
+  <id>4542</id>
+  <revision>
+    <id>51444</id>
+    <parentid>51443</parentid>
+    <timestamp>2024-02-01T15:33:20Z</timestamp>
+    <contributor>
+      <username>Jekyll Grim Payne</username>
+      <id>2175</id>
+    </contributor>
+    <origin>51444</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="5841" sha1="6haurgnk0cxfva9dlob4fm0c07sbr78" xml:space="preserve">{{Actor|
+| type = Artifact
+| name = Disc of Repulsion
+| class = ArtiBlastRadius
+| game = Hexen
+| doomednum = 10110
+| spawnid = 74
+| spawnname = T_ITEMREPULSION 
+}}[[Classes]]: [[Classes:Inventory|Inventory]]&amp;rarr;{{Class|CustomInventory}}&amp;rarr;&lt;u&gt;ArtiBlastRadius&lt;/u&gt;
+
+The disc of repulsion, when used, calls [[A_Blast]], pushing away nearby movable actors, including players, monsters and even projectiles. It can be used to avoid being hit by missiles, push enemies out of the way, throw them in chasms or traps, or even provoke infighting by making them collide another monsters. An actor projected by the disc of repulsion will take damage when colliding with a wall or another actor.
+
+Monsters with the {{flag|BOSS}} or {{flag|DONTBLAST}} flags are normally unaffected; as well as any actor that isn't a monster, player, or projectile, unless they have the {{flag|CANBLAST}} flag. When an actor is affected, a [[Classes:BlastEffect|blue ring with a white cross]] temporarily appears on it to show the disc of repulsion did take effect.
+
+=== [[ZScript]] definition ===
+{{ZScriptDefinitionNote|actors/hexen/blastradius.zs}}
+&lt;syntaxhighlight lang="csharp"&gt;
+class ArtiBlastRadius : CustomInventory
+{
+	Default
+	{
+		+FLOATBOB
+		Inventory.DefMaxAmount;
+		Inventory.PickupFlash "PickupFlash";
+		+INVENTORY.INVBAR +INVENTORY.FANCYPICKUPSOUND
+		Inventory.Icon "ARTIBLST";
+		Inventory.PickupSound "misc/p_pkup";
+		Inventory.PickupMessage "$TXT_ARTIBLASTRADIUS";
+		Tag "$TAG_ARTIBLASTRADIUS";
+	}
+	States
+	{
+	Spawn:
+		BLST ABCDEFGH 4 Bright;
+		Loop;
+	Use:
+		TNT1 A 0 A_Blast;
+	}
+	
+}
+//==========================================================================
+//
+// A_Blast is public to Actor
+//
+//==========================================================================
+
+extend class Actor
+{
+	/* For reference, the default values:
+	#define BLAST_RADIUS_DIST	255.0
+	#define BLAST_SPEED			20.0
+	#define BLAST_FULLSTRENGTH	255
+	*/
+
+	//==========================================================================
+	//
+	// AArtiBlastRadius :: BlastActor
+	//
+	//==========================================================================
+
+	private void BlastActor (Actor victim, double strength, double speed, Class&lt;Actor&gt; blasteffect, bool dontdamage)
+	{
+		if (!victim.SpecialBlastHandling (self, strength))
+		{
+			return;
+		}
+
+		double ang = AngleTo(victim);
+		Vector2 move = AngleToVector(ang, speed);
+		victim.Vel.XY = move;
+
+		// Spawn blast puff
+		ang -= 180.;
+		Vector3 spawnpos = victim.Vec3Offset(
+			(victim.radius + 1) * cos(ang),
+			(victim.radius + 1) * sin(ang),
+			(victim.Height / 2) - victim.Floorclip);
+		Actor mo = blasteffect? Spawn (blasteffect, spawnpos, ALLOW_REPLACE) : null;
+		if (mo)
+		{
+			mo.Vel.XY = victim.Vel.XY;
+		}
+		if (victim.bMissile)
+		{
+			// [RH] Floor and ceiling huggers should not be blasted vertically.
+			if (!victim.bFloorHugger &amp;&amp; !victim.bCeilingHugger)
+			{
+				victim.Vel.Z = 8;
+				if (mo != null) mo.Vel.Z = 8;
+			}
+		}
+		else
+		{
+			victim.Vel.Z = 1000. / victim.Mass;
+		}
+		if (victim.player)
+		{
+			// Players handled automatically
+		}
+		else if (!dontdamage)
+		{
+			victim.bBlasted = true;
+		}
+		if (victim.bTouchy)
+		{ // Touchy objects die when blasted
+			victim.bArmed = false; // Disarm
+			victim.DamageMobj(self, self, victim.health, 'Melee', DMG_FORCED|DMG_EXPLOSION);
+		}
+	}
+	
+	//==========================================================================
+	//
+	// AArtiBlastRadius :: Activate
+	//
+	// Blast all actors away
+	//
+	//==========================================================================
+
+	action void A_Blast(int blastflags = 0, double strength = 255, double radius = 255, double speed = 20, class&lt;Actor&gt; blasteffect = "BlastEffect", sound blastsound = "BlastRadius")
+	{
+
+		if (player &amp;&amp; (blastflags &amp; BF_USEAMMO) &amp;&amp; invoker == player.ReadyWeapon &amp;&amp; stateinfo != null &amp;&amp; stateinfo.mStateType == STATE_Psprite)
+		{
+			Weapon weapon = player.ReadyWeapon;
+			if (weapon != null &amp;&amp; !weapon.DepleteAmmo(weapon.bAltFire))
+			{
+				return;
+			}
+		}
+
+		A_StartSound (blastsound, CHAN_AUTO);
+
+		if (!(blastflags &amp; BF_DONTWARN))
+		{
+			SoundAlert (self);
+		}
+		ThinkerIterator it = ThinkerIterator.Create("Actor");
+		Actor mo;
+		while ( (mo = Actor(it.Next ())) )
+		{
+			if (mo == self || (mo.bBoss &amp;&amp; !(blastflags &amp; BF_AFFECTBOSSES)) || mo.bDormant || mo.bDontBlast)
+			{ // Not a valid monster: originator, boss, dormant, or otherwise protected
+				continue;
+			}
+			if (mo.bIceCorpse || mo.bCanBlast)
+			{
+				// Let these special cases go
+			}
+			else if (mo.bIsMonster &amp;&amp; mo.health &lt;= 0)
+			{
+				continue;
+			}
+			else if (!mo.player &amp;&amp; !mo.bMissile &amp;&amp; !mo.bIsMonster &amp;&amp; !mo.bCanBlast &amp;&amp; !mo.bTouchy &amp;&amp; !mo.bVulnerable)
+			{	// Must be monster, player, missile, touchy or vulnerable
+				continue;
+			}
+			if (Distance2D(mo) &gt; radius)
+			{ // Out of range
+				continue;
+			}
+			if (mo.CurSector.PortalGroup != CurSector.PortalGroup &amp;&amp; !CheckSight(mo))
+			{
+				// in another region and cannot be seen.
+				continue;
+			}
+			if ((blastflags &amp; BF_ONLYVISIBLETHINGS) &amp;&amp; !isVisible(mo, true)) 
+			{
+				//only blast if target can bee seen by calling actor
+				continue;
+			}
+			BlastActor (mo, strength, speed, blasteffect, !!(blastflags &amp; BF_NOIMPACTDAMAGE));
+		}
+	}
+}
+&lt;/syntaxhighlight&gt;
+
+=== [[DECORATE]] definition ===
+{{DecorateDefinitionNote}}
+ ACTOR &lt;u&gt;ArtiBlastRadius&lt;/u&gt; : {{Class|CustomInventory}}
+ {
+   +{{Flag|FLOATBOB}}
+   {{Property|Inventory.DefMaxAmount}}
+   {{Property|Inventory.PickupFlash}} "{{Class|PickupFlash}}"
+   +{{Flag|INVBAR}}
+   +{{Flag|FANCYPICKUPSOUND}}
+   {{Property|Inventory.Icon}} "ARTIBLST"
+   {{Property|Inventory.PickupSound}} "misc/p_pkup"
+   {{Property|Inventory.PickupMessage}} "$TXT_ARTIBLASTRADIUS"
+   {{Property|Tag}} "$TAG_ARTIBLASTRADIUS"
+   States
+   {
+   Spawn:
+     BLST ABCDEFGH 4 Bright
+     Loop
+   Use:
+     TNT1 A 0 [[A_Blast]]
+   }
+ }</text>
+    <sha1>6haurgnk0cxfva9dlob4fm0c07sbr78</sha1>
+  </revision>
+</page>

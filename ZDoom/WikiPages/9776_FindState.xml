@@ -1,0 +1,73 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>FindState</title>
+  <ns>0</ns>
+  <id>9776</id>
+  <revision>
+    <id>51880</id>
+    <parentid>51350</parentid>
+    <timestamp>2024-02-29T09:28:56Z</timestamp>
+    <contributor>
+      <username>Jekyll Grim Payne</username>
+      <id>2175</id>
+    </contributor>
+    <comment>/* Usage */ Fixed incorrect information about weapons</comment>
+    <origin>51880</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="2039" sha1="dxpapeumsrrhipvaa861bmk9w3255ce" xml:space="preserve">{{ZScriptNote}}
+
+'''{{class|Actor}}'''
+
+{{c|clearscope native state '''FindState'''(statelabel ''st'', bool ''exact'' }}={{c| false)}}
+
+== Usage ==
+Obtains a pointer to the first [[Structs:State|Actor state]] in the specified state sequence. This can be returned in an [[Anonymous functions|anonymous function]] or a function that returns a state.
+
+Note: If called in {{class|PSprite}} context (i.e. from a {{class|Weapon}} state or action function) and you need to find the state on the weapon, remember to prefix this function with &lt;code&gt;invoker.&lt;/code&gt;, because in PSprite context &lt;code&gt;invoker&lt;/code&gt; is the weapon, whereas &lt;code&gt;self&lt;/code&gt; is the owner of the weapon. Alternatively, simply use [[ResolveState|{{c|ResolveState}}]]—it can guess context automatically.
+
+=== Parameters ===
+*{{c|statelabel '''st'''}}
+:The name of the state sequence, such as "Spawn", "Missile", etc.
+*{{c|bool '''exact'''}}
+:Finds the exact state passed to ''st'', this is useful for finding substates like the ones that the Pain and (X)Death states support, or custom substates like "Jump.Up:". For example, it can be used to find if the caller has a Pain.Electric state in particular.
+
+== Examples ==
+This version of the {{class|ChaingunGuy}} immediately stops firing if its target is either null, or dead, or over 1024 units away from him:
+
+&lt;syntaxhighlight lang="csharp"&gt;
+class ChaingunGuyWithDistanceCheck : ChaingunGuy
+{
+	Default
+	{
+		MaxTargetRange 1024; // Won't try attacking targets beyond this range
+	}
+
+	States
+	{
+	Missile:
+		CPOS E 10 A_FaceTarget;
+		CPOS FE 4 BRIGHT A_CPosAttack;
+		CPOS F 1 
+		{
+			// If the target pointer is null, or the target is dead,
+			// or distance to it is 1024 or more units, go back to
+			// the See state sequence:
+			if (!target || target.health &lt;= 0 || Distance3D(target) &gt;= MaxTargetRange)
+			{
+				return FindState("See");
+			}
+			// Otherwise continue:
+			return null;
+		}
+		Goto Missile+1;
+	}
+}&lt;/syntaxhighlight&gt;
+
+== See also ==
+*[[FindStateByString]]
+*[[ZScript actor functions]]
+
+[[Category:ZScript]]</text>
+    <sha1>dxpapeumsrrhipvaa861bmk9w3255ce</sha1>
+  </revision>
+</page>

@@ -1,0 +1,63 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>Classes:InquisitorShot</title>
+  <ns>0</ns>
+  <id>4618</id>
+  <revision>
+    <id>39851</id>
+    <parentid>35215</parentid>
+    <timestamp>2015-05-04T22:12:33Z</timestamp>
+    <contributor>
+      <username>Blue Shadow</username>
+      <id>2021</id>
+    </contributor>
+    <minor />
+    <comment>/* DECORATE definition */ Updated</comment>
+    <origin>39851</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="978" sha1="hqw2w8br939mga8aawnkorzbxq4s9gm" xml:space="preserve">{{Actor|
+| type = Explosive
+| name = Inquisitor shot
+| class = InquisitorShot
+| game = Strife
+| convid = 108
+}}[[Classes]]: &lt;u&gt;InquisitorShot&lt;/u&gt;&lt;br&gt;
+{{desc}}
+==== [[DECORATE]] definition ====
+ ACTOR &lt;u&gt;InquisitorShot&lt;/u&gt;
+ {
+   {{property|ReactionTime}} 15
+   {{property|Speed}} 25
+   {{property|Radius}} 13
+   {{property|Height}} 13
+   {{property|Mass}} 15
+   {{property|Projectile}}
+   -{{flag|ACTIVATEIMPACT}}
+   -{{flag|ACTIVATEPCROSS}}
+   -{{flag|NOGRAVITY}}
+   +{{flag|STRIFEDAMAGE}}
+   {{property|MaxStepHeight}} 4
+   {{property|SeeSound}} "inquisitor/attack"
+   {{property|DeathSound}} "inquisitor/atkexplode"
+   States
+   {
+   Spawn:
+     UBAM AB 3 [[A_Countdown]]
+     Loop
+   Death:
+     BNG2 A 0 Bright [[A_SetTranslucent]](1, 1)
+     BNG2 A 4 Bright [[A_Explode]](192, 192, 1, 1)
+     BNG2 B 4 Bright
+     BNG2 C 4 Bright
+     BNG2 D 4 Bright
+     BNG2 E 4 Bright
+     BNG2 F 4 Bright
+     BNG2 G 4 Bright
+     BNG2 H 4 Bright
+     BNG2 I 4 Bright
+     Stop
+   }
+ }</text>
+    <sha1>hqw2w8br939mga8aawnkorzbxq4s9gm</sha1>
+  </revision>
+</page>

@@ -1,0 +1,35 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>Y-shearing</title>
+  <ns>0</ns>
+  <id>7191</id>
+  <revision>
+    <id>49841</id>
+    <parentid>38602</parentid>
+    <timestamp>2022-11-19T19:27:01Z</timestamp>
+    <contributor>
+      <username>Gez</username>
+      <id>1283</id>
+    </contributor>
+    <origin>49841</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="2293" sha1="8ctg5a7a06ymw4fbw8j2c0zuh7l9sqh" xml:space="preserve">[[Image:Y-shearing.png|right|thumb|230px|Two "windows".]]
+'''Y-shearing''' is a technique to create the illusion of looking up and down in a 3D engine where column drawing depends on the view pitch remaining horizontal. In the Doom engine, it was introduced by ''[[Heretic]]''.
+
+This illusion is created simply by modifying the boundaries of the selection. One can imagine the scene being rendered as a very tall image, in which a sliding window represents the player's view window. Sliding upwards corresponds to looking upwards, and sliding downwards correspond to looking downwards.
+
+Of course, only the pixels within the window are rendered; but it is possible to create screenshot montages such as the illustration provided here, showing how a scene would look like if it was rendered as high and as low as the engine permits.
+
+The red and green rectangles correspond to two different 4:3 "windows". The overlapping areas are rendered almost exactly identically in both the source screenshots (the only differences corresponding to sub-texel precision issues in the projection), which is what allows such a montage to be possible.
+
+This is also the source of the perspective distortion experienced when using [[free look]] in the software renderer. Since the scene is actually always rendered horizontally, the perspective does not correspond to what the player instinctively expects from a change in view pitch.
+
+Another drawback of this method is that since the projection remains horizontal, a 90° pitch from the horizontal is technically impossible. The sliding window position follows a tangent curve, thus increasingly more lines are needed for each new degree. This can be seen on this article's illustration, as the pixels on the floor texture becomes increasingly stretched the lower you look. The maximum upward angle in ZDoom is 32°, and the maximum downward angle is 56°. A 90° angle would require an infinite number of lines to be rendered.
+
+The hardware-accelerated renderer ([[OpenGL]], [[OpenGL ES]], [[Vulkan]]) featured in [[GZDoom]] and [[Zandronum]] performs true 3D projection and does not use Y-shearing.
+
+The unfinished and ultimately removed [[Polymost]] implementation would have provided true 3D projection, without Y-shearing.
+[[Category:Technical aspects]]</text>
+    <sha1>8ctg5a7a06ymw4fbw8j2c0zuh7l9sqh</sha1>
+  </revision>
+</page>

@@ -1,0 +1,31 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>Palette flash</title>
+  <ns>0</ns>
+  <id>7210</id>
+  <revision>
+    <id>47154</id>
+    <parentid>32498</parentid>
+    <timestamp>2020-02-14T18:03:10Z</timestamp>
+    <contributor>
+      <username>FireSeraphim</username>
+      <id>2130</id>
+    </contributor>
+    <minor />
+    <comment>A minor little note for those who might be looking for the same info I previously was looking for, this page is the first one that might come up when searching the wiki on palette flashes.</comment>
+    <origin>47154</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="2544" sha1="2b7r48qpnodzlyqya9yox31gaosfizs" xml:space="preserve">'''Palette flashes''' are effects created in [[vanilla Doom]] by changing the [[palette]] used. The [[PLAYPAL]] lump therefore contains 14 palettes (28 palettes in ''[[Hexen]]''). Palette 0 is used in normal conditions, palettes 1 to 8 are meant for taking damage, palettes 9 to 12 for picking up bonus items, and palette 13 for wearing the radiation suit (or, in ''[[Strife]]'', being poisoned). In ''Hexen'', palettes 13 to 20 are used for [[poison]] damage, 21 for [[frozen death]], 22 to 24 for firing the {{Class|CWeapWraithverge|Wraithverge}} and 25 to 27 for firing the {{Class|MWeapBloodscourge|Bloodscourge}}.
+
+[[ZDoom]], however, only uses the normal palette in all circumstances and instead emulates palette flashes with screen blending. This allows to have unlimited types of palette flashes as well as allows proper handling of [[image format]]s that do not use the PLAYPAL. Another advantage of ZDoom's approach is that blendings can be combined: for example, using simultaneously a {{Class|RadSuit|radiation-shielding suit}} and picking up an item while taking damage from enemy fire results in vanilla Doom in one of the screen effects having priority on the other; whereas ZDoom will combine the effects together.
+
+Custom palette flashes can be created with the {{Property|Powerup.Colormap}} and {{Property|Player.DamageScreenColor}} properties in [[DECORATE]], and with {{c|pickupcolor}} in a [[MAPINFO/GameInfo_definition|MAPINFO GameInfo section]].
+
+For inventory items, the palette flash can be disabled via the [[Actor_flags#INVENTORY.NOSCREENFLASH|INVENTORY.NOSCREENFLASH]] actor flag.
+
+The blending color values for the default palette flashes were taken from the {{dw|Doom utilities}} source code, which is how the extra palettes were automatically generated from the first palette. They are accurate for ''[[Doom]]'', ''[[Heretic]]'' (which does not make use of palette 13), and ''[[Strife]]'', as well as for the first 13 palettes of ''Hexen''. However, the lack of such source code for the Hexen version of dcolors.c resulted in the blending values for the remaining 15 Hexen flashes being mere approximations. Perfectly accurate values have since been reverse-engineered by careful analysis of each color channel in the default Hexen PLAYPAL in comparison to the reference palette; but since people might have grown used to the ZDoom colors, the accurate values are optional. Use the {{c|{{CVAR|R|paletteflash}}}} [[console variable]] to use the accurate values.
+
+[[Category:Glossary]][[Category:Technical aspects]]</text>
+    <sha1>2b7r48qpnodzlyqya9yox31gaosfizs</sha1>
+  </revision>
+</page>

@@ -1,0 +1,283 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>RPG script</title>
+  <ns>0</ns>
+  <id>2625</id>
+  <revision>
+    <id>30857</id>
+    <parentid>28698</parentid>
+    <timestamp>2011-05-12T23:23:33Z</timestamp>
+    <contributor>
+      <username>MithranDenizen</username>
+      <id>1713</id>
+    </contributor>
+    <minor />
+    <comment>Replaced a comma with a semicolon, so that it'll actually compile.</comment>
+    <origin>30857</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="6769" sha1="bihpm927lytaf1xnb7iq4eeztz3d3t8" xml:space="preserve">''Tutorial was written and coded by [[User:Jallamann|Jallamann]]''
+
+The original post can be found {{forum|here|p=173471}}.
+
+Cleaned up version, also slightly smaller in p-code
+&lt;pre&gt;
+/* ---------------- JALLAMANN'S RPG SCRIPT BEGINS -----------------
+
+
+	Script version 1.4 beta - Sep 26th, 2005
+	
+	Experience and level system script
+	Originally designed for Crusader: Jewel Case
+	
+	Copyright (c) 2004-2005 Ivar Remøy aka. jallamann
+	
+	Big thanks to Wasted Youth for the original script,
+	which was used for reference for this one.
+	
+	You can use this in your map or modification if
+	you give me credit for it. If you enhance it in
+	any way, I'll be interested in looking at it,
+	perhaps include it in my coming projects.
+	
+	If you decide to use it, please tell me at either
+	mail: ivar@nightmaster.net
+	or at the ZDoom.org forums.
+	
+	If you use it, you MUST leave this comment intact
+	with NO modifications, include the entire script in
+	your SCRIPTS lump, and don't delete it, so that I
+	can become popular and take over the world.
+	No, really, just an Acceptable Usage Policy.
+	
+	Enjoy! ;D
+	
+	This is the anally optimized version
+*/
+
+#include "zcommon.acs"
+
+#define ZOMBIE_XP  2
+#define SARGEANT_XP  5
+#define IMP_DEMON_XP 10
+#define CHAINGUN_XP 15
+#define HISSIE_XP 20
+
+// [Doomguy0505]: For some reason, using #DEFINE'd strings makes the p-code smaller
+#define STR_GAINED "Gained "
+#define STR_XP " XP"
+#define STR_REACHED "You reached level "
+
+#define OPEN_XP "XP: "
+#define OPEN_LEVEL "Level: "
+#define OPEN_FSLASH "/"
+
+#define FONT_BIG "bigfont"
+#define FONT_SMALL "smallfont"
+
+#define CLASS_CLIP "Clip"
+#define CLASS_SHOTGUN "Shotgun"
+#define CLASS_BACKPACK "Backpack"
+#define CLASS_CHAINGUN "Chaingun"
+#define CLASS_BLUEARMOR "BlueArmor"
+#define CLASS_ARMORBONUS "ArmorBonus"
+#define CLASS_PLASMARIFLE "PlasmaRifle"
+
+#define REWARD_2 "25 HP"
+#define REWARD_3 "25 HP\nGained 100 bullets"
+#define REWARD_5 "100 armor"
+#define REWARD_6 "50 armor"
+#define REWARD_7 "50 armor\nGained 50 HP"
+#define REWARD_10 "50 Armor\nGained 50 HP\nGained plasma rifle"
+
+// [Doomguy0505]: Makes it easier when you need to change the script numbers
+#define SCRIPT_REWARD 152
+#define SCRIPT_XP 151
+#define SCRIPT_CREDITS 154
+#define SCRIPT_LOOP 150
+
+#define OBSCRIPT_ZOMBIEMAN 201
+#define OBSCRIPT_SARGEANT 202
+#define OBSCRIPT_IMP_DEMON 203
+#define OBSCRIPT_CHAINGUNNER 204
+#define OBSCRIPT_HISSIE 205
+#define OBSCRIPT_STEALTH_HISSIE 206
+#define OBSCRIPT_STEALTH_BARON 207
+
+// [Doomguy0505]: Since all the kill xp hudmessages had these properties the same,
+// I #DEFINE'd them as well
+#define KILL_COLOUR CR_RED
+#define KILL_X 0.5
+#define KILL_Y 0.6
+#define KILL_TIME 2.0
+#define KILL_TYPE HUDMSG_FADEOUT
+
+#define MISC_CREDITS "This modification uses jallamann's\
+\nexperience and level script.\n\nfor more info, see www.nightmaster.net"
+
+// INITIAL VARIABLES
+// xp = Player experience, lv = Player level,
+// nextlv = Next level, hp = Player health,
+// ar = Player armor, xp2lv = number of xp
+// required for each level
+int xp = 0, lv = 1, nextlv = 2, hp = 100, ar = 0;
+str gained = "";
+int xp2lv[10] = {50, 125, 250, 450, 675, 900, 1200, 1500, 2000,
+	2500};
+
+
+script SCRIPT_LOOP open
+{
+	// experience and level screen refresh loop
+	SetFont(FONT_BIG);
+	HudMessage(s:OPEN_XP, d:xp, s:OPEN_FSLASH, d:xp2lv[lv+1];
+		HUDMSG_FADEOUT, 1, CR_BROWN, 0.99, 0.70, 2.0);
+	HudMessage(s:OPEN_LEVEL, d:lv; HUDMSG_FADEOUT, 2, CR_BROWN, 0.99, 0.75, 2.0);
+	SetFont(FONT_SMALL);
+	Delay(1);
+	Restart;
+}
+
+script SCRIPT_XP (void) // xp check script, executed when a monster that gives xp dies
+{
+	if(xp &gt;= xp2lv[lv+1])
+	{
+		xp = 0; // reset xp counter
+		lv++; // increase level by 1
+		ACS_Execute(SCRIPT_REWARD, 0, 0, 0, 0);
+	}
+}
+
+script SCRIPT_REWARD (void) // Reward script
+{
+	switch(lv)
+	{
+		case 2: // 25 HP
+			hp += 25;
+			gained = REWARD_2;
+		break;
+		case 3: // 25 HP + Some bullets
+			hp += 25;
+			gained = REWARD_3;
+			GiveInventory(CLASS_CLIP, 100);
+		break;
+		case 4: // Shotgun
+			gained = CLASS_SHOTGUN;
+			GiveInventory(CLASS_SHOTGUN, 1);
+		break;
+		case 5: // 100 Armor
+			gained = REWARD_5;
+			ar += 100;
+		break;
+		case 6: // 50 Armor
+			gained = REWARD_6;
+			ar += 50;
+		break;
+		case 7: // 25 HP + 50 Armor
+			gained = REWARD_7;
+			ar += 50;
+			hp += 50;
+		break;
+		case 8: // Backpack
+			gained = CLASS_BACKPACK;
+			GiveInventory(CLASS_BACKPACK, 1);
+		break;
+		case 9: // Chaingun
+			gained = CLASS_CHAINGUN;
+			GiveInventory(CLASS_CHAINGUN, 1);
+		break;
+		case 10: // 50 HP + 50 Armor + Plasma rifle
+			gained = REWARD_10;
+			ar += 50;
+			hp += 50;
+			GiveInventory(CLASS_PLASMARIFLE, 1);
+		break;
+	}
+	SetFont(FONT_BIG);
+	Print(s:STR_REACHED, d:lv);
+	SetFont(FONT_SMALL);
+	HudMessage(s:STR_GAINED, s:gained; HUDMSG_FADEOUT, 0, CR_GOLD, 0.50, 0.55, 3.0);
+	// [Doomguy0505]: This won't work, and I can't find a
+	// workarond because there is no PROP_HEALTH
+	SetActorProperty(PlayerNumber(), APROP_HEALTH, hp);
+	TakeInventory(CLASS_BLUEARMOR, 999); // take all armor
+	GiveInventory(CLASS_ARMORBONUS, ar); // give max armor
+	Delay(1);
+	gained = "";
+}
+
+script SCRIPT_CREDITS enter
+{
+	Print(s:MISC_CREDITS);
+}
+
+/*
+  experience scripts
+  ------------------
+
+  201 - zombieman
+  202 - sargeant
+  203 - imp and demon
+  204 - chaingunner
+  205 - hissie
+  206 - stealth hissie
+  207 - stealth baron
+
+  Just edit these to suit your needs...
+*/
+
+script OBSCRIPT_ZOMBIEMAN (void)
+{
+	xp += ZOMBIE_XP;
+	HudMessage(s:STR_GAINED, d:ZOMBIE_XP, s:STR_XP; KILL_TYPE, 0, KILL_COLOUR, KILL_X, KILL_Y, KILL_TIME);
+	ACS_Execute(SCRIPT_XP, 0, 0, 0);
+}
+
+script OBSCRIPT_SARGEANT (void)
+{
+	xp += SARGEANT_XP;
+	HudMessage(s:STR_GAINED, d:SARGEANT_XP, s:STR_XP; KILL_TYPE, 0, KILL_COLOUR, KILL_X, KILL_Y, KILL_TIME);
+	ACS_Execute(SCRIPT_XP, 0, 0, 0);
+}
+
+script OBSCRIPT_IMP_DEMON (void)
+{
+	xp += IMP_DEMON_XP;
+	HudMessage(s:STR_GAINED, d:IMP_DEMON_XP, s:STR_XP; KILL_TYPE, 0, KILL_COLOUR, KILL_X, KILL_Y, KILL_TIME);
+	ACS_Execute(SCRIPT_XP, 0, 0, 0);
+}
+
+script OBSCRIPT_CHAINGUNNER (void)
+{
+	xp += CHAINGUN_XP;
+	HudMessage(s:STR_GAINED, d:CHAINGUN_XP, s:STR_XP; KILL_TYPE, 0, KILL_COLOUR, KILL_X, KILL_Y, KILL_TIME);
+	ACS_Execute(SCRIPT_XP, 0, 0, 0);
+}
+
+script OBSCRIPT_HISSIE (void)
+{
+	xp += HISSIE_XP;
+	HudMessage(s:STR_GAINED, d:HISSIE_XP, s:STR_XP; KILL_TYPE, 0, KILL_COLOUR, KILL_X, KILL_Y, KILL_TIME);
+	ACS_Execute(SCRIPT_XP, 0, 0, 0);
+}
+
+script OBSCRIPT_STEALTH_HISSIE (void)
+{
+	xp += 50;
+	hudmessage(s:STR_GAINED, d:50, s:STR_XP; KILL_TYPE, 0, KILL_COLOUR, KILL_X, KILL_Y, KILL_TIME);
+	ACS_Execute(SCRIPT_XP, 0, 0, 0);
+}
+
+script OBSCRIPT_STEALTH_BARON (void)
+{
+	xp += 60;
+	HudMessage(s:STR_GAINED, d:60, s:STR_XP; KILL_TYPE, 0, KILL_COLOUR, KILL_X, KILL_Y, KILL_TIME);
+	ACS_Execute(SCRIPT_XP, 0, 0, 0);
+}
+
+
+// ---------------- JALLAMANN'S RPG SCRIPT ENDS -----------------
+&lt;/pre&gt;
+[[Category:ACS guides]]</text>
+    <sha1>bihpm927lytaf1xnb7iq4eeztz3d3t8</sha1>
+  </revision>
+</page>

@@ -1,0 +1,45 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>A BossDeath</title>
+  <ns>0</ns>
+  <id>2746</id>
+  <revision>
+    <id>47208</id>
+    <parentid>47189</parentid>
+    <timestamp>2020-03-18T14:48:58Z</timestamp>
+    <contributor>
+      <username>Gez</username>
+      <id>1283</id>
+    </contributor>
+    <minor />
+    <comment>underscore</comment>
+    <origin>47208</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="1614" sha1="ko7i6phgfe9ftkg6cg9p5ykcwzdj4o8" xml:space="preserve">{{codepointer|Special action}}'''A_BossDeath'''
+{{doomwiki|A_BossDeath}}
+
+(no parameters)
+
+
+Checks whether all monsters of the calling type are dead, and if so, executes all special actions that are assigned to this type. Special actions have to be assigned to a monster with the {{c|{{MapProperty|SpecialAction}}}} [[MAPINFO]] command.
+
+== Examples ==
+The {{Class|BaronOfHell|Baron of Hell}}, for example, uses [[A_BossDeath]] in its Death sequence - that is called in E1M8 when both barons have died, and thus performs the map's {{MapProperty|SpecialAction_ExitLevel|special action}} (in this case, lower the walls).
+
+  Death:
+    BOSS I 8
+    BOSS J 8 [[A_Scream]]
+    BOSS K 8
+    BOSS L 8 [[A_NoBlocking]]
+    BOSS MN 8
+    BOSS O -1 [[A_BossDeath]]
+    Stop
+
+== Interaction with actor replacement ==
+
+If the calling actor's class [[DECORATE_format_specifications|replaces]] actors of another class, this function will also trigger special actions for that other class. If more than one actor class is declared as replacing the same base actor, and actors of both classes are present on the map at the same time, then the same special action may be triggered more than once, potentially breaking the map.
+
+For example, if a mod adds several variants of the {{Class|Arachnotron}} (all of which are declared with &lt;code&gt;replaces Arachnotron&lt;/code&gt;), and spawns the different variants at random (with an actor that also &lt;code&gt;replaces Arachnotron&lt;/code&gt;), then the map may break when the player kills them all. (This won't happen when using a {{Class|RandomSpawner}}, because it specially handles this situation.)</text>
+    <sha1>ko7i6phgfe9ftkg6cg9p5ykcwzdj4o8</sha1>
+  </revision>
+</page>

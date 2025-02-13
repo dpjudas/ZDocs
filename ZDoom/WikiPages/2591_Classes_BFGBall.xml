@@ -1,0 +1,89 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>Classes:BFGBall</title>
+  <ns>0</ns>
+  <id>2591</id>
+  <revision>
+    <id>48915</id>
+    <parentid>48486</parentid>
+    <timestamp>2021-12-27T11:14:29Z</timestamp>
+    <contributor>
+      <username>Jekyll Grim Payne</username>
+      <id>2175</id>
+    </contributor>
+    <comment>updated in accordance with updated ZScriptDefinitionNote template</comment>
+    <origin>48915</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="1765" sha1="g0dosnbju297sowztibccsminpoamvc" xml:space="preserve">{{Actor|
+| type = Explosive
+| name = BFG9000 plasma ball
+| class = BFGBall
+| game = Doom
+| spawnid = 128
+| spawnname = T_BFGSHOT 
+}}[[Classes]]: &lt;u&gt;BFGBall&lt;/u&gt;
+
+
+Projectile that is launched from Doom and Doom 2's {{Class|BFG9000}} weapon. With 100 damage and [[A_BFGSpray|damaging tracers]], this is easily the most powerful projectile in Doom.
+
+The BFG tracers will create [[Classes:BFGExtra|green splashes]] on the monsters, making it easy to see which targets were actually hit. The weapon also defines a damage type, which is '''"BFGSplash"''', which is defined in the aforementioned splashes.
+
+==== [[ZScript]] definition ====
+{{ZScriptDefinitionNote|actors/doom/weaponbfg.zs#L135}}
+ class BFGBall : Actor
+ {
+ 	Default
+ 	{
+ 		{{Property|Radius}} 13;
+ 		{{Property|Height}} 8;
+ 		{{Property|Speed}} 25;
+ 		{{Property|Damage}} 100;
+ 		{{Property|Projectile;}}
+ 		+{{Flag|RANDOMIZE}}
+ 		+{{Flag|ZDOOMTRANS}}
+ 		{{Property|RenderStyle}} "Add";
+ 		{{Property|Alpha}} 0.75;
+ 		{{Property|DeathSound}} "weapons/bfgx";
+ 		{{Property|Obituary}} "$OB_MPBFG_BOOM";
+ 	}
+ 	States
+ 	{
+ 	Spawn:
+ 		BFS1 AB 4 Bright;
+ 		Loop;
+ 	Death:
+ 		BFE1 AB 8 Bright;
+ 		BFE1 C 8 Bright [[A_BFGSpray]];
+ 		BFE1 DEF 8 Bright;
+ 		Stop;
+ 	}
+ }
+==== [[DECORATE]] definition ====
+{{DecorateDefinitionNote}}
+ ACTOR &lt;u&gt;BFGBall&lt;/u&gt;
+ {
+   {{Property|Radius}} 13
+   {{Property|Height}} 8
+   {{Property|Speed}} 25
+   {{Property|Damage}} 100
+   {{Property|Projectile}}
+   +{{Flag|RANDOMIZE}}
+   {{Property|RenderStyle}} Add
+   {{Property|Alpha}} 0.75
+   {{Property|DeathSound}} "weapons/bfgx"
+   {{Property|Obituary}} "$OB_MPBFG_BOOM"
+   States
+   {
+   Spawn:
+     BFS1 AB 4 Bright
+     Loop
+   Death:
+     BFE1 AB 8 Bright
+     BFE1 C 8 Bright [[A_BFGSpray]]
+     BFE1 DEF 8 Bright
+     Stop
+   }
+ }</text>
+    <sha1>g0dosnbju297sowztibccsminpoamvc</sha1>
+  </revision>
+</page>

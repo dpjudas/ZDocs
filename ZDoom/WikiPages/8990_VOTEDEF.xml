@@ -1,0 +1,67 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>VOTEDEF</title>
+  <ns>0</ns>
+  <id>8990</id>
+  <revision>
+    <id>43679</id>
+    <parentid>43666</parentid>
+    <timestamp>2017-01-08T21:43:48Z</timestamp>
+    <contributor>
+      <username>Tiger</username>
+      <id>2074</id>
+    </contributor>
+    <comment>I forgot to include the STFeature template.</comment>
+    <origin>43679</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="3475" sha1="f42x1q8fffxdbdo8dtqmhzca401d85u" xml:space="preserve">{{STFeature}}
+&lt;!-- Warn the reader that this is not widely available yet within the Zandronum engine. --&gt;
+'''NOTE:''' This article is a draft for a future custom vote type implementation. '''This is not supported in any current Zandronum version!''' Details available [http://zandronum.com/tracker/view.php?id=1420 on the tracker] and [http://zandronum.com/forum/showthread.php?tid=6193 on the forums].
+
+
+&lt;pre&gt;
+VoteType &lt;name&gt;
+{
+    Argument = {int | float | string | player | map} [(minimum, maximum)]
+    Action = CallACS (&lt;scriptnumber&gt; or "&lt;scriptname&gt;")
+    Description = &lt;string&gt;
+    ForbidCVar = &lt;string&gt;
+    MenuRange = &lt;value&gt;, &lt;value&gt;
+    MenuStep = &lt;value&gt;
+    [Flags]
+}
+&lt;/pre&gt;
+
+* '''Argument''' can be one of the following. If the argument is not given, the vote command will not take one.
+** &lt;tt&gt;int&lt;/tt&gt;: an integer number, e.g. 5
+** &lt;tt&gt;float&lt;/tt&gt;: decimal value, e.g. 3.14
+** &lt;tt&gt;player&lt;/tt&gt;: a valid player, e.g. Doomcrate
+** &lt;tt&gt;string&lt;/tt&gt;: a string, e.g. "hello, world"
+** &lt;tt&gt;map&lt;/tt&gt;: a map name, e.g. "MAP01"
+
+For &lt;tt&gt;int&lt;/tt&gt; and &lt;tt&gt;float&lt;/tt&gt; types, a value range must be given. This details what the minimum and maximum values for the vote are. Example:
+ Argument = int (0, 100) // integer argument ranging from 0 to 100
+
+* '''Action''' = CallACS (&lt;number&gt; / "&lt;name&gt;") - defines what happens if the vote passes. Currently, the only action is CallACS. A script number or name must be given for CallACS. The vote caller is the script activator (unless they left already before the vote passed, in which case the world executes it instead) and the script will be passed the vote parameter, if any:
+** Int: the value as an integer
+** Float: the value converted to fixed point
+** Player: the player index
+** String: the parameter as a dynamic string
+** Map: the lump name of the map as a dynamic string
+* '''Description''' = &lt;text&gt; - Describes the vote. It will show up in the &lt;tt&gt;Call a Vote&lt;/tt&gt; menu and the &lt;tt&gt;listvotetypes&lt;/tt&gt; CCMD.
+* '''ForbidCVar''' = &lt;cvarname&gt; - sets the name of the cvar that forbids this vote type's usage. It defaults to &lt;tt&gt;sv_no&lt;name&gt;vote&lt;/tt&gt;. If the cvar does not exist, it will be automatically created.
+* '''MenuRange''' = &lt;min&gt;, &lt;max&gt; - defines what is used as the value range for the call vote menu. For example fraglimit votes allow values up to 32767 but only 0-100 are used in the menu. Defaults to the value range given in the argument field.
+* '''MenuStep''' = &lt;value&gt; - defines how much the value changes in the menu when arrow keys are used. Defaults to 1.
+* '''NoPassedLimit''' - If this call succeeds, the caller will not be forced to wait 10 minutes to call another vote of this kind.
+* '''NotOnSelf''' - The vote cannot be called with the vote caller as the player value.
+* '''NotOnAdmin''' - The vote cannot be called with anyone in the admin list as the player value.
+* '''NotOnSpectators''' - The vote cannot be called with a spectator as the player value. Does not prevent the vote from being called on dead LMS players.
+* '''NotOnBots''' - The vote cannot be called with a bot as the player value.
+* '''PlayerAsIndex''' - If the argument is a player, the player must be passed to the vote via index rather than name.
+* '''MapInRotation''' - With a map argument, the map must be in the map rotation.
+* '''NeedsNextMap''' - A next map must be available for the vote to be called.
+
+Zandronum comes with stock, natively defined vote types. These have internal implementation and do not run ACS scripts.</text>
+    <sha1>f42x1q8fffxdbdo8dtqmhzca401d85u</sha1>
+  </revision>
+</page>

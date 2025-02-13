@@ -1,0 +1,51 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>Classes:PhasingZorcher</title>
+  <ns>0</ns>
+  <id>5746</id>
+  <revision>
+    <id>39143</id>
+    <parentid>39072</parentid>
+    <timestamp>2015-04-26T17:35:08Z</timestamp>
+    <contributor>
+      <username>Blue Shadow</username>
+      <id>2021</id>
+    </contributor>
+    <minor />
+    <comment>/* DECORATE definition */ Updated</comment>
+    <origin>39143</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="1165" sha1="dauaemzs88s6fgx9kd0gxe3cywjg9lb" xml:space="preserve">{{Actor|
+| type = Weapon
+| name = Phasing zorcher
+| doomednum = 2004
+| class = PhasingZorcher
+| game = Chex
+}}[[Classes|Classes:]]{{Class|Actor}}&amp;rarr;{{Class|Inventory}}&amp;rarr;{{Class|Weapon}}&amp;rarr;{{Class|DoomWeapon}}&amp;rarr;{{Class|PlasmaRifle}}&amp;rarr;&lt;u&gt;PhasingZorcher&lt;/u&gt;&lt;br /&gt;
+''[[Chex Quest]]'s'' equivalent of ''[[Doom]]'s'' {{Class|PlasmaRifle|Plasma Rifle}}.&lt;br&gt;
+It appears to be a white weapon about the size of its Doom template with large brown cylindrical muzzle and it rapidly fires {{Class|PhaseZorchMissile|red Phasing Zorch shots}}.
+==== [[DECORATE]] definition ====
+ ACTOR &lt;u&gt;PhasingZorcher&lt;/u&gt; : {{Class|PlasmaRifle}}
+ {
+   {{Property|Obituary}} ""
+   {{Property|Inventory.PickupMessage}} "$GOTPHASINGZORCHER" // "You got the Phasing Zorcher!"
+   {{Property|Tag}} "$TAG_PHASINGZORCHER" // "Phasing Zorcher"
+   States
+   {
+   Fire:
+     PLSG A 0 [[A_GunFlash]]
+     PLSG A 3 [[A_FireCustomMissile]]("{{Class|PhaseZorchMissile}}")
+     PLSG B 20 [[A_ReFire]]
+     Goto Ready
+   Flash:
+     PLSF A 0 [[A_Jump]](128, "Flash2")
+     PLSF A 3 Bright [[A_Light1]]
+     Goto LightDone
+   Flash2:
+     PLSF B 3 Bright [[A_Light1]]
+     Goto LightDone
+   }
+ }</text>
+    <sha1>dauaemzs88s6fgx9kd0gxe3cywjg9lb</sha1>
+  </revision>
+</page>

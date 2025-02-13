@@ -1,0 +1,388 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>DECORATE expressions</title>
+  <ns>0</ns>
+  <id>3575</id>
+  <revision>
+    <id>52585</id>
+    <parentid>52170</parentid>
+    <timestamp>2024-05-04T10:09:25Z</timestamp>
+    <contributor>
+      <username>Jekyll Grim Payne</username>
+      <id>2175</id>
+    </contributor>
+    <minor />
+    <comment>/* ZScript */</comment>
+    <origin>52585</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="18340" sha1="gahxlqldcsu8ukoq1v71w39r5596i0s" xml:space="preserve">[[ZScript]] and [[DECORATE]] support complex mathematical expressions as parameters for codepointers. The expression may include [[Operators (ZScript)|standard operators]], math functions, and certain actor properties (occasionally called "keywords" in the forums) to compare values with.
+
+These expressions can be used for any numeric parameter in any dynamic context. (That means, they  cannot be used as a value for [[Actor properties]] or [[Actor flags]] in the Default block, with the exception of {{property|DamageFunction}}.)
+
+== Mathematical functions ==
+*'''{{LE|abs}}'''(''x'')
+:Returns the absolute value of ''x''.
+*'''{{LE|exp}}'''(''x'')
+:Returns the base-''e'' exponential function of ''x'', which is ''e'' raised to the power ''x'': ''e&lt;sup&gt;x&lt;/sup&gt;'' .
+*'''{{LE|log}}'''(''x'')
+:Returns the natural logarithm of ''x'' -- the opposite of exp.
+*'''{{LE|log10}}'''(''x'')
+:Returns the common (base-10) logarithm of ''x''.
+*'''{{LE|ceil}}'''(''x'')
+:Rounds ''x'' upward to the next closest integral value. Result is still floating point.
+*'''{{LE|floor}}'''(''x'')
+:Rounds ''x'' down to the next closest integral value. Result is still floating point.
+*'''{{LE|round}}'''(''x'')
+:Rounds ''x'' to the closest integral value. Result is still floating point.
+*'''{{LE|sqrt}}'''(''x'')
+:Returns the square root of ''x''.
+*'''{{LE|min}}'''(''float'' or ''int'', ...)
+:Gets the smallest value of all values listed. Can take any amount of numbers, and can solve both ints and floats.
+*'''{{LE|max}}'''(''float'' or ''int'', ...)
+:Gets the largest value of all values listed. Can take any amount of numbers, and can solve both ints and floats.
+*'''{{LE|clamp}}'''(''src'', ''min'', ''max'')
+:Returns ''src'' within the range of ''min'' and ''max'' inclusively. All parameters can be ints or floats.
+
+== [[Trigonometry]] functions ==
+*'''{{LE|cos}}'''(''x'')
+*'''{{LE|sin}}'''(''x'')
+*'''{{LE|tan}}'''(''x'')
+:Returns cosine, sine, or tangent of angle ''x''. ''x'' must be in degrees.
+*'''{{LE|acos}}'''(''x'')
+*'''{{LE|asin}}'''(''x'')
+*'''{{LE|atan}}'''(''x'')
+:Returns the inverse cosine, sine, or tangent of ''x''. Returns an angle in degrees.
+*'''{{LE|cosh}}'''(''x'')
+*'''{{LE|sinh}}'''(''x'')
+*'''{{LE|tanh}}'''(''x'')
+:Returns the hyperbolic cosine, sine, or tangent of ''x''.
+*'''{{LE|atan2}}'''(''y'', ''x'')
+:Similar to atan, but used to get the quadrants the angles are in. Returns in degrees.
+*'''{{LE|VectorAngle}}'''(''x'', ''y'')
+:Like atan2, only with x first instead of y. Can be used to calculate an angle, for example, by passing coordinates to it.
+ VectorAngle(user_x[0] - user_x[1], user_y[0] - user_y[1])
+
+== Random number functions==
+*'''{{LE|random}}'''[''identifier''](''min'', ''max'')
+:Returns a random integer value between min and max.
+*'''{{LE|random2}}'''[''identifier''](''mask'')
+:Returns a random integer value between -''mask'' and +''mask''. It is equivalent to {{c|(random() &amp; mask) - (random() &amp; mask)}}. If no mask is provided, i.e, {{c|random2()}}, the maximum value of 255 is used instead. Mask is used as a binary mask, e.g. if 9 is used, the random results can be [0, 1, 8, 9] - [0, 1, 8, 9], so it is advised to use as a mask values one less than a power of two, such as 1, 3, 7, 15, 31, 63, or 127.
+*'''{{LE|frandom}}'''[''identifier''](''min'', ''max'')
+:Returns a random floating point value between min and max.
+*'''{{LE|randompick}}'''[''identifier''](''int'', ...)
+:Picks a number from the numbers placed in it. This can take an unlimited amount of parameters, i.e. {{c|randompick(1, 4, 12, 16)}} will choose one of the four numbers.
+*'''{{LE|frandompick}}'''[''identifier''](''float'', ...)
+:Similar to ''randompick'' but for float-point values.
+*'''{{LE|SetRandomSeed}}'''[''identifier''](''seedvalue'')
+:Used if a guaranteed sequence of random numbers is desired. When a specific number is set as seed, the random-number generator (RNG) will always produce the same numbers. Useful for cases where an RNG may be used for purposes where total randomness is not wanted.
+
+''identifier'' is optional. Calls to a random function with an identifier do not interfere with the RNG for calls with a different identifier, which can be used to make the outcome of some events unaffected by others.
+
+== ACS functions ==
+*'''[[ACS_ExecuteWithResult]]'''
+:Runs a script and uses its return value.
+*'''[[ACS_NamedExecuteWithResult]]'''
+:Runs a [[named script]] and uses its return value.
+*'''[[CallACS]]'''
+:Shorter alias for ACS_NamedExecuteWithResult.
+
+== Information functions ==
+=== ZScript ===
+*'''[[CountInv]]'''
+:Gets the number of inventory items an actor is holding from a pointer and returns it to the expression.
+*'''[[CountProximity]]'''
+:Similar to [[A_CheckProximity]] but returns how many of the actors are found instead of jumping.
+:Using a {{class|BlockThingsIterator}} provides more control.
+*'''[[Distance3D]]'''
+:'''[[Distance2D]]'''
+:Gets the distance from the calling actor to a pointer.
+*'''[[GetGibHealth]]'''
+:Gets the gib health property of the calling actor.
+:This is preferable over reading &lt;code&gt;gibhealth&lt;/code&gt; directly, because this is a virtual function, which can be overridden to add custom behavior.
+*'''[[GetPlayerInput (DECORATE)|GetPlayerInput]]'''
+:Returns a bit field containing the buttons pressed by the player, if the calling actor is a {{class|PlayerPawn}}.
+*'''[[GetSpawnHealth]]'''
+:Gets the spawn health property of the calling actor.
+*'''[[GetZAt]]'''
+:Gets the Z coordinate of a floor or ceiling at a specific set of coordinates.
+*'''{{LE|OverlayID}}'''()
+:When used in {{class|PSprite}}, it retrieves the layer's index.
+*'''[[OverlayX]]'''
+:Returns the x position of the specified overlay. Same as obtaining the PSprite pointer first and reading its &lt;code&gt;x&lt;/code&gt; field.
+*'''[[OverlayY]]'''
+:Returns the y position of the specified overlay. Same as obtaining the PSprite pointer first and reading its &lt;code&gt;y&lt;/code&gt; field.
+
+See also [[Operators (ZScript)|ZScript operators]] and [[Statements (ZScript)|ZScript statements]].
+=== DECORATE functions ===
+These functions are not like regular DECORATE action functions. They can be used just like expressions (i.e. randompick) inside of action functions directly such as [[A_SetUserVar]].
+*'''[[CheckClass]]'''
+:Checks an actor's class name, returning {{c|true}} if it matches the passed parameter.
+*'''[[CountInv]]'''
+:Gets the number of inventory items an actor is holding from a pointer and returns it to the expression.
+*'''[[CountProximity]]'''
+:Similar to [[A_CheckProximity]] but returns how many of the actors are found instead of jumping.
+*'''[[GetAngle]]'''
+:Gets the angle which an actor pointer can be found at. Can toggle the relative functionality
+*'''[[GetCvar]]'''
+:Gets a server cvar, internal or user.
+*'''[[GetCrouchFactor]]'''
+:Gets the current crouch factor of a player if the player is a pointer.
+*'''[[GetDistance]]'''
+:Gets the distance from the calling actor to a pointer. Can toggle the Z checking functionality.
+*'''[[GetGibHealth]]'''
+:Gets the gib health property of the calling actor.
+*'''[[GetMissileDamage]]'''
+:Gets the {{Property|Damage|damage}} of the actor.
+*'''[[GetPlayerInput (DECORATE)|GetPlayerInput]]'''
+:Performs the same functionality as the ACS [[GetPlayerInput]].
+*'''[[GetSpawnHealth]]'''
+:Gets the spawn health property of the calling actor.
+*'''[[GetSpriteAngle]]'''
+:Gets an [[Actor pointer]]'s sprite angle.
+*'''[[GetSpriteRotation]]'''
+:Gets an [[Actor pointer]]'s sprite rotation.
+*'''[[GetZAt]]'''
+:Gets the Z coordinate of a floor or ceiling at a specific set of coordinates.
+*'''[[IsPointerEqual]]'''
+:Compares two [[actor pointer]]s, returning {{c|true}} if they reference the same actor.
+*'''{{LE|OverlayID}}'''()
+:When used in an overlay, it retrieves the overlay's layer index.
+*'''[[OverlayX]]'''
+:Returns the x position of the specified overlay.
+*'''[[OverlayY]]'''
+:Returns the y position of the specified overlay.
+
+== Variables ==
+=== ZScript ===
+[[ZScript variables|Variables]] defined in the class can be manipulated directly. Any variable can be read from the class itself, and, provided it's not protected by a specific [[ZScript_variables#Access_Modifiers|access modifer]], it can be read from other classes instead.
+
+A lot of variables can be modified directly, but most of those defined as &lt;code&gt;internal&lt;/code&gt;, &lt;code&gt;readonly&lt;/code&gt; or &lt;code&gt;meta&lt;/code&gt; will still rely on specific functions, like [[SetOrigin]], [[A_Warp]] and others.
+
+Some common [[Actor]] variables include:
+{{Note|This is only a brief list, covering only some of the [[Actor]] class fields, added for informational purposes only. The absolute majority of [[ZScript variables|variables defined in a class]] are readable and modifiable. You can find the full definition of the Actor class on [https://github.com/ZDoom/gzdoom/blob/master/wadsrc/static/zscript/actors/actor.zs GZDoom GitHub repository].}}
+{| class="wikitable" 
+|- style="background-color:#efefef;"
+! Field name
+! Data type
+! How to modify
+! Description
+|-
+| args
+| static int array
+| Directly modifiable&lt;br /&gt;Can be set in the map editor&lt;br /&gt;[[A_SetArg]]
+| {{property|Args|Arguments}} of the actor. This is a static array with the size of 5.&lt;br /&gt;Items are accessible as &lt;code&gt;args[0]&lt;/code&gt;, &lt;code&gt;args[1]&lt;/code&gt;, &lt;code&gt;args[3]&lt;/code&gt;, &lt;code&gt;args[4]&lt;/code&gt;.
+|-
+| target
+| Actor
+| Directly modifiable
+| The actor's [[Actor pointers|target pointer]].
+|-
+| master
+| Actor
+| Directly modifiable
+| The actor's [[Actor pointers|master pointer]].
+|-
+| tracer
+| Actor
+| Directly modifiable
+| The actor's [[Actor pointers|tracer pointer]].
+|-
+| pos
+| Vector3
+| [[SetOrigin]]&lt;br /&gt;[[A_Warp]]&lt;br /&gt;[[Warp (ZScript)]]&lt;br /&gt;[[SetZ]]
+| Actor's current position in the world. Has .x, .y and .z components.
+|-
+| vel
+| Vector3
+| Directly modifiable&lt;br /&gt;[[A_ChangeVelocity]]
+| Actor's current absolute velocity. Has .x, .y and .z components.
+|-
+| angle
+| double
+| Directly modifiable&lt;br /&gt;[[A_SetAngle]]&lt;br /&gt;
+| Actor's absolute facing angle. Note, it can go beyond the 0-360 range.
+|-
+| pitch
+| double
+| Directly modifiable&lt;br /&gt;[[A_SetPitch]]
+| Actor's absolute pitch. Limited to [-90, 90] range.
+|-
+| roll
+| double
+| Directly modifiable&lt;br /&gt;[[A_SetRoll]]
+| Actor's current roll in a [0, 360] range.&lt;br /&gt;For actor sprites to follow the roll, the {{flag|ROLLSPRITE}} flag must be used.&lt;br /&gt;For [[MODELDEF|3D models]] to have effect, the model will need the USEACTORROLL in [[MODELDEF]].
+|-
+| alpha
+| double
+| Directly modifiable&lt;br /&gt;[[A_FadeOut]]&lt;br /&gt;[[A_FadeIn]]&lt;br /&gt;[[A_SetRenderStyle]]
+| The opacity of the actor's current sprite (1.0 = opaque, 0.0 = invisible).&lt;br /&gt;Modifying it has no effect if the actor's {{property|RenderStyle}} is 'Normal'.
+|-
+| scale
+| Vector2
+| Directly modifiable&lt;br /&gt;[[A_SetScale]]
+| The actor's visual scale which affect how its sprites are rendered.&lt;br /&gt;Has .x (horizontal) and .y (vertical) components.
+|-
+| height
+| double
+| Directly modifiable&lt;br /&gt;[[A_SetSize]]
+| Height of the actor's collision box.
+|-
+| radius
+| double
+| [[A_SetSize]]
+| Width of the actor's collision box.
+|-
+| VisibleStartAngle
+| double
+| Directly modifiable
+| Beginning of the actor's angle range which the camera must see it to draw the sprite.&lt;br /&gt;Requires {{flag|MASKROTATION}} flag to have any effect.
+|-
+| VisibleEndAngle
+| double
+| Directly modifiable
+| End of the actor's angle range which the camera must see it to draw the sprite.&lt;br /&gt;Requires {{flag|MASKROTATION}} flag to have any effect.
+|-
+| VisibleStartPitch
+| double
+| Directly modifiable
+| Same as VisibleStartAngle, but for pitch.
+|-
+| VisibleEndPitch
+| double
+| Directly modifiable
+| Same as VisibleEndAngle, but for pitch.
+|-
+| health
+| int
+| [[A_SetHealth]]&lt;br /&gt;
+| The actor's current health.&lt;br /&gt;&lt;br /&gt;'''Warning''': Modifying the actor's health is NOT the same as ''healing'' and ''damaging''. Modifying this field simply changes its base value.&lt;br /&gt;To heal the actor, see [[GiveBody]].&lt;br /&gt;To damage the actor, see [[DamageMobj]].
+|-
+| damage
+| int
+| [[SetDamage]]
+| The actor's current {{property|Damage|damage}}. Note, if the actor's damage was set with {{property|DamageFunction}},&lt;br /&gt;calling [[SetDamage]] will completely override that formula.
+|-
+| mass
+| double
+| Directly modifiable&lt;br /&gt;[[A_SetMass]]
+| The actor's {{property|Mass|mass}}.
+|-
+| speed
+| double
+| Directly modifiable&lt;br /&gt;[[A_SetSpeed]]
+| The actor's {{property|Speed}} property.&lt;br /&gt;Note, '''this is not the current velocity'''. Modifying Speed will have no effect on the speed of the actor's current movement.&lt;br /&gt;For that, you need to modify &lt;code&gt;vel&lt;/code&gt;.
+|-
+| meleerange
+| double
+| Directly modifiable
+| The actor's {{property|MeleeRange}}.
+|-
+| reactiontime
+| int
+| Directly modifiable
+| The actor's {{property|ReactionTime}}.
+|-
+| stamina
+| int
+| Directly modifiable
+| The actor's {{property|Stamina}}.
+|-
+| special
+| int
+| Directly modifiable&lt;br /&gt;[[A_SetSpecial]]
+| The [[special]] attached to the actor.
+|-
+| species
+| name
+| [[A_SetSpecies]]
+| The actor's {{property|Species}}.
+|-
+| waterlevel
+| int
+| style="font-style:italic;" | Readonly
+| How "submerged" the actor is in a [[Transfer_Heights]] or [[3D floor]] water pool:&lt;br /&gt;*'''0''': Not submerged at all (e.g. standing on solid ground or on shallow [[TERRAIN]]-based water)&lt;br /&gt;*'''1''': Less than half submerged ("ankle deep")&lt;br /&gt;*'''2''': At least half submerged ("waist deep")&lt;br /&gt;*'''3''': Entirely submerged (completely underwater)
+|-
+| waterdepth
+| double
+| style="font-style:italic;" | Readonly
+| The exact depth that the actor is at inside of a [[Transfer_Heights]] or [[3D floor]] water volume.&lt;br /&gt;Can be used for more detailed depth checks than ''waterlevel''.
+|-
+| TID
+| int
+| style="font-style:italic;" | Readonly
+| The actor's [[TID]].
+|-
+| TIDtoHate
+| int
+| style="font-style:italic;" | Readonly
+| [[TID]] of the actor to hate (see [[Thing_Hate]]).
+|-
+| cursector
+| {{struct|Sector}}
+| style="font-style:italic;" | Readonly
+| {{struct|Sector}} the actor is currently in.
+|}
+
+=== Old reference ===
+As of GZDoom 2.2.0, it is possible to directly modify some of the variables with assignment operators.
+
+*'''Bold''' - Read and write variables. Allows direct assignment operators.
+*''Italics'' - Read-only variables.
+
+Read-only variables must still rely upon the action function used to manipulate them (e.g. [[A_Warp]] for x/y/z, [[A_ChangeVelocity]] for velx/vely/velz). As of GZDoom 2.2.0, unary increment/decrement operators (user_test++, --user_test, etc.) may be used, as well.
+
+'''NOTE:''' Direct variable modifications will not be interpolated or have any other effects performed upon them. If these effects are desired, use the action function associated with the variable(s) instead (such as [[A_SetAngle]] for interpolating angle changes).
+
+The following is dynamic data for use in [[DECORATE]] definitions and expressions:
+;Actor position and movement
+
+*''{{LE|x}}'' — The actor's X position in the world.
+*''{{LE|y}}'' — Same, but for Y.
+*''{{LE|z}}'' — Same, but for Z.
+*'''{{LE|angle}}''' — Actor's angle, in degrees
+*''{{LE|ceilingz}}'' — returns Z height of the ceiling above the calling actor as an absolute double value (portal- and 3D-floor-aware)
+*''{{LE|floorz}}'' — returns Z height of the floor underneath the calling actor as an absolute double value (portal- and 3D-floor-aware)
+*'''{{LE|pitch}}''' — The actor's pitch in degrees.
+*'''{{LE|roll}}''' - The actor's roll. Currently, this only really affects players such as the rotation of view.
+*''{{LE|velx}}'' or ''momx'' — Actor's velocity along the absolute X axis. The "mom" names are {{deprecated}}.
+*''{{LE|vely}}'' or ''momy'' — Same, but for Y.
+*''{{LE|velz}}'' or ''momz'' — Same, but for Z.
+;Actor properties
+*'''{{LE|accuracy}}''' — The [[accuracy]] of the Actor.
+*'''{{LE|alpha}}''' — The {{Property|Alpha}} value of the Actor.
+*'''{{LE|args}}[]''' — Arguments passed to the thing [[Action specials|special]]; args[0] through args[4] are valid.
+*''{{LE|damage}}'' — The actor's {{Property|Damage}}. {{deprecated}}
+*''{{LE|health}}'' — How much {{Property|Health|health}} the Actor has left.
+*''{{LE|height}}'' — The actor's {{Property|Height}}.
+*'''{{LE|mass}}''' — The actor's {{Property|Mass}}.
+*'''{{LE|meleerange}}''' — The actor's {{Property|MeleeRange}}.
+*''{{LE|radius}}'' — The actor's {{Property|Radius}}.
+*'''{{LE|reactiontime}}''' — The actor's {{Property|ReactionTime}}.
+*'''{{LE|scaleX}}''' — The actor's horizontal scale. See [[A_SetScale]].
+*'''{{LE|scaleY}}''' — The actor's vertical scale. See [[A_SetScale]].
+*'''{{LE|score}}''' — The actor's [[score]].
+*'''{{LE|special}}''' — ID of the [[special]] currently assigned to this actor.
+*'''{{LE|speed}}''' — The actor's {{Property|Speed}}.
+*'''{{LE|stamina}}''' — The [[stamina]] of the Actor.
+*''{{LE|tid}}'' — The actor's [[TID]].
+*''{{LE|tidtohate}}'' — TID of the current assigned target. (see [[Thing_Hate]].)
+*''{{LE|threshold}}'' — The actor's {{Property|Threshold}}.
+*''{{LE|defthreshold}}'' — The actor's {{Property|DefThreshold}}.
+*'''{{LE|VisibleStartAngle}}/{{LE|VisibleEndAngle}}''' - The actor's angle range which the camera must see it to draw the sprite. Requires {{Flag|MASKROTATION}} flag to have any effect.
+*'''{{LE|VisibleStartPitch}}/{{LE|VisibleEndPitch}}''' - Same as VisibleStartAngle and VisibleEndAngle but for pitch instead.
+*''Constant Variables'' — [[Constants#DECORATE_usage|Constant variables]] can be defined both inside and outside of an actor.
+*'''User Variables''' — [[user variable]]s are defined as "var int user_(name);" in actor properties.
+*'''User Arrays''' — user arrays are defined as "var int user_(name)[(size)];" in actor properties.
+*''{{LE|waterlevel}}'' — How "submerged" the actor is in a [[Transfer_Heights]] or [[3D floor]] water pool: 
+:'''0''': Not submerged at all (e.g. standing on solid ground or on shallow [[TERRAIN]]-based water)
+:'''1''': Less than half submerged ("ankle deep")
+:'''2''': At least half submerged ("waist deep")
+:'''3''': Entirely submerged (completely underwater)
+*''{{LE|waterdepth}}'' — The exact depth that the actor is at inside of a Transfer_Heights or 3D floor water volume. Returns an floating point number. Can be used for more detailed depth checks than ''waterlevel''.
+
+== Examples ==
+See [[Projectile Trap]]
+[[Category:DECORATE guides]]</text>
+    <sha1>gahxlqldcsu8ukoq1v71w39r5596i0s</sha1>
+  </revision>
+</page>

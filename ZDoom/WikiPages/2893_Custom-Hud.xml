@@ -1,0 +1,110 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>Custom Hud</title>
+  <ns>0</ns>
+  <id>2893</id>
+  <revision>
+    <id>36008</id>
+    <parentid>35038</parentid>
+    <timestamp>2013-03-01T04:00:28Z</timestamp>
+    <contributor>
+      <username>Deded007</username>
+      <id>1392</id>
+    </contributor>
+    <minor />
+    <comment>links, templates, clean up</comment>
+    <origin>36008</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="4828" sha1="jn43ttgg1r91ylo02on3netac9lvj4i" xml:space="preserve">{{warning|text=While still supported, this method of creating a custom HUD is no longer preferred.  See [[SBARINFO]] for the preferred method to create custom HUDs.}}
+{{TOCright}}
+== Assumed Knowledge ==
+
+It is assumed that before you begin this tutorial, you are familiar with the following concepts:
+
+*[[GetCVar]]
+*[[SetHudSize]]
+*[[SetFont]]
+*[[HudMessage]]
+*[[GetActorProperty]]
+*[[CheckInventory]]
+
+Understanding these concepts is vital to understanding the following tutorial.
+
+== Scripting a Custom Hud ==
+
+You can disabled the built-in HUD by first using SBARINFO and set the height to 0. You can have your script work around the existing HUD, but unless you intend to reuse parts, this is not recommended. To make your HUD more user-friendly you should watch the value of the screenblocks CVAR (using [[GetCVar]]) and alter the HUD accordingly (try not to draw anything when the value is 12). The values correspond to the HUD as follows:&lt;sup id="ref_hotwax"&gt;[[Custom Hud#endnote_hotwax|[1]]]&lt;/sup&gt;
+
+*3-9: There is a border around the player's view, and the status bar is displayed
+*10: Fullscreen with status bar
+*11: Fullscreen without status bar, ZDoom HUD enabled
+*12: Fullscreen with no HUD whatsoever
+
+== The Graphics ==
+
+'''1)''' Create a graphic or graphics you want to use for the HUD. Keep in mind the size of the average users' screen resolution, e.g. 640x480 or 800x600.  This is important because a 1024x768 HUD graphic does not scale down well. 
+
+
+'''2)''' Load all the graphics you just made into your wad file using a [[lump management tool]].  Make note of each graphics name as you will need them in the ACS script.
+
+== ACS ==
+
+'''1)''' If you use [[Doom Builder]], open MAP01 of your wad and select "Edit" from the "Scripts" menu. To display the new HUD bar, you use something like this:
+
+    Script 1 {{SType|Enter}}
+    { 
+        [[SetHudSize]] (800, 600, {{const|TRUE}});
+        [[SetFont]]("HUDLUMP");
+        [[HudMessage]] (s: "a";{{const|HUDMSG_PLAIN}},1000,{{const|CR_UNTRANSLATED}},400.1,550.1,0.0);
+    }
+
+In this script, SetFont tells Doom that the font to use is actually the lump name of your custom stat-bar graphic ("HUDLUMP"), and printing "a" in the HudMessage, as above, will display that graphic.  Notice that it is also an "ENTER" script, because it needs to be activated by the player so that you can easily access their inventory and health information.&lt;sup id="ref_cyrez"&gt;[[Custom Hud#endnote_cyrez|[2]]]&lt;/sup&gt;
+
+
+'''2)''' Next comes displaying the player information.  We'll start with health:
+
+        [[SetHudSize]] (320, 200, {{const|TRUE}});
+        [[SetFont]]("BIGFONT");
+        [[HudMessage]] (i: [[GetActorProperty]](0,{{const|APROP_HEALTH}});
+                       {{const|HUDMSG_PLAIN}},999,{{const|CR_UNTRANSLATED}},90.1,175.1,0.0);
+
+Notice I've changed the sethudsize to accomodate the font "BIGFONT", and the HudMessage coordinates will vary as a result.  Finally, notice that the HudMessage ID is ''lower'' than that of the stat-bar HudMessage ID so that the health count will display ''infront'' of the stat-bar.
+
+'''NB:''' I've deliberately left the HudMessage coordinates slightly unaligned in order to encourage people to find the correct offsets for themselves.
+
+Using other HudMessages such as:
+
+         [[HudMessage]] (i: [[CheckInventory]]("{{class|Armor}}");
+                       {{const|HUDMSG_PLAIN}},999,{{const|CR_UNTRANSLATED}},175.1,175.1,0.0);
+ 
+         [[HudMessage]] (i: [[CheckInventory]]("{{class|Clip}}");
+                       {{const|HUDMSG_PLAIN}},999,{{const|CR_UNTRANSLATED}},175.1,175.1,0.0);
+
+...you will also be able to figure out how to display the armor and ammo counts.
+
+
+'''3)''' And finally, while this may sound tricky, it's actually very straightforward - turning your custom stat-bar on and off according to how the player has their HUD displayed, as discussed earlier.
+
+        if ([[GetCVar]] ("screenblocks") &lt;= 10) 
+            {   /*Do your Custom Hud Stuff here*/}
+        else
+            {   /*Turn it off with HudMessages that print nothing*/}
+
+These are obviously the very basic concepts you need to be familiar with in order to script your own custom hud.  Use what you've learnt here, and have a look through the example scripts posted below to try and understand more about it.
+
+== Example scripts ==
+
+* [[Barista]]'s [http://web.archive.org/web/20080505052402/http://blended.planethalflife.gamespy.com/barista/script_barista.lmp HUD script]
+* [[:File:JonathansHud.acs|Jonathan's HUD Script]]
+
+==References==
+
+#&lt;cite id="endnote_hotwax" style="font-style: normal;"&gt;[[#ref_hotwax|'''↑''']]&lt;/cite&gt; Information obtained from Hotwax.
+#&lt;cite id="endnote_cyrez" style="font-style: normal;"&gt;[[#ref_cyrez|'''↑''']]&lt;/cite&gt; Information obtained from Cyrez.
+
+== See Also ==
+[[Tutorials]]
+
+[[category:ACS guides]]</text>
+    <sha1>jn43ttgg1r91ylo02on3netac9lvj4i</sha1>
+  </revision>
+</page>

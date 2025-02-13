@@ -1,0 +1,80 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>Break</title>
+  <ns>0</ns>
+  <id>5049</id>
+  <revision>
+    <id>35786</id>
+    <parentid>35619</parentid>
+    <timestamp>2013-02-10T19:24:41Z</timestamp>
+    <contributor>
+      <username>Deded007</username>
+      <id>1392</id>
+    </contributor>
+    <minor />
+    <comment>formatting</comment>
+    <origin>35786</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="1904" sha1="n2pywec1dtlcle3sna9lb7crhwoosfg" xml:space="preserve"> break;
+
+==Usage==
+
+'''break''' is used to exit from a (given type of) block of code early, and is most commonly used to break out of the current scope of a ''do'', ''for'', or ''while'' statement, or to break out of a ''switch'' block completely.
+
+==Examples==
+
+This example breaks out of the for loop if the matching player is not currently in the game.
+
+ for (int i = 0; i &lt; 8; i++)
+ {
+    if (![[PlayerInGame]] (i))
+       [[break]];
+ 
+    [[TeleportOther]] (1000 + i, 60 + i, 1);
+ }
+
+This example breaks out of the while loop if the player has the radiation suit.
+
+ while (PlayerDrugged)
+ {
+    [[delay]] (35);
+ 
+    if ([[CheckInventory]] ("{{Class|RadSuit}}"))
+       [[break]]; // Radiation suit protects against drugged effect
+ 
+    [[FadeTo]] ([[random]] (0, 2) * 128, [[random]] (0, 2) * 128, [[random]] (0, 2) * 128, 1.0, 1.0);
+ }
+
+This example uses the '''break''' statement multiple times in a select block.  It is important to remember to use break at the end of each case to avoid execution “falling through” to the next case block.
+
+ switch ([[GameSkill]] ())
+ {
+    case {{const|SKILL_VERY_EASY}}:
+       // Spawn one zombie. Pathetically easy.
+       [[SpawnSpot]] ("{{Class|ZombieMan}}", 60);
+       [[break]];
+ 
+    case {{const|SKILL_EASY}}:
+       // Spawn one imp.  Still really easy.
+       [[SpawnSpot]] ("{{Class|DoomImp}}", 60);
+       [[break]];
+ 
+    case {{const|SKILL_HARD}}:
+       // Spawn a baron, in addition to three imps.
+       [[SpawnSpot]] ("{{Class|BaronOfHell}}", 60);
+       // break is intentionally not used here, to allow execution to continue through the next block.
+ 
+    case {{const|SKILL_NORMAL}}:
+       // Spawn three imps.
+       [[SpawnSpot]] ("{{Class|DoomImp}}", 61);
+       [[break]];
+ 
+    case {{const|SKILL_VERY_HARD}}:
+       // Spawn a CYBERDEMON!
+       [[SpawnSpot]] ("{{Class|Cyberdemon}}", 60);
+       [[break]];
+ }
+[[Category:ACS]]</text>
+    <sha1>n2pywec1dtlcle3sna9lb7crhwoosfg</sha1>
+  </revision>
+</page>

@@ -1,0 +1,126 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>Structs:F3DFloor</title>
+  <ns>0</ns>
+  <id>9598</id>
+  <revision>
+    <id>50653</id>
+    <parentid>50652</parentid>
+    <timestamp>2023-09-29T12:36:32Z</timestamp>
+    <contributor>
+      <username>Jekyll Grim Payne</username>
+      <id>2175</id>
+    </contributor>
+    <minor />
+    <comment>/* Variables */ added a link to Sector_Set3DFloor special</comment>
+    <origin>50653</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="7920" sha1="siq1ooaeg9sotsse0h7rx332sgrky7n" xml:space="preserve">{{ZScriptNote}}
+
+'''F3DFLoor''' is the struct that stores information and methods for each [[3D floor]] in the map. 3D floors are free standing room-over-room level geometry, that can (only) be created with the [[Sector_Set3DFloor]] and [[ExtraFloor_LightOnly]] line specials.
+
+Its' internal definition can be found inside [https://github.com/coelckers/gzdoom/blob/master/src/playsim/p_3dfloors.h#L64 p_3dfloors.h].
+
+== Methods ==
+
+*{{c|TextureID '''{{LE|GetTexture}}'''(Int ''Pos'')}}
+:Returns the [[ZScript_variables|TextureID]] of the 3D floors' top or bottom flat. The pos variable specifies what plane of the 3D floor to check, 0 checks the 3D floors' top flat, and 1 checks the bottom flat.
+
+== Variables ==
+
+*{{c|readonly uint '''flags'''}}
+*:Stores all the flags that the 3D floor has set, possible flags include:
+*:* {{c|'''FF_EXISTS'''}} - Is on if the 3D floor in question is a valid one that exists. You should check for this flag before doing any sorts of checks to a 3D floor !
+*:* {{c|'''FF_SOLID'''}} - This 3D floor is solid, and things cannot go through it normally.
+*:* {{c|'''FF_RENDERSIDES'''}} - Should this 3D floors' sides be rendered ?
+*:* {{c|'''FF_RENDERPLANES'''}} - Should the top and bottom flats of this 3D floor be rendered ?
+*:* {{c|'''FF_RENDERALL'''}} - Should the entire 3D floor be rendered ? Implied by swimmable or non-solid 3D floors.
+*:* {{c|'''FF_SWIMMABLE'''}} - This 3D floor is a swimmable water volume.
+*:* {{c|'''FF_NOSHADE'''}} - This 3D floor should not apply any light effects to the map at all, such as the 3D floors' brightness determining the brightness of the sector below it. This flag is known as "Disable light effects" in [[Ultimate Doom Builder]].
+*:* {{c|'''FF_BOTHPLANES'''}} - Should both flat planes always be rendered ?
+*:* {{c|'''FF_TRANSLUCENT'''}} - Is this 3D floor transparent ? This flag is automatically set if the 3D floor has any alpha below 255.
+*:* {{c|'''FF_FOG'''}} - Should the fog from the 3D floors' control sector be projected to the volume the floor occupies ?
+*:* {{c|'''FF_INVERTPLANES'''}} - Should the interior of the 3D floor also be rendered, this is implied by the "Render inside" type flag in Ultimate Doom Builder.
+*:* {{c|'''FF_ALLSIDES'''}} - Should the inside and outside sides of the 3D floor be rendered ?
+*:* {{c|'''FF_INVERTSIDES'''}} - Should only the inside facing sides of the 3D floor be rendered ?
+*:* {{c|'''FF_DOUBLESHADOW'''}} - Restricts the 3D floors' lighting effects to only apply within its' boundaries. This flag is known as "Restrict light inside" in Ultimate Doom Builder.
+*:* {{c|'''FF_UPPERTEXTURE'''}} - Does the 3D floor use the upper sidedef of the line that created it, instead of the middle sidedef, to draw the 3D floors sides ? This flag is known as "Use upper texture" in Ultimate Doom Builder.
+*:* {{c|'''FF_LOWERTEXTURE'''}} - Ditto, but with the lower sidedef instead.
+*:* {{c|'''FF_THINFLOOR'''}} - This 3D floor ignores the floor of the control sector, and draws both its' top and bottom at the control sectors' ceiling. This flag is known as "Ignore bottom height" in Ultimate Doom Builder.
+*:* {{c|'''FF_SCROLLY'''}} - Does nothing.
+*:* {{c|'''FF_NODAMAGE'''}} - If on, the damage specials and properties applied to the 3D floors' control sector will not transfer over to the 3D floor itself.
+*:* {{c|'''FF_FIX'''}} - Use the floor of the control sector as the floor/top of the 3D floor, and the floor of the target sector as the ceiling. {{verification}}
+*:* {{c|'''FF_INVERTSECTOR'''}} - The 3D floors' sector planes are inverted, meaning that the ceiling is the bottom of the 3D floor, and the floor is the top. This is used by Vavoom-style 3D floors.
+*:* {{c|'''FF_DYNAMIC'''}} - This 3D floor was been broke into chunks due to overlapping with another 3D floor.
+*:* {{c|'''FF_CLIPPED'''}} - {{Moreinfo}}
+*:* {{c|'''FF_SEETHROUGH'''}} - The actor seeing rules on this sector are inverted, allowing sight checks such as [[IsVisible]]() to see through the floor if it's solid, but not if it's non-solid. This flag is known as "Invert Visibility Rules" in Ultimate Doom Builder.
+*:* {{c|'''FF_SHOOTTHROUGH'''}} - The hitscan collision rules on this sector are inverted, meaning that hitscans will go through this 3D floor if it's solid, but will be stopped by the floor if it's non-solid. This flag is known as "Invert Shootability Rules" in Ultimate Doom Builder.
+*:* {{c|'''FF_FADEWALLS'''}} - This 3D floor has real fog applied to its' interior, instead of simply blending the players' view like FF_FOG does. This flag is known as "Fade effect (No view blend)" in Ultimate Doom Builder.
+*:* {{c|'''FF_ADDITIVETRANS'''}} - This floor is rendered with additive translucency, this also implied the FF_TRANSLUCENT flag. This flag is known as "Additive translucency" in Ultimate Doom Builder.
+*:* {{c|'''FF_FLOOD'''}} - This 3D floors' bottom extends down to the next nearest 3D floor with the same flag, the next solid 3D floor, or the bottom of the sector the 3D floor is on.
+*:* {{c|'''FF_THISINSIDE'''}} - This flag is used for a hack needed to get 3D floors with FF_BOTHPLANES to work in the software renderer.
+*:* {{c|'''FF_RESET'''}} - This flag makes the 3D floor reset the lighting effects of the ones above it. This flag is known as "Reset light effects" in Ultimate Doom Builder.
+*{{c|readonly [[Structs:SecPlane|SecPlane]] '''bottom'''}}
+:A reference to the 3D floors' bottom sector plane.
+*{{c|readonly SecPlane '''top'''}}
+:A reference to the 3D floors' top sector plane.
+*{{c|readonly [[Structs:Line|Line]] '''master'''}}
+:A reference to the [[linedef]] that has the [[Sector_Set3DFloor]] [[Line_specials|special]] that created the 3D floor.
+*{{c|readonly [[Structs:Sector|Sector]] '''model'''}}
+:A reference to the [[control sector]] of the 3D floor.
+*{{c|readonly Sector '''target'''}}
+:A reference to the target of the 3D floor. That is to say, the sector that the 3D floor was specified to be created at by Sector_Set3DFloor
+*{{c|readonly int '''alpha'''}}
+:The alpha of the 3D floor, this value can be anything between 0 and 255.
+
+== Examples ==
+This custom pistol has an altfire which will print out several pieces of information about whatever solid 3D floor it hits.
+
+&lt;syntaxhighlight lang="csharp"&gt;
+class F3DFloorFinder : Pistol
+{
+	FlineTraceData Raycaster;
+	F3DFloor RORSector; //A shorthand for Raycaster.Hit3DFloor.
+	States
+	{
+	AltFire:
+		PISG A 16
+		{
+			A_StartSound ("Misc/Chat",CHAN_WEAPON);
+			LineTrace (angle, 32768, pitch, TRF_THRUACTORS|TRF_THRUHITSCAN|TRF_THRUBLOCK, height/2, data:invoker.Raycaster);
+			
+			invoker.RORSector = invoker.Raycaster.Hit3DFloor; //Store the reference to the hit 3D floor, if any, to RORSector.
+			
+			//Only run any of this if an actual 3D floor that exists was found.
+			if (invoker.RORSector &amp;&amp; invoker.RORSector.Flags &amp; F3DFloor.FF_EXISTS)
+			{
+				Console.Printf ("|===========|3D FLOOR INFO|===========|");
+				Console.Printf ("Control sector index: %d",invoker.RORSector.model.Index());
+				Console.Printf ("Target sector index %d",invoker.RORSector.target.Index());
+				Console.Printf ("Master line index %d",invoker.RORSector.master.Index());
+				Console.Printf ("Top texture: %s",TexMan.GetName(invoker.RORSector.GetTexture(0)));
+				Console.Printf ("Bottom texture: %s",TexMan.GetName(invoker.RORSector.GetTexture(1)));
+				Console.Printf ("Alpha: %d",invoker.RORSector.alpha);
+				if (invoker.RORSector.Flags &amp; F3DFloor.FF_SWIMMABLE)
+					Console.Printf ("Swimmable: True");
+				else
+					Console.Printf ("Swimmable: False");
+				Console.Printf ("|=====================================|");
+			}
+			else
+			{
+				Console.Printf ("No 3D floor was found.");
+			}
+		}
+		Goto Ready;
+	}
+}&lt;/syntaxhighlight&gt;
+
+Notes:
+* All of F3Dfloors' data is read only. If you want to modify a 3D floors' properties, you can do so by modifying its' control sector through its' sector struct.
+
+[[Category:ZScript]]
+[[Category:Structs]]</text>
+    <sha1>siq1ooaeg9sotsse0h7rx332sgrky7n</sha1>
+  </revision>
+</page>

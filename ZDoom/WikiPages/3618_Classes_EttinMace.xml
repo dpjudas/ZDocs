@@ -1,0 +1,49 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>Classes:EttinMace</title>
+  <ns>0</ns>
+  <id>3618</id>
+  <revision>
+    <id>34501</id>
+    <parentid>34500</parentid>
+    <timestamp>2012-10-16T13:56:35Z</timestamp>
+    <contributor>
+      <username>Blue Shadow</username>
+      <id>2021</id>
+    </contributor>
+    <minor />
+    <origin>34501</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="605" sha1="cecsjvwh8f981kyp3yg9lpjbdp9expi" xml:space="preserve">{{Actor|
+| type = Gibs
+| name = Ettin mace
+| class = EttinMace
+| game = Hexen
+}}[[Classes]]: &lt;u&gt;EttinMace&lt;/u&gt;
+
+This item is spawned and thrown away when an {{Class|ettin}} is gibbed (when an ettin dies a normal death, the mace remains as part of the ettin sprite).
+
+==== [[DECORATE]] definition ====
+ ACTOR &lt;u&gt;EttinMace&lt;/u&gt;
+ {
+   {{Property|Radius}} 5
+   {{Property|Height}} 5
+   +{{Flag|DROPOFF}}
+   +{{Flag|CORPSE}}
+   +{{Flag|NOTELEPORT}}
+   +{{Flag|FLOORCLIP}}
+   States
+   {
+   Spawn:
+     ETTB MNOP 5
+     Loop
+   Crash:
+     ETTB Q 5
+     ETTB R 5 [[A_QueueCorpse]]
+     ETTB S -1
+     Stop
+   }
+ }</text>
+    <sha1>cecsjvwh8f981kyp3yg9lpjbdp9expi</sha1>
+  </revision>
+</page>

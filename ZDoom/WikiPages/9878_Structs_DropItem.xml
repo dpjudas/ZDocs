@@ -1,0 +1,40 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>Structs:DropItem</title>
+  <ns>0</ns>
+  <id>9878</id>
+  <revision>
+    <id>52364</id>
+    <parentid>52363</parentid>
+    <timestamp>2024-04-11T08:59:03Z</timestamp>
+    <contributor>
+      <username>Jekyll Grim Payne</username>
+      <id>2175</id>
+    </contributor>
+    <origin>52364</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="1211" sha1="0a1nf0lf0my1b4tg6wdppa56lr55hky" xml:space="preserve">'''DropItem''' is a [[Structs|struct]] that can be obtained through the [[GetDropItems]] {{class|Actor}} function. Instances of this struct are stored in a [[ZScript_data_types#Linked_lists|linked list]]. Drop items can only be modified through the {{property|DropItem}} Actor property, which is utilized to determine what items the actor drops upon being killed. It also has an alternative usage by the {{class|RandomSpawner}} class, which uses it to determine what actor to spawn.
+
+== Variables ==
+*{{c|native readonly DropItem '''Next'''}}
+:Pointer to the next DropItem instance in this [[ZScript_data_types#Linked_lists|linked list]].
+*{{c|native readonly name '''Name'''}}
+:Name of the {{class|Actor}} class type to drop/spawn. Note that this is a {{c|Name}}, not a {{c|class&lt;Actor&gt;}} field, which means the class it stores is not guaranteed to exist.
+*{{c|native readonly int '''Probability'''}}
+:Probability of the ''Name'' Actor class to be spawned.
+*{{c|native readonly int '''Amount'''}}
+:{{property|Amount}} of the Actor class to be spawned.
+
+== Examples ==
+{{noexamples}}
+
+== See also ==
+* [[GetDropItems]]
+* {{property|DropItem}}
+* {{class|RandomSpawner}}
+
+[[Category:ZScript]]
+[[Category:Structs]]</text>
+    <sha1>0a1nf0lf0my1b4tg6wdppa56lr55hky</sha1>
+  </revision>
+</page>

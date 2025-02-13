@@ -1,0 +1,63 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>A TransferPointer</title>
+  <ns>0</ns>
+  <id>6956</id>
+  <revision>
+    <id>38227</id>
+    <parentid>33630</parentid>
+    <timestamp>2014-08-31T15:50:24Z</timestamp>
+    <contributor>
+      <username>Major Cooke</username>
+      <id>1703</id>
+    </contributor>
+    <comment>Flags added.</comment>
+    <origin>38227</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="2384" sha1="jihds4samak5bhtjjxjnz4zxw9lhzcn" xml:space="preserve">{{DISPLAYTITLE:A_TransferPointer}}
+'''A_TransferPointer''' (pointer ''source'', pointer ''recipient'', pointer ''sourcefield'', pointer ''recipientfield''[, int flags])
+
+The calling actor performs a transfer of pointer between itself and another actor.
+*''source'' corresponds to the actor to use as a model
+*''recipient'' corresponds to the actor that will change its pointer
+*''sourcefield'' corresponds to the pointer to transfer from the source (cannot be DEFAULT or NULL)
+*''recipientfield'' corresponds to which pointer of the recipient will host the transferred value (cannot be DEFAULT or NULL)
+
+The pointers can be any of the following:
+*''AAPTR_DEFAULT'': The calling actor itself
+*''AAPTR_NULL'': No actor at all (does nothing)
+*''AAPTR_TARGET'': The calling actor's &lt;tt&gt;target&lt;/tt&gt;, if any
+*''AAPTR_MASTER'': The calling actor's &lt;tt&gt;master&lt;/tt&gt;, if any
+*''AAPTR_TRACER'': The calling actor's &lt;tt&gt;tracer&lt;/tt&gt;, if any
+Remember that the nature of these pointers depend on the actor type and is not always intuitive.&lt;br&gt;&lt;br&gt;
+By default MASTER and TARGET become null if values are assigned that would cause infinite relationships. (Missiles targeting each other, masters mastering each other.)&lt;br&gt;
+The following flags can manipulate and disable the safe guards to allow for more complex relationships:
+*'''PTROP_UNSAFETARGET (1)''' - Don't null assignments that result in an infinite chain of missiles referencing each other
+*'''PTROP_UNSAFEMASTER (2)''' - Don't null assignments that result in an infinite chain of actors referencing each other
+*'''PTROP_NOSAFEGUARDS (4)''' - Same as putting in PTROP_UNSAFETARGET|PTROP_UNSAFEMASTER, or 3 (3 and 4 do the same thing, which is redundant).
+
+Additionally, since pointers travel between actors here, an extra check is added: If the actor would end up pointing to itself (which seems both dangerous and useless) the assigned pointer field is nulled. This check cannot be overridden.
+
+For more information on pointers, visit the [[actor pointers]] page.
+
+== Examples ==
+
+
+This [[Classes:DoomImp|Imp]]'s master will acquire the same target as this imp.
+
+
+ ACTOR WimpyImp : [[Classes:DoomImp|DoomImp]]
+ {
+   States
+   {
+   Missile:
+       TNT1 A 0 A_TransferPointer(AAPTR_DEFAULT, AAPTR_MASTER, AAPTR_TARGET, AAPTR_TARGET)
+       Goto Super::Missile
+   }
+ }
+
+
+[[category:Decorate Monster AI functions]]{{DEFAULTSORT:TransferPointer}}</text>
+    <sha1>jihds4samak5bhtjjxjnz4zxw9lhzcn</sha1>
+  </revision>
+</page>

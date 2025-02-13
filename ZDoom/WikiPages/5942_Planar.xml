@@ -1,0 +1,33 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>Planar</title>
+  <ns>0</ns>
+  <id>5942</id>
+  <revision>
+    <id>37744</id>
+    <parentid>30744</parentid>
+    <timestamp>2014-03-20T09:55:30Z</timestamp>
+    <contributor>
+      <username>Gez</username>
+      <id>1283</id>
+    </contributor>
+    <minor />
+    <origin>37744</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="1809" sha1="e6tnepy4rorfo24vqbdiwv2bfxg6nna" xml:space="preserve">A '''planar graphic''' as far as [[ZDoom]] is concerned is a 153 648-byte lump corresponding to a 640&amp;times;480 picture with a 16-color palette. The main difference between a planar format and the "chunky" format used by all other [[image format]]s supported by ZDoom is in how the image is described. Each pixel is divided into four different "bitplanes", which are listed in sequence. So a single byte covers eight different pixels, and give each of them one-fourth of the data they need.
+
+The first 48 bytes correspond to a palette, indicating the red, green and blue values of each of the 16 colors in sequence. However, these values are given on six bits, not eight as usual, so the maximum value is 63 instead of 255. The values must therefore be adjusted accordingly.
+
+The following 153600 bytes are divided into four bitplanes of 38 400 bytes each. Each chunk of 80 bytes correspond to a single row of 640 pixels.
+
+For each pixel, putting in position 0 the bit from the first bitplane, then in pos 1 the one from the second bitplane, then pos 2 for the third and pos 3 from the fourth, allows to reconstitute the color index in the palette for this pixel.
+
+This format was supported natively by VGA chipsets back in the nineties. To display this picture, all ''[[Hexen]]'' had to do was to feed it directly to the graphic card's memory. This approach, however, is not possible anymore on modern operating systems which no longer grant direct access to the hardware, and would not be compatible with windowed mode anyway.
+
+Because of its limitations and obscurity (no existing mainstream graphic software supports this format anymore), ZDoom only supports this format for the Hexen [[startup lumps|startup lump]].
+==External links==
+* {{wp|Planar (computer graphics)|Planar}}
+[[Category:Image formats]]</text>
+    <sha1>e6tnepy4rorfo24vqbdiwv2bfxg6nna</sha1>
+  </revision>
+</page>

@@ -1,0 +1,86 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>Classes:CacodemonBall</title>
+  <ns>0</ns>
+  <id>2480</id>
+  <revision>
+    <id>48905</id>
+    <parentid>48485</parentid>
+    <timestamp>2021-12-27T11:13:07Z</timestamp>
+    <contributor>
+      <username>Jekyll Grim Payne</username>
+      <id>2175</id>
+    </contributor>
+    <comment>updated in accordance with updated ZScriptDefinitionNote template</comment>
+    <origin>48905</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="1357" sha1="g1mzma2sqf6f27cd1xn5w1si0ettvcf" xml:space="preserve">{{Actor|
+| type = Explosive
+| name = Cacodemon projectile
+| class = CacodemonBall
+| game = Doom
+| spawnid = 126
+| spawnname = T_CACODEMONSHOT 
+}}[[Classes]]: &lt;u&gt;CacodemonBall&lt;/u&gt;
+
+
+Lightning ball fired from a Cacodemon's mouth.
+
+==== [[ZScript]] definition ====
+{{ZScriptDefinitionNote|actors/doom/cacodemon.zs#L59}}
+ class CacodemonBall : Actor
+ {
+ 	Default
+ 	{
+  		{{Property|Radius}} 6;
+ 		{{Property|Height}} 8;
+ 		{{Property|Speed}} 10;
+  		{{Property|FastSpeed}} 20;
+ 		{{Property|Damage}} 5;
+ 		{{Property|Projectile;}}
+ 		+{{Flag|RANDOMIZE}}
+  		+{{Flag|ZDOOMTRANS}}
+ 		{{Property|RenderStyle}} "Add";
+ 		{{Property|Alpha}} 1;
+ 		{{Property|SeeSound}} "caco/attack";
+  		{{Property|DeathSound}} "caco/shotx";
+ 	}
+ 	States
+ 	{
+ 	Spawn:
+  		BAL2 AB 4 BRIGHT;
+ 		Loop;
+ 	Death:
+ 		BAL2 CDE 6 BRIGHT;
+ 		Stop;
+ 	}
+ }
+==== [[DECORATE]] definition ====
+{{DecorateDefinitionNote}}
+ ACTOR &lt;u&gt;CacodemonBall&lt;/u&gt;
+ {
+   {{Property|Radius}} 6
+   {{Property|Height}} 8
+   {{Property|Speed}} 10
+   {{Property|FastSpeed}} 20
+   {{Property|Damage}} 5
+   {{Property|Projectile}}
+   +{{Flag|RANDOMIZE}}
+   +{{Flag|ZDOOMTRANS}}
+   {{Property|RenderStyle}} Add
+   {{Property|Alpha}} 1
+   {{Property|SeeSound}} "caco/attack"
+   {{Property|DeathSound}} "caco/shotx"
+   States
+   {
+   Spawn:
+     BAL2 AB 4 Bright
+     Loop
+   Death:
+     BAL2 CDE 6 Bright
+    Stop
+   }
+ }</text>
+    <sha1>g1mzma2sqf6f27cd1xn5w1si0ettvcf</sha1>
+  </revision>
+</page>

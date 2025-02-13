@@ -1,0 +1,92 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>A CheckLOF</title>
+  <ns>0</ns>
+  <id>7575</id>
+  <revision>
+    <id>45092</id>
+    <parentid>44398</parentid>
+    <timestamp>2017-05-02T14:07:48Z</timestamp>
+    <contributor>
+      <username>Blue Shadow</username>
+      <id>2021</id>
+    </contributor>
+    <minor />
+    <comment>Remove {{new}}</comment>
+    <origin>45092</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="5983" sha1="5eovnqxt6jks7gt17hhvm43yizeh8r8" xml:space="preserve">{{Codepointer|Jump}}
+state '''A_CheckLOF''' (state ''jump'' [, int ''flags'' [, float ''range'' [, float ''minrange'' [, float ''angle'' [, float ''pitch'' [, float ''offsetheight'' [, float ''offsetwidth'' [, int ''ptr_target''[, float ''offsetforward'']]]]]]]])
+{{JumpNotice}}
+==Usage==
+Performs a would-be-[[hitscan]]/line of fire test to see if anything other than the target is encountered along the way. If the target would be hit, jump to the specified state.
+
+===Parameters===
+*''jump'': Actor state jump, used if the target or another acceptable victim blocks the line of fire. Default is 0.
+*''flags'': The following flags can be combined by using the &lt;tt&gt;|&lt;/tt&gt; character between the constant names:
+** '''CLOFF_NOAIM_VERT''' — Disables vertical aiming.
+** '''CLOFF_NOAIM_HORZ''' — Disables horizontal aiming.
+** '''CLOFF_AIM_VERT_NOOFFSET''' — Do not adjust aim (pitch) according to height offset. Will aim from whatever origin the other flags indicate (base/feet of actor, or calculated hitscan height).
+** '''CLOFF_FROMBASE''' — Move origin to actor's base
+** '''CLOFF_MUL_HEIGHT''' — Multiply height offset by actor's height, i.e. an offsetheight of 2 and a radius of 32 will offset to 64. This does nothing if offsetheight is 0. (If called by a player, takes into account whether they are crouching or not.)
+** '''CLOFF_MUL_WIDTH''' — Multiply width offset by actor's radius, i.e. an offsetwidth of 2 and a radius of 32 will offset to 64. This does nothing if offsetwidth is 0. 
+** '''CLOFF_JUMPENEMY''' — Allows jumping if an enemy breaks the line of fire.
+** '''CLOFF_JUMPFRIEND''' — Same as the above, but the monsters must be friendly.
+** '''CLOFF_JUMPOBJECT''' — Anything that isn't a monster can cause the jump.
+** '''CLOFF_JUMPNONHOSTILE''' — Actors in the way that are not attacking the calling actor will trigger the jump.
+** '''CLOFF_SKIPENEMY''' — Always act as if there are no enemies in the way to block the shot.
+** '''CLOFF_SKIPFRIEND''' — Same as the above, only with friendlies.
+** '''CLOFF_SKIPOBJECT''' — Same as CLOFF_SKIPENEMY, but applies to non-monsters.
+** '''CLOFF_SKIPNONHOSTILE''' — Pretends monsters not attacking the calling actor between itself and the desired target are non-obstructive.
+** '''CLOFF_JUMP_ON_MISS''' — Hitting a wall, floor, or ceiling is a success if they are within range.
+
+The following do not apply to the actor targeted by the line of fire check.
+:* '''CLOFF_MUSTBESHOOTABLE''' — Ignore actors that are not shootable (checks SHOOTABLE and NONSHOOTABLE).
+:* '''CLOFF_MUSTBEGHOST''' — Ignore actors that are not ghosts.
+:* '''CLOFF_IGNOREGHOST''' — Ignore actors that are ghosts.
+:* '''CLOFF_MUSTBESOLID''' — Ignore actors that are not solid.
+Miscellaneous flags:
+:* '''CLOFF_SKIPTARGET''' — Ignores the target actor breaking the ray -- none of the other filters apply to the target actor, only towards intercepting actors.
+:* '''CLOFF_BEYONDTARGET''' — Requires CLOFF_SKIPTARGET. Trace past the targeted actor (only useful if checking for some of the additional jump qualifiers).
+:* '''CLOFF_ALLOWNULL''' — Cast the ray even if target is null. When there is no target, caller aim (pitch, angle) is used regardless of aim-flags. 
+:* '''CLOFF_CHECKPARTIAL''' — Perform the check even if the target itself is actually out of range. (Useful if the actor is still interested in closer intercepting actors)
+:* '''CLOFF_SETTARGET''' — Set the intercepting actor as the {{c|target}} of the calling actor.
+:* '''CLOFF_SETMASTER''' — Set the intercepting actor as the {{c|master}} of the calling actor.
+:* '''CLOFF_SETTRACER''' — Set the intercepting actor as the {{c|tracer}} of the calling actor.
+Combo Flags:
+:* '''CLOFF_SKIPOBSTACLES''' — Implies the SKIPENEMY, SKIPFRIEND, SKIPOBJECT, SKIPNONHOSTILE flags. Partial overriding is allowed with combinations such as CLOFF_SKIPOBSTACLES|CLOFF_JUMPFRIEND.
+:* '''CLOFF_NOAIM''' — Implies NOAIM_VERT and NOAIM_HORZ.
+*''range'': Range of the check. Default is 0.
+*''minrange'': Fail if the line of fire is blocked too near the shooting actor. Default is 0.
+*''angle'': Offsets the aim by this angle. Base aim depends on flags; on target by default. Default is 0.
+*''pitch'': Offset your aim by this angle (vertical). Base aim depends on flags; on target by default. Default is 0.
+**'''Note''': To gain absolute pitch when the caller does not have a target, use ''-pitch [+ &lt;expression&gt;]'' since the function relies upon pitch when not aiming at anything.
+*''offsetheight'': Offset the line of fire's point of origin by this value. The base height depends on flags; hitscan emulation (around the middle) by default. When pitch is determined by aiming for target, aim is adjusted to correct for this offset. Default is 0.
+*''offsetwidth'': Offset the line of fire's point of origin by this value along the actor's side (horizonal). Positive values shift the trace origin to the right, negative to the left. Aim is not adjusted to correct for this value. Default is 0.
+*''ptr_target'': Pick an actor to aim for, AAPTR_DEFAULT picks TARGET (to ensure no actor is targeted, use AAPTR_NULL). Default is AAPTR_DEFAULT.
+*''offsetforward'': Offset the line of fire's point of origin going forward (positive values) or backwards (negative values). Aim is not adjusted for this value. This flag is affected by CLOFF_MUL_WIDTH the same way as ''offsetwidth''. Default is 0.
+
+
+== Examples ==
+This [[Classes:ShotgunGuy|shotgun guy]] check distance to the target, and if too far, stops shoot:
+ Actor ScanningShotguy4ZDWiki: ShotgunGuy replaces ShotgunGuy
+ {
+   [[Health]] 40
+   States
+   {
+   Missile:
+     SPOS E 5 [[A_FaceTarget]]
+     SPOS E 5 A_CheckLOF( "Attack", CLOFF_SKIPOBSTACLES|CLOFF_IGNOREGHOST, 1500 )
+     SPOS E 5
+     Goto See
+   Attack:
+     SPOS F 10 Bright [[A_SPosAttackUseAtkSound]]
+     SPOS E 5 [[A_MonsterRefire|A_CPosRefire]]
+     Goto Missile
+   }
+ }
+
+[[category:Decorate Jump functions]]{{DEFAULTSORT:CheckLOF}}</text>
+    <sha1>5eovnqxt6jks7gt17hhvm43yizeh8r8</sha1>
+  </revision>
+</page>

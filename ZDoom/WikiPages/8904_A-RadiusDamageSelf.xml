@@ -1,0 +1,50 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>A RadiusDamageSelf</title>
+  <ns>0</ns>
+  <id>8904</id>
+  <revision>
+    <id>47744</id>
+    <parentid>45129</parentid>
+    <timestamp>2020-06-16T17:40:33Z</timestamp>
+    <contributor>
+      <username>Blue Shadow</username>
+      <id>2021</id>
+    </contributor>
+    <comment>maintenance update + more info</comment>
+    <origin>47744</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="1852" sha1="sm7f1k3enwxxp9vqgk16u8y363re2aq" xml:space="preserve">{{codepointer|Generic Attack}}
+void '''A_RadiusDamageSelf''' [(int ''damage'' [, double ''distance'' [, int ''flags'' [, class&lt;Actor&gt; ''flashtype'']]])]
+
+== Usage ==
+
+Performs an explosive (radius) attack, much like {{c|[[A_Explode]]}}, that damages the calling actor's target only, which normally for [[projectile]]s, is their shooter.
+
+While this function can be used by any actor, its usage should generally be restricted to projectiles only.
+
+=== Parameters ===
+
+*''damage'': how much damage is inflicted at the center of the explosion. Default is 128.
+*''distance'': the area covered by the damage (damage inflicted drops linearly with distance). Default is 128.
+*''flags'': customizes the behavior of the function&lt;!--. Multiple flags can be combined by using the | operator between the constant names--&gt;:
+**'''RDSF_BFGDAMAGE''' — use the {{Class|BFG9000}} tracers' formula for damage. This works by picking and adding a random value from 1 to 8 a number of times which equals to the calculated damage over distance.
+:Default is 0.
+*''flashtype'': the actor to spawn at the target's position when damage is inflicted. This actor may have the {{Flag|PUFFGETSOWNER}}, {{Flag|FOILINVUL}} and {{Flag|FOILBUDDHA}} [[actor flags|flags]]. In addition, its {{c|{{Property|DamageType}}}} [[actor properties|property]] is used as the damage type of the attack. If this actor is not provided, the function defaults to {{c|{{DamageType|BFGSplash}}}} as the damage type to inflict. Default is {{c|null}}&lt;sup&gt;{{Zscriptfeaturesmall}}&lt;/sup&gt;/{{c|"None"}}&lt;sup&gt;{{Decoratefeaturesmall}}&lt;/sup&gt;.
+
+== Examples ==
+
+ class OddRocket : {{Class|Rocket}}
+ {
+     States
+     {
+     Death:
+         MISL B 8 Bright [[A_RadiusDamageSelf]](72, 192.0, {{const|RDSF_BFGDAMAGE}}, "{{Class|BFGExtra}}");
+         MISL C 6 Bright;
+         MISL D 4 Bright;
+         Stop;
+     }
+ }</text>
+    <sha1>sm7f1k3enwxxp9vqgk16u8y363re2aq</sha1>
+  </revision>
+</page>

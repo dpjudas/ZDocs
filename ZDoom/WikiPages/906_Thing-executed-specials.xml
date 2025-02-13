@@ -1,0 +1,55 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>Thing executed specials</title>
+  <ns>0</ns>
+  <id>906</id>
+  <revision>
+    <id>44112</id>
+    <parentid>42548</parentid>
+    <timestamp>2017-03-20T11:05:21Z</timestamp>
+    <contributor>
+      <username>Gez</username>
+      <id>1283</id>
+    </contributor>
+    <minor />
+    <comment>removing "new" for GZDoom 2.4.0 release</comment>
+    <origin>44112</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="3642" sha1="tkufhi8whapxv9zsx8yl3pc2r45rwvo" xml:space="preserve">Things can execute most of the [[action specials]] ZDoom offers (all except the handful of [[:Category:Line-only specials|line-only]] ones); however, certain things execute them in certain ways (or when a certain action happens to them).
+
+{{Note|text=The {{Property|Activation}} property allows to change the ways an actor executes its special. The {{Flag|BUMPSPECIAL}} and {{Flag|USESPECIAL}} flags allow to add other ways to get an actor to execute its special.}}
+
+;Shootable Things
+This includes monsters as well as breakable items such as the clay pots in Hexen.  These things will execute their action special when their health reached less than or equal to zero (in other words, when they die or break open).
+
+;Inventory Items
+This includes items such as weapons, health pickups, keycards, ammo, powerups and all other classes derived from {{Class|Inventory}}.  These items will execute their special when they are picked up. 
+
+Note that because of the way Doom's pickup code works, assigning a pickup a teleport special will not work as intended. It is recommended that you have the pickup execute an [[ACS]] script which teleports the player instead.
+
+;[[Classes:PatrolSpecial|Patrol Special]]
+This is a fairly obscure thing that will execute its special when the [[Classes:PatrolPoint|patrol point]] with the same TID is reached by the thing on the patrol route.  For instance, if you have an imp patrolling from patrol point 7 to patrol point 8 and you have a patrol special thing with a tid of 8 on the map somewhere then when that imp reaches patrol 8, whatever special is attached to the patrol special will execute.
+
+;[[Classes:InterpolationSpecial|Interpolation Special]]
+On a very similar note the Interpolation Special thing will do the same exact thing as a Patrol Special except that it works for things following a path of [[Classes:InterpolationPoint|interpolation points]] (using an [[Classes:ActorMover|actor mover]], a [[Classes:MovingCamera|moving camera]] or another type of [[Classes:PathFollower|path follower]]).
+
+;Sector Action Things
+There are eleven total of these and each will execute their attached special when a certain action occurs.  Here's a list:
+
+*[[Classes:SecActEnter|Actor Enters Sector]] - (DoomEdNum 9998)
+*[[Classes:SecActHitCeil|Actor Hits Ceiling]] - (DoomEdNum 9996)
+*[[Classes:SecActHitFakeFloor|Actor Hits Fake Floor]] - (DoomEdNum 9989)
+*[[Classes:SecActHitFloor|Actor Hits Floor]] - (DoomEdNum 9999)
+*[[Classes:SecActExit|Actor Leaves Sector]] - (DoomEdNum 9997)
+*[[Classes:SecActEyesAboveC|Eyes Go Above Fake Ceiling]] - (DoomEdNum 9982)
+*[[Classes:SecActEyesSurface|Eyes Go Above Fake Floor]] - (DoomEdNum 9992)
+*[[Classes:SecActEyesBelowC|Eyes Go Below Fake Ceiling]] - (DoomEdNum 9983)
+*[[Classes:SecActEyesDive|Eyes Go Below Fake Floor]] - (DoomEdNum 9993)
+*[[Classes:SecActUse|Player Uses Sector]] - (DoomEdNum 9995)
+*[[Classes:SecActUseWall|Player Uses Wall]] - (DoomEdNum 9994)
+
+In the case of the first five things, if its {{flag|AMBUSH}} flag is set then a monster can also trigger it, and if it is flagged to be {{flag|DORMANT}}, then a projectile can also trigger it. It will also remove itself after its first use if the {{flag|STANDSTILL}} flag is set. The next four are used in conjunction with [[Transfer_Heights]] and only work for the player. The final two also work only for the player and must be executed within range of a linedef without a special. In the case of thing 9995 the player must be in the same sector as the sector action thing and just press used from anywhere within the sector, but out of range of a wall with a special.
+[[Category:Editing concepts]]</text>
+    <sha1>tkufhi8whapxv9zsx8yl3pc2r45rwvo</sha1>
+  </revision>
+</page>

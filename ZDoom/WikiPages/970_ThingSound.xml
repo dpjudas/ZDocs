@@ -1,0 +1,51 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>ThingSound</title>
+  <ns>0</ns>
+  <id>970</id>
+  <revision>
+    <id>37263</id>
+    <parentid>35826</parentid>
+    <timestamp>2013-10-17T09:18:14Z</timestamp>
+    <contributor>
+      <username>Blue Shadow</username>
+      <id>2021</id>
+    </contributor>
+    <minor />
+    <comment>Superseded note.</comment>
+    <origin>37263</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="1032" sha1="n86yow1o6f3vsv5q0o687wnbwwym5ww" xml:space="preserve">{{superseded|PlaySound}}
+
+void '''ThingSound''' (int ''tid'', str ''sound'', int ''volume'');
+
+== Usage ==
+
+Plays a sound at a thing. This is a point sound, so anyone far away will not hear it as loudly.
+
+=== Parameters ===
+* ''tid'': [[TID]] of the actor.
+* ''sound'': The sound to be played, as defined in [[SNDINFO]].
+* ''volume'': An integer range from 0 to 127, with 127 being full volume and 0 being muted.
+
+== Examples ==
+This script shuts down some kind of generator in the level.  The sound source is an object close to the generator so when the player hits the switch to turn it off, they hear the powering down sound coming from the generator.
+
+ script 1 (void)
+ {
+    // Message to the player
+    [[Print]](s:"Generator shut down.  Rear hatch access granted.");
+  
+    // Turn off the generator lights
+    [[Light_ChangeToValue]](1, 144);
+    [[Light_ChangeToValue]](2, 96);
+  
+    // Play a shutdown sound from the generator
+    [[ThingSound]](1, "ambient/poweroff", 127);
+ }
+
+[[category:ACS Sound functions]]
+__NOTOC__</text>
+    <sha1>n86yow1o6f3vsv5q0o687wnbwwym5ww</sha1>
+  </revision>
+</page>

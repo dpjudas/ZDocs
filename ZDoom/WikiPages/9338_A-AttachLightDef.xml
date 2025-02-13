@@ -1,0 +1,75 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>A AttachLightDef</title>
+  <ns>0</ns>
+  <id>9338</id>
+  <revision>
+    <id>51104</id>
+    <parentid>51103</parentid>
+    <timestamp>2023-12-11T13:13:32Z</timestamp>
+    <contributor>
+      <username>Jekyll Grim Payne</username>
+      <id>2175</id>
+    </contributor>
+    <comment>/* Examples */ Fixed example</comment>
+    <origin>51104</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="1593" sha1="6crlcz9slpq1vpv9kfrbpgooh19dxye" xml:space="preserve">__NOTOC__{{codepointer|Dynamic lights}}
+'''{{class|Actor}}'''
+
+native bool '''A_AttachLightDef''' (Name ''lightid'', Name ''lightdef'')
+
+== Usage ==
+Attaches a [[dynamic light]] defined in [[GLDEFS]] to the calling actor. In contrast to {{c|[[A_AttachLight]]}}, which allows you to fully define and control the light at spawn, this function spawns a specific predefined light.
+
+Can be removed with {{c|[[A_RemoveLight]]}}.
+
+=== Parameters ===
+*{{c|Name '''lightid'''}}
+:An identifier for the light. Can be any name. If a new light is created with the same id, it'll replace the old one.
+*{{c|Name '''lightdef'''}}
+:The dynamic light to attach, as defined in [[GLDEFS]].
+
+=== Return value ===
+Returns &lt;code&gt;true&lt;/code&gt; when the dynamic light has been spawned. If the specified lightdef doesn't exist, returns &lt;code&gt;false&lt;/code&gt; instead.
+
+== Examples ==
+GLDEFS:
+ flickerlight2 FLAMETHROWER_LIGHT_ATTACH
+ {
+     color 1.0 0.6 0.0
+     size 80
+     secondarySize 96
+     interval 1
+     offset 0 40 0
+ }
+ 
+ZScript:
+ ...
+ States
+ {
+ Ready:
+     // Call this before the loop
+     FLMG A 0 Bright [[A_AttachLightDef]]('FlamethrowerLight', 'FLAMETHROWER_LIGHT_ATTACH');
+     FLMG ABCD 2 Bright [[A_WeaponReady]];
+     Loop;
+ 
+ Deselect:
+     // Remove the light when deselecting the weapon
+     FLMG H 0 A_RemoveLight('FlamethrowerLight');
+     FLMG HGFE 1 [[A_Lower]];
+     Wait;
+ 
+ Fire:
+     // Remove the light when firing (other lights can be attached here too)
+     FLMG B 0 Bright A_RemoveLight('FlamethrowerLight');
+     ...
+ }
+
+== See also ==
+*[[GLDEFS]]
+*[[A_AttachLight]]
+*[[A_RemoveLight]]</text>
+    <sha1>6crlcz9slpq1vpv9kfrbpgooh19dxye</sha1>
+  </revision>
+</page>

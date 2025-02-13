@@ -1,0 +1,40 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>A MinotaurDecide</title>
+  <ns>0</ns>
+  <id>5505</id>
+  <revision>
+    <id>23791</id>
+    <parentid>23789</parentid>
+    <timestamp>2009-08-10T13:55:00Z</timestamp>
+    <contributor>
+      <username>Gez</username>
+      <id>1283</id>
+    </contributor>
+    <minor />
+    <origin>23791</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="1814" sha1="1hk4pih7nh5f1t0p4t2nzssihnhfr4r" xml:space="preserve">{{DISPLAYTITLE:A_MinotaurDecide}}
+'''A_MinotaurDecide'''&lt;br /&gt;
+(no parameters)
+
+
+This function lets a minotaur decides which attack to attempt. If the calling actor has no valid target, it does nothing.
+
+If the minotaur does not have the SUMMONEDMONSTER flag, plays the "minotaur/sight" sound on the WEAPON channel.
+
+;Charge attack
+:This attack has an about 60% chance of being selected, if the target is at a lower height than the calling actor and the horizontal distance between both is greater than 64 map units but less than 1024 map units (for minotaurs with the SUMMONEDMONSTER flag) or half that (other minotaurs).
+:If this attack is selected, the calling actor is put in its Charge state, receives the SKULLFLY flag and, if not summoned, becomes invulnerable. Its &lt;tt&gt;special1&lt;/tt&gt; field is set to 17 and its horizontal velocity is set to 13 map units per tic.
+;Hammer attack
+:This attack has an about 40% chance of being selected if the minotaur has the SUMMONEDMONSTER flag, 85% of being selected otherwise; if the charge attack has not been already selected, the target is on the floor and is within 576 map units of the calling actor.
+:If this attack is selected, the calling actor is put in its Hammer state and its &lt;tt&gt;special2&lt;/tt&gt; field is cleared.
+;Swing attack
+:If neither of the attacks has been selected, this function does nothing else than calling [[A_FaceTarget]]. In the original code, the call to A_MinotaurDecide is followed by a call to [[A_MinotaurAtk2]], making the volley of fireballs the fallback default attack.
+
+This codepointer is restricted to {{Class|Minotaur}} and derived classes.
+
+[[Category:Decorate Heretic functions]] [[Category:Decorate Hexen functions]] [[Category:Decorate Monster AI functions]] [[Category:Decorate Restricted functions]]{{DEFAULTSORT:MinotaurDecide}}</text>
+    <sha1>1hk4pih7nh5f1t0p4t2nzssihnhfr4r</sha1>
+  </revision>
+</page>

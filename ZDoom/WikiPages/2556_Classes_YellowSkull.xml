@@ -1,0 +1,67 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>Classes:YellowSkull</title>
+  <ns>0</ns>
+  <id>2556</id>
+  <revision>
+    <id>51442</id>
+    <parentid>39269</parentid>
+    <timestamp>2024-02-01T15:31:08Z</timestamp>
+    <contributor>
+      <username>Jekyll Grim Payne</username>
+      <id>2175</id>
+    </contributor>
+    <comment>/* DECORATE definition */ Added ZScript definition</comment>
+    <origin>51442</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="899" sha1="gpiwjwntxzzwrynjz33c4deq92yt9og" xml:space="preserve">{{Actor|
+| type = Key
+| name = Yellow skull key
+| class = YellowSkull
+| game = Doom
+| doomednum = 39
+| spawnid = 88
+| spawnname = T_YELLOWSKULLKEY 
+}}
+[[Classes]]: [[Classes:Inventory|Inventory]]&amp;rarr;[[Classes:Key|Key]]&amp;rarr;[[Classes:DoomKey|DoomKey]]&amp;rarr;&lt;u&gt;YellowSkull&lt;/u&gt;
+
+
+Yellow skull key.
+
+
+=== [[ZScript]] definition ===
+{{ZScriptDefinitionNote|actors/doom/doomkeys.zs#L84}}
+&lt;syntaxhighlight lang="csharp"&gt;
+class YellowSkull : DoomKey
+{
+	Default
+	{
+		Inventory.Pickupmessage "$GOTYELWSKUL";
+		Inventory.Icon "STKEYS4";
+	}
+	States
+	{
+	Spawn:
+		YSKU A 10;
+		YSKU B 10 bright;
+		loop;
+	}
+}&lt;/syntaxhighlight&gt;
+
+=== [[DECORATE]] definition ===
+{{DecorateDefinitionNote}}
+ ACTOR &lt;u&gt;YellowSkull&lt;/u&gt; : {{Class|DoomKey}}
+ {
+   {{Property|Inventory.PickupMessage}} "$GOTYELWSKUL"
+   {{Property|Inventory.Icon}} "STKEYS4"
+   States
+   {
+   Spawn:
+     YSKU A 10
+     YSKU B 10 Bright
+     Loop
+   }
+ }</text>
+    <sha1>gpiwjwntxzzwrynjz33c4deq92yt9og</sha1>
+  </revision>
+</page>

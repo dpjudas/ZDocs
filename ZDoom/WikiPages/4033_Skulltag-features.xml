@@ -1,0 +1,201 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>Skulltag features</title>
+  <ns>0</ns>
+  <id>4033</id>
+  <revision>
+    <id>44079</id>
+    <parentid>42698</parentid>
+    <timestamp>2017-03-13T22:57:00Z</timestamp>
+    <contributor>
+      <username>AlexMax</username>
+      <id>1586</id>
+    </contributor>
+    <comment>/* Skulltag MAPINFO properties */</comment>
+    <origin>44079</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="9219" sha1="1kn1rcr2k3qjsnqdkbrfyr3pnibo807" xml:space="preserve">{{SkulltagColors}}
+[[Zandronum]]/[[Skulltag]] has many editing features that [[ZDoom]] currently does not. It has been decided to document them here to help out both communities. 
+
+The following articles contain functions that are [[Skulltag]] only, meaning that they currently are NOT compatible with [[ZDoom]]! If you wish to add a Skulltag feature article, please use the '''&lt;nowiki&gt;{{STFeature}}&lt;/nowiki&gt;''' template. Also, under any circumstances, '''&lt;font color=red&gt;do not mix these features up with ZDoom features!&lt;/font&gt;''' (i.e. links on branching pages or categories).
+
+''Feel free to copy the information written in this articles over to the {{Plainlink|[http://wiki.zandronum.com/Main_Page Zandronum Wiki]}}. --[[User:Cutman|Cutty]]''
+
+{{note|text=Any features that are currently implemented in ZDoom will be removed from this list.}}
+
+== Console variables ==
+Skulltag has additional [[CVARs|console variables]] that ZDoom does not have.
+;{{LE|sv_defaultdmflags}} ([[CVARs#boolean|boolean]])
+:Default: true
+:When true, certain default [[DMFlags|DM flags]] are automatically set. This must be set to false in order to change the affected flags.
+:It activates Weapon Stay, Item Respawn, No Monsters, No Crouch and Double Ammo. In non-duel deathmatch modes, it also activates Spawn Farthest.
+
+;Chat_Substitution ([[CVARs#boolean|boolean]])
+:This is a continuation of the ''Chat_Substitution'' [[CVARs|CVar]] that [[CVARs:Messages#Chatting|ZDoom already provides]].
+:*$location
+::Replaced by the player's current location of the sector # (not tag); this requires the use of the [[SECTINFO]] lump.
+
+== Compatibility flags ==
+Skulltag has additional [[compatibility options]] that ZDoom does not have.
+;compat_clientssendfullbuttoninfo
+:Whether the client should send to the server [[GetPlayerInput]] info on a full 32-bit WORD rather than a single 8-bit BYTE. If true, this increases network traffic by 5 to 10% on average, but is needed for some advanced scripts.
+;compat_disablestealthmonsters
+:When this option is set to true, the {{flag|STEALTH}} flag is made ineffective: monsters with this flag are opaque all the time.
+;compat_disabletaunts
+:When true, taunts are completely disabled on the server whether the player has them enabled or not.
+;compat_instantrespawn
+;compat_limited_airmovement
+:When this option is true, air movement is the same as in ZDoom, air control and friction both depending on {{CVAR|C|sv_aircontrol}}. When false, as by default, air control is much greater, but air [[friction]] remains unaffected, allowing "bunny hopping" moves.
+;compat_netscriptsareclientside
+:When true, {{c|NET}} scripts are considered to be {{c|CLIENTSIDE}} as well.
+;compat_nocrosshair
+:When true, crosshairs are disabled.
+;compat_noland
+:When true, players are prohibited from using the "land" console command.
+;compat_oldintermission
+:When enabled, the game uses vanilla intermission screens and music instead of the Skulltag ones during intermissions.
+;compat_oldradiusdmg
+:If this is enabled, the original Doom radius damage code is used, i.e. explosions have infinite vertical range. Normally, only actors with the {{flag|OLDRADIUSDMG}} flag use this old code.
+;compat_oldweaponswitch
+:If this is enabled, players always switch weapons on pickup (as in vanilla Doom).
+;compat_originalsoundcurve
+:If true, the original Doom sound curve is used.
+;compat_plasmabump
+:When enabled, pickup detection is handled exactly like in vanilla Doom. This is named after the "plasma bump" trick from Doom 2 MAP01 in multiplayer.
+
+== ACS ==
+=== Script Types ===
+Skulltag handles [[Script_types#Net_scripts|"net" scripts]] differently. There is a "clientside" type which means the script is ran on a local machine rather than on the server. By default, scripts are executed server-side. In previous versions net changed the script to clientside, but because that automatically made it so users could execute (puke) that script there was no way to make a non-player executable clientside script.
+
+Clientside and net scripts can be combined to create a desirable method of execution.
+
+* net - Can be executed by the puke command, server-side script.
+* clientside - Cannot be executed via the puke command, client-side script.
+* net clientside - Can be executed by the puke command, client-side script.
+
+To bring back the old behavior of net being both clientside and puke executable, you can set a new server [[CVARs|CVAR]] "compat_netscriptsareclientside" to 1.
+
+Skulltag also supports CTF/Skulltag-specific [[script types]] ZDoom does not:
+*'''PICKUP''' executes when a player picks up the enemy flag/skull.
+*'''BLUERETURN''' executes when the blue flag/skull is dropped and is returned to its pedestral.
+*'''REDRETURN''' executes when the red flag/skull is returned.
+*'''WHITERETURN''' executes when the one-flag CTF specific white flag is returned.
+'''PICKUP''' is executed by the player, the others are executed by the world.
+
+=== Skulltag Action Specials ===
+* [[Player_SetTeam]]
+* [[Team_Score]]
+* [[Team_GivePoints]]
+
+=== Skulltag built-in functions ===
+* [[AnnouncerSound]]
+* [[BlueCount]]
+* [[BlueScore]]
+* [[BlueTeamCount]]
+* [[BlueTeamScore]]
+* [[ConsoleCommand]]
+* [[GetInvasionState]]
+* [[GetInvasionWave]]
+* [[IsMultiplayer]]
+* [[IsOneFlagCTF]]
+* [[Music_Change]] {{deprecated}}
+* [[PlayerArmorpoints]]
+* [[PlayerHealth]]
+* [[PlayerTeam]]
+* [[RedCount]]
+* [[RedScore]]
+* [[RedTeamCount]]
+* [[RedTeamScore]]
+* [[SinglePlayer]]
+
+== Classes ==
+''For a full list of Skulltag's actor classes, see [[Classes:Skulltag]].''
+
+== DECORATE ==
+=== Skulltag Action Functions ===
+* [[A_CheckRailReload]] {{deprecated}}
+
+=== Skulltag Actor Flags ===
+The following flags are Skulltag specific, meaning that ZDoom MAY recognise them, but not support them (for compatibility). All of [[ZDoom]]'s [[Actor flags]] are compatible with Skulltag, except those that have been added in SVN versions more recent than the one used for Skulltag's codebase.
+
+==== Behaviour ====
+''For a full list of ZDoom's behaviour flags, see [[Actor flags]].''
+
+*'''SCOREPILLAR'''
+:Used in conjunction with the {{flag|BUMPSPECIAL}} flag to make the player score a point if he/she is holding the flag/skull item.
+*'''ALLOWCLIENTSPAWN'''
+:Spawns the actor on the clientside. This only works for things on the map startup, meaning it will not affect newly spawned actors. For that, see [[A_SpawnItemEx]].
+*'''CLIENTSIDEONLY'''
+: This flag makes the actor invisible to the server, so it's only visible to clients in the server. The purpose of this is for the ability to add visual effects without eating up server bandwidth from spawning actors.
+*'''NONETID'''
+:Actors with this flag are not assigned a network id when spawned. Only use it if you know what you are doing!
+
+==== Inventory ====
+''For a full list of ZDoom's inventory flags, see [[Classes:Inventory|Inventory]].''
+
+*'''INVENTORY.FORCERESPAWNINSURVIVAL'''
+:Causes the item to respawn in survival, even if respawn items is off.
+
+==== Weapons ====
+''For a full list of ZDoom's inventory flags, see [[Classes:Weapon|Weapon]].''
+
+*'''WEAPON.ALLOW_WITH_RESPAWN_INVUL'''
+:Allows the weapon to be used while in respawn protection.
+*'''WEAPON.NOLMS'''
+:This weapon is not given in the Last Man Standing game mode.
+
+==== Limited Use ====
+
+*'''BLUETEAM'''
+*'''REDTEAM'''
+*'''NODE'''
+:Do nothing, unused, probably deprecated.
+*'''BASEHEALTH'''
+*'''SUPERHEALTH'''
+*'''BASEARMOR'''
+*'''SUPERARMOR'''
+Flags the actor as base/super health/armor, used by bot scripting.
+*'''EXPLODEONDEATH'''
+:Seems to have something to do with accuracy and precision medals. Defined on the grenade.
+
+=== Skulltag Actor Properties ===
+*'''LimitedToTeam'''
+Forces the [[Classes:PlayerPawn|Player class]] to a certain team defined in [[TEAMINFO]], starting from 0, i.e. limitedtoteam 1 would assign this class to the second team defined in the TEAMINFO lump.
+*'''Inventory.PickupAnnouncerEntry'''
+Plays the specified announcer entry when the item is picked up.
+*'''Rune.Color ''color'', ''alpha'''''
+Same as [[Classes:PowerupGiver#powerup.color|Powerup.Color]].
+*'''Rune.Type'''
+Sets what the rune does, similar to [[Classes:PowerupGiver#powerup.type|Powerup.Type]]. (DoubleDamage, DoubleFiringSpeed, Drain, Spread, HalfDamage, Regeneration, Prosperity, Reflection, HighJump, Speed25)
+*'''Weapon.PreferredSkin'''
+Forces the [[Classes:PlayerPawn|Player class]] to use a certain skin when the weapon is selected.
+
+== Lumps ==
+=== Skulltag Specific Lumps ===
+* [[ANCRINFO]]
+* [[BOTINFO]]
+* [[CMPGNINF]]
+* [[SECTINFO]]
+* [[SKININFO]]
+See also [[TEAMINFO]] which has many additional Skulltag-specific properties.
+
+=== Skulltag MAPINFO properties ===
+* '''lobby'''
+:Runs several special-cases in order to treat the map like a lobby map.  For example, timelimits are disabled, and exiting the level does not cause a suicide regardless of if exiting the stage is allowed via dmflags.
+
+==== Levels ====
+* '''nobotnodes'''
+:Prevents Skulltag from making bot nodes on the specified level.
+
+==== Episodes ====
+* '''botepisode'''
+:Uses alternate bot skill level menu.
+* '''botskillname''' ''string''
+:Replaces "New Game".
+* '''botskillpicname''' ''string''
+:same as botskillname only uses a graphic lump.
+
+[[Category:Skulltag features]]</text>
+    <sha1>1kn1rcr2k3qjsnqdkbrfyr3pnibo807</sha1>
+  </revision>
+</page>

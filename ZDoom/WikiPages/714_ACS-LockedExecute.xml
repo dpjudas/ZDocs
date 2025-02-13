@@ -1,0 +1,60 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>ACS LockedExecute</title>
+  <ns>0</ns>
+  <id>714</id>
+  <revision>
+    <id>35858</id>
+    <parentid>32864</parentid>
+    <timestamp>2013-02-11T02:17:28Z</timestamp>
+    <contributor>
+      <username>Deded007</username>
+      <id>1392</id>
+    </contributor>
+    <minor />
+    <comment>formatting</comment>
+    <origin>35858</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="2189" sha1="mlz0z9fmlvp1r9wmior5j9pkcfxj0ge" xml:space="preserve">{{DISPLAYTITLE:ACS_LockedExecute}}
+{{Special|83|script, map, s_arg1, s_arg2, lock|ACS|LockedExecute|ACS_LockedExecute}}&lt;br&gt;
+{{Special|85|script, map, s_arg1, s_arg2, lock|ACS|LockedExecuteDoor|ACS_LockedExecuteDoor|nosort=yes}}
+
+* ''script'': Script to execute 
+* ''map'': Map which contains the script 
+* ''s_arg1'': First argument passed to the script 
+* ''s_arg2'': Second argument passed to the script 
+* ''lock'': Required key, if any (see [[key types]]) 
+
+==Usage==
+
+Executes the specified script if the player has the right key. A map value of zero indicates that the script is on the current map. If the script is on a different map, then the execution of the script will be delayed until the player enters the map that contains it. Only one copy of a script can be running at a time when started with this special. 
+
+If the specified script was previously executed but then suspended, then execution will begin at the point immediately after where it was suspended instead of starting over again at the beginning.
+
+The difference between these two specials is the message they print when the player does not have the necessary key(s). '''ACS_LockedExecute''' prints the “remote” message (“You need ... to activate this object” in Doom) and '''ACS_LockedExecuteDoor''' prints the “door” message (“You need ... to open this door” in Doom).
+
+==Examples==
+
+As the only thing which can be locked normally is a door, using [[Door_LockedRaise]], this script type allows any object or event to be locked with a key. Using the script on its own is no different from checking the player's inventory in a way such as this:
+
+ script 1 (void)
+ {
+ 	if ([[CheckInventory]]("{{class|RedCard}}") || [[CheckInventory]]("{{class|RedSkull}}"))
+ 	{
+ 		[[Print]](s:"You use the red key.");
+ 		// More code here
+ 	}
+ 	else
+ 		[[Print]](s:"You need the red key.");
+ }
+
+The advantage to this command is that it can check by key types rather than by key names. For example, a script which activates an elevator could be called with '''ACS_LockedExecute''' to lock it in a simple and elegant way.
+
+[[category:ACS specials|LockedExecute]]
+
+{{script functions}}
+==External links==
+* {{oldref}}</text>
+    <sha1>mlz0z9fmlvp1r9wmior5j9pkcfxj0ge</sha1>
+  </revision>
+</page>

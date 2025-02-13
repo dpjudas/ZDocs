@@ -1,0 +1,60 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>Classes:Leaf1</title>
+  <ns>0</ns>
+  <id>4683</id>
+  <revision>
+    <id>27578</id>
+    <parentid>18480</parentid>
+    <timestamp>2010-08-28T17:53:12Z</timestamp>
+    <contributor>
+      <username>Gez</username>
+      <id>1283</id>
+    </contributor>
+    <minor />
+    <origin>27578</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="785" sha1="igcw5eerophyl8f0qijr7b4ygifwccn" xml:space="preserve">{{Actor|
+| type = SFX
+| name = Leaf1
+| class = Leaf1
+| game = Hexen
+}}[[Classes]]: {{Class}} &amp;rarr; &lt;u&gt;Leaf1&lt;/u&gt;&lt;br&gt;
+&amp;ensp;&amp;rarr;{{Class|Leaf2}}&lt;br&gt;
+{{desc}}
+==== [[DECORATE]] definition ====
+ ACTOR &lt;u&gt;Leaf1&lt;/u&gt;
+ {
+   {{Property|Radius}} 2
+   {{Property|Height}} 4
+   {{Property|Gravity}} 0.125
+   +{{Flag|NOBLOCKMAP}}
+   +{{Flag|MISSILE}}
+   +{{Flag|NOTELEPORT}}
+   +{{Flag|DONTSPLASH}}
+   +{{Flag|NOICEDEATH}}
+ 
+   action native [[A_LeafThrust]]();
+   action native [[A_LeafCheck]]();
+ 
+   States
+   {
+   Spawn:
+     LEF1 ABC 4
+     LEF1 D 4 [[A_LeafThrust]]
+     LEF1 EFG 4
+     LEF1 H 4 [[A_LeafThrust]]
+     LEF1 IAB 4
+     LEF1 C 4 [[A_LeafThrust]]
+     LEF1 DEF 4
+     LEF1 G 4 [[A_LeafThrust]]
+     LEF1 HI 4
+     Stop
+   Death:
+     LEF3 D 10 [[A_LeafCheck]]
+     Wait
+   }
+ }</text>
+    <sha1>igcw5eerophyl8f0qijr7b4ygifwccn</sha1>
+  </revision>
+</page>

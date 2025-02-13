@@ -1,0 +1,83 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>D and Doom</title>
+  <ns>0</ns>
+  <id>3672</id>
+  <revision>
+    <id>26326</id>
+    <parentid>14285</parentid>
+    <timestamp>2010-03-28T12:58:36Z</timestamp>
+    <contributor>
+      <username>Gez</username>
+      <id>1283</id>
+    </contributor>
+    <minor />
+    <comment>recat</comment>
+    <origin>26326</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="9901" sha1="fq206qmjh3ort1qlv7pgmvke4qf6f9n" xml:space="preserve">D&amp;Doom is a project currently being worked on currently exclusively by Talonos. Its aim is to take staples from the Dungeons and Dragons tabletop role-playing game and convert them into a Doom format for use in crating D&amp;D themed wads. Every year or so, it is worked on with great enthusiasm temporarily, only to be forgotten a month later. It is hoped that this time, it will stick.
+
+D&amp;Doom is also the name of an entirely separate project by ler. Unlike the above wad, it is both being actively worked on and will comprise of more than a simple template. This wiki entry is about Talonos wad, however.
+
+==Basics:==
+
+D&amp;Doom currently has no plans to support any classes besides the Sorcerer, who is perhaps the most easily converted from d20 mechanics to Doom mechanics besides the barbarian. The “final” wad will include all of the scripts, decorate items, and mechanics in order to create a D&amp;D themed wad, but very little in the way of levels (though a sample level may be included to demonstrate the system.) It will, in essence, be a “toolkit” one can use to create wads, much like an Iwad, but still requiring Doom2.wad. Enemies, because they are often plot specific, will not be focused on heavily, though there will be a TXT file on converting monsters from d20 to Decorate format, as well as few sample monsters of varying difficulty with all work shown as an example. The wad will borrow heavily from Might and Magic 6-8, much like LilWhiteMouse’s HQuest borrowed heavily from Daggerfall.
+
+=Plans/Progress:=
+
+==Items:==
+
+There are many items planned for D&amp;Doom, most of them based off the various equipment in the Dungeon Master’s Guide. Currently, 41 placeable items have been coded. Of these, 21 have graphics. In addition, a "Paper doll" equipment screen is implemented, allowing a player to see their character wearing his equipment.
+
+Buying, selling, and other shopping related scripts may be in a future release, but are not planned for this version. However, suggested Gold Piece Values for items are in comments “//” in the decorate file for each piece of Equipment if somebody wishes to implement them.
+
+==Monsters:==
+
+No monsters have been implemented, but the graphics for sevral have been ripped.
+
+==RPG scripts:==
+
+Four of the six Iconic D&amp;D stats are fully implemented. (Str, Dex, Con, and Cha are in. Int and Wis are unimportant enough for sorcerers not to merit inclusion.) Dexterity affects your Armor Class and greatly affects your running speed. Strength affects your running speed, and will affect your damage with melee weapons when they are implemented. Constitution affects your running speed only slightly, and greatly affects your Max Health. Charisma increases your “spells per day” (Max ammo) and how quickly you can regain your spells. Also, in order to cast a spell, you must have a score of 10+spell level (Meaning you need a charisma of 10 to cast any spells, and you need a charisma of 20 to cast the most powerful spells in the game) All stats can be increased in three ways: finding items that boost the stat (Gloves of Dexterity, Belt of Giant Strength, etc.) finding books that permanently improve the stat (Manual of Bodily Health, Tome of Leadership and Influence, etc.) or by spending the bonus stat points you obtain while leveling up. The maximum adjusted value for any stat is 36. (20 natural + 5 from levels + 5 from books + 6 from a stat increasing item.)
+
+The lowest possible running speed is 29% Doom Normal (On nightmare difficulty, assigning max points to charisma and the rest on Constitution) and the highest possible running speed is 355% doom Normal (On I’m too Young to Die difficulty, assigning max points to Str, Dex, and Con, spending all bonus points from leveling on Dex, gaining the highest possible magical bonuses on Str, Dex, and Con, and with enchanted boots.)
+
+Character creation is implemented, giving you a number of points to spend on stats depending on your skill level. (Skill level one effectively gives you all 18s, and Skill level four effectively gives you all 10s) Stats are capped at 20 at character creation, but can then increase normally.
+
+Armor class is fully implemented. Unlike in D&amp;D, where your Armor class determines how often you’re hit, in Doom, where dodging is based on the skill of the player, Armor class will act as a percent based damage reduction. Armor Class 5 (Effectively the lowest; requires 1 dexterity and no protective items) provides 0% damage reduction, and each point of AC above that provides 2% damage reduction, to a maximum of 90% damage reduction at Armor Class 50. (Effectively the maximum you can get to; requires a Dexterity of 30 and every piece of protective equipment in the game.) If you take more than 100 damage in a short period of time (from almost instantly to up to three seconds, depending on your armor class) your armor is “Punctured” and you take damage normally (Representing the Death from Massive Damage rule in D&amp;D) until you are out of the line of fire and your armor class “resets”
+
+The scripts handling experience gain and leveling up are complete. When you defeat a monster, it drops little "Globules" of XP. As you gain XP, you to gain Experience levels. Your level determines how powerful the spells you cast are, and also determines your “spells per day” (max ammo). In addition, your character’s level must be twice the level of a spell in order to cast that spell. (Aside from level one spells which are available to be cast at level one.) In addition, levels increase your Maximum Health. Monster designers can adjust the amount of XP "Globules" a monster drops to fine tune the amount of XP a character receives, so if the map designer wants to add more monsters without the player gaining XP too quickly, they may give the player proportionately less XP.
+
+Though it has yet to be implemented, the “Respawn” system is going to be different from normal doom. Instead of losing all your items weapons, ect, as in normal doom, you will instead keep all of your items, but lose a level, potentially denying you access to your better spells, lowering the power of your remaining spells, and reducing your maximum health. If you die at level one, you permanently lose a point of Constitution. Thus, repeated deaths are not recommended.
+
+Co-op compatibility is being made a priority for D&amp;Doom. It is recommended that people who make maps for D&amp;Doom include in their maps a function that adds more monsters if there are more players. Because health drops in "Globules" instead of being divided equally, considerate team-mates will allow players who have died repeatedly to pick up more XP, restoring them to their previous status.
+
+==Weapons:==
+
+Weapons are split into four different parts: Melee weapons, mechanically powered ranged weapons, physically powered ranged weapons, and Spells.
+
+Melee weapons are not yet implemented. There will be three different types, and they will all require no ammo to use, making them excellent backup weapons. However, their damage is based on Strength, and their range is very close, so low strength and constitution characters would do best to avoid these.
+
+Mechanically powered ranged weapons are weapons that are unaffected by the wielder’s strength. This makes them perfect backups for low strength characters. Two are currently implemented both code and graphics wise, though there are no sounds for them yet.
+
+Strength based ranged weapons (Not yet implemented) are ranged weapons that depend on a wielder’s Strength to use. Four are currently planned, and two will have alt-fires that make them usable as Melee weapons as well.
+
+Spells are the point of the game. At higher levels, they can deal massive amounts of damage. They come in eleven levels ranging from 0 – 9, and then an "Epic" spell level beyond that, and have varied effects depending on which one you cast. All spells of the same spell level rely on the same ammo (Thus, you get a certain number of 0th level spells, a certain number of 1st level spells, etc.) Spells have very limited ammunition, especially at low levels. Almost none of the spells have been implemented, though the framework in terms of XP and Statistics is.
+
+You regain spells as a slow, constant rate, depending on your charisma. This rate is low enough so as to be almost useless during combat, but a few moments of waiting will restore your spells to a reasonable level.
+
+==Saves, Feats, and Skills:==
+
+There are no plans to include any of these. Skills have little place in a FPS. Saves are based on player action (For example, you take less damage from an explosive if you are farther from the point of origin, so dodging out of the way of a fireball can result in reduced damage, much like a reflex save.) Feats may end up being implemented, but if so, they will not be chosen as in D&amp;D, but automatically assigned as you gain levels. 
+
+==History:==
+
+D&amp;Doom has been “In development” for over five years, meaning, about once a year, it is picked up by its author, worked on furiously for a week to a month, and then abandoned as real life takes over.
+
+Its author, Talonos, has a very poor track record when it comes to completing projects. He is currently in hiding from the Zdoom forums after he made the statement “ZDCMP2 will be finished this summer!” and then had to vanish without a trace for personal reasons. He has sworn not to come back to the forums until he has a peace offering to show that he deserves to be on the same forums with Graf Zhal and Tormentor.
+
+He is going to follow in Geedoug’s footsteps and take a two year long religious mission in the mid summer 2007. He hopes to finish and release D&amp;Doom before them, because if he doesn’t make a return to the forums before then, likely nobody will remember him when he returns from his mission summer 2009.
+
+[[category:Abandoned ZDoom Projects]]</text>
+    <sha1>fq206qmjh3ort1qlv7pgmvke4qf6f9n</sha1>
+  </revision>
+</page>

@@ -1,0 +1,75 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>Die</title>
+  <ns>0</ns>
+  <id>9739</id>
+  <revision>
+    <id>53813</id>
+    <parentid>51319</parentid>
+    <timestamp>2024-11-21T11:48:15Z</timestamp>
+    <contributor>
+      <username>Jekyll Grim Payne</username>
+      <id>2175</id>
+    </contributor>
+    <origin>53813</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="1806" sha1="afxc6xboci6qmw66z92ug9mahy2arz9" xml:space="preserve">__NOTOC__
+
+'''[[Classes:Actor|Actor]]'''
+
+{{c|virtual void '''Die'''(Actor ''source'', Actor ''inflictor'', int ''dmgflags'' {{=}} 0, Name ''MeansOfDeath'' {{=}} 'none')}}
+
+==Usage==
+Called when an actor is killed (a damaging attack causes an actor's health to fall less than or equal to 0).
+
+===Parameters===
+*{{c|Actor '''source'''}}
+:The actor responsible for the inflictor.
+*{{c|Actor '''inflictor'''}}
+:The actor that dealt the damage of the killing blow, i.e. a projectile or a [[puff]].
+*{{c|int '''dmgflags'''}}
+:The damage flags that were used in the killing blow:
+{{: ZScript damage flags}}
+*{{c|Name '''MeansOfDeath'''}}
+:The [[Damage type|damage type]] of the damage that killed the actor.
+
+==Examples==
+This version of the [[Classes:Zombieman|Zombieman]] will spawn [[Classes:ExplosiveBarrel|explosive barrels]] every 70 tics while it's alive in its [[Tick|&lt;code&gt;Tick()&lt;/code&gt;]] override. The barrels are put into a [[Dynamic arrays|dynamic array]]. Once the monster is killed, all those barrels will be damaged to explode in its &lt;code&gt;Die()&lt;/code&gt; override:
+&lt;syntaxhighlight lang="csharp"&gt;
+class BarrelZombie : Zombieman
+{
+	array &lt;Actor&gt; barrels;
+
+	override void Tick()
+	{
+		super.Tick();
+		if (health &gt; 0 &amp;&amp; !isFrozen() &amp;&amp; GetAge() % 70 == 0)
+		{
+			let bar = Spawn("ExplosiveBarrel", pos, ALLOW_REPLACE);
+			if (bar)
+			{
+				barrels.Push(bar);
+			}
+		}
+	}
+
+	override void Die(Actor source, Actor inflictor, int dmgflags, Name MeansOfDeath)
+	{
+		for (int i = 0; i &lt; barrels.Size(); i++)
+		{
+			let bar = barrels[i];
+			if (bar &amp;&amp; bar.health &gt; 0)
+			{
+				bar.DamageMobj(self, self, bar.health, 'normal');
+			}
+		}
+		super.Die(source, inflictor, dmgflags, MeansOfDeath);
+	}
+}&lt;/syntaxhighlight&gt;
+
+[[Category:ZScript]]
+[[Category:ZScript virtual functions]]
+[[Category:Actor virtual functions]]</text>
+    <sha1>afxc6xboci6qmw66z92ug9mahy2arz9</sha1>
+  </revision>
+</page>

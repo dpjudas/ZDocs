@@ -1,0 +1,51 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>Classes:BloodyFighterSkull</title>
+  <ns>0</ns>
+  <id>5925</id>
+  <revision>
+    <id>39483</id>
+    <parentid>34523</parentid>
+    <timestamp>2015-04-30T21:27:27Z</timestamp>
+    <contributor>
+      <username>Blue Shadow</username>
+      <id>2021</id>
+    </contributor>
+    <minor />
+    <comment>/* DECORATE definition */ Updated</comment>
+    <origin>39483</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="750" sha1="7djkk17x62r9qjpxpu3iszclqkz4hra" xml:space="preserve">{{Actor|
+| type = Gibs
+| name = Bloody fighter skull
+| class = BloodyFighterSkull
+| game = Hexen
+}}[[Classes]]: {{Class}} &amp;rarr; {{Class|PlayerPawn}} &amp;rarr; {{Class|PlayerChunk}} &amp;rarr;&lt;u&gt;BloodySkull&lt;/u&gt;&lt;br&gt;
+Bloody skull created when [[Classes:FighterPlayer|Baratus]] is gibbed.
+
+==== [[DECORATE]] definition ====
+ ACTOR &lt;u&gt;BloodyFighterSkull&lt;/u&gt; : {{Class|PlayerChunk}}
+ {
+   {{Property|Radius}} 4
+   {{Property|Height}} 4
+   +{{Flag|NOBLOCKMAP}}
+   +{{Flag|DROPOFF}}
+   +{{Flag|LOWGRAVITY}}
+   +{{Flag|CANNOTPUSH}}
+   +{{Flag|SKYEXPLODE}}
+   +{{Flag|NOBLOCKMONST}}
+   +{{Flag|NOSKIN}}
+   States
+   {
+   Spawn:
+     BSKL A 0
+     BSKL ABCDFGH 5 [[A_CheckFloor]]("Hit")
+     Goto Spawn+1
+   Hit:
+     BSKL I 16 [[A_CheckPlayerDone]]
+     Wait
+   }
+ }</text>
+    <sha1>7djkk17x62r9qjpxpu3iszclqkz4hra</sha1>
+  </revision>
+</page>

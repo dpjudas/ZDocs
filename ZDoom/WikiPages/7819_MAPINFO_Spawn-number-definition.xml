@@ -1,0 +1,56 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>MAPINFO/Spawn number definition</title>
+  <ns>0</ns>
+  <id>7819</id>
+  <revision>
+    <id>44293</id>
+    <parentid>41010</parentid>
+    <timestamp>2017-03-20T13:25:53Z</timestamp>
+    <contributor>
+      <username>Gez</username>
+      <id>1283</id>
+    </contributor>
+    <minor />
+    <comment>removing "new" for GZDoom 2.4.0 release</comment>
+    <origin>44293</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="1532" sha1="gmvowvi5r6d46m3qiq0p6gz0x9wg6t2" xml:space="preserve">A [[spawn number]] definition begins with the keyword “''SpawnNums''”, followed by a list of actor names and their assigned spawn numbers. The syntax is as follows:
+
+ SpawnNums
+ {
+   &lt;number&gt; = &lt;class&gt;
+ }
+
+Spawn number assignments through this method are overridden by the {{Property|SpawnID|DECORATE one}}. Actors can be assigned multiple spawn numbers, and already-assigned spawn numbers can be mapped to nothing by passing {{c|None}} instead of an actor class name. They can also be mapped to other actors.
+
+==Examples==
+
+In this example, actor BerserkImp is given spawn number 3001 and actor GoldenMug is given two spawn numbers; 4489 and 22594.
+ SpawnNums
+ {
+   3001 = BerserkImp
+   4489 = GoldenMug
+   22594 = GoldenMug
+ }
+
+
+This example clears spawn numbers 3 and 113, which are used in ''[[Doom]]'' by the {{Class|HellKnight|hell knight}} and {{Class|BaronOfHell|baron of hell}}, respectively, and effectively preventing any of those monsters from being spawned via spawn functions or specials which take spawn numbers to identify the actor class to spawn, such as [[Thing_Spawn]]. This is done by mapping their spawn numbers to {{c|None}}.
+ SpawnNums
+ {
+   3 = None
+   113 = None
+ }
+
+
+This one remaps spawn numbers 25 and 132, which are used in ''Doom'' by the {{Class|Soulsphere|soul sphere}} and {{Class|Megasphere|megasphere}}, respectively, to the {{Class|Revenant|revenant}} and {{Class|Archvile|archvile}}.
+ SpawnNums
+ {
+   25 = {{Class|Revenant}}
+   132 = {{Class|Archvile}}
+ }
+
+[[Category:MAPINFO|Spawn number]]</text>
+    <sha1>gmvowvi5r6d46m3qiq0p6gz0x9wg6t2</sha1>
+  </revision>
+</page>

@@ -1,0 +1,39 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>Module replayer options</title>
+  <ns>0</ns>
+  <id>6653</id>
+  <revision>
+    <id>45247</id>
+    <parentid>37813</parentid>
+    <timestamp>2017-05-05T23:01:10Z</timestamp>
+    <contributor>
+      <username>Gez</username>
+      <id>1283</id>
+    </contributor>
+    <comment>remove mention of choice between foo_DUMB and FMOD, since there's no FMOD anymore</comment>
+    <origin>45247</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="1545" sha1="eh09hpbuowpu602rjjembxf75oro4mf" xml:space="preserve">{{menutrail|Main menu|Options menu|Sound options}}
+[[File:ModuleReplayerOptions.png|thumb|The module replayer menu in [[Heretic]].]]
+The '''module replayer  options''' menu allows to change settings related to playback of [[tracker module]]s. Its [[MENUDEF]] name is {{c|ModReplayerOptions}} and it can be summoned with the {{c|{{CCMD|O|menu_modreplayer}}}} console command.
+
+
+*'''{{LE|Sample rate}}''' (Default/4000 Hz/8000 Hz/11025 Hz/22050 Hz/32000 Hz/44100 Hz/48000 Hz)
+:{{c|{{CVAR|S|mod_samplerate}}}}
+:Determines the sample rate at which the module replayer will work. Default uses the same rate as the rest of the sound system.
+*'''{{LE|Interpolation}}''' (None/Linear/Cubic)
+:{{c|{{CVAR|S|mod_interp}}}}
+:Chooses how module samples are interpolated. Note that the [[#Chip-o-matic|Chip-o-matic]] filter can selectively disable interpolation.
+*'''{{LE|Volume ramping}}''' (None/Logarithmic/Linear/XM=lin, else none/XM=lin, else log)
+:{{c|{{CVAR|S|mod_volramp}}}}
+:Defines which mode is used for volume ramping.
+
+
+*'''{{LE|Chip-o-matic}}''' (On/Off)
+:{{c|{{CVAR|S|mod_autochip}}}}
+:Chip-o-matic disables sound interpolation on small sound samples and replace it by aliasing. Enabling it allows a more faithful rendition of {{wp|chiptune|chiptunes}}. Three additional [[console variable]]s determine how the chip-o-matic filter determines whether a sample should be aliased or interpolated: {{c|{{CVAR|S|mod_autochip_size_force}}}}, {{c|{{CVAR|S|mod_autochip_size_scan}}}} and {{c|{{CVAR|S|mod_autochip_scan_threshold}}}}.
+[[Category:Menus]]</text>
+    <sha1>eh09hpbuowpu602rjjembxf75oro4mf</sha1>
+  </revision>
+</page>

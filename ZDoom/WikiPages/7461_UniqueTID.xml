@@ -1,0 +1,52 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>UniqueTID</title>
+  <ns>0</ns>
+  <id>7461</id>
+  <revision>
+    <id>40890</id>
+    <parentid>37725</parentid>
+    <timestamp>2016-02-06T06:52:49Z</timestamp>
+    <contributor>
+      <username>Jpalomo</username>
+      <id>1715</id>
+    </contributor>
+    <origin>40890</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="1745" sha1="deo7r3gq32pwmqbmq8u7j8iyn291qvc" xml:space="preserve">__NOTOC__
+
+
+int '''UniqueTID''' ([int tid[, int limit]])
+
+== Usage ==
+Returns a new [[TID]] that is not currently used by any actors.
+
+=== Parameters ===
+
+* ''tid'': Starting value from which to check. It has two modes of operation:
+#If tid is non-zero, then it checks TIDs one-by-one starting at the given tid until it finds a free one. 
+#If tid is zero, then it returns a completely random TID.
+* ''limit'': Specifies the number of attempts to make to find a free TID. If limit is non-zero, then it will only check that many times for a free TID, so it might not find a free one. If no free TID is found, 0 is returned. If limit is zero, then the search is effectively unlimited.
+
+=== Return value ===
+0 if no free TID is found, a positive value corresponding to an unused TID otherwise.
+
+== Examples ==
+
+This example is part of the code that can be used to see through the "eyes" of a missile(akin to Unreal Tournament's Redeemer)
+It is called in the Spawn state of the missile.
+ script "CameraRocket" (void)
+ {
+      int MissileID = [[UniqueTID]](); // Get a random TID, it is sure that it will not use an already used one.
+      [[Thing_ChangeTID]](0, MissileID); // Set that TID to the fired missile
+      [[SetActivatorToTarget]](MissileID); // Use the target to select the player who fired this missile
+      [[ChangeCamera]](MissileID, 0, 0); // Set the camera for the player
+      [[SetPlayerProperty]](0, ON, PROP_Frozen); // Don't let the player move
+      [[Thing_ChangeTID]](MissileID, 0); // Remove the TID from the missile, as it is no longer needed.
+ }
+Note that the above function does not include turning of the missile based on the view angle or unfreezing the player when it explodes.
+
+[[category:ACS Information functions]]</text>
+    <sha1>deo7r3gq32pwmqbmq8u7j8iyn291qvc</sha1>
+  </revision>
+</page>

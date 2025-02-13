@@ -1,0 +1,90 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>Classes:BlockLinesIterator</title>
+  <ns>0</ns>
+  <id>9502</id>
+  <revision>
+    <id>53823</id>
+    <parentid>53585</parentid>
+    <timestamp>2024-11-22T10:16:25Z</timestamp>
+    <contributor>
+      <username>Jekyll Grim Payne</username>
+      <id>2175</id>
+    </contributor>
+    <minor />
+    <origin>53823</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="3325" sha1="iqyzk3mcufbmrqs4x0fnnv8ojg7nln2" xml:space="preserve">{{ZScriptNote}}
+
+'''BlockLinesIterator''' is a type of iterator used to search for lines in the [[Blockmap]]. Contrary to the name, this does not grab only blocking lines but all lines. Instead it gets any {{struct|Line|'''line'''}} that exists in a blockmap square within the given radius. You can use this to get nearby lines instead of having to iterate through all of them. If you wish to get only blocking lines you'll have to manually check the flags on each line found in the iterator.
+
+While iterating, you should take care not to call any function that refers to the {{c|validcount}} variable, such as other iterators or actor spawning functions. Doing so would interfere with the operation of the iterator, causing lines to be skipped or counted several times. Cf. {{forum|t=75176}}.
+
+== Variables ==
+* {{c|Line '''CurLine'''}}
+:The {{struct|Line|line}} the iterator is currently checking.
+* {{c|Vector3 '''position'''}}
+:The xy map position for the origin of the check relative to the line. The z value is the radius that was given.
+* {{c|int  '''portalflags'''}}
+:Used to signify what Portal-related flags were used when getting the line. 
+
+== Methods ==
+=== Static ===
+The iterator can be initalized with either {{c|Create()}} or {{c|CreateFromPos()}} methods. Both are static methods and must be called as &lt;code&gt;BlockLinesIterator.Create&lt;/code&gt;/&lt;code&gt;BlockLinesIterator.CreateFromPos&lt;/code&gt;
+
+*{{c|BlockLinesIterator '''Create'''(Actor ''origin'', double ''checkradius'' }}={{c| -1)}}
+:Initializes the iterator upon a pointer. Either this or ''CreateFromPos'' can be used. Parameters:
+:*{{c|Actor '''origin'''}}
+::A pointer to an Actor to perform the search upon. To perform it on the calling actor, &lt;code&gt;self&lt;/code&gt; can be used.
+:*{{c|double '''checkradius'''}}
+::The radius to search. Default is -1, interpreted as "use the pointer's radius".
+
+*{{c|BlockLinesIterator '''CreateFromPos'''(Vector3 ''pos'', double ''checkh'', double ''checkradius'', Sector ''sec'' }}={{c| null)}}
+:Initializes the iterator upon a vector. Either this or ''Create'' can be used. Parameters:
+:*{{c|Vector3 '''pos'''}}
+::The map coordinates to set the origin of the search to.
+:*{{c|double '''checkh'''}}
+::The height to use for the origin point. Important for getting correct portal information.
+:*{{c|double '''checkradius'''}}
+::The radius to search.
+:*{{c|Sector '''sec'''}}
+::The starting {{struct|Sector|sector}} to do the search from. If &lt;code&gt;null&lt;/code&gt;, this will get the sector at the provided xy position.
+
+=== Non-static ===
+*{{c|bool '''Next'''()}}
+:Iterates through the list of found lines. Returns &lt;code&gt;false&lt;/code&gt; when at the end of the list.
+
+== Examples ==
+This function returns how many blocking lines there are within approximately ''rad'' distance.
+&lt;syntaxhighlight lang="cs"&gt;
+int CountBlockingLines(double rad)
+{
+    // Create the iterator
+    BlockLinesIterator it = BlockLinesIterator.Create(self, rad);
+    Line ln;
+    int blocking;
+ 
+    while (it.Next())
+    {
+        ln = it.CurLine; // Get the line it's currently on
+        if (!(ln.flags &amp; Line.ML_BLOCKING))
+        {
+            continue;
+        } 
+        ++blocking;
+    }
+ 
+    return blocking;
+}
+&lt;/syntaxhighlight&gt;
+
+== See Also ==
+* [[ZScript]]
+* [[ZScript classes]]
+* [[Structs:Line]]
+
+[[Category:ZScript]]
+[[Category:ZScript iterators]]</text>
+    <sha1>iqyzk3mcufbmrqs4x0fnnv8ojg7nln2</sha1>
+  </revision>
+</page>

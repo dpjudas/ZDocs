@@ -1,0 +1,88 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>GetActorX</title>
+  <ns>0</ns>
+  <id>926</id>
+  <revision>
+    <id>38555</id>
+    <parentid>35810</parentid>
+    <timestamp>2014-11-30T05:46:38Z</timestamp>
+    <contributor>
+      <username>Solarsnowfall</username>
+      <id>488</id>
+    </contributor>
+    <comment>/* Examples */ Formatting.</comment>
+    <origin>38555</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="3135" sha1="duemdugrpfs7z20kms50zp97226urjn" xml:space="preserve">__NOTOC__
+fixed '''GetActorX''' (int ''tid'')
+
+== Usage ==
+
+This returns the X coordinate of the actor.  If ''tid'' is 0, the function uses the activator.
+
+=== Parameters ===
+
+* ''tid'': [[TID]] of the actor.
+
+=== Return value ===
+
+The X coordinate of the actor, as a [[Definitions#Fixed point numbers|fixed point]] value world coordinate.
+
+== Examples ==
+
+This is a semi-useful debug script
+
+ script 123 {{SType|Enter}}
+ {
+     While ({{const|TRUE}})
+     {
+         [[Print]] (f:[[GetActorX]] (0), s:", ", f:[[GetActorY]] (0));
+         [[Delay]] (1);
+     }
+ }
+
+It creates a display of the player's in-game coordinates. (Though using the “idmypos” console command would give you that information on-screen nonetheless.)
+
+----
+
+This script uses [[Spawn]] to create a ring of imps around the player. It is called “Imp Surprise”. The two parameters are the number of imps and their distance from the player. There are a couple of things to notice for this script: It requires quite a lot of open space to function correctly, and the space must be flat. A good place to use it would be in a large open room with a rather good pickup in the middle, assigning this script as the pickup's special.
+
+ script 1 (int count, int dist)
+ {
+     int basex = [[GetActorX]] (0);
+     int basey = [[GetActorY]] (0);
+     int angle, n;
+  
+     for (n = 0; n &lt; count; n++)
+     {
+         angle = 1.0 * n / count;
+ 
+         [[Spawn]](
+             "{{class|DoomImp}}",
+             basex + dist * [[cos]] (angle),
+             basey + dist * [[sin]] (angle),
+             [[GetActorZ]] (0), 0,
+             (angle + 0.5) &gt;&gt; 8
+         );
+     }
+ }
+
+This uses a little maths to place the {{Class|DoomImp|imps}} in a circle around the player. It uses the player's X and Y coordinates as the center of the circle. It finds the angle from which each imp must be spawned using percentages, and then spawns it at that point by splitting up the angle in to X and Y offsets using [[sin]] and [[cos]]. It also sets the angle of each imp to be facing inwards.
+
+The line of code &lt;code&gt;angle = 1.0 * n / count&lt;/code&gt; uses a small and noteworthy trick. As the angle is measured as a [[Definitions#Fixed point angles|fixed point angle]], 1.0 is a full circle. Each successive ''n'' must be a fraction of the way around this circle, and the maximum is ''count''. However, the line would not work if it were formed like this:
+
+ angle = n / count * 1.0;
+
+This is because ''count'' is bigger than ''n'', and due to integer division, ''n'' / ''count'' will always equal 0. This avoids the issues with integer division.
+
+The line ''(angle + 0.5) &gt;&gt; 8'' reverses the angle of creation of the monster and turns it in to a [[Definitions#Byte angles|byte angle]]. For example, if the monster is created at 45 degrees from the player, then it should be facing 225 degrees (towards the player). In fixed point angles, it is created at 0.125 and should be facing 0.625, as it has turned 180 degrees (0.5 of a circle). The ''&gt;&gt; 8'' converts from a fixed point angle to a byte angle.
+
+== See also ==
+* [[GetActorY]]
+* [[GetActorZ]]
+
+[[category:ACS Information functions]]</text>
+    <sha1>duemdugrpfs7z20kms50zp97226urjn</sha1>
+  </revision>
+</page>

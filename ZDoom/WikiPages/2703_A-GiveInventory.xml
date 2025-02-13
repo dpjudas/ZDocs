@@ -1,0 +1,57 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>A GiveInventory</title>
+  <ns>0</ns>
+  <id>2703</id>
+  <revision>
+    <id>52121</id>
+    <parentid>52118</parentid>
+    <timestamp>2024-03-27T17:03:22Z</timestamp>
+    <contributor>
+      <username>Jekyll Grim Payne</username>
+      <id>2175</id>
+    </contributor>
+    <minor />
+    <origin>52121</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="1843" sha1="d4sfy5z5ga6h18mm9a99iykfafwu0a8" xml:space="preserve">__NOTOC__{{codepointer|Inventory}}
+bool '''A_GiveInventory''' (string ''type'' [, int ''amount'' [, pointer ''giveto'']])
+
+==Usage==
+Adds ''amount'' items of type ''type'' to the calling actor's inventory. This function will not add more items than can be carried. This is only really useful for [[weapon]]s and {{Class|CustomInventory|custom inventory}}.
+
+If ''type'' is an item derived from {{c|{{Class|Health}}}}, then the amount received is the result of multiplying ''amount'' by the item's {{Property|Inventory.Amount|amount}}, e.g. if ''type'' is {{c|{{Class|Medikit}}}} and ''amount'' is 2, then the amount of health received would be 50 points, not 2.
+
+===Parameters===
+*''type'': the item to give. This should be a valid {{Class|Inventory|inventory item}}.
+*''amount'': the number of samples of this item to give. Default is 0, which is interpreted as 1.
+*''giveto'': the actor to give the item to. This is an [[actor pointer#Custom scripting|actor pointer selector]]. Default is {{c|{{const|AAPTR_DEFAULT}}}}, which corresponds to the caller of the function.
+
+=== Return value ===
+The function returns ''true'' if the item is successfully received, otherwise it returns ''false''.
+
+== Examples ==
+ Actor BigBoost : {{Class|CustomInventory}} 10492
+ {
+   {{Property|Inventory.PickupMessage}} "Energy Boost!!!"
+   {{Property|Inventory.PickupSound}} "misc/p_pkup"
+   +{{Flag|COUNTITEM}}
+   States
+   {
+   Spawn:
+     AWI3 A -1
+     Stop
+   Pickup:
+     TNT1 A 0 [[A_GiveInventory]] ("{{Class|Soulsphere}}", 2)
+     TNT1 A 0 [[A_GiveInventory]] ("{{Class|BFG9000}}")
+     Stop
+   }
+ }
+This actor uses the {{Class|CustomInventory}}'s special behavior to give two inventory items with one pickup using [[A_GiveInventory]].
+
+[[category:Decorate Inventory functions]]{{DEFAULTSORT:GiveInventory}}
+[[Category:DECORATE]]
+[[Category:Inventory]]</text>
+    <sha1>d4sfy5z5ga6h18mm9a99iykfafwu0a8</sha1>
+  </revision>
+</page>

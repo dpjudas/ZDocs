@@ -1,0 +1,49 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>Sector SetColor</title>
+  <ns>0</ns>
+  <id>690</id>
+  <revision>
+    <id>36901</id>
+    <parentid>36900</parentid>
+    <timestamp>2013-07-30T20:43:34Z</timestamp>
+    <contributor>
+      <username>Blue Shadow</username>
+      <id>2021</id>
+    </contributor>
+    <comment>/* Examples */ Formatting.</comment>
+    <origin>36901</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="1647" sha1="3d8ap7ylabp9z812owzjyesmx3dvkbw" xml:space="preserve">{{DISPLAYTITLE:Sector_SetColor}}
+{{Special|212|tag, r, g, b, desat|Sector|Color}}
+* ''tag'': Tag of affected sector 
+* ''r'': Amount of red in the light 
+* ''g'': Amount of green in the light 
+* ''b'': Amount of blue in the light 
+* ''desat'': Desaturation of the color
+
+Sets the [[colored lighting|color of light]] in a sector. By default, sectors have white light (red, green, blue are all 255). Because there can be a noticeable delay while the game constructs the tables for a color for the first time, another sector should already have the desired color&amp;nbsp;&amp;mdash; preferably by using an “open” type script to set the color of a dummy sector that the player will never see.
+
+You can use the {{CCMD|D|testcolor}} console command to test a color from within the game.
+
+The ''desat'' parameter specifies how much the colors in the sector are desaturated. 0 means no desaturation at all, resulting in normal colors. 255 means full desaturation, resulting in a black and white display.
+
+== UDMF ==
+
+If your map is in the [[UDMF]] format, and you don't intend to modify sector colors later on, you can apply colors without the use of this special under the sector's ''custom'' tab. The color must be provided in hex, i.e. '''RRGGBB'''.
+
+Additionally, desaturation can be applied in UDMF as well. The values for desaturation are in [[Fixed point numbers|fixed point]], meaning 0 is normal, and 1 is fully desaturated.
+
+==Examples==
+The following script applies red coloring to any sector with a [[tag]] of 3 on map start.
+
+ Script 1 [[Script_types#OPEN|Open]]
+ {
+   [[Sector_SetColor]](const:3, 255, 0, 0);
+ }
+
+==External links==
+* {{oldref}}</text>
+    <sha1>3d8ap7ylabp9z812owzjyesmx3dvkbw</sha1>
+  </revision>
+</page>

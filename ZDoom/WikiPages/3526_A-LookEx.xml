@@ -1,0 +1,85 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>A LookEx</title>
+  <ns>0</ns>
+  <id>3526</id>
+  <revision>
+    <id>53757</id>
+    <parentid>52708</parentid>
+    <timestamp>2024-11-19T08:46:55Z</timestamp>
+    <contributor>
+      <username>Jekyll Grim Payne</username>
+      <id>2175</id>
+    </contributor>
+    <minor />
+    <origin>53757</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="3767" sha1="1703e39v8s6lmphvernvepzpt7n1fr3" xml:space="preserve">&lt;noinclude&gt;{{codepointer|Monster AI}}
+&lt;/noinclude&gt;
+
+'''{{class|Actor}}'''
+
+{{c|void '''A_LookEx'''(int ''flags'' {{=}} 0, double ''minseedist'' {{=}} 0, double ''maxseedist'' {{=}} 0, double ''maxheardist'' {{=}} 0, double ''fov'' {{=}} 0, statelabel ''label'' {{=}} null)}}
+
+==Usage==
+
+This is a customizable version of [[A_Look]], allowing for enemies which can only see or hear a target under given conditions. Just like with '''A_Look''', if you set this on a friendly monster, it will make the monster enter the specified state even if it does not have a target. The '''{{flag|STANDSTILL}}''' actor flag can be used (and is pretty much required) with this function to prevent this behavior.
+
+'''Note:''' In order for '''A_LookEx''' to function correctly, the actor calling it ''must'' have either the {{c|seestate}}, or a “See” state defined.
+
+=== Parameters ===
+*{{c|int '''flags'''}}
+:Controls miscellaneous aspects of the monster's behavior while looking for targets. Use &lt;code&gt;|&lt;/code&gt; to use multiple flags at once. The following flags are available:
+{{: LOF flags}}
+*{{c|double '''minseedist'''}}
+:The minimum sight distance of the monster in map units. If this is greater than 0, the monster will not see a player who is closer than this. If this is set, the monster also will not wake up if touched by the player (so it can be set smaller than the radius to prevent the monster from reacting if the player comes up from behind).
+*{{c|double '''maxseedist'''}}
+:The maximum sight distance of the monster, in map units. It will not see any players farther away than this. 0 means unlimited (as in Doom). Note that friendly monsters have a hard cap of 1280 map units for performance reasons.
+*{{c|double '''maxheardist'''}}
+:The maximum hearing range of the monster, it will not react to sounds from players farther away than this. 0 means unlimited (as in Doom).
+*{{c|double '''fov'''}}
+:The field of view of the monster. A narrower FOV means the player has to be more centered in front of the monster for it to notice the player. Setting this to 0 uses the old default of 180 degrees, while smaller values make the FOV narrower and larger values wider. 360 means look in all directions and is the same as '''{{flag|LOOKALLAROUND}}''' with an FOV of 0.
+*{{c|StateLabel '''label'''}}
+:The [[Actor states|state]] the monster will jump to if it acquires a target. Default is &lt;code&gt;null&lt;/code&gt; which is interpreted as "See".
+
+== Examples ==
+
+The actor in the following example is totally deaf, and can not see targets more than 256 map units away. It jumps to the custom state “WakeUp” upon acquiring a valid target.
+
+ class ImpairedZombie : {{Class|ZombieMan}}
+ {
+   States
+   {
+   Spawn:
+     POSS A 1 '''A_LookEx'''({{const|LOF_NOSOUNDCHECK}}, maxseedist: 256, label: "WakeUp");
+     loop;
+   WakeUp:
+     POSS A 1 [[A_AlertMonsters]];
+     goto See;
+   }
+ }
+
+The following actor, in addition to being totally deaf, has a limited field of vision (30 degrees) and will not detect targets closer than 32 map units plus its {{property|Radius|radius}} to it. Its seesound is played at full volume upon waking up.
+
+ class SecuritySoul : {{Class|LostSoul}}
+ {
+   Default
+   {
+     {{property|SeeSound}} "misc/alarm";
+   }
+   States
+   {
+   Spawn:
+     SKUL A 1 '''A_LookEx'''({{const|LOF_NOSOUNDCHECK}}|{{const|LOF_FULLVOLSEESOUND}}, radius + 32, fov: 30, label: "See")
+     loop;
+   }
+ }
+
+Note that in both these cases, the actor will regain full hearing and vision upon waking up, like a regular Doom monster. To check FOV while currently chasing a target, see [[A_JumpIfTargetInLOS]]. To check for distance from a current target, see [[Distance2D]], [[Distance3D]] and [[A_JumpIfCloser]].
+
+== See also ==
+* [[Structs:LookExParams]]
+* [[LookForEnemies]]</text>
+    <sha1>1703e39v8s6lmphvernvepzpt7n1fr3</sha1>
+  </revision>
+</page>

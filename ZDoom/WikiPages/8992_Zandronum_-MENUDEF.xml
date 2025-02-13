@@ -1,0 +1,53 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>Zandronum: MENUDEF</title>
+  <ns>0</ns>
+  <id>8992</id>
+  <revision>
+    <id>43678</id>
+    <parentid>43669</parentid>
+    <timestamp>2017-01-08T21:43:28Z</timestamp>
+    <contributor>
+      <username>Tiger</username>
+      <id>2074</id>
+    </contributor>
+    <comment>I forgot to include the STFeature template.</comment>
+    <origin>43678</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="2043" sha1="g6x73xnzv0gffux9my4tzl94lx6e1lr" xml:space="preserve">{{STFeature}}
+As of development builds for 3.0, Zandronum has ZDoom's menu rewrite and [[MENUDEF]] is supported. Zandronum also contains some additions to the option menu that ZDoom currently does not. These features were created for Zandronum's custom menus (e.g. multiplayer options), but custom menus may utilize them as well.
+
+== &lt;code&gt;TextField&lt;/code&gt; ==
+
+&lt;code&gt;'''TextField''' ''label'', ''cvar'' [, ''graycheck'' ]&lt;/code&gt;
+
+Defines a text input field. Designed for use with string CVars but other types of CVars may be used as well (input will behave as if entered into console). If ''graycheck'' is specified and points to a CVar, this text field will be disabled if the said CVar evaluates to a boolean false.
+
+== &lt;code&gt;NumberField&lt;/code&gt; ==
+
+&lt;code&gt;'''NumberField''' ''label'', ''cvar'' [, ''minimum'', ''maximum'' [, ''step'' [, ''graycheck'']]]&lt;/code&gt;
+
+Defines a numeric input field, designed for use with number CVars (can be used with other kinds but data will be lost). Behaves like a slider except only the number is visible.
+
+* The ''minimum'' and ''maximum'' parameters default to 0 and 100, respectively. and determine the minimum and maximum amounts for the field.
+* The ''step'' parameter defaults to 1 and determines by how much the value will jump when the user shifts the value.
+* The ''graycheck'' parameter behaves like with text fields and defines a CVar whose value must not evaluate to a boolean false for the field to be available.
+
+== &lt;code&gt;PlayerField&lt;/code&gt; ==
+
+&lt;code&gt;'''PlayerField''' ''label'', ''cvar''[, ''attributes'']&lt;/code&gt;
+
+Defines a field that selects a player. The index number of the player selected will be stored in the CVar (thus it should ideally be an integer CVar).
+
+Additional behavior tweaks may be specified with ''attributes'':
+* &lt;code&gt;''notself''&lt;/code&gt;: the field will not select the local player
+* &lt;code&gt;''nobots''&lt;/code&gt;: the field will not select bots
+
+== &lt;code&gt;NetgameOnly&lt;/code&gt; ==
+
+&lt;code&gt;'''NetgameOnly'''&lt;/code&gt;
+
+The menu with this instruction is only available when playing online.</text>
+    <sha1>g6x73xnzv0gffux9my4tzl94lx6e1lr</sha1>
+  </revision>
+</page>

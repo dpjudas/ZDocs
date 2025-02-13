@@ -1,0 +1,169 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>Creating new monsters or other complex items (ZScript)</title>
+  <ns>0</ns>
+  <id>9867</id>
+  <revision>
+    <id>52890</id>
+    <parentid>52419</parentid>
+    <timestamp>2024-08-15T09:31:03Z</timestamp>
+    <contributor>
+      <username>Jekyll Grim Payne</username>
+      <id>2175</id>
+    </contributor>
+    <comment>/* Examples */</comment>
+    <origin>52890</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="5987" sha1="o4tyajdcanwmqpvyypfw3k9sk2qkdty" xml:space="preserve">[[Monster|Monsters]] are just regular actors that call some specific monster AI action functions:
+
+* [[A_Look]]
+* [[A_Look2]]
+* [[A_Chase]]
+* [[A_FastChase]]
+* [[A_VileChase]]
+* [[A_ExtChase]]
+* [[A_Wander]]
+
+== Properties, states and sounds ==
+
+It's these functions that make an actor act like a monster but there's a few more things to observe:
+
+* Use the '''Monster''' [[Actor properties|property]] to set up [[Actor_properties#Flag_combos|all the necessary flags]] to make an actor act like a monster.
+* A monster's {{property|Height}} and {{property|Radius}} should be set properly. Unlike props, it is essential that these values are correct because they are used by the collision detection code which also checks whether a monster has been hit by a weapon.
+* A monster should have proper definitions for [[Actor_properties#Sound|all standard sounds]], or it might remain silent in certain situations. See {{property|SeeSound}}, {{property|ActiveSound}}, {{property|PainSound}}, {{property|DeathSound}}. {{property|AttackSound}} may be required as well, although it's possible to play the sound directly with [[A_StartSound]].
+* A monster requires a minimum set of [[Actor states|states]]:
+:* '''Spawn''': This should define a looping 'idle' sequence. This sequence has to call [[A_Look]] (or one of its variants, like [[A_LookEx]]) repeatedly so that the monster can react to players.
+:* '''See''': This defines a looping walking sequence. This sequence has to call [[A_Chase]] or one of its variants repeatedly so that the monster can walk around and do things.
+:* '''Melee'''/'''Missile''': This defines a near or far attack sequence. At least one of them is needed so that the monster is able to attack players or other monsters.
+:* '''Death''': This is called when the monster's {{property|Health|health}} goes below zero.
+:* '''Pain''': Used for animation when the monster reacts to pain. Usually [[A_Pain]] is called here to play the monster's {{property|PainSound}}, but custom behavior can be injected as well.
+
+:You can also define one of the optional special death sequences:
+:*'''XDeath''': Used instead of Death if the monster's {{property|Health|health}} goes below its {{property|GibHealth}} when it does, to define an "extreme death" sequence.
+:*'''Raise''': Allows the monster to be resurrected by [[Classes:Archvile|Arch-Viles]] or other monsters capable of doing that through [[A_VileChase]]. This is the animation of the monster being resurrected (often it's just the death animation played in reverse).
+
+Normally monsters are based on the {{class|Actor}} class (this is shown in the examples below).
+
+== Examples ==
+
+This is an example of a properly defined monster in [[ZScript]]. It is just an exact replica of Doom's [[Classes:ZombieMan|pistol shooting Zombie]]:
+ class &lt;u&gt;ZombieClone&lt;/u&gt; : Actor
+ {
+   Default
+   {
+     {{Property|Monster}};
+     {{Property|Obituary}} "$OB_ZOMBIE"; {{comment|prints "%o was killed by a zombieman"}}
+     {{Property|Health}} 20;
+     {{Property|Radius}} 20;
+     {{Property|Height}} 56;
+     {{Property|Speed}} 8;
+     {{Property|PainChance}} 200;
+     {{Property|SeeSound}} "grunt/sight";
+     {{Property|AttackSound}} "grunt/attack";
+     {{Property|PainSound}} "grunt/pain";
+     {{Property|DeathSound}} "grunt/death";
+     {{Property|ActiveSound}} "grunt/active";
+     {{Property|DropItem}} '[[Classes:Clip|Clip]]', 256;
+     +{{flag|FLOORCLIP}};
+   }
+   States
+   {
+   Spawn:
+     POSS AB 10 [[A_Look]];
+     loop;
+   See:
+     POSS AABBCCDD 4 [[A_Chase]];
+     loop;
+   Missile:
+     POSS E 10 [[A_FaceTarget]];
+     POSS F 8 [[A_PosAttack]];
+     POSS E 8;
+     goto See;
+   Pain:
+     POSS G 3;
+     POSS G 3 [[A_Pain]];
+     goto See;
+   Death:
+     POSS H 5;
+     POSS I 5 [[A_Scream]];
+     POSS J 5 [[A_NoBlocking]];
+     POSS K 5;
+     POSS L -1;
+     stop;
+   XDeath:
+     POSS M 5;
+     POSS N 5 [[A_XScream]];
+     POSS O 5 [[A_NoBlocking]];
+     POSS PQRST 5;
+     POSS U -1;
+     stop;
+   Raise:
+     POSS KJIH 5;
+     goto See;
+   }
+ }
+
+Note, in order for this monster to appear in the [[Ultimate Doom Builder|map editor]] so you can place it in your map, you'll need to give it a [[MAPINFO/Editor_number_definition|DoomEdNum, also known as editor number]]. Nowadays this should be don through [[MAPINFO/Editor_number_definition|MAPINFO]]:
+&lt;syntaxhighlight lang="csharp"&gt;
+DoomEdNums
+{
+  10246 = "ZombiemanClone"
+}&lt;/syntaxhighlight&gt;
+
+If you don't need a complete monster but ony a subset of its functions you can do so. For example to create a shootable item that doesn't act as a monster all you have to do is to remove the '''See''' state, the call to [[A_Look]] in the '''Spawn''' state and replace the '''Monster''' [[Actor properties|property]] with the appropriate [[Actor flags|flags]]. The one flag you need is '''{{flag|SHOOTABLE}}''' but normally you might want to set a few others as well. This is an example of a shootable decoration:
+ class FloorLamp : Actor
+ {
+   Default
+   {
+     {{Property|Health}} 1;
+     {{Property|Radius}} 16;
+     {{Property|Height}} 51;
+     {{Property|DeathSound}} "misc/glass";
+     +{{flag|SHOOTABLE}}
+     +{{flag|SOLID}}
+     +{{flag|NOBLOOD}}
+   }
+   States
+   {
+   Spawn:
+     HAWA A -1 Bright;
+     Loop;
+   Death:
+     HAWA B 11 [[A_Scream]];
+     HAWA C 9;
+     HAWA D -1 [[A_Fall]];
+     Stop;
+   }
+ }
+
+
+Other things are possible as well, for example an actor that reacts to seeing a player but instead of waking up and attacking the player it is doing something else, for example playing a sound:
+ class TriggerSound1 : Actor
+ {
+   Default
+   {
+     {{Property|SeeSound}} "ts1";
+     +{{flag|NOBLOCKMAP}}
+   }
+   States
+   {
+   Spawn:
+     TNT1 A 2 [[A_Look]];
+     Loop;
+   See:
+     TNT1 A 1;
+     Stop;
+   }
+ }
+
+== Virtual functions ==
+Monsters can utilize a large array of [[ZScript virtual functions|virtual functions]]. Some of the most commonly used ones are:
+* [[PostBeginPlay]]
+* [[Tick]]
+* [[Die]]
+* [[DamageMobj]]
+
+[[Category:ZScript guides]]</text>
+    <sha1>o4tyajdcanwmqpvyypfw3k9sk2qkdty</sha1>
+  </revision>
+</page>

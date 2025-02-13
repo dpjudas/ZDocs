@@ -1,0 +1,43 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>Map format</title>
+  <ns>0</ns>
+  <id>5361</id>
+  <revision>
+    <id>50412</id>
+    <parentid>49194</parentid>
+    <timestamp>2023-07-17T01:04:58Z</timestamp>
+    <contributor>
+      <username>Unbeat Water</username>
+      <id>2634</id>
+    </contributor>
+    <minor />
+    <comment>Fix minor grammar mistake</comment>
+    <origin>50412</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="4073" sha1="gmjx39tapzfjr22yy3nuij2n0pp51w8" xml:space="preserve">[[ZDoom]] supports natively three different types of map formats.
+
+==Doom map format==
+The oldest format, as originally devised by [[Id Software]]. It is a binary format used by the classic [[Doom]] [[Doom II|series]], but also by [[Chex Quest]], [[Heretic]] and [[Strife]], with some differences in their sets of line specials. It is the most limited: it does not support [[ACS]], line specials cannot have arguments, things cannot have tids, specials, arguments or Z-height, and so on. Using this format for a ZDoom project is not advised because of its limitations, but it is still useful for making a project compatible with other ports. Maps in this format do not use the same values for [[sector specials|sector]] and [[action specials|linedef specials]] as those used internally by ZDoom, and therefore are preprocessed first by a [[map translator]]. The default map translator used is indicated by the [[MAPINFO/GameInfo definition|GameInfo section]] of a [[MAPINFO]] lump, and a map-specific one can be given in the [[MAPINFO/Map definition|map section]]. The &lt;tt&gt;-xlat&lt;/tt&gt; [[command line parameter]] can override the default translator.
+
+A Doom-format map normally has the following lumps in this sequence: map header, [[THINGS]], [[LINEDEFS]], [[SIDEDEFS]], [[VERTEXES]], [[SEGS]], [[SSECTORS]], [[NODES]], [[SECTORS]], [[REJECT]], [[BLOCKMAP]]. However, ZDoom is able to load maps that miss some of these lumps: SEGS, SSECTORS, NODES and BLOCKMAP can be recreated on-the-fly by the internal nodebuilder, and REJECT contain non-critical information.
+
+==Hexen map format==
+Developed by [[Raven Software]] to support the enhanced features of [[Hexen]], most notably [[ACS|Action Code Scripting]], this is an extension of the Doom map format and still suffers from some limitations. ZDoom pioneered using this format for the other games, making it known as "Doom-in-Hexen", "Heretic-in-Hexen", and so on. This is somewhat of a misnomer: only the map format is affected, a "Doom-in-Hexen" map is still a map for Doom, not a map for Hexen.
+The {{plainlink|[http://zdoom.org/Download download page]}} contains '''[[zwadconv]]''', a utility that converts Doom-formatted maps to the Hexen map format. For this reason, the Hexen format is a good choice for adapting a non-ZDoom mod if you want to add ZDoom features to the project; but it is no longer recommended for brand-new ZDoom projects.
+
+A Hexen-format map has the same sequence of lumps as a Doom-format map, followed by a [[BEHAVIOR]] lump for compiled ACS, and optionally an uncompiled [[SCRIPTS]] lump at the end. However, the [[THINGS]] and [[LINEDEFS]] lumps are different and incompatible (the size of a single element is respectively 20 bytes instead of 10 and 16 bytes instead of 14), so even if a Hexen-format map does not use ACS, the BEHAVIOR lump is necessary to prevent the map from being interpreted incorrectly.
+
+==Universal Doom Map Format==
+The UDMF, or "textmap" format, was developed specifically with extensibility in mind and does not suffer from the limitations that affect the binary formats. All ZDoom features are supported on UDMF maps (though some are implemented differently), and it is now the recommended choice for new ZDoom projects.
+
+A UDMF map has the following lumps: map header, [[TEXTMAP]], [[ZNODES]], [[REJECT]], [[DIALOGUE]], [[BEHAVIOR]], [[ENDMAP]]. Of those, only the header, TEXTMAP and ENDMAP are mandatory; all others are optional, though they may be needed for certain features.
+
+See the [[Universal Doom Map Format]] article for more information.
+
+==Other formats==
+ZDoom has a partial and limited support for the Build map format, as a legacy of [[ZDuke]]. Maps in this format can be loaded and explored, but they are not playable, the scale ratio is not accurate, and many features are not implemented (and never will be). Additionally, no support for the unique mapping format used by Doom 64 is present, and ZDoom/GZDoom mods based off that game have typically converted the Doom 64 maps to the UDMF format.
+[[Category:Data formats]] [[Category:Map formats|*]]</text>
+    <sha1>gmjx39tapzfjr22yy3nuij2n0pp51w8</sha1>
+  </revision>
+</page>

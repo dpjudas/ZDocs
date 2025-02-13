@@ -1,0 +1,67 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>Classes:Cacolantern</title>
+  <ns>0</ns>
+  <id>5321</id>
+  <revision>
+    <id>21510</id>
+    <parentid>21508</parentid>
+    <timestamp>2009-04-20T13:29:52Z</timestamp>
+    <contributor>
+      <username>Gez</username>
+      <id>1283</id>
+    </contributor>
+    <origin>21510</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="1164" sha1="m198gfpsgx3jjovc0uschtajf55hhzu" xml:space="preserve">{{Actor|
+| type = Monster
+| name = Cacolantern
+| class = Cacolantern
+| game = Skulltag
+| doomednum = 5006
+| spawnid = 159
+| spawnname = T_CACOLANTERN
+}}
+[[Classes]]: {{Class|Cacodemon}}&amp;rarr;&lt;u&gt;Cacolantern&lt;/u&gt;&lt;br&gt;
+&amp;ensp;&amp;rarr;{{Class|Abaddon}}&lt;br&gt;
+
+An orange {{Class|Cacodemon}}, stronger than its red cousin. Their pumpkin color is the source of their nickname.
+==== [[DECORATE]] definition ====
+ ACTOR &lt;u&gt;Cacolantern&lt;/u&gt; : {{Class|Cacodemon}} 5006
+ {
+   SpawnID 159
+   Health 800
+   Obituary "$OB_CACOLANTERN" // "%o was smitten by a cacolantern."
+   HitObituary "$OB_CACOLANTERN_MELEE" // "%o got too close to a cacolantern."
+   States
+   {
+   Spawn:
+     HED2 A 10 [[A_Look]]
+     Loop
+   See:
+     HED2 A 3 [[A_Chase]]
+     Loop
+   Pain:
+     HED2 E 3
+     HED2 E 3 [[A_Pain]]
+     HED2 F 6
+     Goto See
+   Missile:
+     HED2 BC 5 [[A_FaceTarget]]
+     HED2 D 5 Bright [[A_BasicAttack]] (8, "None", "{{Class|CacolanternBall}}", 32)
+     Goto See
+   Death:
+     HED2 G 8 [[A_NoBlocking]]
+     HED2 H 8 [[A_Scream]]
+     HED2 IJK 8
+     HED2 L -1 [[A_SetFloorClip]]
+     Stop
+   Raise:
+     HED2 L 8 [[A_UnsetFloorClip]]
+     HED2 KJIHG 8
+     Goto See
+   }
+ }</text>
+    <sha1>m198gfpsgx3jjovc0uschtajf55hhzu</sha1>
+  </revision>
+</page>

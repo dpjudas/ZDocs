@@ -1,0 +1,39 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>A PigPain</title>
+  <ns>0</ns>
+  <id>4871</id>
+  <revision>
+    <id>39067</id>
+    <parentid>39056</parentid>
+    <timestamp>2015-04-22T15:46:09Z</timestamp>
+    <contributor>
+      <username>Blue Shadow</username>
+      <id>2021</id>
+    </contributor>
+    <comment>Corrected documentation</comment>
+    <origin>39067</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="736" sha1="4vwt4le9jo8gwvt46cifgxzp93s99g7" xml:space="preserve">{{codepointer|Hexen|Sound}}'''A_PigPain'''
+
+(no parameters)
+
+==Usage==
+Plays the {{Property|PainSound|pain sound}} of the actor by calling {{c|[[A_Pain]]}} and thrusts it vertically in the air with a small force. The thrust is only applied if the actor is resting on the ground.
+
+''[[Hexen]]'s'' {{Class|pig}} is currently the only actor class that makes use of this function.
+
+== Examples ==
+
+This code is the equivalent of calling {{c|[[A_PigPain]]}}.
+   Pain:
+     EXAM A 2
+     EXAM A 0 [[A_Pain]]
+     EXAM A 2 [[A_JumpIf]](z &lt;= floorz, "Thrust") // See [[DECORATE expressions#Variables|DECORATE expressions]]
+     Goto See
+   Thrust:
+     EXAM A 2 [[A_ChangeVelocity]](velx, vely, 1.0 * 7 / 2, {{const|CVF_REPLACE}})
+     Goto See</text>
+    <sha1>4vwt4le9jo8gwvt46cifgxzp93s99g7</sha1>
+  </revision>
+</page>

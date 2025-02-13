@@ -1,0 +1,86 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>Classes:FlemoidusStridicus</title>
+  <ns>0</ns>
+  <id>6175</id>
+  <revision>
+    <id>27885</id>
+    <parentid>27884</parentid>
+    <timestamp>2010-10-13T07:11:57Z</timestamp>
+    <contributor>
+      <username>Gez</username>
+      <id>1283</id>
+    </contributor>
+    <minor />
+    <origin>27885</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="1768" sha1="soykek3gpyotwihqk0jv44o8yperzgd" xml:space="preserve">{{Actor|
+| type = Monster
+| name = Flemoidus Stridicus
+| doomednum = 3002
+| spawnid = 8
+| class = FlemoidusStridicus
+| game = Chex3
+}}[[Classes|Classes:]]{{Class|Actor}}&amp;rarr;&lt;u&gt;FlemoidusStridicus&lt;/u&gt;&lt;br /&gt;
+
+Like the {{Class|FlemoidusCycloptisCommonus|Cycloptis Commonus}} (or Doom's {{Class|Demon}}), this flemoid moves quicky and uses melee attacks.
+
+The Stridicus has higher health and speed than the cycloptis, making it a greater threat.
+
+==== [[DECORATE]] definition ====
+ ACTOR &lt;u&gt;FlemoidusStridicus&lt;/u&gt; replaces {{Class|FlemoidusCycloptisCommonus}}
+ {
+   {{Property|Game}} Chex
+   {{Property|SpawnID}} 8
+   {{Property|Health}} 225
+   {{Property|PainChance}} 100
+   {{Property|Speed}} 16
+   {{Property|Radius}} 30
+   {{Property|Height}} 56
+   {{Property|Mass}} 400
+   {{Property|DamageFactor}} "Flem", 0.0
+   {{Property|DamageFactor}} "Slime", 0.0  //in chex3.exe the slam now has slime damagetype
+   {{Property|Monster}}
+   +{{Flag|FLOORCLIP}}
+   +{{Flag|FASTER}}
+   +{{Flag|FASTMELEE}}
+   +{{Flag|DONTGIB}}
+   {{Property|SeeSound}} "demon/sight"
+   {{Property|AttackSound}} "demon/melee"
+   {{Property|PainSound}} "demon/pain"
+   {{Property|DeathSound}} "demon/death"
+   {{Property|ActiveSound}} "demon/active"
+   {{Property|Obituary}} "$OB_STRIDICUS"
+   States
+   {
+   Spawn:
+     SARG AB 10 A_Look
+     Loop
+   See:
+     SARG AABBCCDD 2 [[A_Chase]]
+     Loop
+   Melee:
+     SARG EF 8 [[A_FaceTarget]]
+     SARG G 8 [[A_CustomMeleeAttack]](random[sargattack](1,10)*4, "", "", "Flem")
+     Goto See
+   Pain:
+     SARG H 2
+     SARG H 2 [[A_Pain]]
+     Goto See
+   Death:
+     SARG I 8
+     SARG J 8 [[A_Scream]]
+     SARG K 4
+     SARG L 4 [[A_NoBlocking]]
+     SARG M 4
+     SARG N -1
+     Stop
+   Raise:
+     SARG N 5
+     SARG MLKJI 5
+     Goto See
+   }
+ }</text>
+    <sha1>soykek3gpyotwihqk0jv44o8yperzgd</sha1>
+  </revision>
+</page>

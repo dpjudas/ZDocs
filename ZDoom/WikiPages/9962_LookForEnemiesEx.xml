@@ -1,0 +1,53 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>LookForEnemiesEx</title>
+  <ns>0</ns>
+  <id>9962</id>
+  <revision>
+    <id>53425</id>
+    <parentid>53357</parentid>
+    <timestamp>2024-10-23T09:12:12Z</timestamp>
+    <contributor>
+      <username>Blue Shadow</username>
+      <id>2021</id>
+    </contributor>
+    <minor />
+    <origin>53425</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="1935" sha1="6m6ari2vt6ena6vte3qfs35f5gjin0k" xml:space="preserve">{{git|9df656a}}
+
+'''{{class|Actor}}'''
+
+{{c|int '''LookForEnemiesEx''' (out Array&lt;Actor&gt; ''targets'', double ''range'' {{=}} -1, bool ''noPlayers'' {{=}} true, bool ''allaround'' {{=}} false, LookExParams ''params'' {{=}} null)}}
+
+== Usage ==
+Returns an array with every enemy of the caller found in the specified {{c|range}}, using the same checks as [[LookForEnemies]]. Allowing for far more fine tuned enemy search functions.
+
+&lt;!-- inkoalawetrust: This function behaves similarly to LookFor(Enemies/Players), but does NOT just have a boolean return, so I can't include the LookFor parameters article and have to copy paste it instead.--&gt;
+=== Parameters ===
+*{{c|out Array&lt;Actor&gt; '''targets'''}}
+:An array [[ZScript special words|passed by reference]] as an input for LookForEnemiesEx(), it is filled with the targets' the function finds.
+*{{c|double '''range'''}}
+:The range in which the function will look for valid enemies, in map units. Default is -1, which means the range is the callers' {{property|FriendlySeeBlocks}}*128 (The size of the [[blockmap]] grid).
+*{{c|bool '''noPlayers'''}}
+:If enabled, this function will not look for any hostile players found in {{c|range}} of the caller. Default is true.
+*{{c|bool '''allaround'''}}
+:If true, the actor will look for targets all around them, ignoring the {{c|fov}} field in LookExParams. Default is false.
+*{{c|LookexParams '''params'''}}
+:A '''{{struct|LookExParams}}''' struct with values that will determine the function's behavior.
+
+=== Return value ===
+*Array &lt;Actor&gt; — Not an actual return, but the {{c|targets}} array passed into the function is what is filled with [[Actor_pointer#ZScript|pointers to the valid targets]] the function finds, allowing the array to then be used as desired.
+*int — Returns the amount of valid enemies that the function found.
+
+== Examples ==
+{{Noexamples}}
+
+== See also ==
+*[[Structs:LookExParams]]
+*[[A_LookEx]]
+
+[[Category:ZScript]]</text>
+    <sha1>6m6ari2vt6ena6vte3qfs35f5gjin0k</sha1>
+  </revision>
+</page>

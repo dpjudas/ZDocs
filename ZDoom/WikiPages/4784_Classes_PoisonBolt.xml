@@ -1,0 +1,99 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>Classes:PoisonBolt</title>
+  <ns>0</ns>
+  <id>4784</id>
+  <revision>
+    <id>54134</id>
+    <parentid>40132</parentid>
+    <timestamp>2025-01-14T22:04:46Z</timestamp>
+    <contributor>
+      <username>Jekyll Grim Payne</username>
+      <id>2175</id>
+    </contributor>
+    <origin>54134</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="1683" sha1="0l0jx0akagyu2el70hg82cj3u60wuq9" xml:space="preserve">{{Actor|
+| type = Explosive
+| name = Poison bolt
+| class = PoisonBolt
+| game = Strife
+| convid = 102
+}}[[Classes]]: &lt;u&gt;PoisonBolt&lt;/u&gt;&lt;br&gt;
+A poison bolt instantly kills most monsters. It deals 50 damage on a monster with the {{flag|BOSS}} flag, but has no effect at all on any actor with the {{flag|NOBLOOD}} flag (boss or not).
+
+The special damage handgling is done with {{function|DoSpecialDamage}}.
+
+=== [[ZScript]] definition ===
+{{ZScriptDefinitionNote|actors/strife/weaponcrossbow.zs}}
+&lt;syntaxhighlight lang="csharp"&gt;
+class PoisonBolt : Actor
+{
+	Default
+	{
+		Speed 30;
+		Radius 10;
+		Height 10;
+		Damage 500;
+		Projectile;
+		+STRIFEDAMAGE
+		MaxStepHeight 4;
+		SeeSound "misc/swish";
+		ActiveSound "misc/swish";
+		Obituary "$OB_MPPOISONBOLT";
+	}
+	States
+	{
+	Spawn:
+		ARWP A 10 A_LoopActiveSound;
+		Loop;
+	Death:
+		AROW A 1;
+		Stop;
+	}
+	
+	override int DoSpecialDamage (Actor target, int damage, Name damagetype)
+	{
+		if (target.bNoBlood)
+		{
+			return -1;
+		}
+		if (target.health &lt; 1000000)
+		{
+			if (!target.bBoss)			
+				return target.health + 10;
+			else
+				return 50;
+		}
+		return 1;
+	}
+}
+&lt;/syntaxhighlight&gt;
+
+=== [[DECORATE]] definition ===
+{{DecorateDefinitionNote}}
+ ACTOR &lt;u&gt;PoisonBolt&lt;/u&gt; native
+ {
+   {{Property|Speed}} 30
+   {{Property|Radius}} 10
+   {{Property|Height}} 10
+   {{Property|Damage}} 500
+   {{Property|Projectile}}
+   +{{Flag|STRIFEDAMAGE}}
+   {{Property|MaxStepHeight}} 4
+   {{Property|SeeSound}} "misc/swish"
+   {{Property|ActiveSound}} "misc/swish"
+   {{Property|Obituary}} "$OB_MPPOISONBOLT" // "%o recieved a lethal dose of %k's wrath."
+   States
+   {
+   Spawn:
+     ARWP A 10 [[A_LoopActiveSound]]
+     Loop
+   Death:
+     AROW A 1
+     Stop
+   }
+ }</text>
+    <sha1>0l0jx0akagyu2el70hg82cj3u60wuq9</sha1>
+  </revision>
+</page>

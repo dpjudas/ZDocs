@@ -1,0 +1,99 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>Classes:ImageScrollerMenu</title>
+  <ns>0</ns>
+  <id>9652</id>
+  <revision>
+    <id>49858</id>
+    <parentid>49857</parentid>
+    <timestamp>2022-11-21T10:02:04Z</timestamp>
+    <contributor>
+      <username>Boondorl</username>
+      <id>2606</id>
+    </contributor>
+    <minor />
+    <origin>49858</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="4284" sha1="mmbbdyo1c03aehyrtfvzgx4w2vmzhu8" xml:space="preserve">ImageScrollerMenus are a type of [[Classes:Menu|menu]] designed to show a sequence of images and text back-to-back in a slide show like fashion. While normally used for Raze (Build engine's UI updates at 120Hz hence frames being tracked in multiples of 120), ZDoom also has full support for it.
+
+== Fields ==
+*ImageScrollerDescriptor '''mDesc''' - The menu descriptor for this menu. Contains image and text page data
+*ImageScrollerPage '''previous''' - The previous page that's currently being transitioned from
+*ImageScrollerPage '''current''' - The current page. When a transition begins this is set to the page that's being transitioned to
+*double '''start''' - The time the transition started converted to a multiple of 120
+*int '''length''' - The length of the animated transition. This is normally 30 frames at 120 FPS (or 0.25 seconds)
+*int '''dir''' - The horizontal direction to move while transitioning
+*int '''index''' - The index of the page currently being displayed
+
+== Methods ==
+=== Virtual ===
+*void '''Init'''(Menu ''parent'', ImageScrollerDescriptor ''desc'')
+
+=== Overrides ===
+*bool '''MenuEvent'''(int ''mkey'', bool ''fromcontroller'')
+*bool '''MouseEvent'''(int ''type'' int ''x'', int ''y'')
+*void '''Drawer'''()
+
+=== Non-static ===
+*''private'' void '''StartTransition'''(ImageScrollerPage ''to'', int ''animtype'')
+*''private'' bool '''DrawTransition'''()
+
+== Image Scroller Descriptors ==
+&lt;code&gt;ImageScrollerDescriptor&lt;/code&gt; is a subclass of MenuDescriptor and stores all the information about the items that exist within the scroller as specified by the MENUDEF file.
+
+=== Fields ===
+*Array&lt;ImageScrollerPage&gt; '''mItems''' - The list of all pages that exist in the image scroller
+*Font '''textFont''' - The font to use when drawing text
+*TextureID '''textBackground''' - The picture to draw in the background behind the text
+*Color '''textBackgroundBrightness''' - The color to apply to the background picture of the text
+*double '''textScale''' - The scale to apply to text
+*bool '''mAnimatedTransition''' - If set to true, the menu supports animated transitions. This is only used in the menu's '''Init'''()
+*bool '''mAnimated''' - If set to true, the menu is animated and should be interpolated. This is only used in the menu's '''Init'''()
+*int '''virtWidth''' - The virtual width to use when drawing
+*int '''virtHeight''' - The virtual height to use when drawing
+
+== Image Scroller Pages ==
+&lt;code&gt;ImageScrollerPage&lt;/code&gt; is a subclass of MenuItemBase and is the core class for adding scenes to the image scroller. If you plan on adding any custom page types to use with MENUDEF, they must inherit from this class and have the prefix '''ImageScrollerPage''' in their class name.
+
+=== Fields ===
+*int '''virtWidth''' - The virtual width to use when drawing
+*int '''virtHeight''' - The virtual height to use when drawing
+
+=== Virtual Methods ===
+*void '''OnStartPage'''()
+*void '''OnEndPage'''()
+
+=== Non-static Methods ===
+*''protected'' void '''DrawText'''(Font ''fnt'', int ''color'', double ''x'', double ''y'', string ''text'')
+*''protected'' void '''DrawTexture'''(TextureID ''tex'', double ''x'', double ''y'')
+
+== Image Pages ==
+&lt;code&gt;ImageScrollerPageImageItem&lt;/code&gt; is the ImageScrollerPage subclass that acts as a base for all pages meant to only display images.
+
+=== Fields ===
+*TextureID '''mTexture''' - The texture to draw
+
+=== Overridden Methods ===
+*void '''Drawer'''(bool ''selected'')
+
+=== Non-static Methods ===
+*void '''Init'''(ImageScrollerDescriptor ''desc'', string ''patch'')
+
+== Text Pages ==
+&lt;code&gt;ImageScrollerPageTextItem&lt;/code&gt; is the ImageScrollerPage subclass that acts as a base for all pages meant to display text on a background.
+
+=== Fields ===
+*Font '''mFont''' - The font to use when drawing the text
+*BrokenLines '''mText''' - The text to display broken down into multiple lines in order to make sure it fits on the screen
+*TextureID '''mTexture''' - The picture to draw in the background behind the text
+*Color '''mBrightness''' - The color to apply to the background picture
+*double '''mTextScale''' - The scale to apply to the text
+
+=== Overridden Methods ===
+*void '''Drawer'''(bool ''selected'')
+
+=== Non-static Methods ===
+*void '''Init'''(ImageScrollerDescriptor ''desc'', string ''txt'', int ''y'' = -1)</text>
+    <sha1>mmbbdyo1c03aehyrtfvzgx4w2vmzhu8</sha1>
+  </revision>
+</page>

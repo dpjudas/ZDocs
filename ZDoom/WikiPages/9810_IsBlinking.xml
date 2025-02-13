@@ -1,0 +1,51 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>IsBlinking</title>
+  <ns>0</ns>
+  <id>9810</id>
+  <revision>
+    <id>51530</id>
+    <parentid>51529</parentid>
+    <timestamp>2024-02-02T13:09:45Z</timestamp>
+    <contributor>
+      <username>Jekyll Grim Payne</username>
+      <id>2175</id>
+    </contributor>
+    <comment>/* ZScript definition */</comment>
+    <origin>51530</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="1510" sha1="m8q4hf1bh7tq4x5mj4aaqbfyyy6x8q3" xml:space="preserve">'''{{class|Powerup}}'''
+
+{{c|virtual clearscope bool '''isBlinking'''() const}}
+
+== Usage ==
+A [[ZScript virtual functions|virtual function]] of the {{class|Powerup}} class that checks if the powerup is currently "blinking", i.e. close to running out, and returns true whenever it's "blinking out". By default, is set up in such a way that it returns true for 8 tics, then false for 8 subsequent tics.
+
+Used by the powerups themselves to determine if {{property|Powerup.Colormap}} should be applied to player's screen. Could also be used by {{class|BaseStatusBar|HUDs}}, for example, to change the opacity of the powerup's icon in the HUD.
+
+=== Return values ===
+Returns true if the powerup is currently "blinking out".
+
+== [[ZScript]] definition ==
+{{ZScriptDefinitionNote|actors/inventory/powerups.zs#L279C2-L279C68}}
+The base {{class|Powerup}} class defines it as follows:
+&lt;syntaxhighlight lang="csharp"&gt;
+	virtual clearscope bool isBlinking() const
+	{
+		return (EffectTics &lt;= BLINKTHRESHOLD &amp;&amp; (EffectTics &amp; 8) &amp;&amp; !bNoScreenBlink);
+	}
+&lt;/syntaxhighlight&gt;
+This returns true for 8 [[tic|tics]], while the powerup's &lt;code&gt;effectTics&lt;/code&gt; (the current number of remaining tics) is equal to less than {{c|BLINKTHRESHOLD}} (a constant equal to 4*32, i.e. 128) and the {{flag|INVENTORY.NOSCREENBLINK}} flag is false. Every 8 tics the value is flipped.
+
+== Examples ==
+{{noexamples}}
+
+== See also ==
+* [[Classes:Powerup]]
+* [[Powerup virtual functions]]
+
+[[Category:ZScript]]
+[[Category:ZScript virtual functions]]</text>
+    <sha1>m8q4hf1bh7tq4x5mj4aaqbfyyy6x8q3</sha1>
+  </revision>
+</page>

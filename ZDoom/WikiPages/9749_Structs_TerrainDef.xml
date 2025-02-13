@@ -1,0 +1,69 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>Structs:TerrainDef</title>
+  <ns>0</ns>
+  <id>9749</id>
+  <revision>
+    <id>53499</id>
+    <parentid>53471</parentid>
+    <timestamp>2024-11-01T12:56:51Z</timestamp>
+    <contributor>
+      <username>Blue Shadow</username>
+      <id>2021</id>
+    </contributor>
+    <minor />
+    <comment>/* Fields */</comment>
+    <origin>53499</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="4102" sha1="sn5yig0fumfxxr1k8jy4mormddzsjx3" xml:space="preserve">{{ZScriptNote}}
+
+'''TerrainDef''' is a [[ZScript]] [[structs|struct]] that contains information about a texture that is defined through the [[TERRAIN]] lump. A TerrainDef of a specific floor texture can be obtained with [[GetFloorTerrain]].
+
+==Fields==
+*{{c|Name '''TerrainName'''}}
+:The name of the Terrain definition.
+*{{c|int '''Splash'''}}
+:The index of the splash actor spawned by this terrain. &lt;u&gt;Currently this is not useful in ZScript&lt;/u&gt;, because it doesn't correspond to a splash definition name, and the function that could obtain this index from a splash name is not exposed to ZScript.
+*{{c|int '''DamageAmount'''}}
+:The amount of damage dealt to player when they step onto this terrain. Corresponds to the &lt;code&gt;DamageAmount&lt;/code&gt; property of the terrain definition.
+*{{c|Name '''DamageMOD'''}}
+:The {{property|DamageType}} dealt to player when they step onto this terrain. Corresponds to the &lt;code&gt;DamageType&lt;/code&gt; property of the terrain definition.
+*{{c|int '''DamageTimeMask'''}}
+:Determines how often this terrain deals damage. Corresponds to the &lt;code&gt;DamageTimeMask&lt;/code&gt; property of the terrain definition.
+*{{c|double '''FootClip'''}}
+:The number of pixels an actors will "sink" into this terrain. Corresponds to the &lt;code&gt;FootClip&lt;/code&gt; property of the terrain definition.
+*{{c|bool '''IsLiquid'''}}
+:True if the terrain is defined as liquid. Corresponds to the &lt;code&gt;liquid&lt;/code&gt; property of the terrain definition.
+*{{c|bool '''AllowProtection'''}}
+:True if [[Classes:PowerIronFeet|PowerIronFeet]]-based items should be able to protect from the damage of this terrain. Corresponds to the &lt;code&gt;AllowProtection&lt;/code&gt; property of the terrain definition.
+*{{c|bool '''DamageOnLand'''}}
+:True if this terrain can deal falling damage. Corresponds to the &lt;code&gt;DamageOnLand&lt;/code&gt; property of the terrain definition.
+*{{c|double '''Friction'''}}
+:The friction factor of this terrain. Corresponds to the &lt;code&gt;Friction&lt;/code&gt; property of the terrain definition.
+*{{c|double '''MoveFactor'''}}
+:The movement factor of this terrain. Corresponds to the &lt;code&gt;MoveFactor&lt;/code&gt; property of the terrain definition.
+
+The following fields deal with the footstep sounds. For more information, [[Footsteps|read here]].
+*{{c|float '''StepVolume'''}}
+:The volume of footstep sounds produced by this terrain. Corresponds to the &lt;code&gt;StepVolume&lt;/code&gt; property of the terrain definition. 
+*{{c|int '''WalkStepTics'''}}
+:The frequency in [[tic|tics]] of footstep sounds produced by this terrain while walking. Corresponds to the &lt;code&gt;WalkStepTics&lt;/code&gt; property of the terrain definition.
+*{{c|int '''RunStepTics'''}}
+:The frequency in [[tic|tics]] of footstep sounds produced by this terrain while running. Corresponds to the &lt;code&gt;RunStepTics&lt;/code&gt; property of the terrain definition. 
+*{{c|Sound '''LeftStepSound'''}}
+:The "left foot" step sound produced by the terrain. Corresponds to the &lt;code&gt;LeftStepSounds&lt;/code&gt; property of the terrain definition. 
+*{{c|Sound '''RightStepSound'''}}
+:The "right foot" step sound produced by the terrain. Corresponds to the &lt;code&gt;RightStepSounds&lt;/code&gt; property of the terrain definition. 
+*{{c|Sound '''StepSound'''}} {{git|12d1afc}}
+:A generic, foot-agnostic step sound produced by the terrain. By default, this sound takes precedence over the foot-specific sounds when a player with the {{flag|PLAYERPAWN.MAKEFOOTSTEPS|MAKEFOOTSTEPS}} flag set walks over a sector with this terrain. Corresponds to the &lt;code&gt;StepSounds&lt;/code&gt; property of the terrain definition. 
+*{{c|double '''StepDistance'''}} {{git|d07d08c}}
+:A distance (As opposed to time-based, like the Walk/RunStepTics parameters) interval for footsteps. Used by the default footstep system for making steps based on how much and how fast the player is moving, as opposed to set time intervals where the player moves on the terrain.
+*{{c|double '''StepDistanceMinVel'''}} {{git|d07d08c}}
+:If {{c|StepDistance}} isn't 0. This is the velocity the player must have been going at when the distance interval was reached, for a footstep to happen.
+
+
+[[Category:ZScript]]
+[[Category:Structs]]</text>
+    <sha1>sn5yig0fumfxxr1k8jy4mormddzsjx3</sha1>
+  </revision>
+</page>

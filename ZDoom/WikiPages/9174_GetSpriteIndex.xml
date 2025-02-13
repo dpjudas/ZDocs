@@ -1,0 +1,90 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>GetSpriteIndex</title>
+  <ns>0</ns>
+  <id>9174</id>
+  <revision>
+    <id>51855</id>
+    <parentid>51854</parentid>
+    <timestamp>2024-02-20T18:13:05Z</timestamp>
+    <contributor>
+      <username>Jekyll Grim Payne</username>
+      <id>2175</id>
+    </contributor>
+    <comment>/* Usage */</comment>
+    <origin>51855</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="2238" sha1="a2i2dtn75qu9tfqgcslj463j9thnmzu" xml:space="preserve">{{ZScriptNote}}
+
+'''[[Classes:Actor|Actor]]'''
+
+native static int '''GetSpriteIndex'''(name ''sprt'')
+
+==Usage==
+Returns a [[SpriteID]] for the provided four letters of a sprite name. Can be used to modify the actor's sprite dynamically, by setting the result value to the actor's &lt;code&gt;sprite&lt;/code&gt; field.
+
+{{Warning|In order to be able to modify an actor's sprite directly, the SpriteID in question must be loaded into memory. For that to happen, the sprite name must be defined somewhere in an actor. It can be ''any'' actor, and the actor in question doesn't have to spawn, it just needs to be defined somewhere in the code.
+Only sprite name is relevant, while frame letters are not: for example, using {{c|ZOMB A 0}} will load all sprites that start with "ZOMB" into memory.}}
+
+== Example ==
+This torch will randomly take an appearance of {{class|RedTorch}}, {{class|BlueTorch}} or {{class|GreenTorch}}. The sprite names are stored in a [[ZScript_variables#Arrays|static array]] and the sprite is set in {{c|[[PostBeginPlay]]}}.
+&lt;syntaxhighlight lang="csharp"&gt;
+class RandomTallTorch : RedTorch 
+{
+    static const name torchSprites[] = 
+    {
+        'TRED',
+        'TBLU',
+        'TGRN'
+    };
+
+    override void PostBeginPlay() 
+    {
+        super.PostBeginPlay();
+        sprite = GetSpriteIndex(torchSprites[random(0, torchSprites.Size()-1)]);
+    }
+
+    States 
+    {
+    Spawn:
+        #### ABCD 4 bright;
+        loop;
+    }
+}&lt;/syntaxhighlight&gt;
+
+This is a variation of the same example that also uses {{c|[[A_AttachLightDef]]}} to attach a dynamic light to the torch:
+&lt;syntaxhighlight lang="csharp"&gt;
+class RandomTallTorchWithALight : RedTorch 
+{
+    static const name torchSprite[] = 
+    {
+        'TRED',
+        'TBLU',
+        'TGRN'
+    };
+    static const name torchLight[] = 
+    {
+        'BIGREDTORCH',
+        'BIGBLUETORCH',
+        'BIGGREENTORCH'
+    };
+    override void PostBeginPlay() 
+    {
+        super.PostBeginPlay();
+        int i = random(0,2);
+        sprite = GetSpriteIndex(torchSprite[i]);
+        A_AttachLightDef("0",torchLight[i]);
+    }
+    States 
+    {
+    Spawn:
+        #### ABCD 4 bright;
+        loop;
+    }
+}&lt;/syntaxhighlight&gt;
+
+[[Category:ZScript]]
+[[Category:Actor static functions]]</text>
+    <sha1>a2i2dtn75qu9tfqgcslj463j9thnmzu</sha1>
+  </revision>
+</page>

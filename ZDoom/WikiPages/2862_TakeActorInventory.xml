@@ -1,0 +1,89 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>TakeActorInventory</title>
+  <ns>0</ns>
+  <id>2862</id>
+  <revision>
+    <id>45631</id>
+    <parentid>35663</parentid>
+    <timestamp>2017-10-17T22:44:47Z</timestamp>
+    <contributor>
+      <username>Sunbeam</username>
+      <id>2562</id>
+    </contributor>
+    <comment>Added info about passing 0 as TID.</comment>
+    <origin>45631</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="2419" sha1="sdvhkcavzid088mzufclb8g6xxzywn6" xml:space="preserve">void '''TakeActorInventory'''(int ''tid'', str ''inventory_item'', int ''amount'');
+
+==Usage==
+
+This function will take the amount of items from the specified actor. In the case of ammo, health and armor it will take the total number (so &lt;code&gt;[[TakeActorInventory]](3, "{{class|Shell}}", 5)&lt;/code&gt; and &lt;code&gt;[[TakeActorInventory]](3, "{{class|ShellBox}}", 5)&lt;/code&gt; will both take five shells from actors with a TID of 3).
+
+If 0 is given as TID then the specified items will be removed from ALL players.
+
+Unlike [[ClearActorInventory]], [[TakeActorInventory]] can remove items that are {{flag|INVENTORY.UNDROPPABLE|flagged as undroppable}}.
+
+See the [[inventory]] page for a list of items in ZDoom. 
+
+== Examples ==
+In this example, when a player activates script 2, they will steal the most powerful weapon that can be found (in the order given in the weapon string array) from the first player that can be found with it at random. This results in the activating player gaining the weapon and the player found with said weapon losing it.
+
+ str weapon[7] = {
+     "{{class|Chainsaw}}",
+     "{{class|Shotgun}}",
+     "{{class|SuperShotgun}}",
+     "{{class|Chaingun}}",
+     "{{class|RocketLauncher}}",
+     "{{class|PlasmaRifle}}",
+     "{{class|BFG9000}}"
+ };
+ 
+ bool player_checked[8];
+ 
+ script 1 enter
+ {
+     [[Thing_ChangeTID]](0, 1000 + [[PlayerNumber]]());
+ }
+ 
+ script 2 (void)
+ {
+     int w, p, take, count;
+     for (w=6; w&gt;=0; w--) 
+     {
+         while (count &lt; [[PlayerCount]]() &amp;&amp; !take) 
+         {
+             count = 1;
+             do {
+                 p = [[random]](0, 7); 
+             } while (![[PlayerInGame]](p) || player_checked[p] || p == [[PlayerNumber]]());
+ 
+             if (![[CheckActorInventory]](1000 + p, weapon[w])) 
+             {
+                 count++;
+                 player_checked[p] = 1;
+             }
+             else if([[CheckActorInventory]](1000 + p, weapon[w]))
+             {
+                 [[TakeActorInventory]](1000 + p, weapon[w], 1);
+                 [[GiveInventory]](weapon[w], 1);
+                 take = 1;
+                 w = -1;
+             }
+         }
+ 
+         for (p=0; p&lt;8; p++)
+             player_checked[p] = 0;
+      }
+  }
+
+==See also==
+*[[GiveActorInventory]]
+*[[TakeInventory]]
+*[[ClearActorInventory]]
+*[https://forum.zdoom.org/viewtopic.php?p=311865#p311865 Info on ZDoom forum about TID 0]
+
+[[category:ACS Inventory functions]]</text>
+    <sha1>sdvhkcavzid088mzufclb8g6xxzywn6</sha1>
+  </revision>
+</page>

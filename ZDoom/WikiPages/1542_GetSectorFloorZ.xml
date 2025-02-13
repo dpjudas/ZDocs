@@ -1,0 +1,50 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>GetSectorFloorZ</title>
+  <ns>0</ns>
+  <id>1542</id>
+  <revision>
+    <id>44122</id>
+    <parentid>41056</parentid>
+    <timestamp>2017-03-20T11:13:19Z</timestamp>
+    <contributor>
+      <username>Gez</username>
+      <id>1283</id>
+    </contributor>
+    <minor />
+    <comment>removing "new" for GZDoom 2.4.0 release</comment>
+    <origin>44122</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="1879" sha1="44p0epbt30tkfjzhfa26x60go6fuqrz" xml:space="preserve">__NOTOC__
+fixed '''GetSectorFloorZ''' (int ''tag'', int ''x'', int ''y'');
+
+== Usage ==
+This returns the [[sector]] floor height at coordinates [''x'', ''y''].
+
+=== Parameters ===
+* ''tag'': [[Tag]] of the sector.
+* ''x'', ''y'': Coordinates of the point (not [[Fixed point numbers|fixed point]] value!).
+
+=== Return value ===
+
+Returns the sector floor height at coordinates [''x'', ''y''] as a [[Fixed point numbers|fixed point]] value. When used on sectors which share tags, it will return the floor height of the sector with the lowest sector number and the matching tag. If the sector is flat (floor is not [[slope]]d), this will just return the floor height no matter where the coordinates are specified, so [0, 0] is as good as anywhere. If the sector is sloped and the coordinates are specified in an area outside of the the sector, a projected height (the height the floor would be if the sector were extended to that area) is returned. If ''tag'' is 0, the function returns the floor height of whatever sector is found at [''x'', ''y''].
+
+== Examples ==
+
+This script should be run via an “[[Thing executed specials|Actor enters sector]]” special, or by assigning it to the lines around a platform. It makes the platform raise every time the player stands on it, and when it is too high from the surrounding floor (assumed to be 0.0) then it reports that the player cannot climb on to the platform another time.
+
+ script 1 (int sector)
+ {
+     [[Floor_RaiseByValue]] (sector, 10, 8);
+     [[TagWait]] (sector);
+  
+     if ([[GetSectorFloorZ]] (sector, 0, 0) &gt; 24.0)
+         [[Print]] (s:"This platform is too\nhigh to climb on!");
+ }
+
+Another use of this command is creating lifts which run to a number of floors one after the other and then return to their start floor. This command can detect if they are at specific floors.
+
+[[category:ACS Information functions]]</text>
+    <sha1>44p0epbt30tkfjzhfa26x60go6fuqrz</sha1>
+  </revision>
+</page>

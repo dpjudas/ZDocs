@@ -1,0 +1,36 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>Gravity</title>
+  <ns>0</ns>
+  <id>7411</id>
+  <revision>
+    <id>32933</id>
+    <timestamp>2012-05-14T17:33:20Z</timestamp>
+    <contributor>
+      <username>Gez</username>
+      <id>1283</id>
+    </contributor>
+    <comment>page creation</comment>
+    <origin>32933</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="1592" sha1="1a6jrr668gc7cjettzhvfn4kqenpffm" xml:space="preserve">The '''gravity''' in [[ZDoom]] works as normal in the Doom engine: it corresponds to a value which is added to a thing's vertical velocity linearly each [[tic]]. During the first tic of free fall, that value is added twice.
+
+However, ZDoom offers multiple ways in which the gravity value is affected, instead of being a constant as in [[vanilla Doom]]. An actor's gravity factor is the product of the following factors:
+#The [[level]]'s overall gravity, as defined in [[MAPINFO]] with the {{c|gravity}} map property. Note that this value is set on a scale of 800.
+#The [[sector]]'s own gravity, as defined in [[UDMF]] with the {{c|gravity}} sector property and in [[Hexen format]] with the [[Static_Init]] special; possibly modified with [[Sector_SetGravity]].
+#The [[actor]]'s own {{Property|Gravity}} property in [[DECORATE]], possibly modified through [[ACS]] with the [[ACS actor properties|APROP_Gravity]] property.
+Internally, the default values are all 1.0, so a fall lasting one second (35 tics) gives an accumulated speed of 36 in the default conditions.
+
+In addition, being [[underwater]] also affects gravity depending on the depth of immersion: a {{c|waterlevel}} of 1 divides it by 16; a waterlevel of 2 or 3 divides it by 8.
+
+Although you are advised to use MAPINFO for it, level gravity can also be affected with [[FraggleScript]] with either {{c|gravity &lt;int value&gt;}} on a scale of 100 or with {{c|consolecmd gravity &lt;float value&gt;}} on a scale of 1.
+
+==See also==
+* [[Falling damage]]
+* [[Sector_SetGravity]]
+* [[Swimming]]
+
+[[Category:Glossary]][[Category:Technical aspects]]</text>
+    <sha1>1a6jrr668gc7cjettzhvfn4kqenpffm</sha1>
+  </revision>
+</page>

@@ -1,0 +1,51 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>Classes:ArtiTeleportOther</title>
+  <ns>0</ns>
+  <id>4692</id>
+  <revision>
+    <id>39695</id>
+    <parentid>38868</parentid>
+    <timestamp>2015-05-02T21:44:54Z</timestamp>
+    <contributor>
+      <username>Blue Shadow</username>
+      <id>2021</id>
+    </contributor>
+    <minor />
+    <comment>/* DECORATE definition */ Updated</comment>
+    <origin>39695</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="999" sha1="7bayonybl5uvqr34iyv45x5qfzd7398" xml:space="preserve">{{Actor|
+| type = Artifact
+| name = Banishment device
+| class = ArtiTeleportOther
+| game = Hexen
+| doomednum = 10040
+| spawnid = 17
+| spawnname = T_ITEMTPORTOTHER 
+}}[[Classes]]: [[Classes:Inventory|Inventory]]&amp;rarr;&lt;u&gt;ArtiTeleportOther&lt;/u&gt;&lt;br&gt;
+This artifact is used for Hexen's "Banishment Device". When activated, a projectile ({{Class|TelOtherFX1}}) is launched which teleports the hit enemy to a random deathmatch start.
+
+==== [[DECORATE]] definition ====
+ ACTOR &lt;u&gt;ArtiTeleportOther&lt;/u&gt; : {{Class|Inventory}} native
+ {
+   +{{Flag|COUNTITEM}}
+   +{{Flag|FLOATBOB}}
+   +{{Flag|INVENTORY.INVBAR}}
+   +{{Flag|INVENTORY.PICKUPFLASH}}
+   +{{Flag|INVENTORY.FANCYPICKUPSOUND}}
+   {{Property|Inventory.DefMaxAmount}}
+   {{Property|Inventory.Icon}} "ARTITELO"
+   {{Property|Inventory.PickupSound}} "misc/p_pkup"
+   {{Property|Inventory.PickupMessage}} "$TXT_ARTITELEPORTOTHER" // "BANISHMENT DEVICE"
+   {{Property|Tag}} "$TAG_ARTITELEPORTOTHER"
+   States
+   {
+   Spawn:
+     TELO ABCD 5
+     Loop
+   }
+ }</text>
+    <sha1>7bayonybl5uvqr34iyv45x5qfzd7398</sha1>
+  </revision>
+</page>

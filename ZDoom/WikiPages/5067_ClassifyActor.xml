@@ -1,0 +1,72 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>ClassifyActor</title>
+  <ns>0</ns>
+  <id>5067</id>
+  <revision>
+    <id>35678</id>
+    <parentid>35101</parentid>
+    <timestamp>2013-02-10T02:20:16Z</timestamp>
+    <contributor>
+      <username>Deded007</username>
+      <id>1392</id>
+    </contributor>
+    <minor />
+    <comment>/* Examples */  formatting</comment>
+    <origin>35678</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="2149" sha1="3j3gu5b1b08wg1pyynrcv8pzbp3tas5" xml:space="preserve">__NOTOC__
+int '''ClassifyActor''' (int ''tid'')
+
+== Usage ==
+
+Returns information about the specified actor.
+
+=== Parameters ===
+
+* ''tid'': TID of the actor. Use 0 to refer to the script activator.
+
+=== Return Value ===
+
+The function usually returns a bitfield where each bit in the result value corresponds to a value defined in zcommon.acs. The exception is when no actor with the specified TID is found, in which case the return value is 0.
+
+Currently defined values include:
+
+* '''ACTOR_NONE''' (0): Only returned if ''tid'' was non-zero, and there were no actors found with that TID.
+* '''ACTOR_WORLD''' (1): Only returned if ''tid'' was zero, but the activator is the world rather than an actor.
+* '''ACTOR_PLAYER''' (2): The actor is a player.
+* '''ACTOR_BOT''' (4): The actor is a bot.
+* '''ACTOR_VOODOODOLL''' (8): The actor is a “voodoo doll”. (An extra copy of a player present in the map that does not have any AI but passes damage taken to the corresponding player when injured.)
+* '''ACTOR_MONSTER''' (16): The actor is an enemy.
+* '''ACTOR_ALIVE''' (32): The actor is currently alive.
+* '''ACTOR_DEAD''' (64): The actor is currently dead.
+* '''ACTOR_MISSILE''' (128): The actor is a missile in flight.
+* '''ACTOR_GENERIC''' (256): The actor is neither a missile nor an enemy. (The actor may be a decoration, invisible marker such as a teleport destination, etc.)
+
+Since the return value is a bitfield, the individual bits can be checked by using a bitwise-AND (&lt;tt&gt;&amp;&lt;/tt&gt;) comparison, as shown in the following examples.
+
+== Examples ==
+
+This script does nothing if the activator is a monster.
+
+ script 1 (void) 
+ {
+   if (!([[ClassifyActor]](0) &amp; {{const|ACTOR_MONSTER}}))
+     [[Print]](s:"Congratulations, you are not a monster!");
+ }
+
+
+This script automatically exits when the actor it affects disappears or loses its TID. Note that it uses a direct comparison to check for &lt;tt&gt;ACTOR_NONE&lt;/tt&gt; rather than a bitwise-AND.
+
+ script 7 (int target) 
+ {
+   while ([[ClassifyActor]](target) != {{const|ACTOR_NONE}})
+     [[Delay]](70);
+     
+  [[ThingSound]](target, "misc/tracker", 127);
+ }
+
+[[category:ACS Information functions]]</text>
+    <sha1>3j3gu5b1b08wg1pyynrcv8pzbp3tas5</sha1>
+  </revision>
+</page>

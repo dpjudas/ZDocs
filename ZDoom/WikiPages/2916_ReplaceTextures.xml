@@ -1,0 +1,50 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>ReplaceTextures</title>
+  <ns>0</ns>
+  <id>2916</id>
+  <revision>
+    <id>35847</id>
+    <parentid>33027</parentid>
+    <timestamp>2013-02-11T01:33:13Z</timestamp>
+    <contributor>
+      <username>Deded007</username>
+      <id>1392</id>
+    </contributor>
+    <minor />
+    <comment>formatting</comment>
+    <origin>35847</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="1067" sha1="cx99ursb109mn37rzfxllc2pl8s1p2k" xml:space="preserve">void '''ReplaceTextures''' (str ''oldtexturename'', str ''newtexturename'' [, int ''flags'']);
+
+== Usage ==
+
+Replaces all occurences of ''oldtexturename'' with ''newtexturename''.
+
+=== Parameters ===
+
+* ''oldtexturename'': the texture being replaced.
+* ''newtexturename'': the new texture to be applied.
+* ''flags'': the following flags are supported for this function and can be combined using the logical or operator | :
+:*NOT_BOTTOM: Do not change any bottom textures on walls.
+:*NOT_MIDDLE: Do not change any middle textures on walls.
+:*NOT_TOP: Do not change any top textures on walls.
+:*NOT_FLOOR: Do not change any floor textures.
+:*NOT_CEILING: Do not change any ceiling textures.
+
+== Examples ==
+
+The following script changes the generic floor into blood after 60 tics:
+
+ script 1 {{SType|Open}}
+ {
+   [[Delay]](60);
+   [[ReplaceTextures]]("FLOOR0_1","BLOOD1");
+ }
+
+If used in a correct way, this feature can be used to scare the player (eg. if the walls turn into a mess of gore after pressing a certain switch).
+
+[[category:ACS Level alteration functions]]</text>
+    <sha1>cx99ursb109mn37rzfxllc2pl8s1p2k</sha1>
+  </revision>
+</page>

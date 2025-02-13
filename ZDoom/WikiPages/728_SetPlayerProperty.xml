@@ -1,0 +1,78 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>SetPlayerProperty</title>
+  <ns>0</ns>
+  <id>728</id>
+  <revision>
+    <id>52943</id>
+    <parentid>50622</parentid>
+    <timestamp>2024-08-22T05:46:55Z</timestamp>
+    <contributor>
+      <username>Blue Shadow</username>
+      <id>2021</id>
+    </contributor>
+    <minor />
+    <comment>remove {{new}}</comment>
+    <origin>52943</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="4465" sha1="43ffqmg7h2ef3ekyodci3js4z3d1i53" xml:space="preserve">{{Special|191|who, set, which|Miscellaneous}}
+
+* ''who'': Set to 1 to affect all players, 0 for just the one who activated the special.
+* ''set'': Set to 1 to turn on the property, or 0 to turn it off. '''PROP_INVULNERABILITY''' has a special use for this field.
+* ''which'': Which property to change
+
+Sets a property for a player.
+
+{{note|text=Using this special to grant powerup effects to players has been [[deprecation|deprecated]]. Consider using the [[GiveInventory]] function for this purpose instead.}}
+
+* 0&amp;nbsp;&amp;mdash; '''PROP_FROZEN'''&amp;nbsp;&amp;mdash; The player cannot move, but can still fire and perform other actions. (In order to instantly freeze the player in place, use in conjunction with [[Thing_Stop]] to set the player's current momentum to zero.)
+* 1&amp;nbsp;&amp;mdash; '''PROP_NOTARGET'''&amp;nbsp;&amp;mdash; Monsters ignore the player, unless they have already seen him or the player harms them.
+* 2&amp;nbsp;&amp;mdash; '''PROP_INSTANTWEAPONSWITCH'''&amp;nbsp;&amp;mdash; The weapons do not delay between changing them.
+* 3&amp;nbsp;&amp;mdash; '''PROP_FLY'''&amp;nbsp;&amp;mdash; The player is (not) subjected to gravity. The behavior is about the same as having Heretic's/Hexen's Wings of Wrath.
+* 4&amp;nbsp;&amp;mdash; '''PROP_TOTALLYFROZEN'''&amp;nbsp;&amp;mdash; Same as '''PROP_FROZEN''', but does not allow the player to look around or shoot. (In fact, the only control they can still use is the “+use” key)
+* 5&amp;nbsp;&amp;mdash; '''PROP_INVULNERABILITY''' {{deprecated}} &amp;nbsp;&amp;mdash; Invulnerability sphere. Using a "set" value of 1 makes the player(s) invulnerable ''and'' applies the inverted greyscale invulnerable palette.  Using a "set" value of 2 makes the player(s) invulnerable but does not apply the invulnerability palette. [[SetActorProperty]] with APROP_Invulnerable or APROP_DamageFactor is a valid substitution.
+* 6&amp;nbsp;&amp;mdash; '''PROP_STRENGTH''' {{deprecated}}&amp;nbsp;&amp;mdash; Berserk pack
+* 7&amp;nbsp;&amp;mdash; '''PROP_INVISIBILITY''' {{deprecated}}&amp;nbsp;&amp;mdash; Partial Invisibility sphere
+* 8&amp;nbsp;&amp;mdash; '''PROP_RADIATIONSUIT''' {{deprecated}}&amp;nbsp;&amp;mdash; Radiation suit
+* 9&amp;nbsp;&amp;mdash; '''PROP_ALLMAP''' {{deprecated}}&amp;nbsp;&amp;mdash; Computer area map
+* 10&amp;nbsp;&amp;mdash; '''PROP_INFRARED''' {{deprecated}}&amp;nbsp;&amp;mdash; Light Amplification Goggles
+* 11&amp;nbsp;&amp;mdash; '''PROP_WEAPONLEVEL2''' {{deprecated}}&amp;nbsp;&amp;mdash; Tome of Power
+* 12&amp;nbsp;&amp;mdash; '''PROP_FLIGHT''' {{deprecated}}&amp;nbsp;&amp;mdash; Wings of Wrath
+* 13&amp;nbsp;&amp;mdash; '''PROP_UNUSED1'''&amp;nbsp;&amp;mdash; Does nothing. Do not use.
+* 14&amp;nbsp;&amp;mdash; '''PROP_UNUSED2'''&amp;nbsp;&amp;mdash; Does nothing. Do not use.
+* 15&amp;nbsp;&amp;mdash; '''PROP_SPEED''' {{deprecated}}&amp;nbsp;&amp;mdash; Speed boots
+* 16&amp;nbsp;&amp;mdash; '''PROP_BUDDHA'''&amp;nbsp;&amp;mdash; Buddha Mode (1 indestructible hit point)
+* 17&amp;nbsp;&amp;mdash; '''PROP_BUDDHA2'''&amp;nbsp;&amp;mdash; Ultimate buddha mode, the player will be kept at 1 health even against hazards that normally kill them with normal buddha, such as instant kill floors.
+* 18&amp;nbsp;&amp;mdash; '''PROP_FRIGHTENING'''&amp;nbsp;&amp;mdash; The player scares away any monsters targeting them which do not have {{flag|NOFEAR}} enabled.
+* 19&amp;nbsp;&amp;mdash; '''PROP_NOCLIP'''&amp;nbsp;&amp;mdash; The player can walk right through any blocking actors and level geometry.
+* 20&amp;nbsp;&amp;mdash; '''PROP_NOCLIP2'''&amp;nbsp;&amp;mdash; Same as above, but the player can also fly around, similar to Quakes' noclip. Allowing them to also noclip straight through [[3D floors]].
+* 21&amp;nbsp;&amp;mdash; '''PROP_GODMODE'''&amp;nbsp;&amp;mdash; Degreelessness mode. The player is invulnerable to most damage, barring some hazards such as telefragging and instant kill sectors.
+* 22&amp;nbsp;&amp;mdash; '''PROP_GODMODE2'''&amp;nbsp;&amp;mdash; Ultimate degreeless mode. The player is immune to any and all damage.
+
+==Examples==
+This function is almost like an ACS pause game function, and can be toggled on and off.
+ Function void PlayerFreeze (bool IsOn)
+ {
+ 	if(IsOn)
+ 	{
+ 		[[Thing_Stop]](TID_Player);
+ 		'''SetPlayerProperty'''({{const|TRUE}}, {{const|ON}}, {{const|PROP_TotallyFrozen}});
+ 		if([[CheckActorInventory]](TID_Player, "{{Class|PowerTimeFreezer}}") == 0)
+ 			[[GiveActorInventory]](TID_Player, "PowerGiver_ACSTimeFreeze", 1);
+ 	}
+ 	else
+ 	{
+ 		'''SetPlayerProperty'''({{const|TRUE}}, {{const|OFF}}, {{const|PROP_TotallyFrozen}});
+ 		[[TakeActorInventory]](TID_Player, "PowerTimeFreezer", 0x7fffffff);
+ 	}
+ }
+
+== See also ==
+* [[Structs:PlayerInfo]]
+* [[Structs:PlayerInfo#Setting_player_properties_directly|Setting player properties directly (ZScript)]]
+
+==External links==
+* {{oldref}}</text>
+    <sha1>43ffqmg7h2ef3ekyodci3js4z3d1i53</sha1>
+  </revision>
+</page>

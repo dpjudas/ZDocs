@@ -1,0 +1,46 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>GetSectorLightLevel</title>
+  <ns>0</ns>
+  <id>2852</id>
+  <revision>
+    <id>35768</id>
+    <parentid>22239</parentid>
+    <timestamp>2013-02-10T07:50:17Z</timestamp>
+    <contributor>
+      <username>Deded007</username>
+      <id>1392</id>
+    </contributor>
+    <minor />
+    <comment>formatting</comment>
+    <origin>35768</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="616" sha1="fw8469a4xekvh8wnzn7sutho6ezzo6j" xml:space="preserve">__NOTOC__
+int '''GetSectorLightLevel''' (int ''tag'')
+
+== Usage ==
+
+This returns the sector's light level.
+
+=== Parameters ===
+
+* ''tag'': Tag of the sector.
+
+=== Return value ===
+
+Returns the sector's light level as a value between 0 and 255. When used on sectors which share tags, it will return the light level of the sector with the lowest sector number and the matching tag.
+
+== Examples ==
+
+ script 1 (int sector)
+ {
+     int l = [[GetSectorLightLevel]] (sector);
+     [[Light_ChangeToValue]] (sector, 8);
+     [[Delay]] (8);
+     [[Light_ChangeToValue]] (sector, l);
+ }
+
+[[category:ACS Information functions]]</text>
+    <sha1>fw8469a4xekvh8wnzn7sutho6ezzo6j</sha1>
+  </revision>
+</page>

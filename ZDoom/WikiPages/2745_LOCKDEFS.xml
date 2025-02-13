@@ -1,0 +1,112 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>LOCKDEFS</title>
+  <ns>0</ns>
+  <id>2745</id>
+  <revision>
+    <id>48713</id>
+    <parentid>46891</parentid>
+    <timestamp>2021-09-13T20:05:06Z</timestamp>
+    <contributor>
+      <username>Zrrion the insect</username>
+      <id>2062</id>
+    </contributor>
+    <minor />
+    <comment>added ref to zscript</comment>
+    <origin>48713</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="3898" sha1="tdob9d752e5iit7ifv9ez9wjjzyon93" xml:space="preserve">'''LOCKDEFS''' is used to assign keys to locks. [[ZDoom]] already defines a number of [[key types|default lock numbers]], use LOCKDEFS if you need a lock type that isn't already available.
+
+If you want to use custom keys you have to add a '''[[DECORATE]]''' or '''[[ZScript]]''' lump as well.
+
+The '''LOCKDEFS''' lump supports the following commands:
+
+*'''CLEARLOCKS'''
+:This clears all lock definitions from previous definitions. Use this only if you do not want to use any of the original locks, or if you intend to redefine all of them. Be careful with this: The order in which the keys are defined is important for display on the Doom and Heretic status bar which only have very limited means of displaying keys the player is carrying. If you just want to add more locks to the game you should not use '''CLEARLOCKS'''.
+
+*'''LOCK''' ''locknumber'' [''game'']&lt;br&gt;
+::{&lt;br&gt;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;''definition''&lt;br&gt;}
+:Defines one lock. The number is the one you have to use with the lock parameter of the [[Door_LockedRaise]] or [[ACS_LockedExecute]] [[action specials]], among others. The number can be any positive value. Optionally, you can specify the game this is to be used for. For user WADs this information is not necessary. It is here for the internal definition lump which contains lock definitions for all games.
+:The ''definition'' block can contain the following commands
+:* ''any key name''
+::The player must own this key to open the lock
+:* '''ANY { keyname1 keyname2 ... }
+::The player must own one of the listed keys to open this lock
+:* By specifying more of these commands locks can be created that need several keys.
+:*'''MESSAGE''' doormessage
+::The message that is printed when the player tries to open a door without having all the keys. You can specify a string from the language lump by passing its name prefixed by a '$'.
+:*'''REMOTEMESSAGE''' doormessage
+::The message that is printed when the player tries to press a remote switch without having all the keys.
+:*'''MAPCOLOR''' r g b
+::The color any linedef with this lock should have on the automap. 
+:*'''LOCKEDSOUND''' soundname
+::Defines the sound that is played when a player tries to open the door without having the required keys.
+
+== Examples ==
+
+ Lock 1
+ {
+ 	{{Class|RedCard}}
+ 	Message "$PD_REDC"
+ 	RemoteMessage "You need a red card to activate this object"
+ 	Mapcolor 255 0 0
+ }
+
+This defines a single key lock with one message coming from the [[LANGUAGE]] lump.
+
+ Lock 129
+ {
+ 	Any { {{Class|RedCard}} {{Class|RedSkull}} {{Class|KeyGreen}} }
+ 	Message "$PD_REDK"
+ 	RemoteMessage "$PD_REDO"
+ 	Mapcolor 255 0 0
+ }
+
+This defines a lock that can be open with either of the 3 specified keys. Both messages are taken from the [[LANGUAGE]] lump.
+
+ Lock 100
+ {
+ 	Message "Any key will open this door"
+ 	RemoteMessage "Any key will activate this object"
+ 	Mapcolor 128 128 255
+ }
+
+This defines a lock that can be opened with any key.
+
+ Lock 229
+ {
+ 	Any { {{Class|BlueCard}} {{Class|BlueSkull}} {{Class|KeyBlue}} }
+ 	Any { {{Class|YellowCard}} {{Class|YellowSkull}} {{Class|KeyYellow}} }
+ 	Any { {{Class|RedCard}} {{Class|RedSkull}} {{Class|KeyGreen}} }
+ 	Message "$PD_ALL3"
+ 	RemoteMessage "You need all three keys to activate this object"
+ }
+
+This defines a lock that requires 3 keys to open, one out of each group.
+
+ Lock 101
+ {
+ 	{{Class|BlueCard}}
+ 	{{Class|BlueSkull}}
+ 	{{Class|YellowCard}}
+ 	{{Class|YellowSkull}}
+ 	{{Class|RedCard }}
+ 	{{Class|RedSkull}}
+ 	Message "$PD_ALL6"
+ 	RemoteMessage "You need all six keys to activate this object"
+ }
+
+This defines a lock that requires 6 keys to open.
+
+==Action specials==
+The following five action specials use lock numbers:
+*[[Door_LockedRaise|13:Door_LockedRaise]]
+*[[Door_Animated|14:Door_Animated]]
+*[[ACS_LockedExecute|83:ACS_LockedExecute]]
+*[[ACS_LockedExecute|85:ACS_LockedExecuteDoor]]
+*[[Generic_Door|202:Generic_Door]]
+
+[[Category:ZDoom special lumps]]</text>
+    <sha1>tdob9d752e5iit7ifv9ez9wjjzyon93</sha1>
+  </revision>
+</page>

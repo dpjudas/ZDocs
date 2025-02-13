@@ -1,0 +1,62 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>A CyberAttack</title>
+  <ns>0</ns>
+  <id>1731</id>
+  <revision>
+    <id>52874</id>
+    <parentid>52873</parentid>
+    <timestamp>2024-08-10T13:02:34Z</timestamp>
+    <contributor>
+      <username>Jekyll Grim Payne</username>
+      <id>2175</id>
+    </contributor>
+    <comment>/* See also */</comment>
+    <origin>52874</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="1010" sha1="odp3315yc6rftbe76bre86vz19ucsvf" xml:space="preserve">{{DISPLAYTITLE:A_CyberAttack}}
+{{BuiltInFunctionNote|A_SpawnProjectile}}
+{{doomwiki|A_CyberAttack}}
+
+'''{{class|Actor}}'''
+
+{{c|void '''A_CyberAttack'''()}}
+
+The attack of Doom's [[Classes:Cyberdemon|cyberdemon]]. This shoots a [[Classes:Rocket|rocket]].
+
+== [[ZScript]] definition ==
+{{ZScriptDefinitionNote|actors/doom/cyberdemon.zs#L75}}
+&lt;syntaxhighlight lang="csharp"&gt;
+void A_CyberAttack()
+{
+	if (target)
+	{
+		A_FaceTarget();
+		SpawnMissile (target, "Rocket");
+	}
+}&lt;/syntaxhighlight&gt;
+
+(See [[SpawnMissile]])
+
+== Examples ==
+
+This is the [[Classes:Cyberdemon|Cyberdemon's]] Missile state sequence as in [[ZScript]] (the rest omitted for brevity):
+
+ 	Missile:
+ 		CYBR E 6 [[A_FaceTarget]];
+ 		CYBR F 12 [[A_CyberAttack]];
+ 		CYBR E 12 [[A_FaceTarget]];
+ 		CYBR F 12 [[A_CyberAttack]];
+ 		CYBR E 12 [[A_FaceTarget]];
+ 		CYBR F 12 [[A_CyberAttack]];
+ 		Goto See;
+
+{{DEFAULTSORT:CyberAttack}}[[category:Decorate Classic attack functions]]
+
+== See also ==
+*[[A_FaceTarget]]
+*[[A_SpawnProjectile]]
+*[[Cyberdemon]]</text>
+    <sha1>odp3315yc6rftbe76bre86vz19ucsvf</sha1>
+  </revision>
+</page>

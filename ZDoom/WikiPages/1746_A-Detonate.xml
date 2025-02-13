@@ -1,0 +1,44 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>A Detonate</title>
+  <ns>0</ns>
+  <id>1746</id>
+  <revision>
+    <id>36253</id>
+    <parentid>36247</parentid>
+    <timestamp>2013-04-27T10:13:44Z</timestamp>
+    <contributor>
+      <username>Gez</username>
+      <id>1283</id>
+    </contributor>
+    <minor />
+    <origin>36253</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="758" sha1="stywza7ivborja2runfl4lw5b396jm4" xml:space="preserve">{{codepointer|Generic Attack}}'''A_Detonate'''
+
+(no parameters)
+
+
+Performs an explosive (radius) attack. The amount of damage and the attack's radius are specified with the actor's {{c|{{Property|Damage}}}} property.
+
+== Examples ==
+This is a gamma {{Class|demon}}. It releases a wave of damaging radiation when it dies. When killed, its death state triggers [[A_Detonate]], which according to its {{c|Damage}} property, releases a wave of radius damage within 100 units, dealing 100 damage at the center of the blast.
+
+ ACTOR GammaDemon : {{Class|Demon}}
+ {
+   {{Property|Damage}} 100
+   States
+   {
+   Death:
+     SARG I 8
+     SARG J 8 [[A_Scream]]
+     SARG K 4 [[A_Detonate]]
+     SARG L 4 [[A_NoBlocking]]
+     SARG M 4
+     SARG N -1
+     Stop
+   }
+ }</text>
+    <sha1>stywza7ivborja2runfl4lw5b396jm4</sha1>
+  </revision>
+</page>

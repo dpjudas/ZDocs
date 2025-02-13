@@ -1,0 +1,98 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>Classes:Sorcerer1</title>
+  <ns>0</ns>
+  <id>3991</id>
+  <revision>
+    <id>39331</id>
+    <parentid>36276</parentid>
+    <timestamp>2015-04-29T17:17:13Z</timestamp>
+    <contributor>
+      <username>Blue Shadow</username>
+      <id>2021</id>
+    </contributor>
+    <minor />
+    <comment>/* DECORATE definition */ Updated</comment>
+    <origin>39331</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="2848" sha1="n7c0dxvrnb2aa52ownf3f9bgml34jsr" xml:space="preserve">{{Actor|
+| type = Monster
+| name = D'Sparil on his mount
+| class = Sorcerer1
+| game = Heretic
+| doomednum = 7
+| spawnid = 142
+| spawnname = T_DSPARILONSERPENT
+}}[[Classes]]: &lt;u&gt;Sorcerer1&lt;/u&gt;&lt;br&gt;
+The youngest and weakest of the Serpent Riders, D'Sparil doesn't battle alone like his elders [[Classes:Korax|Korax]] and Eidolon; but rides a [[Classes:Demon1|chaos serpent]] to the battle. Which is fair enough for a Serpent Rider. In this form, D'Sparil lets his mount do all the work, the native action [[A_Srcr1Attack]] makes it spew forth [[Classes:SorcererFX1|fireballs]] that are visually similar to [[Classes:Demon1FX1|those]] of the average [[Classes:Demon1|chaos serpent]], but twice as powerful. Once the serpent's health lowers to 666 or less, it starts spitting six of these fireballs in two volleys of three. Its native action [[A_Sor1Pain]] makes it walk faster the next time it uses [[A_Sor1Chase]]. When it finally dies, D'Sparil quickly rises to battle, something handled by the native action [[A_SorcererRise]] which spawns a [[Classes:Sorcerer2|Sorcerer2]] and sets it to its "rise" state.
+
+==== [[DECORATE]] definition ====
+ ACTOR &lt;u&gt;Sorcerer1&lt;/u&gt;
+ {
+   {{Property|Health}} 2000
+   {{Property|Radius}} 28
+   {{Property|Height}} 100
+   {{Property|Mass}} 800
+   {{Property|Speed}} 16
+   {{Property|PainChance}} 56
+   {{Property|Monster}}
+   +{{Flag|BOSS}}
+   +{{Flag|DONTMORPH}}
+   +{{Flag|NORADIUSDMG}}
+   +{{Flag|NOTARGET}}
+   +{{Flag|NOICEDEATH}}
+   +{{Flag|FLOORCLIP}}
+   +{{Flag|DONTGIB}}
+   {{Property|SeeSound}} "dsparilserpent/sight"
+   {{Property|AttackSound}} "dsparilserpent/attack"
+   {{Property|PainSound}} "dsparilserpent/pain"
+   {{Property|DeathSound}} "dsparilserpent/death"
+   {{Property|ActiveSound}} "dsparilserpent/active"
+   {{Property|Obituary}} "$OB_DSPARIL1"
+   {{Property|HitObituary}} "$OB_DSPARIL1HIT"
+ 
+   action native [[A_Sor1Pain]]();
+   action native [[A_Sor1Chase]]();
+   action native [[A_Srcr1Attack]]();
+   action native [[A_SorcererRise]]();
+ 
+   States
+   {
+   Spawn:
+     SRCR AB 10 [[A_Look]]
+     Loop
+   See:
+     SRCR ABCD 5 [[A_Sor1Chase]]
+     Loop
+   Pain:
+     SRCR Q 6 [[A_Sor1Pain]]
+     Goto See
+   Missile:
+     SRCR Q 7 [[A_FaceTarget]]
+     SRCR R 6 [[A_FaceTarget]]
+     SRCR S 10 [[A_Srcr1Attack]]
+     Goto See
+   Missile2:
+     SRCR S 10 [[A_FaceTarget]]
+     SRCR Q 7 [[A_FaceTarget]]
+     SRCR R 6 [[A_FaceTarget]]
+     SRCR S 10 [[A_Srcr1Attack]]
+     Goto See
+   Death:
+     SRCR E 7
+     SRCR F 7 [[A_Scream]]
+     SRCR G 7
+     SRCR HIJK 6
+     SRCR L 25 [[A_PlaySound]]("dsparil/zap", {{Const|CHAN_BODY}}, 1, {{Const|FALSE}}, {{Const|ATTN_NONE}})
+     SRCR MN 5
+     SRCR O 4
+     SRCR L 20 [[A_PlaySound]]("dsparil/zap", {{Const|CHAN_BODY}}, 1, {{Const|FALSE}}, {{Const|ATTN_NONE}})
+     SRCR MN 5
+     SRCR O 4
+     SRCR L 12
+     SRCR P -1 [[A_SorcererRise]]
+   }
+ }</text>
+    <sha1>n7c0dxvrnb2aa52ownf3f9bgml34jsr</sha1>
+  </revision>
+</page>

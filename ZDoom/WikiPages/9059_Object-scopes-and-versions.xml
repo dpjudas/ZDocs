@@ -1,0 +1,118 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>Object scopes and versions</title>
+  <ns>0</ns>
+  <id>9059</id>
+  <revision>
+    <id>53298</id>
+    <parentid>52613</parentid>
+    <timestamp>2024-10-12T09:22:41Z</timestamp>
+    <contributor>
+      <username>Blue Shadow</username>
+      <id>2021</id>
+    </contributor>
+    <minor />
+    <comment>/* Versioning */</comment>
+    <origin>53298</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="6374" sha1="a4uqzpmsqn4tgjhasu70ypkfzex4i8m" xml:space="preserve">{{ZScriptNote}}
+As ZScript is quite a powerful tool, there needs to be some checking in order to ensure that mods remain compatible and don't try to do their thing wrong.&lt;br&gt;
+Note that this does not ''remove'' features, but limits the circumstances in which you can use them.
+
+== Versioning ==
+{{note|The current ZScript version is {{latest}} for the latest official release version, and 4.14.0 for the latest development version.}}
+ZScript has a versioning system, used to improve forward and backward compatibility: newer code may work differently if executed from old scripts, for example.
+
+The system is split in two parts: modder's part and engine part.
+
+On the engine part, classes, fields and functions are marked with their respective versions, for example, like this:
+  class Menu : Object native ui version("2.4")
+  virtual version("2.4") ui void AlterWeaponSprite(VisStyle vis, in out int changed) {}
+If you try to use it from a ZScript source that's lower than version 2.4, it will produce a compile time error and the game won't load.
+
+On the modder's part, you define your ZScript source's version like this:
+  version "2.4"
+This directive should be placed on the first line of your ZSCRIPT lump or zscript.txt file.
+
+Several notes to keep in mind:
+* ZScript's version number may differ from the GZDoom release version, e.g., GZDoom 3.0.0 has a ZScript version of 2.5.
+* Different versions will have functions and/or restrictions.
+* Newer versions cannot access deprecated functions. 
+* Everything is also subject to the scoping system (see below).
+
+== Scoping system ==
+The main purpose of the scoping system is to prevent accidental (and not so accidental) uncontrolled changes to the playsim from the user interface code to enforce demo and multiplayer compatibility.
+
+The scoping system is only active in ZScript version 2.4 and above. They are otherwise unavailable.
+
+'''NOTE: As such, declaring a mod for 2.4, due to the introduction of the version scope in that version, will prevent older versions from being able to load the mod.'''
+
+=== Basics ===
+Every object in ZScript has a ''scope'' (or sometimes mistakenly called ''context'', because the word 'context' is used in reported errors). The scope can be either '''data''', '''play''' or '''ui'''.&lt;br&gt;
+The default scope for classes (when not specified and not inherited from superclass) is '''data'''.&lt;br&gt;
+The default scope for class members (both fields and methods) is the scope of that class, e.g. all unspecified fields in ''Actor'' are '''play'''.&lt;br&gt;
+The objects are subject to the following rules:
+{| class="wikitable" style="border: none; background: none;"
+|-
+! colspan="2" rowspan="2" style="border: none; background: none;" |
+! colspan="3" | '''Code scope'''
+|-
+! style="width: 64px" | '''data''' 
+! style="width: 64px" | '''play''' 
+! style="width: 64px" | '''ui'''
+|-
+! rowspan="3" | '''Calling&lt;br&gt;context'''
+! '''data''' 
+| style="background: #cfc; text-align: center" | full
+| style="background: #ffc; text-align: center" | readonly
+| style="background: #fcc; text-align: center" | none
+|-
+! '''play''' 
+| style="background: #cfc; text-align: center" | full
+| style="background: #cfc; text-align: center" | full
+| style="background: #fcc; text-align: center" | none
+|-
+! '''ui''' 
+| style="background: #cfc; text-align: center" | full
+| style="background: #ffc; text-align: center" | readonly
+| style="background: #cfc; text-align: center" | full
+|}
+
+This table is designed to be read from the left to top. I.e. from caller with a data scope (left) attempting to access an object with a play scope (top), the caller's access is read-only.
+
+* Full access means it's possible to call any methods on objects of that type, read all fields and write all non-readonly fields.
+* Readonly access means that calling non-const methods and writing fields of that type is not possible (e.g. a method marked with '''ui''' cannot write to actor fields, because they are '''play''').&lt;br&gt;Construction of classes marked with non-writable scope is not possible either.
+* No access means field reading is not allowed and no method can be called.
+
+=== Syntax ===
+There are four scope-related keywords in ZScript: ''ui'', ''play'', ''clearscope'' and ''virtualscope''.&lt;br&gt;
+Of these, the most used are ''ui'' and ''play''. The other two are generally local to the internal classes.
+* ''ui'' marks a field, method or class as belonging to the '''ui''' scope. Example:
+  virtual version("2.4") '''ui''' void AlterWeaponSprite(VisStyle vis, in out int changed) {}
+Here it means that AlterWeaponSprite (and all of it's overrides) is only callable from other '''ui''' methods and it can't write actor fields.
+* ''play'' marks a field, method or class as belonging to the '''play''' scope. Example:
+  class Thinker : Object native '''play'''
+By default, all fields and methods inside a class with ''play'' or ''ui'' will also be ''play'' or ''ui''. To prevent this, ''clearscope'' keyword can be used on methods.
+* ''clearscope'' marks a method or an internal struct inside a ''play'' or ''ui'' class as belonging to the '''data''' scope. This makes the marked method/struct usable in both '''ui''' and '''play''' contexts, but the method/struct itself is subject to the '''data''' restrictions (see above).
+* ''virtualscope'' is an extremely special keyword that makes specific method calls use the scope of the object that they are called from. This is used internally for dangerous Object methods like ''Destroy'', which need to be '''play''' if they are executed on Actor, '''ui''' if they are executed on Menu, and '''data''' if they are executed on something else.
+
+=== Additional things to know ===
+* '''data''' structures will use the scope declared for the class field. For example, in the following code, ''ds.someInt'' will be '''play''', because ''ActorWithData'' is '''play''':
+  struct DataStruct
+  {
+    int someInt;
+  }
+  class ActorWithData : Actor
+  {
+    DataStruct ds;
+  }
+* For virtual methods the scope is only set once by the virtual declaration. You can't change scope of a virtual method override — this will cause a compile error.
+* For classes, it's possible to make a class inheriting from '''data''' class either '''play''' or '''ui''', but it's not possible to change an already set '''play''' or '''ui''' class to another side.
+
+== See also ==
+* [[ZScript]]
+
+[[Category:ZScript]]</text>
+    <sha1>a4uqzpmsqn4tgjhasu70ypkfzex4i8m</sha1>
+  </revision>
+</page>

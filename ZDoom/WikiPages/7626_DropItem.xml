@@ -1,0 +1,40 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>DropItem</title>
+  <ns>0</ns>
+  <id>7626</id>
+  <revision>
+    <id>48036</id>
+    <parentid>48028</parentid>
+    <timestamp>2020-10-23T07:19:55Z</timestamp>
+    <contributor>
+      <username>Blue Shadow</username>
+      <id>2021</id>
+    </contributor>
+    <minor />
+    <origin>48036</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="1542" sha1="o5fobcc6ww809krzxvlz6jxxbd3te0b" xml:space="preserve">__NOTOC__
+int '''DropItem''' (int ''tid'', string ''item'' [, int ''dropamount'' [, int ''chance'']])
+
+==Usage==
+Causes actors with the matching [[TID]] to drop the specified item. If ''tid'' is 0, the activator of the script is considered to be the dropper of the item. This works in a similar way to the {{c|{{Property|DropItem}}}} [[actor properties|actor property]].
+
+===Parameters===
+*''tid'': The TID of the actor which the item is dropped by.
+*''item'': The item to drop. This can be any valid actor class, not just inventory.
+*''dropamount'': The inventory amount the dropped item contains. This is only meaningful with actors inheriting from the {{Class|Inventory}} class. If ''dropamount'' is greater than 0, the amount of inventory gained from picking up the item equals exactly to that number. Otherwise, the amount gotten is the same as the amount {{Property|Inventory.Amount|defined}} by the item itself, except for {{Class|ammo}} items, which in this case, the amount is determined by the current skill level's [[MAPINFO/Skill definition|DropAmmoFactor]]. Default is -1.
+*''chance'': The probability of the drop. The item is never dropped if this is -1 or less, while it is always dropped if this is 255 or greater. Default is 256.
+
+=== Return value ===
+Returns the total number of actors that attempted to drop the item, otherwise it returns 0. The success or failure of an item drop has no consequence on the returned value.
+
+== Examples ==
+{{noexamples}}
+
+== See also ==
+* [[A_DropItem]]
+[[category:ACS Inventory functions]]</text>
+    <sha1>o5fobcc6ww809krzxvlz6jxxbd3te0b</sha1>
+  </revision>
+</page>

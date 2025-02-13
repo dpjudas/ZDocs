@@ -1,0 +1,891 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>ZScript virtual functions</title>
+  <ns>0</ns>
+  <id>8956</id>
+  <revision>
+    <id>53891</id>
+    <parentid>53889</parentid>
+    <timestamp>2024-11-25T14:29:09Z</timestamp>
+    <contributor>
+      <username>Jekyll Grim Payne</username>
+      <id>2175</id>
+    </contributor>
+    <comment>/* AltHud */</comment>
+    <origin>53891</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="42945" sha1="0anevqugviltivcrg32e5wzyq9tg26t" xml:space="preserve">{{ZScriptNote}}
+__TOC__
+
+== Overview ==
+Virtual functions in ZScript are functions designed for inheritance purposes, which allow for child classes to override them with their own version. This grants the ability to also call the super function which will execute everything in the predecessor class's function.
+
+ Class ActA : Actor
+ {
+     int a;
+     virtual void MyVirtualFunction()
+     {
+         // Do some stuff here.
+         a++;
+     }
+ }
+
+This class will perform a++ and b++, with b++ going first. 
+
+ Class ActB : ActA
+ {
+     int b;
+     override void MyVirtualFunction()
+     {
+         b++;
+         Super.MyVirtualFunction();
+     }
+ }
+
+Note: Through chaining actors via inheritance, it's possible to execute every version down to the base actor, if they're set up to call the super function. The following example demonstrates the variables 'c', then 'b', and finally 'a' being incremented in that order.
+
+ Class ActC : ActB
+ {
+     int c;
+     override void MyVirtualFunction()
+     {
+         c++;
+         Super.MyVirtualFunction();
+     }
+ }
+
+=== Abstract functions ===
+Abstract functions are virtual functions that do not have a body (i.e. code). They can only be defined in [[ZScript classes#abstract|abstract classes]]. The purpose of abstract functions is to create interface-like classes with different implementations. If you have a base class that is never used directly, only through implementations, then it should be marked abstract. Virtual functions that are always overridden in derived classes should also be converted to abstract functions.
+
+Example:
+
+ class Base abstract
+ {
+     abstract int MyFunc();
+ }
+ 
+ class Derived1 : Base
+ {
+     override int MyFunc()
+     {
+          return 1;
+     }
+ }
+ 
+ class Derived2 : Base
+ {
+     override int MyFunc()
+     {
+         return 2;
+     }
+ }
+
+Note that if you don't override an abstract function in a derived class, GZDoom will consider it a script error, unless the derived class is also marked abstract. It is also considered a script error to call an abstract function via the Super qualifier. Additionally, you cannot subclass DECORATE-based actors from ZScript classes with abstract functions.
+
+== Internal Functions ==
+Some of ZDoom's classes have several functions available for overriding if desired. 
+
+Some of these govern fairly basic actor functionality and may produce unintended side effects or behaviours if overridden. Please test thoroughly whenever you override these (or call them in some unusual place, e.g., CanCollideWith() in some custom missile impact code), and if you don't know ''exactly'' what a virtual does you might want to call super.&lt;nameofvirtualfunction&gt;() in your override until you've had time to check the GZDoom source code to figure out what (if anything) it does by default.
+
+=== [[Object]] ===
+:*virtualscope void '''[[OnDestroy]]'''()
+:::Called when an object is about to be removed from the game. This could be used for actor maintenance, such as removal of children actors which would otherwise stop functioning without the master, or special effects that may be associated with that actor in particular.
+
+=== [[Classes:LineTracer|LineTracer]] ===
+Inherits from [[Object]]
+:*ETraceStatus '''[[TraceCallback]]'''()
+:::Called when the ray trace hits a potential blocker, be it an actor, wall, or plane. Returns the status telling the ray trace what to do next.
+
+=== [[Thinker]] ===
+Inherits from [[Object]]
+
+{{: Thinker virtual functions}}
+
+=== [[Actor]] ===
+Inherits from [[Thinker]]
+
+{{: Actor virtual functions}}
+
+=== [[Classes:MorphedMonster|MorphedMonster]] ===
+Inherits from [[Actor]]
+:*bool '''[[UndoMonsterMorph]]'''(bool force = false)
+:::Called when a monster is going to unmorph. Returns true if the monster successfully unmorphed.
+::*''force'' - If true, don't collision check when unmorphing back into the original actor.
+
+=== [[FastProjectile]] ===
+Inherits from [[Actor]]
+:*void '''[[Effect]]'''()
+:::Responsible for spawning the FastProjectile's trail while it's traveling.
+
+=== [[Classes:SorcBall|SorcBall]] ===
+Inherits from [[Actor]]
+:*void '''[[DoFireSpell]]'''()
+:::Called when a SorcBall decides to cast its spell. Can be used to add custom pre and post spell behavior.
+:*void '''[[SorcUpdateBallAngle]]'''()
+:::Called when the SorcBall is orbiting around its parent and is not casting a spell.
+:*void '''[[CastSorcererSpell]]'''()
+:::Called when a SorcBall decides to cast its spell. This contains behavior for the spell itself that's being casted.
+
+=== [[Classes:PathFollower|PathFollower]] ===
+Inherits from [[Actor]]
+:*bool '''[[Interpolate]]'''()
+:::Handles the behavior for moving from one interpolation point to the next. Returning false tells the PathFollower to not look for its next node after reaching its current destination.
+
+=== [[Classes:SectorAction|SectorAction]] ===
+Inherits from [[Actor]]
+:*bool '''[[TriggerAction]]'''(Actor triggerer, int activationType)
+:::Called when the SectorAction is triggered by an actor. Returns true if the action was successfully triggered.
+::*''triggerer'' - The actor directly responsible for triggering the action.
+::*''activationType'' - The type of action(s) the triggerer wants to trigger. Will not activate if it doesn't align with the SectorAction's own activation types.
+
+:*bool '''[[CanTrigger]]'''(Actor triggerer)
+:::Called when testing if the actor that activated the SectorAction is capable of doing so. Returns true if the actor can activate it.
+::*''triggerer'' - The actor directly responsible for triggering the action.
+
+=== [[Inventory]] ===
+Inherits from [[Actor]]
+{{: Inventory virtual functions}}
+
+=== [[Weapon]] ===
+Inherits from StateProvider which inherits from [[Inventory]]
+{{: Weapon virtual functions}}
+
+=== [[Powerup]] ===
+Inherits from [[Inventory]]
+{{: Powerup virtual functions}}
+
+=== [[Classes:Ammo|Ammo]] ===
+Inherits from [[Inventory]]
+:*Class&lt;Ammo&gt; '''[[GetParentAmmo]]()'''
+:::Returns the class type of the base ammo used for this class of ammo e.g. with [[Classes:ClipBox|ClipBox]] the class type returned would be [[Classes:Clip|Clip]].
+
+=== [[RandomSpawner]] ===
+Inherits from [[Actor]]
+:*void '''[[PostSpawn]]'''(Actor spawned)
+:::Called after the random actor has been spawned and initialized. Allows for further post modifications of the actor from the RandomSpawner itself instead of on the actor.
+::*''spawned'' - The actor that the RandomSpawner created
+
+:*Name '''[[ChooseSpawn]]'''()
+:::The function for deciding which actor to spawn. Returns the name of the actor class that should be spawned. Returning 'None' will spawn nothing.
+
+=== [[PlayerPawn]] ===
+Inherits from [[Actor]]
+:'''WARNING:''' Caution must be used when overriding player virtual functions. [[PlayerPawn#Client_Prediction_(ZScript_only)|Client-prediction]] can cause desyncs when playing in networked games, especially with functions related to '''PlayerThink'''. Only override these functions if you absolutely know what you're doing.
+:*void '''[[PlayIdle]]'''()
+:::Sets the player to their SpawnState. Called when the player stops moving.
+
+:*void '''[[PlayRunning]]'''()
+:::Sets the player to their SeeState. Called when the player starts moving.
+
+:*void '''[[PlayAttacking]]'''()
+:::Sets the player's state to their MissileState. Called when the player performs an attack.
+
+:*void '''[[PlayAttacking2]]'''()
+:::Sets the player's state to their MeleeState. Often called when the player's weapon fires and a muzzle flash is produced.
+
+:*void '''[[MorphPlayerThink]]'''()
+:::Called every tic while the player is morphed. Allows for special behavior when morphed.
+
+:*void '''[[OnRespawn]]'''()
+:::Called when the player respawns.
+
+:*void '''[[FireWeapon]]'''(State stat)
+:::Called when the player fires their weapon's primary attack.
+::*''stat'' - The state to set the player's current weapon to.
+
+:*void '''[[FireWeaponAlt]]'''(State stat)
+:::Called when the player fires their weapon's alternate attack.
+::*''stat'' - The state to set the player's current weapon to.
+
+:*void '''[[CheckWeaponChange]]'''()
+:::Called every tic when checking to see if the player has a pending weapon. If so, the current weapon starts to lower.
+
+:*void '''[[TickPSprites]]'''()
+:::Called every tic. Handles the logic for the player's weapon sprites (including CustomInventory sprites).
+
+:*void '''[[CalcHeight]]'''()
+:::Called every tic. Calculates the view height offset of the player (e.g. the view bob when running).
+
+:*void '''[[DeathThink]]'''()
+:::Called every tic while the player is dead. Allows for special behavior while dead.
+
+:*void '''[[CheckFOV]]'''()
+:::Called every tic when checking if the player's FOV matches their desired FOV. This is what handles the zooming in and out effect when using A_ZoomFactor.
+
+:*void '''[[CheckCheats]]'''()
+:::Called every tic when checking to see what cheats the player currently has active. By default handles flying and noclipping.
+
+:*bool '''[[CheckFrozen]]'''()
+:::Called every tic to check if the player is frozen via the FROZEN flags. Returns true if the player is partially or totally frozen.
+
+:*bool '''[[CanCrouch]]'''()
+:::Checks if the player is capable of crouching. Returns true if the player can.
+
+:*void '''[[CrouchMove]]'''(int direction)
+:::Handles the view height movement when crouching and uncrouching.
+::*''direction'' - Whether the movement is down (negative, crouching) or up (positive, uncrouching).
+
+:*void '''[[CheckCrouch]]'''(bool totallyfrozen)
+:::Called every tic to check if the player is crouching or not.
+::*''totallyfrozen'' - True if the player is partially/totally frozen via the FROZEN flags.
+
+:*double, double '''[[TweakSpeeds]]'''(double forward, double side)
+:::Modifies the speed values by the player's speed modification properties and items. Returns the modified forward and sideways movement speeds.
+::*''forward'' - The original forward speed.
+::*''side'' - The original sideways speed.
+
+:*void '''[[MovePlayer]]'''()
+:::Moves the player based off their current button inputs.
+
+:*void '''[[CheckPitch]]'''()
+:::Called every tic to modify the player's pitch based off their current input.
+
+:*void '''[[CheckJump]]'''()
+:::Handles making the player jump.
+
+:*void '''[[CheckMoveUpDown]]'''()
+:::Handles the up and down flight movement when using something like Heretic's Wings of Wrath.
+
+:*void '''[[HandleMovement]]'''()
+:::Called every tic to handle all of the movement functions of the player.
+
+:*void '''[[CheckUndoMorph]]'''()
+:::Called every tic to check if the player should unmorph.
+
+:*void '''[[CheckPoison]]'''()
+:::Called every tic to apply poison damage and modify the poison screen effect Hexen has.
+
+:*void '''[[CheckDegeneration]]'''()
+:::Called every tic to check if the player's health should degenerate if over their max health when the CVar is set.
+
+:*void '''[[CheckAirSupply]]'''()
+:::Called every tic to check the player's air supply if underwater.
+
+:*void '''[[PlayerThink]]'''()
+:::Called every tic before anything else in the game. Largely handles all player checks, special player tic functions, and player movement.
+
+:*void '''[[MakeFootsteps]]'''() {{git|12d1afc}}
+:::Handles the basic default [[footsteps]] system. This virtual needs the {{flag|PLAYERPAWN.MAKEFOOTSTEPS|MAKEFOOTSTEPS}} flag to be set in order to run.
+
+:*void '''[[GiveDefaultInventory]]'''()
+:::Called when giving the player their default starting items.
+
+:*void '''[[GiveDeathmatchInventory]]'''()
+:::Called when giving the player their death match starting items.
+
+:*int '''[[GetTeleportFreezeTime]]'''()
+:::Gets the amount of time the player should be frozen after teleporting. This mainly checks for items that invalidate the player's TeleportFreezeTime property. Returns the duration to freeze in tics.
+
+:*Weapon '''[[PickWeapon]]'''(int slot, bool checkammo)
+:::Called when picking a weapon in a slot. Looks for the last weapon in the slot first. Returns the weapon that should be selected.
+::*''slot'' - The slot number to look in.
+::*''checkammo'' - If false, don't check if the weapon has enough ammo to fire.
+
+:*Weapon '''[[PickNextWeapon]]'''()
+:::Gets the next weapon when going through the slots in order. Returns the weapon that should be selected.
+
+:*Weapon '''[[PickPrevWeapon]]'''()
+:::Gets the previous weapon when going through the slots in order. Returns the weapon that should be selected.
+
+:*Vector2 '''[[BobWeapon]]'''(double ticfrac)
+:::Called every frame. Returns the weapon sprite's xy bobbing offset for that frame.
+::*''ticfrac'' - The percentage of the way to the next tic that the current frame is at. Ranges from 0 to 1. Used for interpolating the offset between tics.
+
+:*clearscope color '''[[GetPainFlash]]'''() const
+:::Returns the pain flash color the player has when taking damage.
+
+:*bool '''[[ResetAirSupply]]'''(bool playgasp = true)
+:::Resets the player's air supply.  Returns whether or not the player was drowning.
+::*''playgasp'' - If true and the player was drowning, play the gasp sound.
+
+:*void '''[[PreTravelled]]'''()
+:::{{moreinfo}}
+
+:*void '''[[Travelled]]'''()
+:::Called when a player has traveled to a different map. Works on both regular maps and hubs.
+
+:*void '''[[CheatGive]]'''(String name, int amount)
+:::Called when the player uses the console give cheat.
+::*''name'' - The name of the inventory type to give.
+::*''amount'' - The amount to give of the inventory type.
+
+:*void '''[[CheatTake]]'''(String name, int amount)
+:::Called when the player uses the console take cheat.
+::*''name'' - The name of the inventory type to take.
+::*''amount'' - The amount to take of the inventory type.
+
+:*void '''[[CheatSetInv]]'''(String strng, int amount, bool beyond)
+:::Called when the player uses the console setinv cheat.
+::*''strng'' - The name of the inventory type to set.
+::*''amount'' - The amount to set the inventory type to.
+::*''beyond'' - If true, allow the inventory type to go beyond its max amount.
+
+:*String '''[[CheatMorph]]'''(class&lt;PlayerPawn&gt; morphClass, bool quickundo)
+:::Called when the player uses the console morphme cheat. Returns the text to display after morphing.
+::*''morphClass'' - The class type to morph into.
+::*''quickundo'' - If false, allow the player to morph into a different class while still morphed.
+
+:*void '''[[CheatTakeWeaps]]'''()
+:::Handles taking away the player's non-wimpy weapons.
+
+:*protected Inventory '''[[GetFlechetteItem]]'''()
+:::Called when using a flechette. Returns the flechette item to use in the action.
+
+:*void '''[[ActivateMorphWeapon]]'''()
+:::Called on the morph actor when the player morphs. Responsible for giving the player their appropriate morph weapon after doing so.
+
+:*bool '''[[MorphPlayer]]'''(playerinfo activator, Class&lt;PlayerPawn&gt; spawntype, int duration, int style, Class&lt;Actor&gt; enter_flash = null, Class&lt;Actor&gt; exit_flash = null)
+:::Morphs the player into the new morph actor. Returns true if the player successfully morphed.
+::*''activator'' - The info of the player that's responsible for the morph.
+::*''spawntype'' - The class type to use for the new morph actor.
+::*''duration'' - The duration of the morph in tics.
+::*''style'' - The style to use for the morph.
+::*''enter_flash'' - The class type to use when spawning a flash as the player morphs.
+::*''exit_flash'' - The class type to use when spawning a flash as the player unmorphs.
+
+:*bool '''[[UndoPlayerMorph]]'''(playerinfo activator, int unmorphflag = 0, bool force = false)
+:::Unmorphs the player back into their original form. Returns true if the player unmorphed successfully.
+::*''activator'' - The info of the player that's responsible for the unmorph.
+::*''unmorphflag'' - The flags to check when unmorphing. Only MRF_STANDARDUNDOING is used by default.
+::*''force'' - If true, don't collision check when unmorphing back into the original player.
+
+=== [[Events_and_handlers|StaticEventHandler]] ===
+Inherits from [[Object]]
+:*void '''[[OnRegister]]'''()
+:*void '''[[OnUnregister]]'''()
+:*void '''[[WorldLoaded]]'''(WorldEvent e)
+:*void '''[[WorldUnloaded]]'''(WorldEvent e)
+:*void '''[[WorldThingSpawned]]'''(WorldEvent e)
+:*void '''[[WorldThingDied]]'''(WorldEvent e)
+:*void '''[[WorldThingRevived]]'''(WorldEvent e)
+:*void '''[[WorldThingDamaged]]'''(WorldEvent e)
+:*void '''[[WorldThingDestroyed]]'''(WorldEvent e)
+:*void '''[[WorldLinePreActivated]]'''(WorldEvent e)
+:*void '''[[WorldLineActivated]]'''(WorldEvent e)
+:*void '''[[WorldSectorDamaged]]'''(WorldEvent e)
+:*void '''[[WorldLineDamaged]]'''(WorldEvent e)
+:*void '''[[WorldLightning]]'''(WorldEvent e)
+:*void '''[[WorldTick]]'''()
+:*ui void '''[[RenderOverlay]]'''(RenderEvent e)
+:*ui void '''[[RenderUnderlay]]'''(RenderEvent e)
+:*void '''[[PlayerEntered]]'''(PlayerEvent e)
+:*void '''[[PlayerRespawned]]'''(PlayerEvent e)
+:*void '''[[PlayerDied]]'''(PlayerEvent e)
+:*void '''[[PlayerDisconnected]]'''(PlayerEvent e)
+:*ui bool '''[[UiProcess]]'''(UiEvent e)
+:*ui bool '''[[InputProcess]]'''(InputEvent e)
+:*ui void '''[[UiTick]]'''()
+:*ui void '''[[PostUiTick]]'''()
+:*ui void '''[[ConsoleProcess]]'''(ConsoleEvent e)
+:*void '''[[NetworkProcess]]'''(ConsoleEvent e)
+:*void '''[[CheckReplacement]]'''(ReplaceEvent e)
+:*void '''[[CheckReplacee]]'''(ReplacedEvent e)
+:*void '''[[NewGame]]'''()
+
+=== InterBackground ===
+*bool '''[[LoadBackground]]'''(bool isenterpic)
+:::Called when loading the background image for the intermission screen. Returns whether or not to automatically start the next map. Returning false will start a count down until the next map automatically starts.
+::*''isenterpic'' - If true, load the image for entering the next map instead of the stats screen.
+
+:*void '''[[updateAnimatedBack]]'''()
+:::Called every tic during the intermission screen. Handles animating the background image.
+
+:*void '''[[drawBackground]]'''(int CurState, bool drawsplat, bool snl_pointeron)
+:::Called every frame during the intermission screen. Draws the background for the screen.
+::*''CurState'' - The current state of the intermission screen's logic.
+:::*'''StatCount''' - Showing the stats for the previous level.
+:::*'''ShowNextLoc''' - Currently showing the next location.
+:::*'''NoState''' - No current state.
+:::*'''LeavingIntermission''' - Closing the intermission screen.
+::*''drawsplat'' - If true, draw the splat effects on locations the player has already been to (see: Doom 1's intermission screens).
+::*''snl_pointeron'' - If true, draw the arrow pointing to the location the player is entering (see: Doom 1's intermission screens).
+
+=== StatusScreen ===
+:*int '''[[drawLF]]'''()
+:::Called when drawing the title text for finishing a level at the top of the intermission screen. Returns the y offset from the top of the screen.
+
+:*void '''[[drawEL]]'''()
+:::Called when drawing the title text for entering a level at the top of the intermission screen.
+
+:*void '''[[End]]'''()
+:::Called when the intermission screen is closing.
+
+:*protected void '''[[initNoState]]'''()
+:::Handles the behavior for initializing the intermission screen with no state. Called shortly before the intermission screen is about to close.
+
+:*protected void '''[[updateNoState]]'''()
+:::Called every tic that the intermission's CurState is set to '''NoState'''. Handles automated closing of intermission screen when entering the next map.
+
+:*protected void '''[[initShowNextLoc]]'''()
+:::Called when going from the stats screen to showing the next location.
+
+:*protected void '''[[updateShowNextLoc]]'''()
+:::Called every tic that the intermission's CurState is set to '''ShowNextLoc'''. Handles the blinking arrow and counting down towards setting '''NoState'''.
+
+:*protected void '''[[drawShowNextLoc]]'''(void)
+:::Called every frame that the intermission's CurState is set to '''ShowNextLoc''' and '''LeavingIntermission'''. Handles drawing the entering level background and entering level title text.
+
+:*protected void '''[[drawNoState]]'''()
+:::Called every frame that the intermission's CurState is set to '''NoState'''. Calls '''drawShowNextLoc''' with the arrow set to not blink when drawn.
+
+:*void '''[[StartMusic]]'''()
+:::Handles starting the intermission music on the first tic of the intermission screen.
+
+:*void '''[[Ticker]]'''(void)
+:::Called every tic. Handles the update functions for the intermission screen based on the CurState.
+
+:*void '''[[Drawer]]'''(void)
+:::Called every frame. Handles the draw functions for the intermission screen based on the CurState.
+
+:*void '''[[Start]]'''(wbstartstruct wbstartstruct)
+:::Called when the intermission screen is first created.
+::*''wbstartstruct'' - Contains information and player stats about the previous level and information about the next level.
+
+:*protected void '''[[initStats]]'''()
+:::Called when the intermission screen is started. Handles initializing the stats.
+
+:*protected void '''[[updateStats]]'''()
+:::Called every tic that the intermission's CurState is set to '''StatCount'''.
+
+:*protected void '''[[drawStats]]'''()
+:::Called every frame that the intermission's CurState is set to '''StatCount'''.
+
+=== HUDMessageBase ===
+:*bool '''[[Tick]]'''()
+:::Called every tic the HUD message is active by the status bar. Returns true if the message should disappear.
+
+:*void '''[[ScreenSizeChanged]]'''()
+:::Called by the status bar whenever the screen size changes. Handles resizing the text to fit appropriately.
+
+:*void '''[[Draw]]'''(int bottom, int visibility)
+:::Called every frame the HUD message is active by the status bar. Handles drawing the text of the message.
+::*''bottom'' - The y offset that corresponds to the bottom of the screen. Takes whether or not the status bar is visible into account.
+::*''visibility'' - The visibility flags to use when drawing the message. If any of the HUD message's visibility flags match one, the message won't draw.
+
+=== [[Classes:BaseStatusBar|BaseStatusBar]] ===
+{{: BaseStatusBar virtual functions}}
+
+=== DoomStatusBar ===
+Inherits from [[Classes:BaseStatusBar|BaseStatusBar]]
+:*protected void '''[[DrawBarKeys]]'''()
+:::Called every frame. Responsible for drawing the keys in Doom's status bar.
+
+:*protected void '''[[DrawBarAmmo]]'''()
+:::Called every frame. Responsible for drawing the collection of ammo totals in Doom's status bar.
+
+:*protected void '''[[DrawBarWeapons]]'''()
+:::Called every frame. Responsible for drawing the weapon slot numbers in Doom's status bar.
+
+:*protected void '''[[DrawFullscreenKeys]]'''()
+:::Called every frame. Responsible for drawing the keys on the HUD in Doom when in fullscreen mode.
+
+=== {{class|AltHUD}} ===
+:*void '''[[Init]]'''()
+:::Called when the status bar is first created. Can be used to add custom functionality on creation.
+
+:*void '''[[DrawTimeString]]'''(Font fnt, int color, int timer, int x, int y, double trans = 0.75)
+:::Called every frame. Responsible for drawing the formatted timer of how long the player has been playing.
+::*''fnt'' - The font to use for the text.
+::*''color'' - The color to use for the text.
+::*''timer'' - The timer being used to create the formatted string (tracked in tics).
+::*''x'' - The x offset of the text. The text here is right aligned.
+::*''y'' - The y offset of the text.
+::*''trans'' - The alpha to use for the text.
+
+:*void '''[[DrawStatLine]]'''(int x, in out int y, String prefix, String text)
+:::Handles drawing a stat e.g. kills.
+::*''x'' - The x offset of the text.
+::*''y'' - The y offset of the text. This value is directly modifiable so it can be automatically shifted up when called in '''DrawStatus'''.
+::*''prefix'' - The prefix for the text, often used to indicate which stat is being printed.
+::*''text'' - The text to be printed, often the stat value itself.
+
+:*void '''[[DrawStatus]]'''(PlayerInfo CPlayer, int x, int y)
+:::Called every frame. Draws any stats that are enabled.
+::*''CPlayer'' - The player info of the player to get stats from if applicable (mainly in multiplayer).
+::*''x'' - The x offset to draw the stats at.
+::*''y'' - The y offset to start drawing the stats at.
+
+:*void '''[[DrawHealth]]'''(PlayerInfo CPlayer, int x, int y)
+:::Called every frame. Draws the player's health.
+::*''CPlayer'' - The player info of the player whose health is being drawn.
+::*''x'' - The x offset to draw the health at.
+::*''y'' - The y offset to draw the health at.
+
+:*void '''[[DrawArmor]]'''(BasicArmor barmor, HexenArmor harmor, int x, int y)
+:::Called every frame. Draws the armor value based on the armors passed to it.
+::*''barmor'' - The BasicArmor pointer to use when calculating the amount of armor.
+::*''harmor'' - The HexenArmor pointer to use when calculating the AC of the armor.
+::*''x'' - The x offset to draw the armor value at.
+::*''y'' - The y offset to draw the armor value at.
+
+:*bool '''[[DrawOneKey]]'''(int xo, int x, int y, in out int c, Key inv)
+:::Draws a single key on the HUD. Returns true if the key had a valid icon to draw.
+::*''xo'' - The base x offset the keys are drawn at. Does nothing by default.
+::*''x'' - The current x offset to draw the key at.
+::*''y'' - The y offset to draw the key at.
+::*''c'' - The number of keys that have been drawn on the current line. Can be directly modified for more customizability. Does nothing by default.
+::*''inv'' - The key to check the icon for so it can be drawn.
+
+:*int '''[[DrawKeys]]'''(PlayerInfo CPlayer, int x, int y)
+:::Called every frame. Handles drawing all the keys on the HUD. Returns the y offset of the next line on top of the drawn keys.
+::*''CPlayer'' - The player info of the player to search for keys.
+::*''x'' - The x offset to start drawing the keys at. Keys drawn shift leftward on the line until reaching 10 and then wrap back.
+::*''y'' - The y offset to start drawing the keys at. Keys drawn shift upward every time the line wraps.
+
+:*int '''[[DrawAmmo]]'''(PlayerInfo CPlayer, int x, int y)
+:::Called every frame. Draws all the information related to the player's ammo on the HUD. Returns the y offset of the next line on top of the drawn ammo values.
+::*''CPlayer'' - The player info of the player to get the ammo from.
+::*''x'' - The x offset to draw the ammo at.
+::*''y'' - The y offset to start drawing the ammo at. Shifts upward.
+
+:*void '''[[DrawOneWeapon]]'''(PlayerInfo CPlayer, int x, in out int y, Weapon weapon)
+:::Draws the image of a weapon on the HUD.
+::*''CPlayer'' - The player info of the player who owns the weapon.
+::*''x'' - The x offset to draw the image at.
+::*''y'' - The y offset to draw the image at. This value is directly modifiable so it can be automatically shifted up when called in '''DrawWeapons'''.
+::*''weapons'' - The weapon to check for an image to draw.
+
+:*void '''[[DrawWeapons]]'''(PlayerInfo CPlayer, int x, int y)
+:::Called every frame. Draws images of all of the player's current weapons.
+::*''CPlayer'' - The player info of the player to look for weapons.
+::*''x'' - The x offset to start drawing the weapon images at.
+::*''y'' - The y offset to start drawing the weapon images at.
+
+:*void '''[[DrawInventory]]'''(PlayerInfo CPlayer, int x,int y)
+:::Called every frame. Draws the player's visible inventory items on the HUD.
+::*''CPlayer'' - The player info of the player whose inventory should be searched.
+::*''x'' - The x offset to start drawing the items at. Shifts rightward.
+::*''y'' - The y offset to draw the items at.
+
+:*void '''[[DrawFrags]]'''(PlayerInfo CPlayer, int x, int y)
+:::Called every frame during death match games. Draws the number of frags the player currently has.
+::*''CPlayer'' - The player info of the player to get the frag count from.
+::*''x'' - The x offset to draw the frag count at.
+::*''y'' - The y offset to draw the frag count at.
+
+:*void '''[[DrawCoordinates]]'''(PlayerInfo CPlayer, bool withmapname)
+:::Called every frame the automap is open or when the idmypos cheat is true. Draws the player's current coordinates.
+::*''CPlayer'' - The player info the player to get the position of.
+::*''withmapname'' - If true, draws the name of the level along with it.
+
+:*bool '''[[DrawTime]]'''(int y)
+:::Called every frame. Draws the current formatted time based on the option selected by the player. Returns true if the time was drawn.
+::*''y'' - The y offset to draw the time at.
+
+:*bool '''[[DrawLatency]]'''(int y)
+:::Called every frame. Draws the latency from the client to the host of the game. Returns true if the latency was drawn.
+::*''y'' - The y offset to draw the latency at.
+
+:*void '''[[DrawPowerups]]'''(PlayerInfo CPlayer, int y)
+:::Called every frame. Draws the player's power up icons if they have any.
+::*''CPlayer'' - The player info of the player to check for power ups.
+::*''y'' - The y offset to start drawing the icons at. Shifts downward if the icons would go off screen (shifts leftward as more are drawn).
+
+:*void '''[[DrawInGame]]'''(PlayerInfo CPlayer)
+:::Called every frame. The main drawing function for the HUD.
+::*''CPlayer'' - The player info of the player to get information from.
+
+:*void '''[[DrawAutomap]]'''(PlayerInfo CPlayer)
+:::Called every frame the automap is active. Responsible for drawing text information related to the automap.
+::*''CPlayer'' - The player info of the player to get information from.
+
+:*void '''[[Draw]]'''(PlayerInfo CPlayer, int w, int h)
+:::Called every frame. Determines whether to draw the regular HUD or automap HUD.
+::*''CPlayer'' - The player info of the player to get information from.
+::*''w'' - The width to use for the HUD.
+::*''h'' - The height to use for the HUD.
+
+=== Menu ===
+Inherits from [[Object]]
+:*bool '''[[MenuEvent]]'''(int mkey, bool fromcontroller)
+:::Called whenever a hardcoded menu button is pressed. Returns true if the event should have no further handling but does nothing by default.
+::*''mkey'' - The code for the menu key that was used.
+::*''fromcontroller'' - If true, the event was triggered by a controller.
+
+:*bool '''[[OnUIEvent]]'''(UIEvent ev)
+:::Called whenever a GUI mouse or keyboard action occurs. Returns true if the event should have no further handling.
+::*''ev'' - Contains information about the event that occurred.
+
+:*bool '''[[OnInputEvent]]'''(InputEvent ev)
+:::Called when any non-GUI related input is used. Returns true if the event should have no further handling.
+::*''ev'' - Contains information about the event that occurred.
+
+:*void '''[[Drawer]]'''()
+:::Called every frame. Handles drawing any generic menu visuals.
+
+:*bool '''[[TranslateKeyboardEvents]]'''()
+:::If a GUI keyboard action occurs, handle the behavior for converting that action to a menu action. Returning false will stop the default conversion behavior.
+
+:*void '''[[SetFocus]]'''(MenuItemBase fc)
+:::Sets the menu item to take focus of. Focus is when an item becomes the currently selected option the player is using. Does nothing by default.
+::*''fc'' - The menu item that wants to take focus.
+
+:*bool '''[[CheckFocus]]'''(MenuItemBase fc)
+:::Checks if the menu item is the current focus of the menu. Returns true if the menu item is the current focus. Does nothing by default.
+::*''fc'' - The menu item to check if it's focused.
+
+:*void '''[[ReleaseFocus]]'''()
+:::Handles unsetting the current focus of the menu. Does nothing by default.
+
+:*void '''[[ResetColor]]'''()
+:::Used to reset the color value of a color picker. Does nothing by default.
+
+:*bool '''[[MouseEvent]]'''(int type, int mx, int my)
+:::Called from the default '''OnUIEvent''' behavior. Handles specific mouse-related actions such as left clicking and movement. Returns true if the mouse should be captured after left clicking.
+::*''type'' - The type of mouse event that occurred.
+::*''mx'' - The current x position of the mouse on the screen.
+::*''my'' - The current y position of the mouse on the screen.
+
+:*void '''[[Ticker]]'''()
+:::Called every tic. Can be used to handle behavior that should happen on time consistent basis.
+
+:*void '''[[OnReturn]]'''()
+:::Called when returning to a menu from a sub menu.
+
+=== GenericMenu ===
+Inherits from [[Classes:Menu|Menu]]
+:*void '''[[Init]]'''(Menu parent)
+:::Called when the menu is first created. Allows for custom functionality when initializing.
+::*''parent'' - The menu this one belongs to. If parent is not null it can be considered a sub menu.
+
+=== OptionMenu ===
+Inherits from [[Classes:Menu|Menu]]
+:*void '''[[Init]]'''(Menu parent, OptionMenuDescriptor desc)
+:::Called when the menu is first created. Allows for custom functionality when initializing.
+::*''parent'' - The menu this one belongs to. If parent is not null it can be considered a sub menu.
+::*''desc'' - The option menu items in this menu and related information of their display.
+
+:*int '''[[GetIndent]]'''()
+:::Calculates the indent for where to draw the option menu's items at. Returns the x offset to draw at.
+
+=== ListMenu ===
+Inherits from [[Classes:Menu|Menu]]
+:*void '''[[Init]]'''(Menu parent = NULL, ListMenuDescriptor desc = NULL)
+:::Called when the menu is first created. Allows for custom functionality when initializing.
+::*''parent'' - The menu this one belongs to. If parent is not null it can be considered a sub menu.
+::*''desc'' - The list menu items in this menu and related information of their display.
+
+=== ConversationMenu ===
+Inherits from [[Classes:Menu|Menu]]
+:*int '''[[Init]]'''(StrifeDialogueNode CurNode, PlayerInfo player, int activereply)
+:::Called when the menu is first created. Allows for custom functionality when initializing. Returns the y offset for the top of the reply list.
+::*''CurNode'' - The dialogue node the menu starts at.
+::*''player'' - The player info of the player the speaker is talking to.
+::*''activereply'' - The reply to be automatically selected.
+
+:*int '''[[FormatReplies]]'''(int activereply)
+:::Handles the text formatting of the replies on menu initialization. Returns the y offset for the top of the reply list.
+::*''activereply'' - The reply to be automatically selected.
+
+:*void '''[[FormatSpeakerMessage]]'''()
+:::Handles the text formatting of the speaker's dialogue on menu initialization.
+
+:*bool '''[[DrawBackdrop]]'''()
+:::Handles drawing the backdrop for the conversation. Returning true dims the background of the text.
+
+:*void '''[[DrawSpeakerText]]'''(bool dimbg)
+:::Handles drawing the dialogue of the speaker alongside other information such as their name.
+::*''dimbg'' - If true, dims the background behind the text.
+
+:*void '''[[DrawReplies]]'''()
+:::Handles drawing the replies in list form.
+
+:*void '''[[DrawGold]]'''()
+:::Handles drawing the player's current gold if the menu has it enabled.
+
+=== MessageBoxMenu ===
+Inherits from [[Classes:Menu|Menu]]
+:*void '''[[Init]]'''(Menu parent, String message, int messagemode, bool playsound = false, Name cmd = 'None', voidptr native_handler = null)
+:::Called when the menu is first created. Allows for custom functionality when initializing.
+::*''parent'' - The menu this one belongs to. If parent is not null it can be considered a sub menu.
+::*''message'' - The text of the prompt.
+::*''messagemode'' - The mode for displaying the responses. Non-zero values will leave out the generic yes and no responses.
+::*''playsound'' - If true, plays the prompt sound.
+::*''cmd'' - The name of the menu class to go to if this is a sub menu with no handler.
+::*''native_handler'' - The handler to call when handling the result. If there is none the parent menu is used instead.
+
+:*void '''[[HandleResult]]'''(bool res)
+:::Handles the player's response to the prompt.
+::*''res'' - True if the player hit yes.
+
+=== MenuItemBase ===
+Inherits from [[Object]]
+:*bool '''[[CheckCoordinate]]'''(int x, int y)
+:::Checks against the passed xy coordinate. Returns true if the check passed. Does nothing by default.
+::*''x'' - The x coordinate to check against.
+::*''y'' - The y coordinate to check against.
+
+:*void '''[[Ticker]]'''()
+:::Called every tic by the menu this menu item belongs to. Can be used to handle functionality that should be done with consistent time intervals.
+
+:*void '''[[Drawer]]'''(bool selected)
+:::Called every frame. Handles drawing the menu item's generic visuals.
+::*''selected'' - If true, this menu item is currently the focus of the menu.
+
+:*bool '''[[Selectable]]'''()
+:::Checks if the menu item can be selected. Returns true if it can. Does nothing by default.
+
+:*bool '''[[Activate]]'''()
+:::Activates the menu item. Returns true if it activated successfully. Does nothing by default.
+
+:*Name, int '''[[GetAction]]'''()
+:::Returns the name of the menu class the item goes to and the parameters when setting that menu.
+
+:*bool '''[[SetString]]'''(int i, String s)
+:::Changes a text value of the menu item. Returns true if the value successfully changed. Does nothing by default.
+::*''i'' - Which text value to change.
+::*''s'' - The new value to change it to.
+
+:*bool, String '''[[GetString]]'''(int i)
+:::Gets a text value of the menu item. Returns true if it retrieved the value successfully and the value it retrieved. Does nothing by default.
+::*''i'' - Which text value to get.
+
+:*bool '''[[SetValue]]'''(int i, int value)
+:::Sets a number value of the menu item. Returns true if the value successfully changed. Does nothing by default.
+::*''i'' - Which number value to change.
+::*''value'' - The new value to change it to.
+
+:*bool, int '''[[GetValue]]'''(int i)
+:::Gets a number value of the menu item. Returns true if it retrieved the value successfully and the value it retrieved. Does nothing by default.
+::*''i'' - Which number value to get.
+
+:*void '''[[Enable]]'''(bool on)
+:::Handles enabling and disabling of the menu item.
+::*''on'' - If true, enable the menu. Otherwise disable it.
+
+:*bool '''[[MenuEvent]]'''(int mkey, bool fromcontroller)
+:::Called when the menu this menu item belongs to gets a menu event and it's the selected menu item. Returns true if the event should have no further handling but does nothing by default.
+::*''mkey'' - The code for the menu key that was used.
+::*''fromcontroller'' - If true, the event was triggered by a controller.
+
+:*bool '''[[MouseEvent]]'''(int type, int x, int y)
+:::Called when the menu this menu item belongs to gets a mouse event and it's the selected menu item. Returns true if the mouse should be captured after left clicking but does nothing by default.
+::*''type'' - The type of mouse event that occurred.
+::*''mx'' - The current x position of the mouse on the screen.
+::*''my'' - The current y position of the mouse on the screen.
+
+:*bool '''[[CheckHotkey]]'''(int c)
+:::Checks if the pressed key is the hot key for the menu item to be selected. Returns true if the hotkey matches. Does nothing by default.
+::*''c'' - The character code for the key pressed.
+
+:*int '''[[GetWidth]]'''()
+:::Calculates the width of the menu item. Returns the width.
+
+:*int '''[[GetIndent]]'''()
+:::Calculates the indent of the menu item to draw its values from. Returns the x offset.
+
+:*int '''[[Draw]]'''(OptionMenuDescriptor desc, int y, int indent, bool selected)
+:::Called every frame by the menu this menu item belongs to. Handles drawing with extra information about the menu as a whole. Returns the indent the menu item used.
+::*''desc'' - Contains the menu items the parent menu has and information related to displaying them.
+::*''y'' - The current y offset of the menu item.
+::*''indent'' - The indent of the menu itself.
+::*''selected'' - If true, this menu item is currently the focus of the menu.
+
+:*void '''[[OnMenuCreated]]'''()
+:::Called when the menu this menu item belongs to initializes. Can be used to set up custom functionality when the menu is created.
+
+=== OptionMenuItemOptionBase ===
+Inherits from OptionMenuItem which inherits from MenuItemBase
+:*int '''[[GetSelection]]'''()
+:::Gets which entry the option menu item's CVar belongs to in the map data structure containing all the CVars and their values. Returns the entry number of the CVar.
+
+:*void '''[[SetSelection]]'''(int Selection)
+:::Sets the option menu item's CVar value with the option menu item's current value.
+::*''Selection'' - Which entry corresponds to the CVar in the map data structure containing all the CVars and their values.
+
+:*bool '''[[isGrayed]]'''()
+:::Checks if the option is currently grayed out. Returns true if it is.
+
+=== OptionMenuSliderBaser ===
+Inherits from OptionMenuItem which inherits from MenuItemBase
+:*double '''[[GetSliderValue]]'''()
+:::Returns the slider's value.
+
+:*void '''[[SetSliderValue]]'''(double val)
+:::Sets the slider's value to the new number.
+::*''val'' - The number to set the slider to.
+
+=== OptionMenuItemSliderReverbEditOption ===
+Inherits fom OptionMenuSliderBase
+:*String '''[[Represent]]'''()
+:::Returns the formatted text to draw when displaying the reverb editing's text field value.
+
+=== OptionMenuFieldBase ===
+Inherits from OptionMenuItem which inherits from MenuItemBase
+:*String '''[[Represent]]'''()
+:::Returns the formatted text to draw when displaying the text field's value.
+
+=== ListMenuItem ===
+Inherits from MenuItemBase
+:*void '''[[DrawSelector]]'''(double xofs, double yofs, TextureID tex)
+:::Handles drawing the selector arrow when the list item is currently selected.
+::*''xofs'' - The x offset to use from the list item's current x position.
+::*''yofs'' - The y offset to use from the list item's current y position.
+::*''tex''- The id of the texture to draw.
+
+== Examples ==
+The following demonstrates how SpecialMissileHit works on [[MageStaffFX2]].
+ override int SpecialMissileHit (Actor victim)
+ {
+ 	if (victim != target &amp;&amp; !victim.player &amp;&amp; !victim.bBoss)
+ 	{
+ 		victim.DamageMobj (self, target, 10, 'Fire');
+ 		return 1;	// Keep going
+ 	}
+ 	return -1;
+ }
+
+The following demonstrates how SpecialBlastHandling is performed with the [[Classes:ArtiBlastRadius|Disc of Repulsion]].
+ override bool SpecialBlastHandling (Actor source, double strength)
+ {
+     // Reflect to originator
+     tracer = target;	
+     target = source;
+     return true;
+ }
+
+The following demonstrates how CanCollideWith can be used:
+
+ //--------------------------------------------------------------------------
+ // Disable collisions on some actors.
+ //--------------------------------------------------------------------------
+ 
+ override bool CanCollideWith(Actor other, bool passive)
+ {
+     // Non-passive means the one moving into the other is performing the checks.
+     if (!passive)
+     {
+         if (!other)		
+             return false;
+ 	
+         // Pass through dead things. There is a difference between this and CORPSE.
+         if (other.bKILLED)
+             return false;
+ 		
+         // Solid obstacles must block.
+         if (other.bSOLID &amp;&amp; !other.bNONSHOOTABLE &amp;&amp; !other.bSHOOTABLE)
+             return true;
+ 		
+         if (other.bSHOOTABLE &amp;&amp; (other.bFLOAT || other.bNOGRAVITY))
+             return false;
+ 
+         // Walk over 'em if they're small enough.
+         if (other.Height &lt;= 75 &amp;&amp; other.Radius &lt;= 60)
+             return false;
+ 
+         // Pass through different species of select types.
+         if (other.GetSpecies() == 'CommonInfected')
+             return false;
+     }
+     // We don't really care about others making the check.
+     return true;
+ }
+
+== See also ==
+* [[ZScript]]
+
+[[Category:ZScript]]
+[[Category:ZScript virtual functions]]</text>
+    <sha1>0anevqugviltivcrg32e5wzyq9tg26t</sha1>
+  </revision>
+</page>

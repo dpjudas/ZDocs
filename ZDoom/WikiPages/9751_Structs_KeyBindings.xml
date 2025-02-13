@@ -1,0 +1,51 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>Structs:KeyBindings</title>
+  <ns>0</ns>
+  <id>9751</id>
+  <revision>
+    <id>53060</id>
+    <parentid>51173</parentid>
+    <timestamp>2024-09-05T20:07:09Z</timestamp>
+    <contributor>
+      <username>Jekyll Grim Payne</username>
+      <id>2175</id>
+    </contributor>
+    <comment>/* Dynamic */</comment>
+    <origin>53060</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="2318" sha1="hfp5onmrvabw8qk0jewheqwp6i5k7w8" xml:space="preserve">{{ZScriptNote}}
+
+This struct contains functionality related to key bindings.
+
+== Methods ==
+
+All methods are defined as &lt;code&gt;native&lt;/code&gt;, meaning their inner workings are handled in C++.
+=== Static ===
+The keys recognized by these methods are integer values either from the [https://github.com/ZDoom/gzdoom/blob/fb6e4becaadea0a6d64d711c6757e471ad22d62c/wadsrc/static/zscript/engine/inputevents.zs#L85 InputEvent] struct, or obtained with &lt;code&gt;GetKeysForCommand&lt;/code&gt;/&lt;code&gt;GetAllKeysForCommand&lt;/code&gt;.
+*{{c|static String '''NameKeys'''(int k1, int k2)}}
+:Returns the names of the two provided keys. This function is essentially deprecated, being superseded by the more efficient &lt;code&gt;NameAllKeys()&lt;/code&gt;.
+*{{c|static String '''NameAllKeys'''(array&lt;int&gt; list, bool colors }}={{c| true)}}
+:Returns the names of all keys contained in the provided array. The string is colorized by default, but that can be circumvented by passing &lt;code&gt;false&lt;/code&gt; to the &lt;code&gt;colors&lt;/code&gt; argument (so that the string can be later colorized with the appropriate string-drawing function arguments or [[Text colors|color codes]]).
+
+=== Dynamic ===
+Dynamic KeyBindings methods can be called in [[ZScript]] on the global &lt;code&gt;Bindings&lt;/code&gt; pointer.
+
+The command arguments are what you would type in the console to trigger that action.
+
+*{{c|int, int '''GetKeysForCommand'''(String cmd)}}
+:Returns the first two keys for the provided command. This function is essentially deprecated, being superseded by the more robust &lt;code&gt;GetAllKeysForCommand&lt;/code&gt;.
+*{{c|void '''GetAllKeysForCommand'''(out array&lt;int&gt; list, String cmd)}}
+:Fills the provided array with keys for the provided command.
+*{{c|String '''GetBinding'''(int key)}}
+:Returns the command bound to the provided key as a string. If used within an {{class|EventHandler}} '''InputProcess()''' override, &lt;code&gt;e.KeyScan&lt;/code&gt; can be passed here, and the function will return the name of the console command tied to that key.
+*{{c|void '''SetBind'''(int key, String cmd)}}
+:Binds the specified command to the specified key. &lt;u&gt;Can only be called in a UI event from a Menu class.&lt;/u&gt;
+*{{c|void '''UnbindACommand'''(String str)}}
+:Unbinds the specified command from a key. &lt;u&gt;Can only be called in a UI event from a Menu class.&lt;/u&gt;
+
+[[Category:ZScript]]
+[[Category:Structs]]</text>
+    <sha1>hfp5onmrvabw8qk0jewheqwp6i5k7w8</sha1>
+  </revision>
+</page>

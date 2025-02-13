@@ -1,0 +1,93 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>CMPGNINF</title>
+  <ns>0</ns>
+  <id>4207</id>
+  <revision>
+    <id>20819</id>
+    <parentid>20118</parentid>
+    <timestamp>2009-02-25T22:54:10Z</timestamp>
+    <contributor>
+      <username>Matty Rage</username>
+      <id>1420</id>
+    </contributor>
+    <comment>Added examples from skulltag.wad</comment>
+    <origin>20819</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="2051" sha1="f57nnqji016olcoa0gtbh8zz51y22mj" xml:space="preserve">{{STFeature}}
+
+
+CMPGNINF is a lump that lets the coder tell Skulltag what to do when it loads a certain map. It should be used in conjunction with [[MAPINFO]]. As with all Skulltag's special lumps, it requires opening and closing braces:
+
+ {
+ Properties...
+ }
+
+=== Properties ===
+
+The following properties can be used with CMPGNINF
+
+*'''mapname'''
+:The map name of the map you wish to define.
+*'''fraglimit'''
+:The default frag limit.
+*'''timelimit'''
+:The default time limit.
+*'''pointlimit'''
+:The default point (CTF etc) limit.
+*'''duellimit'''
+:The default amount of duels in a duel game.
+*'''winlimit'''
+:The default amount of wins required to end the map in a duel game.
+*'''wavelimit'''
+:The amount of waves in an invasion map.
+*'''gamemode'''
+:The game mode of the map. Can be either ''cooperative'', ''survival'', ''invasion'', ''deathmatch'', ''teamplay'', ''duel'', ''terminator'', ''lastmanstanding'', ''teamlms'', ''possession'', ''teampossession'', ''teamgame'', ''ctf'', ''oneflagctf'' or ''skulltag''.
+*'''dmflags'''
+:The set [[DMFlags]] of the map.
+*'''dmflags2'''
+:The set [[DMFlags|DMFlags2]] of the map.
+*'''compatflags'''
+:The set [[Compatibility options]] of the map.
+*'''playerteam'''
+:The team the player is set to (Singleplayer only).
+*'''mustwinallduels'''
+:If non-zero the player has to win all duels to proceed to the next map.
+*'''possessionholdtime'''
+:The time the [[Classes:Skulltag|Possession Sphere]] has to be held in order to score a point.
+*'''instagib'''
+:If non-zero the game will be an Instagib match.
+*'''buckshot'''
+:If non-zero the game will be an Buckshot match.
+*'''botteam'''
+:botteam[&lt;botnum&gt;] = &lt;integer&gt; (0 = blue, 1 = red)
+*'''bot'''
+:bot[&lt;botnum&gt;] = &lt;string&gt; (bot name)
+
+== Example ==
+These are taken from the CMPGNINF in the skulltag wad.
+
+ {
+ mapname = d2dm1
+ gamemode = deathmatch
+ fraglimit = 25
+ dmflags = 20612
+ dmflags2 = 512
+ bot[0] = deimos
+ bot[1] = aldebaran
+ bot[2] = chubbs
+ }
+
+ {
+ mapname = d2lms1
+ possessionholdtime = 15
+ }
+
+ {
+ mapname = D2INV1
+ gamemode = invasion
+ wavelimit = 6
+ }</text>
+    <sha1>f57nnqji016olcoa0gtbh8zz51y22mj</sha1>
+  </revision>
+</page>

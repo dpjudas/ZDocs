@@ -1,0 +1,52 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>Classes:MaceFX2</title>
+  <ns>0</ns>
+  <id>4276</id>
+  <revision>
+    <id>39405</id>
+    <parentid>34129</parentid>
+    <timestamp>2015-04-29T17:59:29Z</timestamp>
+    <contributor>
+      <username>Blue Shadow</username>
+      <id>2021</id>
+    </contributor>
+    <minor />
+    <comment>/* DECORATE definition */ Updated</comment>
+    <origin>39405</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="941" sha1="t4hit6rlhjfc6ft0gvbkpkowjp4da9r" xml:space="preserve">{{Actor|
+| type = Explosive
+| name = Large firemace sphere
+| class = MaceFX2
+| game = Heretic
+| spawnid = 156
+| spawnname = T_HEAVYMACEBALL 
+}}[[Classes]]: [[Classes:MaceFX1|MaceFX1]]&amp;rarr;&lt;u&gt;MaceFX2&lt;/u&gt;&lt;br&gt;
+
+The [[Classes:Mace|firemace]]'s secondary projectile, this mace sphere bounces a few times, spawning two [[Classes:MaceFX3|small spheres]] on each bounce. The native action [[A_MaceBallImpact2]] manages that by "resurrecting" the sphere (setting it back to its spawn state) unless its vertical speed is too slow, and by spawning the smaller ones.
+
+==== [[DECORATE]] definition ====
+ ACTOR &lt;u&gt;MaceFX2&lt;/u&gt; : {{Class|MaceFX1}}
+ {
+   {{Property|Speed}} 10
+   {{Property|Damage}} 6
+   {{Property|Gravity}} 0.125
+   -{{Flag|NOGRAVITY}}
+   {{Property|SeeSound}} ""
+ 
+   action native [[A_MaceBallImpact2]]();
+ 
+   States
+   {
+   Spawn:
+     FX02 CD 4
+     Loop
+   Death:
+     FX02 F 4 [[A_MaceBallImpact2]]
+     Goto Super::Death+1
+   }
+ }</text>
+    <sha1>t4hit6rlhjfc6ft0gvbkpkowjp4da9r</sha1>
+  </revision>
+</page>

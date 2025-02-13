@@ -1,0 +1,56 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>Classes:EntityPod</title>
+  <ns>0</ns>
+  <id>4767</id>
+  <revision>
+    <id>39847</id>
+    <parentid>37928</parentid>
+    <timestamp>2015-05-04T22:10:26Z</timestamp>
+    <contributor>
+      <username>Blue Shadow</username>
+      <id>2021</id>
+    </contributor>
+    <minor />
+    <comment>/* DECORATE definition */ Updated</comment>
+    <origin>39847</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="657" sha1="gg934j3a09cfe6jp46tjb01fdl5eitl" xml:space="preserve">{{Actor|
+| type = Map spot
+| name = Entity pod
+| class = EntityPod
+| game = Strife
+| doomednum = 198
+| convid = 77
+}}[[Classes]]: &lt;u&gt;EntityPod&lt;/u&gt;&lt;br&gt;
+
+A strange big green egg that breaks and releases the Entity to fight you.
+
+==== [[DECORATE]] definition ====
+ ACTOR &lt;u&gt;EntityPod&lt;/u&gt;
+ {
+   {{Property|Radius}} 25
+   {{Property|Height}} 91
+   +{{Flag|SOLID}}
+   +{{Flag|NOTDMATCH}}
+   {{Property|SeeSound}} "misc/gibbed"
+ 
+   action native [[A_SpawnEntity]]();
+ 
+   States
+   {
+   Spawn:
+     PODD A 60 [[A_Look]]
+     Loop
+   See:
+     PODD A 360
+     PODD B 9 [[A_NoBlocking]]
+     PODD C 9
+     PODD D 9 [[A_SpawnEntity]]
+     PODD E -1
+     Stop
+   }
+ }</text>
+    <sha1>gg934j3a09cfe6jp46tjb01fdl5eitl</sha1>
+  </revision>
+</page>

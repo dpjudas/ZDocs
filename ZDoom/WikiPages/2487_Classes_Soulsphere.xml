@@ -1,0 +1,50 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>Classes:Soulsphere</title>
+  <ns>0</ns>
+  <id>2487</id>
+  <revision>
+    <id>39197</id>
+    <parentid>33862</parentid>
+    <timestamp>2015-04-27T17:30:18Z</timestamp>
+    <contributor>
+      <username>Blue Shadow</username>
+      <id>2021</id>
+    </contributor>
+    <minor />
+    <comment>/* DECORATE definition */ Updated</comment>
+    <origin>39197</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="1132" sha1="3v1cmg50g57o45n27w6j8cyzkuudp18" xml:space="preserve">{{Actor|
+| type = Health
+| name = Soul sphere
+| class = Soulsphere
+| game = Doom
+| doomednum = 2013
+| spawnid = 25
+| spawnname = T_SOULSPHERE 
+}}[[Classes]]: [[Classes:Inventory|Inventory]]&amp;rarr;[[Classes:Health|Health]]&amp;rarr;&lt;u&gt;Soulsphere&lt;/u&gt;
+
+The soul sphere is a blue orb with a humanoid face inside. When picked up, it grants the player a mighty 100 point health boost. Unlike the [[Classes:Medikit|medikit]] and the [[Classes:Stimpack|stimpack]], the soul sphere's health boost can go ''above'' the 100 health point limit, up to 200 points. A related, yet less powerful, item with a similar effect is the [[Classes:HealthBonus|health bonus]].
+
+==== [[DECORATE]] definition ====
+ ACTOR &lt;u&gt;Soulsphere&lt;/u&gt; : {{Class|Health}}
+ {
+   +{{Flag|COUNTITEM}}
+   +{{Flag|INVENTORY.AUTOACTIVATE}}
+   +{{Flag|INVENTORY.ALWAYSPICKUP}}
+   +{{Flag|INVENTORY.FANCYPICKUPSOUND}}
+   {{Property|Inventory.Amount}} 100
+   {{Property|Inventory.MaxAmount}} 200
+   {{Property|Inventory.PickupMessage}} "$GOTSUPER" // "Supercharge!"
+   {{Property|Inventory.PickupSound}} "misc/p_pkup"
+   States
+   {
+   Spawn:
+     SOUL ABCDCB 6 Bright
+     Loop
+   }
+ }</text>
+    <sha1>3v1cmg50g57o45n27w6j8cyzkuudp18</sha1>
+  </revision>
+</page>

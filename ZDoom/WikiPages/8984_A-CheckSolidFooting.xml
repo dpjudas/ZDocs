@@ -1,0 +1,106 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>A CheckSolidFooting</title>
+  <ns>0</ns>
+  <id>8984</id>
+  <revision>
+    <id>49965</id>
+    <parentid>43790</parentid>
+    <timestamp>2022-12-16T17:41:53Z</timestamp>
+    <contributor>
+      <username>Caligari 87</username>
+      <id>90</id>
+    </contributor>
+    <minor />
+    <comment>syntax highlighting</comment>
+    <origin>49965</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="2611" sha1="t25deiylkqjrceqnd46hzkn9mq6k24u" xml:space="preserve">{{DISPLAYTITLE:A_CheckSolidFooting}}
+[[Category:Custom action functions]]
+state '''A_CheckSolidFooting''' (int ''offset'', int flags = CSF_ALL)&lt;br&gt;
+state '''A_CheckSolidFooting''' (str "''state''", int flags = CSF_ALL)
+{{JumpNotice}}
+This is an example of a custom function that jumps if the calling actor is standing on the ground, an actor or a 3D floor. It is a much more effective and accurate version of [[A_CheckFloor]].
+
+== Implementing into your mod ==
+Add the following enum to your project:
+
+&lt;syntaxhighlight lang="csharp"&gt;
+enum ECheckSolidFootingFlags
+{
+    CSF_SOLIDGROUND = 1,
+    CSF_SOLIDACTORS = 2,
+    
+    CSF_ALL = CSF_SOLIDGROUND|CSF_SOLIDACTORS,
+}
+&lt;/syntaxhighlight&gt;
+
+Then add the following [[ZScript]] function to your actor of choice. This does not need to be repeated for classes which inherit from another already possessing this function. Note that the additional ''oldVelZ'' variable, and the change to the Tick method are optional. However, you will need to remove the code that makes use of these changes in the A_CheckSolidFooting function if you do not include them.
+
+&lt;syntaxhighlight lang="csharp"&gt;
+// add this variable to your actor
+double oldVelZ;
+
+override void Tick()
+{
+    // add the following line to your actor's Tick() method
+    oldVelZ = vel.z;
+    
+    super.Tick();
+}
+
+action state A_CheckSolidFooting(StateLabel label, int flags = CSF_ALL)
+{
+    // small optimization: if our z-vel has changed, we aren't standing on something
+    if (invoker.oldVelZ != vel.z)
+        return null;
+    
+    // are we standing on solid ground?
+    if (abs(pos.z - GetZAt()) &lt;= 1)
+    {
+        if (flags &amp; CSF_SOLIDGROUND)
+            return ResolveState(label);
+    }
+    
+    // are we standing on an actor?
+    bool ok; Actor below;
+    [ok, below] = TestMobjZ(true);
+    if (below)
+    {
+        if (flags &amp; CSF_SOLIDACTORS)
+            return ResolveState(label);
+    }
+    
+    // has our z-velocity not changed?
+    if (vel.z == invoker.oldVelZ &amp;&amp; (flags &amp; CSF_SOLIDGROUND))
+        return ResolveState(label);
+    
+    // we aren't standing on anything
+    return null;
+}
+&lt;/syntaxhighlight&gt;
+
+The function is now ready for use.
+
+== Examples ==
+The following example will force the actor into the first frame of its Death state when on the ground, and the first frame of its Spawn state when in the air.
+
+&lt;syntaxhighlight lang="csharp"&gt;
+override void Tick()
+{
+    let r = A_CheckSolidFooting("Death");
+    if (r == null)
+        SetStateLabel("Spawn");
+    else
+        SetState(r);
+
+    oldVelZ = vel.z;
+    super.Tick();
+}
+&lt;/syntaxhighlight&gt;
+
+== See also ==
+*[[A_CheckFloor]]</text>
+    <sha1>t25deiylkqjrceqnd46hzkn9mq6k24u</sha1>
+  </revision>
+</page>

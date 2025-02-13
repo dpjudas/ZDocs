@@ -1,0 +1,47 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>Structs:LookExParams</title>
+  <ns>0</ns>
+  <id>9913</id>
+  <revision>
+    <id>53468</id>
+    <parentid>52703</parentid>
+    <timestamp>2024-10-31T10:40:12Z</timestamp>
+    <contributor>
+      <username>Jekyll Grim Payne</username>
+      <id>2175</id>
+    </contributor>
+    <comment>/* See also */</comment>
+    <origin>53468</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="1221" sha1="54hh52uvw8m6in37eaizv6t9s7o1pc9" xml:space="preserve">{{ZScriptNote}}
+
+'''LookExParams''' is a [[Structs|struct]] that contains information that can be used by various Look functions such as [[LookForEnemies]], [[LookForPlayers]] and [[LookForTid]]. Functions like [[A_LookEx]] utilize this struct internally but it cannot be passed to them directly.
+
+== Variables ==
+*{{c|double '''Fov'''}}
+:Field of vision for the looking.
+*{{c|double '''minDist'''}}
+:Minimum sight distance in map units. If greater than 0, the calling actor will not see the potential target is closer than this. If this is smaller than the calling actor's {{property|Radius|radius}}, it won't wake up upon being touched by an enemy.
+*{{c|double '''maxDist'''}}
+:Maximum sight distance in map units. The calling actor will not see potential targets beyond it.
+*{{c|double '''maxHeardist'''}}
+:Maxiumum hearing distance. The calling actor will not react to sounds produced by the potential target beyond this distance.
+*{{c|int '''flags'''}}
+:Same as [[A_LookEx]] flags:
+{{: LOF flags}}
+*{{c|State '''seestate'''}}
+:The {{struct|State}} pointer to jump to.
+
+== See also ==
+* [[LookForEnemies]]
+* [[LookForPlayers]]
+* [[LookForTid]]
+* [[A_LookEx]]
+* [[IsVisible]]
+
+[[Category:ZScript]]
+[[Category:Structs]]</text>
+    <sha1>54hh52uvw8m6in37eaizv6t9s7o1pc9</sha1>
+  </revision>
+</page>

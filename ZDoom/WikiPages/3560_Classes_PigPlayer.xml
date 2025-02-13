@@ -1,0 +1,79 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>Classes:PigPlayer</title>
+  <ns>0</ns>
+  <id>3560</id>
+  <revision>
+    <id>34841</id>
+    <parentid>18695</parentid>
+    <timestamp>2012-11-09T15:44:22Z</timestamp>
+    <contributor>
+      <username>Blue Shadow</username>
+      <id>2021</id>
+    </contributor>
+    <comment>/* DECORATE definition */ Updated.</comment>
+    <origin>34841</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="1659" sha1="ij37yb2u3tqqy5i5z2ybmcvvphw6qjd" xml:space="preserve">{{Actor|
+| type = Player
+| name = Pig
+| class = PigPlayer
+| game = Hexen
+}}[[Classes]]: [[Classes:PlayerPawn|PlayerPawn]] &amp;rarr;&lt;u&gt; PigPlayer&lt;/u&gt;
+
+Players hit by a [[Classes:ArtiPork|porkalator]] [[Classes:PorkFX|shot]] are temporarily turned into this. Upon morphing back to their original shape, their health is reset to the default for their class (usually 100). Using the [[Classes:ArtiTeleport|chaos device]] puts an end to the transformation. Not to be confused with the [[Classes:Pig|pig]] class.
+
+==== [[DECORATE]] definition ====
+ ACTOR &lt;u&gt;PigPlayer&lt;/u&gt; : {{Class|PlayerPawn}} native
+ {
+   {{Property|Health}} 30
+   {{Property|ReactionTime}} 0
+   {{Property|PainChance}} 255
+   {{Property|Radius}} 16
+   {{Property|Height}} 24
+   {{Property|Speed}} 1
+   +{{Flag|WINDTHRUST}}
+   +{{Flag|NOSKIN}}
+   -{{Flag|PICKUP}}
+   {{Property|PainSound}} "PigPain"
+   {{Property|DeathSound}} "PigDeath"
+   {{Property|Player.JumpZ}} 6
+   {{Property|Player.Viewheight}} 28
+   {{Property|Player.ForwardMove}} 0.96, 0.98
+   {{Property|Player.SideMove}} 0.95833333, 0.975
+   {{Property|Player.SpawnClass}} "Pig"
+   {{Property|Player.SoundClass}} "Pig"
+   {{Property|Player.DisplayName}} "Pig"
+   {{Property|Player.MorphWeapon}} "{{Class|Snout}}"
+   States
+   {
+   Spawn:
+     PIGY A -1
+     Stop
+   See:
+     PIGY ABCD 3
+     Loop
+   Pain:
+     PIGY D 4 [[A_PigPain]]
+     Goto Spawn
+   Melee:
+   Missile:
+     PIGY A 12
+     Goto Spawn
+   Death:
+     PIGY E 4 [[A_Scream]]
+     PIGY F 3 [[A_NoBlocking]]
+     PIGY G 4
+     PIGY H 3
+     PIGY IJK 4
+     PIGY L -1
+     Stop
+   Ice:
+     PIGY M 5 [[A_FreezeDeath]]
+     PIGY M 1 [[A_FreezeDeathChunks]]
+     Wait
+   }
+ }</text>
+    <sha1>ij37yb2u3tqqy5i5z2ybmcvvphw6qjd</sha1>
+  </revision>
+</page>

@@ -1,0 +1,58 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>SetPointer</title>
+  <ns>0</ns>
+  <id>7009</id>
+  <revision>
+    <id>38756</id>
+    <parentid>38179</parentid>
+    <timestamp>2015-02-01T07:57:34Z</timestamp>
+    <contributor>
+      <username>Cpt. Carmack</username>
+      <id>2022</id>
+    </contributor>
+    <minor />
+    <comment>/* Examples */</comment>
+    <origin>38756</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="2467" sha1="mjixrxld8akdt0kxcgw9u1z5vkz0onu" xml:space="preserve">bool '''SetPointer'''(int ''assign_slot'', int ''tid''[, int ''pointer_selector''[, int ''flags'']])
+
+== Usage ==
+Set the value of one of the activator's stored [[actor pointer]]s.
+
+Note: The function tests for circular reference on {{c|master}} and {{c|target}} fields, setting them to NULL if one is found. That test does not occur when assigning to the {{c|tracer}} field. Any attempt to make the actor point directly to itself will also result in a NULL assignment.
+
+=== Parameters ===
+* int ''assign_slot'': an [[actor pointer]] selector. Must refer to an assignable pointer type ({{c|target}}, {{c|master}}, {{c|tracer}}).
+* int ''tid'': [[TID]] of the actor to be stored in the selected slot. 0 selects the activator, but the caller can only be an intermediate selection.
+* int ''pointer_selector'': if this is specified, the actor specified by TID is used as an intermediate actor. The final value is determined by selecting any available actor pointer from the intermediate actor.
+* int ''flags'':
+** '''PTROP_UNSAFETARGET''': don't nullify assignments that result in an infinite chain of missiles referencing each other.
+** '''PTROP_UNSAFEMASTER''': don't nullify assignments that result in an infinite chain of actors referencing each other.
+
+=== Return value ===
+* '''TRUE''' (1) if a non-NULL assignment was made (a suitable actor was found and stored).
+* '''FALSE''' (0) if there is no activator, or if a NULL assignment was made. This function assigns data to the activator, and cannot operate without one.
+
+== Examples ==
+This script will cause any monster with provided TID to attack the calling player's current target. It could be used for summoned minions and the script could be activated via a hot-key.
+ Script "AttackTarget" (int TID) NET
+ {
+  int oldTID, target;
+  if([[SetActivator]](0,AAPTR_PLAYER_GETTARGET)) // Get the target of the activator. If it fails because there is none nothing will happen.
+ { 
+   oldTID = [[ActivatorTID]](); // Save the TID of the target.
+   target = [[UniqueTID]](); // Get a new unique TID for the target actor.
+   [[Thing_ChangeTID]](0, target); // Set that TID to the actor.
+   SetActivator(TID); // Set the activator to the actor with the given TID.
+   [[SetPointer]](AAPTR_TARGET, target); // Give a new target to it.
+   Thing_ChangeTID(target,oldTID); // Restore the previous TID, because it might be used already by other scripts.
+ }
+
+== See also ==
+* [[Actor pointer]]s
+
+[[Category:ACS Actor functions]]</text>
+    <sha1>mjixrxld8akdt0kxcgw9u1z5vkz0onu</sha1>
+  </revision>
+</page>

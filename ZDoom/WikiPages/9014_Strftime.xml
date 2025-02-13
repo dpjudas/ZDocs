@@ -1,0 +1,46 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>Strftime</title>
+  <ns>0</ns>
+  <id>9014</id>
+  <revision>
+    <id>48144</id>
+    <parentid>48143</parentid>
+    <timestamp>2020-11-25T20:26:56Z</timestamp>
+    <contributor>
+      <username>Threesaster</username>
+      <id>2609</id>
+    </contributor>
+    <origin>48144</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="1129" sha1="qzspvgrv9ylh095mzmosqkboh9rr1j2" xml:space="preserve">{{STFeature}}
+
+str '''Strftime'''(int timestamp, str format['', int utc'']) (Dev. 3.0 | 150831-1814)
+__NOTOC__
+== Usage ==
+=== Parameters ===
+* ''timestamp'': the timestamp to format (use [[SystemTime (Skulltag)|SystemTime]] to get the current time])
+* ''format'': a string describing how the string is formatted. It may contain any supported [http://www.cplusplus.com/reference/ctime/strftime/ conversion specifiers], which are replaced as appropriate.
+* ''utc'': If true, then the timestamp will be localized using the UTC timezone, local timezone otherwise.
+
+=== Return value ===
+A human-readable string from the given timestamp, formatted using the format parameter.
+
+Note that due to ACS's limitations, timestamps are suspectible to the [http://en.wikipedia.org/wiki/Year_2038_problem year 2038 problem].
+
+== Example ==
+This prints something like &lt;code&gt;{{CURRENTMONTHNAME}} {{CURRENTDAY}} {{CURRENTYEAR}}&lt;/code&gt; to the screen.
+
+&lt;syntaxhighlight lang="c" line="1"&gt;
+Script 1 (void)
+{
+    Print (s: Strftime (SystemTime(), "%B %d %Y", true));
+}
+&lt;/syntaxhighlight&gt;
+
+== See Also ==
+*[[SystemTime (Skulltag)]]
+*[[GetTimeProperty]]</text>
+    <sha1>qzspvgrv9ylh095mzmosqkboh9rr1j2</sha1>
+  </revision>
+</page>

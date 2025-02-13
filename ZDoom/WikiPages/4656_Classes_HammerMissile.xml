@@ -1,0 +1,55 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>Classes:HammerMissile</title>
+  <ns>0</ns>
+  <id>4656</id>
+  <revision>
+    <id>34519</id>
+    <parentid>34518</parentid>
+    <timestamp>2012-10-17T13:23:15Z</timestamp>
+    <contributor>
+      <username>Blue Shadow</username>
+      <id>2021</id>
+    </contributor>
+    <comment>Added a description.</comment>
+    <origin>34519</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="954" sha1="e3pdr7jwofsnjahux7w4owijpbqvs42" xml:space="preserve">{{Actor|
+| type = Explosive
+| name = Hammer missile
+| class = HammerMissile
+| game = Hexen
+}}[[Classes]]:  {{Class}} &amp;rarr; &lt;u&gt;HammerMissile&lt;/u&gt;&lt;br&gt;
+
+The flaming hammer projectile fired by the {{Class|FighterPlayer|fighter}}'s {{Class|FWeapHammer|Hammer of Retribution}} weapon.
+==== [[DECORATE]] definition ====
+ ACTOR &lt;u&gt;HammerMissile&lt;/u&gt;
+ {
+   {{Property|Speed}} 25
+   {{Property|Radius}} 14
+   {{Property|Height}} 20
+   {{Property|Damage}} 10
+   {{Property|DamageType}} "Fire"
+   {{Property|Projectile}}
+   {{Property|DeathSound}} "FighterHammerExplode"
+   {{Property|Obituary}} "$OB_MPFWEAPHAMMERR"
+   States
+   {
+   Spawn:
+     FHFX A 2 Bright
+     FHFX B 2 Bright [[A_PlaySound]]("FighterHammerContinuous")
+     FHFX CDEFGH 2 Bright
+     Loop
+   Death:
+     FHFX I 3 Bright [[A_SetTranslucent]](1, 1)
+     FHFX J 3 Bright
+     FHFX K 3 Bright [[A_Explode]](128, 128, 0)
+     FHFX LM 3 Bright
+     FHFX N 3
+     FHFX OPQR 3 Bright
+     Stop
+   }
+ }</text>
+    <sha1>e3pdr7jwofsnjahux7w4owijpbqvs42</sha1>
+  </revision>
+</page>

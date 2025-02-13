@@ -1,0 +1,99 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>Classes:Wizard</title>
+  <ns>0</ns>
+  <id>3743</id>
+  <revision>
+    <id>39452</id>
+    <parentid>34179</parentid>
+    <timestamp>2015-04-30T21:07:36Z</timestamp>
+    <contributor>
+      <username>Blue Shadow</username>
+      <id>2021</id>
+    </contributor>
+    <minor />
+    <comment>/* DECORATE definition */ Updated</comment>
+    <origin>39452</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="2125" sha1="oc2rc2138t3qhijvusg65516nuon0kj" xml:space="preserve">{{Actor|
+| type = Monster
+| name = Disciple of D'Sparil
+| class = Wizard
+| game = Heretic
+| doomednum = 15
+| spawnid = 19
+| spawnname = T_WIZARD
+}}[[Classes]]: &lt;u&gt;Wizard&lt;/u&gt;&lt;br&gt;
+The Disciples are sinister wizards wearing a dark hooded robe, probably undead. They shoot three purple {{Class|WizardFX1|halo-like projectiles}} on a wide fan, a behavior which can be used to induce infighting. {{Class|Sorcerer2|D'Sparil}} can summon them by pairs.
+
+==== [[DECORATE]] definition ====
+ ACTOR &lt;u&gt;Wizard&lt;/u&gt;
+ {
+   {{Property|Health}} 180
+   {{Property|Radius}} 16
+   {{Property|Height}} 68
+   {{Property|Mass}} 100
+   {{Property|Speed}} 12
+   {{Property|PainChance}} 64
+   {{Property|Monster}}
+   +{{Flag|FLOAT}}
+   +{{Flag|NOGRAVITY}}
+   +{{Flag|DONTOVERLAP}}
+   {{Property|SeeSound}} "wizard/sight"
+   {{Property|AttackSound}} "wizard/attack"
+   {{Property|PainSound}} "wizard/pain"
+   {{Property|DeathSound}} "wizard/death"
+   {{Property|ActiveSound}} "wizard/active"
+   {{Property|Obituary}} "$OB_WIZARD"
+   {{Property|HitObituary}} "$OB_WIZARDHIT"
+   {{Property|DropItem}} "{{Class|BlasterAmmo}}", 84, 10
+   {{Property|DropItem}} "{{Class|ArtiTomeOfPower}}", 4, 0
+ 
+   action native [[A_GhostOff]]();
+   action native [[A_WizAtk1]]();
+   action native [[A_WizAtk2]]();
+   action native [[A_WizAtk3]]();
+ 
+   States
+   {
+   Spawn:
+     WZRD AB 10 [[A_Look]]
+     Loop
+   See:
+     WZRD A 3 [[A_Chase]]
+     WZRD A 4 [[A_Chase]]
+     WZRD A 3 [[A_Chase]]
+     WZRD A 4 [[A_Chase]]
+     WZRD B 3 [[A_Chase]]
+     WZRD B 4 [[A_Chase]]
+     WZRD B 3 [[A_Chase]]
+     WZRD B 4 [[A_Chase]]
+     Loop
+   Missile:
+     WZRD C 4 [[A_WizAtk1]]
+     WZRD C 4 [[A_WizAtk2]]
+     WZRD C 4 [[A_WizAtk1]]
+     WZRD C 4 [[A_WizAtk2]]
+     WZRD C 4 [[A_WizAtk1]]
+     WZRD C 4 [[A_WizAtk2]]
+     WZRD C 4 [[A_WizAtk1]]
+     WZRD C 4 [[A_WizAtk2]]
+     WZRD D 12 [[A_WizAtk3]]
+     Goto See
+   Pain:
+     WZRD E 3 [[A_GhostOff]]
+     WZRD E 3 [[A_Pain]]
+     Goto See
+   Death:
+     WZRD F 6 [[A_GhostOff]]
+     WZRD G 6 [[A_Scream]]
+     WZRD HI 6
+     WZRD J 6 [[A_NoBlocking]]
+     WZRD KL 6
+     WZRD M -1 [[A_SetFloorClip]]
+     Stop
+   }
+ }</text>
+    <sha1>oc2rc2138t3qhijvusg65516nuon0kj</sha1>
+  </revision>
+</page>

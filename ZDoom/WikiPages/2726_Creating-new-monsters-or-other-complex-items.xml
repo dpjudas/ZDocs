@@ -1,0 +1,141 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>Creating new monsters or other complex items</title>
+  <ns>0</ns>
+  <id>2726</id>
+  <revision>
+    <id>52209</id>
+    <parentid>52208</parentid>
+    <timestamp>2024-04-02T15:06:37Z</timestamp>
+    <contributor>
+      <username>Jekyll Grim Payne</username>
+      <id>2175</id>
+    </contributor>
+    <origin>52209</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="4341" sha1="js5rvpbkc463qvu1zflzdermtgh6npx" xml:space="preserve">{{OutdatedGuide|Creating new monsters or other complex items (ZScript)}}
+
+[[Monster]]s are just regular actors that call some specific monster AI action functions:
+
+* [[A_Look]]
+* [[A_Look2]]
+* [[A_Chase]]
+* [[A_FastChase]]
+* [[A_VileChase]]
+* [[A_ExtChase]]
+* [[A_Wander]]
+
+It's these functions that make an actor act like a monster but there's a few more things to observe:
+
+* Use the '''Monster''' [[Actor properties|property]]. This sets up all the necessary flags to make an actor act like a monster.
+* A monster's height and radius should be set properly. Unlike decorations it is essential that these values are correct because they are used by the collision detection code which also checks whether a monster has been hit by a weapon.
+* A monster should have proper definitions for all standard sounds or it might remain silent in certain situations.
+* A monster requires a minimum set of [[Actor states|states]]:
+:* '''Spawn''': This should define a looping 'idle' sequence. This sequence has to call [[A_Look]] or [[A_Look2]] repeatedly so that the monster can react to players.
+:* '''See''': This defines a looping walking sequence. This sequence has to call [[A_Chase]] or one of its variants repeatedly so that the monster can walk around and do things.
+:* '''Melee'''/'''Missile''': This defines a near or far attack sequence. At least one of them is needed so that the monster is able to attack players or other monsters
+:* '''Death''': This is called when the monster's health goes below zero.
+:You can also define one of the optional special death sequences, a '''Pain''' state which makes the monster react to being attacked or the '''Raise''' state which makes it resurrectable by [[Classes:Archvile|Arch-Viles]] or other monsters capable of doing that.
+
+
+This is an example of a properly defined monster. It is just an exact replica of Doom's [[Classes:ZombieMan|pistol shooting Zombie]]:
+ actor &lt;u&gt;ZombieClone&lt;/u&gt; 3004
+ {
+   {{Property|SpawnID}} 4
+   {{Property|Obituary}} "%o was killed by a zombieman."
+   {{Property|Health}} 20
+   {{Property|Radius}} 20
+   {{Property|Height}} 56
+   {{Property|Mass}} 100
+   {{Property|Speed}} 8
+   {{Property|PainChance}} 200
+   {{Property|SeeSound}} "grunt/sight"
+   {{Property|AttackSound}} "grunt/attack"
+   {{Property|PainSound}} "grunt/pain"
+   {{Property|DeathSound}} "grunt/death"
+   {{Property|ActiveSound}} "grunt/active"
+   {{Property|DropItem}} "[[Classes:Clip|Clip]]" 256
+   {{Property|Monster}}
+   +{{flag|FLOORCLIP}}
+   States
+   {
+   Spawn:
+     POSS AB 10 [[A_Look]]
+     loop
+   See:
+     POSS AABBCCDD 4 [[A_Chase]]
+     loop
+   Missile:
+     POSS E 10 [[A_FaceTarget]]
+     POSS F 8 [[A_PosAttack]]
+     POSS E 8
+     goto See
+   Pain:
+     POSS G 3
+     POSS G 3 [[A_Pain]]
+     goto See
+   Death:
+     POSS H 5
+     POSS I 5 [[A_Scream]]
+     POSS J 5 [[A_NoBlocking]]
+     POSS K 5
+     POSS L -1
+     stop
+   XDeath:
+     POSS M 5
+     POSS N 5 [[A_XScream]]
+     POSS O 5 [[A_NoBlocking]]
+     POSS PQRST 5
+     POSS U -1
+     stop
+   Raise:
+     POSS KJIH 5
+     goto See
+   }
+ }
+
+
+If you don't need a complete monster but ony a subset of its functions you can do so. For example to create a shootable item that doesn't act as a monster all you have to do is to remove the '''See''' state, the call to [[A_Look]] in the spawn state and replace the '''Monster''' [[Actor properties|property]] with the appropriate [[Actor flags|flags]]. The one flag you need is '''{{flag|SHOOTABLE}}''' but normally you might want to set a few others as well. This is an example of a shootable decoration:
+ actor FloorLamp 10247
+ {
+   {{Property|Health}} 1
+   {{Property|Radius}} 16
+   {{Property|Height}} 51
+   {{Property|DeathSound}} "misc/glass"
+   +{{flag|SHOOTABLE}}
+   +{{flag|SOLID}}
+   +{{flag|NOBLOOD}}
+   states
+   {
+   Spawn:
+     HAWA A -1 Bright
+     Loop
+   Death:
+     HAWA B 11 [[A_Scream]]
+     HAWA C 9
+     HAWA D -1 [[A_Fall]]
+     Stop
+   }
+ }
+
+
+Other things are possible as well, for example an actor that reacts to seeing a player but instead of waking up and attacking the player it is doing something else, for example playing a sound:
+ actor TriggerSound1 10601
+ {
+   {{Property|SeeSound}} "ts1"
+   +{{flag|NOBLOCKMAP}}
+   states
+   {
+   Spawn:
+     TNT1 A 2 [[A_Look]]
+     Loop
+   See:
+     TNT1 A 1
+     Stop
+   }
+ }
+
+[[Category:DECORATE guides]]</text>
+    <sha1>js5rvpbkc463qvu1zflzdermtgh6npx</sha1>
+  </revision>
+</page>

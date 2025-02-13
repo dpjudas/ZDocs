@@ -1,0 +1,53 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>HealThing</title>
+  <ns>0</ns>
+  <id>701</id>
+  <revision>
+    <id>47767</id>
+    <parentid>47765</parentid>
+    <timestamp>2020-06-29T09:05:37Z</timestamp>
+    <contributor>
+      <username>Blue Shadow</username>
+      <id>2021</id>
+    </contributor>
+    <comment>/* Parameters */ DeHackEd can change soulsphere's maximum</comment>
+    <origin>47767</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="1611" sha1="j0x6114kytmhsi8ilsgvitwwh1wfad1" xml:space="preserve">{{Special|248|amount, max|Thing}}
+==Usage==
+Gives health to the actor that activated the special.
+
+===Parameters===
+* ''amount'': the amount by which to heal.
+* ''max'': the maximum value the actor's health can reach when healed.
+
+If ''max'' is 0 or the actor to heal is a non-player, {{c|[[GiveBody]]}} is called to handle the healing, with the specified amount passed to it while leaving {{c|GiveBody}}'s ''max'' parameter's value as the default.
+
+If ''max'' is greater than 0 and the actor to heal is a player, ''amount'' is added to the actor's health with no modifications to it; if ''max'' is 1, the actor is healed up to the maximum set by the {{Class|soulsphere}}, which is 200 (this maximum value could be changed via [[DeHackEd]]). Otherwise, if it is greater than 1, the actor is healed up to that value.
+
+
+{{Warning|do not use negative amounts if ''max'' is greater than 0. While negative amounts are acceptable for use with the call to {{c|GiveBody}}, if ''max'' is greater than 0, {{c|HealThing}} uses those negative amounts as they are, thus reducing the actor's health. {{c|HealThing}} does not kill the actor if it reduces its health to 0 or less, and instead, leaves it in a broken state.}}
+
+==Examples==
+This new {{Class|berserk}} powerup uses {{c|HealThing}} to heal the player to full health.
+
+ class NewBerserk : {{Class|Berserk}}
+ {
+     States
+     {
+     Pickup:
+         TNT1 A 0 [[A_GiveInventory]]("{{Class|PowerStrength}}");
+         TNT1 A 0 [[HealThing]](100);
+         TNT1 A 0 [[A_SelectWeapon]]("KoolFist");
+         Stop;
+     } 
+ }
+
+==External links==
+* {{oldref}}
+
+__NOTOC__</text>
+    <sha1>j0x6114kytmhsi8ilsgvitwwh1wfad1</sha1>
+  </revision>
+</page>

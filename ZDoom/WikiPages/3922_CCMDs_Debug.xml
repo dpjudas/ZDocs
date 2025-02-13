@@ -1,0 +1,294 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>CCMDs:Debug</title>
+  <ns>0</ns>
+  <id>3922</id>
+  <revision>
+    <id>50173</id>
+    <parentid>50056</parentid>
+    <timestamp>2023-03-22T03:17:08Z</timestamp>
+    <contributor>
+      <username>Blue Shadow</username>
+      <id>2021</id>
+    </contributor>
+    <minor />
+    <comment>remove {{gzdoomfeaturesmall}}</comment>
+    <origin>50173</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="19001" sha1="b2c4ubxy0cgpiaup8ima94l1uziwryg" xml:space="preserve">These [[CCMDs|console commands]] can be used for cheating or testing new maps.
+
+See the [[CCMDs]] article for general information on how to use commands.
+
+
+__TOC__
+
+==Abilities and Items==
+
+These commands can allow the player to gain abilities or items they wouldn't normally have, or access areas of the map more quickly or by a different route than intended.
+
+* '''{{LE|anubis}}'''
+:Toggles monster fear on and off. Scared monsters will run away from you and attack less frequently.
+
+* '''{{LE|buddha}}'''
+:Gives you an indestructible hit point: no normal attack can remove that last hit point from you (certain death effects such as telefragging will still kill you). This is a more useful cheat than god mode for testing monsters or levels. 
+
+* '''{{LE|buddha2}}'''
+:Similar to {{c|buddha}} above, except that absolutely nothing can take away that one hit point, not even telefrag.
+
+* '''{{LE|drop}}''' &lt;item&gt; [amount]
+:Drops the given item, if there is at least that much in the player's inventory. Items with the {{Flag|INVENTORY.UNDROPPABLE}} or {{Flag|INVENTORY.UNTOSSABLE}} flags cannot be dropped. ''amount'' specifies the number of samples the dropped item contains. The command cannot drop more than what is available in the inventory.
+
+* '''{{LE|fly}}'''
+:Toggles fly mode on and off.
+
+* '''{{LE|freeze}}'''
+:Use this command once to freeze gameplay (while still allowing you to move around). Use it again to unfreeze gameplay. This will not work in multiplayer. 
+
+* '''{{LE|give}}''' &lt;item&gt;
+:Gives an item to the player. Give understands the following special items: 
+:*all - gives you everything
+:*everything - gives you everything, including weapons flagged with {{Flag|WEAPON.CHEATNOTWEAPON}}.
+:*backpack - gives you a backpack in Doom, a bag of holding in Heretic and Hexen, and an ammo satchel in Strife.
+:*health - gives you full health 
+:*weapons - gives you every weapon 
+:*ammo - gives you full ammo 
+:*armor - gives you full armor 
+:*keys - gives you every key that is [[LOCKDEFS|assigned to a lock]].
+*It also understands the names of individual inventory items. Use the command &lt;tt&gt;dumpclasses inventory&lt;/tt&gt; for a complete list of these.
+
+* '''{{LE|god}}'''
+:Toggles God (Degreelessness) mode on/off. While active, you cannot be hurt by normal attacks (although some things such as telefragging will still kill you). Also known as iddqd. 
+
+* '''{{LE|god2}}'''
+:Similar to {{c|god}} above, except that the player is given absolute invulnerability; nothing can damage them, not even telefrag.
+
+* '''{{LE|iddqd}}'''
+:The same as god, except it also gives you 100 health. 
+
+* '''{{LE|morphme}}''' [class]
+:Transforms you into a chicken in Heretic and a pig in Hexen and Doom (The latter only happens if you have the relevant graphics present). Additionally, if "class" is specified, it will attempt to morph you into the supplied class. This will only work if the target class is inherited from PlayerPawn, and you are not in a state that cannot otherwise morph (i.e. death).
+
+* '''{{LE|noclip}}'''
+:Toggles noclipping mode on/off. With this mode, you can walk through walls and solid actors, and are able to step up by an infinite amount.  Basically your horizontal movement will never be restricted.  This can be useful for passing through locked doors or quickly accessing later parts of a map.
+
+* '''{{LE|noclip2}}'''
+:Toggles noclipping mode 2 on/off. This is similar to the '''noclip''' command above, except it also toggles the {{Flag|NOGRAVITY}} flag on and gives the ability to fly through [[3D floors]].
+
+* '''{{LE|notarget}}'''
+:Toggles notarget mode on/off. While active, monsters will not target you unless you hurt them first. In "modern FPS", monsters "can't find you" when in notarget mode. This is not the case with ZDoom. 
+
+* '''{{LE|resurrect}}'''
+:When dead, resurrects the player (brings him back alive and to 100% health). Note - cannot be used when the player is "broken apart" e.g. shattered to pieces after being frozen.
+
+* '''{{LE|powerup}}'''
+:Powers you up in Heretic as if you had used a Tome of Power.
+
+* '''{{LE|printinv}}'''
+:Lists your current inventory to the console.
+
+* '''{{LE|take}}''' &lt;item&gt; &lt;amount&gt;
+:Takes an item away from the player. Amount specifies how many to take away (if applicable). Can be used to damage the player by using "take health X", where X is the amount of damage to do. If the player reaches 0 health this way, he will die. Use the command &lt;tt&gt;printinv&lt;/tt&gt; for a full list of what is in the player's inventory.
+
+* '''{{LE|targetinv}}'''
+:Executes "printinv" at current crosshair target, listing their inventory items.
+
+* '''{{LE|thaw}}'''
+:Clears the {{c|PROP_FROZEN}} and {{c|PROP_TOTALLYFROZEN}} [[SetPlayerProperty|properties]] from the player. This is considered a cheat.
+
+* '''{{LE|warp}}''' &lt;x-coord&gt; &lt;y-coord&gt; [z-coord]
+:Sends you to the specified coordinates immediately. This can be used with {{CVAR|D|idmypos}} to debug problems in a specific area of a map.
+
+==Actor control==
+
+* '''{{LE|summon}}''' &lt;class&gt; [angle [TID [special [args... ]]]]
+:Spawns a new actor in front of you. A complete list of actors can be obtained with the dumpclasses actor command. For a list of actors limited to those you can place in an editor, use the dumpmapthings command. It is possible to spawn actors from another game with this command, but they will not be visible unless you provide the missing graphics for them.
+:By default, the actor spawns facing East. If the optional angle parameter is provided, the actor is spawned at an angle relative to the player's current facing instead. (0 faces away from the player, while 180 faces towards him).
+:Additional optional parameters can be used to set the summoned actor's [[TID]], [[special]], and arguments.
+
+* '''{{LE|summonfriend}}''' &lt;class&gt; [angle [TID [special [args... ]]]]
+:Same as summon, but causes monsters created using this command to attack non-friendly monsters instead of you. 
+
+* '''{{LE|summonfoe}}''' &lt;class&gt; [angle [TID [special [args... ]]]]
+:Same as summon, but forces monsters created using this command to be hostile to the player, regardless of the actor's {{flag|FRIENDLY}}.
+
+* '''{{LE|summonmbf}}''' &lt;class&gt; [angle]
+:Same as summonfriend, but also gives the summoned actor the {{flag|NOBLOCKMONST}} flag, allowing them to cross monster-blocking lines like MBF friendly monsters do.
+
+* '''{{LE|kill}}''' [class]
+:Used by itself, this kills the player. Alternatively, you can specify "kill monsters" to kill every monster in the level or "kill baddies" to kill every unfriendly monster in the level. Note that this command also prevents actors which normally spawn other actors on death (e.g. the Pain Elemental) from doing so. 
+:If a class is specified, this kills all actors of that type in the map.
+:'''NOTE:''' This command cannot destroy actors which have {{flag|NODAMAGE}} flag. However, this can be worked around by giving it {{c|{{Property|PainChance}} "Massacre", 256}}. Simply have the monster perform [[A_ChangeFlag]] to remove the flag, and call {{c|[[A_Die]]("Extreme")}} after a one tic delay passes.
+
+* '''{{LE|mdk}}''' [damagetype]
+:This cheat will deal 1000000 damage to whatever is in the center of the screen, using a [[hitscan]] attack. Use a crosshair to get the exact point of what to kill. Optionally, a [[damage type]] for the attack can be specified. This is not available in [[deathmatch]] mode, even if {{CVAR|C|sv_cheats}} is true.
+:'''NOTE:''' Similar to the ''kill'' command above, this command cannot destroy actors which have {{flag|NODAMAGE}} flag, or {{flag|LAXTELEFRAGDMG}} with a reduced enough damagefactor property.
+
+* '''{{LE|remove}}''' &lt;class&gt;
+:Removes all entities of the type specified from the current map, except for live players.
+:'''WARNING:''' Removing voodoo dolls may break maps which rely upon triggering line specials, and should be avoided.
+:'''NOTE:''' This command does not have any categories, and only corresponds with actor names. I.e. 'remove monsters' will not remove all monsters, though expansion of this command is planned to include some categories.
+
+==Level control==
+* '''{{LE|changemus}}''' [&lt;music&gt; [track]]
+:Changes the currently playing music. ''Music'' should be the name of a music lump, a file on disk (which need not have been specified with the {{c|-file}} [[command line parameter]]), or a website address for a specific music file. If a music lump contains several tracks ([[MIDI]] type 2, certain [[XMI]] song, and miscellaneous other [[music format]]s support this), then optionally a second parameter can be used to specify the track number.
+:If no parameters are given, the command will instead log the name of the currently-played lump or file to the [[console]].
+
+* '''{{LE|changesky}}''' &lt;texture&gt;
+:Replaces the default sky texture. This corresponds to the texture defined as {{c|sky1}} in a [[MAPINFO]] [[map definition]].
+
+* '''{{LE|idmus}}''' &lt;slotnumber&gt;
+:Changes the music to that associated with the specified level slot. This emulates the {{c|idmus}} [[cheat]].
+
+==Map changes==
+
+* '''{{LE|changemap}}''' &lt;lumpname&gt;
+:Shows the intermission screen and then warps the player to the specified map, (e.g. "changemap e2m3" or "changemap map27") retaining the player's inventory and health value in the process. The following can be used instead of a map's name:
+:* {{c|*}}: warps to the current map.
+:* {{c|+}}: warps to the next map as defined in [[MAPINFO]].
+:* {{c|+$}}: warps to the next secret map as defined in MAPINFO.
+
+* '''{{LE|endgame}}'''
+:Quits the current game and go back to the title screen.
+
+* '''{{LE|finishgame}}'''
+:This command simulates an end-of-game action and exists to end mods that never exit their last level.
+
+* '''{{LE|hxvisit}}''' &lt;warptrans&gt;
+:Changes to the level specified by ''warptrans''. Unlike [[#idclev|idclev]], hxvisit determines the map to go to by finding a map defined in [[MAPINFO]] with a matching ''warptrans''. Hence, it emulates the ''[[Hexen]]'' {{c|visit}} [[cheat]].
+
+* '''{{LE|idclev}}''' &lt;slotnumber&gt;
+:Changes to the level specified by ''slotnumber''. This emulates the {{c|idclev}} [[cheat]].
+
+* '''{{LE|map}}''' &lt;lumpname&gt; [dm|coop]
+:Immediately warps the player to the specified map, skipping the intermission screen. (e.g. "map e2m3" or "map map27") Also resets the player's inventory and health to their starting values, as if they had started a new game. Use changemap to change to a new map without starting the game over. Passing {{c|*}} instead of a map name warps the player to the current map. Optionally the {{c|dm}} or {{c|coop}} keyword can be added to set the game mode to emulated [[multiplayer]]. Without this keyword the game mode defaults to single-player.
+
+* '''{{LE|nextmap}}'''
+:Warps the player to the next map as specified by [[MAPINFO]].  Also resets the player's inventory and health as if a new game had been started.
+
+* '''{{LE|nextsecret}}'''
+:Warps the player to the current secret map as specified by [[MAPINFO]], just as if he had found the secret exit in this map.  Also resets the player's inventory and health as if a new game had been started.
+
+* '''{{LE|open}}''' &lt;path &amp; filename&gt; [dm|coop]
+:Opens the given file and loads the first map found in it. The rest of the loaded file is ignored &amp;mdash; custom graphics and sounds, [[MAPINFO]] and actor definitions, maps beyond the first, etc., all that are ignored. The map name and slot will be the provided file name, rather than the map's actual slot within the file. Inventory and health are reset as if starting a new game. This command cannot be used in [[multiplayer]] mode. Like with {{c|map}}, the {{c|dm}} or {{c|coop}} keyword can be added to set the game mode to emulated [[multiplayer]]. Without this keyword the game mode defaults to single-player.
+
+==Testing==
+
+These commands can be used to test various [[ZDoom]] features directly.
+
+* '''{{LE|acsprofile}}''' [clear | [&lt;sort-function&gt;] [&lt;limit&gt;]]
+:Provides [[ACS]] profiling information. Optional arguments can be passed to it:
+:* ''sort-function'' specifies which column to sort on (total, min, max, avg, or runs). The default is total.
+:* ''limit'' specifies how many rows to limit the output to. The default is 10. 0 or less will print every script or function that has at least one run.
+:* ''clear'' resets all profiling statistics to 0. It cannot be used with either of the other two optional arguments.
+
+* '''{{LE|clearscancycles}}'''
+:Resets the count of minimum wall scanning cycles. Used for profiling the wallscan function.
+
+* '''{{LE|clearwallcycles}}'''
+:Resets the count of minimum wall drawing cycles. Used for profiling the wall drawer.
+
+* '''{{LE|crashout}}'''
+:Debugging routine for testing the crash logger. This deliberately triggers a crash by {{wp|segmentation fault|attempting to write}} at {{wp|Pointer_(computer_programming)#Null_pointer|address 0}}.
+
+* '''{{LE|error}}''' &lt;message&gt;
+:Simulates an error by killing the current game and falling back to the fullscreen [[console]] with the specified message. 
+
+* '''{{LE|error_fatal}}''' &lt;message&gt;
+:Simulates a fatal error by exiting the game completely and showing the error-message.
+
+* '''{{LE|fpuke}}''' &lt;script&gt;
+:Executes a [[FraggleScript]] script.
+
+* '''{{LE|gl_flush}}'''
+:Flushes out all textures from video memory.
+
+* '''{{LE|gl_portalinfo}}'''
+:Triggers logging of [[portal]] information.
+
+* '''{{LE|gl_resetmap}}'''
+:Resets various internal variables used by the OpenGL renderer to the values from their associated [[CVARs]]. Concerned variables are: {{CVAR|R|gl_lightmode}}, {{CVAR|R|gl_nocoloredspritelighting}}, {{CVAR|R|gl_notexturefill}}, and {{CVAR|R|gl_brightfog}}.
+
+* '''{{LE|initpolymosttest}}''' [&lt;value&gt;]
+:Used to proceed to tests in the uncompleted [[Polymost]] renderer. An optional value between 1 and 5 can be given (1: shorter top edge; 2: shorter bottom edge; 3: shorter left edge; 4: shorter right edge; 5: predefined values). In any case, the command has no obvious effect.
+
+* '''{{LE|listsnapshots}}'''
+:Displays a list of which maps have savedata stored (for [[hub]] travel purposes) in the current game.
+
+* '''{{LE|listsoundchannels}}'''
+:Displays the current amount of sounds being played, along with their positions, followed by the total amount at the end.
+
+* '''{{LE|loopsound}}''' &lt;sound&gt;
+:Spawns a {{Class|SpeakerIcon}} at the player's position and makes it loop constantly the given sound. Like all other sounds in the game, ''sound'' must be properly defined in a SNDINFO lump before you can use it.
+
+* '''{{LE|playsequence}}''' &lt;sequence&gt; [&lt;number&gt;]
+:Plays a [[sound sequence]] on the local machine. If a number is not given, 0 is used. The ''sequence'' must be defined in [[SNDSEQ]].
+
+* '''{{LE|playsound}}''' &lt;sound&gt;
+:Plays a sound on the local machine. Like all other sounds in the game, ''sound'' must be properly defined in a [[SNDINFO]] lump before you can use it. 
+
+* '''{{LE|spray}}''' &lt;decal&gt;
+:Sprays a [[decal]] on a nearby wall so you can see what it looks like. 
+
+* '''{{LE|puke}}''' &lt;script&gt; [arg1 [arg2 [arg3]]]
+:Executes an [[ACS]] script on the current map, optionally passing it up to three numerical arguments. If you try this on [[multiplayer]], {{CVAR|C|sv_cheats}} must normally be enabled. However, if the script has the "net" keyword, it can be activated by anyone in a multiplayer game. 
+:If the "script" argument is a negative value, the script will be executed as if it had been called by [[ACS_ExecuteAlways]]; otherwise it will be executed as if called by [[ACS_Execute]]. Script 0 is reserved for ''[[Strife]]'' support and cannot be puked.
+
+* '''{{LE|pukename}}''' &lt;script&gt; [always] [arg1 [arg2 [arg3]]]
+:Executes a [[named script]] on the current map, optionally passing it up to three numerical arguments. If you try this on [[multiplayer]], {{CVAR|C|sv_cheats}} must normally be enabled. However, if the script has the "net" keyword, it can be activated by anyone in a multiplayer game. 
+:If the {{c|always}} keyword is placed after the script name (and before any optional argument), the script will be executed as if it had been called by [[ACS_NamedExecuteAlways]]; otherwise it will be executed as if called by [[ACS_NamedExecute]].
+
+* '''{{LE|skyfog}}''' &lt;value&gt;
+:Changes the density of the fog that affects the [[sky]] plane. This allows to test sky fog sheets.
+
+* '''{{LE|special}}''' &lt;special&gt; [arg1 [arg2 [arg3 [arg4 [arg5]]]]]
+:Executes an [[action special]] on the current map, optionally passing it up to five numerical arguments.
+
+* '''{{LE|testblend}}''' &lt;color&gt; &lt;amount&gt;
+:Sets the [[palette blend]] to a specified color and amount. ''color'' can be either a color name defined in the [[X11R6RGB]] lump or a color string.''amount'' can be a number between 0.0 and 1.0 inclusive and specifies how much of &lt;color&gt; should be mixed with the palette, with 0.0 being no mixing and 1.0 being full mixing.
+
+* '''{{LE|testcolor}}''' &lt;color&gt;
+:Sets the [[light color]] of any sectors using the default light to ''color''. ''color'' can be either a color defined in the [[X11R6RGB]] lump or a color string.
+
+* '''{{LE|testfade}}''' &lt;color&gt;
+:Temporarily sets the [[fade color]] of the current level to ''color''. Most levels fade to black by default, but this can be changed with the MAPINFO lump. ''color'' can be either a color defined in the [[X11R6RGB]] lump or a color string.
+
+* '''{{LE|testmusicvol}}''' [&lt;volume&gt;]
+:Allows to change the relative music volume of the current song without changing {{CVAR|S|snd_musicvolume}}. The baseline is 1.0. This can be used to test the effect that a {{sndinfo|musicvolume}} entry for the current song in [[SNDINFO]] would have.
+
+==Display==
+
+These commands can be used to alter or test various aspects of the game's renderer or game display.
+
+* '''{{LE|bumpgamma}}'''
+:Increases the current gamma level by 0.1. If the new gamma level would be greater than 3.0, it wraps the gamma around to 1.0.
+
+* '''{{LE|chase}}'''
+:Toggles the [[chasecam]] on and off. This is considered a [[cheat]].
+
+* '''{{LE|fov}}'''
+:Modifies the [[FOV]].
+
+* '''{{LE|r_visibility}}''' [amount]
+:Without any parameters, displays the current visibility. With a parameter, the visibility is set. Standard visibility for the Doom engine is 8. Visibility determines how quickly light drops off with distance from the viewer. At 0 visibility, there is no change in lighting with depth. 
+
+* '''{{LE|screenshot}}''' [file]
+:Dumps [[screenshot|a copy of the screen]] to disk as a PNG or PCX file. If file is not specified, the screenshot filename will be in a set format which include the name of the IWAD being used and the time the shot was taken. 
+
+* '''{{LE|vid_listmodes}}'''
+:Lists all resolutions supported by the current display driver. 
+
+* '''{{LE|vid_setmode}}''' &lt;width&gt; &lt;height&gt; [depth]
+:Sets the screen mode to width x height with an optional color depth (if your video hardware supports it). Only a depth of 8 is supported. {{verification}}
+
+* '''{{LE|vid_currentmode}}'''
+:Displays the resolution of the current video mode.
+
+==See Also==
+
+*[[CVARs]]
+*[[CCMDs]]
+
+[[category:ZDoom console]]</text>
+    <sha1>b2c4ubxy0cgpiaup8ima94l1uziwryg</sha1>
+  </revision>
+</page>

@@ -1,0 +1,44 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>Classes:LAZDevice</title>
+  <ns>0</ns>
+  <id>5740</id>
+  <revision>
+    <id>39144</id>
+    <parentid>38065</parentid>
+    <timestamp>2015-04-26T17:35:24Z</timestamp>
+    <contributor>
+      <username>Blue Shadow</username>
+      <id>2021</id>
+    </contributor>
+    <minor />
+    <comment>/* DECORATE definition */ Updated</comment>
+    <origin>39144</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="773" sha1="83r01r7054eox10b2pa91ac3z0phu5b" xml:space="preserve">{{Actor|
+| type = Weapon
+| name = LAZ device
+| doomednum = 2006
+| class = LAZDevice
+| game = Chex
+}}[[Classes|Classes:]]{{Class|Actor}}&amp;rarr;{{Class|Inventory}}&amp;rarr;{{Class|Weapon}}&amp;rarr;{{Class|DoomWeapon}}&amp;rarr;{{Class|BFG9000}}&amp;rarr;&lt;u&gt;LAZDevice&lt;/u&gt;&lt;br /&gt;
+The Chex Quest equivalent to the BFG9000. Functions identically.
+==== [[DECORATE]] definition ====
+ ACTOR &lt;u&gt;LAZDevice&lt;/u&gt; : {{Class|BFG9000}}
+ {
+   {{Property|Obituary}} ""
+   {{Property|Inventory.PickupMessage}} "$GOTLAZDEVICE" // "You got the LAZ Device! Woot!"
+   {{Property|Tag}} "$TAG_LAZDEVICE" // "LAZ Device"
+   States
+   {
+   Fire:
+     BFGG A 20 [[A_BFGSound]]
+     BFGG B 10 [[A_GunFlash]]
+     BFGG B 10 [[A_FireCustomMissile]]("{{Class|LAZBall}}")
+     BFGG B 20 [[A_ReFire]]
+     Goto Ready
+   }
+ }</text>
+    <sha1>83r01r7054eox10b2pa91ac3z0phu5b</sha1>
+  </revision>
+</page>

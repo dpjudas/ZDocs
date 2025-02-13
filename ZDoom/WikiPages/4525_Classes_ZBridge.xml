@@ -1,0 +1,50 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>Classes:ZBridge</title>
+  <ns>0</ns>
+  <id>4525</id>
+  <revision>
+    <id>53629</id>
+    <parentid>39724</parentid>
+    <timestamp>2024-11-08T12:00:38Z</timestamp>
+    <contributor>
+      <username>Jekyll Grim Payne</username>
+      <id>2175</id>
+    </contributor>
+    <comment>/* DECORATE definition */</comment>
+    <origin>53629</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="1114" sha1="it3h75jywclsdn4nvmyaqjclq8m1p38" xml:space="preserve">{{Actor|
+| type = Bridge
+| name = Bridge thing
+| class = ZBridge
+| game = Doom
+| doomednum = 118
+| spawnid = 21
+| spawnname = T_BRIDGE 
+}}[[Classes]]: [[Classes:CustomBridge|CustomBridge]]&amp;rarr;&lt;u&gt;ZBridge&lt;/u&gt;&lt;br&gt;
+
+The bridge is a "3D" element that can be placed at any height and allows players and monsters alike to walk upon it. It is usually combined with mid-textures in order to create an approximation of a [[3D floor]]; though this trick is no longer needed now that "[[Sector_Attach3dMidtex|3D mid-textures]]" are supported.
+
+For a reason known only to [[Randy]], the default sprite provided by ZDoom.pk3 is a yellow rectangle with "GROSS HACK" written on it, so in order to use this bridge in other games than Hexen it is necessary to provide replacement sprites.
+
+=== [[ZScript]] definition ===
+{{ZScriptDefinitionNote|actors/shared/bridge.zs}}
+&lt;syntaxhighlight lang="cs"&gt;
+class ZBridge : CustomBridge
+{
+	default
+	{
+		Args 36, 4, 0, 0;
+	}
+}
+&lt;/syntaxhighlight&gt;
+=== [[DECORATE]] definition ===
+{{DecorateDefinitionNote}}
+ ACTOR &lt;u&gt;ZBridge&lt;/u&gt; : {{Class|CustomBridge}}
+ {
+   {{Property|Args}} 36, 4, 0, 0
+ }</text>
+    <sha1>it3h75jywclsdn4nvmyaqjclq8m1p38</sha1>
+  </revision>
+</page>

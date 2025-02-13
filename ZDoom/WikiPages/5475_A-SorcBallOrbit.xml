@@ -1,0 +1,77 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>A SorcBallOrbit</title>
+  <ns>0</ns>
+  <id>5475</id>
+  <revision>
+    <id>37080</id>
+    <parentid>23721</parentid>
+    <timestamp>2013-08-31T20:06:57Z</timestamp>
+    <contributor>
+      <username>Gez</username>
+      <id>1283</id>
+    </contributor>
+    <minor />
+    <origin>37080</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="4540" sha1="k4dtg5u70wyw9d77imfs2o68prwjqtw" xml:space="preserve">{{DISPLAYTITLE:A_SorcBallOrbit}}
+'''A_SorcBallOrbit'''&lt;br /&gt;
+(no parameters)
+
+This is part of the {{Class|Heresiarch}}'s attack function. This codepointer can only work correctly if it is called by an actor of type {{Class|SorcBall}} which has an actor of type Heresiarch in its &lt;tt&gt;target&lt;/tt&gt; field. (Projectiles use this field to store not what actor they were fired at, but which actor did fire them. The calling actor's &lt;tt&gt;target&lt;/tt&gt; field is supposed to be its parent actor.)
+
+In the following, "ball" refers to the calling actor and "parent" to the calling actor's target. This codepointer makes use of several fields in the ball and its parent:
+
+{| {{prettytable}}
+! colspan="2"| Parent fields
+|-
+|&lt;tt&gt;special1&lt;/tt&gt;||Angle of the first ball
+|-
+|&lt;tt&gt;StopBall&lt;/tt&gt;||which type of ball to stop: {{Class|SorcBall1}}, {{Class|SorcBall2}} or {{Class|SorcBall3}}
+|-
+|&lt;tt&gt;args[0]&lt;/tt&gt;||Defense time
+|-
+|&lt;tt&gt;args[1]&lt;/tt&gt;||Number of full rotations since stopping mode
+|-
+|&lt;tt&gt;args[2]&lt;/tt&gt;||Orbit speed to reach when accelerating or decelerating
+|-
+|&lt;tt&gt;args[3]&lt;/tt&gt;||Movement mode, see below
+|-
+|&lt;tt&gt;args[4]&lt;/tt&gt;||Current ball orbit speed
+|-
+! colspan="2"|Ball fields
+|-
+|&lt;tt&gt;special1&lt;/tt&gt;||Previous angle of ball (for woosh)
+|-
+|&lt;tt&gt;special2&lt;/tt&gt;||Countdown of rapid fire ({{Class|SorcFX4}})
+|}
+
+
+
+If the ball has no parent, puts the ball in its pain state.
+
+Otherwise, makes the calling actor orbits around its target. Depending on the value of the parent's &lt;tt&gt;args[3]&lt;/tt&gt; field, several other effects might happen, see "orbit modes" below.
+
+=== Orbit modes ===
+
+* 0: The ball decelerates to orbit more slowly: the parent's &lt;tt&gt;args[4]&lt;/tt&gt; field is decreased if it hasn't yet reached the value of the parent's &lt;tt&gt;args[2]&lt;/tt&gt; field, otherwise the parent's &lt;tt&gt;args[3]&lt;/tt&gt; field is set to 5.
+* 1: The ball accelerates to orbit more quickly: the parent's &lt;tt&gt;args[4]&lt;/tt&gt; field is increased if it hasn't yet reached the value of the parent's &lt;tt&gt;args[2]&lt;/tt&gt; field, otherwise the parent's &lt;tt&gt;args[3]&lt;/tt&gt; field is set to 5 and if the &lt;tt&gt;args[4]&lt;/tt&gt; field has reached the value of 25, the balls stop their orbit, the parent's &lt;tt&gt;args[1]&lt;/tt&gt; and &lt;tt&gt;[3]&lt;/tt&gt; fields are set to 0 and 3 respectively, and the &lt;tt&gt;StopBall&lt;/tt&gt; field is set to  {{Class|SorcBall2}} (about 80% chance if &lt;tt&gt;args[0]&lt;/tt&gt; is 0), {{Class|SorcBall3}} (otherwise, about 80% chance if the parent's health is reduced to half or less) or {{Class|SorcBall1}} the rest of the time.
+* 2: If possible, stops the rotation and sets the parent's &lt;tt&gt;args[3]&lt;/tt&gt; and &lt;tt&gt;args[4]&lt;/tt&gt; fields to 3 and 0 respectively. Otherwise, orbits normally. An actor of type {{Class|SorcBall1}} will update the parent's &lt;tt&gt;special1&lt;/tt&gt; field accordingly.
+* 3: If the parent is alive and its &lt;tt&gt;StopBall&lt;/tt&gt; corresponds to the ball's type, puts the parent in its Attack1 state. Otherwise, do nothing. Further effects depends on the ball's type; see "attack modes" below.
+* 4: Do nothing &amp;mdash; this is also the default (in)action for any value not in the 0&amp;mdash;6 range.
+* 5: Orbits normally
+* 6: Decrements the ball's &lt;tt&gt;special2&lt;/tt&gt; field, if it becomes negative then sets the parent's &lt;tt&gt;args[3]&lt;/tt&gt; field to 4 and, if alive, puts the parent in its Attack2 state.
+
+=== Attack modes ===
+
+* {{Class|SorcBall}}: Sets the parent's &lt;tt&gt;args[3]&lt;/tt&gt; field to 4. As this is a base type, SorcBall does nothing else.
+* {{Class|SorcBall1}}: Makes the parent plays the "SorcererSpellCast" sound on its voice channel. About 80% of the time, the ball's &lt;tt&gt;args[4]&lt;/tt&gt; field is to 128 and its &lt;tt&gt;special2&lt;/tt&gt; field to 18; and the parent's &lt;tt&gt;args[3]&lt;/tt&gt; field is set to 6.&lt;br /&gt;
+The rest of the time, puts the parent in its Attack2 state.
+* {{Class|SorcBall2}}: Parent plays the sound "SorcererSpellCast" and goes in its Attack2 state. A {{Class|SorcFX2}} is spawned at the ball's horizontal position and vertically 45 units from the parent's feet; its &lt;tt&gt;target&lt;/tt&gt; field is set to the parent. The parent gains the REFLECTIVE and INVULNERABLE flags and its &lt;tt&gt;args[0]&lt;/tt&gt; is set to 255.
+* {{Class|SorcBall3}}: Parent plays the sound "SorcererSpellCast" and goes in its Attack2 state. If the parent's health has been reduced to 1/3 of its starting value, spawns two {{Class|SorcFX3}}, otherwise spawn only one. Any spawned actor has its &lt;tt&gt;target&lt;/tt&gt; field set to the parent.
+
+This codepointer is restricted to {{Class|SorcBall}} and actors inheriting from it.
+[[Category:Decorate Hexen functions]] [[Category:Decorate Restricted functions]] {{DEFAULTSORT:SorcBallOrbit}}</text>
+    <sha1>k4dtg5u70wyw9d77imfs2o68prwjqtw</sha1>
+  </revision>
+</page>

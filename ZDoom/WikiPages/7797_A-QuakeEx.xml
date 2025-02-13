@@ -1,0 +1,85 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>A QuakeEx</title>
+  <ns>0</ns>
+  <id>7797</id>
+  <revision>
+    <id>52962</id>
+    <parentid>50604</parentid>
+    <timestamp>2024-08-22T09:52:17Z</timestamp>
+    <contributor>
+      <username>Blue Shadow</username>
+      <id>2021</id>
+    </contributor>
+    <minor />
+    <comment>remove {{new}}</comment>
+    <origin>52962</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="6982" sha1="npm46gqkbzl651sj7kgk0zqtr4ifrim" xml:space="preserve">__NOTOC__{{codepointer|Special action}}
+'''A_QuakeEx''' (float ''intensityX'', float ''intensityY'', float ''intensityZ'', int ''duration'', int ''damrad'', int ''tremrad'' [, sound ''sfx'' [, int ''flags'' [, float ''mulwavex'' [, float ''mulwavey'' [, float ''mulwavez''[, int ''falloff''[, int ''highpoint''[, float ''rollIntensity''[, float ''rollWave''[, float ''damageMultiplier''][, ''thrustMultiplier''[, ''damage'']]]]]]]]]]])
+
+{{note|as of [[GZDoom version history#4.11.0|4.11.0]], the intensity parameters are decimal values instead of integers.}}
+==Usage==
+A_QuakeEx is an extended version of [[A_Quake]] with the ability to create an earthquake effect to manipulate the player's view along a specific axis, either in direct map axis or along the camera based upon the flags. It also allows adjusting the Z axis (quaking up and down). It also follows the same functionality, and creates an [[earthquake]] around the calling actor. In addition, it can also manipulate the ins and outs of an earthquake.
+
+Wave quakes can stack, adding their effects on top of other wave quakes. This does not affect non-wave quakes any differently, however.
+
+==Parameters==
+* ''intensityX/Y/Z'': Strength of earthquake, ranging from 0 to 9, along a particular axis.
+* ''duration'': Duration in tics 
+* ''damrad'': Radius of damage in map units, things that are not on the ground are unaffected.
+* ''tremrad'': Radius of tremor in map units
+* ''sound'': Accompanying sound effect for the tremor. (Default: "world/quake".) The sound is played on the [[A_StartSound#Usage|CHAN_BODY]] sound channel. Passing ''""'' will make the quake silent; however, '''it'll still occupy the CHAN_BODY channel''' — meaning, playing a sound on the CHAN_BODY channel with A_StartSound, and then calling A_QuakeEx will immediately stop the previous sound. There's currently no way to make this function not occupy a sound channel at all.
+* ''flags'': Can be combined with the pipe "|" character. All flags are compatible with each other.
+:*'''QF_RELATIVE''': Adjust the X, Y and Z intensities to quake along the camera view's front and side respectively. 
+:*'''QF_SCALEDOWN''': Scales the intensity over the duration, going from full at the start of the quake to 0 upon finishing. Can be combined with QF_SCALEUP.
+:*'''QF_SCALEUP''': Scales the intensity over the duration, going from 0 at the start of the quake to full upon finishing. Can be combined with QF_SCALEDOWN.
+:*'''QF_WAVE''': Changes the quake from a randomly generated one to a sine wave, and are further controlled by ''mulwavex/y/z''. Intensity is known as 'amplitude' in this form.
+:*'''QF_MAX''': Requires QF_SCALEDOWN and QF_SCALEUP. Fully scaled quakes will gradually scale from 0 to half intensity, and back to 0. This changes 0 to start from the defined intensity instead.
+:*'''QF_FULLINTENSITY''': Requires QF_SCALEDOWN and QF_SCALEUP. Fully scaled quakes will only scale in to the half intensity from their origins. This changes half to full intensity instead.
+:*'''QF_3D''': Makes the screen shake of the earthquake also fall off based on how far away the player is on the Z axis from the source of the earthquake.
+:*'''QF_GROUNDONLY''': The screen shake of the earthquake will stop when the player or their camera is off the ground, similar to real world earthquakes.
+:*'''QF_AFFECTACTORS''': The damrad property will also be able to harm and throw around non-player actors, instead of only affecting players. Non-players can be made immune to the thrusting with {{flag|DONTTHRUST}}.
+:*'''QF_SHAKEONLY''': The earthquakes' damrad property will only be used to throw the player and other actors around, without actually harming them.
+:*'''QF_DAMAGEFALLOFF''': Causes the thrusting and/or damage created by the earthquake to fall off based on distance, just like the screenshake effect itself, unlike the screenshake however, the damage and thrust falloff uses the ''damrad'' instead of the ''tremrad''. If the damage of the quake falls off to 0 or less while within the ''damrad'', the value will be clamped to 1.
+* ''mulwavex/y/z'': Only used with QF_WAVE. Specifies the number of waves per second the wave quake goes through while active. Default is 1. These are float values, so precision can be achieved.
+* ''falloff'': Determines how far away the quake will start to reduce its amplitude based on distance. Takes the same arguments at ''tremrad'' in map units. Anything inside this will experience the full effect of the quake. Default is 0, which is no falloff.
+* ''highpoint'': Only used with QF_SCALE&lt;DOWN/UP&gt;. Determines how far into the quake in tics for the quake to reach the peak of its shaking (or lack thereof if QF_MAX is included). Default is 0, or directly half way. 
+* ''rollintensity'': The camera roll is affected in a similar way to intensityX/Y/Z if specified. Unlike normal intensity, this is not capped. If QF_WAVE is used, can also be negative to allow randomization. This feature does not rely upon the standard intensities and can be used separately (placing 0 in intensity and mulwave properties), but the flags affect it exactly the same.
+* ''rollwave'': Similar to mulwavex/y/z, but for rolling. 
+* ''damageMultiplier'': Multiplies the damage the earthquake induces on actors by the amount specified. Default is 1.
+* ''thrustMultiplier'': Multiplies the amount of force the earthquake shoves around with by the amount specified. Default is 0.5.
+* ''damage'': The exact amount of damage the earthquake should perform, allowing for fine tuning of damage. By default, earthquakes do a random amount of damage from 1 to 7, unless this property is 0.
+
+Regular random quakes can stack with wave quakes, but to achieve this effect, one call to A_QuakeEx with QF_WAVE specified must happen with another call to the same function without QF_WAVE. This allows for cameras to shake along the wave, as the wave takes priority over where the jittering regular quakes positions. Wave quakes also will pause when the game is paused in any manner. Normally, regular quakes persist through an opened console for example, but wave quakes will always halt when a menu or console pause occurs. Similarly, rolling quakes follow the same behavior.
+
+Contrarily to the [[Radius_Quake]] [[action special]], the radii for damage and tremor are given directly in map units, not in "tiles" of 64x64 map units. This must be kept in mind when updating an actor definition from Radius_Quake to A_QuakeEx.
+
+== Examples ==
+Cacodemon in this example die with quake around him:
+ Actor Caco4ZDoomWiki: Cacodemon replaces Cacodemon
+ {
+  Health 600
+  Scale 1.3
+  [[Translation]] "16:47=168:191", "112:127=208:223"
+  States
+  {
+  Death:
+    HEAD G 12 A_QuakeEx( 2, 2, 2, 60, 0, 3000 ) //Light quake on 3000 map units around cacodemon death
+    HEAD H 12 [[A_Scream]]
+    HEAD IJ 12
+    HEAD K 12 [[A_NoBlocking]]
+    HEAD L -1 [[A_SetFloorClip]]
+    Stop
+  }
+ }
+
+== See also ==
+
+*[[QuakeEx]]
+*[[Radius_Quake]]
+*[[Radius_Quake2]]
+*[[A_Quake]]</text>
+    <sha1>npm46gqkbzl651sj7kgk0zqtr4ifrim</sha1>
+  </revision>
+</page>

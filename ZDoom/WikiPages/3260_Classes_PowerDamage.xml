@@ -1,0 +1,133 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>Classes:PowerDamage</title>
+  <ns>0</ns>
+  <id>3260</id>
+  <revision>
+    <id>53721</id>
+    <parentid>36552</parentid>
+    <timestamp>2024-11-13T12:00:36Z</timestamp>
+    <contributor>
+      <username>Jekyll Grim Payne</username>
+      <id>2175</id>
+    </contributor>
+    <origin>53721</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="2941" sha1="18d80n0jauz7pbanm5f3qw419d6h9ig" xml:space="preserve">{{actor|
+| type = Power
+| name = Increased damage power
+| class = PowerDamage
+}}[[Classes]]: [[Classes:Inventory|Inventory]]&amp;rarr;[[Classes:Powerup|Powerup]]&amp;rarr;&lt;u&gt;PowerDamage&lt;/u&gt;&lt;br&gt;
+&amp;ensp;&amp;ensp; [[Hierarchical class list|(more)]]
+
+{{: Powerup definition}}
+
+'''PowerBuddha''' modifies the damage its owner deals by using a '''[[ModifyDamage]]''' override.
+
+=== Examples ===
+A double damage item:
+ class PowerDoubleDamage : PowerDamage
+ {
+   Default
+   {
+     {{property|DamageFactor}} "normal", 2;
+     {{property|Inventory.Icon}} "MEGAA0";
+   }
+ }
+
+A Quad damage item and an example of an accompanying {{class|PowerupGiver}}:
+ class PowerQuadDamage : PowerDamage
+ {
+     {{property|DamageFactor}} "normal", 4;
+     {{property|Inventory.Icon}} "MEGAA0";
+ }
+ 
+ actor QuadDamage : PowerupGiver
+ {
+   Default
+   {
+     {{property|Powerup.Type}} 'QuadDamage';
+     {{property|Powerup.Duration}} 1000;
+     {{property|Inventory.PickupMessage}} "Quad Damage!!"; {{LanguageCodeNote}}
+     {{property|Powerup.Color}} "LawnGreen", 0.25
+     {{property|Inventory.MaxAmount}} 0;
+     {{property|Inventory.UseSound}} "pickups/slowmo";
+     {{property|Translation}} "128:143=120:127";
+     +{{flag|Inventory.AUTOACTIVATE}}
+     +{{flag|Inventory.FANCYPICKUPSOUND}}
+   }
+   States
+   {
+   Spawn:
+     MEGA ABCD 4 bright;
+     loop;
+   }
+ }
+
+=== [[ZScript]] definition ===
+{{ZScriptDefinitionNote|actors/inventory/powerups.zs}}
+&lt;syntaxhighlight lang="csharp"&gt;
+class PowerDamage : Powerup
+{
+	Default
+	{
+		Powerup.Duration -25;
+	}
+	
+	//===========================================================================
+	//
+	// InitEffect
+	//
+	//===========================================================================
+
+	override void InitEffect()
+	{
+		Super.InitEffect();
+
+		if (Owner != null)
+		{
+			Owner.A_StartSound(SeeSound, CHAN_5, CHANF_DEFAULT, 1.0, ATTN_NONE);
+		}
+	}
+
+	//===========================================================================
+	//
+	// EndEffect
+	//
+	//===========================================================================
+
+	override void EndEffect()
+	{
+		Super.EndEffect();
+		if (Owner != null)
+		{
+			Owner.A_StartSound(DeathSound, CHAN_5, CHANF_DEFAULT, 1.0, ATTN_NONE);
+		}
+	}
+
+	//===========================================================================
+	//
+	// ModifyDamage
+	//
+	//===========================================================================
+
+	override void ModifyDamage(int damage, Name damageType, out int newdamage, bool passive, Actor inflictor, Actor source, int flags)
+	{
+		if (!passive &amp;&amp; damage &gt; 0)
+		{
+			newdamage = max(1, ApplyDamageFactors(GetClass(), damageType, damage, damage * 4));
+			if (Owner != null &amp;&amp; newdamage &gt; damage) Owner.A_StartSound(ActiveSound, CHAN_AUTO, CHANF_DEFAULT, 1.0, ATTN_NONE);
+		}
+	}
+}
+&lt;/syntaxhighlight&gt;
+
+=== [[DECORATE]] definition ===
+{{DecorateDefinitionNote}}
+ ACTOR &lt;u&gt;PowerDamage&lt;/u&gt; : {{Class|Powerup}} native
+ {
+   {{Property|Powerup.Duration}} -25
+ }</text>
+    <sha1>18d80n0jauz7pbanm5f3qw419d6h9ig</sha1>
+  </revision>
+</page>

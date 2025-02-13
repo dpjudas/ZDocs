@@ -1,0 +1,83 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>GiveInventory (ScriptUtil)</title>
+  <ns>0</ns>
+  <id>9857</id>
+  <revision>
+    <id>52115</id>
+    <timestamp>2024-03-27T17:00:32Z</timestamp>
+    <contributor>
+      <username>Jekyll Grim Payne</username>
+      <id>2175</id>
+    </contributor>
+    <comment>Created page with "{{note|This function is a static [[ZScript]] function. For a non-static, Actor version, see '''[[GiveInventory (Actor)]]'''. For the [[ACS]] function of the same name, see '''..."</comment>
+    <origin>52115</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="2159" sha1="s5miq05wh58lyqv63gzpev3q7r6ec4q" xml:space="preserve">{{note|This function is a static [[ZScript]] function. For a non-static, Actor version, see '''[[GiveInventory (Actor)]]'''. For the [[ACS]] function of the same name, see '''[[GiveInventory]]'''.}}
+
+'''{{class|ScriptUtil}}'''
+
+{{c|static void '''GiveInventory'''(Actor ''activator'', Name ''type'', int ''amount'')}}
+
+== Usage ==
+A static, ZScript-only version of [[GiveInventory (Actor)]]/[[A_GiveInventory]]. Requires a [[Actor pointers|pointer]] to the actor that will receive the item. If the pointer is null, the item will instead be &lt;u&gt;given to all players in the game&lt;/u&gt;.
+
+=== Parameters ===
+*{{c|Actor '''activator'''}}
+:Pointer to the actor that will receive the item. If this is &lt;code&gt;null&lt;/code&gt;, the item will be given to all players in the game.
+*{{c|Name '''type'''}}
+:The name of the intended {{c|Inventory}} item class to give. Since this is a {{c|Name}}, using non-existent class names will not cause an error, but it will print a message to the console, informing that this item doesn't exist.
+:If the provided class name is not an {{c|Inventory}} class, the function will also print a console message.
+*{{c|int '''amount'''}}
+:The amount of the specified item to give.
+
+== [[ZScript]] definition ==
+{{ZScriptDefinitionNote|scriptutil/scriptutil.zs#L15}}
+
+&lt;syntaxhighlight lang="csharp"&gt;
+	static void GiveInventory (Actor activator, Name type, int amount)
+	{
+		if (amount &lt;= 0 || type == 'none')
+		{
+			return;
+		}
+		if (type == 'Armor')
+		{
+			type = "BasicArmorPickup";
+		}
+		Class&lt;Actor&gt; info = type;
+		if (info == NULL)
+		{
+			Console.Printf ("GiveInventory: Unknown item type %s.\n", type);
+		}
+		else if (!(info is 'Inventory'))
+		{
+			Console.Printf ("GiveInventory: %s is not an inventory item.\n", type);
+		}
+		else if (activator == NULL)
+		{
+			for (int i = 0; i &lt; MAXPLAYERS; ++i)
+			{
+				if (playeringame[i])
+					players[i].mo.GiveInventory((class&lt;Inventory&gt;)(info), amount);
+			}
+		}
+		else
+		{
+			activator.GiveInventory((class&lt;Inventory&gt;)(info), amount);
+		}
+	}
+&lt;/syntaxhighlight&gt;
+
+== Examples ==
+{{noexamples}}
+
+== See also ==
+* [[GiveInventory (Actor)]]
+* [[A_GiveInventory]]
+
+[[Category:ZScript]]
+[[Category:Inventory]]</text>
+    <sha1>s5miq05wh58lyqv63gzpev3q7r6ec4q</sha1>
+  </revision>
+</page>

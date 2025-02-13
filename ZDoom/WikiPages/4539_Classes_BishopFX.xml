@@ -1,0 +1,53 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>Classes:BishopFX</title>
+  <ns>0</ns>
+  <id>4539</id>
+  <revision>
+    <id>44941</id>
+    <parentid>39458</parentid>
+    <timestamp>2017-04-13T11:47:20Z</timestamp>
+    <contributor>
+      <username>Marrub</username>
+      <id>2058</id>
+    </contributor>
+    <minor />
+    <comment>typo</comment>
+    <origin>44941</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="871" sha1="rdheceidacbgim7x9s1ase7uimib8x5" xml:space="preserve">{{Actor|
+| type = Explosive
+| name = Dark bishop spell
+| class = BishopFX
+| game = Hexen
+}}[[Classes]]: &lt;u&gt;BishopFX&lt;/u&gt;&lt;br&gt;
+A weak projectile with minor seeking capabilities fired by the dark {{Class|bishop}} that flies in a weaving pattern. The bishop fires a stream of this projectile.
+==== [[DECORATE]] definition ====
+ ACTOR &lt;u&gt;BishopFX&lt;/u&gt;
+ {
+   {{Property|Radius}} 10
+   {{Property|Height}} 6
+   {{Property|Speed}} 10
+   {{Property|Damage}} 1
+   {{Property|Projectile}}
+   +{{Flag|SEEKERMISSILE}}
+   -{{Flag|ACTIVATEIMPACT}}
+   -{{Flag|ACTIVATEPCROSS}}
+   +{{Flag|STRIFEDAMAGE}}
+   {{Property|RenderStyle}} Add
+   {{Property|DeathSound}} "BishopMissileExplode"
+   States
+   {
+   Spawn:
+     BPFX ABAB 1 Bright [[A_BishopMissileWeave]]
+     BPFX B 0 Bright [[A_SeekerMissile]](2, 3)
+     Loop
+   Death:
+     BPFX CDEF 4 Bright
+     BPFX GH 3 Bright
+     Stop
+   }
+ }</text>
+    <sha1>rdheceidacbgim7x9s1ase7uimib8x5</sha1>
+  </revision>
+</page>

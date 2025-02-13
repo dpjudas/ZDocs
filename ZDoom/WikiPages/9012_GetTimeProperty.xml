@@ -1,0 +1,71 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>GetTimeProperty</title>
+  <ns>0</ns>
+  <id>9012</id>
+  <revision>
+    <id>48142</id>
+    <parentid>43708</parentid>
+    <timestamp>2020-11-25T20:25:24Z</timestamp>
+    <contributor>
+      <username>Threesaster</username>
+      <id>2609</id>
+    </contributor>
+    <origin>48142</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="1108" sha1="tqhflj0ycnfqwof78oduyc2wxoly569" xml:space="preserve">{{STFeature}}
+
+int '''GetTimeProperty''' (int timestamp, int which['', int utc'']) (Dev. 3.0 | 150831-1814)
+__NOTOC__
+== Usage ==
+=== Parameters ===
+* ''timestamp'': The timestamp to localize.
+* ''which'': Which attribute to return.
+* ''utc'': If true, the timestamp will be localized using the UTC timezone, local timezone otherwise
+
+== Time properties ==
+{|
+!Property
+!Range
+!Description
+|-
+| &lt;tt&gt;TM_SECOND&lt;/tt&gt; (0)
+| [0 - 61]
+| Seconds.&lt;br /&gt;Result is generally within [0, 59] but may very rarely exceed due to leap seconds.
+|-
+| &lt;tt&gt;TM_MINUTE&lt;/tt&gt; (1)
+| [0 - 59]
+| Minutes
+|-
+| &lt;tt&gt;TM_HOUR&lt;/tt&gt; (2)
+| [0, 23]
+| Hours
+|-
+|&lt;tt&gt;TM_DAY&lt;/tt&gt; (3)
+| [0, 30]
+| Days
+|-
+|&lt;tt&gt;TM_MONTH&lt;/tt&gt; (4)
+| [0, 11]
+| Month of the year
+|-
+|&lt;tt&gt;TM_YEAR&lt;/tt&gt; (5)
+| [1901, 2038]
+| Year
+|-
+|&lt;tt&gt;TM_WEEKDAY&lt;/tt&gt; (6)
+| [0, 6]
+| Weekday (Sunday is 0)
+|}
+
+== Result value ==
+Localizes the given timestamp and returns an attribute of it.
+
+Note that due to ACS's limitations, the timestamp is suspectible to the [http://en.wikipedia.org/wiki/Year_2038_problem year 2038 problem].
+
+== See Also ==
+*[[SystemTime (Skulltag)]]
+*[[Strftime]]</text>
+    <sha1>tqhflj0ycnfqwof78oduyc2wxoly569</sha1>
+  </revision>
+</page>

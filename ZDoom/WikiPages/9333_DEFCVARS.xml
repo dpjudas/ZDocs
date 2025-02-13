@@ -1,0 +1,43 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>DEFCVARS</title>
+  <ns>0</ns>
+  <id>9333</id>
+  <revision>
+    <id>47664</id>
+    <parentid>47663</parentid>
+    <timestamp>2020-06-08T00:45:03Z</timestamp>
+    <contributor>
+      <username>Blue Shadow</username>
+      <id>2021</id>
+    </contributor>
+    <minor />
+    <comment>/* Syntax */</comment>
+    <origin>47664</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="1512" sha1="2sp2otp6rz8vtagf75u7cq2ko0xaxby" xml:space="preserve">'''DEFCVARS''' is a lump that allows to override the engine's default values for [[console variables]] with new defaults. It is only read from files loaded as the [[IWAD]]; the intent is to allow stand-alone games created with the [[GZDoom]] engine to be shipped with default settings that are more appropriate to them without having to modify the engine's source code for that. In files loaded as a mod, the lump is ignored.
+
+==Syntax==
+The first line must always be the game's config {{c|LastRun}} version (219 as of the introduction of this feature), and then followed by the CVARs and their settings in the style of a console file (similar to [[DEFBINDS]] or [[KEYCONF]]).
+
+Each line after the version uses this simple syntax:
+ [set] var "value"
+
+It is preferred to use the word '{{c|set}}' in front of every line, but that is optional. {{c|var}} is the name of the CVAR being changed, and "{{c|value}}" is its intended default value.
+
+Any attempt to set a CVAR that does not exist will cause the parser to error out. The reason for the "{{c|version}}" directive is to allow migration of old and removed CVARs to avoid this causing problems in the future with older mods.
+
+==Example==
+ version 219
+ set freelook "true"
+ set vid_rendermode "0"
+ set name "Space Zombie"
+ set color "00 00 a0"
+
+==Forum links==
+* {{forum|t=66811|Config converter}}: thread about a small utility that transforms a [[zdoom.ini|gzdoom.ini]] file into a set of DEFBINDS, DEFCVARS, and KEYCONF lumps.
+
+[[Category:ZDoom special lumps]]</text>
+    <sha1>2sp2otp6rz8vtagf75u7cq2ko0xaxby</sha1>
+  </revision>
+</page>

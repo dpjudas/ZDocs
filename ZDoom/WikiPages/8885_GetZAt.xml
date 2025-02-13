@@ -1,0 +1,164 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>GetZAt</title>
+  <ns>0</ns>
+  <id>8885</id>
+  <revision>
+    <id>52794</id>
+    <parentid>50161</parentid>
+    <timestamp>2024-06-30T12:32:35Z</timestamp>
+    <contributor>
+      <username>Jekyll Grim Payne</username>
+      <id>2175</id>
+    </contributor>
+    <comment>Formatting</comment>
+    <origin>52794</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="5102" sha1="pacf7d54vzost3ciynozbu2jgxdahoc" xml:space="preserve">'''{{class|Actor}}'''
+
+native double '''GetZAt''(double ''px'' = 0, double ''py'' = 0, double ''angle'' = 0, int ''flags'' = 0, int ''pick_pointer'' = AAPTR_DEFAULT)
+
+== Usage ==
+Gets the Z of the floor or ceiling at coordinates ''x'' and ''y'' based on flags. This allows for more flexible checks than the floorz and ceilingz [[Actor properties]].
+
+This function is capable of succeeding where [[A_CheckFloor]] and A_CheckCeiling have their shortcomings -- over ledges and at the edges of a hitbox. With a proper loop, an actor can detect if any part of the pointed actor is truly on the ground or touching the ceiling in its entirety or not.
+
+Note that this function is to be used where an [[DECORATE expressions|expression]] is expected. It is mostly useful when combined with {{c|[[A_JumpIf]]}} or [[Actor_states#Anonymous_Functions|Anonymous Functions]].
+
+== Parameters ==
+* {{c|double '''px'''}}
+:The x coordinates based on relativity to the pointer. Positive numbers move the check forward, negative moves it behind.
+* {{c|double '''py'''}}
+:Similar to X but for side-to-side. Positive numbers move the check to the right of the actor, negative moves it to the left.
+* {{c|double '''angle'''}}
+:The offset amount added to the actor's current angle. Positive amounts rotate the check to the left, negative to the right.
+* {{c|int '''flags'''}}
+:Multiple flags can be combined with &lt;code&gt;|&lt;/code&gt;. The following flags are available:
+:* '''GZF_ABSOLUTEPOS''': Relativity is disabled and the x/y coordinates are absolute.
+:* '''GZF_ABSOLUTEANG''': ''angle'' is not added to the actor's current angle.
+:* '''GZF_CEILING''': The function checks for the ceiling's z instead of the floor's.
+:* '''GZF_3DRESTRICT''': Ignores Z on top of midtextures and 3D floors that are above the pointer's position.
+:* '''GZF_NOPORTALS''': Ignores the existence of portals and does not traverse into other sectors.
+:* '''GZF_NO3DFLOOR''': Ignores all 3D floors above or below the pointer between it and the true floor/ceiling.
+* {{c|int '''pick_pointer'''}}
+:The pointer to examine. Default is {{c|{{const|AAPTR_DEFAULT}}}}. See [[actor pointers]].
+
+=== Return value ===
+double — Returns the floorz or ceilingz based on the flags above as a double.
+
+==Examples==
+
+This custom version of [[Classes:Blood|Blood]] enters a Death state upon hitting the floor and then leaves a pool on the floor (which is a flat sprite). However, in order to make sure that the flat sprite doesn't stick out into the air when it falls near a ledge or on a narrow stair, four GetZAt checks are introduced. Unless the floor height of four points 24 units away in 4 directions from the center of the BetterBlood actor is equal to the floor height under the actor's center, the pool doesn't appear.
+
+===[[ZScript]] code===
+In this example the sprites SPLTA-SPLTD are meant to be represent a pool of blood (viewed from above).
+&lt;syntaxhighlight lang="csharp"&gt;
+class BetterBlood : Blood replaces Blood
+{
+	Default
+	{
+		-ALLOWPARTICLES
+		+MISSILE
+	}
+
+	States
+	{
+	Spawn:
+		BLUD CBA 8;
+		wait;
+	Death:
+		TNT1 A 0 
+		{
+			// if any if these checks fail, destroy the actor by moving
+			// to the "Null" state sequence:
+			if (GetZAt(24,0) != floorz || GetZAt(-24,0) != floorz || GetZAt(0,24) != floorz || GetZAt(0,-24) != floorz)
+			{
+				return FindState("Null");
+			}
+			// otherwise make it a flat sprite and continue:
+			bFLATSPRITE = true;
+			return State(null);
+		}
+		SPLT A -1
+		{
+			// set the sprite frame randomly to A, B, C or D:
+			frame = random(0,3);
+		}
+		stop;
+	}
+}&lt;/syntaxhighlight&gt;
+
+Another option in ZScript is to use a for loop and utilize the angle argument of {{c|GetZAt()}} to rotate the check. This will run the check every 30 degrees:
+&lt;syntaxhighlight lang="csharp"&gt;
+class BetterBlood : Blood replaces Blood
+{
+	Default
+	{
+		-ALLOWPARTICLES
+		+MISSILE
+	}
+
+	States
+	{
+	Spawn:
+		BLUD CBA 8;
+		wait;
+	Death:
+		TNT1 A 0 
+		{
+			// Check 24 units away from the actor, rotating 
+			// the check by 30 degrees with every iteration:
+			for (int i = 0; i &lt; 360; i += 30)
+			{
+				// As soon as this check fails destroy the 
+				// actor by moving to the "Null" sequence:
+				if (GetZAt(24, 0, i) != floorz)
+				{
+					return FindState("Null");
+				}
+			}
+			// otherwise make it a flat sprite and continue:
+			bFLATSPRITE = true;
+			return State(null);
+		}
+		SPLT A -1
+		{
+			// set the sprite frame randomly to A, B, C or D:
+			frame = random(0,3);
+		}
+		stop;
+	}
+}&lt;/syntaxhighlight&gt;
+
+===[[DECORATE]] code===
+ Actor BetterBlood : Blood replaces Blood
+ {
+ 	{{flag|-ALLOWPARTICLES}}
+ 	{{flag|+MISSILE}}
+ 
+ 	[[Actor states|States]]
+ 	{
+ 	Spawn:
+ 		BLUD CBA 8
+ 		wait
+ 	Death:
+ 		// go to the "Pool" state sequence only if all of these checks pass:
+ 		TNT1 A 0 [[A_JumpIf]](GetZAt(24,0) == floorz &amp;&amp; GetZAt(-24,0) == floorz &amp;&amp; GetZAt(0,24) == floorz &amp;&amp; GetZAt(0,-24) == floorz, "Pool")
+ 		stop
+ 	Pool:
+ 		// make it a flat sprite and set one of the frames randomly:
+ 		TNT1 A 0 [[A_ChangeFlag]]("FLATSPRITE",1)
+ 		TNT1 A 0 [[A_Jump]](256,1,2,3,4)
+ 		SPLT A -1
+ 		stop
+ 		SPLT B -1
+ 		stop
+ 		SPLT C -1
+ 		stop
+ 		SPLT D -1	
+ 		stop
+ 	}
+ }</text>
+    <sha1>pacf7d54vzost3ciynozbu2jgxdahoc</sha1>
+  </revision>
+</page>

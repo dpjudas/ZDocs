@@ -1,0 +1,67 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>Classes:Allmap</title>
+  <ns>0</ns>
+  <id>2493</id>
+  <revision>
+    <id>48334</id>
+    <parentid>48333</parentid>
+    <timestamp>2021-03-09T09:17:04Z</timestamp>
+    <contributor>
+      <username>Jekyll Grim Payne</username>
+      <id>2175</id>
+    </contributor>
+    <comment>fixed Maprevealer link</comment>
+    <origin>48334</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="1310" sha1="qf6wvokdtct024tyw7p91sik6r57huu" xml:space="preserve">{{Actor|
+| type = Powerup
+| name = Computer area map
+| class = Allmap
+| game = Doom
+| doomednum = 2026
+| spawnid = 137
+| spawnname = T_COMPUTERMAP 
+}}[[Classes]]: [[Classes:Inventory|Inventory]]&amp;rarr;[[Classes:MapRevealer|MapRevealer]]&amp;rarr;&lt;u&gt;Allmap&lt;/u&gt;
+
+The computer area map reveals all the unexplored areas of a level with gray lines in the [[Automap|automap]]. Contrarily to the ''iddt'' [[cheat]], the computer area map shows neither hidden [[linedef]]s nor [[actor]]s.
+
+==== [[ZScript]] definition ====
+ class Allmap : {{Class|MapRevealer}}
+ {
+ 	Default
+ 	{
+ 		+{{Flag|COUNTITEM}}
+ 		+{{Flag|INVENTORY.FANCYPICKUPSOUND}}
+ 		+{{Flag|INVENTORY.ALWAYSPICKUP}}
+ 		{{Property|Inventory.MaxAmount}} 0;
+ 		{{Property|Inventory.PickupSound}} "misc/p_pkup";
+ 		{{Property|Inventory.PickupMessage}} "$GOTMAP"; // "Computer Area Map"
+ 	}
+ 	States
+ 	{
+ 	Spawn:
+ 		PMAP ABCDCB 6 Bright;
+ 		Loop;
+ 	}
+ }
+
+==== [[DECORATE]] definition ====
+ ACTOR &lt;u&gt;Allmap&lt;/u&gt; : {{Class|MapRevealer}}
+ {
+   +{{Flag|COUNTITEM}}
+   +{{Flag|INVENTORY.FANCYPICKUPSOUND}}
+   +{{Flag|INVENTORY.ALWAYSPICKUP}}
+   {{Property|Inventory.MaxAmount}} 0
+   {{Property|Inventory.PickupSound}} "misc/p_pkup"
+   {{Property|Inventory.PickupMessage}} "$GOTMAP" // "Computer Area Map"
+   States
+   {
+   Spawn:
+     PMAP ABCDCB 6 Bright
+     Loop
+   }
+ }</text>
+    <sha1>qf6wvokdtct024tyw7p91sik6r57huu</sha1>
+  </revision>
+</page>

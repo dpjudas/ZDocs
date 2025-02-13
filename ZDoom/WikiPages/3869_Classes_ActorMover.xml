@@ -1,0 +1,48 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>Classes:ActorMover</title>
+  <ns>0</ns>
+  <id>3869</id>
+  <revision>
+    <id>39765</id>
+    <parentid>19223</parentid>
+    <timestamp>2015-05-03T22:44:00Z</timestamp>
+    <contributor>
+      <username>Blue Shadow</username>
+      <id>2021</id>
+    </contributor>
+    <minor />
+    <comment>/* DECORATE definition */ Updated</comment>
+    <origin>39765</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="1526" sha1="50iyfsekwscsnhrl71q9eho4i2v4mlb" xml:space="preserve">{{Actor|
+| type = Script thing
+| name = Actor mover
+| class = ActorMover
+| doomednum = 9074
+}}[[Classes]]: [[Classes:PathFollower|PathFollower]]&amp;rarr;&lt;u&gt;ActorMover&lt;/u&gt;&lt;br&gt;
+
+An ActorMover will move any thing along a path of [[Classes:InterpolationPoint|interpolation points]]. If you move a monster, the monster will automatically be made dormant while it is on the path.
+
+The actor mover takes four parameters:
+
+:1. low byte: low byte of tid of first interpolation point in path.
+:2. high byte: high byte of tid of first interpolation point in path.
+:3. options: (Add any of the following values; i.e. for options 2 and 4, this parameter would be 6):
+::* 1: path is linear instead of curved.
+::* 2: Thing will adjust its angle to match those of the points it passes.
+::* 4: Thing will adjust its pitch to match those of the points it passes.
+::* 8: When used with 2 and/or 4, the thing faces in the direction of movement instead of the direction the interpolation points are facing.
+::* 128: If the thing being moved is normally solid, make it nonsolid so that it can't be blocked. 
+:4. tid: the tid of the thing to move. 
+
+Use the [[Thing_Activate]](ActorMover's tid) special to start the actor mover.
+
+To stop an ActorMover use the reverse special, [[Thing_Deactivate]](ActorMover's tid). If the camera is restarted using Thing_Activate, it will automatically start at the beginning of the path.
+==== [[DECORATE]] definition ====
+ ACTOR &lt;u&gt;ActorMover&lt;/u&gt; : {{Class|PathFollower}} native {}
+
+[[category:Special ZDoom things]]</text>
+    <sha1>50iyfsekwscsnhrl71q9eho4i2v4mlb</sha1>
+  </revision>
+</page>

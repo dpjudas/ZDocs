@@ -1,0 +1,42 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>Powerup properties</title>
+  <ns>0</ns>
+  <id>5098</id>
+  <revision>
+    <id>53433</id>
+    <parentid>48765</parentid>
+    <timestamp>2024-10-26T12:52:40Z</timestamp>
+    <contributor>
+      <username>Jekyll Grim Payne</username>
+      <id>2175</id>
+    </contributor>
+    <comment>quotation marks</comment>
+    <origin>53433</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="4524" sha1="s3i59tdhr758qhlszy4q366tbcul47c" xml:space="preserve">&lt;onlyinclude&gt;* '''{{LE|Powerup.Color}}''' ''color'' [, ''alpha'']
+:*'''Powerup.Color "BlueMap"'''
+:*'''Powerup.Color "GoldMap"'''
+:*'''Powerup.Color "GreenMap"'''
+:*'''Powerup.Color "InverseMap"'''
+:*'''Powerup.Color "RedMap"'''
+:*'''Powerup.Color "None"'''
+:Specifies the color and the opacity of the screen blend that is used when the powerup is active. Color is specified either as three integers {{Decoratefeaturesmall}}, an "RR GG BB" string or a color name from the [[X11R6RGB]] lump. Alpha is optional, and is a value between 0.0 and 1.0, defaulting to 0.33333 if not specified. Instead of specifying a color you can also use the predefined values {{c|BlueMap}}, {{c|GoldMap}}, {{c|GreenMap}}, {{c|InverseMap}} and {{c|RedMap}}. These do not set a blending value but instead use a predefined blend.
+:Using a color value of {{c|None}} for a {{Class|PowerupGiver}}, results in having no screen blend. Setting an arbitrary color with zero ''alpha'', instead, to override the {{Class|powerup}}'s own does not achieve the same task.
+* '''{{LE|Powerup.Colormap}}''' [''sourcecolor'', ]''destcolor''
+:A generalization of the colormaps (which, counter-intuitively, are used with {{Property|Powerup.Color}}), this creates a color ramp from the source color to the destination color. This uses decimal numbers for the red, green, blue components, ranging from 0.0 to 1.0, inclusive. If only one color is provided, then black (0.0, 0.0, 0.0) is used as the source color. For example, Powerup.Colormap 0.0, 0.0, 0.0, 1.0, 1.0, 1.0 and Powerup.Colormap 1.0, 1.0, 1.0 both create a grayscale, Powerup.Colormap 1.0, 1.0, 1.0, 0.0, 0.0, 0.0 creates the well known inverse map and Powerup.Colormap 1.0, 0.0, 0.0, 0.0, 1.0, 0.0 creates a red to green effect.
+* '''{{LE|Powerup.Duration}}''' ''time''
+:The length of time the power up will last in tics (1/35 of a second). If a negative duration is given, it will be taken as the duration in seconds (e.g., {{c|-30}} is half a minute, while {{c|30}} is less than a second). The maximum duration is {{c|0x7FFFFFFF}}, which corresponds to about two years of real time and can therefore safely be used for permanent powerups. Note, however, that due to the design of the {{Class|PowerTimeFreezer|TimeFreezer}} powerup, using such a duration value for this powerup is not recommended, as the engine will add two tics to the powerup's duration if the duration's value was even and the powerup was activated on an odd game tic, resulting in a signed overflow error. A value of {{c|0x7FFFFFFD}} is safe to use in such a case.
+* '''{{LE|Powerup.Mode}}''' '''mode'''
+:For some powerups which may behave in different ways, specify the mode. Currently affects {{Class|PowerInvulnerable|Invulnerability}}, {{Class|PowerInvisibility|Invisibility}} and {{Class|PowerIronFeet|Environment protection}}.
+:* '''Invulnerability''' modes: 'None' and 'Reflective'. 'None' is invulnerability without any added effect. 'Reflective' also makes all projectiles bounce off of the player while the powerup is in effect.
+:* '''Invisibility''' modes: 'Cumulative', 'Fuzzy', 'Opaque', 'Stencil' and 'Translucent'. 'Cumulative' allow multiple invisibility powerups of the same type to stack when active at the same time, adding their ''strength'' value together. 'Fuzzy' uses the [[fuzz]] effect renderstyle, like that of the {{Class|spectre}}. 'Opaque' results in an opaque renderstyle, making the actor not invisible graphically speaking. 'Stencil' uses the stencil renderstyle, showing just the shape. 'Translucent' is merely a way of explicitly specifying the default invisibility mode.
+:*'''Environment protection''' modes: 'Normal' and 'Full'. 'Normal' is environment protection's default mode. 'Full' is total-protection mode. It is similar to 'Normal', but it also protects against the types of [[damaging floor#Sector types|damaging floors]] that the 'Normal' mode does not protect against, whether it is partial protection or not.
+* '''{{LE|Powerup.Strength}}''' ''strength''
+:The magnitude of a powerup's effect. Currently applies to {{Class|PowerInvisibility|Invisibility}} and {{Class|PowerRegeneration|Regeneration}}, as other powerups have unquantifiable effects or use predetermined fields such as DamageFactor.
+:* '''Invisibility''' strength: determines how translucent the affected actor becomes. 0 is for opaque, and 100 is for fully invisible. Does not apply to 'Fuzzy' mode.
+:* '''Regeneration''' strength: determines the amount of health regenerated.&lt;/onlyinclude&gt;
+[[Category:Editing references]]</text>
+    <sha1>s3i59tdhr758qhlszy4q366tbcul47c</sha1>
+  </revision>
+</page>

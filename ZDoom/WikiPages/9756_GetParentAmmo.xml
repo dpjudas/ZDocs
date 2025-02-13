@@ -1,0 +1,55 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>GetParentAmmo</title>
+  <ns>0</ns>
+  <id>9756</id>
+  <revision>
+    <id>52687</id>
+    <parentid>52647</parentid>
+    <timestamp>2024-05-20T18:55:46Z</timestamp>
+    <contributor>
+      <username>Jekyll Grim Payne</username>
+      <id>2175</id>
+    </contributor>
+    <comment>/* Examples */ Fixed error in the example</comment>
+    <origin>52687</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="1441" sha1="lj7pd4j9gkov6hujqy2iakzr7yfsjog" xml:space="preserve">'''[[Classes:Ammo|Ammo]]'''
+
+{{c|virtual Class&lt;Ammo&gt; '''GetParentAmmo'''()}}
+
+== Usage ==
+Returns the first ammo class that the calling class is based on. This is used to determine if a specific {{class|Ammo|ammo}} type is a new ammo type or a new ''pickup'' for an ''existing'' ammo type.
+
+For example, {{class|Clip}} is based on {{class|Ammo}} directly, so this function will return {{c|'Clip'}}. But {{class|ClipBox}} is based on {{class|Clip}}, so this function in {{c|ClipBox}} will return {{c|'Clip'}} as well, and thus {{c|ClipBox}} gives {{c|Clip}} when picked up.
+
+This function must be overridden if an author wants to introduce their own ''base'' ammo class, with features/functionality that should affect all ammo types in their project.
+
+== Examples ==
+This creates a new base ammo type, '''FloatingAmmoBase''', which {{flag|FLOATBOB|bobs in the air}} and is only {{property|Gravity|affected by 30% of gravity}}. This can be used as a base to create new ammo types that will all inherit this behavior:
+&lt;syntaxhighlight lang="csharp"&gt;
+class FloatingAmmoBase : Ammo
+{
+	Default
+	{
+		+FLOATBOB
+		Gravity 0.3;
+	}
+
+	override Class&lt;Ammo&gt; GetParentAmmo ()
+	{
+		class&lt;Object&gt; type = GetClass();
+
+		while (type.GetParentClass() != "FloatingAmmoBase" &amp;&amp; type.GetParentClass() != null)
+		{
+			type = type.GetParentClass();
+		}
+		return (class&lt;Ammo&gt;)(type);
+	}
+}&lt;/syntaxhighlight&gt;
+
+[[Category:ZScript]]
+[[Category:ZScript virtual functions]]</text>
+    <sha1>lj7pd4j9gkov6hujqy2iakzr7yfsjog</sha1>
+  </revision>
+</page>

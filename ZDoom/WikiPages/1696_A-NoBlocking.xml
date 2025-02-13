@@ -1,0 +1,55 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>A NoBlocking</title>
+  <ns>0</ns>
+  <id>1696</id>
+  <revision>
+    <id>53222</id>
+    <parentid>48030</parentid>
+    <timestamp>2024-10-04T19:14:10Z</timestamp>
+    <contributor>
+      <username>Gez</username>
+      <id>1283</id>
+    </contributor>
+    <minor />
+    <comment>note about behavior difference from vanilla</comment>
+    <origin>53222</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="1724" sha1="mmxg0fwioxch5etq5x9d7zso3grctbd" xml:space="preserve">{{codepointer|Status change}}
+{{doomwiki|A_Fall}}
+void '''A_NoBlocking''' [(bool ''drop'')]
+
+void '''A_Fall''' ()
+
+==Usage==
+The function does the following:
+* It makes the actor visible if it is [[stealth]].
+* It makes it non-solid.
+* It makes it spawn its [[DIALOGUE|dialogue]]-set and {{Property|DropItem|"regular"}} drop items.
+* It clears the dialogue that is assigned to it.
+
+Note that unlike the dialogue-set drop item, which is cleared from the actor after it is spawned (cleared since the actor no longer has a dialogue assigned to it), the regular drop items are not, which means that these items are spawned each time the function is called. Also, if the actor has both dialogue-set and regular drop items, it only spawns the dialogue-set one for that function call. For all subsequent calls, the regular drop items are spawned, instead.
+
+'''A_Fall''' is an alternative name which is Doom's original name for this function.  It functions identically to the default '''A_NoBlocking''' call with default parameters.
+
+Note that in vanilla Doom, item drops are not handled by A_Fall, but instead by {{c|P_KillMobj}} directly. Drops therefore happen immediately when the actor is killed, instead of happening when the actor calls A_Fall like it does in ZDoom.
+
+===Parameters===
+*''drop'': Determines whether the actor's [[DropItem]] will be spawned. Default is ''true''.
+
+== Examples ==
+
+This function is typically used in an actor's death state, as can be seen in this [[DECORATE]] code from the Doom 2 {{Class|ChaingunGuy}}.
+
+ Death:
+   CPOS H 5
+   CPOS I 5 [[A_Scream]]
+   CPOS J 5 [[A_NoBlocking]]
+   CPOS KLM 5
+   CPOS N -1
+   stop
+
+'''Note:''' This can be combined with [[A_Scream]] using [[A_ScreamAndUnblock]].</text>
+    <sha1>mmxg0fwioxch5etq5x9d7zso3grctbd</sha1>
+  </revision>
+</page>

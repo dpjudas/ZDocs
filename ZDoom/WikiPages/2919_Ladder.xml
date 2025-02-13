@@ -1,0 +1,234 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>Ladder</title>
+  <ns>0</ns>
+  <id>2919</id>
+  <revision>
+    <id>48281</id>
+    <parentid>37332</parentid>
+    <timestamp>2021-02-03T20:20:45Z</timestamp>
+    <contributor>
+      <username>Kappes Buur</username>
+      <id>88</id>
+    </contributor>
+    <comment>added link to KB's tutorial</comment>
+    <origin>48281</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="11015" sha1="e7xtroryrjwr6orfvjdba3wdsuc6gyx" xml:space="preserve">{{TOCright}}
+== Assumed Knowledge ==
+
+It is assumed that before you begin this tutorial, you are familiar with the following concepts:
+
+*[[Thing executed specials]]
+*[[ThrustThingZ]]
+*[[SetPlayerProperty]]
+*[[SetLineSpecial]]
+*[[SetLineBlocking]]
+*[[GetActorX]]
+*[[GetActorY]]
+*[[GetActorZ]]
+
+Understanding these concepts is vital to understanding the following tutorial.
+
+== Past Examples ==
+
+Aside from the "invisible stairs" approach, which can now be considered a messy and antiquated "hack", there are other examples of how to create a ladder.  However, the following two examples both have their benefits and flaws.
+
+=== Helms Deep's Ladder ===
+
+The ladder in Helms Deep was simply a repeatable [[ThrustThingZ]] special placed on the line which was triggered when the player pushed on it.
+&lt;pre&gt;&lt;nowiki&gt;
+    ThrustThingZ(0, 16, 0, 0);
+&lt;/nowiki&gt;&lt;/pre&gt;
+The problem arises when pressing back to climb down, resulting in falling off the ladder completely.
+
+=== Little White Mouse's Ladder ===
+
+This example uses what has been dubbed a "flying sector"; that is, using the "Actor Enters Sector" and "Actor Leaves Sector" [[Thing executed specials]] to set and remove the APROP_FLY property:
+&lt;pre&gt;&lt;nowiki&gt;
+    script 1 (int Ladder) {
+    if (Ladder == 1){SetPlayerProperty (0, 1, PROP_FLY);}
+    if (Ladder == 2){SetPlayerProperty (0, 0, PROP_FLY);}
+    }
+&lt;/nowiki&gt;&lt;/pre&gt;
+This method is effective in that you can turn around &amp; fire from any point on the ladder, so that you don't just drop when going down.
+
+One limitation of this method is that the player is required to use their "jump / fly up" and "crouch / fly down" keys to move up and down the ladder, and if you remove the air-control entirely it won't work at all.
+
+Also, in this example, if there is no ceiling, the player can continue to fly as high as they please.
+
+== Combining the Methods ==
+
+Using a combination of these two examples and the inclusion of a few "fixes", you can achieve a nice ladder effect which combines the best of both methods.
+
+=== "Jumping" to climb the ladder ===
+
+Rather than having the fly property activated by the sector things, use the Helms Deep approach and have it activated when the player pushes up against the line.
+
+Secondly, when the player pushes the line include the ThrustThingZ code so that they will not have to use the "jump" key to climb upwards; rather, simply pushing forward will allow them to climb the ladder.
+
+This method combines the ability to climb by simply pressing forward ''and'' turn around &amp; fire from any point on the ladder.
+
+This creates the problem of not being able to "climb down" the ladder and the issue of how to turn the fly property off if the player simply walks away from the line.  However, both these problems will be addressed later.
+
+=== No ceiling ===
+
+Using a quick IF statement to check the player's height, you can determine whether or not to maintain the fly property or turn it off:
+&lt;pre&gt;&lt;nowiki&gt;
+    if(GetActorZ(ActivatorTID()) &gt;= 0 &amp;&amp; GetActorZ(ActivatorTID()) &lt; 512&lt;&lt;16) 
+        {
+        SetPlayerProperty(0, 1, PROP_FLY);
+        ThrustThingZ(0, 16, 0, 0);
+        } 
+    else
+        {
+        SetPlayerProperty(0, 0, PROP_FLY);
+        }
+&lt;/nowiki&gt;&lt;/pre&gt;
+Where "0" is the bottom of the ladder and "512" is the top.
+
+Note that the player's height is in his shoes. If the height of the top platform floor is 384, that's what your player's height will be when he stands on it.
+
+=== Inability to climb down ===
+
+This issue should be addressed with another line placed adjacent to the "ladder" line, which acts inversely to its counterpart.  In other words, this invisible line would use a ThrustThingZ
+to force the player downward.  Place this "down ladder" about 36 map units away from the ladder line for the best effect.
+
+Attention needs to be paid to this line in particular regarding when it should and should not be "passable."
+
+The way to achieve this is to use the height checking statement from the previous solution to also use [[SetLineBlocking]] on the "down ladder."
+
+Obviously, the player is still going to want to walk away from the ladder at the lowest point. However, their Z-height will still be greater than 0, meeting the condition specified in the previous code, so an extra "Else If" statement is required.
+&lt;pre&gt;&lt;nowiki&gt;
+    if(GetActorZ(ActivatorTID()) &gt; 64&lt;&lt;16 &amp;&amp; GetActorZ(ActivatorTID()) &lt; 512&lt;&lt;16)
+        {
+        SetPlayerProperty(0, 1, PROP_FLY);
+        ThrustThingZ(0, 16, bool up/down, 0);
+        SetLineBlocking(lineid, BLOCK_CREATURES);
+        } 
+    else if(GetActorZ(ActivatorTID()) &gt;= 0 &amp;&amp; GetActorZ(ActivatorTID()) &lt; 64&lt;&lt;16)
+        {
+        SetPlayerProperty(0, 1, PROP_FLY);
+        ThrustThingZ(0, 16, bool up/down, 0);
+        SetLineBlocking(lineid, BLOCK_NOTHING);
+        }
+    else
+        {
+        SetPlayerProperty(0, 0, PROP_FLY);
+        SetLineBlocking(lineid, BLOCK_NOTHING);
+        }
+&lt;/nowiki&gt;&lt;/pre&gt;
+Note that the property BLOCK_CREATURES is used so that projectiles can still pass through it.
+
+Note that the third argument of [[ThrustThingZ]] has been changed to a bool.  It is recommended you declare an integer for this argument which is defined by an argument of whichever line the player is pushing; this elminates the need for multiple scripts.
+
+Now, you will need this "down ladder" line to have a lineid, but also to execute the special when bumped.  To do this, give the line an ID in you map editor, and then use an open script to assign the special:
+&lt;pre&gt;&lt;nowiki&gt;
+    Script 999 OPEN
+    {
+    SetLineSpecial(lineid,80,1,0,1);
+    }
+&lt;/nowiki&gt;&lt;/pre&gt;
+Also, when climbing on to the ladder from the top to climb down, the "down ladder" will of course not be activated since you haven't bumped the ladder to do so.  Here is where an "Actor Enters Sector" thing works well to activate the following script:
+&lt;pre&gt;&lt;nowiki&gt;
+    if(GetActorZ(ActivatorTID()) &gt; 64&lt;&lt;16 &amp;&amp; GetActorZ(ActivatorTID()) &lt;= 512&lt;&lt;16) 
+    {
+        SetLineBlocking(downladderline, BLOCK_CREATURES);
+    } 
+    else
+    {
+        SetLineBlocking(downladderline, BLOCK_NOTHING);
+    }
+&lt;/nowiki&gt;&lt;/pre&gt;
+This will make sure that the "down ladder" is set to blocking; otherwise, you'll just jump off the top of the platform.
+
+=== Removing the "fly" property ===
+
+Now the [[Thing executed specials]] of "Actor Leaves Sector" should be used, as the previous code, as well as the dummy "down ladder", have already ensured that the player can only leave the sector when they are at the top or bottom of the ladder, at which point the fly property is no longer necessary.  The "Actor Leaves Sector" thing can remove this property itself, without calling another script.  The special should be "191: SetPlayerProperty", and the arguments should be "0,0,3".
+
+It is advisable to leave a "buffer area" around the ladder line, as seen in the example map. Otherwise it is possible to quickly strafe across the ladder line and retain the fly property (i.e. the "leaves sector" thing special doesn't activate).
+
+=== Abandoning the ladder ===
+
+Finally, it's clear to see that, trapped by the linedefs, it would be impossible for the player to simply "jump off" the ladder.
+
+This can be resolved using a "Player uses sector" thing to execute the following:
+&lt;pre&gt;&lt;nowiki&gt;
+    SetPlayerProperty(0, 0, PROP_FLY);
+    SetLineBlocking(downladderline, BLOCK_NOTHING);
+&lt;/nowiki&gt;&lt;/pre&gt;
+== Finished Script ==
+
+Your completed script should look something like this:
+&lt;pre&gt;&lt;nowiki&gt;
+    #include "zcommon.acs"
+    int downladderline=1; //&lt;--- Make this integer equal the lineid of your "down ladder".
+
+    Script 1 (int updown)
+    {
+    if(GetActorZ(ActivatorTID()) &gt; 64&lt;&lt;16 &amp;&amp; GetActorZ(ActivatorTID()) &lt; 512&lt;&lt;16)
+        {
+        SetPlayerProperty(0, 1, PROP_FLY);
+        ThrustThingZ(0, 16, updown, 0);
+        SetLineBlocking(downladderline, BLOCK_CREATURES);
+        } 
+    else if(GetActorZ(ActivatorTID()) &gt;= 0 &amp;&amp; GetActorZ(ActivatorTID()) &lt; 64&lt;&lt;16)
+        {
+        SetPlayerProperty(0, 1, PROP_FLY);
+        ThrustThingZ(0, 16, updown, 0);
+        SetLineBlocking(downladderline, BLOCK_NOTHING);
+        }
+    else
+        {
+        SetPlayerProperty(0, 0, PROP_FLY);
+        SetLineBlocking(lineid, BLOCK_NOTHING);
+        }
+    }
+
+    Script 2 (void)
+    {
+        SetPlayerProperty(0, 0, PROP_FLY)
+        SetLineBlocking(downladderline, BLOCK_NOTHING);
+    }
+
+    Script 3 (void)
+    {
+    if(GetActorZ(ActivatorTID()) &gt; 64&lt;&lt;16 &amp;&amp; GetActorZ(ActivatorTID()) &lt;= 512&lt;&lt;16) 
+        {
+        SetLineBlocking(downladderline, BLOCK_CREATURES);
+        } 
+    else
+        {
+        SetLineBlocking(downladderline, BLOCK_NOTHING);
+        }
+    }
+
+    Script 999 OPEN
+    {
+    SetLineSpecial(downladderline,80,1,0,1);
+    }
+&lt;/nowiki&gt;&lt;/pre&gt;
+
+== The Slimeinator's Way ==
+
+If you're not into all the ACS stuff above, don't worry about it. A fourth method is available, simplifying the ladder down to a few Things and a linedef.
+
+Step one: Create your ladder linedef. Make sure it is marked "Impassible" or "Block Everything." Make the linedef action Thing Thrust Z (action 128), and make "Force" equal 16. This is a Helms Deep ladder. Now, make a sector 16 x *insert ladder linedef length here* adjacent to the ladder linedef. If the ladder is twosided, make another sector on the opposite side of the ladder. Now, put two Sector Action Things into the 16 x *linedef length* sector(s). One is "Actor enters sector" and the second is "Actor leaves sector." Each one should be Set Player Property (action 191), and the property should be property 3. Entering the sector activates the property, and leaving the sector deactivates the property. This is Little White Mouse's ladder. Now for the ceiling. If you're using an OpenGL engine, you can use an invisible 3D floor to serve as the ceiling. If not, then you can use DECORATE to make a "ceiling" Thing to serve as an impassible ceiling. Make sure the +NOGRAVITY flag is set and the Thing is the proper radius. With this method, you need to use the Z Height Property.
+
+== Using 3D floors==
+It is also possible to use the Helm's Deep method with 3D floors, so that instead of blocking everything or just players they have height sensitive collision. 
+
+To start, create a small sector for your ladder, giving it your chosen tag. Make one side have your preferred ladder texture and the same "ThrustThingZ" special. Create an invisible 3D floor in your ladder sector and adjust the height as you see fit, generally based on the ladder's own dimensions. I recommend making the top of the ladder a bit tall to ease the transition off of it.
+
+If done correctly, this should be a relatively simple way to make flexible ladders rather quickly. One can even make broken or moving ladders with this method.
+
+Another variation of constructing a ladder is to use offset 3D sectors for steps instead of using the action special "ThrustThingZ". See two different examples in Kappes Buur's tutorial
+*[https://www.kappes.drdteam.org/3D/3D-10/3D-10.htm Climbable Ladder].
+
+== See Also ==
+[[Tutorials]]
+
+[[category:ACS guides]]</text>
+    <sha1>e7xtroryrjwr6orfvjdba3wdsuc6gyx</sha1>
+  </revision>
+</page>

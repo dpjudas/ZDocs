@@ -1,0 +1,75 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>Thing ChangeTID</title>
+  <ns>0</ns>
+  <id>569</id>
+  <revision>
+    <id>43784</id>
+    <parentid>40495</parentid>
+    <timestamp>2017-01-26T22:28:36Z</timestamp>
+    <contributor>
+      <username>Arkore</username>
+      <id>2094</id>
+    </contributor>
+    <comment>Adding another useful example with an important observation note.</comment>
+    <origin>43784</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="1666" sha1="m9a2otfkow201waubv5cjvpw90skgqk" xml:space="preserve">{{DISPLAYTITLE:Thing_ChangeTID}}
+{{Special|176|oldtid, newtid|Thing|TID}}
+
+* ''oldtid'': The current [[TID]] of the thing whose TID will be changed.
+* ''newtid'': The new TID that the thing will be changed to.
+
+If ''oldtid'' is zero, then whatever activated the script will have its TID changed to ''newtid''. If ''oldtid'' is non-zero, then everything with the TID ''oldtid'' will have their TID changed to ''newtid''.
+
+==Examples==
+One of the primary uses for this special is to give a player a TID using a script like this:
+
+ script 100 enter
+ {
+     Thing_ChangeTID (0, 1337+PlayerNumber());
+ }
+
+This will give player 1 the TID 1337, player 2 the TID 1338, player 3 the TID 1339, and so on.
+
+Use this script for multiplayer levels:
+
+ script 256 respawn
+ {
+     Thing_ChangeTID(0, PlayerNumber()+256);
+ }
+ 
+ script 257 death
+ {
+     Thing_ChangeTID(0, 0);
+ }
+ 
+ script 258 enter
+ {
+     Thing_ChangeTID(0, PlayerNumber()+256);
+ }
+
+This will give player 1 the TID 256, player 2 TID 257, etc. It will cause each player not to have a TID during death.
+
+Use this script for multiplayer levels and players to retain their TID during death:
+
+ script 256 respawn
+ {
+     Thing_ChangeTID(0, 0);
+     Thing_ChangeTID(0, PlayerNumber()+256);
+ }
+ 
+ script 258 enter
+ {
+     Thing_ChangeTID(0, PlayerNumber()+256);
+ }
+
+This will give player 1 the TID 256, player 2 TID 257, etc. It will cause each player to keep their TID during death.
+
+For multiplayer, it is very important to change the player's TID to 0 in DEATH or RESPAWN.  Otherwise, there will be multiple players (corpses) using the same TID, which will eventually result in a crash.
+
+==External links==
+* {{oldref}}</text>
+    <sha1>m9a2otfkow201waubv5cjvpw90skgqk</sha1>
+  </revision>
+</page>

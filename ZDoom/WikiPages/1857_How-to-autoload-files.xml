@@ -1,0 +1,78 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>How to autoload files</title>
+  <ns>0</ns>
+  <id>1857</id>
+  <revision>
+    <id>40842</id>
+    <parentid>36679</parentid>
+    <timestamp>2016-02-06T06:04:08Z</timestamp>
+    <contributor>
+      <username>Jpalomo</username>
+      <id>1715</id>
+    </contributor>
+    <origin>40842</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="4822" sha1="mtzuyvza9r6m24vcy19i6bktj0igh4u" xml:space="preserve">There are several ways to autoload mods on ZDoom startup. Note that if needed, autoloading can be disabled for a run by using the &lt;tt&gt;-noautoload&lt;/tt&gt; [[command line parameter]].
+
+===Autoloading with the ZDoom ini file===
+Edit [[zdoom.ini]] and search for the relevant “&lt;code&gt;[*.Autoload]&lt;/code&gt;” section (where &lt;code&gt;*&lt;/code&gt; is the name of the game). Under it you can add the WADs with “&lt;code&gt;Path=''path and name of the file''&lt;/code&gt;”. For example, if you wanted to load mods called skins.wad and xhairs.wad for Strife, you would add the following to the ini file:
+
+ [Strife.Autoload]
+ Path=C:\Strife\wads\skins.wad
+ Path=C:\Strife\wads\xhairs.wad
+
+Currently, these Autoload sections are recognized:
+
+*Global.Autoload&amp;nbsp;&amp;ndash; All games
+**Chex.Autoload&amp;nbsp;&amp;ndash; All Chex games
+***Chex1.Autoload&amp;nbsp;&amp;ndash; Chex Quest 1
+***Chex3.Autoload&amp;nbsp;&amp;ndash; Chex Quest 3
+**Doom.Autoload&amp;nbsp;&amp;ndash; All Doom games
+***Doom1.Autoload&amp;nbsp;&amp;ndash; Doom 1 / Ultimate Doom
+***Doom2.Autoload&amp;nbsp;&amp;ndash; Doom 2
+***Doom2BFG.Autoload&amp;nbsp;&amp;ndash; Doom 2 {{dw|BFG Edition}}
+***Freedoom.Autoload&amp;nbsp;&amp;ndash; Freedoom
+***Freedoom1.Autoload&amp;nbsp;&amp;ndash; Freedoom “demo”
+***FreeDM.Autoload&amp;nbsp;&amp;ndash; Freedoom Deathmatch
+***TNT.Autoload&amp;nbsp;&amp;ndash; Final Doom: TNT Evilution
+***Plutonia.Autoload&amp;nbsp;&amp;ndash; Final Doom: The Plutonia Experiment
+**Harmony.Autoload&amp;nbsp;&amp;ndash; [[Harmony]]
+**Heretic.Autoload&amp;nbsp;&amp;ndash; Heretic
+**Hexen.Autoload&amp;nbsp;&amp;ndash; Hexen (including Deathkings of the Dark Citadel)
+***HexenDemo.Autoload&amp;nbsp;&amp;ndash; Hexen demo version
+***HexenDK.Autoload&amp;nbsp;&amp;ndash; Hexen: Deathkings of the Dark Citadel expansion
+**Strife.Autoload&amp;nbsp;&amp;ndash; Strife
+**UrbanBrawl.Autoload&amp;nbsp;&amp;ndash; [[Action Doom 2: Urban Brawl]]
+
+The more general sections are loaded first, followed by the game-specific sections.  So if any content is loaded from the &lt;code&gt;HexenDK.AutoLoad&lt;/code&gt; section that conflicts with the content loaded by the &lt;code&gt;Hexen.AutoLoad&lt;/code&gt; section, the HexenDK content will take precedence.
+
+===Autoloading with the skins directory===
+This method is meant only for .WAD files containing [[S_SKIN|skins]]. While it is possible to use it for other types of mods, doing so is discouraged. Create a new subdirectory named “skins” under your ZDoom directory and put the WADs you want to autoload in there and they will be loaded the next time your run ZDoom. ZDoom is capable of autoloading other files in from the skins directory but needs the file extension to be .wad. This method is not recommended by the developers due to people forgetting they have WADs in the skin directory and reporting bugs that are caused by them.
+
+===Mod-specific autoloading===
+It is possible with the '''LOAD''' property of the [[GAMEINFO]] lump to autoload several files in a precise order when loading a file containing such a lump. This can simplify loading multi-file mods and removes the need for custom shortcuts as explained below. Since this is mod-specific and not generalized, it is not affected by the -noautoload parameter.
+
+===Autoloading with a shortcut===
+This is a good method to use if you want to play many mods for ZDoom that consist of multiple files. This is not technically autoloading and ZDoom will not detect it as such, so the -noautoload parameter will not affect it. To do this, first create a shortcut to zdoom.exe on the desktop, or anywhere that suits your needs. Then right-click on it, and go to “Properties”. In the “Link to...” box, by default you should see:
+
+ C:\Doom2\zdoom.exe
+
+In this box, add the following commandline:
+
+ '''-file &lt;file1&gt; &lt;file2&gt; &lt;file3&gt; &lt;file4&gt; ...'''
+
+And so on, replacing the example with the names of the files of your choice. Put a space between the filenames.
+For example, if you wanted to play a mod named doomhell.wad with additional patches coolweap.wad and newenemy.wad (yes, obviously the example lacks creativity), your command line should look like this:
+
+ C:\Doom2\zdoom.exe '''-file doomhell.wad coolweap.wad newenemy.wad'''
+
+The -file parameter will assume that, if a filename is missing the extension, that file is a WAD file. Since the “Link to...” can only contain 255 characters, it is a good idea to omit the .WAD extensions when loading a very large number of files.
+Also, it is possible to load files other than WAD files this way. This is useful when loading a wave sound or images without adding them into a WAD file. For example, if you have a new sound for the pistol, and you want to play DOOMHELL.WAD with it, first rename that sound file to dspistol.wav so ZDoom would recognize it, then add it in your command line, which should now look like (notice that the .WAD extentions are omitted here):
+
+ C:\Doom2\zdoom.exe -file doomhell coolweap newenemy '''dspistol.wav'''
+
+[[Category:Guides]]</text>
+    <sha1>mtzuyvza9r6m24vcy19i6bktj0igh4u</sha1>
+  </revision>
+</page>

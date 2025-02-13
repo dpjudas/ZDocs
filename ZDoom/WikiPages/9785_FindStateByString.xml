@@ -1,0 +1,80 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>FindStateByString</title>
+  <ns>0</ns>
+  <id>9785</id>
+  <revision>
+    <id>53269</id>
+    <parentid>52999</parentid>
+    <timestamp>2024-10-12T08:57:12Z</timestamp>
+    <contributor>
+      <username>Blue Shadow</username>
+      <id>2021</id>
+    </contributor>
+    <minor />
+    <comment>remove {{new}}</comment>
+    <origin>53269</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="2044" sha1="r2aobwm778mnadt2g4yxdc6l09gx5zn" xml:space="preserve">{{ZScriptNote}}
+
+'''{{class|Actor}}'''
+
+{{c|clearscope native state '''FindStateByString'''(string ''st'', bool ''exact'' {{=}} false)}}
+
+== Usage ==
+Functions like [[FindState]], except that it accepts a text string data type as the state to search for, instead of directly having to use a StateLabel type. The main use case is for dynamically creating states to jump to using the built-in [[String]] functions.
+
+Note: just like [[FindState]], must be prefixed with &lt;code&gt;invoker.&lt;/code&gt; if called in {{class|PSprite}} context (i.e. from a {{class|Weapon}} state or action function), otherwise it won't know which actor's state (the weapon's or the owner's) must be found.
+
+=== Parameters ===
+*{{c|string '''st'''}}
+:The [[String|string]] containing the name of the state sequence, such as "Spawn", "Missile", etc.
+*{{c|bool '''exact'''}}
+:Finds the exact state passed to ''st'', this is useful for finding substates like the ones that the Pain and (X)Death states support, or custom substates like "Jump.Up:". For example, it can be used to find if the caller has a Pain.Electric state in particular.
+
+== Examples ==
+This actor changes to 5 random states by just stitching a number from 1 to 5 at the end of a string, and passing it to ''FindStateByString()'', instead of having to use a [[Statements#switch|Switch/Case]].
+
+&lt;syntaxhighlight lang="csharp"&gt;
+//This actor jumps to random states using a randomized state string.
+class RandomStringStateJumper : Actor
+{
+	States
+	{
+		Spawn:
+			TNT1 A 0 NoDelay
+			{				
+				//Decide a random graphic to show with RNG, then append that as the Graphic# state to go to.
+				String pickState = String.Format ("Graphic%d", random(1,5));
+				return FindStateByString (pickState);
+			}
+			Stop;
+		Graphic1:
+			PLAY A -1;
+			Stop;
+		Graphic2:
+			POSS A -1;
+			Stop;
+		Graphic3:
+			TRE2 A -1;
+			Stop;
+		Graphic4:
+			TLMP A -1;
+			Stop;
+		Graphic5:
+			SMT2 A -1;
+			Stop;
+	}
+}
+&lt;/syntaxhighlight&gt;
+
+== See also ==
+*[[String]]
+*[[FindState]]
+*[[ResolveState]]
+*[[ZScript actor functions]]
+
+[[Category:ZScript]]</text>
+    <sha1>r2aobwm778mnadt2g4yxdc6l09gx5zn</sha1>
+  </revision>
+</page>

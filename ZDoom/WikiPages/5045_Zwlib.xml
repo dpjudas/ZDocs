@@ -1,0 +1,346 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>Zwlib</title>
+  <ns>0</ns>
+  <id>5045</id>
+  <revision>
+    <id>28720</id>
+    <parentid>20047</parentid>
+    <timestamp>2010-11-20T12:27:28Z</timestamp>
+    <contributor>
+      <username>Gez</username>
+      <id>1283</id>
+    </contributor>
+    <origin>28720</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="10132" sha1="jwil3gjnhkg1x8iblcsrmwwerxircsc" xml:space="preserve">{{cleanup}} &lt;!-- okay, what is the purpose of this page? --&gt;
+&lt;pre&gt;&lt;nowiki&gt;
+/*
+
+  From http://zdoom.org/wiki/Other_useful_functions
+
+Math
+  * abs
+  * pow
+  * round
+  * sqrt
+  
+Geo
+  * distance
+  * gettargetangle
+  * gettargetpitch
+  
+Info
+  * getactorclass
+  * getspawnid
+  
+Hud
+  * getaspectratio
+  * hudmessageonactor 
+  * hudmessagetime
+  * printsprite
+
+Misc
+  * acs_terminaterange
+  * spawnradius
+  * syncspeed
+  
+*/
+
+/* Math */
+
+ 
+/// abs
+/// This function can be used to return the absolute value of an integer.
+function int abs (int x)
+{
+  if (x &lt; 0) return -x; 
+  return x;
+}
+
+/// pow
+/// This function computes n-th power of x.
+function int pow (int x, int n)
+{
+  if (n &lt; 1)
+  return 1;
+  int y = x;
+  while (--n) y *= x;
+  return y;
+}
+
+/// sqrt
+/// computes rounded square root of integer x
+function int sqrt (int x)
+{
+  int r;
+  x = x + 1 &gt;&gt; 1;
+  while (x &gt; r) x -= r++;
+  return r;
+}
+
+/// round
+/// This function implements rounding. Returns an int.
+function int round (int fixednum) 
+{
+  int retamount = fixednum &gt;&gt; 16;
+  if (fixednum % 65536 &gt; 32767) retamount++;
+  return retamount;
+}
+
+/// roundf
+/// This function implements rounding. Returns a float.
+function int roundf (int fixednum) 
+{
+  return round(number) &lt;&lt; 16;
+}
+
+/* Geo */
+
+/// distance
+/// this function does all the necessary calculations to 
+/// return the distance (in grid units) between tid1 and tid2.
+function int distance (int tid1, int tid2)
+{
+  int x, y, z, d, r;
+  x = GetActorX(tid1) - GetActorX(tid2) &gt;&gt; 16;
+  y = GetActorY(tid1) - GetActorY(tid2) &gt;&gt; 16;
+  z = GetActorZ(tid2) - GetActorZ(tid2) &gt;&gt; 16;
+  d = x*x + y*y + z*z + 1 &gt;&gt; 1;
+  while (d &gt; r) d -= r++;
+  return r;
+}
+
+/// gettargetangle
+/// This function acts as an exstension to VectorAngle, it returns 
+/// the relative angle of a thing with tid2, from a thing with tid1.
+function int gettargetangle (int tid1, int tid2)
+{
+  int x, y;
+  x = GetActorX(tid2) - GetActorX(tid1);
+  y = GetActorY(tid2) - GetActorY(tid1);
+  return VectorAngle(x, y);
+}
+
+/// gettargetpitch
+/// This function acts as an extension to VectorAngle, it returns
+/// the relative pitch of a thing with tid2, from a thing with tid1.
+/// This function requires the inclusion of the sqrt function.
+function int gettargetpitch (int tid1, int tid2)
+{
+  int x, y, z, xy;
+  x = GetActorX(tid2) - GetActorX(tid1) &gt;&gt; 16;
+  y = GetActorY(tid2) - GetActorY(tid1) &gt;&gt; 16;
+  z = GetActorZ(tid2) - GetActorZ(tid1);
+  xy = sqrt (x*x + y*y) &lt;&lt; 16;
+  return VectorAngle(z, xy) - 0.25;
+}
+
+/* Info */
+
+/// getactorclass
+/// This function, along with the string array, returns the
+/// class name for any Doom 1 &amp; 2 spawnable thing in the form of a string. 
+str getactorclass_class[105] = {"ShotgunGuy","ChaingunGuy","BaronOfHell",
+        "ZombieMan","DoomImp","Arachnotron","SpiderMastermind","Demon",
+        "Spectre","DoomImpBall","Clip","Shell","Cacodemon","Revenant",
+        "Bridge","ArmorBonus","Stimpack","Medikit","Soulsphere","Shotgun",
+        "Chaingun","RocketLauncher","PlasmaRifle","BFG","Chainsaw",
+        "SuperShotgun","Rock1","Rock2","Rock3","Dirt1","Dirt2","Dirt3",
+        "Dirt4","Dirt5","Dirt6","PlasmaBall","RevenantTracer","SGShard1",
+        "SGShard2","SGShard3","SGShard4","SGShard5","SGShard6","SGShard7",
+        "SGShard8","SGShard9","SGShard0","GreenArmor","BlueArmor","Cell",
+        "BlueCard","RedCard","YellowCard","YellowSkull","RedSkull","BlueSkull",
+        "ArchvileFire","StealthBaron","StealthHellKnight","StealthZombieMan",
+        "StealthShotgunGuy","LostSoul","Archvile","Fatso","HellKnight",
+        "Cyberdemon","PainElemental","WolfensteinSS","StealthArachnotron",
+        "StealthArchvile","StealthCacodemon","StealthChaingunGuy",
+        "StealthDemon","StealthDoomImp","StealthFatso","StealthRevenant",
+        "ExplosiveBarrel","CacodemonBall","Rocket","BFGBall",
+        "ArachnotronPlasma","Blood","BulletPuff","Megasphere",
+        "InvulnerabilitySphere","Berserk","BlurSphere","RadSuit","Allmap",
+        "Infrared","ClipBox","RocketAmmo","RocketBox","CellPack","ShellBox",
+        "Backpack","Gibs","ColonGibs","SmallBloodPool","BurningBarrel",
+        "BrainStem","ScriptedMarine","HealthBonus","FatShot","BaronBall"};
+function str getactorclass (int tid)
+{
+  for (int i=0; i&lt;105; i++)
+  if (ThingCountName (getactorclass_class[i], tid))
+    return getactorclass_class[i];
+  return 0;
+}
+
+/// getspawnid
+/// This function returns the Spawn ID for a given TID. It can be useful for
+/// making type or class specific decisions in a script.
+int getspawnid_id[104] = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 19, 20, 21, 22,
+     23, 24, 25, 27,28, 29, 30, 31, 32, 33, 41, 42, 43, 44, 45, 46, 47, 48, 49,
+     51, 53, 54, 55, 56,57, 58, 59, 60, 61, 62, 63, 68, 69, 75, 85, 86, 87, 88,
+     89, 90, 98, 100, 101, 102,103, 110, 111, 112, 113, 114, 115, 116, 117, 118,
+     119, 120, 121, 122, 123, 124, 125, 126, 127,128, 129, 130, 131, 132, 133,
+     134, 135, 136, 137, 138, 139, 140, 141, 143, 144, 146, 147, 148,149, 150,
+     151, 152, 153, 154};
+function int getspawnid (int tid)
+{
+  for (int i=0; i&lt;104; i++)
+  if (ThingCount(getspawnid_id[i], tid))
+    return getspawnid_id[i];
+  return 0;
+}
+
+/* Hud */
+
+/// getaspectratio
+/// Returns the aspect ratio of the user's resolution by using nearly the same
+/// method ZDoom uses internally. Requires the abs function.
+
+#define ZW_ASPECT_4_3 1.3
+#define ZW_ASPECT_5_4 1.25
+#define ZW_ASPECT_16_9 1.7
+#define ZW_ASPECT_16_10 1.6
+
+function int getaspectratio(void)
+{
+  int width = getcvar("vid_defwidth");
+  int height = getcvar("vid_defheight");
+  int nowidescreen = getcvar("vid_nowidescreen");
+  int tft = getcvar("vid_tft");
+  if(nowidescreen)
+  {
+    if(!tft)
+      return ZW_ASPECT_4_3;
+    if(fixedmul(height&lt;&lt;16, fixeddiv(5.0, 4.0)) == width&lt;&lt;16)
+      return ZW_ASPECT_5_4;
+    else
+      return ZW_ASPECT_4_3;
+  }
+  if(abs((abs(fixedmul(height&lt;&lt;16, fixeddiv(16.0, 9.0)))&gt;&gt;16) - width) &lt; 10)
+  {
+    return ZW_ASPECT_16_9;
+  }
+  if(abs((abs(fixedmul(height&lt;&lt;16, fixeddiv(16.0, 10.0)))&gt;&gt;16) - width) &lt; 60)
+  {
+    if((width == 320 &amp;&amp; height == 200) || (width == 640 &amp;&amp; height == 400))
+      return ZW_ASPECT_4_3;
+    return ZW_ASPECT_16_10;
+  }
+  if(fixedmul(height&lt;&lt;16, fixeddiv(5.0, 4.0))&gt;&gt;16 == width &amp;&amp; tft)
+  {
+    return ZW_ASPECT_5_4;
+  }
+  return ZW_ASPECT_4_3;
+}
+
+/// hudmessageonactor
+/// This function will place text or a sprite (depending on parameters passed)
+/// at the onscreen position of an actor with the specified tid, as long as 
+/// it's in range (fixed mapunits).
+function void hudmessageonactor(int tid, int range, str sprite, str text)
+{
+  int dist, ang, vang, pitch, x, y;
+  int HUDX = 640;
+  int HUDY = 400;
+  int offset = 0;
+
+  if(sprite != -1)
+  {
+    setfont(sprite);
+    text = "A";
+    offset = 0.1;
+  }
+
+  sethudsize(HUDX, HUDY, 1);
+  x = getactorx(tid) - getactorx(0);
+  y = getactory(tid) - getactory(0); 
+
+  vang = vectorangle(x,y);
+  ang = (vang - GetActorAngle(0) + 1.0) % 1.0;
+
+  if(((vang+0.125)%0.5) &gt; 0.25) dist = fixeddiv(y, sin(vang));
+  else dist = fixeddiv(x, cos(vang));
+
+  if ((ang &lt; 0.2 || ang &gt; 0.8) &amp;&amp; dist &lt; range)
+  {
+    pitch = vectorangle(dist, getactorz(tid) - (getactorz(0) + 41.0));
+    pitch = (pitch + GetActorPitch(0) + 1.0) % 1.0;
+
+    x = HUDX/2 - ((HUDX/2) * sin(ang) / cos(ang));
+    y = HUDY/2 - ((HUDX/2) * sin(pitch) / cos(pitch));
+
+    hudmessage(s:text; HUDMSG_PLAIN, 1, CR_UNTRANSLATED, (x&lt;&lt;16)+offset, 
+                                                            (y&lt;&lt;16)+offset, 0);
+  }
+  else
+    hudmessage(s:" "; HUDMSG_PLAIN, 1, CR_UNTRANSLATED, 0, 0, 0);
+}
+
+/// hudmessagetime
+/// This function is used to find how long a given hud message will take to
+/// finish displaying. It is designed to be called within a delay function 
+/// immediately after the hud message command. (See examples)
+#define ZW_TICUNIT     35.725
+function int hudmessagetime(int type, int length, int typetime, int staytime,
+                                                                 int fadetime)
+{
+  Switch(type)
+  {
+  Case HUDMSG_PLAIN:
+    return fixedmul(staytime, ZW_TICUNIT) &gt;&gt; 16;
+  Case HUDMSG_FADEOUT:
+    return fixedmul(staytime + fadetime, ZW_TICUNIT) &gt;&gt; 16;
+  Case HUDMSG_TYPEON:
+    return fixedmul(fixedmul(typetime, length &lt;&lt; 16) + staytime + fadetime, 
+                                                               ZW_TICUNIT) &gt;&gt; 16;
+  Case HUDMSG_FADEINOUT:
+    return fixedmul(typetime + staytime + fadetime, ZW_TICUNIT) &gt;&gt; 16;
+  }
+}
+
+/// printsprite
+/// This function draws the specified sprite to the screen at the given position.
+function void printsprite(str sprite, int id, int x, int y, int delay)
+{
+  SetFont(sprite);
+  HudMessage(s:"A"; 0, id, CR_UNTRANSLATED, x, y, delay);
+}
+
+/* Misc */
+
+/// acs_terminaterange
+/// This Function will terminate a range of Scripts, in order of what you put
+/// in lo_script upto hi_script. Credit to SolarSnowFall for improvment.
+function void acs_terminaterange (int lo_script, int hi_script, int map)
+{
+  for (int i=lo_script; i&lt;=hi_script; i++) acs_terminate(i, map);
+}
+
+/// spawnradius
+/// This function acts as an extension to Spawn, used to spawn things in
+/// circular patterns. It uses a MapSpot (or any other thing) as a base,
+/// and will spawn the object at the appropriate angle and radius relative to
+/// the MapSpot as the center. The radius is supplied in grid units, and angles
+/// are supplied as vector angles.
+function void spawnradius (str type, int spotid, int radius, int angle, int 
+                                                                        newtid)
+{
+  int x, y;
+  x = GetActorX(spotid) + radius * cos(angle);
+  y = GetActorY(spotid) + radius * sin(angle);
+  Spawn(type, x, y, GetActorZ(spotid), newtid, angle &gt;&gt; 8);
+}
+
+/// syncspeed
+/// Synchronizes the travel time between two commands. For example, 
+/// if you wanted the ceiling to raise 20 units (with a speed of 8) in the
+/// same time the floor lowers 6 units, you would do syncspeed(6, 20, 8).
+function int syncspeed(int newdistance, int syncdistance, int syncspd)
+{
+  int t = fixeddiv(syncdistance&lt;&lt;16, syncspd&lt;&lt;16);
+  int r = fixeddiv(newdistance&lt;&lt;16, t);
+  return r&gt;&gt;16;
+}
+&lt;/nowiki&gt;&lt;/pre&gt;
+[[Category:ACS]]</text>
+    <sha1>jwil3gjnhkg1x8iblcsrmwwerxircsc</sha1>
+  </revision>
+</page>

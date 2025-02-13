@@ -1,0 +1,90 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>Classes:RevenantTracer</title>
+  <ns>0</ns>
+  <id>2602</id>
+  <revision>
+    <id>48912</id>
+    <parentid>48494</parentid>
+    <timestamp>2021-12-27T11:14:10Z</timestamp>
+    <contributor>
+      <username>Jekyll Grim Payne</username>
+      <id>2175</id>
+    </contributor>
+    <comment>updated in accordance with updated ZScriptDefinitionNote template</comment>
+    <origin>48912</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="1738" sha1="jh96uppvl1uqviz348t9ew59n6n7on1" xml:space="preserve">{{Actor|
+| type = Explosive
+| name = Revenant homing missile
+| class = RevenantTracer
+| game = Doom2
+| spawnid = 53
+| spawnname = T_TRACER 
+}}[[Classes]]: &lt;u&gt;RevenantTracer&lt;/u&gt;
+
+
+The seeking missile fired by a [[Classes:Revenant|Revenant]]. Whether it actually homes in on the Revenant's target or not is random (it's about 50% chance, but check [[A_Tracer]] for exact numbers), this behavior is caused by the way [[A_Tracer]] was written.
+
+From their sprite names, it could be inferred they were originally planned to be the {{Class|Fatso|Mancubus}}' missiles.
+
+==== [[ZScript]] definition ====
+{{ZScriptDefinitionNote|actors/doom/revenant.zs#L68}}
+ class RevenantTracer : Actor
+ {
+ 	Default
+ 	{
+ 		{{Property|Radius}} 11;
+ 		{{Property|Height}} 8;
+ 		{{Property|Speed}} 10;
+ 		{{Property|Damage}} 10;
+ 		{{Property|Projectile;}}
+ 		+{{Flag|SEEKERMISSILE}} 
+ 		+{{Flag|RANDOMIZE}}
+ 		+{{Flag|ZDOOMTRANS}}
+ 		{{Property|SeeSound}} "skeleton/attack";
+ 		{{Property|DeathSound}} "skeleton/tracex";
+ 		{{Property|RenderStyle}} "Add";
+ 	}
+ 	States
+ 	{
+ 	Spawn:
+ 		FATB AB 2 BRIGHT [[A_Tracer]];
+ 		Loop;
+ 	Death:
+ 		FBXP A 8 BRIGHT;
+ 		FBXP B 6 BRIGHT;
+ 		FBXP C 4 BRIGHT;
+ 		Stop;
+ 	}
+ }
+
+==== [[DECORATE]] definition ====
+{{DecorateDefinitionNote}}
+ ACTOR &lt;u&gt;RevenantTracer&lt;/u&gt;
+ {
+   {{Property|Radius}} 11
+   {{Property|Height}} 8
+   {{Property|Speed}} 10
+   {{Property|Damage}} 10
+   {{Property|Projectile}}
+   +{{Flag|SEEKERMISSILE}}
+   +{{Flag|RANDOMIZE}}
+   {{Property|SeeSound}} "skeleton/attack"
+   {{Property|DeathSound}} "skeleton/tracex"
+   {{Property|RenderStyle}} Add
+   States
+   {
+   Spawn:
+     FATB AB 2 Bright [[A_Tracer]]
+     Loop
+   Death:
+     FBXP A 8 Bright
+     FBXP B 6 Bright
+     FBXP C 4 Bright
+     Stop
+   }
+ }</text>
+    <sha1>jh96uppvl1uqviz348t9ew59n6n7on1</sha1>
+  </revision>
+</page>

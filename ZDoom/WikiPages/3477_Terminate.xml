@@ -1,0 +1,49 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>Terminate</title>
+  <ns>0</ns>
+  <id>3477</id>
+  <revision>
+    <id>35855</id>
+    <parentid>28539</parentid>
+    <timestamp>2013-02-11T02:11:24Z</timestamp>
+    <contributor>
+      <username>Deded007</username>
+      <id>1392</id>
+    </contributor>
+    <minor />
+    <comment>formatting, see also</comment>
+    <origin>35855</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="816" sha1="tq86ek03cnkxvlrwbid61xv2lkgpte2" xml:space="preserve"> terminate;
+
+==Usage==
+
+Terminate is a function used in [[ACS]] to end the current script early. You can also use [[ACS_Terminate]] to terminate other scripts.
+
+==Example==
+
+This [[ACS|script]] will terminate itself if the player has not collected all the keys yet.
+
+ [[Data Types|int]] keys = 0; // See [[Scope]]
+ 
+ script 1 ([[Script_types#Closed_scripts|void]])
+ {
+     keys[[Operators#'++' (unary)|++]];
+ 
+     if (keys &lt; 3)
+          [[terminate]];
+ 
+     // All keys collected, open the door.
+     [[Door_Open]] (24, 16, 0);
+ }
+
+Note that there is no need to add the terminate command to the very end of a script. (After the [[Door_Open]] line in this example) When the closing brace is reached, the script will terminate itself automatically.
+
+== See also ==
+* [[ACS_Terminate]]
+* [[Suspend]]
+[[Category:ACS]]</text>
+    <sha1>tq86ek03cnkxvlrwbid61xv2lkgpte2</sha1>
+  </revision>
+</page>

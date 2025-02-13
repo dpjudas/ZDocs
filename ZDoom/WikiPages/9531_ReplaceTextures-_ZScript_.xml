@@ -1,0 +1,65 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>ReplaceTextures (ZScript)</title>
+  <ns>0</ns>
+  <id>9531</id>
+  <revision>
+    <id>53047</id>
+    <parentid>49769</parentid>
+    <timestamp>2024-09-03T19:01:00Z</timestamp>
+    <contributor>
+      <username>Jekyll Grim Payne</username>
+      <id>2175</id>
+    </contributor>
+    <comment>formatting</comment>
+    <origin>53047</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="2257" sha1="jn6y0215ujtei3j6fr1hxrds3f3vrvo" xml:space="preserve">__NOTOC__{{ZScriptNote}}
+
+&lt;small style="opacity:.8"&gt;{{c|struct [[LevelLocals]]}}&lt;/small&gt;&lt;br /&gt;
+{{c|void '''ReplaceTextures'''(String &lt;var&gt;from&lt;/var&gt;, String &lt;var&gt;to&lt;/var&gt;, int &lt;var&gt;flags&lt;/var&gt;)}}
+&lt;br /&gt;
+
+== Usage ==
+
+Changes all the instances of a texture in the level to another texture, similar to the [[ReplaceTextures]] [[ACS]] function. Also has flags to exclude specific instances of the texture to be replaced from being so, for more fine control.
+
+=== Parameters ===
+
+*{{c|String '''from'''}}
+:The texture to be replaced in the map.
+
+*{{c|String '''to'''}}
+:The texture to replace the texture specified above with.
+
+*{{c|int '''flags'''}}
+:The flags that can be used to exclude certain types of the ''From'' texture from being replaced. To combine multiple flags, use the | separator. Because the flags are inside the [[Structs:TexMan|TexMan]] struct, you need to add the ''TexMan.'' prefix on every flag like in the example below to use them.
+:* {{c|'''NOT_BOTTOM'''}}: Excludes the bottom sidedefs of lines from being replaced.
+:* {{c|'''NOT_MIDDLE'''}}: Excludes the middle sidedefs of lines from being replaced.
+:* {{c|'''NOT_TOP'''}}: Excludes the top sidedefs of lines from being replaced.
+:* {{c|'''NOT_FLOOR'''}}: Exludes floor flats from being replaced.
+:* {{c|'''NOT_CEILING'''}}: Exludes ceiling flats from being replaced.
+:* {{c|'''NOT_WALL'''}}: Excludes all walls from being replaced.
+:* {{c|'''NOT_FLAT'''}}: Excludes all flats from being replaced.
+
+== Examples ==
+
+This is a special Imp that when spawned will replace all STARTAN1 instances, except for ones on bottom sidedefs, with GSTONE1. Replace all FLOOR0_1 instances, except for ones on any linedef or ceiling, with BLOOD1, and replace all CEIL1_1 instances, except for ones on floors and linedefs with the special F_SKY1 sky texture.
+
+&lt;syntaxhighlight lang="csharp"&gt;
+class TextureReplacingImp : {{Class|DoomImp}}
+{
+	override void PostBeginPlay()
+	{
+		Super.PostBeginPlay();
+		Level.ReplaceTextures ("STARTAN2", "GSTONE1", TexMan.NOT_BOTTOM);
+		Level.ReplaceTextures ("FLOOR0_1", "BLOOD1", TexMan.NOT_WALL|TexMan.NOT_CEILING);
+		Level.ReplaceTextures ("CEIL1_1", "F_SKY1", TexMan.NOT_WALL|TexMan.NOT_FLOOR);
+	}
+}&lt;/syntaxhighlight&gt;
+
+[[Category:ZScript]]
+[[Category:LevelLocals]]</text>
+    <sha1>jn6y0215ujtei3j6fr1hxrds3f3vrvo</sha1>
+  </revision>
+</page>

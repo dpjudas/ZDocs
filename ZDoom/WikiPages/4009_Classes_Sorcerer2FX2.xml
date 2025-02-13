@@ -1,0 +1,56 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>Classes:Sorcerer2FX2</title>
+  <ns>0</ns>
+  <id>4009</id>
+  <revision>
+    <id>39335</id>
+    <parentid>34024</parentid>
+    <timestamp>2015-04-29T17:20:01Z</timestamp>
+    <contributor>
+      <username>Blue Shadow</username>
+      <id>2021</id>
+    </contributor>
+    <minor />
+    <comment>/* DECORATE definition */ Updated</comment>
+    <origin>39335</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="1163" sha1="5a1w3w9niwp8goilvz4oumkrbly1cl3" xml:space="preserve">{{Actor|
+| type = Explosive
+| name = D'Sparil's Disciple invocation
+| class = Sorcerer2FX2
+| game = Heretic
+| spawnid = 146
+| spawnname = T_DSPARILWIZARDSPAWNER 
+}}[[Classes]]: &lt;u&gt;Sorcerer2FX2&lt;/u&gt;&lt;br&gt;
+One of [[Classes:Sorcerer2|D'Sparil]]'s two modes of attack, this projectile (visually similar to [[Classes:WizardFX1|a disciple shot]]) spawns a [[Classes:Wizard|disciple]] and dies afterwards. D'Sparil spawns two of those, at 45° on both sides of him. The native action [[A_GenWizard]] is responsible for spawning a disciple and, if spawning was successful, spawning a [[Classes:TeleportFog|teleport fog]] as well and setting the projectile into its death state.
+
+==== [[DECORATE]] definition ====
+ ACTOR &lt;u&gt;Sorcerer2FX2&lt;/u&gt;
+ {
+   {{Property|Radius}} 10
+   {{Property|Height}} 6
+   {{Property|Speed}} 6
+   {{Property|Damage}} 10
+   {{Property|Projectile}}
+   -{{Flag|ACTIVATEIMPACT}}
+   -{{Flag|ACTIVATEPCROSS}}
+   {{Property|RenderStyle}} Add
+ 
+   action native [[A_GenWizard]]();
+ 
+   States
+   {
+   Spawn:
+     FX11 A 35 Bright
+     FX11 A 5 Bright [[A_GenWizard]]
+     FX11 B 5 Bright
+     Goto Spawn+1
+   Death:
+     FX11 CDEFG 5 Bright
+     Stop
+   }
+ }</text>
+    <sha1>5a1w3w9niwp8goilvz4oumkrbly1cl3</sha1>
+  </revision>
+</page>

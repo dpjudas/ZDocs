@@ -1,0 +1,151 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>Database</title>
+  <ns>0</ns>
+  <id>8998</id>
+  <revision>
+    <id>43684</id>
+    <timestamp>2017-01-08T22:41:17Z</timestamp>
+    <contributor>
+      <username>Tiger</username>
+      <id>2074</id>
+    </contributor>
+    <comment>Imported article from the Zandronum wiki; Zandronum and Databases on Gameservers.</comment>
+    <origin>43684</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="5393" sha1="72unx0s8rhj4wuttmg0pnddmadi7543" xml:space="preserve">{{STFeature}}
+
+Zandronum has database support, allowing you to persist data across server restarts.
+
+Note: You need to have port 10666 forwarded to test this online.
+
+== Database Functions ==
+
+=== Data retrieval and saving ===
+
+{| class="wikitable"
+! Function
+! Parameters
+! Return
+! Description
+|-
+| '''GetDBEntry'''
+| string ''namespace'', string ''key''
+| int ''value''
+| Retrieve a numeric value out of the database.
+|-
+| '''SetDBEntry'''
+| string ''namespace'', string ''key'', int ''value''
+| void
+| Set a database row to a specific numeric value.
+|-
+| '''GetDBEntryString'''
+| string ''namespace'', string ''key''
+| string ''value''
+| Retrieve a string value out of the database.
+|-
+| '''SetDBEntryString'''
+| string ''namespace'', string ''key'', string ''value''
+| void
+| Set a database row to a specific string value.
+|-
+| '''IncrementDBEntry'''
+| string ''namespace'', string ''key'', int ''value''
+| void
+| Increment a database row by a specific number.
+|}
+
+Reading and writing data to a database is done through an easy-to-use namespace/key/value system.  If you put data into the database with a specific namespace and key, you can retrieve that same data by supplying the same namespace and key later.
+
+Namespaces are intended to be roughly analogous to "tables" in other databases, used to split up different sets of data by concern.  Namespaces can also be iterated through and sorted.
+
+=== Iteration and Sorting ===
+
+{| class="wikitable"
+! Function
+! Parameters
+! Return
+! Description
+|-
+| '''GetDBEntryRank'''
+| string ''namespace'', string ''key'', bool ''order''
+| int ''position''
+| Sort a namespace by value and return the position of the given key in that namespace.
+|-
+| '''GetDBEntries'''
+| string ''namespace''
+| resource ''results''
+| Return a resource that contains a pointer to all rows in a namespace.
+|-
+| '''SortDBEntries'''
+| string ''namespace'', int ''limit'', int ''offset'', bool ''order''
+| resource ''results''
+| Return a resource that contains a pointer to rows in the namespace sorted by value.
+|-
+| '''CountDBResults'''
+| resource ''results''
+| int ''count''
+| Count the number of rows a resource contains.
+|-
+| '''GetDBResultKeyString'''
+| resource ''results'', int ''row''
+| string ''key''
+| Returns the key at the specific row of a resource.
+|-
+| '''GetDBResultValueString'''
+| resource ''results'', int ''row''
+| string ''value''
+| Returns the value at the specific row of a resource as a string.
+|-
+| '''GetDBResultValue'''
+| resource ''results'', int ''row''
+| int ''value''
+| Returns the value at the specific row of a resource as an integer.
+|-
+| '''FreeDBResults'''
+| resource ''results''
+| void
+| Free a resource from memory.
+|}
+
+Most of these functions deal with a resource.  A resource is simply a number that points to results of a database query.  The queries that Zandronum allows you to make is either retrieving all rows in a namespace at once, or retrieving a limited subset of them in a sorted fashion.  Once you have a query result as a resource, you then use functions to figure out what exactly that result contains.
+
+=== Transactions ===
+
+{| class="wikitable"
+! Function
+! Parameters
+! Return
+! Description
+|-
+| '''BeginDBTransaction'''
+| void
+| void
+| Begin a database transaction.
+|-
+| '''EndDBTransaction'''
+| void
+| void
+| Commit the database transaction.
+|}
+
+A transaction prevents functions that normally write to the database from writing immediately.  Instead, they are kept in memory until you end the transaction, at which point it writes everything at once.  If you need to write lots of rows to the database, writing them all at once in a transaction is much faster than writing them one by one.  Transactions are also guaranteed to be atomic, which means that if Zandronum crashes during the transaction, either everything in a transaction is written to the database or nothing gets written - the database will never be left in a state where only half the rows were written.
+
+== A word of warning ==
+
+Using any ACS database function '''stops the entire gamesim''' while it runs the database query.  This is normally not much of an issue, but if you start to see performance issues with your modification, looking at how many database queries you're running is a good place to start.  If your database queries are causing performance issues, try batching your queries up and running them all at once with a transaction.
+
+== Remote Database support ==
+
+Zandronum does not support connecting to a remote database server over a network.  Due to limitations of ACS, database functions lock up the entire game simulation until a result is found - such a scheme would be unworkable over a something as fickle and with as much latency as the Internet.
+
+However, if you know a little bit of non-ACS programming or scripting, you can connect to the on-disk database with any language that supports SQLite3 and do whatever you want with it, including sending it someplace else over a network.  If this sounds like fun, but you have no programming experience aside from ACS, this author recommends [https://www.python.org/ Python] since it works on Windows, Linux and OSX and comes with [https://docs.python.org/3/library/sqlite3.html sqlite3] support out of the box.
+
+== Examples ==
+{{Noexamples}}
+
+== See also ==
+* [https://zandronum.com/forum/viewtopic.php?f=94&amp;t=6993 Databases, accounts, and you. Part 1: basic tutorial.]</text>
+    <sha1>72unx0s8rhj4wuttmg0pnddmadi7543</sha1>
+  </revision>
+</page>

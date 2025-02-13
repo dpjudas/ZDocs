@@ -1,0 +1,63 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>Player setup</title>
+  <ns>0</ns>
+  <id>6541</id>
+  <revision>
+    <id>49567</id>
+    <parentid>49401</parentid>
+    <timestamp>2022-09-30T22:02:41Z</timestamp>
+    <contributor>
+      <username>Blue Shadow</username>
+      <id>2021</id>
+    </contributor>
+    <minor />
+    <comment>remove {{new}} tags for 4.8.0</comment>
+    <origin>49567</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="4245" sha1="se7ix97j5q093jm4tpzzy3kdfokm8ew" xml:space="preserve">{{menutrail|Main menu|Options menu}}
+[[File:PlayerSetup.png|thumb|The player setup in [[Hexen]].]]The '''player setup''' regroups the different options that relate to player appearance, such as the displayed name, gender, and skin, the choice of [[TEAMINFO|team]], as well as personal preferences, such as autoaim strength and whether "always run" is on or off. Its [[MENUDEF]] name is &lt;tt&gt;PlayerMenu&lt;/tt&gt; and it can be summoned with the [[console command]] &lt;tt&gt;menu_player&lt;/tt&gt;.
+
+'''Note:''' Although the player setup allows to change class, such changes do not take effect instantly but require the player to respawn. Furthermore, if the class is changed outside of a game, it will have no effect as the [[class selection menu]], even if not displayed, will override it.
+
+* '''{{LE|Name|name}}'''
+:{{c|{{CVAR|C|name}}}}
+:This is your [[player]]'s name. This is only really useful in a [[multiplayer]] game, but it can also be set for single player.
+* '''{{LE|Team|team}}''' (None/Blue/Red/Green/Gold/Black/White/Orange/Purple)
+:{{c|{{CVAR|C|team}}}}
+:This is the [[team]] that your player belongs to. It is only meaningful during [[deathmatch]] games. There are eight predefined teams available, though this can be changed with a custom [[TEAMINFO]].
+* '''{{LE|Color|color}}''' (''[[player class]]-dependent set''/Custom)
+:{{c|{{CVAR|C|color}}}}
+:This is your player's color. The default varies depending on which game you are playing. This is overridden by a valid value for {{CVAR|C|colorset}}. Red, green, and blue sliders appear below when using a custom color; they are hidden otherwise.
+* '''{{LE|Red|red}}''' (0&amp;mdash;255 by 16 increments)
+:The red component for a custom color. This slider only appears if the player is using a "Custom" [[#Color|color]].
+* '''{{LE|Green|green}}''' (0&amp;mdash;255 by 16 increments)
+:The green component for a custom color. This slider only appears if the player is using a "Custom" [[#Color|color]].
+* '''{{LE|Blue|blue}}''' (0&amp;mdash;255 by 16 increments)
+:The blue component for a custom color. This slider only appears if the player is using a "Custom" [[#Color|color]].
+* '''{{LE|Class|playerclass}}''' (''Game-dependent list'')
+:{{c|{{CVAR|C|playerclass}}}}
+:The [[player class]] used by the player. The list of choices depends on which player classes are available, as determined by the [[GameInfo definition]] of [[MAPINFO]] and possibly certain old [[KEYCONF]] commands.
+* '''{{LE|Skin|skin}}''' (''Load-dependent list'')
+:{{c|{{CVAR|C|skin}}}}
+:This is your player's skin. "Base" is the name of the regular skin for the selected player class and is always available. Additional skins are contained in wad files that you either load with {{param|-file}} at the [[command line]] or [[autoload]] using [[the ini]] or skins directory.
+* '''{{LE|Gender|gender}}''' (Male/Female/Neutral/Object)
+:{{c|{{CVAR|C|gender}}}}
+:This is the gender of your player. Valid values are "male", "female", "neutral" and "object". Anything else will be treated as male. When you die, certain messages will be altered to reflect the gender selected here. Unfortunately, [[ZDoom]] does not provide any additional player sounds, so this will not affect your character's voice in any of the [[supported game]]s unless you provide your own sounds. (Default characters are male in all base games except ''[[Harmony]]''.)
+* '''{{LE|Autoaim|autoaim}}''' (0.0&amp;mdash;35.0, by 1.0 increments)
+:{{c|{{CVAR|C|autoaim}}}}
+:This represents the intensity of vertical autoaim, in degrees.
+*'''{{LE|Vertical Bullet Spread|vertspread}}''' (On/Off)
+:{{c|{{CVAR|C|vertspread}}}}
+:Vertical bullet spread for weapons. This option is effective only if it is [[Gameplay_options#Allow_Vertical_Bullet_Spread|allowed]]. Weapons which this option affects are the {{Class|pistol}}, {{Class|shotgun}}, {{Class|chaingun}}, {{Class|GoldWand|elven wand}} and {{Class|Blaster|dragon claw}}.
+* '''{{LE|Switch on pickup|neverswitchonpickup}}''' (Off/On)
+:{{c|{{CVAR|C|neverswitchonpickup}}}}
+:When on, you will not automatically switch to a new [[weapon]] when you pick one up.
+* '''{{LE|Always Run|cl_run}}''' (On/Off)
+:{{c|{{CVAR|C|cl_run}}}}
+:When on, the game will always treat movement commands as if {{CCMD|P|+speed}} is active.
+
+[[Category:Menus]]</text>
+    <sha1>se7ix97j5q093jm4tpzzy3kdfokm8ew</sha1>
+  </revision>
+</page>

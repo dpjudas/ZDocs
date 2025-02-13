@@ -1,0 +1,107 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>A DamageSelf</title>
+  <ns>0</ns>
+  <id>7752</id>
+  <revision>
+    <id>54180</id>
+    <parentid>54179</parentid>
+    <timestamp>2025-02-03T10:47:44Z</timestamp>
+    <contributor>
+      <username>Jekyll Grim Payne</username>
+      <id>2175</id>
+    </contributor>
+    <minor />
+    <comment>/* Examples */</comment>
+    <origin>54180</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="5639" sha1="5mvdf702m660pu0fcsrn8g74l9vpbq5" xml:space="preserve">{{codepointer|Monster AI}}
+'''{{class|Actor}}'''
+
+{{c|native void '''A_DamageSelf'''(int ''amount'', name ''damagetype'' {{=}} "none", int ''flags'' {{=}} 0, class&lt;Actor&gt; ''filter'' {{=}} null, name ''species'' {{=}} "None", int ''src'' {{=}} AAPTR_DEFAULT, int ''inflict'' {{=}} AAPTR_DEFAULT)}}
+
+==Usage==
+Damages the calling actor by the specified amount. Negative amounts heal it, instead. This function cannot damage player actors which are under the effect of {{c|{{CCMD|D|god2}}}}, and they still survive with one point of [[health]] if under the effect of {{c|{{CCMD|D|buddha2}}}}.
+
+===Parameters===
+*{{c|int '''amount'''}}
+:The amount of damage to inflict. Negative amounts heal. An amount of 1000000 or higher is treated specially, and results in killing the actor regardless of [[health]] or any damage modifiers that may be in effect.
+*{{c|name '''damagetype'''}}
+:The [[Damage types|type of damage]] to inflict. Default is {{c|'{{DamageType|None}}'}}.
+*{{c|int '''flags'''}}
+:The flags to modify the function's behavior. Multiple flags can be combined with &lt;code&gt;|&lt;/code&gt;. The following flags are available:
+:*'''DMSS_FOILINVUL''' — the actor is damaged even if it is invulnerable. For this flag to work, an inflictor is required (see ''inflict'' below). This flag is ignored if the actor is a player.
+:*'''DMSS_FOILBUDDHA''' — if the damage is enough to kill the actor, it dies even if it is under the "buddha" effect from the {{flag|BUDDHA|flag}}, {{class|PowerBuddha|powerup}}, or [[CCMDs:Debug#buddha|cheat]]. For this flag to work, an inflictor is required (see ''inflict'' below). This flag is ignored if the actor is a player.
+:*'''DMSS_NOPROTECT''' — damage bypasses the [[ModifyDamage|damage-modifying capability]] of items in the actor's inventory. A {{Class|PowerProtection|protection powerup}} is an example of such items.
+:*'''DMSS_NOFACTOR''' — damage bypasses the the actor's {{Property|DamageFactor|damage factors}}.
+:*'''DMSS_AFFECTARMOR''' — damage does not bypass the [[AbsorbDamage|damage-absorbing capability]] of items in the actor's inventory. An [[armor]] is an example of such items.
+:*'''DMSS_KILL''' — inflicts an amount of damage which is equal to the sum of the actor's current health and ''amount'', killing the actor under normal conditions. This flag bypasses the actor's damage factors and the damage-absorbing capability (but not the damage-modifying one) of items in the actor's inventory.
+:*'''DMSS_EXFILTER''' — inverts the case of the class name filter; the actor is only damaged if its class name does not match the value passed to ''filter''.
+:*'''DMSS_EXSPECIES''' — inverts the case of the [[species]] filter; the actor is only damaged if its {{Property|Species|species}} does not match the value passed to ''species''.
+:*'''DMSS_EITHER''' — the actor is damaged if either its class name or species matches the values passed to ''filter'' and ''species'', respectively.
+:*'''DMSS_INFLICTORDMGTYPE''' — ignores the specified damage type, and instead, uses the {{Property|DamageType|damage type}} of the actor doing the damage (inflictor).
+*{{c|class&lt;Actor&gt; '''filter'''}}
+:The actor class to damage. If this is not &lt;code&gt;null&lt;/code&gt;, the caller will only be damaged if it belongs to this class. Default is {{c|null}}&lt;sup&gt;{{Zscriptfeaturesmall}}&lt;/sup&gt;/{{c|"None"}}&lt;sup&gt;{{Decoratefeaturesmall}}&lt;/sup&gt;.
+*{{c|name '''species'''}}
+:The actor species to damage. If this is not &lt;code&gt;"None"&lt;/code&gt;, the caller will only be damaged if its {{property|Species}} matches this. Default is {{c|"None"}}.
+*{{c|int '''src'''}}
+:A [[Actor_pointer#DECORATE_&amp;_ACS|DECORATE actor pointer]] for the actor responsible for the damage (source). If this is set to {{c|AAPTR_NULL}}, the actor is damaged without a source. Default is {{c|AAPTR_DEFAULT}}, which is the calling actor itself.
+*{{c|int '''inflict'''}}
+:A [[Actor_pointer#DECORATE_&amp;_ACS|DECORATE actor pointer]] for the actor dealing the damage (normally this would be a [[puff]] or [[projectile]]). If this is set to {{c|AAPTR_NULL}}, the actor is damaged without an inflictor (note that doing so renders both DMSS_FOILINVUL and DMSS_FOILBUDDHA ineffective). Default is {{c|AAPTR_DEFAULT}}, which is the calling actor itself.
+
+== Examples ==
+This example creates a new item that when used increases movement and attack speed at the cost of 25 [[health]], similar to the stimpacks in ''StarCraft''.
+ class StarcraftStimpack : {{Class|Inventory}}
+ {
+     Default
+     {
+         +{{Flag|Inventory.INVBAR}}
+         {{Property|Tag}} "Stimpack";
+         {{Property|Inventory.Icon}} "SSTMA0";
+         {{Property|Inventory.Amount}} 1;
+         {{Property|Inventory.MaxAmount}} 25;
+         {{Property|Inventory.PickupMessage}} "You found some stimpacks"; {{LanguageCodeNote}}
+         {{Property|Inventory.PickupSound}} "misc/i_pkup";
+         {{Property|Inventory.UseSound}} "misc/p_pkup";
+     }
+ 
+     override bool [[Use]](bool pickup)
+     {
+         {{comment|Do not let the player kill themselves:}}
+         if (owner.health &lt;= 25)
+         {
+             return false;
+         }
+         owner.[[A_DamageSelf]](25);
+         owner.[[A_GiveInventory]]("StimpackMoveEffect");
+         owner.A_GiveInventory("StimpackAttackEffect");
+         return true;
+     }
+ 
+     States
+     {
+     Spawn:
+         SSTM A -1;
+         [[Stop]];
+     }
+ }
+ 
+ class StimpackMoveEffect : {{Class|PowerSpeed}}
+ {
+     Default
+     {
+         +{{Flag|PowerSpeed.NOTRAIL}}
+         Powerup.Duration -15;
+     }
+ }
+ 
+ class StimpackAttackEffect : {{class|PowerDoubleFiringSpeed}}
+ {
+     Default
+     {
+         Powerup.Duration -15;
+     }
+ }</text>
+    <sha1>5mvdf702m660pu0fcsrn8g74l9vpbq5</sha1>
+  </revision>
+</page>

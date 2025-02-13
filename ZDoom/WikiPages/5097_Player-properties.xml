@@ -1,0 +1,121 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>Player properties</title>
+  <ns>0</ns>
+  <id>5097</id>
+  <revision>
+    <id>52952</id>
+    <parentid>50638</parentid>
+    <timestamp>2024-08-22T06:23:29Z</timestamp>
+    <contributor>
+      <username>Blue Shadow</username>
+      <id>2021</id>
+    </contributor>
+    <minor />
+    <comment>remove {{new}}</comment>
+    <origin>52952</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="11541" sha1="fl0zdc1rqslz4wfcuy1irmbsbei2b8x" xml:space="preserve">&lt;onlyinclude&gt;*'''{{LE|Player.AirCapacity}}''' ''value''
+:Sets the air supply for the player class. This acts as a multiplier for the level's {{MapProperty|AirSupply|air supply}} value. A value of 2 will double the air supply, for instance. A value of 0 or less means the air supply is infinite, and thus the player class cannot drown.
+:Default is 1.0.
+* '''{{LE|Player.AttackZOffset}}''' ''value''
+:The height offset (in Doom map pixels) from the center of the player at which his attacks are fired. Scales according to crouched height.
+:Default is 8.
+* '''{{LE|Player.ClearColorSet}}''' ''number''
+:Removes a color set from the player class. This allows to remove color sets inherited from a parent class.
+* '''{{LE|Player.ColorRange}}''' ''start'', ''end''
+:Defines the color range in which to [[translation|translate]] the player's sprite.
+:Default is no translation (0, 0).
+* '''{{LE|Player.ColorSet|Player.Colorset}}''' ''number'', ''name'', ''start'', ''end'', ''color'' [...]
+:Defines a preset color set for the player class. The ''number'' must be unique. The ''name'' is used to identify the preset in the [[player setup]] menu. The ''start'' and ''end'' parameters determine the translation for the ColorRange, and the ''color'' parameter is used as the visual identifier for the set in the [[scoreboard]].
+:Up to six additional color ranges can be defined, each with four parameter for ''range_start'', ''range_end'', ''first_color'' and ''last_color'', in this order. See {{Class|StrifePlayer}} for an example.
+* '''{{LE|Player.ColorSetFile}}''' ''number'', ''name'', ''table'', ''color''
+:Defines a preset color set for the player class. The ''number'' must be unique. The ''name'' is used to identify the preset in the [[player setup]] menu. The translation is indicated by a translation table lump using the format defined by ''[[Hexen]]'' (TRANTBL0 to TRANTBLD). The ''color'' parameter is used as the visual identifier for the set in the [[scoreboard]].
+* '''{{LE|Player.CrouchSprite}}''' ''sprite''
+:Defines the sprites for when your skin is [[crouching]]. If you don't define them your sprite will shrink half its vertical size to show it is crouching. For the crouch sprites you have to define all frames apart from the dying and gib frames. Please note that there is no "Crouch" state that is definable for players, as the engine would not support such a feature. Players need to be able to move seamlessly between crouching and standing during any given state ('''See''', '''Missile''', '''Melee''', etc.) without losing their place in that state, hence there can be no generic "Crouch" state to jump to.
+* '''{{LE|Player.DamageScreenColor}}''' ''color''[, ''intensity''[, ''damagetype'']]
+:The color the player's display turns when the player is in pain. This can be specified as three hex values for R, G, B respectively, or as a literal color name (e.g. "blue").  If this isn't defined, it defaults to red. The ''intensity'' of the flash can be scaled from 0.0 to 1.0. If a ''damagetype'' is specified, the color only applies when the last [[custom damage types|damage type]] received is that type. If there is no color specified for a given damage type, it defaults to what is set without one.
+* '''{{LE|Player.DisplayName}}''' ''string''
+:This is the identification string of the player class. It is used in addplayerclass [[KEYCONF]] command, in playerclass [[Console Commands|console variable]], in [[S_SKIN|skin definitions]], and in menus. '''Each player class used in game must have an unique display name!'''
+* '''{{LE|Player.Face}}''' ''string''
+:This is the three-character prefix that will be used by the status bar face display built into DOOM and by custom status bars that define faces; note that with custom status bars in [[SBARINFO]], faces can be used in all games (not just DOOM), provided the necessary graphics are supplied. This is like the ''face'' property of [[S_SKIN]] but for player classes. To include a status bar face you must put the 3 first letters of the sprite for the face here. For example, if one of the animations was BUGST00 you would put '''Face "BUG"'''.
+:When deciding which face to use, the engine checks for STF**** (DOOM games only), the [[SBARINFO]] face, the current player class face, the face of the currently loaded skin and finally the morphed animal player class face; whichever it finds last "wins".
+:The engine also maintains faces across morphing; for example, if you were playing deathmatch in HeXen and have loaded an [[SBARINFO]] which defines faces for the fighter and also a DECORATE script containing a custom morph attack weapon that changes your enemy into a dog and includes dog face graphics; if you are turned into a dog, the status bar would change to show your face as a dog and turn back to a human again when you unmorph.
+* '''{{LE|Player.FallingScreamSpeed}}''' ''value_min'', ''value_max''
+:When a player is falling within this range of speeds, they will play ''*falling'' sound.
+:Default is (35.0, 40.0).
+* '''{{LE|Player.FlechetteType}}''' ''string''
+:Type of {{Class|ArtiPoisonBag|fléchette}} used by this player class.
+* '''{{LE|Player.FlyBob}}''' ''value''
+:A multiplier for how much the players' view and height bobs up and down when they are [[flying]] and the {{c|{{CVAR|C|fviewbob}}}} console variable is on.
+:Default is 1.0.
+* '''{{LE|Player.ForwardMove}}''' ''value''[, ''value-run'']
+:Speed modifier for forward/backward movement. The ''value'' is for walking and ''value-run'' is for running.
+:Default is 1 for both values. The default run speed is double the walking speed, so Player.ForwardMove 1, 0.5 would disable running.
+* '''{{LE|Player.GruntSpeed}}''' ''value''
+:The minimum speed a player must be falling at the time of landing to play ''*grunt'' sound.
+:Default is 12.0.
+* '''{{LE|Player.HealRadiusType}}''' ''string''
+:The nature of the healing effect the player offers to his allies in cooperative multiplayer when using a [[Classes:ArtiHealingRadius|Mystic Ambit Incant]].
+:Value can be ''Health'', ''Armor'' or ''Mana''. Default is ''Health''.
+* '''{{LE|Player.HexenArmor}}''' ''base value'', ''value [[Classes:MeshArmor|armor]]'', ''value [[Classes:FalconShield|shield]]'', ''value [[Classes:PlatinumHelm|helm]]'', ''value [[Classes:AmuletOfWarding|amulet]]''
+:The player's [[armor class]] values in Hexen. All values must be a multiple of five (they are divided by five when displayed on the HUD). Base value is the player class's minimum, all other values are the increases gained by picking up the corresponding [[Classes:HexenArmor|Hexen armor item]].
+* '''{{LE|Player.InvulnerabilityMode}}''' ''string''
+:The secondary effect an {{Class|PowerInvulnerable|invulnerability powerup}} will have on the player, in addition to the invulnerability and display gimmick.
+:'''Ghost''' will make the player phase in an out of ghost mode rapidly; '''Reflective''' will make the player reflect projectile attacks.
+:Default is unnamed. To obtain the default effect, just make sure the line is not present.
+* '''{{LE|Player.JumpZ}}''' ''value'' (fixed point)
+:The player's [[jump]] speed. The player's jump height in normal gravity is (''value'' &amp;times; (''value'' + 1)) / 2). A player can still climb their {{Property|MaxStepHeight}} while jumping, allowing to reach heights higher than indicated purely by the jump height. For example with the default values, a player can climb a height of up to 60 map units: 36 from jump, 24 from step.
+:Default is 8.0.
+* '''{{LE|Player.MaxHealth}}''' ''value''
+:Default is 100.
+:The maximum [[health]] reachable by using normal [[Classes:Health|health items]].
+* '''{{LE|Player.MorphWeapon}}''' ''weapon''
+:Sets the weapon the player will use when morphed to this class.
+* '''{{LE|Player.MugShotMaxHealth}}''' ''value''
+:Defines the value that is considered to be max health for the status bar mugshot. Negative values use the player's max health as the mug shot max health, zero (default value) uses 100 as the mug shot max health, and positive values are used directly as the mug shot max health.
+* '''{{LE|Player.Portrait}}''' ''string''
+:Replaces the player portrait in the [[class selection menu]] to show a customized image, much like Hexen's player classes.
+* '''{{LE|Player.RunHealth}}''' ''value''
+:The minimum health the player can have and still be able to run. (This is normally 16% for Strife)
+:Default is 0.
+* '''{{LE|Player.ScoreIcon}}''' ''sprite''
+:The icon visible next to the player's name on multiplayer [[scoreboard]].
+* '''{{LE|Player.SideMove}}''' ''value'' [''value-run'']
+:Speed modifier for left/right movement. The ''value'' is for walking and ''value-run'' is for running.
+:Default is 1 for both values. The default run speed is double the walking speed, so Player.SideMove 1, 0.5
+:would disable side-running.
+:'''NOTE''': Side movement running speed is actually 4/5ths forward running speed, and the side walk speed is 24/25ths forward walk.
+* '''{{LE|Player.SoundClass}}''' ''string''
+:The sound class used by [[SNDINFO]]'s '''$playersound''' command.
+:Default is "player".
+* '''{{LE|Player.SpawnClass}}''' ''spawnclass''
+:This is the filter for spawning things in a map. The ''spawnclass'' can be one of '''Any''', '''Fighter''', '''Cleric''', '''Mage''' or a number between 1 and 16. 1 is synonymous with '''Fighter''', 2 with '''Cleric''' and 3 with '''Mage'''.
+* '''{{LE|Player.StartItem}}''' ''classname'' [''amount'']
+:Adds an item to player's start inventory. First [[Classes:Weapon|weapon]] added is the weapon selected at start.
+:''Note:'' The initial startitem list is never inherited and must be specified in full for each player class.
+* '''{{LE|Player.TeleportFreezeTime}}''' ''value''
+:The time in [[tic]]s the player remains immobile after teleportation. If this is 0 or less, or the player has at least one active {{Class|powerup}} which has the {{Flag|INVENTORY.NOTELEPORTFREEZE}} flag set, this behavior is overridden, and as a result, the player does not become immobile after teleportation.
+:Default is 18.
+* '''{{LE|Player.UseRange}}''' ''range''
+:Determines how far away a player class can activate lines or objects with the {{CCMD|P|+use}} [[CCMDs|command]].
+:Default is 64.0.
+* '''{{LE|Player.ViewBob}}''' ''value''
+:A multiplier for {{CVAR|C|movebob|move}} and {{CVAR|C|stillbob|still}} bob. Determines how far the player's [[camera]] bobs up and down. Higher values increase the bob range.
+:Default is 1.0.
+* '''{{LE|Player.ViewBobSpeed}}''' ''value''
+:A multiplier for camera bobbing speed while {{CVAR|C|movebob|moving}}. Determines how quickly the camera moves while bobbing (and thus the frequency of bobbing). Higher values make the camera move through the bob range more slowly.
+:Default is 20.0.
+* '''{{LE|Player.ViewHeight}}''' ''value''
+:Specifies how high above the floor the player's [[camera|eyes]] are.
+:Default is 41.0.
+* '''{{LE|Player.WaterClimbSpeed}}''' ''value''
+:The speed at which the player can climb walls when [[swimming]].
+:Default is 3.5.
+* '''{{LE|Player.WeaponSlot}}''' ''slot'', ''weapon1''[, ''weapon2'', ''weapon3'', ...]
+:Assigns the specified weapons to the given slot number for this player class. ''slot'' can be any single digit from 0 - 9. This is followed by a comma-separated list of each weapon's class name that should be assigned to that slot. If there is more than one weapon assigned to a given slot, the player can cycle between them by repeatedly pressing the slot button. For other ways to assign weapons to slots, see [[weapon slots]].
+&lt;/onlyinclude&gt;
+[[Category:Editing references]]</text>
+    <sha1>fl0zdc1rqslz4wfcuy1irmbsbei2b8x</sha1>
+  </revision>
+</page>

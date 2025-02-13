@@ -1,0 +1,59 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>A SetRenderStyle</title>
+  <ns>0</ns>
+  <id>8936</id>
+  <revision>
+    <id>53530</id>
+    <parentid>53528</parentid>
+    <timestamp>2024-11-01T14:33:39Z</timestamp>
+    <contributor>
+      <username>Jekyll Grim Payne</username>
+      <id>2175</id>
+    </contributor>
+    <origin>53530</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="1310" sha1="cvr8ieuwqm9rnuj1weu79qyv5z9wa8u" xml:space="preserve">{{codepointer|Status change}}
+{{c|void '''A_SetRenderStyle'''(double ''alpha'', int ''style'')}}
+
+==Usage==
+Sets the {{Property|Alpha|alpha}} and {{Property|RenderStyle|render style}} of the actor.
+
+This function is a replacement for {{c|[[A_SetTranslucent]]}}.
+
+==Parameters==
+*{{c|double '''alpha'''}}:
+:The alpha value to set, in the range of 0 to 1.0. Use &lt;code&gt;alpha&lt;/code&gt; to pass the actor's current alpha without modifying it (preceded by a pointer to the actor, if calling from another class).
+*{{c|int '''style'''}}:
+:The render style to set, which can be one of the following:
+{{: Renderstyle}}
+
+== Examples ==
+This version of the {{class|Spectre}} will revent to normal renderstyle when killed (which will cause it to look like the regular {{class|Demon}}), and then reaquire its default fuzzy renderstyle when revived:
+&lt;syntaxhighlight lang="cs"&gt;
+class SpectreModified : Spectre
+{
+    States
+    {
+	Death:
+        // we're passing 'alpha' as the first argument,
+        // keeping its current alpha unchanged:
+		SARG I 8 A_SetRenderstyle(alpha, STYLE_Normal);
+		SARG J 8 A_Scream;
+		SARG K 4;
+		SARG L 4 A_NoBlocking;
+		SARG M 4;
+		SARG N -1;
+		Stop;
+	Raise:
+		SARG N 5 A_SetRenderstyle(alpha, STYLE_Fuzzy)
+		SARG MLKJI 5;
+		Goto See;
+    }
+}&lt;/syntaxhighlight&gt;
+
+== See also ==
+* [[GetRenderstyle]]</text>
+    <sha1>cvr8ieuwqm9rnuj1weu79qyv5z9wa8u</sha1>
+  </revision>
+</page>

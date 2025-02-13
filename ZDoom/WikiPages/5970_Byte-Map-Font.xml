@@ -1,0 +1,81 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>Byte Map Font</title>
+  <ns>0</ns>
+  <id>5970</id>
+  <revision>
+    <id>45986</id>
+    <parentid>40404</parentid>
+    <timestamp>2018-03-26T00:41:12Z</timestamp>
+    <contributor>
+      <username>SanyaWaffles</username>
+      <id>2507</id>
+    </contributor>
+    <minor />
+    <comment>Fixed link to BMF homepage (the other one redirected to a malware site)</comment>
+    <origin>45986</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="2414" sha1="h0720n71uyvtavdbnyc7ga4zymifd55" xml:space="preserve">A '''Byte Map Font''', or '''BMF''', contains an arbitrary amount of paletted characters.
+
+It is of this form:
+{| {{prettytable}}
+!Offset !! Length !! Name !! Content
+|-
+|0x0000 || 4 || Identifier || 0x1AD5E6E1
+|-
+|0x0004 || 1 || Version || Normally 0x11
+|-
+|0x0005 || 1 || Line height || Unsigned value
+|-
+|0x0006 || 1 || Size over the base line || Signed value
+|-
+|0x0007 || 1 || Size under the base line || Signed value
+|-
+|0x0008 || 1 || Space after each character, in addition to each character's own shift || Signed value
+|-
+|0x0009 || 1 || Inner size (?) || Signed value
+|-
+|0x000A || 1 || Count of used colors (not the same as palette size) || Unsigned value
+|-
+|0x000B || 1 || Highest used color index || Unsigned value
+|-
+|0x000C || 4 || Reserved values || Should be 0x00000000
+|-
+|0x0010 || 1 || Number of RGB entries in the palette || Unsigned value
+|-
+|0x0011 || x*3 || Palette || A series of 6-bit RGB values, starting from palette index 1 (index 0 is transparent and not described).
+|}
+After the palette comes an information string about the font:
+{| {{prettytable}}
+!Offset !! Length !! Name !! Content
+|-
+|0x0000 || 1 || Size || Unsigned value
+|-
+|0x0001 || x || Info || ASCII characters
+|}
+After the string comes a two-byte, little-endian unsigned value for the amount of characters. Then comes the character data:
+{| {{prettytable}}
+!Offset !! Length !! Name !! Content
+|-
+|0x0000 || 1 || Which character || ASCII character
+|-
+|0x0001 || 1 || Width || Unsigned value, size of the character image
+|-
+|0x0002 || 1 || Height || Unsigned value, size of the character image
+|-
+|0x0003 || 1 || X-offset || Signed value, offset of the character image relative to the cursor
+|-
+|0x0004 || 1 || Y-offset || Signed value, offset of the character image relative to the cursor
+|-
+|0x0005 || 1 || Shift || Horizontal cursor shift after drawing the character (used instead of width) in addition to the global font value of space added after each character
+|-
+|0x0001 || x || Info || Character image as raw pixels in row-major format
+|}
+Characters are listed one after the other until the end of the file. Note that some characters may have a null image (0 width and/or 0 height); spaces are likely to have no image and instead be defined only by the shift value.
+==External link==
+* [https://bmf.php5.cz BMF Homepage] - contains a couple of utilities and a large collection of fonts
+
+[[Category:Font formats]]</text>
+    <sha1>h0720n71uyvtavdbnyc7ga4zymifd55</sha1>
+  </revision>
+</page>

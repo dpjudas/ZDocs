@@ -1,0 +1,71 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>Classes:RocketAmmo</title>
+  <ns>0</ns>
+  <id>2574</id>
+  <revision>
+    <id>53605</id>
+    <parentid>39188</parentid>
+    <timestamp>2024-11-08T11:36:37Z</timestamp>
+    <contributor>
+      <username>Jekyll Grim Payne</username>
+      <id>2175</id>
+    </contributor>
+    <origin>53605</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="1213" sha1="if9dn2gmigufpj6ep0hryapkskap8uq" xml:space="preserve">{{Actor|
+| type = Ammo
+| name = Rocket
+| class = RocketAmmo
+| game = Doom
+| doomednum = 2010
+| spawnid = 140
+| spawnname = T_ROCKETAMMO 
+}}[[Classes]]: [[Classes:Inventory|Inventory]]&amp;rarr;[[Classes:Ammo|Ammo]]&amp;rarr;&lt;u&gt;RocketAmmo&lt;/u&gt;&lt;br&gt;
+&amp;ensp;&amp;rarr;[[Classes:RocketBox|RocketBox]]
+
+Ammunition used by the player's [[Classes:RocketLauncher|rocket launcher]] in [[Doom]].
+
+=== [[ZScript]] definition ===
+{{ZScriptDefinitionNote|actors/doom/doomammo.zs}}
+&lt;syntaxhighlight lang="cs"&gt;
+class RocketAmmo : Ammo
+{
+	Default
+	{
+		Inventory.PickupMessage "$GOTROCKET";
+		Inventory.Amount 1;
+		Inventory.MaxAmount 50;
+		Ammo.BackpackAmount 1;
+		Ammo.BackpackMaxAmount 100;
+		Inventory.Icon "ROCKA0";
+		Tag "$AMMO_ROCKETS";
+	}
+	States
+	{
+	Spawn:
+		ROCK A -1;
+		Stop;
+	}
+}
+&lt;/syntaxhighlight&gt;
+=== [[DECORATE]] definition ===
+{{DecorateDefinitionNote}}
+ ACTOR &lt;u&gt;RocketAmmo&lt;/u&gt; : {{Class|Ammo}}
+ {
+   {{Property|Inventory.PickupMessage}} "$GOTROCKET" // "Picked up a rocket."
+   {{Property|Inventory.Amount}} 1
+   {{Property|Inventory.MaxAmount}} 50
+   {{Property|Ammo.BackpackAmount}} 1
+   {{Property|Ammo.BackpackMaxAmount}} 100
+   {{Property|Inventory.Icon}} "ROCKA0"
+   States
+   {
+   Spawn:
+     ROCK A -1
+     Stop
+   }
+ }</text>
+    <sha1>if9dn2gmigufpj6ep0hryapkskap8uq</sha1>
+  </revision>
+</page>

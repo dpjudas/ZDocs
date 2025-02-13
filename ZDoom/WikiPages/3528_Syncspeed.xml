@@ -1,0 +1,32 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>Syncspeed</title>
+  <ns>0</ns>
+  <id>3528</id>
+  <revision>
+    <id>27946</id>
+    <parentid>16598</parentid>
+    <timestamp>2010-10-20T20:08:41Z</timestamp>
+    <contributor>
+      <username>Ceeb</username>
+      <id>1593</id>
+    </contributor>
+    <minor />
+    <origin>27946</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="642" sha1="pjf2uh1l859lnodor9ht6f7m88soxtp" xml:space="preserve">{{DISPLAYTITLE:syncspeed}}
+Synchronizes the travel time between two commands.  For example, if you wanted the ceiling to raise 20 units (with a speed of 8) in the same time the floor lower 6 units, you would do syncspeed(6, 20, 8).
+
+&lt;pre&gt;function int syncspeed(int newdistance, int syncdistance, int syncspd)
+{
+	int t = fixeddiv(syncdistance&lt;&lt;16, syncspd&lt;&lt;16);
+	int r = fixeddiv(newdistance&lt;&lt;16, t);
+	return r&gt;&gt;16;
+}&lt;/pre&gt;
+
+The function will sometimes not return with perfect synchronization due since a normal integer is required for most movement operations.  The results, however, should be fairly close.
+
+[[category:Sample ACS functions]]</text>
+    <sha1>pjf2uh1l859lnodor9ht6f7m88soxtp</sha1>
+  </revision>
+</page>

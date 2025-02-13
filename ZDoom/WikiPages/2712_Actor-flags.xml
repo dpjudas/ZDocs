@@ -1,0 +1,834 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>Actor flags</title>
+  <ns>0</ns>
+  <id>2712</id>
+  <revision>
+    <id>54191</id>
+    <parentid>54169</parentid>
+    <timestamp>2025-02-06T23:26:20Z</timestamp>
+    <contributor>
+      <username>Inkoalawetrust</username>
+      <id>2604</id>
+    </contributor>
+    <comment>Documented NOAUTOSKULLFLY.</comment>
+    <origin>54191</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="73556" sha1="lv6mugbosohmtjdonrneao2evoby3p0" xml:space="preserve">[[Actor flags|Flags]] are a feature of [[ZScript]] and [[DECORATE]] that control various characteristics of classes based on {{class|Actor}}, varying from appearance to physical properties. Flags can be specified in an actor's &lt;code&gt;Default { }&lt;/code&gt; block, same as [[Actor properties]]. Note, in contrast to properties, using a semicolon (&lt;code&gt;;&lt;/code&gt;) after flags in the {{c|Default}} block is optional.
+
+{{note|All flags are false in the base {{class|Actor}} class. Specific subclasses of actor, however, may have various flags enabled.}}
+
+Flags can be set and unset in the Default block:
+:'''&lt;tt&gt;+&lt;/tt&gt;FLAGNAME''' sets a flag
+:'''&lt;tt&gt;-&lt;/tt&gt;FLAGNAME''' clears a flag
+
+Certain flags may interact or interfere with properties:
+* The {{property|Monster}} property is a flag combo that enables a series of flags necessary to make an actor into a monster.
+* The {{property|Projectile}} property works the same way for projectiles.
+* The various [[#Bouncing|bouncing flags]] should normally not be combined with the {{property|BounceType}} property, since the property is meant to be a shorthand for the flags.
+
+In [[ZScript]] the absolute majority of flags can be accessed and modified at runtime, outside of the Default block by using &lt;code&gt;bFLAGNAME&lt;/code&gt;, for example:
+&lt;syntaxhighlight lang="csharp"&gt;
+TNT1 A 0
+{
+  bNOCLIP = true; //enable the NOCLIP flag on the calling actor
+}&lt;/syntaxhighlight&gt;
+(See [[Anonymous functions]])
+
+Having a [[Actor pointers|pointer]] to an actor also allows modifying their flags with &lt;code&gt;&lt;pointer&gt;.bFLAGNAME = &lt;true/false&gt;&lt;/code&gt;.
+
+There are several flags, however, that cannot be modified directly. For example, {{flag|NOBLOCKMAP}} can only be modified through [[A_ChangeLinkFlags]]. Details like this are provided on this page.
+
+
+== General flags ==
+
+The following flags can be used with any actor.
+
+=== Renderer ===
+* '''{{LE|INTERPOLATEANGLES}}'''
+: Actor angles are constantly interpolated over the span of one tic. This includes angle, pitch and roll. Interpolation smoothly transitions from the previous angles to the next instead of instantly snapping.
+* '''{{LE|FLATSPRITE}}'''
+: Actor becomes a flat sprite which can be tilted with the use of the Pitch actor property. 
+: '''NOTE:''' This flag is not compatible with WALLSPRITE.
+* '''{{LE|ROLLSPRITE}}'''
+: Actor sprite is affected by roll, rotating the sprite.
+* '''{{LE|WALLSPRITE}}'''
+: Similar to FLATSPRITE but is not affected by pitch. 
+: '''NOTE:''' This flag is not compatible with FLATSPRITE.
+*'''{{LE|ROLLCENTER}}'''
+: Prior to this flag's introduction, rolling occurred at the very center of the sprite no matter what offsets were used. Offsets are now used instead of the center. Using this flag restores the original behavior of displacing via the center instead of offsets.
+*'''{{LE|SPRITEANGLE}}'''
+: Enables the use of the {{Property|SpriteAngle}} actor property.
+*'''{{LE|SPRITEFLIP}}'''
+: Actor sprite is flipped on the x-axis in a special way. If the current sprite is mirrored (such as POSSA2A8 versus CYBRA2), this flag has no effect.
+*'''{{LE|XFLIP}}'''
+: Actor sprite is flipped on the x-axis.
+*'''{{LE|YFLIP}}'''
+: Actor sprite is flipped on the y-axis.
+*'''{{LE|FLIPSPRITEOFFSETX}}'''
+: Actor sprite is flipped on the x-axis, while retaining all relative offsets.
+*'''{{LE|FLIPSPRITEOFFSETY}}'''
+: Actor sprite is flipped on the y-axis, while retaining all relative offsets.
+*'''{{LE|MASKROTATION}}'''
+: Enables rendering of a sprite based on defined angles through the use of {{Property|VisibleAngles}} and {{Property|VisiblePitch}}.
+*'''{{LE|ABSMASKANGLE}}'''
+: The visible angle becomes absolute -- not offset by the actor's current angle.
+*'''{{LE|ABSMASKPITCH}}'''
+: Same as ABSMASKANGLE but for pitch.
+*'''{{LE|DONTINTERPOLATE}}'''
+: Position interpolation is disabled for this actor.
+*'''{{LE|ZDOOMTRANS}}'''
+: Marks the actor's {{Property|RenderStyle}} as being a ZDoom graphical enhancement over the original. An actor with this flag will change its RenderStyle to {{c|Normal}} (opaque) when {{CVAR|R|r_vanillatrans}} is set to 1 or 3. Custom content should generally not use this flag, though it can be desired for visual consistency with vanilla content for actors such as fireball projectiles or teleportation flashes.
+*'''{{LE|ABSVIEWANGLES}}'''
+: The ViewAngle/Pitch/Roll properties are an offset to the current actor's angle/pitch/roll. With this flag, they become absolute.
+*'''{{LE|CASTSPRITESHADOW}}'''
+: Forces the actor to cast [[sprite shadows]], this can be used to make a monster cast a sprite shadow if the setting is set to default, or to make non-monster actors such as decorations cast shadows as well. 
+*'''{{LE|NOSPRITESHADOW}}'''
+: Entirely disables shadow casting for the actor regardless of what the setting is set to, can be used to make a monster not cast shadows, can't be used to turn shadows off for players.
+*'''{{LE|MASTERNOSEE}}'''
+: Actors with this flag on will not appear on the view of the actor who they have set as their [[Actor_pointer|master]]. For example, an orb with this flag that orbits around the player, will not render on the players' first person view, but can be seen if the player sees themselves through another camera, or looks at themselves through a [[mirror]] or a [[portal]].
+*'''{{LE|ADDLIGHTLEVEL}}'''
+: Makes the actors' {{property|LightLevel}} be added on top of the existing sector light level. Instead of being an absolute value.
+[[Image:MirrorActorFlagsExample.png|right|thumb|400px|The {{class|DoomImp|Imp}} on the left cannot be seen through mirrors, the {{class|Demon}} on the right can ''only'' be seen through mirrors.]]
+* '''{{LE|INVISIBLEINMIRRORS}}'''
+: The actor will not render on mirrors.
+* '''{{LE|ONLYVISIBLEINMIRRORS}}'''
+: The actor will only be visible when seen through mirrors.
+* '''{{LE|DECOUPLEDANIMATIONS}}'''
+: Allows the use of named animations for [[MODELDEF#IQM|IQM 3D models]] (see [[SetAnimation]]).
+* '''{{LE|CAMFOLLOWSPLAYER}}'''
+: If used on an actor meant to be a camera, makes sure  its view position interpolates along with player's camera every frame instead of every game tic. This can be combined with any actor meant to function as a camera, whether through camera textures, or direct modification of the {{struct|PlayerInfo|'''player.camera'''}} field in [[ZScript]].
+* '''{{LE|SQUAREPIXELS}}''' {{new|4.13.0}}
+: The actors' sprites are rendered without any [[aspect ratio correction]] applies. As they do for +{{flag|ROLLSPRITE}} actors and particles.
+* '''{{LE|STRETCHPIXELS}}''' {{new|4.13.2}}
+: The actor is always rendered with aspect ratio correction, even when rolling.
+
+=== Physics ===
+
+* '''{{LE|SOLID}}'''
+:Set when the object should be solid (blocking). The size of the blocking is defined using the height and radius [[Actor properties|properties]].
+: &amp;rarr; Automatically given by the '''{{Property|Monster}}''' [[Actor properties#Flag_combos|combo]]
+* '''{{LE|SHOOTABLE}}'''
+:Object can be damaged. If health goes below 0 it enters its death state.
+: &amp;rarr; Automatically given by the '''{{Property|Monster}}''' [[Actor properties#Flag_combos|combo]]
+* '''{{LE|FLOAT}}'''
+:Floating actor that can change height at will (usually used for monsters). The speed of the float can be defined with its {{c|{{Property|FloatSpeed}}}} [[Actor properties|property]]. Actors will not be able to float properly unless it has NOGRAVITY set. If set with FLOORCLIP, the actor will be able to walk off edges from heights.
+* '''{{LE|NOGRAVITY}}'''
+:Actor is not subject to gravity. 
+: &amp;rarr; Automatically given by the '''{{Property|Projectile}}''' [[Actor properties#Flag_combos|combo]]
+* '''{{LE|WINDTHRUST}}'''
+:Actor is thrust by [[Heretic]]/[[Hexen]] wind sector specials, and [[Classes:PointPusher|pusher]]s/[[Classes:PointPuller|puller]]s.
+* '''{{LE|PUSHABLE}}'''
+:Actor can be pushed.
+* '''{{LE|DONTFALL}}'''
+:Doesn't fall down after being killed ({{Flag|NOGRAVITY}} isn't turned off when killed).
+* '''{{LE|CANPASS}}'''
+:Actor uses height sensitive collision detection. Use with care! This only makes sense on actors that can move by themselves. This flag is needed so that an actor can stand on sprite bridges.
+: &amp;rarr; Automatically given by the '''{{Property|Monster}}''' [[Actor properties#Flag_combos|combo]]
+* '''{{LE|ACTLIKEBRIDGE}}'''
+:Uses the special collision logic for bridge things. Most importantly bridge things allow everything else to pass above and beneath regardless of the setting of the '''{{Flag|CANPASS}}''' flag.
+* '''{{LE|NOBLOCKMAP}}'''
+:This object is excluded from passive collision detection. Nothing else can run into a '''NOBLOCKMAP''' object but the object itself can run into others. Actors with this flag cannot be hit by hitscan/trace functions such as [[A_FireBullets]], [[A_RailAttack]], etc.
+:'''Note:''' If an object had this flag set needs to be restored to being a solid object, {{c|[[A_ChangeLinkFlags]](0)}} may need to be called manually to reset its blockmap data.
+: &amp;rarr; Automatically given by the '''{{Property|Projectile}}''' [[Actor properties#Flag_combos|combo]]
+* '''{{LE|NOINTERACTION}}'''
+:The actor is purely decorative.  It will not interact with any other actor and will ignore all game physics (including solid walls and floors!), moving only according to its own momentum. (i.e. The actor will not be affected by gravity, but its movement can still be directly changed using [[ThrustThing]].) All AI routines will ignore this actor's existence, speeding up processing time.
+:'''Note:''' Setting this flag implies removing the actor from the blockmap. If an actor had this flag set needs to be restored to being a solid object, {{c|[[A_ChangeLinkFlags]](0)}} must be called manually to reset its blockmap data. Keep in mind NOBLOCKMAP will only apply on the next actor tick when used, meaning the actor is still subject to repositioning (i.e. if a puff without the flag hits a ledge, the engine may move it above the ledge). Including NOBLOCKMAP as part of the actor's definition will prevent this behavior, since the engine won't link it to begin with and save processing time.
+* '''{{LE|MOVEWITHSECTOR}}'''
+:Actor follows sector height changes unconditionally. Normally actors with the NOBLOCKMAP flag are excluded from moving with sectors. Another use is to ensure that an actor remains on the floor of extremely fast moving lifts.
+* '''{{LE|RELATIVETOFLOOR}}'''
+:An actor not bound by [[gravity]] with this flag retains its z-height relative to a moving floor.
+* '''{{LE|NOLIFTDROP}}'''
+:Does not drop when a lift under it lowers.
+* '''{{LE|SLIDESONWALLS}}'''
+:Actor can slide along walls. Used for players and actors that are pushed against walls.
+* '''{{LE|NODROPOFF}}'''
+:Makes tall dropoffs block any movement by this actor. Normally this is only being done for monster movement but not for thrust by damage or scrolling sectors.
+* '''{{LE|NOFORWARDFALL}}'''
+:On random occasions and under certain circumstances, an actor on high ledges will be pushed and will fall forward when being damaged by an attack. This flag, when set, will disable that behavior. Alternatively, the flag can be set on the damage inflictor (e.g., a projectile or a [[puff]] for a [[hitscan]] attack). In this case, the behavior is only disabled if the actor got damaged by an inflictor which has the flag set.
+* '''{{LE|NOTRIGGER}}'''
+:Disables all line action (crossing, impacting, using, etc.) for the actor.
+* '''{{LE|BLOCKEDBYSOLIDACTORS}}'''
+:An actor with this flag is blocked by solid actors, even if itself non-solid. If the actor does not have the {{Flag|CANPASS}} flag as well, solid things are infinitely tall for it. An effect of this flag is that {{Class|PoisonCloud}} actors spawned from a {{Class|ZPoisonShroom}} are stuck in the mushroom (which is solid) and unable to be pushed away by the {{Class|ArtiBlastRadius|Disc of Repulsion}}, whereas the same actor spawned from a {{Class|PoisonBag}} can be blasted away.
+* '''{{LE|BLOCKASPLAYER}}'''
+:A non-player actor (including projectiles) with this flag is blocked by the same lines that block a player.
+* '''{{LE|NOFRICTION}}'''
+:All [[friction]] effects are disabled on the actor with this flag set, including the speed cap from water and crouching.
+* '''{{LE|NOFRICTIONBOUNCE}}'''
+:Actor does not bounce off walls as a result of sliding into them on slippery floors.
+* '''{{LE|FALLDAMAGE}}'''
+:[[Monster]] can be damaged by falling. A falling monster always dies upon hitting the floor if its downward velocity is high enough for it to be considered for damage, unless the {{c|{{MapProperty|ProperMonsterFallingDamage}}}} [[MAPINFO]] flag is also set on the map.
+:To enable [[falling damage]] for all monsters on a map, set the {{c|{{MapProperty|MonsterFallingDamage}}}} [[MAPINFO]] flag on that map.
+* '''{{LE|ALLOWTHRUBITS}}'''
+:Enables the use of the {{Property|ThruBits}} property.
+* '''{{LE|CROSSLINECHECK}}'''
+:Enables the use of the [[ZScript_virtual_functions#Actor| CanCrossLine virtual function]].
+
+=== Behavior ===
+
+* '''{{LE|ALWAYSRESPAWN}}'''
+:A monster with this flag will respawn in any skill level as though the skill level was set to Nightmare. Note, this flag is for monsters, '''not''' for inventory items; Inventory items use INVENTORY.ALWAYSRESPAWN. If dealing with an Inventory pointer (or derivative), you will need to cast to Actor first in order to access this flag. The only case when this distinction is not relevant is in a DECORATE definition, since prefixes are optional and using +ALWAYSRESPAWN will set the correct flag depending on the type of actor.
+* '''{{LE|AMBUSH}}'''
+:Monster is set to ambush players:  The monster will not start chasing the player after hearing player weapons until it has a direct line of sight to him (after being woken up, however, it does ''not'' need to be facing him).  Normally this is set in an editor on a per-object basis.  Note that some editors call this flag "Deaf," but this is a misnomer.  ''The monster can still hear the player with this flag set!''
+* '''{{LE|AVOIDMELEE}}'''
+:Monster backs away from melee combat when too close to its target, provided it has a valid Missile state. A [[bots|bot]] with this flag needs to have a ranged weapon selected.
+:To enable this behavior for all monsters on a map, set the {{c|{{MapProperty|AvoidMelee}}}} [[MAPINFO]] flag on that map.
+* '''{{LE|BOSS}}'''
+:Actor is a boss, and has the following special properties:
+:* Plays See sound and Death sound at full volume (regardless of distance), and play these sounds in surround mode during the cast endgame.
+:* Cannot be squashed (normally instant death) by Heretic's powered-up Mace.
+:* Cannot be teleported by Hexen's [[Classes:ArtiTeleportOther|Banishment Device]].
+:* Cannot be pushed by items such as Hexen's [[Classes:ArtiBlastRadius|Disc of Repulsion]], or damaged by other monsters thrown at the boss by these items.
+:* Takes only one-quarter of the damage from Hexen's Wraithverge spirits, burns said spirit out faster than other monsters, and reflects them against the attacker if the boss also has the {{Flag|REFLECTIVE}} flag.
+:* Has a chance to resist Hexen's Arcs of Death.
+:* Does not take fire damage when indirectly affected by Hexen's Bloodscourge's projectiles.
+:* Takes only 50 damage from a [[Classes:PoisonBolt|poison bolt]], instead of instantly killed.
+* '''{{LE|DONTCORPSE}}'''
+:Monsters with this flag will not automatically get the {{flag|CORPSE}} flag when killed. It is the modder's duty to explicitly set the flag in the monster's death sequence. This has two main effects: first, the actor cannot be immediately passed through, and secondly it will not immediately enter a Crash state if it is on the floor or another actor. The purpose is to allow modders greater control on death animations and special effects with flying monsters.
+* '''{{LE|DONTFACETALKER}}'''
+:Actor does not turn to face the player in a conversation.
+* '''{{LE|DORMANT}}'''
+:Actor is dormant and has to be activated with [[Thing_Activate]]. Dormant actors can't do anything and don't take damage.
+* '''{{LE|FRIENDLY}}'''
+:This monster doesn't target the player. Instead it attacks other monsters. Currently friendly monsters only target unfriendly monsters when they see the Player, and unfriendly monsters will never attack friendly monsters unless they are attacked first or have the {{flag|SeeFriendlyMonsters| SEEFRIENDLYMONSTERS}} flag on. Also note that monsters resurrected or spawned by friendly monsters ([[Classes:Archvile|Arch-Vile]], [[Classes:PainElemental|Pain Elementals]], [[Classes:BossEye|Icon of Sin]], etc.) are friendly; and inversely a dead friendly monster resurrected by an unfriendly Arch-Vile is no longer friendly.
+:'''Note''': Setting this flag to true/false dynamically will have no effect if the monster has already acquired a target by that point; it'll keep chasing and attacking its current target. '''{{c|[[A_ClearTarget]]}}''' must be called first, in order to clear its pointers; then the next time {{c|[[A_Look]]}}/{{c|[[A_Chase]]}} tries to acquire a target, it'll follow the new rules set by this flag.
+* '''{{LE|JUMPDOWN}}'''
+:Actors with this flag set will often (about 92% chance) decide to jump down tall ledges to pursue their target, if said target is hostile and is relatively close (horizontally within 144 map units).
+* '''{{LE|LOOKALLAROUND}}'''
+:Looks in all directions for targets, not just in front of itself when [[A_Look]] or one of its variants is called.
+* '''{{LE|NEVERRESPAWN}}'''
+:A monster with this flag will never respawn, even in Nightmare.
+* '''{{LE|NOSPLASHALERT}}'''
+:This monster is not alerted by terrain splash sounds like landing in water. Splashes are defined in [[TERRAIN]] and are not always literally "splashes".
+* '''{{LE|NOTARGETSWITCH}}'''
+:A monster with this flag never switches its target unless its current target is dead.
+* '''{{LE|NOVERTICALMELEERANGE}}'''
+:A monster with this flag ignores vertical distance to its target when checking for melee range. Used, for example, by the Strife [[Classes:Stalker|Stalker]] to drop on its target from the ceiling, regardless of ceiling height.
+* '''{{LE|QUICKTORETALIATE}}'''
+:Normally, when an actor acquires a target, it is prevented from switching to a new target for until its {{property|Threshold}} value gets reduced to 0 by repeated calls to [[A_Chase]].  If this flag is set, the monster is exempted from that code and is free to switch targets repeatedly.  Monsters with this set will tend to turn on a new attacker immediately, rather than focusing on their current target. The [[Classes:Archvile|arch-vile]] uses this flag.
+* '''{{LE|STANDSTILL}}'''
+:It is used to prevent inactive monsters from walking around without having something to attack. Strife's special logic for humanoids and ZDoom's friendly monsters use this.
+* '''{{LE|AVOIDHAZARDS}}'''
+:The monster will actively try to avoid being harmed by crushing ceilings. Note: This flag ONLY works for crushing ceilings ! It will not make the actor react to other level hazards.
+* '''{{LE|STAYONLIFT}}'''
+:Will stay still on moving platforms, instead of moving around on them, and begin moving again once they stop.
+* '''{{LE|DONTFOLLOWPLAYERS}}'''
+:Friendly monsters with this flag will not follow the player they are allied to, when they have no target or goal left to deal with.
+* '''{{LE|SEEFRIENDLYMONSTERS}}'''
+:Hostile monsters with this flag on will attack [[Actor_flags#FRIENDLY| friendly]] monsters on sight. The sight behavior is identical to that of friendly monsters.
+
+=== (In)Abilities ===
+* '''{{LE|CANNOTPUSH}}'''
+:This actor cannot push pushable objects.
+* '''{{LE|NOTELEPORT}}''' 
+:Actor cannot teleport.
+: &amp;rarr; Automatically given by the '''{{Property|Projectile}}''' [[Actor properties#Flag_combos|combo]]
+* '''{{LE|ACTIVATEIMPACT}}'''
+:Upon hitting a wall this actor can activate G1/GR lines.
+: &amp;rarr; Automatically given by the '''{{Property|Projectile}}''' [[Actor properties#Flag_combos|combo]]
+* '''{{LE|CANPUSHWALLS}}'''
+:Upon hitting a wall this actor can activate P1/PR lines.
+: &amp;rarr; Automatically given by the '''{{Property|Monster}}''' [[Actor properties#Flag_combos|combo]]
+* '''{{LE|CANUSEWALLS}}'''
+:This actor can activate unlocked doors and lifts. (Original Doom monster behavior)
+: &amp;rarr; Automatically given by the '''{{Property|Monster}}''' [[Actor properties#Flag_combos|combo]]
+* '''{{LE|ACTIVATEMCROSS}}'''
+:This actor can activate 'Monster crosses' lines.
+: &amp;rarr; Automatically given by the '''{{Property|Monster}}''' [[Actor properties#Flag_combos|combo]]
+* '''{{LE|ACTIVATEPCROSS}}'''
+:This actor can activate 'Projectile crosses' lines.
+: &amp;rarr; Automatically given by the '''{{Property|Projectile}}''' [[Actor properties#Flag_combos|combo]]
+* '''{{LE|CANTLEAVEFLOORPIC}}'''
+:This actor cannot cross into a sector with a different floor texture.
+* '''{{LE|TELESTOMP}}'''
+:This actor can telefrag others. Actors without this flag will fail to teleport if another actor is blocking the destination.
+* '''{{LE|NOTELESTOMP}}'''
+:This actor cannot telefrag others under any circumstances, even if the {{c|{{MapProperty|AllowMonsterTelefrags}}}} [[MAPINFO/Map definition|map definition]] flag is set. This also affects actors spawned via the [[SpawnShot|Icon of Sin Cubes]].
+* '''{{LE|STAYMORPHED}}'''
+:If morphed this actor cannot revert to its original form. Does not appear to work on playerclasses.
+* '''{{LE|CANBLAST}}'''
+:Can be blasted by Hexen's [[Classes:ArtiBlastRadius|Disc of Repulsion]]. For monsters this is implicit.
+* '''{{LE|NOBLOCKMONST}}'''
+:Actor can walk through monster blocking lines.
+* '''{{LE|ALLOWTHRUFLAGS}}'''
+:Only useful for actors used as puffs. Enables a variety of THRU flag behavior for actors used as puffs. Flags not listed do not require ALLOWTHRUFLAGS to work.
+:*'''Bullets''' - Enables THRUACTORS and THRUSPECIES on puffs.
+:*'''Rails''' - Enables THRUACTORS, THRUSPECIES and THRUGHOST on puffs.
+* '''{{LE|THRUGHOST}}'''
+:Missiles and puffs pass through ghosts (set with the '''{{Flag|GHOST}}''' flag). See {{Flag|ALLOWTHRUFLAGS}} for details on puffs.
+* '''{{LE|THRUACTORS}}'''
+:This actor passes through all other actors. See {{Flag|ALLOWTHRUFLAGS}} for details on puffs.
+* '''{{LE|THRUSPECIES}}'''
+:This actor passes through other actors of the same [[species]]. See {{Flag|ALLOWTHRUFLAGS}} for details on puffs.
+* '''{{LE|MTHRUSPECIES}}'''
+:A [[missile]] or [[puff]] with this flag makes the attack (the missile itself, or the puff's [[hitscan]]) passes through actors of the same [[species]] as the actor that shot it, if any.
+:A [[Railgun|rail]] attack goes harmlessly through actors which have the same species as that of the attacker's, provided that the puff  has this flag set. Additionally, {{c|[[A_BFGSpray]]}} has no effect on actors which have the same species as that of the associated ''{{Class|BFGExtra|flash}}'', provided, again, that the ''flash'' also has this flag set. (The actors' species needs to match the shooter's, not the ''flash's'')
+* '''{{LE|SPECTRAL}}'''
+:A [[monster]] with this flag can only be hurt by a missile or puff (bullet attacks only; not rail attacks) that also has this flag set.
+* '''{{LE|FRIGHTENED}}'''
+:Monster runs away from player (but still fights back).
+* '''{{LE|FRIGHTENING}}'''
+:Monster runs away from its target if said target has this flag set, attacking less frequently.
+* '''{{LE|NOTARGET}}'''
+:Actor cannot be targeted by other monsters. This does not prevent hostile monsters from being targeted by friendly monsters.
+* '''{{LE|NEVERTARGET}}'''
+:Actor cannot be targeted at all. This prevents hostile monsters from being targeted by friendly monsters.
+* '''{{LE|NOINFIGHTSPECIES}}'''
+:Actor does not infight with others belonging to the same [[species]] as it.
+* '''{{LE|FORCEINFIGHTING}}'''
+:A monster ignores the map's setting of no [[infighting]], and infights like normal.
+* '''{{LE|NOINFIGHTING}}'''
+:The inverse of NOTARGET.  This actor will never turn on another monster when provoked.
+* '''{{LE|NOTIMEFREEZE}}'''
+:This actor is not affected by {{Class|PowerTimeFreezer|time freeze powerups}} or the "freeze" console cheat.
+* '''{{LE|NOFEAR}}'''
+:This actor is not affected by {{Class|PowerFrightener|frightener powerups}} or the "anubis" console cheat.
+* '''{{LE|CANTSEEK}}'''
+:This actor cannot be tracked by seeker missiles. See also the {{Flag|DONTSEEKINVISIBLE}} flag.
+* '''{{LE|SEEINVISIBLE}}'''
+:Monsters with this flag can see and aim at invisible opponents (players or other monsters) without their aim being degraded.
+* '''{{LE|DONTTHRUST}}'''
+:Actor is excluded from damage and radius thrusting of all sorts by explosions or damage of any kind. It also never deals impact damage to other actors, nor does it damage itself from being too close to a wall.
+* '''{{LE|ALLOWPAIN}}'''
+:Actors with this flag can enter pain states regardless of invulnerability or damage absorption, if the incoming damage is greater than zero.
+* '''{{LE|USEKILLSCRIPTS}}'''
+:Actors with this flag will execute KILL-type ACS scripts upon death.
+* '''{{LE|NOKILLSCRIPTS}}'''
+:Actors with this flag will never execute KILL-type ACS scripts upon death, even if ForceKillScripts is enabled in the [[GameInfo definition]].
+* '''{{LE|STOPRAILS}}'''
+:Piercing rail attacks stop at and do not go through an actor with this flag. The actor is still subject to damage from the attack, however.
+* '''{{LE|MINVISIBLE}}'''
+:Monsters will treat actors with this flag as if they were invisible, regardless of their rendering properties.
+* '''{{LE|MVISBLOCKED}}'''
+:Actors with this flag are entirely blocked from monster sight checks. This can be used to guarantee full invisibility, without any random chance of monsters being able to spot the actor.
+* '''{{LE|SHADOWAIM}}'''
+:Makes monsters with the {{flag|SEEINVISIBLE}} flag still get a penalty when trying to shoot at a {{flag|SHADOW}} monster. Even if they can immediately spot them.
+* '''{{LE|DOSHADOWBLOCK}}'''
+:Actors with this flag will be affected by the {{flag|SHADOW}} aim penalty if a {{flag|SHADOWBLOCK}} actor is standing in the way. For example, if there's smoke actors with ''SHADOWBLOCK'' in the monsters' line of fire, it's aim will degrade as if its' target had ''SHADOW''.
+* '''{{LE|SHADOWAIMVERT}}'''
+:With this flag on, the vertical aim of the actor will also be affected when it fires at {{flag|SHADOW}} actors, or through {{flag|SHADOWBLOCK}} actors.
+* '''{{LE|FORCESECTORDAMAGE}}''' {{removed}}
+: Forces the actor to be harmed by damaging floors like a player would be, even if the damaging sector they're in isn't marked to hurt non-players. Effects like {{Class|PowerIronFeet}} defenses will still work normally. 
+
+=== Defenses ===
+
+* '''{{LE|INVULNERABLE}}'''
+:Actor is invulnerable. It cannot be hurt in normal situations, will never enter its Pain state, and will not change targets unless damaged by {{Flag|FOILINVUL}} projectiles. Use {{Flag|ALLOWPAIN}} to let the actor feel pain while invulnerable.
+:'''Note:''' an invulnerable actor can still be hurt by damage that exceeds a very high threshold set at 1000000 (one million). This ensures that certain "instakill" attacks such as the mdk [[CCMDs|console command]] or telefragging always work, even on invulnerable actors. Invulnerability also ignores damagefactors; the raw damage must be a million points or greater in order to foil it. {{Flag|NODAMAGE}} is the only flag to ignore these rules.
+* '''{{LE|BUDDHA}}'''
+:Actor is given an indestructible hit point: no normal attack can remove that last hit point from the actor. They can still take damage and enter any pain state. However, if the actor is hit with an attack bearing the {{Flag|FOILBUDDHA}} flag or was subjected to telefragging or "instakill" attacks, the actor will still die as a result.
+* '''{{LE|REFLECTIVE}}'''
+:Actor reflects missiles shot at it. By default projectiles are reflected at a random angle. This also causes the reflecting actor to be considered as the original shooter once reflected, and seeker missiles will seek after the original shooter.
+* '''{{LE|SHIELDREFLECT}}'''
+:Used in conjunction with the '''REFLECTIVE''' flag. It changes the reflection behavior so that only projectiles hitting the monster from the front side are reflected. With this flag the reflection angle is always +/-45 degrees.
+* '''{{LE|DEFLECT}}'''
+:Used in conjunction with the '''REFLECTIVE''' flag. It changes the reflection behavior so that the reflection angle is always +/-45 degrees.
+* '''{{LE|MIRRORREFLECT}}'''
+:Used in conjunction with the '''REFLECTIVE''' flag. It changes the reflection behavior so the projectile is always turned 180 degrees around and the speed is inversed. Takes precedence over SHIELDREFLECT and DEFLECT.
+* '''{{LE|AIMREFLECT}}'''
+:Used in conjunction with the '''REFLECTIVE''' flag. It changes the reflection behavior so the projectile is always turned and aimed at the original shooter. Takes precedence over SHIELDREFLECT, DEFLECT and MIRRORREFLECT flags. If there is no shooter to aim at, it will fall back on the flags it takes precedence over. I.e. if MIRRORREFLECT is specified, it will simply use that behavior instead.
+* '''{{LE|THRUREFLECT}}'''
+:Used in conjunction with the '''REFLECTIVE''' flag. It changes the reflection behavior so the projectile passes through without changing angle or speed, but is still considered reflected. Takes precedence over all reflective modifying flags.
+* '''{{LE|NORADIUSDMG}}'''
+:Actor cannot be hurt by radius (explosive) damage.
+* '''{{LE|DONTBLAST}}'''
+:Cannot be blasted by Hexen's [[Classes:ArtiBlastRadius|Disc of Repulsion]].
+* '''{{LE|SHADOW}}'''
+:Makes monsters trying to target this actor to be inaccurate. Unlike regular ''Doom'' this does not automatically imply [[fuzz]]iness. For that you have to specify {{Property|RenderStyle}} '''Fuzzy'''.
+* '''{{LE|GHOST}}'''
+:Actor is a ghost. This does not imply translucency etc. Some of Heretic's projectiles and weapons cannot attack ghosts.
+* '''{{LE|DONTMORPH}}'''
+:Cannot be morphed into a [[Classes:Chicken|chicken]], [[Classes:Pig|pig]] or any other [[Classes:MorphProjectile|morphs]].
+* '''{{LE|DONTSQUASH}}'''
+:This actor cannot be instantly killed by Heretic's powered up [[Classes:Mace|Mace]]. '''BOSS''' implies this flag.
+* '''{{LE|NOTELEOTHER}}'''
+:Cannot be teleported by Hexen's [[Classes:ArtiTeleportOther|banishment device]].
+* '''{{LE|HARMFRIENDS}}'''
+:Projectile attacks from a friendly monster with this flag will hurt other friendly monsters of the same species.
+* '''{{LE|DOHARMSPECIES}}'''
+:Monsters with this flag will be able to ''receive'' damage from projectile attacks from other monsters sharing the same [[actor properties#species|species]]. By default projectiles fired by monsters belonging to the same species can only deal damage and trigger infighting via [[A_Explode]] but they deal no impact damage; this flag overrides that behavior, forcing the monster to receive impact damage from projectiles as well.
+:The flag's name is a misnomer: it sounds like it's the opposite of DONTHARMSPECIES, but the effect is entirely different. This flag only affects the damage ''received'' by the monster, not the damage it deals, as opposed to DONTHARMSPECIES.
+:'''Has no effect on hitscan attacks.''' Hitscan attacks always hurt monsters by default even when they're the same class or species.
+* '''{{LE|DONTHARMCLASS}}'''
+:Prevents monsters with this flag from dealing explosion damage to other monsters of the same class. By default, projectiles fired by monsters of the same class don't deal impact damage but can deal damage and trigger infighting via [[A_Explode]]. This flag overrides that behavior, blocking explosion damage between the same class as well. (This also means that monsters with this flag can't blow themselves up with their own explosive projectiles.)
+:Note, if '''DONTHARMSPECIES''' is used on the monster, adding this flag is pointless because it's implied.
+:This flag was previously named DONTHURTSPECIES, which was a misleading name that could lead to believe its effect was that of DONTHARMSPECIES.
+:'''Has no effect on hitscan attacks.''' Hitscan damage can only be prevented with a custom puff using [[#ALLOWTHRUFLAGS|THRU flags]] or by creating an entirely custom hitscan attack (see [[LineAttack]] and [[LineTrace]]).
+* '''{{LE|DONTHARMSPECIES}}'''
+:Works the same way as the DONTHARMCLASS flag, except it checks for [[actor properties#species|species]], not class name. Prevents monsters with this flag from dealing explosion damage to other monsters that have the same species. By default, projectiles fired by monsters belonging to the same species don't deal impact damage but can deal damage and trigger infighting via [[A_Explode]]. This flag overrides that behavior, blocking explosion damage between monsters of the same species as well. (This also means that monsters with this flag can't blow themselves up with their own explosive projectiles.)
+:This flag implies DONTHARMCLASS.
+* '''{{LE|NODAMAGE}}'''
+:The actor reduces ALL damage to 0, but still reacts to getting hurt (allowing infighting).
+:'''NOTE:''' Unlike INVULNERABLE, this flag carries a higher degree of protection against '''all''' effects. They cannot be killed with MDK, the "kill monsters" command, [[Thing_Destroy]], telefrag damage, and are completely impervious to the FOILINVUL flag. If the actor has both INVULNERABLE and NODAMAGE, then FOILINVUL actors can still be used to draw their attention.
+* '''{{LE|NOSECTORDAMAGE}}''' {{removed}}
+:Actor cannot be harmed by [[damaging floor]]s.
+* '''{{LE|DONTRIP}}'''
+:Ripping projectiles die upon hitting this actor as though they were non-ripping projectiles. This takes precedence over ripping levels.
+* '''{{LE|NOTELEFRAG}}'''
+:Actor cannot be telefragged. This only implies the actual teleport effect, not by damaging functions. Actors simply cannot teleport into that position at all.
+* '''{{LE|ALWAYSTELEFRAG}}'''
+:An actor with this flag will unconditionally be telefragged by others when in the way.
+* '''{{LE|DONTDRAIN}}'''
+:Actor's health cannot be drained with weapons that drain health from the victim such as [[Heretic]]'s {{Class|GauntletsPowered|gauntlets}}, or with weapons using the ''lifesteal'' capability of {{c|[[A_Saw]]}} and {{c|[[A_CustomPunch]]}}.
+* '''{{LE|LAXTELEFRAGDMG}}'''
+:By default, when an actor receives telefrag-esque damage (million points) from a single attack, damagefactors are ignored. This flag forces the damage to be mitigated or amplified regardless, based on damagetype and factor. Invulnerable and buddha capabilities are still foiled nonetheless.
+* '''{{LE|SHADOWBLOCK}}'''
+:Actors with this flag will cause actors with {{flag|DOSHADOWBLOCK}} to get the {{flag|SHADOW}} aiming penalty, if they are standing in the laters' line of fire.
+
+=== Appearance and sound ===
+
+* '''{{LE|BRIGHT}}'''
+:All of the actor's frames are rendered at full-bright, as if every frame had the ''bright'' keyword present.
+* '''{{LE|INVISIBLE}}'''
+:Actor is invisible. This disables the rendering of actor's sprites, similarly to {{Property|RenderStyle}} None, but in addition makes it actually invisible to monsters.
+* '''{{LE|NOBLOOD}}'''
+:Actor does not bleed when hurt. Additionally, an actor with this flag is immune to [[Classes:PoisonBolt|poison bolts]]. You can also specify a blood type (without this flag) using the {{Property|BloodType}} actor property.
+* '''{{LE|NOBLOODDECALS}}''' 
+:Actor does not generate blood [[decal]]s when shot (but still generates blood sprites).  Not needed if '''NOBLOOD''' is already specified.
+* '''{{LE|STEALTH}}'''
+:Actor is a [[stealth monster]]. Stealth monsters are monsters that are visible only when they are in pain or attack; other than that, they are invisible.
+* '''{{LE|FLOORCLIP}}'''
+:Actor's lower part is clipped when standing in a sector with a liquid texture (defined in  the [[TERRAIN|TERRAIN lump]]).
+* '''{{LE|SPAWNFLOAT}}'''
+:Actor is spawned at a random height in the sector.
+* '''{{LE|SPAWNCEILING}}'''
+:Actor is spawned hanging from the ceiling as opposed to standing on the floor. Use in conjunction with '''{{Flag|NOGRAVITY}}'''.
+* '''{{LE|FLOATBOB}}'''
+:Use float bobbing z movement like Heretic/Hexen's powerups. Generally used with '''{{Flag|NOGRAVITY}}'''.
+* '''{{LE|NOICEDEATH}}'''
+:Monster cannot be frozen, used to prevent the generic ice death.
+* '''{{LE|DONTGIB}}'''
+:Actor cannot be crushed to a pile of blood by [[Crusher|crushing ceiling]]s. Also, {{Flag|DROPPED|dropped}} [[item]]s with this flag cannot be crushed into nothingness as they usually do.
+* '''{{LE|DONTSPLASH}}'''
+:Actor does not create any [[TERRAIN|terrain]] splashes.
+* '''{{LE|DONTOVERLAP}}'''
+:Two actors with this flag cannot occupy the same x/y-position. ''Note that this flag will short-circuit a large part of the collision detection code, so it is not recommended to be used unless unavoidable!''
+* '''{{LE|RANDOMIZE}}'''
+:Randomizes the duration for its first death and spawn frame of a projectile by removing up to 3 tics. Most of [[Doom]]'s (but not [[Heretic]]'s and [[Hexen]]'s) projectiles use this.
+* '''{{LE|FIXMAPTHINGPOS}}'''
+:Move thing out of walls. For torches and similar things that tend to be placed directly on a wall.
+* '''{{LE|FULLVOLACTIVE}}'''
+:Plays its active sound at full volume.
+* '''{{LE|FULLVOLDEATH}}'''
+:An exploding projectile plays its {{Property|DeathSound|death sound}} at full volume.
+:An actor which calls {{c|[[A_Scream]]}} plays its death sound at full volume.
+* '''{{LE|FULLVOLSEE}}'''
+:Plays its see sound at full volume.
+* '''{{LE|NOWALLBOUNCESND}}'''
+:Does not play a sound when bouncing off a wall. Normally the '''{{Property|SeeSound}}''' is played in this case.
+* '''{{LE|VISIBILITYPULSE}}'''
+:The actor's translucency is pulsing between 25% and fully opaque.
+* '''{{LE|ROCKETTRAIL}}'''
+:This object has a rocket particle trail. It will spawn a {{Class|RocketSmokeTrail}} actor at its position every four tics.
+* '''{{LE|GRENADETRAIL}}'''
+:This object has a grenade particle trail (from [[Skulltag]]'s grenades). It will spawn a {{Class|GrenadeSmokeTrail}} actor at its position every eight tics. This flag is ignored if the actor also has the ROCKETTRAIL flag, which gets priority.
+* '''{{LE|NOBOUNCESOUND}}'''
+:Don't make a bouncing sound.
+* '''{{LE|NOSKIN}}'''
+:Don't allow skins for this actor. Useful only for [[Creating new player classes|player classes]].
+* '''{{LE|DONTTRANSLATE}}''' 
+:Prevents this actor from being translated when used as a blood class (using the {{Property|BloodType}} property) or when spawned from another actor using [[A_SpawnItemEx]].
+:On a player class, this prevents player translations from being applied.
+:'''Note:''' Changing this flag during play has no effect; this flag is only checked when the actor is spawned and is not referenced afterwards.
+* '''{{LE|NOPAIN}}''' 
+:The actor will never enter its pain state. Contrarily to merely giving a {{Property|PainChance}} of 0, this overrides the {{Flag|FORCEPAIN}} flag on the inflictor. Note that it will still take damage, however.
+[[Image:BillboardAxes.png|right|thumb|160px|Y and XY billboarding.]]
+* '''{{LE|FORCEYBILLBOARD}}''' {{OpenGLsmall}}
+:Added for [[GZDoom]], [[Skulltag]] and [[Zandronum]] compatibility.  Forces the actor's sprite to "billboard" to the screen on the Y-axis when using the OpenGL renderer.  Does nothing in ZDoom.
+* '''{{LE|FORCEXYBILLBOARD}}''' {{OpenGLsmall}}
+:Added for [[GZDoom]], [[Skulltag]] and [[Zandronum]] compatibility.  Forces the actor's sprite to "billboard" to the screen on the X- and Y-axes when using the OpenGL renderer.  Does nothing in ZDoom (Also ZDoom already "billboards" sprites on the X- and Y-axes).
+* '''{{LE|BILLBOARDFACECAMERA}}'''
+:Forces the sprites of the actor to face the camera position, overriding the value of the [[gl_billboard_faces_camera]] [[CVar]].
+* '''{{LE|BILLBOARDNOFACECAMERA}}'''
+:Forces the sprites of the actor to face the inverse camera direction, overriding the value of the [[gl_billboard_faces_camera]] [[CVar]].
+* '''{{LE|ISOMETRICSPRITES}}''' {{new|4.13.0}}
+:Causes the sprite to pitch to face the camera/viewpoint while remaining within the confines of the actor's collision box (set by the actor's radius and height). This is achieved with a combination of rotation and vertical scaling. The sprite is also rendered displaced in the xy-plane towards the camera by the actor's radius times sqrt(2). Internally, its z-buffer depth is modified to better handle overlaps for actors stacked on top of each other. This is meant for sprites to be used in [[Isometric Mode]].
+
+=== Projectile ===
+
+* '''{{LE|MISSILE}}'''
+:Actor is a projectile, which allows the following behavior:
+:*Actors with this flag will enter their Death state when hitting geometry or a {{flag|SOLID|solid}} actor (can also enter Crash or XDeath, if provided; see [[Actor_states#States|'''here''' for details).
+:*Can utilize [[#Bouncing|bouncing behavior]].
+:*Will be able to go through impassable linedefs, unless they're set to block projectiles.
+:This flag is automatically unset once the projectile dies upon hitting an actor or an obstacle, thus checking for it is the best generic way to check if the projectile is still active.
+:Projectiles normally move at the velocity defined by their {{property|Speed}} property, but only if spawned through projectile-firing functions like [[A_FireProjectile]]/[[A_SpawnProjectile]]. They don't start moving automatically if just spawned in the world generically (e.g. with [[Spawn (ZScript)|Spawn]] or [[A_SpawnItemEx]]).
+: &amp;rarr; Automatically given by the '''{{Property|Projectile}}''' [[Actor properties#Flag_combos|combo]]
+* '''{{LE|RIPPER}}'''
+:For projectiles that can rip through monsters and players. Ripping projectiles constantly cause their damage amount when ripping through actors, so low damage values are recommended. Bleeding actors also spew blood when being ripped. They will never be reflectable by any actor unless it comes into contact with an actor containing {{Flag|DONTRIP}}.
+* '''{{LE|NOBOSSRIP}}'''
+:Ripper projectiles with this flag will not rip through monsters with the +{{Flag|BOSS}} flag.
+* '''{{LE|NODAMAGETHRUST}}'''
+:An actor with that flag does not thrust away its victims when it inflicts damage.
+* '''{{LE|DONTREFLECT}}''' 
+:Will not reflect off of actors with the {{Flag|REFLECTIVE}} flag set, instead exploding on impact. If the projectile also includes the ability to bounce off of actors with special conditions, it will do so without being considered reflected and maintain who shot it and who it is seeking if set to do so. {{Flag|THRUREFLECT}} takes priority over this.
+* '''{{LE|NOSHIELDREFLECT}}''' 
+:Will not reflect off of actors with the {{Flag|SHIELDREFLECT}} flag set, instead exploding on impact. If the projectile also includes the ability to bounce off of actors with special conditions, it will do so without being considered reflected and maintain who shot it and who it is seeking if set to do so. {{Flag|THRUREFLECT}} takes priority over this.
+* '''{{LE|FLOORHUGGER}}'''
+:Defines a projectile that is moving along the floor. Floor hugging projectiles pass over all obstacles until they hit a solid wall (not a raised floor).
+* '''{{LE|CEILINGHUGGER}}'''
+:Defines a projectile that is moving along the ceiling.
+* '''{{LE|BLOODLESSIMPACT}}'''
+:No blood is spawned when this projectile hits something. This also prevents hitscan weapons from spawning blood.
+* '''{{LE|BLOODSPLATTER}}'''
+:Spawns {{Class|BloodSplatter|blood splatter}} sprites when hitting a bleeding actor. This can also be used for [[hitscan]] [[weapon]]s.
+: &amp;rarr; Automatically given by the '''{{Property|Projectile}}''' [[Actor properties#Flag_combos|combo]] when playing ''[[Heretic]]'' or ''[[Hexen]]''
+* '''{{LE|FOILINVUL}}'''
+:Can hurt invulnerable monsters (but not players).
+* '''{{LE|FOILBUDDHA}}'''
+:Ignores the BUDDHA flag behavior and kills them if applicable. Damage factors and types still take priority. Players are unaffected by this flag.
+* '''{{LE|SEEKERMISSILE}}'''
+:Actor is a homing missile. This is only used as a hint to the game. For a homing missile to be effective it also has to use one of the seeker missile [[Action functions#Missile movement|code pointers]] in its moving states.
+* '''{{LE|SCREENSEEKER}}'''
+:A seeker missile with this flag can only acquire a new target (in its &lt;tt&gt;tracer&lt;/tt&gt; field) if the latter is in the field of vision of the missile's shooter (more exactly, within an about 84° cone from the shooter).
+* '''{{LE|SKYEXPLODE}}'''
+:Projectile explodes and puff spawns when hitting a sky instead of vanishing.
+:A [[puff]] with this flag spawns on [[linedefs]] which have the {{c|[[Line_Horizon]]}} [[Action specials|special]] set.
+* '''{{LE|NOEXPLODEFLOOR}}'''
+:When hitting the floor the projectile just stops instead of exploding.
+* '''{{LE|STRIFEDAMAGE}}'''
+:[[Strife]] uses a different damage calculation for its projectiles which results in lower damage; the {{Property|Damage|damage}} is multiplied by a random value between 1 and 4, inclusive.
+* '''{{LE|EXTREMEDEATH}}'''
+:This projectile or puff always gibs its victim.
+* '''{{LE|NOEXTREMEDEATH}}'''
+:This projectile or puff never gibs its victim.
+* '''{{LE|DEHEXPLOSION}}'''
+:Draw the missile's [[Actor states|Death]] state translucent or additive depending on the [[Console Commands|addrocketexplosion]] console variable and the 'Rocket Explosion Style' and 'Rocket Explosion Alpha' settings in [[DeHackEd]].
+* '''{{LE|PIERCEARMOR}}'''
+:[[Armor]] does not alter the damage done by a projectile with this flag set.
+* '''{{LE|FORCERADIUSDMG}}''' 
+:All actors will take radius damage from this projectile, even boss enemies that are normally immune to radius damage.
+* '''{{LE|FORCEZERORADIUSDMG}}'''
+:Forces splash damage of zero to pass through to the code responsible for damaging actors. The purpose of this is to give the projectile the chance to execute its [[ZScript virtual functions#DoSpecialDamage|special damage code]].
+* '''{{LE|SPAWNSOUNDSOURCE}}''' 
+:This projectile will play its seesound from the originating actor.
+* '''{{LE|PAINLESS}}'''
+:Actors will never enter their '''Pain''' state if hit by a projectile with this flag set.
+* '''{{LE|FORCEPAIN}}'''
+:Actors will always enter the '''Pain''' state appropriate to the type of damage received if hit by a projectile with this flag set, even if the projectile does zero damage. The {{Flag|PAINLESS}} flag has precedence (a projectile with both PAINLESS and FORCEPAIN will not cause actors to enter their '''Pain''' state), and pain cannot be forced on actors with the {{Flag|NOPAIN}} flag set.
+* '''{{LE|CAUSEPAIN}}'''
+:Actors will always be subject to their {{Property|PainChance|pain chance}}, even if said actors are {{Flag|INVULNERABLE|invulnerable}} or the amount of damage inflicted is zero.
+* '''{{LE|DONTSEEKINVISIBLE}}'''
+:Seeker missiles with this flag will not home in on invisible actors. See also the {{Flag|CANTSEEK}} flag.
+* '''{{LE|STEPMISSILE}}'''
+:Missiles with this flag can climb up steps.
+* '''{{LE|ADDITIVEPOISONDAMAGE}}'''
+:Several hits from missiles or puffs with the {{Property|PoisonDamage}} property and this flag cause the poison damage suffered by the victim to increase.
+* '''{{LE|ADDITIVEPOISONDURATION}}'''
+:Several hits from missiles or puffs with the {{Property|PoisonDamage}} property and this flag cause the poisoning suffered by the victim to be prolonged.
+* '''{{LE|POISONALWAYS}}'''
+:('''Note:''' this flag does not apply to the [[Hexen]] style of poison which affects players only.)
+:[[Poison]] is inflicted even if the victim is invulnerable.
+* '''{{LE|HITTARGET}}'''
+:Projectiles that die from hitting an actor will set that actor as its target pointer. Bouncing missiles can make use of this to immediately change their pointers upon bouncing. Bullets and rail attacks can benefit from this flag as well.
+* '''{{LE|HITMASTER}}'''
+:Projectiles that die from hitting an actor will set that actor as its master pointer. Bouncing missiles can make use of this to immediately change their pointers upon bouncing. Bullets and rail attacks can benefit from this flag as well. 
+* '''{{LE|HITTRACER}}'''
+:Projectiles that die from hitting an actor will set that actor as its tracer pointer. Bouncing missiles can make use of this to immediately change their pointers upon bouncing. Bullets and rail attacks can benefit from this flag as well. 
+* '''{{LE|HITOWNER}}'''
+:('''Note:''' despite having similar naming, this flag does not share the same functionality as the above three flags.)
+:Normally, projectiles go harmlessly through their shooters. This flag disables that behavior, and instead allows projectiles to collide with their shooters. This means, a projectile could potentially explode immediately upon being fired, possibly damaging its shooter, so care should be exercised when using the flag. A useful application of this flag is with bouncing projectiles, so that they collide with their shooters when bouncing back instead of going through them.
+
+==== Bouncing ====
+See also the [[actor properties#BounceType|bounce properties]].
+* '''{{LE|BOUNCEONWALLS}}'''
+:Missile bounces off of walls. Implied by Doom and Hexen bounce types.
+* '''{{LE|BOUNCEONFLOORS}}'''
+:Missile bounces off of floors. Implied by all three bounce types.
+* '''{{LE|BOUNCEONCEILINGS}}'''
+:Missile bounces off of ceilings. Implied by all three bounce types.
+* '''{{LE|ALLOWBOUNCEONACTORS}}'''
+:Missile bounces off of non-bleeding actors. Implied by Doom and Hexen bounce types. Note that this needs to be set for '''{{Flag|BOUNCEONACTORS}}''' below to have any effect.
+* '''{{LE|BOUNCEAUTOOFF}}'''
+:Missile stops bouncing if the velocity is too low after a bounce. Always triggered by a bounce on the ceiling, since moving downwards will always count as not moving upwards enough. Implied by the Doom bounce type.
+* '''{{LE|BOUNCEAUTOOFFFLOORONLY}}'''
+:Missile stops bouncing if the velocity is too low after a bounce on the floor.
+* '''{{LE|BOUNCELIKEHERETIC}}'''
+:Missile only bounces once, and never on walls, like Heretic's [[Classes:Mace|Firemace]] projectiles. Implied by Heretic bounce type.
+* '''{{LE|BOUNCEONACTORS}}'''
+:Missile bounces off of all actors, even if they bleed and aren't reflective.
+* '''{{LE|BOUNCEONUNRIPPABLES}}'''
+:{{Flag|RIPPER|Ripping}} missile bounces off of {{Flag|SHOOTABLE|shootable}} actors with the {{Flag|DONTRIP}} flag set.
+* '''{{LE|NOWALLBOUNCESND}}'''
+:Missile doesn't play a sound when hitting a wall. The [[Classes:Heresiarch|Heresiarch]]'s [[Classes:SorcFX1|bouncing flaming skulls]] use this.
+* '''{{LE|NOBOUNCESOUND}}'''
+:Missile doesn't make any sound at all when bouncing.
+* '''{{LE|EXPLODEONWATER}}'''
+:Forces bouncing missiles to explode on [[TERRAIN]] liquids. By default they vanish instead.
+* '''{{LE|CANBOUNCEWATER}}'''
+:Allows bouncing missiles to bounce of [[TERRAIN]] liquids. By default they vanish instead.
+* '''{{LE|MBFBOUNCER}}'''
+:Missile is considered an [[MBF]] bouncer. They behave differently from normal bouncers in many situations:
+::* They are considered to be missiles for several tests, even if they do not have the {{Flag|MISSILE}} flag. For example, a monster with that flag is able to cross impassable linedefs that do not block missiles.
+::* They do not lose their bouncing properties when slowing down and coming to a rest.
+* '''{{LE|USEBOUNCESTATE}}'''
+:Missile enters the most appropriate Bounce state available upon bouncing. Possible bounce states include Bounce, Bounce.Floor, Bounce.Ceiling, Bounce.Wall, Bounce.Actor, and Bounce.Actor.Creature. The Bounce.Actor.Creature state is used for bouncing over a shootable actor without the {{Flag|NOBLOOD}} flag.
+* '''{{LE|DONTBOUNCEONSHOOTABLES}}'''
+:Missile does not bounce off {{Flag|SHOOTABLE|shootable actors}}, and instead, it explodes.
+* '''{{LE|DONTBOUNCEONSKY}}'''
+:Missile does not bounce off skies, and instead, it disappears.
+* '''{{LE|KEEPBOUNCEANGLE}}''' {{git|e0394ef}}
+:Missile does not have its' angle changed after bouncing to face the direction it's now bouncing towards.
+* '''{{LE|BOUNCEMODIFIESPITCH}}''' {{git|e0394ef}}
+:Bouncing missiles also have their pitch affected, i.e a missile bouncing on an actors' head begins moving upwards
+
+=== Puff ===
+Some of these flags can be applied both to [[Puff|hitscan puffs]] and to {{class|blood}} actors, others only affect one of them.
+* '''{{LE|ISPUFF}}''' {{new|4.13.0}}
+:The actor is a [[puff]]. This flag is readonly and gets set on spawn automatically if the actor was spawned by a puff-using attack function or by '''[[SpawnPuff]]'''.
+:If set, the actor's &lt;code&gt;DamageSource&lt;/code&gt; field will also contain a pointer to the actor whose attack spawned the puff (this field is set unconditinally and does not require PUFFGETSOWNER).
+* '''{{LE|PUFFGETSOWNER}}'''
+:'''Can be used both on [[puff]] and {{class|blood}} actors.''' If set, the actor's [[Actor pointers|'''target''']] pointer is set to the actor who fired the attack (if it's a puff) or the bleeding actor (if this is a blood actor). [[Classes:BFGExtra|'''BFG Spray''']] is also affected by this flag like it were a puff.
+* '''{{LE|ALLOWPARTICLES}}'''
+:'''Can be used both on [[puff]] and {{class|blood}} actors.''' This flag allows the puff/blood sprite to be replaced by [[particles]]. 
+* '''{{LE|PUFFONACTORS}}'''
+:A puff with this flag, when spawned by [[hitscan]] or melee attacks, will enter its XDeath [[Actor states|state]] upon hitting a bleeding actor. Note, this doesn't affect railgun puffs; those need the {{flag|ALWAYSPUFF}} to achieve the same effect. See [[Puff#Puff_states_and_flags|'''puff states and flags''']] for details.
+* '''{{LE|ALWAYSPUFF}}'''
+:Allows puffs spawned by bullet or melee attacks to spawn even when nothing was hit and the attack ended in mid-air. The puff will enter its Crash [[Actor states|state]], if present (otherwise Spawn is used).
+:For railgun puffs, this instead will force the puff to enter its XDeath state (if present) when the attack hit a shootable bleeding actor. See [[Puff#Puff_states_and_flags|'''puff states and flags''']] for details.
+* '''{{LE|FORCEDECAL}}'''
+:A puff with this flag has its [[decal]] used instead of the one defined by the weapon.
+* '''{{LE|NODECAL}}'''
+:The attack using a puff with this flag will not generate [[Decal|decals]] on geometry.
+
+=== Miscellaneous ===
+* '''{{LE|ICESHATTER}}'''
+:An actor with this flag, when causing damage, can shatter ice corpses regardless of damage type. Note that initially the damage which kills and freezes the actor at first will not shatter it, but any damage done afterwards will.
+* '''{{LE|DROPPED}}'''
+:Actor always acts as if it was dropped.  Dropped [[item]]s have two properties: They never respawn, and they will be [[Crusher|crushed]] by doors and moving sectors, unless they have the '''{{Flag|DONTGIB}}''' flag.
+* '''{{LE|ISMONSTER}}'''
+:Actor is classed as a [[monster]].
+: &amp;rarr; Automatically given by the '''{{Property|Monster}}''' [[Actor properties#Flag_combos|combo]]
+* '''{{LE|CORPSE}}'''
+:Actor is a corpse. For normal actors there is no need to set this but in combination with the '''Crash''' state it might be useful.
+* '''{{LE|COUNTITEM}}'''
+:Counts toward [[item]] percentage.
+:Changing this flag dynamically won't reduce the total item count on the level. Use [[A_ChangeCountFlags]] if there's a need to modify this flag at runtime.
+* '''{{LE|COUNTKILL}}'''
+:Counts toward kill percentage.
+:Changing this flag dynamically won't reduce the monster item count on the level. Use [[A_ChangeCountFlags]] if there's a need to modify this flag at runtime.
+: &amp;rarr; Automatically given by the '''{{Property|Monster}}''' [[Actor properties#Flag_combos|combo]]
+* '''{{LE|COUNTSECRET}}'''
+:Counts toward [[secret]] percentage.
+:Changing this flag dynamically won't reduce the total secret count on the level. Use [[A_ChangeCountFlags]] if there's a need to modify this flag at runtime.
+* '''{{LE|NOTDMATCH}}'''
+:Actor is not spawned in [[deathmatch]] games.
+* '''{{LE|NONSHOOTABLE}}'''
+:Actor cannot be hit (projectiles pass through).
+* '''{{LE|DROPOFF}}'''
+:Actor can walk over ledges/taller steps. This would allow a [[monster]] to travel through a map with impunity.
+: &amp;rarr; Automatically given by the '''{{Property|Projectile}}''' [[Actor properties#Flag_combos|combo]]
+* '''{{LE|SYNCHRONIZED}}'''
+:Normally all actors spawned at level start are slightly randomized to avoid having all of them have the exact same appearance at the same time. This flag disables that randomization.
+* '''{{LE|ALWAYSFAST}}''' 
+:The [[monster]] with this flag does not take a random number of steps before attempting an attack. In addition, the reaction time is reduced and [[actor states]] marked as FAST will have their durations halved.
+* '''{{LE|NEVERFAST}}''' 
+:The [[monster]] with this flag will always take a random number of steps before attempting to attack.  Opposite of ALWAYSFAST.
+* '''{{LE|OLDRADIUSDMG}}'''
+:Use old radius damage code (for [[Classes:ExplosiveBarrel|barrels]] and [[Classes:BossBrain|boss brain]]). Actors with this flag do not take z-height into account when calculating radius damage.
+* '''{{LE|USESPECIAL}}''' 
+:The actor's special will be triggered when the [[player]] presses use while facing this actor. The player will be considered the activator of the special.
+:'''Note:''' This default behavior can be modified with the {{Property|Activation}} property.
+* '''{{LE|BUMPSPECIAL}}'''
+:The actor's special will be triggered when the [[player]] touches this actor. The player will be considered the activator of the special.
+:'''Note:''' This default behavior can be modified with the {{Property|Activation}} property.
+* '''{{LE|BOSSDEATH}}''' 
+:Makes [[A_FreezeDeathChunks]] and [[A_Burst]] call [[A_BossDeath]].
+* '''{{LE|NOTAUTOAIMED}}'''
+:The actor is ignored by [[autoaim]]. Can be overridden by setting {{CVAR|C|cl_doautoaim}} to true.
+* '''{{LE|NOMENU}}'''
+:A [[player class]] with this flag set is excluded from being listed in the [[class selection menu]].
+* '''{{LE|PICKUP}}'''
+:Tells the engine whether or not this class can pick up [[item]]s. Mostly useful for preventing morphed [[player]]s from using items.
+* '''{{LE|TOUCHY}}'''
+:The actor dies at the slightest touch. This includes contact with another actor, sudden contact with the ceiling (closing door, raising elevator, floor or ceiling crusher, and so on), falling, and being blasted by an effect such as the {{Class|ArtiBlastRadius|disc of repulsion}}.
+* '''{{LE|VULNERABLE}}'''
+:An actor with this flag can be affected by area-of-effect damage. Only matters for actors without the {{Flag|SHOOTABLE}} flag.
+* '''{{LE|NOTONAUTOMAP}}'''
+:An actor with this flag will not be shown on the [[automap]] while the {{Class|PowerScanner|scanner powerup}} is in effect. The cheat code can still reveal the actors however.
+* '''{{LE|WEAPONSPAWN}}'''
+:Actors with this flag are affected by cooperative weapon spawning filter {{CVAR|C|sv_noweaponspawn|DMFlag}}. Actors inheriting from {{Class|Weapon}} will have this set.
+
+=== Limited use ===
+* '''{{LE|GETOWNER}}''' 
+:Only useful with [[FastProjectiles]]. By default, the actors spawned by the FastProjectiles will set the projectile as the target pointer. Use this flag to get the original shooter as the owner for proper damage methods.
+* '''{{LE|SEESDAGGERS}}'''
+:Strife specific flag. Any actor with this flag will react to a player using Strife's dagger which normally doesn't alert monsters. You can clear it from Strife's [[Classes:Acolyte|Acolytes]] though to prevent them from responding to dagger attacks.
+* '''{{LE|INCOMBAT}}'''
+:Used for Strife's dialog system.  An actor that has this flag set will not respond to the player's attempts to converse, even if it has a ConversationID set.  Not particularly useful to have an actor spawn with, but can be set later if the actor should become hostile to the player.
+* '''{{LE|NOCLIP}}'''
+:Actor is totally excluded from collision detection and can walk through walls etc.
+* '''{{LE|NOSECTOR}}'''
+:Object is not linked into the sector. This makes it invisible and excludes it from certain physics checks. It is recommended not to use this flag due to its side effects. There are better ways to make an actor invisible, e.g. the '''{{Flag|INVISIBLE}}''' flag.
+* '''{{LE|ICECORPSE}}'''
+:Actor is a frozen corpse.
+* '''{{LE|JUSTHIT}}'''
+:Try to attack right back (used in monster AI, probably not particularly useful in actor definitions).
+* '''{{LE|JUSTATTACKED}}'''
+:Take at least one step before attacking (also not particularly useful in an actor definition).
+* '''{{LE|TELEPORT}}'''
+:Used when teleporting an actor. When something is teleported, this flag is set, it gets moved to its new position, it's checked for collision, then the flag is cleared (again, not useful for actor definition).
+* '''{{LE|BLASTED}}'''
+:Actor takes temporary damage from impact. Related to the [[Classes:ArtiBlastRadius|Disc of Repulsion]]. Not useful in actor definitions.
+* '''{{LE|EXPLOCOUNT}}'''
+:A missile with this flag that should normally explode only does so if its increased &lt;tt&gt;special2&lt;/tt&gt; field is greater than its &lt;tt&gt;special1&lt;/tt&gt; field.
+* '''{{LE|SKULLFLY}}'''
+:Actor is a charging monster. Like a '''{{Flag|MISSILE}}''', its movement will not be damped, and it will cause damage on impact. In addition, the actor will not go into pain states, will also be blocked by items, and on impact '''SKULLFLY''' will be cleared and the actor will return to its initial state. It can be dynamically set like any ordinary flag, but the actor needs to have a velocity for it to do anything. [[A_SkullAttack]] and [[A_MinotaurCharge]] set this flag along with thrusting the actor.
+* '''{{LE|NOAUTOSKULLFLY}}''' {{git|d527829}}
+:Disabled turning off +SKULLFLY, stopping the actors' velocity, and putting them back to the See or idle state when they slam unto something.
+* '''{{LE|RETARGETAFTERSLAM}}'''
+:A charging actor with this flag set enters the Idle [[Actor_states#States|state]] instead of the See state upon slamming into other actors. This flag is only used with the {{Class|LostSoul|lost soul}} to restore its original behavior of reacquiring its target upon slamming into other actors.
+* '''{{LE|ONLYSLAMSOLID}}'''
+:A charging actor with this flag will only collide with solid actors, instead of also colliding with non-solid actors like items. Solid actors are actors that have {{flag|SOLID}} or {{flag|SHOOTABLE}}.
+* '''{{LE|SPECIALFIREDAMAGE}}'''
+:A [[projectile]] with this flag that causes fire damage will not inflict a fire death when killing an actor.
+* '''{{LE|SPECIALFLOORCLIP}}'''
+:An actor with this flag is considered to use the floor clipping feature to achieve special effects, such as the {{Class|WraithBuried|buried reiver}} raising from the ground; so its floorclip is not adjusted by the engine depending on which [[TERRAIN|terrain]] type it is standing.
+* '''{{LE|SUMMONEDMONSTER}}'''
+:This flag's use is limited to the {{Class|Minotaur}} actor class and derivatives; it basically alters the outcome of the functions exclusive to that class such as [[A_MinotaurDecide]], resulting in minor behavioral changes. The only actor class that makes use of this flag is {{Class|MinotaurFriend}}.
+* '''{{LE|SPECIAL}}'''
+:Tells the engine that this actor can be picked up. The base class {{Class|SpectralMonster}} has a special use for this flag that allows actors inheriting from it to hurt the player when they come in contact with said actors. Unsetting this on inventory-derived classes does nothing, as the engine will automatically assign this flag for all defined inventory.
+* '''{{LE|NOSAVEGAME}}'''
+:Actor is not stored in [[savegame]]s. As there is no record of the actor's existence, it would be missing from the game upon loading a savegame. So it is best, if anything, to use this flag with non-interactive actors, since they are inconsequential to the game world.
+
+==== Boss event triggers ====
+* '''{{LE|E1M8BOSS}}'''
+:When all actors with this flag in E1M8 are killed, the death sequence that lowers all floors with a tag of 666 will trigger.
+* '''{{LE|E2M8BOSS}}'''
+:When all actors with this flag in E2M8 are killed, the map will automatically end.
+* '''{{LE|E3M8BOSS}}'''
+:When all actors with this flag in E3M8 are killed, the map will automatically end like in E2M8.
+* '''{{LE|E4M6BOSS}}'''
+:When all actors with this flag in E4M6 are killed, all sectors with a tag of 666 will quickly open.
+* '''{{LE|E4M8BOSS}}'''
+:When all actors with this flag in E4M8 are killed, all the floors with a tag of 666 will lower to the closest floor.
+* '''{{LE|MAP07BOSS1}}'''
+:When all actors with this flag are killed on MAP07, all floors with a tag of 666 will lower to the closest floor.
+* '''{{LE|MAP07BOSS2}}'''
+:When all actors with this flag are killed on MAP07, all floors with a tag of 667 will [[Floor_RaiseByTexture|raise by the height of the lowest texture]].
+
+====Internal flags====
+These flags are used internally by GZDoom. But have also been exposed to ZScript to be usable for scripts too. These flags cannot be added directly to an actors' definition.
+
+* '''{{LE|INCHASE}}'''
+:Used by [[A_Chase]] and [[A_Look]]/[[A_LookEx]] to prevent infinite recursion if the actor is already running the A_Chase function.
+* '''{{LE|UNMORPHED}}'''
+: Marks the player or monster as being the original, unmorphed version of another player/monster.
+* '''{{LE|FLY}}'''
+:Marks players as currently being able to fly, for as long as they have the [[Classes:PowerFlight| flight powerup]].
+* '''{{LE|ONMOBJ}}'''
+:The actor is currently standing on top of another actor.
+* '''{{LE|ARGSDEFINED}}'''
+:If the actor has args defined in its' DECORATE/ZScript definition, then this flag makes GZDoom ignore the map defined args for the actor.
+* '''{{LE|NOSIGHTCHECK}}'''
+:Used by [[Thing_Hate]] types 2, 4, and 6, to make monsters attack other actors they've been set to hate, even if they currently have no line of sight to them.
+* '''{{LE|CRASHED}}'''
+:The actor has entered its' [[Actor_states#Crash| Crash]] state.
+* '''{{LE|WARNBOT}}'''
+:Used to make projectiles warn [[bots]].
+* '''{{LE|HUNTPLAYERS}}'''
+:Used by Thing_Hate types 2 and 4, to make monsters chase other monsters with a certain TID, but also still be able to chase players.
+* '''{{LE|NOHATEPLAYERS}}'''
+:Used by Thing_Hate types 5 and 6, to make monsters only chase other monsters, and ignore players.
+* '''{{LE|SCROLLMOVE}}'''
+:Marks the actor as being thrust by a scrolling sector.
+* '''{{LE|VFRICITION}}'''
+:Used exclusively by [[A_PainAttack]] to make any monster with the FLOAT flag that called the function be thrust downwards once killed.
+* '''{{LE|BOSSSPAWNED}}'''
+:Used by the [[Classes:SpawnShot| boss cubes]] fired by the [[Classes:BossBrain| Icon of Sin]], to mark the monsters it spawns as having been spawned by the IoS.
+* '''{{LE|AVOIDINGDROPOFF}}'''
+:Used to make monsters avoid dropoffs.
+* '''{{LE|CHASEGOAL}}'''
+:Set by [[Thing_SetGoal]] if the "Don't Chase Target" parameter is set to true. To make the monster only follow its' patrol route but still be able to attack its' enemies.
+* '''{{LE|INCONVERSATION}}'''
+:Is turned on while the actor is engaging in conversation with the player.
+* '''{{LE|ARMED}}'''
+:Used by MBF to mark actors with the TOUCHY flag that are alive and have a See state, as being armed mines.
+* '''{{LE|FALLING}}'''
+:Does nothing.
+* '''{{LE|LINEDONE}}'''
+:Used by the deprecated [[A_LineEffect]] function to make the actor not be able to execute another special. After it executes a special that is not repeating.
+* '''{{LE|SHATTERING}}'''
+:Marks an actor as needing to forcibly shatter eventually after becoming an ice corpse.
+* '''{{LE|KILLED}}'''
+:Turned on when an actor dies, to mark it as having been killed. This does not necessarily mean that the actor is a corpse.
+* '''{{LE|BOSSCUBE}}'''
+:Used to mark boss cubes spawned by [[A_BrainSpit]] as such. To prevent the cubes from accelerating while they are frozen in place.
+* '''{{LE|INTRYMOVE}}'''
+:Turned on when the actor is running [https://github.com/ZDoom/gzdoom/blob/aea346f1f3bd85411ee9095099954c3dec554175/src/playsim/p_map.cpp#L2236 P_TryMove()].
+* '''{{LE|HANDLENODELAY}}'''
+:This flag is enabled right at the start of the [[ZScript_virtual_functions#Actor| PostBeginPlay() virtual]] of all actors, to make them obey [[Actor_states#State_keywords| the NoDelay state keyword]].
+* '''{{LE|FLYCHEAT}}'''
+:This flag along with the FLY flag is turned on if the player starts flying using the fly cheat.
+* '''{{LE|RESPAWNINVUL}}'''
+:Enables the invulnerability visual effect respawned players get in [[Deathmatch]] when sv_respawnprotect is on.
+
+====Deprecated flags====
+These flags should no longer be used. They are documented here for reference purposes.
+
+* '''{{LE|LOWGRAVITY}}''' {{deprecated}}
+:Actor is subject to low [[gravity]].
+:Superseded by the {{c|{{Property|Gravity}}}} actor property. Use &lt;code&gt;Gravity 0.125&lt;/code&gt; instead.
+* '''{{LE|QUARTERGRAVITY}}''' {{deprecated}}
+:Actor is subject to 1/4th of normal gravity.
+:This flag was only added for compatibility with certain [[Skulltag]] definitions. Use &lt;code&gt;Gravity 0.25&lt;/code&gt; instead.
+* '''{{LE|LONGMELEERANGE}}''' {{deprecated}}
+:When closer than 196 map units to its target, this monster does not start its missile attacks.
+:Superseded by the {{c|{{Property|MeleeThreshold}}}} actor property. Use &lt;code&gt;MeleeThreshold 196&lt;/code&gt; instead.
+* '''{{LE|SHORTMISSILERANGE}}''' {{deprecated}}
+:Has a limited missile attack range of 896 map units.
+:Superseded by the {{c|{{Property|MaxTargetRange}}}} actor property. Use &lt;code&gt;MaxTargetRange 896&lt;/code&gt; instead.
+* '''{{LE|HIGHERMPROB}}''' {{deprecated}}
+:Has a higher chance of performing a ranged attack.
+:Superseded by the {{c|{{Property|MinMissileChance}}}} actor property. Use &lt;code&gt;MinMissileChance 160&lt;/code&gt; instead.
+* '''{{LE|FIRERESIST}}''' {{deprecated}}
+:Actor takes one half of the normal damage from fire.
+:Superseded by the {{c|{{Property|DamageFactor}}}} actor property. Use &lt;code&gt;DamageFactor "Fire", 0.5&lt;/code&gt; instead.
+* '''{{LE|DONTHURTSPECIES}}''' {{deprecated}}
+:This is an alternate name for {{Flag|DONTHARMCLASS}}. This name has been deprecated because it is misleading, as its effect is unrelated to the actual definition of {{Property|Species}} in the ZDoom engine.
+* '''{{LE|FIREDAMAGE}}''' {{Deprecated}}
+:Actor inflicts fire damage.
+:Superseded by the {{c|{{Property|DamageType}}}} actor property. Use &lt;code&gt;DamageType "Fire"&lt;/code&gt; instead.
+* '''{{LE|ICEDAMAGE}}''' {{Deprecated}}
+:Actor inflicts ice damage.
+:Superseded by the {{c|{{Property|DamageType}}}} actor property. Use &lt;code&gt;DamageType "Ice"&lt;/code&gt; instead.
+* '''{{LE|MISSILEEVENMORE}}''' {{deprecated}}
+:Increases the probability of a missile attack from farther away even more than MISSILEMORE. Both flags can be combined for extra aggressive monsters.
+:Superseded by the {{c|{{Property|MissileChanceMult}}}} actor property. Use &lt;code&gt;MissileChanceMult 0.125&lt;/code&gt; instead.
+* '''{{LE|MISSILEMORE}}''' {{deprecated}}
+:Increases the probability of a missile attack from farther away, though less than MISSILEEVENMORE. Both flags can be combined for extra aggressive monsters.
+:Superseded by the {{c|{{Property|MissileChanceMult}}}} actor property. Use &lt;code&gt;MissileChanceMult 0.5&lt;/code&gt; instead.
+* '''{{LE|HERETICBOUNCE}}''' {{deprecated}}
+:Heretic-style bouncing (objects only bounce off planes).
+:Use &lt;code&gt;{{Property|BounceType}} "Heretic"&lt;/code&gt; or the following [[Actor_flags#Bouncing|flags]] instead: BOUNCEONFLOORS, BOUNCELIKEHERETIC.
+* '''{{LE|HEXENBOUNCE}}''' {{deprecated}}
+:Hexen-style bouncing (objects bounce off planes and walls).
+:Use &lt;code&gt;{{Property|BounceType}} "Hexen"&lt;/code&gt; or the following [[Actor_flags#Bouncing|flags]] instead: BOUNCEONWALLS, BOUNCEONFLOORS, ALLOWBOUNCEONACTORS.
+* '''{{LE|DOOMBOUNCE}}''' {{deprecated}}
+:ZDoom-style bouncing (like Hexen but stops when losing a certain amount of momentum).
+:Use &lt;code&gt;{{Property|BounceType}} "Doom"&lt;/code&gt; or the following [[Actor_flags#Bouncing|flags]] instead: BOUNCEONWALLS, BOUNCEONFLOORS, ALLOWBOUNCEONACTORS, BOUNCEAUTOOFF.
+* '''{{LE|FASTER}}''' {{deprecated}}
+:The [[monster]] with this flag had the duration of the states in its See state sequence halved in nightmare skill or with fast monsters on. This flag has no effect anymore and the {{c|Fast}} [[actor states|state keyword]] should be used instead.
+* '''{{LE|FASTMELEE}}''' {{deprecated}}
+:The duration of the states in the the [[monster]]'s Melee state sequence was halved in nightmare mode or with fast monsters on. This flag has no effect anymore and the {{c|Fast}} [[actor states|state keyword]] keyword should be used instead.
+
+== Additional flags ==
+{{warning|In contrast to [[DECORATE]], flag prefixes are NOT optional in [[ZScript]]! If a flag is defined in any other class than the base Actor class itself, the relevant class name must be provided as the flag's prefix: for example, since the INVBAR flag is defined in the [[Inventory]] class, it must be set as &lt;code&gt;+Inventory.INVBAR&lt;/code&gt; (simply &lt;code&gt;+INVBAR&lt;/code&gt; will NOT work.)}}
+Some subclasses of [[Classes:Actor|Actor]] define their own additional flags. They are listed here:
+=== [[Classes:Inventory|Inventory]] ===
+{{:Inventory flags}}
+=== [[Classes:Weapon|Weapons]] ===
+{{:Weapon flags}}
+=== [[Classes:PowerSpeed|PowerSpeed]] ===
+{{:PowerSpeed flags}}
+=== [[Classes:PlayerPawn|Players]] ===
+{{:Player flags}}
+
+=== Skulltag specific flags ===
+
+For Skulltag specific flags see [[Skulltag features#Skulltag Actor Flags|Skulltag actor Flags]].
+
+[[Category:DECORATE]][[Category:Editing concepts]][[Category:Editing references]]</text>
+    <sha1>lv6mugbosohmtjdonrneao2evoby3p0</sha1>
+  </revision>
+</page>

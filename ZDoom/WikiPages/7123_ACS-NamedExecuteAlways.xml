@@ -1,0 +1,76 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>ACS NamedExecuteAlways</title>
+  <ns>0</ns>
+  <id>7123</id>
+  <revision>
+    <id>40212</id>
+    <parentid>40203</parentid>
+    <timestamp>2015-06-12T18:14:06Z</timestamp>
+    <contributor>
+      <username>Blue Shadow</username>
+      <id>2021</id>
+    </contributor>
+    <minor />
+    <comment>/* Examples */</comment>
+    <origin>40212</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="2282" sha1="ic4uy6ijxbqqippbndsmq4jw7pa5ogy" xml:space="preserve">{{DISPLAYTITLE:ACS_NamedExecuteAlways}}
+
+bool '''ACS_NamedExecuteAlways''' (string ''script'', int ''map'', int ''s_arg1'', int ''s_arg2'', int ''s_arg3'')&lt;br /&gt;
+'''ACS_NamedExecuteAlways''' (string ''script'', int ''map'', int ''s_arg1'', int ''s_arg2'', int ''s_arg3'')
+
+== Usage ==
+Variant of [[ACS_ExecuteAlways]] for [[named script]]s.
+
+There is both an [[ACS]] and a [[DECORATE]] version of this function. Both behave identically.
+
+However, it is not available as an [[action special]]: to call named scripts from a a line or thing [[special]], you have to use the non-named variant ([[ACS_ExecuteAlways]]) in [[UDMF]], with the &lt;tt&gt;arg0str&lt;/tt&gt; custom argument set to the name of the script &amp;mdash; this will override the first parameter.
+
+=== Parameters ===
+* ''script'': Name of the script to execute 
+* ''map'': Map which contains the script 
+* ''s_arg1'': First argument passed to the script 
+* ''s_arg2'': Second argument passed to the script 
+* ''s_arg3'': Third argument passed to the script 
+
+=== Return value ===
+Returns true if the script could be executed successfully, false otherwise. [[Deferred script]]s are always considered successful.
+
+==Examples==
+This example gives a one-time full heal to a player when nearly dead, if the player picked a special item. The item runs the script, while the script monitors players status and activates when players health is reduced to 1.
+
+Decorate Item:
+ Actor AvoidDeath : {{Class|CustomInventory}}
+ {
+   {{Property|Inventory.MaxAmount}} 0
+   +{{flag|INVENTORY.AUTOACTIVATE}}
+   States
+   {
+   Use:
+     TNT1 A 0 [[ACS_NamedExecuteAlways]]("AvoidDeathScript", 0)
+     [[Stop]]
+   }
+ }
+ACS Script:
+ script "AvoidDeathScript" (void)
+ {
+   [[SetPlayerProperty]](0, 1, {{const|PROP_BUDDHA}});  // Sets buddha mode for player
+   while(1) // Permanent Loop
+   {
+     if([[GetActorProperty]](0, {{const|APROP_HEALTH}}) &lt;= 1) // Checks if the player is wounded enough to heal
+     {
+       [[SetPlayerProperty]](0, 0, {{const|PROP_BUDDHA}}); // Remove the buddha mode
+       [[GiveInventory]]("{{Class|Health}}", 100);        // and heal the player
+       [[terminate]];
+     }
+     [[delay]](1);
+   }
+ }
+
+{{DEFAULTSORT:ExecuteAlways}}[[Category:ACS Script functions]][[Category:Decorate Script functions]]
+
+{{script functions}}</text>
+    <sha1>ic4uy6ijxbqqippbndsmq4jw7pa5ogy</sha1>
+  </revision>
+</page>

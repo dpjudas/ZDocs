@@ -1,0 +1,44 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>LineSide</title>
+  <ns>0</ns>
+  <id>931</id>
+  <revision>
+    <id>35823</id>
+    <parentid>21237</parentid>
+    <timestamp>2013-02-10T23:39:12Z</timestamp>
+    <contributor>
+      <username>Deded007</username>
+      <id>1392</id>
+    </contributor>
+    <minor />
+    <comment>formatting</comment>
+    <origin>35823</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="991" sha1="gbqd5h0gi5zp57xk78om2k9e5yqo0jx" xml:space="preserve">int '''LineSide''' (void)
+
+==Usage==
+
+Returns an integer value based on the side of the line a script was activated from.  For readability there are defines in zdefs.acs as follows:
+
+*'''LINE_FRONT''' = 0
+*'''LINE_BACK''' = 1
+
+This allows you to carry out actions depending on which way the player crosses the line.
+
+==Examples==
+
+This script creates a one-way corridor. It uses a sequence of lines, all set to be repeatable and activated when walked over. They activate this script, script using the parameter which is the [[definitions|direction]] the player would be going in if they were walking from the front of the line over to the back.
+
+ script 1 (int angle)
+ {
+ 	if ([[LineSide]]() == {{const|LINE_BACK}})
+ 		[[ThrustThing]](angle, 10, 0, 0);
+ }
+
+If the player crosses the line normally, e.g. front to back, they will not be hindered. If they try to cross it in reverse, e.g. back to front, they will be thrust away in the correct direction.
+
+[[category:ACS Information functions]]</text>
+    <sha1>gbqd5h0gi5zp57xk78om2k9e5yqo0jx</sha1>
+  </revision>
+</page>

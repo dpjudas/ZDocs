@@ -1,0 +1,67 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>Compile GZDoom on Mac OS X</title>
+  <ns>0</ns>
+  <id>9303</id>
+  <revision>
+    <id>48406</id>
+    <parentid>46452</parentid>
+    <timestamp>2021-03-17T00:40:09Z</timestamp>
+    <contributor>
+      <username>PaganRaven</username>
+      <id>909</id>
+    </contributor>
+    <minor />
+    <comment>Added link to new wiki article</comment>
+    <origin>48406</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="3369" sha1="4dm8a8gp5tvrt8m6i0od1vrta375dit" xml:space="preserve">This guide is for the compilation of ''GZDoom 3.7.0'' and above (including the git dev builds).  
+
+{{note|*this guide has been written with ''Homebrew'' in mind; if it's the first time for you, be very careful, as it can pollute the system if used improperly. This guide contains only the bare minimum needed.}}
+{{note|For builds above GZDoom 4.5.0, please follow [https://zdoom.org/wiki/Compile_GZDoom_on_Mac_OS_X_11.2.2 this guide].}}
+
+Compiling GZDoom on Mac OS X may seem like a daunting task, but it's actually pretty similar to [[Compile GZDoom on Linux|the process for Linux]].
+
+== Requirements ==
+* A Mac computer supporting OpenGL 3.3 and above (a list is available [https://support.apple.com/en-us/HT202823 here])
+* Mac OS X 10.11 El Capitan and above (it's possible to make the executable compatible with OS X 10.9 Mavericks)
+* Xcode 8 and above, the latest one is available [https://developer.apple.com/xcode/ here] (requires free registration)
+** Xcode Command Line Tools, which contains the compilers and git tools
+* Homebrew (this must be installed after Xcode Command Line Tools)
+* CMake 2.8.7 or later, available [https://cmake.org/download/ here]
+* ''libjpeg''
+* ''FluidSynth'', ''OpenAL-Soft'', ''libsndfile'' and ''mpg123'' (note that OpenAL-Soft is different from the ''OpenAL'' framework already provided by Apple, not compatible with GZDoom).
+
+== Install dependencies ==
+In case you don't have ''Xcode Command Line Tools'', this can be installed with this command line on the terminal:
+&lt;pre&gt;xcode-select --install&lt;/pre&gt;
+
+For Homebrew, just follow the instructions at ''Install Homebrew'' section [https://brew.sh/ here].
+
+To install the jpeg and sound packages, copy and paste the following to the terminal:
+&lt;pre&gt;
+brew install jpeg-turbo fluid-synth openal-soft libsndfile mpg123
+&lt;/pre&gt;
+
+If in your Homebrew enviroment the package &lt;tt&gt;jpeg&lt;/tt&gt; is already installed, then &lt;tt&gt;jpeg-turbo&lt;/tt&gt; can be omitted, as it's equivalent.
+
+== Source code ==
+
+It is recommended that you use a recent version from the [[Git repository]] to compile, but you may use an older version's source from the {{plainlink|[https://zdoom.org/downloads ZDoom Downloads Page]}} if desired.
+
+== Configuring with CMake ==
+
+When you run the CMake application, you will be greeted with a window asking for a source code path and a build directory. It is recommended that the build directory is created inside the source code.
+
+After you click Configure, you will end up having to tell CMake where the sound libraries are located, so some options must be changed  (you may need to switch to advanced view to see these options). First, disable &lt;tt&gt;DYN_OPENAL&lt;/tt&gt; and click Configure again, then change the &lt;tt&gt;OPENAL_INCLUDE_DIR&lt;/tt&gt; entry to &lt;tt&gt;/usr/local/opt/openal-soft/include/AL&lt;/tt&gt; and the &lt;tt&gt;OPENAL_LIBRARY&lt;/tt&gt; one to &lt;tt&gt;/usr/local/opt/openal-soft/lib/libopenal.dylib&lt;/tt&gt; .
+Last step in case you need the compatibility with OSX 10.9: set &lt;tt&gt;CMAKE_OSX_DEPLOYMENT_TARGET&lt;/tt&gt; to "10.9".
+
+After all of this, click "Configure" one more time and you should be good. When you click "Generate", select the &lt;tt&gt;Unix Makefiles&lt;/tt&gt; option.
+
+== Compiling ==
+Open a terminal and cd to the build directory.  Type "make" to compile.  Assuming everything was done correctly you should have a working GZDoom application bundle.
+
+[[Category:Guides]][[Category:Technical aspects]]</text>
+    <sha1>4dm8a8gp5tvrt8m6i0od1vrta375dit</sha1>
+  </revision>
+</page>

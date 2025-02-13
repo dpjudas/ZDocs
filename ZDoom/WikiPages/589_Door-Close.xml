@@ -1,0 +1,67 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>Door Close</title>
+  <ns>0</ns>
+  <id>589</id>
+  <revision>
+    <id>43888</id>
+    <parentid>40746</parentid>
+    <timestamp>2017-02-26T17:49:39Z</timestamp>
+    <contributor>
+      <username>Gez</username>
+      <id>1283</id>
+    </contributor>
+    <minor />
+    <comment>/* Conversions from linedef types */</comment>
+    <origin>43888</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="1897" sha1="3x0zqnzxgj2luixxhv4u1p2j3ceasvy" xml:space="preserve">{{DISPLAYTITLE:Door_Close}}
+{{Special|10|tag, speed, lighttag|Door|Close}}
+
+* ''tag'': Tag of affected sector 
+* ''speed'': How quickly the door closes 
+* ''lighttag'': Tag of sector to perform a gradual lighting effect in
+
+Lowers the ceiling of all affected sectors to the floor. If ''tag'' is 0, then the sector on the line's back side is used.
+
+If ''lighttag'' is non-zero a gradual lighting effect is done in the tagged sectors. The light is gradually changed between the darkest neighboring sector when the door is fully closed and the brightest neighboring sector when the door is fully open.
+
+==Examples==
+This script activates a trap of closing a door with tag 12, darkens sector 13 to its original value, colorises sectors 13 and 14 (the room) to dark red and plays an ambient sound.
+ script 1 (void)
+ {
+   [[Door_Close]](12, 32, 13);
+   [[Sector_SetColor]](13, 200, 50, 50, 0);
+   [[Sector_SetColor]](14, 200, 50, 50, 0);
+   [[AmbientSound]]("EvilLaugh", 127);
+ }
+
+== Conversions from linedef types ==
+The following Doom map format types can be converted as Door_Raise:
+{| {{prettytable}}
+!Type!!Conversion!!Trigger
+|-
+|{{icon|Doom}} 3: W1 Door Close||Door_Close (tag, {{xlat|D_SLOW}})||Player Cross
+|-
+|{{icon|Doom}} 42: SR Door Close||Door_Close (tag, {{xlat|D_SLOW}})||Player Use, Repeatable
+|-
+|{{icon|Doom}} 50: S1 Door Close||Door_Close (tag, {{xlat|D_SLOW}})||Player Use
+|-
+|{{icon|Doom}} 75: WR Door Close||Door_Close (tag, {{xlat|D_SLOW}})||Player Cross, Repeatable
+|-
+|{{icon|Doom}} 107: WR Door Close||Door_Close (tag, {{xlat|D_FAST}})||Player Cross, Repeatable
+|-
+|{{icon|Doom}} 110: W1 Door Close||Door_Close (tag, {{xlat|D_FAST}})||Player Cross
+|-
+|{{icon|Doom}} 113: S1 Door Close||Door_Close (tag, {{xlat|D_FAST}})||Player Use
+|-
+|{{icon|Doom}} 116: SR Door Close||Door_Close (tag, {{xlat|D_FAST}})||Player Use, Repeatable
+|}
+
+==See also==
+
+*[[Door Open]]
+*[[Door Raise]]</text>
+    <sha1>3x0zqnzxgj2luixxhv4u1p2j3ceasvy</sha1>
+  </revision>
+</page>

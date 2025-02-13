@@ -1,0 +1,52 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>Classes:LinearValueInterpolator</title>
+  <ns>0</ns>
+  <id>9748</id>
+  <revision>
+    <id>53078</id>
+    <parentid>51088</parentid>
+    <timestamp>2024-09-12T23:02:08Z</timestamp>
+    <contributor>
+      <username>Jekyll Grim Payne</username>
+      <id>2175</id>
+    </contributor>
+    <origin>53078</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="1868" sha1="8ele79xwrpw2qwe2t8h38fz90duinyc" xml:space="preserve">{{ZScriptNote}}
+
+'''LinearValueInterpolator''' is a data-scoped class that allows for gradual change of a value, which can be used for something like a health indicator lerping over a few tics instead of changing its value instantly, or a similar effect with a graphical element.
+
+'''LinearValueInterpolator''' interpolates a value linearly, moving from start value to the target value by taking equally-sized steps. Another similar class is '''{{class|DynamicValueInterpolator}}''', which interpolates with easing-in/easing-out effect.
+
+Note, both interpolators update every [[tic]] regardless of the scope they were created from, so in UI scope this method will not be particularly smooth, since it'll still be tied to the default 35-tic framerate.
+
+== Fields ==
+*int '''mCurrentValue''' - The current value contained in the interpolator
+*int '''mMaxChange''' - The maximum value from from the original value to the target value per interpolator's update
+
+== Methods ==
+=== Static ===
+{{c|static '''LinearValueInterpolator''' Create(int ''startval'', int ''maxchange'')}}
+
+This function instantiates a new interpolator. It should be cast to a local field in the HUD (or other UI) class in order to interact with it.
+
+Arguments:
+*int '''startval''' - The original value
+*int '''maxchange''' - The maximum value from from the original value to the target value per interpolator's update
+
+=== Dynamic ===
+* {{c|void '''Update'''(int ''destvalue'')}}
+:Updates the interpolator, setting a new target value for it to move towards from the current value. The new target value is defined by the '''{{c|destvalue}}''' argument.
+
+* {{c|int '''GetValue'''()}}
+:Returns the current value in the interpolator (contained in the {{c|mCurrentValue}} field).
+
+* {{c|void '''Reset'''(int ''value'')}}
+:Sets the interpolator's current value to '''{{c|value}}'''.
+
+
+[[Category:ZScript]]</text>
+    <sha1>8ele79xwrpw2qwe2t8h38fz90duinyc</sha1>
+  </revision>
+</page>

@@ -1,0 +1,144 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>Translation</title>
+  <ns>0</ns>
+  <id>3298</id>
+  <revision>
+    <id>52604</id>
+    <parentid>51151</parentid>
+    <timestamp>2024-05-06T23:17:09Z</timestamp>
+    <contributor>
+      <username>Jekyll Grim Payne</username>
+      <id>2175</id>
+    </contributor>
+    <comment>added mention of TranslationID in 4.12</comment>
+    <origin>52604</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="9674" sha1="ly6a119u5dqcpgewxv0h5ayt8h6z157" xml:space="preserve">{{Note|This article is about color translations. For language translations, see [[internationalization]] and [[LANGUAGE]].}}
+The '''{{Property|Translation}}''' [[Actor properties|actor property]] or the same keyword in [[TEXTURES]] can be used to redefine the colors of an actor's sprite. '''Translation''' may be given either a numeric value representing one of the current IWAD's standard translations, a string value representing one of ZDoom's built-in translations (currently only "Ice"), a custom translation name as defined in [[TRNSLATE]], or a comma-delimited set of string values describing a custom translation (using the same format as in [[TRNSLATE]], just defining the translation itself directly). 
+
+Color translations can also be applied to an actor dynamically:
+* ZScript/DECORATE: 
+:calling [[A_SetTranslation|A_SetTranslation("&lt;translation name&gt;")]] on an actor will apply a translation defined in the [[TRNSLATE]] lump.
+:[[A_OverlayTranslation]] can apply a TRNSLATE-defined translation to a weapon sprite.
+* [[ACS]]: the [[Thing_SetTranslation]] [[Action_specials|action special]] can apply a translation to the actor.
+* ZScript only: &lt;code&gt;translation&lt;/code&gt; is an {{c|uint}}-type Actor field that can be modified directly.
+:A TRNSLATE translation can be applied to it by calling &lt;code&gt;&lt;actor pointer&gt;.translation = Translation.GetID("&lt;translation name&gt;")&lt;/code&gt;
+:The contents of the translation field can be copied from one actor to another: &lt;code&gt;&lt;actor pointer 1&gt;.translation = &lt;actor pointer 2&gt;.translation&lt;/code&gt;. An actor's translation can also be stored in a custom {{c|uint}} field {{deprecated}}, for example, to be later reset. Starting with GZDoom 4.12, the type must be {{c|TranslationID}}, ''not'' {{c|uint}}.
+
+Translations can only be created dynamically in ACS by using [[CreateTranslation]]. ZScript is limited to applying translations from TRNSLATE or copying them between actors.
+
+'''Note on truecolor graphics:''' Applying ''any'' translation to a graphic will forcefully palettize it to the game's current [[PLAYPAL]], and it can't be reverted back to its truecolor form afterwards. As such, applying color translations to truecolor graphics may be undesirable.
+
+== Translation strings ==
+===Palette range to palette range===
+Custom translations are defined by a simple syntax. A translation block consists of an original color range from the palette, followed by the "equal" sign, followed by the destination range. A range, in turn, is defined by its first color index, the "colon" sign, then the last color index. The ranges do not need to have the same length. Several translation blocks can be listed in a single translation, separated by comma.
+ {{Property|Translation}} "original_start:original_end=destination_start:destination_end"
+ [[CreateTranslation]] (number, original_start:original_end=destination_start:destination_end);
+
+=== Direct color translations ===
+It is possible to use directly RGB values instead of a palette color range for the destination (the original colors still need to be a paletted range). The destination range is defined by two RGB triplets (of integer values between 0 and 255), within square brackets.
+ {{Property|Translation}} "original_start:original_end=[rs,gs,bs]:[re,ge,be]"
+ [[CreateTranslation]] (number, original_start:original_end=[rs,gs,bs]:[re,ge,be]);
+
+=== Desaturated color translations ===
+In [[DECORATE]], [[TEXTURES]], and [[ACS]] translation definitions, it is possible to use saturated or desaturated translations. The destination range is defined by two RGB triplets (of floating point values between 0.0 and 2.0), within square brackets, and the percentage symbol follows the equal symbol between the original and destination range.
+
+ {{Property|Translation}} "original_start:original_end=%[rs,gs,bs]:[re,ge,be]"
+ [[CreateTranslation]] (number, original_start:original_end=%[rs,gs,bs]:[re,ge,be]);
+
+For each palette entry in the original range, the destination color is calculated as follows:
+
+:translatedcolor = (rs,gs,bs) + grayscale(originalcolor) * (re-rs, ge-gs, be-bs)
+
+=== Blended translations ===
+Similar to the "Blend" effect available in [[TEXTURES]] composition. The colors in the range are converted to grayscale, then multiplied by the destination color, given as a single RGB triplet with values between 0 and 255 within square brackets. A hash sign ({{c|#}}) follows the equal symbol.
+
+ {{Property|Translation}} "original_start:original_end=#[r,g,b]"
+ [[CreateTranslation]] (number, original_start:original_end=#[r,g,b]);
+
+For each palette entry in the original range, the destination color is calculated as follows:
+
+:translatedcolor = grayscale(originalcolor) * (r, g, b)
+
+=== Tinted translations ===
+Similar to the "Tint" blend effect available in [[TEXTURES]] composition. The colors in the range are moved toward the destination color (expressed by an RGB triplet within square brackets) by amount in percent. An at sign {{c|@}} is placed between the equal sign and the opening bracket.
+ {{Property|Translation}} "original_start:original_end=@amount[r,g,b]"
+ [[CreateTranslation]] (number, original_start:original_end=@amount[r,g,b]);
+
+For each palette entry in the original range, the destination color is calculated as follows:
+
+:translatedcolor = originalcolor * (100-amount)% + (r, g, b) * amount%
+
+== Pre-set translations ==
+See the [[palette]] article for reference on each game's palette. Translations only work reliably on images that use the game palette stored in [[PLAYPAL]]. Please note that even PNGs with the exact same palette are not guaranteed to work correctly because some duplicate colors will not get mapped to the same index as in the source image. Therefore anything that is supposed to be translated should use graphics in Doom patch format.
+
+For cross-game mods, note that while Strife defines more preset translations than Doom or Heretic, ZDoom will only allow these to be used in Strife. In Doom or Heretic, using a preset value greater than 2 will result in an error at startup. In such a case, when replacing Strife actors such as Acolytes and Peasants, the provided translation values should be used instead of the preset number.
+
+=== Doom ===
+*0 turns green into grey (112:127=96:111)
+*1 turns green into brown (112:127=64:79)
+*2 turns green into red (112:127=32:47)
+
+=== Heretic ===
+*0 turns fern green into light brown (225:240=114:129)
+*1 turns fern green into red (225:240=145:160)
+*2 turns fern green into blue (225:240=190:205)
+
+=== Strife ===
+*0 turns tan into red (32:63=0:31, 128:143=64:79, 241:246=224:229, 247:251=241:245)
+*1 turns tan into rust (32:63=0:31, 128:143=176:191)
+*2 turns tan into grey (32:47=208:223, 48:63=208:223, 128:143=16:31)
+*3 turns tan into dark green (32:47=208:223, 48:63=208:223, 128:143=48:63)
+*4 turns tan into gold (32:63=0:31, 80:95=128:143, 128:143=80:95, 192:223=160:191)
+*5 turns tan into bright green, and white into bright green (32:63=0:31, 80:95=16:31, 128:143=96:111, 192:223=32:63)
+*6 turns tan into blue, and gold into red (32:63=0:31, 80:95=64:79, 128:143=144:159, 192=1, 193:223=1:31)
+
+=== Any ZDoom-supported game ===
+*"Ice" turns the sprite into the color that it would be if it was in its [[actor states|ice death]] state. The exact translation is calculated by the game depending on what colors are available in the palette to be the closest to light blue.
+
+==== Ice translation====
+The ice translation works like a blended translation in that the color is converted to grayscale first, on a scale from 0 (darkest) to 15 (lightest). This value is then used as an index to a color on a small palette of Hexen's blueish grey range:
+{| {{Prettytable}}
+! 0 !! 1 !! 2 !! 3 !! 4 !! 5 !! 6 !! 7 !! 8 !! 9 !! 10 !! 11 !! 12 !! 13 !! 14 !! 15
+|-
+| {{color|rgb(10,8,18)}} || {{color|rgb(15,15,26)}} || {{color|rgb(20,16,36)}} || {{color|rgb(30,26,46)}}
+| {{color|rgb(40,36,57)}} || {{color|rgb(50,46,67)}} || {{color|rgb(59,57,78)}} || {{color|rgb(69,67,88)}}
+| {{color|rgb(79,77,99)}} || {{color|rgb(89,87,109)}} || {{color|rgb(99,97,120)}} || {{color|rgb(109,107,130)}}
+| {{color|rgb(118,118,141)}} || {{color|rgb(128,128,151)}} || {{color|rgb(138,138,162)}} || {{color|rgb(148,148,172)}}
+|-
+|colspan=16|{{gradient|10, 8, 18|148, 148, 172|450}}
+|}
+
+The effect can be approximated by using a [[#Desaturated color translations|desaturated translation]] between its extremes, from (10,8,18) to (148,148,172).
+
+== Examples ==
+The files {{plainlink|{{c|[http://zdoom.org/files/examples/translation.zip translation.zip]}} and {{c|[http://zdoom.org/files/examples/translation-tud.zip translation-tud.zip]}}}} contain playable test maps illustrating the use of [[Thing_SetTranslation]] in ACS. A screenshot can be seen {{plainlink|[http://zdoom.org/gfx/translation-tud.png here]}}.
+
+This line changes the green color range into the into red color range when the Doom [[PLAYPAL]] is in use.
+  
+  Translation 2
+
+This line changes the green color range to the orange color range and the blue color range to the pink color range when the Doom PLAYPAL is in use.
+  
+  Translation "112:127=208:223", "192:207=16:31"
+
+This line changes the actor's colors to icy blue shades (or as close to icy blue shades as the current PLAYPAL allows).
+  
+  Translation "Ice"
+
+This line changes the actor to be completely red.
+
+  Translation "0:255=%[0,0,0]:[1,0,0]"
+
+== Voxels ==
+Translations are only supported for 2D graphics such as [[sprite]]s, [[texture]]s, [[flat]]s and for [[MODELDEF|3D models]]. They will not work correctly with [[voxel]]s. ({{forum|t=28250|Source}})
+
+== See also ==
+* [[Palette]]
+* [[TRNSLATE]]
+
+[[Category:Glossary]][[Category:Features]][[Category:DECORATE]][[Category:ACS]]</text>
+    <sha1>ly6a119u5dqcpgewxv0h5ayt8h6z157</sha1>
+  </revision>
+</page>

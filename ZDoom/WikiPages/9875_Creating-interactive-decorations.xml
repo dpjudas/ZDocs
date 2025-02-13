@@ -1,0 +1,67 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>Creating interactive decorations</title>
+  <ns>0</ns>
+  <id>9875</id>
+  <revision>
+    <id>52580</id>
+    <parentid>52579</parentid>
+    <timestamp>2024-05-03T15:07:31Z</timestamp>
+    <contributor>
+      <username>Jekyll Grim Payne</username>
+      <id>2175</id>
+    </contributor>
+    <origin>52580</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="1834" sha1="987yeiqnq5j2cx4rzy2qqzltkkg6839" xml:space="preserve">{{class|Actor|Actors}} can be made into decorations — not only [[Creating non-interactive decorations (ZScript)|non-interactive ones]], but also interactive ones.
+
+This is an example of a decoration that reacts to attacks and uses actions:
+ class Pulsar : Actor
+ {
+   Default
+   {
+     {{Property|Height}} 40;
+     {{Property|Radius}} 20;
+     +{{Flag|SHOOTABLE}} {{comment|Will react to being hit by attacks}}
+     {{Property|Painchance}} 255; {{comment|Will always enter its Pain state sequence when damaged}}
+     {{Property|PainSound}} "pulsar/pulse"; {{comment|Sound made when A_Pain is called}}
+     +{{Flag|NODAMAGE}} {{comment|Will not actually take any damage from being attacked but will still react}}
+     +{{Flag|NODAMAGETHRUST}} {{comment|Cannot be moved by damage}}
+     +{{Flag|BRIGHT}} {{comment|All sprites of this actor are drawn fullbright}}
+   }
+   States
+   {
+   Spawn:
+     HAX7 A -1; {{comment|This actor is not animated and shows only one sprite in its Spawn sequence}}
+     stop;
+   Pain:
+     HAX7 A 15;
+     HAX7 B 15 [[A_Pain]];
+     HAX7 C 20 [[A_Explode]](flags:XF_NOTMISSILE); {{comment|Will deal radius damage, like the {{class|Rocket}}}}
+     goto Spawn;
+   }
+ }
+
+If you want to create a decoration that you can interact with directly, by pressing Use next to it, you can override the actor's [[Used]] virtual function:
+
+For example, this odd varation of the {{Class|ExplosiveBarrel|explosive barrel}} explodes immediately when the player uses it:
+ class OddBarrel : {{Class|ExplosiveBarrel}}
+ {
+     override bool '''Used''' (Actor user)
+     {
+         if (user &amp;&amp; user.player))
+         {
+             [[A_Die]]();
+             return true;
+         }
+ 
+         return false;
+     }
+ }
+
+For more examples and explanation, see the [[Used|{{c|Used()}} function page]].
+
+[[Category:ZScript guides]]</text>
+    <sha1>987yeiqnq5j2cx4rzy2qqzltkkg6839</sha1>
+  </revision>
+</page>

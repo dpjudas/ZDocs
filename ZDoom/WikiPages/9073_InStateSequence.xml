@@ -1,0 +1,98 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>InStateSequence</title>
+  <ns>0</ns>
+  <id>9073</id>
+  <revision>
+    <id>52889</id>
+    <parentid>51671</parentid>
+    <timestamp>2024-08-15T09:25:38Z</timestamp>
+    <contributor>
+      <username>Jekyll Grim Payne</username>
+      <id>2175</id>
+    </contributor>
+    <comment>/* Examples */</comment>
+    <origin>52889</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="4309" sha1="nbjljgv1474xo5nc01l7uow96ks2rzf" xml:space="preserve">{{ZScriptNote}}
+'''{{class|Actor}}'''
+
+{{c|clearscope static bool '''InStateSequence''' (State ''newstate'', State ''basestate'')}}
+
+== Usage ==
+Used to check that an actor's current {{struct|State|state}} is in a specific state sequence. More specifically, it takes a state pointer passed to the first argument, and then checks if it's currently anywhere in the state sequence passed to the second argument. The state sequence (second argument) in this case is obtained through a pointer to its first state, e.g. [[ResolveState|{{c|ResolveState("Pain")}}]] is a pointer to the first state in the "Pain" state sequence.
+
+For example, &lt;code&gt;InStateSequence(&lt;actorpointer&gt;.curstate, &lt;actorpointer&gt;.ResolveState("Pain"))&lt;/code&gt; will return true if the &lt;code&gt;&lt;actorpointer&gt;&lt;/code&gt; actor is currently anywhere in its "Pain" state sequence. Note, this is different from checking if &lt;code&gt;&lt;actorpointer&gt;.curstate == &lt;actorpointer&gt;.ResolveState("Pain")&lt;/code&gt;, because the latter will only return true if &lt;code&gt;curstate&lt;/code&gt; is in the ''first'' state of the actor's "Pain" sequence.
+
+Since the function is defined as static, it doesn't need to be prefixed with an actor pointer; however, the states passed for the first and second arguments must be retrieved from a pointer to a specific actor. Note, however, that this function is defined in the {{class|Actor}} class, so if it's called outside of an actor (for example, from an {{class|EventHandler}}), it has to be prefxied with &lt;code&gt;Actor.&lt;/code&gt;.
+
+The {{struct|State}} struct also has a non-static version of this function, which must be prefixed with a state pointer, such as &lt;code&gt;&lt;actorpointer&gt;.curstate.InStateSequence(&lt;actorpointer&gt;.ResolveState("Pain"))&lt;/code&gt;.
+
+When you need to check the state of a {{class|Weapon}} animation, remember that its animation states are handled by the {{class|PSprite}} class, while the weapon itself doesn't use them. As such, in this case you first need a PSprite pointer:
+&lt;syntaxhighlight lang="csharp"&gt;
+let psp = player.FindPSprite(PSP_WEAPON); //obtain a pointer to the PSprite of the main layer
+if (psp &amp;&amp; InStateSequence(psp.curstate, ResolveState("Ready")))
+{
+  // This block is executed if the PSprite pointer is non-null,
+  // and it's currently in the weapon's Ready state sequence
+}&lt;/syntaxhighlight&gt;
+
+'''Note:''' To get a better idea of what exactly a state sequence is, see [[Actor_states#What_constitutes_a_state_sequence|'''here''']].
+
+=== Parameters ===
+*{{c|State '''newstate'''}}
+:The state to check. If you need to check the current state of an actor, pass &lt;code&gt;&lt;actorpointer&gt;.curState&lt;/code&gt;. For {{class|PSprite}}, similarly, pass &lt;code&gt;&lt;PSpritePointer&gt;.curState&lt;/code&gt;.
+*{{c|State '''basestate'''}}
+:Pointer to the first state in the state sequence you need to check. Can be obtained with [[ResolveState]], for example &lt;code&gt;&lt;actorpointer&gt;.ResolveState("Pain")&lt;/code&gt;.
+:Note, actors have a &lt;code&gt;spawnState&lt;/code&gt; field that already contains a pointer to the actor's first Spawn state, so that can be passed as well if the need is to check if an actor is in its Spawn state sequence.
+
+== Examples ==
+This [[DoEffect]] override, if inserted into a {{class|Weapon}}, will print "&lt;weaponname&gt; is currently ready" whenever this weapon is selected and is in its Ready state sequence:
+&lt;syntaxhighlight lang="csharp"&gt;
+override void DoEffect()
+{
+	super.DoEffect();
+	if (!owner || !owner.player)
+	{
+		return;
+	}
+	let weap = owner.player.readyweapon;
+	if (!weap || weap != self)
+	{
+		return;
+	}
+
+	let psp = owner.player.FindPSprite(PSP_WEAPON);
+	if (psp &amp;&amp; InStateSequence(psp.curstate, GetReadyState()))
+	{
+		Console.MidPrint(smallfont, String.Format("Weapon %s is currently ready", GetTag()));
+	}
+}&lt;/syntaxhighlight&gt;
+
+This {{class|PlasmaBall|plasma ball}} will [[A_Log|announce]] when it has gibbed what it hits:
+&lt;syntaxhighlight lang="csharp"&gt;
+class GibAnnouncer : PlasmaBall replaces PlasmaBall
+{
+    States
+    {
+    XDeath:
+        PLSX A 0
+        {
+            if(blockingMObj &amp;&amp; InStateSequence(blockingMObj.curState, blockingMObj.ResolveState("XDeath")))
+            {
+                A_Log("%s was gibbed!", blockingMObj.GetTag());
+            }
+        }
+        Goto Death;
+    }
+}&lt;/syntaxhighlight&gt;
+
+== See also ==
+* [[Structs:State]]
+* [[ResolveState]]
+* [[Actor states]]
+
+[[Category:ZScript]]</text>
+    <sha1>nbjljgv1474xo5nc01l7uow96ks2rzf</sha1>
+  </revision>
+</page>

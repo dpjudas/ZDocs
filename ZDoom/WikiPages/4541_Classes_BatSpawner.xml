@@ -1,0 +1,56 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>Classes:BatSpawner</title>
+  <ns>0</ns>
+  <id>4541</id>
+  <revision>
+    <id>39454</id>
+    <parentid>34188</parentid>
+    <timestamp>2015-04-30T21:08:57Z</timestamp>
+    <contributor>
+      <username>Blue Shadow</username>
+      <id>2021</id>
+    </contributor>
+    <minor />
+    <comment>/* DECORATE definition */ Updated</comment>
+    <origin>39454</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="1059" sha1="kgx3xobrt3k6ad3x3oc32hgack4568y" xml:space="preserve">{{Actor|
+| type = Map spot
+| name = Bat spawner
+| class = BatSpawner
+| game = Hexen
+}}[[Classes]]: [[Classes:SwitchableDecoration|SwitchableDecoration]]&amp;rarr;&lt;u&gt;BatSpawner&lt;/u&gt;&lt;br&gt;
+Spawns a flock of {{Class|Bat|bats}} when activated. A bat spawner's argument affect its behavior when [[A_BatSpawn]] is called:
+*args[0] frequency of spawn, a smaller number results in a higher frequency.
+*args[1] spread angle, expressed as a [[definitions|byte angle]].
+*args[3] lifetime of each bats (each point allows spawned bats to survive for four calls to [[A_BatMove]]).
+*args[4] turn amount per move for the bats (in degrees).
+
+==== [[DECORATE]] definition ====
+ ACTOR &lt;u&gt;BatSpawner&lt;/u&gt; : {{Class|SwitchableDecoration}}
+ {
+   +{{Flag|NOBLOCKMAP}}
+   +{{Flag|NOSECTOR}}
+   +{{Flag|NOGRAVITY}}
+   {{Property|RenderStyle}} None
+ 
+   action native [[A_BatSpawnInit]]();
+   action native [[A_BatSpawn]]();
+ 
+   States
+   {
+   Spawn:
+   Active:
+     TNT1 A 2
+     TNT1 A 2 [[A_BatSpawnInit]]
+     TNT1 A 2 [[A_BatSpawn]]
+     Wait
+  Inactive:
+     TNT1 A -1
+     Stop
+   }
+ }</text>
+    <sha1>kgx3xobrt3k6ad3x3oc32hgack4568y</sha1>
+  </revision>
+</page>

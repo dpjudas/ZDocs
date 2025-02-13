@@ -1,0 +1,110 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>Classes:MageBoss</title>
+  <ns>0</ns>
+  <id>4532</id>
+  <revision>
+    <id>39651</id>
+    <parentid>34775</parentid>
+    <timestamp>2015-05-02T21:20:25Z</timestamp>
+    <contributor>
+      <username>Blue Shadow</username>
+      <id>2021</id>
+    </contributor>
+    <minor />
+    <comment>/* DECORATE definition */ Updated</comment>
+    <origin>39651</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="2090" sha1="rg5c5hkms7rdh1ruo25v4op8nd1fjpl" xml:space="preserve">{{Actor|
+| type = Monster
+| name = Menelkir
+| class = MageBoss
+| game = Hexen
+| doomednum = 10102
+}}[[Classes]]: &lt;u&gt;MageBoss&lt;/u&gt;&lt;br&gt;
+Menelkir is one of the three penultimate bosses of Hexen. The Arch-Mage of the Arcanum, Menelkir now serves as one of [[Classes:Korax|Korax]]'s top lieutenants. Erratic movement and the [[Classes:MWeapBloodscourge|Bloodscourge]] make him a dangerous foe.
+==== [[DECORATE]] definition ====
+ ACTOR &lt;u&gt;MageBoss&lt;/u&gt;
+ {
+   {{Property|Health}} 800
+   {{Property|PainChance}} 50
+   {{Property|Speed}} 25
+   {{Property|Radius}} 16
+   {{Property|Height}} 64
+   {{Property|Monster}}
+   +{{Flag|FLOORCLIP}}
+   +{{Flag|TELESTOMP}}
+   +{{Flag|DONTMORPH}}
+   {{Property|PainSound}} "PlayerMagePain"
+   {{Property|DeathSound}} "PlayerMageCrazyDeath"
+   {{Property|Obituary}} "$OB_MBOSS" // "%o couldn't absorb Menelkir's Mana."
+ 
+   action native [[A_MageAttack]]();
+ 
+   States
+   {
+   Spawn:
+     MAGE A 2
+     MAGE A 3 [[A_ClassBossHealth]]
+     MAGE A 5 [[A_Look]]
+     Wait
+   See:
+     MAGE ABCD 4 [[A_FastChase]]
+     Loop
+   Pain:
+     MAGE G 4
+     MAGE G 4 [[A_Pain]]
+     Goto See
+   Melee:
+   Missile:
+     MAGE E 8 [[A_FaceTarget]]
+     MAGE F 8 Bright [[A_MageAttack]]
+     Goto See
+   Death:
+     MAGE H 6
+     MAGE I 6 [[A_Scream]]
+     MAGE JK 6
+     MAGE L 6 [[A_NoBlocking]]
+     MAGE M 6
+     MAGE N -1
+     Stop
+   XDeath:
+     MAGE O 5 [[A_Scream]]
+     MAGE P 5
+     MAGE R 5 [[A_NoBlocking]]
+     MAGE S 5
+     MAGE T 5
+     MAGE U 5
+     MAGE V 5
+     MAGE W 5
+     MAGE X -1
+     Stop
+   Ice:
+     MAGE Y 5 [[A_FreezeDeath]]
+     MAGE Y 1 [[A_FreezeDeathChunks]]
+     Wait
+   Burn:
+     FDTH E 5 Bright [[A_PlaySound]]("PlayerMageBurnDeath")
+     FDTH F 4 Bright
+     FDTH G 5 Bright
+     FDTH H 4 Bright [[A_Scream]]
+     FDTH I 5 Bright
+     FDTH J 4 Bright
+     FDTH K 5 Bright
+     FDTH L 4 Bright
+     FDTH M 5 Bright
+     FDTH N 4 Bright
+     FDTH O 5 Bright
+     FDTH P 4 Bright
+     FDTH Q 5 Bright
+     FDTH R 4 Bright
+     FDTH S 5 Bright [[A_NoBlocking]]
+     FDTH T 4 Bright
+     FDTH U 5 Bright
+     FDTH V 4 Bright
+     Stop
+   }
+ }</text>
+    <sha1>rg5c5hkms7rdh1ruo25v4op8nd1fjpl</sha1>
+  </revision>
+</page>

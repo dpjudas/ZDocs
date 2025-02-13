@@ -1,0 +1,55 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>ZScript named arguments</title>
+  <ns>0</ns>
+  <id>8980</id>
+  <revision>
+    <id>53873</id>
+    <parentid>53451</parentid>
+    <timestamp>2024-11-25T09:03:02Z</timestamp>
+    <contributor>
+      <username>Jekyll Grim Payne</username>
+      <id>2175</id>
+    </contributor>
+    <origin>53873</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="1853" sha1="r8nuif3s51lmwlfwnf2ja6vdrjkwj3q" xml:space="preserve">{{ZScriptNote}}
+
+[[ZScript]] supports the ability to add in named arguments. This is useful for leaving other arguments blank in functions and also clearly defining, what argument is for what.
+
+{{new|4.13.0}} In addition, with named arguments, the order of the arguments can be changed as desired, as long as all required arguments are provided.
+
+In order to use a named argument, provide its name in the function, followed by &lt;code&gt;:&lt;/code&gt; and the value for the argument.
+
+== 4.13.0 onward ==
+As of GZDoom 4.13.0, named arguments provide extra features:
+* Required parameters cannot be skipped, but you can provide their names
+* Using named arguments allows passing arguments to functions in any order
+
+For these new features to work, ZScript version must be set to 4.13.0 or later.
+
+&lt;syntaxhighlight lang="csharp"&gt;
+version "4.13.0" // as usual, this only needs to be defined once in the root zscript file
+
+// elsewhere in the code:
+
+// Skips xofs, yofs, yvel, and angle parameters. Arguments are
+// provided in arbitrary order, with flags being defined
+// before offsets and velocity:
+A_SpawnItemEx(missile: 'Rocket', flags: SXF_NOCHECKPOSITION|SXF_TRANSFERPITCH|SXF_SETTARGET, zofs: 32, xvel: cos(pitch) * 20, zvel: -sin(pitch) * 20);
+&lt;/syntaxhighlight&gt;
+
+== Pre-4.13.0 ==
+In earlier versions of ZScript certain restrictions are present:
+* Required parameters cannot be skipped, and their names cannot be used.
+* All arguments must be provided in the same order as they're defined in the function
+
+&lt;syntaxhighlight lang="csharp"&gt;
+// Skips xofs, yofs, yvel, and angle parameters. These are also in chronological order:
+A_SpawnItemEx('Rocket', zofs: 32, xvel: cos(pitch) * 20, zvel: -sin(pitch) * 20, flags: SXF_NOCHECKPOSITION|SXF_TRANSFERPITCH|SXF_SETTARGET);
+&lt;/syntaxhighlight&gt;
+
+[[Category:ZScript]][[Category:Editing concepts]][[Category:Features]]</text>
+    <sha1>r8nuif3s51lmwlfwnf2ja6vdrjkwj3q</sha1>
+  </revision>
+</page>

@@ -1,0 +1,90 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>Classes:Beggar</title>
+  <ns>0</ns>
+  <id>3973</id>
+  <revision>
+    <id>35196</id>
+    <parentid>18222</parentid>
+    <timestamp>2012-12-19T13:37:45Z</timestamp>
+    <contributor>
+      <username>Blue Shadow</username>
+      <id>2021</id>
+    </contributor>
+    <comment>/* DECORATE definition */ Updated.</comment>
+    <origin>35196</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="1876" sha1="f26ylxelykt9xnmxtjbupagz2zfnv57" xml:space="preserve">{{Actor|
+| type = Monster
+| name = Beggar
+| class = Beggar
+| game = Strife
+}}[[Classes]]: [[Classes:StrifeHumanoid|StrifeHumanoid]]&amp;rarr;&lt;u&gt;Beggar&lt;/u&gt;&lt;br&gt;
+&amp;ensp;&amp;rarr;[[Classes:Beggar1|Beggar1]]&lt;br&gt;
+&amp;ensp;&amp;rarr;[[Classes:Beggar2|Beggar2]]&lt;br&gt;
+&amp;ensp;&amp;rarr;[[Classes:Beggar3|Beggar3]]&lt;br&gt;
+&amp;ensp;&amp;rarr;[[Classes:Beggar4|Beggar4]]&lt;br&gt;
+&amp;ensp;&amp;rarr;[[Classes:Beggar5|Beggar5]]&lt;br&gt;
+
+The base class for all beggars from Strife. It is not used directly in the game.
+
+==== [[DECORATE]] definition ====
+ ACTOR &lt;u&gt;Beggar&lt;/u&gt; : {{Class|StrifeHumanoid}}
+ {
+   {{Property|Health}} 20
+   {{Property|PainChance}} 250
+   {{Property|Speed}} 3
+   {{Property|Radius}} 20
+   {{Property|Height}} 56
+   {{Property|Monster}}
+   +{{Flag|JUSTHIT}}
+   -{{Flag|COUNTKILL}}
+   +{{Flag|NOSPLASHALERT}}
+   {{Property|MinMissileChance}} 150
+   {{Property|Tag}} "$TAG_BEGGAR" // "Beggar"
+   {{Property|MaxStepHeight}} 16
+   {{Property|MaxDropoffHeight}} 32
+   {{Property|HitObituary}} "$OB_BEGGAR" // "%o was beaten to death by the poor."
+   {{Property|AttackSound}} "beggar/attack"
+   {{Property|PainSound}} "beggar/pain"
+   {{Property|DeathSound}} "beggar/death"
+   States
+   {
+   Spawn:
+     BEGR A 10 [[A_Look]]
+     Loop
+   See:
+     BEGR AABBCC 4 [[A_Wander]]
+     Loop
+   Melee:
+     BEGR D 8
+     BEGR D 8 [[A_CustomMeleeAttack]](2*[[DECORATE_expressions#Mathematical_functions|random]][PeasantAttack](1, 5)+2)
+     BEGR E 1 [[A_Chase]]
+     BEGR D 8 [[A_SentinelRefire]]
+     Loop
+   Pain:
+     BEGR A 3 [[A_Pain]]
+     BEGR A 3 [[A_Chase]]
+     Goto Melee
+   Death:
+     BEGR F 4
+     BEGR G 4 [[A_Scream]]
+     BEGR H 4
+     BEGR I 4 [[A_NoBlocking]]
+     BEGR JKLM 4
+     BEGR N -1
+     Stop
+   XDeath:
+     BEGR F 5 [[A_TossGib]]
+     GIBS M 5 [[A_TossGib]]
+     GIBS N 5 [[A_XScream]]
+     GIBS O 5 [[A_NoBlocking]]
+     GIBS PQRST 4 [[A_TossGib]]
+     GIBS U 5
+     GIBS V 1400
+     Stop
+   }
+ }</text>
+    <sha1>f26ylxelykt9xnmxtjbupagz2zfnv57</sha1>
+  </revision>
+</page>

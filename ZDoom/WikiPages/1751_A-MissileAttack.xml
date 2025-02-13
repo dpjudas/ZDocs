@@ -1,0 +1,60 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>A MissileAttack</title>
+  <ns>0</ns>
+  <id>1751</id>
+  <revision>
+    <id>24311</id>
+    <parentid>23557</parentid>
+    <timestamp>2009-09-29T10:36:58Z</timestamp>
+    <contributor>
+      <username>Gez</username>
+      <id>1283</id>
+    </contributor>
+    <minor />
+    <origin>24311</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="1187" sha1="rlilyokqldif615veod85w73q5wzdeu" xml:space="preserve">{{DISPLAYTITLE:A_MissileAttack}}
+{{WarnDeprecated|[[A_CustomMissile]]}}
+'''A_MissileAttack'''
+
+(no parameters)
+
+
+Turns the actor to face its target, then launches a missile.
+
+[[Actor properties|Properties]] used:
+* '''missiletype''' ''classname''
+:Actor name of the missile being launched.
+* '''missileheight''' ''value''
+:Height above floor for the spawned missile.
+
+'''A_MissileAttack''' can handle homing missiles as long as the missile has the '''{{flag|SEEKERMISSILE}}''' flag set and contains some kind of [[Action functions#Missile movement|tracer code pointer]] in its moving animation.
+
+== Examples ==
+A tougher version of the Baron of Hell that shoots a more powerful missile:
+
+  actor BaronOfUnderworld : BaronOfHell 7601
+  {
+    health 4500
+    speed 12
+    missiletype "UnderworldFireball"
+    missileheight 48
+    states
+    {
+      [...]
+      Missile:
+        BOSS EF 6 [[A_FaceTarget]]
+        BOSS G 6 [[A_MissileAttack]]
+        BOSS EF 6 [[A_FaceTarget]]
+        BOSS G 6 [[A_MissileAttack]]
+        BOSS EF 6 [[A_FaceTarget]]
+        BOSS G 6 [[A_MissileAttack]]
+        goto See
+    }
+  }
+
+[[category:Decorate Generic Attack functions]]{{DEFAULTSORT:MissileAttack}}</text>
+    <sha1>rlilyokqldif615veod85w73q5wzdeu</sha1>
+  </revision>
+</page>

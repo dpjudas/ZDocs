@@ -1,0 +1,122 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>A DropItem</title>
+  <ns>0</ns>
+  <id>7625</id>
+  <revision>
+    <id>54143</id>
+    <parentid>48035</parentid>
+    <timestamp>2025-01-20T10:21:03Z</timestamp>
+    <contributor>
+      <username>Jekyll Grim Payne</username>
+      <id>2175</id>
+    </contributor>
+    <origin>54143</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="3398" sha1="pva2wo0gaua0svc7xfn2ijro23c5t0v" xml:space="preserve">{{DISPLAYTITLE:A_DropItem}}
+'''{{class|Actor}}'''
+
+{{c|Actor '''A_DropItem'''(class&lt;Actor&gt; ''item'', int ''dropamount'' {{=}} -1, int ''chance'' {{=}} 256)}}
+
+==Usage==
+The calling actor spawns the specified item as if it was dropped. This is meant to simulate how monsters "drop" items on death via their {{property|DropItem}} property, by giving them a bit of velocity. The item in question is not actually taken from (and doesn't have to be preset in) the calling actor's inventory.
+
+===Parameters===
+*{{c|class&lt;Actor&gt; '''item'''}}
+:The item to drop. Despite the name, this doesn't have to be an item, and can be any actor class.
+
+*{{c|int '''dropamount'''}}
+:If ''item'' is indeed a valid item (i.e. based on the {{class|Inventory}} class) and this is non-negative, its amount will be set to this value. If this value is negative, the dropped item's amount will be equal to its default {{property|Inventory.Amount}} value. Note, if ''item'' is an {{class|Ammo}} item, its amount will be modified by the current skill level's [[MAPINFO/Skill definition|DropAmmoFactor]].
+
+*{{c|int '''chance'''}}
+:The probability of the drop in the 0-255 range. If negative, the drop always fails; if 255 or above, the drop is guaranteed. Default is 256.
+
+===Return value===
+*''Actor'' - a pointer to ''item'' if it was spawned successfully; otherwise it returns {{c|null}}.
+
+== Examples ==
+This is an excerpt from {{class|PlayerPawn}}'s {{function|Die}} override, which makes sure that the player drops their current weapon when killed:
+&lt;syntaxhighlight lang="csharp"&gt;
+...
+else if (weap.SpawnState != NULL &amp;&amp;
+	weap.SpawnState != GetDefaultByType('Actor').SpawnState)
+{
+	let weapitem = Weapon(A_DropItem (weap.GetClass(), -1, 256));
+	if (weapitem)
+	{
+		if (weap.AmmoGive1 &amp;&amp; weap.Ammo1)
+		{
+			weapitem.AmmoGive1 = weap.Ammo1.Amount;
+		}
+		if (weap.AmmoGive2 &amp;&amp; weap.Ammo2)
+		{
+			weapitem.AmmoGive2 = weap.Ammo2.Amount;
+		}
+		weapitem.bIgnoreSkill = true;
+	}
+}
+...
+&lt;/syntaxhighlight&gt;
+Most of the code is omitted for brevity. The full code can be seen on [https://github.com/ZDoom/gzdoom/blob/master/wadsrc/static/zscript/actors/player/player.zs GZDoom GitHub repository].
+
+== [[ZScript]] definition ==
+{{ZScriptDefinitionNote|actors/inventory_util.zs}}
+&lt;syntaxhighlight lang="csharp"&gt;
+	Actor A_DropItem(class&lt;Actor&gt; item, int dropamount = -1, int chance = 256)
+	{
+		if (item != NULL &amp;&amp; random[DropItem]() &lt;= chance)
+		{
+			Actor mo;
+			double spawnz = 0;
+
+			if (!(Level.compatflags &amp; COMPATF_NOTOSSDROPS))
+			{
+				int style = sv_dropstyle;
+				if (style == 0)
+				{
+					style = gameinfo.defaultdropstyle;
+				}
+				if (style == 2)
+				{
+					spawnz = 24;
+				}
+				else
+				{
+					spawnz = Height / 2;
+				}
+			}
+			mo = Spawn(item, pos + (0, 0, spawnz), ALLOW_REPLACE);
+			if (mo != NULL)
+			{
+				mo.bDropped = true;
+				mo.bNoGravity = false;	// [RH] Make sure it is affected by gravity
+				if (!(Level.compatflags &amp; COMPATF_NOTOSSDROPS))
+				{
+					mo.TossItem ();
+				}
+				let inv = Inventory(mo);
+				if (inv)
+				{
+					inv.ModifyDropAmount(dropamount);
+					inv.bTossed = true;
+					if (inv.SpecialDropAction(self))
+					{
+						// The special action indicates that the item should not spawn
+						inv.Destroy();
+						return null;
+					}
+				}
+				return mo;
+			}
+		}
+		return NULL;
+	}
+&lt;/syntaxhighlight&gt;
+
+== See also ==
+* [[DropItem]]
+[[category:Decorate Inventory functions]]
+[[Category:ZScript]]</text>
+    <sha1>pva2wo0gaua0svc7xfn2ijro23c5t0v</sha1>
+  </revision>
+</page>

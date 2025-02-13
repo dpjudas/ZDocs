@@ -1,0 +1,183 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>TryPickup</title>
+  <ns>0</ns>
+  <id>9793</id>
+  <revision>
+    <id>54073</id>
+    <parentid>53027</parentid>
+    <timestamp>2024-12-20T09:05:37Z</timestamp>
+    <contributor>
+      <username>Jekyll Grim Payne</username>
+      <id>2175</id>
+    </contributor>
+    <minor />
+    <comment>/* Examples */</comment>
+    <origin>54073</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="5652" sha1="n7n9xrz0hi4cmld8lofbcdq0ss48rzv" xml:space="preserve">'''{{class|Inventory}}'''
+
+{{c|virtual protected bool '''TryPickup'''(in out Actor ''toucher'')}}
+
+==Usage==
+A [[ZScript virtual functions|virtual function]] called by {{class|Inventory}} items when they're received (either by being picked up from the world, or by being given directly). This is the main function related to picking up that performs a whole host of checks, such as:
+* Calling [[HandlePickup]] to let other items in the inventory process this pickup (not all items do that, however)
+* Checking whether the toucher already has this item in their inventory, and whether its {{property|MaxAmount}} allows a new item to be picked up.
+* Calls [[Use]] if the item has the {{flag|INVENTORY.AUTOACTIVATE}} flag.
+and others.
+
+Note, '''this function should never be called directly'''. If you want to call it manually, it should be done through a special wrapper, [[CallTryPickup]], which performs a series of extra checks before calling this function.
+
+{{note|If you need to make an item do something once it's being picked up, consider overriding '''[[Use]]''' or '''[[AttachToOwner]]''' instead. {{c|TryPickup}} should only be overridden when there's a need to do something ''before'' the item has been picked up and potentially prevent it from being picked up.}}
+
+=== Parameters ===
+*{{c|Actor '''toucher'''}}
+:The actor who is attempting to receive this item.
+
+=== Return values ===
+Returns true if the item was successfully received. Note, this doesn't guarantee that the item itself keep existing. Many classes, such as {{class|Health}}, perform their function (such as healing the toucher) and then disappear. TryPickup still returns true in this case, because technically the item was sucecssfully received.
+
+== [[ZScript]] definition ==
+{{ZScriptDefinitionNote|actors/inventory/inventory.zs#L499}}
+Various items may override this function, but the base {{class|Inventory}} class defines it as follows:
+
+&lt;syntaxhighlight lang="csharp"&gt;
+	virtual protected bool TryPickup (in out Actor toucher)
+	{
+		Actor newtoucher = toucher; // in case changed by the powerup
+
+		// If HandlePickup() returns true, it will set the IF_PICKUPGOOD flag
+		// to indicate that self item has been picked up. If the item cannot be
+		// picked up, then it leaves the flag cleared.
+
+		bPickupGood = false;
+		if (toucher.Inv != NULL &amp;&amp; toucher.Inv.CallHandlePickup (self))
+		{
+			// Let something else the player is holding intercept the pickup.
+			if (!bPickupGood)
+			{
+				return false;
+			}
+			bPickupGood = false;
+			GoAwayAndDie ();
+		}
+		else if (MaxAmount &gt; 0)
+		{
+			// Add the item to the inventory. It is not already there, or HandlePickup
+			// would have already taken care of it.
+			let copy = CreateCopy (toucher);
+			if (copy == NULL)
+			{
+				return false;
+			}
+			// Some powerups cannot activate absolutely, for
+			// example, PowerMorph; fail the pickup if so.
+			if (copy.bInitEffectFailed)
+			{
+				if (copy != self) copy.Destroy();
+				else bInitEffectFailed = false;
+				return false;
+			}
+			// Handle owner-changing powerups
+			if (copy.bCreateCopyMoved)
+			{
+				newtoucher = copy.Owner;
+				copy.Owner = NULL;
+				bCreateCopyMoved = false;
+			}
+			// Continue onwards with the rest
+			copy.AttachToOwner (newtoucher);
+			if (bAutoActivate)
+			{
+				if (copy.Use (true))
+				{
+					if (--copy.Amount &lt;= 0)
+					{
+						copy.bSpecial = false;
+						copy.SetStateLabel ("HoldAndDestroy");
+					}
+				}
+			}
+		}
+		else if (bAutoActivate)
+		{
+			// Special case: If an item's MaxAmount is 0, you can still pick it
+			// up if it is autoactivate-able.
+
+			// The item is placed in the inventory just long enough to be used.
+			toucher.AddInventory(self);
+			bool usegood = Use(true);
+
+			// Handle potential change of toucher/owner because of morph
+			if (usegood &amp;&amp; self.owner)
+			{
+				toucher = self.owner;
+			}
+
+			toucher.RemoveInventory(self);
+
+			if (usegood)
+			{
+				GoAwayAndDie();
+			}
+			else
+			{
+				return false;
+			}
+		}
+		return true;
+	}
+&lt;/syntaxhighlight&gt;
+
+== Examples ==
+This variation of Doom's {{class|SuperShotgun}} will not allow anyone to pick it up if the actor trying to pick it up has a {{class|Shotgun}} (or another item set to replace the Shotgun) in their inventory:
+&lt;syntaxhighlight lang="csharp"&gt;
+class MySuperShotgun : SuperShotgun
+{
+	override bool TryPickup (in out Actor toucher)
+	{
+		// Find whatever class is set to replace the Shotgun (for mod compatibility).
+		// If there's none, this will just return Shotgun itself:
+		class&lt;Inventory&gt; stgRepl = (class&lt;Inventory&gt;)(Actor.GetReplacement('Shotgun'));
+		// Null-check the cast - this is needed on the off chance that there is
+		// a replacement for the Shotgun that for some reason isn't an item
+		// at all (e.g. if a mod replaces shotguns with monsters, for example):
+		if (stgRepl == null)
+		{
+			// If so, do the usual TryPickup sequence and nothing else:
+			return Super.TryPickup(toucher);
+		}
+
+		// Otherwise, check if the player has a Shotgun (or its replacement)
+		// in their inventory. If so, don't let  them pick this up and print a message:
+		Inventory stg = toucher.FindInventory(stgRepl);
+		if (stg != null)
+		{
+			toucher.A_Print(String.Format("Cannot pick up %s; drop %s first", self.GetTag(), stg.GetTag()));
+			return false;
+		}
+
+		// Otherwise do the usual TryPickup sequence:
+		return Super.TryPickup(toucher);
+	}
+}&lt;/syntaxhighlight&gt;
+See also:
+* [[FindInventory]]
+* [[GetReplacement]]
+* [[GetTag]]
+* [[A_Print]]
+
+== See also ==
+* [[CallTryPickup]]
+* [[TryPickupRestricted]]
+* [[Touch]]
+* [[Use]]
+* [[AttachToOwner]]
+* [[Inventory virtual functions]]
+
+[[Category:ZScript]]
+[[Category:Inventory]]
+[[Category:ZScript virtual functions]]</text>
+    <sha1>n7n9xrz0hi4cmld8lofbcdq0ss48rzv</sha1>
+  </revision>
+</page>

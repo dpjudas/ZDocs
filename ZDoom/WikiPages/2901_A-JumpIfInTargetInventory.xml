@@ -1,0 +1,51 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>A JumpIfInTargetInventory</title>
+  <ns>0</ns>
+  <id>2901</id>
+  <revision>
+    <id>42399</id>
+    <parentid>42326</parentid>
+    <timestamp>2016-02-25T18:32:43Z</timestamp>
+    <contributor>
+      <username>Marisa Heit</username>
+      <id>5</id>
+    </contributor>
+    <comment>Add return type</comment>
+    <origin>42399</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="1204" sha1="1a1vywh8007t9028l34vqt20i59g6a9" xml:space="preserve">{{codepointer|Jump}}
+state '''A_JumpIfInTargetInventory''' (str "''item''", int ''count'', int ''offset''[, pointer ''forward''])&lt;br/&gt;
+state '''A_JumpIfInTargetInventory''' (str "''item''", int ''count'', str "''state''"[, pointer ''forward''])
+{{JumpNotice}}
+== Usage ==
+Jumps if the target has the specified actor type ''item'' and amount ''count'' in its inventory.
+
+If an [[actor pointer]] is given, the test will be forwarded to the actor in the target's corresponding pointer.
+
+== Examples ==
+This Imp runs away if the player has a {{Class|BFG9000}} or a {{Class|PlasmaRifle|Plasma Rifle}}.
+
+ actor WiseImp : {{Class|DoomImp}}
+ {
+   states
+   {
+   Spawn:
+     TROO A 0 [[A_ChangeFlag]]("{{flag|FRIGHTENED}}",0) // Clear the FRIGHTENED flag if the Imp loses its target.
+     TROO AB 10 [[A_Look]]
+     Goto Spawn+1
+   See:
+     TROO AABBCCDD 3 [[A_Chase]]
+     TROO A 0 '''A_JumpIfInTargetInventory'''("{{Class|PlasmaRifle}}", 1, "Ohcrap")
+     TROO A 0 '''A_JumpIfInTargetInventory'''("{{Class|BFG9000}}", 1, "Ohcrap")
+     loop
+   Ohcrap: 
+     TROO A 0 [[A_Pain]] // Imp roars in fear
+     TROO A 3 [[A_ChangeFlag]]("{{flag|FRIGHTENED}}",1)
+     TROO AABBCCDD 2 A_Chase
+     Goto Ohcrap+2
+   }
+ }</text>
+    <sha1>1a1vywh8007t9028l34vqt20i59g6a9</sha1>
+  </revision>
+</page>

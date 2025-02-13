@@ -1,0 +1,47 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>Classes:AcolyteShadow</title>
+  <ns>0</ns>
+  <id>4588</id>
+  <revision>
+    <id>39825</id>
+    <parentid>37891</parentid>
+    <timestamp>2015-05-04T21:58:01Z</timestamp>
+    <contributor>
+      <username>Blue Shadow</username>
+      <id>2021</id>
+    </contributor>
+    <minor />
+    <comment>/* DECORATE definition */ Updated</comment>
+    <origin>39825</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="697" sha1="8qq0us4lebgdert2hnj34vefkieulq7" xml:space="preserve">{{Actor|
+| type = Monster
+| name = Shadow acolyte
+| class = AcolyteShadow
+| game = Strife
+| doomednum = 58
+| convid = 61, 58, 59
+}}[[Classes]]: [[Classes:StrifeHumanoid|StrifeHumanoid]]&amp;rarr;[[Classes:Acolyte|Acolyte]]&amp;rarr;&lt;u&gt;AcolyteShadow&lt;/u&gt;&lt;br&gt;
+
+An Acolyte who, when alarmed, dons the [[Classes:ShadowArmor|shadow armor]] and becomes translucent.
+
+==== [[DECORATE]] definition ====
+ ACTOR &lt;u&gt;AcolyteShadow&lt;/u&gt; : {{Class|Acolyte}}
+ {
+   +{{Flag|MISSILEMORE}}
+   {{Property|DropItem}} "{{Class|ClipOfBullets}}"
+   States
+   {
+   See:
+     AGRD A 6 [[A_BeShadowyFoe]]
+     Goto Super::See+1
+   Pain:
+     AGRD O 0 Fast Slow [[A_SetShadow]]
+     AGRD O 8 Fast Slow [[A_Pain]]
+     Goto See
+   }
+ }</text>
+    <sha1>8qq0us4lebgdert2hnj34vefkieulq7</sha1>
+  </revision>
+</page>

@@ -1,0 +1,62 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>GetCurrentAmmo</title>
+  <ns>0</ns>
+  <id>9713</id>
+  <revision>
+    <id>50961</id>
+    <parentid>50675</parentid>
+    <timestamp>2023-11-12T20:19:16Z</timestamp>
+    <contributor>
+      <username>Jekyll Grim Payne</username>
+      <id>2175</id>
+    </contributor>
+    <comment>added parent class</comment>
+    <origin>50961</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="2149" sha1="cdinzg1ykc8v8vxct0f0tdvo2am0m4m" xml:space="preserve">__NOTOC__
+'''[[Classes:BaseStatusBar|BaseStatusBar]]'''
+
+{{c|Ammo, Ammo, int, int '''GetCurrentAmmo'''()}}
+
+==Usage==
+Can be used in a [[Classes:BaseStatusBar|ZScript HUD]] to obtain information about [[Classes:Ammo|ammo]] used by the weapon currently selected by the player.
+
+===Return values===
+The function returns two &lt;code&gt;Ammo&lt;/code&gt; pointers and two integer values. Note, the ammo pointers are pointers to instances of those ammo classes in the user's inventory, not class names. Normally it can only be null if the weapon doesn't use ammo at all, since weapons will give the player an instance of the ammo they use (even if &lt;code&gt;Weapon.AmmoGive&lt;/code&gt; is set to 0);
+
+*{{c|''Ammo''}}
+:A pointer to an instance of primary ammo (as defined by the {{property|Weapon.AmmoType1}} property) in the user's inventory.
+*{{c|''Ammo''}}
+:A pointer to an instance of primary ammo (as defined by the {{property|Weapon.AmmoType2}} property) in the user's inventory.
+*{{c|''int''}}
+:The amount of primary ammo currently in the user's inventory.
+*{{c|''int''}}
+:The amount of primary ammo currently in the user's inventory.
+
+==Examples==
+This will draw primary and secondary ammo icons at the bottom right corner of the screen, and the amount of ammo will be printed next to them. There will be 1 pixel of padding between the icons and the text.
+&lt;syntaxhighlight lang="csharp"&gt;
+Ammo am1, am2;
+int am1amt, am2amt;
+[am1, am2, am1amt, am2amt] = GetCurrentAmmo();
+vector2 iconSize = (10, 10); //the icon's size is limited to this
+vector2 iconPos = (-24, -8); //starting position of the first icon
+if (am1)
+{
+	DrawInventoryIcon(am1, iconPos, DI_SCREEN_RIGHT_BOTTOM|DI_ITEM_CENTER, boxSize: iconSize);
+	DrawString(numHUDFont, ""..am1amt, (iconPos.x + iconSize.x * 0.5 + 1, iconPos.y), DI_SCREEN_RIGHT_BOTTOM|DI_TEXT_ALIGN_LEFT);
+}
+if (am2)
+{
+	iconPos -= (0, iconSize.y + 1);
+	DrawInventoryIcon(am2, iconPos, DI_SCREEN_RIGHT_BOTTOM|DI_ITEM_CENTER, boxSize: iconSize);
+	DrawString(numHUDFont, ""..am2amt, (iconPos.x + iconSize.x * 0.5 + 1, iconPos.y), DI_SCREEN_RIGHT_BOTTOM|DI_TEXT_ALIGN_LEFT);
+}
+&lt;/syntaxhighlight&gt;
+
+[[Category:ZScript]]
+[[Category:BaseStatusBar]]</text>
+    <sha1>cdinzg1ykc8v8vxct0f0tdvo2am0m4m</sha1>
+  </revision>
+</page>

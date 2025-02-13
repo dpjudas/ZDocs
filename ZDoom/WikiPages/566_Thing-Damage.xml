@@ -1,0 +1,48 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>Thing Damage</title>
+  <ns>0</ns>
+  <id>566</id>
+  <revision>
+    <id>53478</id>
+    <parentid>49027</parentid>
+    <timestamp>2024-11-01T10:30:17Z</timestamp>
+    <contributor>
+      <username>TheMisterCat</username>
+      <id>1636</id>
+    </contributor>
+    <minor />
+    <comment>Note added for clarity over behaviour when activator damages self</comment>
+    <origin>53478</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="1685" sha1="5ni4ws1dp8jij3vmbl3fadyn6be5wco" xml:space="preserve">{{DISPLAYTITLE:Thing_Damage}}
+{{Special|119|tid, amount, mod|Thing|Damage}}
+
+== Usage ==
+
+Damages the specified actor.
+
+=== Parameters ===
+
+* ''tid'': [[TID]] of the thing you want to damage.
+* ''amount'': The amount of damage the thing will receive.
+* ''mod'': Means of death. Determines the obituary message that will appear if a player is killed. Relevant damage types for the means of death are found on the [[Damage_types]] page.
+
+Similar to [[DamageThing]], but it hurts actors by [[TID]] rather than whoever activates it. Note that if TID is 0, this behaves similarly to '''DamageThing''', but using 0 as the amount will not force death.
+
+There are some newer built-in damage types for which no MOD code exists and custom damage types are identified by names; neither can be used with this special. If you want to attach this special outside a script, e.g. to a line or a thing, but need to use a damage type that is recognized by the game by name, but is not listed above, set the line/thing special to run a script instead and use the [[Thing_Damage2]] [[ACS]] function in the script.
+
+See [[Damage types]] for a list of means-of-death.
+
+== NOTE ==
+Please note that if the activator of the action is the same as the actor having damage applied to them, this will always count as a suicide, disregarding the damagetype assigned (will just display 'player killed self' message) - Please ensure if you have a damagetype assigned and want it to display the correct obituary, that you have reassigned the activator, or the activator is otherwise not the same as the damaged thing.
+
+== Examples ==
+
+ Script 1 {{SType|Enter}}
+ {
+    [[Thing_Damage]](0, 20, {{const|MOD_RAILGUN}});
+ }</text>
+    <sha1>5ni4ws1dp8jij3vmbl3fadyn6be5wco</sha1>
+  </revision>
+</page>

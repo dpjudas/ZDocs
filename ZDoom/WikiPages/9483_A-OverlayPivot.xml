@@ -1,0 +1,53 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>A OverlayPivot</title>
+  <ns>0</ns>
+  <id>9483</id>
+  <revision>
+    <id>49056</id>
+    <parentid>49055</parentid>
+    <timestamp>2022-03-13T13:06:13Z</timestamp>
+    <contributor>
+      <username>Jekyll Grim Payne</username>
+      <id>2175</id>
+    </contributor>
+    <origin>49056</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="1916" sha1="m7w5vpzp8wt5iwh41ggrhwmrei7nuxa" xml:space="preserve">__NOTOC__{{DISPLAYTITLE: A_OverlayPivot}}
+'''A_OverlayPivot''' (int ''layer'', double wx = 0.5, double wy = 0.5, int flags = 0)
+
+== Usage ==
+Sets the position of the pivot on the overlay. This is used to set a position that will act as the center of rotation for [[A_OverlayRotate]] and [[A_OverlayScale]]. These offsets are applied on top of [[A_OverlayPivotAlign]]'s settings.
+
+This function's offsets are affected by [[A_OverlayFlags]]'s PSPF_PIVOTPERCENT flag, which is set to '''true''' by default. 
+
+== Parameters ==
+*''layer'' - The layer to modify.
+*''wx'' - Positive numbers offset to the right. Default is 0.5 (which is center if PSPF_PIVOTPERCENT is applied).
+*''wy'' - Same as `wx` but goes down if positive, up if negative instead.
+*''flags'' - Flags can be combined using '|' (without ' '):
+**'''WOF_RELATIVE''' - Takes into account the current rotation of the overlay.
+**'''WOF_ADD''' - The input adds instead of replaces the current offset, and implies WOF_INTERPOLATE.
+**'''WOF_KEEPX''' - The 'wx' parameter is ignored.
+**'''WOF_KEEPY''' - The 'wy' parameter is ignored.
+**'''WOF_INTERPOLATE''' - Enables interpolation for the frame called on. For backwards compatibility however, [[A_OverlayOffset]] will override the current interpolation setting  if the function is called in the same tic.
+
+Note, despite the default values for ''wx'' and ''wy'' arguments of the function are 0.5, the default values of the corresponding ''vector2 pivot'' field in the PSprite class are 0.0, meaning the default pivot point for overlay rotation and scale is the graphic's top left corner, not its center.
+
+== Examples ==
+{{noexamples}}
+== See Also ==
+*[[A_Overlay]]
+*[[A_OverlayOffset]]
+*[[A_OverlayRenderstyle]]
+*[[A_OverlayAlpha]]
+*[[A_WeaponOffset]]
+*[[A_OverlayPivotAlign]]
+*[[A_OverlayRotate]]
+*[[A_OverlayScale]]
+*[[A_OverlayVertexOffset]]
+
+{{DEFAULTSORT:OverlayPivot}}[[category:Decorate Weapon functions]]</text>
+    <sha1>m7w5vpzp8wt5iwh41ggrhwmrei7nuxa</sha1>
+  </revision>
+</page>

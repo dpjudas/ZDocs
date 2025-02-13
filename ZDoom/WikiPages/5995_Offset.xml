@@ -1,0 +1,54 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>Offset</title>
+  <ns>0</ns>
+  <id>5995</id>
+  <revision>
+    <id>42737</id>
+    <parentid>42736</parentid>
+    <timestamp>2016-06-06T12:26:50Z</timestamp>
+    <contributor>
+      <username>Gez</username>
+      <id>1283</id>
+    </contributor>
+    <minor />
+    <origin>42737</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="1417" sha1="5gxsxq6jsbm7a7z09fmno9ka9u023w8" xml:space="preserve">'''Offset''' (int ''xpos'', int ''ypos'')&lt;br&gt;
+
+Offset is a special property that may be used in [[DECORATE]] [[Classes:Weapon|weapons]]. It has two arguments: xpos (default '''0''', positive values shift to the right, negative values shift to the left) and ypos (default '''32''', higher values shift down, lower values shift up. Both of these can be negatives.). It may be placed in a weapon's states after the state's duration, but before the [[action function]]. This does not affect states with [[A_WeaponReady]] unless weapon bobbing is disabled.
+Note that Offset(0, 0) is interpreted as "keep previous offset", not as "reset offset to 0, 0", for backward compatibility, since all states have offsets 0, 0 by default.
+
+====Example====
+This pistol uses only three unique sprite images. The recoil effect is entirely using Offset.&lt;br&gt;
+ ACTOR Walther : {{Class|Weapon}}
+ {
+ 	{{Property|Weapon.AmmoType1}} "WaltherAmmo"
+ 	{{Property|Weapon.AmmoUse1}} 1
+ 	{{Property|Weapon.SlotNumber}} 2
+  	{{Property|AttackSound}} "Walther/Fire"
+  	+{{Flag|NOAUTOFIRE}}
+ 	States
+ 	{
+ 	Select:
+ 		WALT A 1 [[A_Raise]]
+ 		Loop
+ 	Deselect:
+ 		WALT A 1 [[A_Lower]]
+ 		Loop
+   	Ready:
+ 		WALT A 1 [[A_WeaponReady]]
+ 		Loop
+ 	Fire:
+ 		WALT C 1 Bright Offset(1,34) [[A_FireBullets]](0,0,-1,11,"BulletPuff",1)
+ 		WALT B 1 Offset(2,37)
+ 		WALT B 1 Offset(1,36)
+ 		WALT A 1 Offset(0,33)
+ 		WALT A 1
+ 		Goto Ready
+ 	}
+ }
+[[Category:DECORATE]]</text>
+    <sha1>5gxsxq6jsbm7a7z09fmno9ka9u023w8</sha1>
+  </revision>
+</page>

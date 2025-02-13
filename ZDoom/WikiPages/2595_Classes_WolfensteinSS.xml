@@ -1,0 +1,159 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>Classes:WolfensteinSS</title>
+  <ns>0</ns>
+  <id>2595</id>
+  <revision>
+    <id>48932</id>
+    <parentid>48444</parentid>
+    <timestamp>2021-12-27T11:16:51Z</timestamp>
+    <contributor>
+      <username>Jekyll Grim Payne</username>
+      <id>2175</id>
+    </contributor>
+    <comment>updated in accordance with updated ZScriptDefinitionNote template</comment>
+    <origin>48932</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="3571" sha1="p38v9e6xiqb8uoapb6s6i3e6iw2o3rn" xml:space="preserve">{{Actor|
+| type = Monster
+| name = Wolfenstein SS
+| class = WolfensteinSS
+| game = Doom2
+| doomednum = 84
+| thingindex = 24
+| spawnid = 116
+| spawnname = T_WOLFSS
+}}
+[[Classes]]: &lt;u&gt;WolfensteinSS&lt;/u&gt;
+
+
+The Wolfenstein SS guard ("WolfSS") is an enemy from Wolfenstein 3D, which appears in the secret levels of [[Doom]] 2. He is armed with a machine gun and leaves a [[Classes:Clip|clip]] after death.
+
+Difficulty levels in Wolfenstein 3D were implemented by controlling the speed at which the enemies react and fire.  For [[Doom]] 2, id simply placed 2-4 of these enemies everywhere that one guard appeared in Wolfenstein.  Unfortunately, because enemies in Doom can also hurt each other, this just made them tend to infight with each other more.
+
+The attack frames for this enemy are single-rotation only (as in Wolfenstein 3D), so that he always appears to be firing directly at the player viewing him, no matter what direction he's actually shooting in.
+
+
+==== [[ZScript]] definition ====
+{{ZScriptDefinitionNote|actors/doom/possessed.zs#L193}} 
+ class WolfensteinSS : Actor
+ {
+ 	Default
+ 	{
+ 		{{Property|Health}} 50;
+ 		{{Property|Radius}} 20;
+ 		{{Property|Height}} 56;
+ 		{{Property|Speed}} 8;
+ 		{{Property|PainChance}} 170;
+ 		{{Property|Monster}};
+ 		+{{Flag|FLOORCLIP}}
+ 		{{Property|SeeSound}} "wolfss/sight";
+ 		{{Property|PainSound}} "wolfss/pain";
+ 		{{Property|DeathSound}} "wolfss/death";
+ 		{{Property|ActiveSound}} "wolfss/active";
+ 		{{Property|AttackSound}} "wolfss/attack";
+ 		{{Property|Obituary}} "$OB_WOLFSS";
+ 		{{Property|Tag}} "$FN_WOLFSS";
+ 		{{Property|Dropitem}} "Clip";
+ 	}
+ 	States
+ 	{
+ 	Spawn:
+ 		SSWV AB 10 [[A_Look]];
+ 		Loop;
+ 	See:
+ 		SSWV AABBCCDD 3 [[A_Chase]];
+ 		Loop;
+ 	Missile:
+ 		SSWV E 10 [[A_FaceTarget]];
+ 		SSWV F 10 [[A_FaceTarget]];
+ 		SSWV G 4 BRIGHT [[A_CPosAttack]];
+ 		SSWV F 6 [[A_FaceTarget]];
+ 		SSWV G 4 BRIGHT [[A_CPosAttack]];
+ 		SSWV F 1 [[A_CPosRefire]];
+ 		Goto Missile+1;
+ 	Pain:
+ 		SSWV H 3;
+ 		SSWV H 3 [[A_Pain]];
+ 		Goto See;
+ 	Death:
+ 		SSWV I 5;
+ 		SSWV J 5 [[A_Scream]];
+ 		SSWV K 5 [[A_NoBlocking]];
+ 		SSWV L 5;
+ 		SSWV M -1;
+ 		Stop;
+ 	XDeath:
+ 		SSWV N 5 ;
+ 		SSWV O 5 [[A_XScream]];
+ 		SSWV P 5 [[A_NoBlocking]];
+ 		SSWV QRSTU 5;
+ 		SSWV V -1;
+ 		Stop;
+ 	Raise:
+ 		SSWV M 5;
+ 		SSWV LKJI 5;
+ 		Goto See ;
+ 	}
+ }
+==== [[DECORATE]] definition ====
+{{DecorateDefinitionNote}}
+ ACTOR &lt;u&gt;WolfensteinSS&lt;/u&gt;
+ {
+   {{Property|Health}} 50
+   {{Property|Radius}} 20
+   {{Property|Height}} 56
+   {{Property|Speed}} 8
+   {{Property|PainChance}} 170
+   {{Property|Monster}}
+   +{{Flag|FLOORCLIP}}
+   {{Property|SeeSound}} "wolfss/sight"
+   {{Property|PainSound}} "wolfss/pain"
+   {{Property|DeathSound}} "wolfss/death"
+   {{Property|ActiveSound}} "wolfss/active"
+   {{Property|AttackSound}} "wolfss/attack"
+   {{Property|Obituary}} "$OB_WOLFSS"
+   {{Property|Dropitem}} "{{Class|Clip}}"
+   States
+   {
+   Spawn:
+     SSWV AB 10 [[A_Look]]
+     Loop
+   See:
+     SSWV AABBCCDD 3 [[A_Chase]]
+     Loop
+   Missile:
+     SSWV E 10 [[A_FaceTarget]]
+     SSWV F 10 [[A_FaceTarget]]
+     SSWV G 4 Bright [[A_CPosAttack]]
+     SSWV F 6 [[A_FaceTarget]]
+     SSWV G 4 Bright [[A_CPosAttack]]
+     SSWV F 1 [[A_CPosRefire]]
+     Goto Missile+1
+   Pain:
+     SSWV H 3
+     SSWV H 3 [[A_Pain]]
+     Goto See
+   Death:
+     SSWV I 5
+     SSWV J 5 [[A_Scream]]
+     SSWV K 5 [[A_NoBlocking]]
+     SSWV L 5
+     SSWV M -1
+     Stop
+   XDeath:
+     SSWV N 5 
+     SSWV O 5 [[A_XScream]]
+     SSWV P 5 [[A_NoBlocking]]
+     SSWV QRSTU 5
+     SSWV V -1
+     Stop
+   Raise:
+     SSWV M 5
+     SSWV LKJI 5
+     Goto See 
+   }
+ }</text>
+    <sha1>p38v9e6xiqb8uoapb6s6i3e6iw2o3rn</sha1>
+  </revision>
+</page>

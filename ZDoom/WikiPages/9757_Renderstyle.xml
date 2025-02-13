@@ -1,0 +1,54 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>Renderstyle</title>
+  <ns>0</ns>
+  <id>9757</id>
+  <revision>
+    <id>54019</id>
+    <parentid>54017</parentid>
+    <timestamp>2024-12-04T18:26:20Z</timestamp>
+    <contributor>
+      <username>Jekyll Grim Payne</username>
+      <id>2175</id>
+    </contributor>
+    <origin>54019</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="3806" sha1="ol88mfw2ohyge24rwqfuzjwrrotmz12" xml:space="preserve">&lt;noinclude&gt;
+'''Render style''' is how a certain graphic should be rendered in the engine. Render style may apper and be modified...
+* as the Actor class {{property|RenderStyle}} property;
+* as part of [[particles]] or the {{class|VisualThinker}} class;
+* in many functions that handle drawing on the screen, such as [[DrawTexture|{{c|Screen.DrawTexture()}}]], or the HUD, such as [[DrawImage (BaseStatusBar)|{{c|DrawImage()}}]];
+* when creating new virtual images with the [[TEXTURES]] lump.
+
+In [[ZScript]] the constats that function as render style names are defined in the ERenderStyle struct.
+
+== Available render styles ==
+{{note|This section of the page can be included into other pages that describe renderstyles (such as [[A_SetRenderStyle]]), using the '''&lt;nowiki&gt;{{: Renderstyle}}&lt;/nowiki&gt;''' syntax. (This note and the rest of the page will not be included.)}}
+&lt;/noinclude&gt;:*'''STYLE_None''' - Do not render
+:*'''STYLE_Normal''' - Regular rendering (all pixels of the graphic are opaque)
+:*'''STYLE_Fuzzy''' - With a [[fuzz]] effect, like the {{class|Spectre}}
+:*'''STYLE_SoulTrans''' - Each pixel has the same translucency to an amount determined by the {{c|{{CVAR|R|transsouls}}}} [[CVARs|CVAR]].
+:*'''STYLE_OptFuzzy''' - [[fuzz|Fuzzy]] or translucent, based on the value of the {{c|{{CVAR|R|r_drawfuzz}}}} [[CVARs|CVAR]].
+:*'''STYLE_Stencil''' - All pixels are drawn in a single color and fully opaque.
+:*'''STYLE_Translucent''' - Each pixel is evenly translucent according to the {{property|alpha}} field (from 0.0 to 1.0).
+:*'''STYLE_TranslucentStencil''' - Like {{c|STYLE_Stencil}}, but supports alpha.
+:*'''STYLE_Add''' - Additive rendering: each pixel's color is added to the color of the underlying scene. Lighter pixels will appear more opaque and bright, while darker will appear less opaque. Creates a "glowing" effect recommended for things that are meant to emit light, like fire, plasma, etc.
+:*'''STYLE_Shaded''' - Translucency is applied to each pixel based on its brightness (similar to {{c|STYLE_Add}}), then all pixels are tinted to a specific color. This is how [[Decal|decals]] are drawn by default.
+:*'''STYLE_Shadow''' - Equivalent to black translucent stencil with an alpha of 0.3
+:*'''STYLE_Subtract''' - The opposite of additive: the color value of each pixel is subtracted from the color of the scene, creating a dark translucency of the opposite color, e.g. a red color being subtracted from a white surface will cause a cyan "shadow".
+:*'''STYLE_AddStencil''' - Combines stencil and additive: all pixels are drawn in a single color, and the whole graphic will be translucent based on the brightness of that color.
+:*'''STYLE_AddShaded''' - Combines shaded and additive: all pixels are tinted with a specific color, and the translucency of each pixel is set based on the brightness of its color.
+:*'''STYLE_Multiply''' - Colors of each pixel and the underlying scene are multiplied (hardware renderer only). This results in intense dark tones.
+:*'''STYLE_InverseMultiply''' - The background scene is inverted, then its colors are multiplied by the colors of each pixels of the graphic (hardware renderer only). 
+:*'''STYLE_ColorBlend''' - Each pixel's color is blended with the color of the underlying scene, and then translucency is applied to each pixel based on its color intensity (hardware renderer only). This allows for per-pixel translucency like STYLE_Add, but there's no "glowing" effect, and instead the graphic appears very faint.
+:*'''STYLE_ColorAdd''' - Same as {{c|STYLE_ColorBlend}}, but colors are added rather than blended.
+:*'''STYLE_Source''' - No blending, same as {{c|STYLE_Normal}} (only used internally)&lt;noinclude&gt;
+
+[[Category:Include templates]]
+[[Category:ZScript]]
+[[Category:Editing references]]
+[[Category:Editing concepts]]
+&lt;/noinclude&gt;</text>
+    <sha1>ol88mfw2ohyge24rwqfuzjwrrotmz12</sha1>
+  </revision>
+</page>

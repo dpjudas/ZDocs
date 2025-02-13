@@ -1,0 +1,159 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>Set custom colors</title>
+  <ns>0</ns>
+  <id>6656</id>
+  <revision>
+    <id>46103</id>
+    <parentid>45982</parentid>
+    <timestamp>2018-06-16T20:14:44Z</timestamp>
+    <contributor>
+      <username>Blue Shadow</username>
+      <id>2021</id>
+    </contributor>
+    <minor />
+    <comment>Remove {{new}}</comment>
+    <origin>46103</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="7243" sha1="drxpr1ayy2sfxqr2ipd8s7p9ucktrp2" xml:space="preserve">{{menutrail|Main menu|Options menu|Automap options}}
+[[File:SetCustomColors.png|thumb|The custom colors menu in [[Hacx]].]]
+The '''set custom colors''' menu allows to modify the colors of the [[automap]]'s "custom" colorset. Its [[MENUDEF]] name is {{c|MapColorMenu}} and it can be summoned with the {{c|{{CCMD|O|menu_mapcolors}}}} console command.
+
+Note that each game has its own values for these settings.
+
+*'''{{LE|Restore default custom colors}}'''
+:{{c|{{CCMD|P|am_restorecolors}}}}
+:This command resets all colors to the [[ZDoom]] default.
+
+
+*'''{{LE|Background|am_backcolor}}''' (Color)
+:{{c|{{CVAR|A|am_backcolor}}}}
+:The background color of the automap. If an [[AUTOPAGE]] graphic is shown, this is ignored.
+*'''{{LE|You|am_yourcolor}}''' (Color)
+:{{c|{{CVAR|A|am_yourcolor}}}}
+:The color of the [[map arrow]] representing the player avatar.
+*'''{{LE|1-sided walls|am_wallcolor}}''' (Color)
+:{{c|{{CVAR|A|am_wallcolor}}}}
+:The color for normal one-sided walls.
+*'''{{LE|2-sided walls with different floors|am_fdwallcolor}}''' (Color)
+:{{c|{{CVAR|A|am_fdwallcolor}}}}
+:The color for lines marking a floor height change. This has priority over the ceiling height change color if both apply.
+*'''{{LE|2-sided walls with different ceilings|am_cdwallcolor}}''' (Color)
+:{{c|{{CVAR|A|am_cdwallcolor}}}}
+:The color for lines marking a ceiling height change.
+*'''{{LE|2-sided walls with 3D floors|am_efwallcolor}}''' (Color)
+:{{c|{{CVAR|A|am_efwallcolor}}}}
+:The color for lines marking a [[3D floor]] boundary.
+*'''{{LE|Map grid|am_gridcolor}}''' (Color)
+:{{c|{{CVAR|A|am_gridcolor}}}}
+:The color of the automap grid, when it is on. (By default, the grid is off.)
+*'''{{LE|Center point|am_xhaircolor}}''' (Color)
+:{{c|{{CVAR|A|am_xhaircolor}}}}
+:The color of the crosshair in the middle of the map when follow mode is off.
+*'''{{LE|Not-yet-seen walls|am_notseencolor}}''' (Color)
+:{{c|{{CVAR|A|am_notseencolor}}}}
+:The color of walls revealed by a {{Class|MapRevealer}} item.
+*'''{{LE|Locked doors|am_lockedcolor}}''' (Color)
+:{{c|{{CVAR|A|am_lockedcolor}}}}
+:The color of locked doors. This is overridden by the lock's own color if it has one defined in [[LOCKDEFS]].
+*'''{{LE|Teleporter to the same map|am_intralevelcolor}}''' (Color)
+:{{c|{{CVAR|A|am_intralevelcolor}}}}
+:The color of teleporter lines.
+*'''{{LE|Teleporter to a different map|am_interlevelcolor}}''' (Color)
+:{{c|{{CVAR|A|am_interlevelcolor}}}}
+:The color of the map exit lines.
+*'''{{LE|Secret sector|am_secretsectorcolor}}''' (Color)
+:{{c|{{CVAR|A|am_secretsectorcolor}}}}
+:The color of a secret sector's walls.
+*'''{{LE|Unexplored secret|am_unexploredsecretcolor}}''' (Color)
+:{{c|{{CVAR|A|am_unexploredsecretcolor}}}}
+:The color of an undiscovered secret sector's walls.
+*'''{{LE|Special trigger lines|am_specialwallcolor}}''' (Color)
+:{{c|{{CVAR|A|am_specialwallcolor}}}}
+:The color of lines which can trigger a line special, if [[Automap_options#Show_trigger_lines|show trigger lines]] from the parent menu is on.
+
+==Cheat mode==
+These colors are for lines and [[map arrow]]s only drawn in automap cheat mode (&lt;tt&gt;am_cheat&lt;/tt&gt; is set to 1 or more).
+*'''{{LE|Invisible 2-sided walls|am_tswallcolor}}''' (Color)
+:{{c|{{CVAR|A|am_tswallcolor}}}}
+:The color of two-sided walls with no floor or ceiling height change (normally hidden).
+*'''{{LE|Secret walls|am_secretwallcolor}}''' (Color)
+:{{c|{{CVAR|A|am_secretwallcolor}}}}
+:The color of walls marked as hidden.
+*'''{{LE|Actors|am_thingcolor}}''' (Color)
+:{{c|{{CVAR|A|am_thingcolor}}}}
+:The default color for map things.
+*'''{{LE|Monsters|am_thingcolor_monster}}''' (Color)
+:{{c|{{CVAR|A|am_thingcolor_monster}}}}
+:The color of non-friendly map things with the {{Flag|ISMONSTER}} flag.
+*'''{{LE|Non-counting monsters|am_thingcolor_ncmonster}}''' (Color)
+:{{c|{{CVAR|A|am_thingcolor_ncmonster}}}}
+:The color of non-friendly monsters lacking the {{Flag|COUNTKILL}} flag.
+*'''{{LE|Friends|am_thingcolor_friend}}''' (Color)
+:{{c|{{CVAR|A|am_thingcolor_friend}}}}
+:The color of map things with the {{Flag|FRIENDLY}} flag.
+*'''{{LE|Items|am_thingcolor_item}}''' (Color)
+:{{c|{{CVAR|A|am_thingcolor_item}}}}
+:The default color of map things that can be picked up.
+*'''{{LE|Count Items|am_thingcolor_citem}}''' (Color)
+:{{c|{{CVAR|A|am_thingcolor_citem}}}}
+:The color of map things that can be picked up and have the {{Flag|COUNTITEM}} flag.
+
+==Overlay mode==
+These colors are used when the [[automap]] is in overlay mode, rather than fullscreen mode.
+*'''{{LE|You|am_ovyourcolor}}''' (Color)
+:{{c|{{CVAR|A|am_ovyourcolor}}}}
+:The color of the [[map arrow]] representing the player avatar.
+*'''{{LE|1-sided walls|am_ovwallcolor}}''' (Color)
+:{{c|{{CVAR|A|am_ovwallcolor}}}}
+:The color for normal one-sided walls.
+*'''{{LE|2-sided walls with different floors|am_ovfdwallcolor}}''' (Color)
+:{{c|{{CVAR|A|am_ovfdwallcolor}}}}
+:The color for lines marking a floor height change. This has priority over the ceiling height change color if both apply.
+*'''{{LE|2-sided walls with different ceilings|am_ovcdwallcolor}}''' (Color)
+:{{c|{{CVAR|A|am_ovcdwallcolor}}}}
+:The color for lines marking a ceiling height change.
+*'''{{LE|2-sided walls with 3D floors|am_ovefwallcolor}}''' (Color)
+:{{c|{{CVAR|A|am_ovefwallcolor}}}}
+:The color for lines marking a [[3D floor]] boundary.
+*'''{{LE|2-sided walls|am_ovotherwallscolor}}''' (Color)
+:{{c|{{CVAR|A|am_ovotherwallscolor}}}}
+:The color of lines marking a ceiling or height change.
+*'''{{LE|Not-yet-seen walls|am_ovunseencolor}}''' (Color)
+:{{c|{{CVAR|A|am_ovunseencolor}}}}
+:The color of lines revealed by a {{Class|MapRevealer}} item.
+*'''{{LE|Teleporter|am_ovtelecolor}}''' (Color)
+:{{c|{{CVAR|A|am_ovtelecolor}}}}
+:The color of teleporter lines.
+*'''{{LE|Secret sector|am_ovsecretsectorcolor}}''' (Color)
+:{{c|{{CVAR|A|am_ovsecretsectorcolor}}}}
+:The color of a secret sector's walls.
+*'''{{LE|Special trigger lines|am_ovspecialwallcolor}}''' (Color)
+:{{c|{{CVAR|A|am_ovspecialwallcolor}}}}
+:The color of lines which can trigger a line special, if [[Automap_options#Show_trigger_lines|show trigger lines]] from the parent menu is on.
+
+==Overlay cheat mode==
+These colors are used only when using the map cheat (&lt;tt&gt;am_cheat&lt;/tt&gt; is set to 1 or more) and the automap is in overlay mode rather than fullscreen mode.
+*'''{{LE|Actors|am_ovthingcolor}}''' (Color)
+:{{c|{{CVAR|A|am_ovthingcolor}}}}
+:The default color for map things.
+*'''{{LE|Monsters|am_ovthingcolor_monster}}''' (Color)
+:{{c|{{CVAR|A|am_ovthingcolor_monster}}}}
+:The color of non-friendly map things with the {{Flag|ISMONSTER}} flag.
+*'''{{LE|Non-counting monsters|am_ovthingcolor_ncmonster}}''' (Color)
+:{{c|{{CVAR|A|am_ovthingcolor_ncmonster}}}}
+:The color of non-friendly monsters lacking the {{Flag|COUNTKILL}} flag. 
+*'''{{LE|Friends|am_ovthingcolor_friend}}''' (Color)
+:{{c|{{CVAR|A|am_ovthingcolor_friend}}}}
+:The color of map things with the {{Flag|FRIENDLY}} flag.
+*'''{{LE|Items|am_ovthingcolor_item}}''' (Color)
+:{{c|{{CVAR|A|am_ovthingcolor_item}}}}
+:The default color of map things that can be picked up.
+*'''{{LE|Count Items|am_ovthingcolor_citem}}''' (Color)
+:{{c|{{CVAR|A|am_ovthingcolor_citem}}}}
+:The color of map things that can be picked up and have the {{Flag|COUNTITEM}} flag.
+
+[[Category:Menus]]</text>
+    <sha1>drxpr1ayy2sfxqr2ipd8s7p9ucktrp2</sha1>
+  </revision>
+</page>

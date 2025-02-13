@@ -1,0 +1,72 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>Classes:TelOtherFX1</title>
+  <ns>0</ns>
+  <id>4694</id>
+  <revision>
+    <id>34923</id>
+    <parentid>19970</parentid>
+    <timestamp>2012-11-11T03:38:51Z</timestamp>
+    <contributor>
+      <username>Blue Shadow</username>
+      <id>2021</id>
+    </contributor>
+    <minor />
+    <comment>/* DECORATE definition */</comment>
+    <origin>34923</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="1803" sha1="ipbqwug3j1mb4g1bmtfoo0dx6ij0die" xml:space="preserve">{{Actor|
+| type = Explosive
+| name = Banishment device blast
+| class = TelOtherFX1
+| game = Hexen
+}}[[Classes]]: &lt;u&gt;TelOtherFX1&lt;/u&gt;&lt;br&gt;
+&amp;ensp;&amp;rarr;[[Classes:TelOtherFX2|TelOtherFX2]]&lt;br&gt;
+&amp;ensp;&amp;rarr;[[Classes:TelOtherFX3|TelOtherFX3]]&lt;br&gt;
+&amp;ensp;&amp;rarr;[[Classes:TelOtherFX4|TelOtherFX4]]&lt;br&gt;
+&amp;ensp;&amp;rarr;[[Classes:TelOtherFX5|TelOtherFX5]]&lt;br&gt;
+
+This projectile implements Hexen's [[Classes:ArtiTeleportOther|Banishment Device]]. The four child classes are spawned by A_TeloSpawnA through A_TeloSpawnD to leave a slight trail as the projectile moves.
+
+Upon hitting a monster, that monster is teleported to a random deathmatch start. If it has a TID, the TID is set to zero. If it has a special, that special is executed and removed.
+
+Upon hitting a player, that player will be teleported to a random start spot, either a deathmatch start for deathmatch games or a normal start for other game modes. Unlike monsters, a player's TID and special will be unaltered.
+
+==== [[DECORATE]] definition ====
+ ACTOR &lt;u&gt;TelOtherFX1&lt;/u&gt; native
+ {
+   {{Property|Damage}} 10001
+   {{Property|Projectile}}
+   -{{Flag|ACTIVATEIMPACT}}
+   -{{Flag|ACTIVATEPCROSS}}
+   +{{Flag|BLOODLESSIMPACT}}
+   {{Property|Radius}} 16
+   {{Property|Height}} 16
+   {{Property|Speed}} 20
+ 
+   action native [[A_TeloSpawnA]]();
+   action native [[A_TeloSpawnB]]();
+   action native [[A_TeloSpawnC]]();
+   action native [[A_TeloSpawnD]]();
+   action native [[A_CheckTeleRing]]();
+ 
+   States
+   {
+   Spawn:
+     TRNG E 5 Bright
+     TRNG D 4 Bright
+     TRNG C 3 Bright [[A_TeloSpawnC]]
+     TRNG B 3 Bright [[A_TeloSpawnB]]
+     TRNG A 3 Bright [[A_TeloSpawnA]]
+     TRNG B 3 Bright [[A_TeloSpawnB]]
+     TRNG C 3 Bright [[A_TeloSpawnC]]
+     TRNG D 3 Bright [[A_TeloSpawnD]]
+     Goto Spawn+2
+   Death:
+     TRNG E 3 Bright
+     Stop
+   }
+ }</text>
+    <sha1>ipbqwug3j1mb4g1bmtfoo0dx6ij0die</sha1>
+  </revision>
+</page>

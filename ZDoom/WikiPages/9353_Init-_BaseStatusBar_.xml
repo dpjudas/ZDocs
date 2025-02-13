@@ -1,0 +1,56 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>Init (BaseStatusBar)</title>
+  <ns>0</ns>
+  <id>9353</id>
+  <revision>
+    <id>51164</id>
+    <parentid>51162</parentid>
+    <timestamp>2024-01-02T18:24:11Z</timestamp>
+    <contributor>
+      <username>Jekyll Grim Payne</username>
+      <id>2175</id>
+    </contributor>
+    <comment>Added BaseStatusBar category</comment>
+    <origin>51164</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="991" sha1="bbejsztozmdun4bbagw2k87zd1nwjr0" xml:space="preserve">{{ZScriptNote}}
+__NOTOC__
+'''{{class|BaseStatusBar}}'''
+
+virtual void '''Init'''()
+
+== Usage ==
+Called when a [[Classes:BaseStatusBar|status bar]] is first created when opening the game. This can be used to initialize any special variables or set up size information about the status bar.
+
+== Examples ==
+&lt;syntaxhighlight lang="csharp"&gt;
+override void Init()
+{
+    super.Init();
+
+    // Set the status bar virtual resolution to 320x200 with a status bar height of 32 pixels
+    SetSize(32, 320, 200);
+
+    // Initialize fonts to be used throughout the rest of the HUD
+    Font fnt = "HUDFONT_DOOM";
+    mHUDFont = HUDFont.Create(fnt, fnt.GetCharWidth("0"), Mono_CellLeft, 1, 1);
+
+    fnt = "INDEXFONT_DOOM";
+    mIndexFont = HUDFont.Create(fnt, fnt.GetCharWidth("0"), Mono_CellLeft);
+    mAmountFont = HUDFont.Create("INDEXFONT");
+
+    diparms = InventoryBarState.Create();
+}
+&lt;/syntaxhighlight&gt;
+
+== Internal Code ==
+ virtual void Init() 
+ {
+ }
+
+[[Category:ZScript]]
+[[Category:BaseStatusBar]]</text>
+    <sha1>bbejsztozmdun4bbagw2k87zd1nwjr0</sha1>
+  </revision>
+</page>

@@ -1,0 +1,224 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>GADoom</title>
+  <ns>0</ns>
+  <id>9532</id>
+  <revision>
+    <id>48589</id>
+    <parentid>48588</parentid>
+    <timestamp>2021-06-13T19:12:06Z</timestamp>
+    <contributor>
+      <username>Redneckerz</username>
+      <id>2602</id>
+    </contributor>
+    <origin>48589</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="18470" sha1="tjdlqfkg6xte5fdo8moga4r6ee5uf4e" xml:space="preserve">{{Doomwiki}}
+'''GADoom''', also known as '''GameArena Doom''' was a shortlived extensive source modification of ZDoom 2.0.48 by Stuart Konen, alias ''GameArena''. It introduced several new features to ZDoom specifically to enhance modability of the engine, several years before technologies such as [[DECORATE]] or [[ZScript]] became common. It introduces new elements, such as improved [[monster]] AI, dynamic footsteps, improved particles, new [[weapon]]s and a new standard for writing modifications, called a ''Mod'' file.
+
+==Features==
+* Dynamic footsteps for both the player and enemies. Footsteps can fade away over distance
+* ''Mod'' file support. Use with {{c|-mod}} in the commandline (See section Mod Files)
+* Player taunts. Enabled via the command {{c|taunt &lt;sound name&gt;}}. It is only heard by other players and monsters within a limited distance. It can be set to any sound, but only the players who have the sound will hear it. Taunting wakes up any surrounding monsters
+* Blue "flash" effect when picking up [[health]]
+* Variable damage dependant of distance, but only for monster vs player, or player vs player. Damage increases on low range, and decreases when distance increases
+* File loading from the console without completely exiting out of GADoom, using the {{c|loadfile}} parameter. To use, enter {{c|loadfile &lt;file1&gt; &lt;file2&gt; &lt;file3&gt;}} etc. You can load up to 20 files at any given time, just use a different argument for each file. This will cause GADoom to momentarily pause as reinitalization takes place, before starting the Doom loop again.  Either wads or dehacked files can be loaded using loadfile.
+** If you wish to load files for one session, where when you load a new file they will be removed,  use {{c|loadfile mfile &lt;file1&gt;}} etcetera
+* New weapons
+** A flamethrower, emitting transparency based flames. The flamethrower spawnable ID is 2017
+** A knife, replacing the fist
+* [[Fist]]s no longer alert nearby enemies when you take a swing
+* Doors now have a greater possibility of awakening nearby enemies
+*  Monsters will tend to keep away from the melee range of the player when the player is using a melee weapon, however it isn't that noticable unless the player is standing in a "crowd" of enemies. In that instance it increases difficulty
+* Monsters would only respond to one player if a weapon was fired. Now even fellow monsters firing will cause nearby enemies to look for the hostile attacker
+* New path node system for AI. These nodes are automatically generated and thus do not rely on user editing or external node files 
+* Invisibility is now a slow transition for players, rather than immediate
+* Rockets fired by players and cyberdemons can now be shot out of the air
+* The ability to specify DeHacked files (.deh) using the command line parameter {{c|-file}}. Before you could only do so by using the {{c|-deh}} command line parameter
+* A stat called "rank", which is based on rate of kills and time played
+* New terrain type of "texture", it allows some of the terrain type changes to take effect on walls using the texture as well as floors. However, you can't have the same texture pointing to two different terrain definitions.
+* New ACS commands: 
+** {{c|checksight}}: checks to see if two actors  are "in sight" of each other.  The arguments for checksight() consist of 2 actor tids, for example, checksight(0, 3) would tranverse the sight path between the activator (always zero) and the actor with the tid of 3.  Returns 1 if true, 0 if false, and -1 for failed
+** {{c|getdistance}}: () returns the distance in units of roughly 32, 2 would be about 64. The arguments for getdistance() consist of 2 actor tids, for example, getdistance(0, 3) would return the distance between the activator (always zero) and the actor with the tid of 3, returns 0 (NULL) when failed
+** {{c|drawpic}}: syntax for the ACS command is {{c|drawpic(name, x, y, tics, transparency)}}, where graphicname is the name of the graphic to be displayed (must be within used wad), x is the left corner and y is the right corner, tics is the amount of time the graphic should be displayed. For memory sake (in case of recursion), only 32 graphics may be displayed at any given time. Example {{c|drawpic("interpic", 0, 0, 40)}}. Graphics appear in their natural state and will not be stretched. Transparency can be set to a value between one (1 percent visible) and 100 (opaque). Be warned, if you choose to display a ton of transparent images at once, slowdown may become evident due to heavy rasterization operations. This command is useful for intros, credits, etc
+*** New Drawpic function which allows for stretched graphics. In ACS the appropriate command is {{c|drawpic_stretched(name, x, y, tics, transparency, width, height)}}. If you'd like to use stretching via the console command use: {{c|drawpic(name, x, y, tics, transparency, 1, width, height)}}.
+** {{c|Sector_CeilingHit}}: (1, tag, (int)script, (int)arg1, (int)arg2, (int)arg3) which sets a script to be activated upon a projectile hitting the ceiling of sector "tag". Overridable (only one script can be assigned), however you can dynamically link to other scripts if needed
+** {{c|Sector_FloorSound}}: (tag, sound "pointer"), which sets the base footstep sound for sector "tag", useful for declaring different material types. Example: Sector_FloorSound(2, "footsteps/metal")
+** {{c|APROP_LightLevel}}: Lists available actor properties retrievable using ACS. The property will return the light level in the actor's current sector. APROP_LightLevel is defined to 13.
+** {{c|APROP_SectorTag}}: This returns the actor's current sector's tag, this can also be used to set the sector tag. APROP_SectorTag is defined as 14.
+** {{c|APROP_FloorHeight}} and {{c|APROP_CeilingHeight}}: This returns the actor's floor/ceiling height of the sector the actor is currently in. APROP_FloorHeight is 11 and APROP_CeilingHeight is 1
+* A new [[sector]] action special that can be activated when the sector floor has been shot. The action trigger ID is 9887 and works like any other sector special trigger, except if the floor has been shot by anyone, the special will be run
+* New cvars:
+** {{c|vid_adjustfps}}: If the framerate drops below a certain value, different effects will be turned off. They will turn on again when the framerate increases
+** {{c|cl_hitsplatsize}}: Available values are 1-6, basically this sets the size of particles emitted from weapon hits
+** {{c|sv_allowdexit}}: If set to true, players can activate specials to exit levels even if dead
+
+GADoom also implements a new menu entry called ''Game Enhancement''. These consist of the following submenu's:
+===Visual Enhancement===
+* Auto Adjust Framerate: Dynamically adjusts framerate depending on scene complexity
+* Particle Splat Size: A slider which sets the amount of particles shown by objects, such as rockets
+
+===Gameplay Enhancement===
+* Flamethrower Enabled: Enables a custom flamethrower weapon
+* Knife Enabled: Enables a knife for use in melee situations
+* Can exit level when dead: When toggled, the player can still exit a level, even when deceased
+
+===Other menu's===
+* Stats menu (options-&gt;player stats), it contains the following statistics:
+** Total Time Played
+** Total Kills
+** Total Player Kills
+** Total Player Deaths
+** Shots/Attacks
+* Levels Passed
+
+There is also a menu entry called ''Custom Game Menu'', found in Options. However, these mods are all presets and there aren't that many supported. Konen planned on supporting these through the aforementioned ''Mod'' files, but are now set internally. It may take some time for a mod to reinitialize due to Doom's internal architecture.
+
+==Mod Files==
+''Note: Most of the info comes from the file changes.txt included with GADoom, along with various postings from the ZDoom forums.''
+
+The most important addition in GADoom are '''Mod Files'''. These files contain variables called ''streams'', which are modifiers which can be used to alter the behavior of [[thing]]s, [[actor]]s, [[weapon]]s in various ways. Multiple streams can be active within the same file.
+
+===Definition===
+A ''mod'' file consists of various streams executed in a readable syntax as if it were a batch file, acting as a pseudo-scripting language. Mod files can be saved as either {{c|*.txt}} or {{c|*.mod}}, when you use them in the command line the extension is not required so with testmod.mod, you can use {{c|-mod testmod}}. When using a new drop type, you'll notice a debug message "true" when anything with a new droptype is killed. Any new weapon fire types must be defined before linked with {{c|&lt;firetype&gt;}} and all mod files must have {{c|&lt;end&gt;}} as the final statement to close all open streams. 
+
+To add into processing, a ''Mod'' file can include ''declarers'' which can specify certain files to add into processing. {{c|&lt;reqfile&gt;}} will make the file required in order to play the project, if it's not found the project will not be executed (a warning will be given). {{c|&lt;optfile&gt;}} is like reqfile except only a warning will be given if the file doesn't exist and the user will be allowed to play. Multiple file declarers may be used within a mod file. Supported files are {{c|*.deh}}, {{c|*.bex}} and {{c|*.wad}}. It is also possible to place Mod Files internally within a [[WAD]]. These files are loaded from a lump called {{c|"MODFILE"}}.
+
+===Example of a Mod file===
+&lt;pre&gt;
+&lt;optfile&gt;map04.wad
+&lt;optfile&gt;map06.wad
+
+&lt;customfiretype&gt;megachain
+&lt;projectile&gt;bullet
+&lt;damage&gt;20
+&lt;firesound&gt;weapons/shotgf
+&lt;projectilenum&gt;50
+
+&lt;thinginfo&gt;Chaingun
+&lt;firetype&gt;megachain
+
+&lt;thinginfo&gt;ZombieMan
+&lt;droptype&gt;RocketLauncher
+&lt;dropchance&gt;75
+&lt;fearful&gt;
+
+&lt;end&gt;
+&lt;/pre&gt;
+
+===Variables===
+The following variables are supported in a ''Mod'' file:
+* {{c|&lt;env_fs_texture&gt;}} and {{c|&lt;env_fs_sound&gt;}}: A new system to assign sounds for enviromentally mapped footsteps (sounds). You can use more than 64 textures assigned to the same sound with more than 4096 different textures that may be mapped to sounds. Two global modfile properties must be used when assigning sounds, first is {{c|&lt;env_fs_texture&gt;}} which requires a string value of a valid texture. Then, you may use {{c|&lt;env_fs_sound&gt;}}, it also requires a string value and must be set to a sound "declaration" within the [[SNDINFO]] lump. For example:
+&lt;pre&gt;
+&lt;env_fs_texture&gt;GRASS1
+&lt;env_fs_sound&gt;misc/whatever
+&lt;/pre&gt;
+* {{c|&lt;env_fs_activated&gt;}}: A modifier for actors, it's a boolean value (so true or false), if true the current monster will have have footsteps, if false it won't.
+* {{c|&lt;doom_skipskill&gt;}}: Allows for any doom based game player to bypass the skill selection screen (no value required).
+* {{c|&lt;doom_defskill&gt;}}: Specifies the skill level that is automatically set when using {{c|&lt;doom_skipskill&gt;}}, available values are 0-4, 0 being easy and 4 being nightmare.
+* {{c|&lt;stimpackhealth&gt;}}: This sets the amount of health given to the player when he/she picks up a stimpack. Valid values range from 1 to 200.
+* {{c|&lt;slimedamage&gt;}} and {{c|&lt;lavadamage&gt;}}: Variables for Default Slime and Lava damage. The available range is 0-500. They take effect on all lava and slime damage, but still retain damage "level", so for example if low lava damage is set to 20, hefty damage will be even more dangerous.
+* {{c|&lt;damage&gt;}}: All custom firetypes can be set to deal a user defined amount of damage, even missile based attacks. No longer are individual damage specifiers like {{c|&lt;bulletdamage&gt;}} needed, now just use {{c|&lt;damage&gt;}} as {{c|&lt;bulletdamage&gt;}} and such are still available but obsolete.
+** {{c|&lt;bulletdamage&gt;}}: Obsolete definition for damage values.
+* {{c|&lt;nostats&gt;}}: Allows present level transitions to be immediate in all modes except deathmatch.
+* {{c|&lt;ai_darkness&gt;}}: This sets the level of darkness the base AI will no longer be able to see the player. Its default is 0, but when set to a value between 1 and 256 it will become active. Enemies will also notice you if you come close to them in the darkness (really close). {{c|&lt;ai_darkness&gt;}} may only take an integer.
+* {{c|&lt;thinginfo&gt;}}: Opens a stream to a thing, once a stream is open thing variables may be assigned. Currently enemies/weapons can only be altered. {{c|&lt;thinginfo&gt;}} is a rather powerful variable that includes several modifiers:
+** {{c|&lt;droptype&gt;}} and {{c|&lt;dropchance&gt;}}: These are enemy modifiers. Droptype's value is the item that the currently opened thinginfo stream drops. It may be any object, even another enemy, which could make for some interesting mods, perhaps a guy that turns to an attacking ghost upon death. {{c|&lt;dropchance&gt;}} declares the chance of that thing being dropped, if not set it will be 100. Available range is 1-100. If ''"None"'' is assigned, the default drop item will be removed. If {{c|&lt;shadowman&gt;}} is specified, a "enemy" will try to stay to in the shadows when possible. If {{c|&lt;harmless&gt;}} is specified, that "enemy" will not shoot at players, no value is required when using {{c|&lt;harmless&gt;}}. When {{c|&lt;fearful&gt;}} is present the enemy will try to get away from the player (still firing if {{c|&lt;harmless&gt;}} is not set), no value is required.
+** {{c|&lt;firetype&gt;}}: This is specifically for weapons. {{c|&lt;firetype&gt;}} only works under a weapon stream opened with {{c|&lt;thinginfo&gt;}}, but when used correctly it sets the current fire type of the opened weapon. So you can now have the pistol shoot shotgun rounds etc. Example: {{c|"&lt;thinginfo&gt;pistol &lt;firetype&gt;shotgun"}} will cause the pistol to shoot shotgun rounds. Along with the use of dehacked you can really modify how a weapon fires.
+*** DOOM monster names can also be used as firetypes in Mod Files, for example {{c|&lt;firetype&gt;ZombieMan}} will automatically set that actor/weapon's firetype to use that of the doom monster. Using a "Revenant" firetype will allow for shooting of homing "missiles", even when fired by a player. Homing only locks on if the shot is aimed directly at the target and if the level time is divisible by three (for randomness.
+** {{c|&lt;bulletrange&gt;}}: May only be used with new fire types using bullet projectiles. It sets the max range of the bullet, values of {{c|&lt;bulletrange&gt;}} may be set to 1-*, each single value of 1 is 64 units. The default value is 32.
+** {{c|&lt;meleerange&gt;}} and {{c|&lt;meleedamage&gt;}}: New "Projectile" type for weapon streams, the new type is "melee" and signifies a non projectile based attack.  Range is by default 1, but it can be altered with {{c|&lt;meleerange&gt;}} (uses the same rules as bulletrange, see above). You may specify damage the damage amount by using {{c|&lt;meleedamage&gt;}}
+** {{c|&lt;health&gt;}}: Sets the current open Actor stream object health. Default player health is 100, so setting &lt;health&gt; to 200 would make the monster twice as healthly as the default player. This is similar to a implementation seen in [[DeHacked]]. 
+** {{c|&lt;blood_decal}} (normal blood splat) and {{c|&lt;blood_decal_heavy&gt;}} (heavy damage blood splat): A modifier for actors (only Monsters) which allows for changing of their blood decals. Either a single decal or a decal group can be assigned, all decals assigned must be delared in the {{c|decaldef}} [[lump]].
+** {{c|&lt;nodecal&gt;}}: No value  required. It will turn off decals for the current weapon stream.
+** {{c|&lt;blood_color&gt;}}: Controls blood puff color, which may be assigned an RGB value. All values must contain 3 place digits, (for example, instead of 20, use 020), they may be seperated by commas, colons, spaces, or no seperation if you wish. Example: {{c|&lt;blood_color&gt;000:255:000}} would set the based blood puff color to green.
+** {{c|&lt;fixedspeed&gt;}}: A modifier for actors, it can be used to set the current monster's default move speed. This can be set to an integer between 1 and 100.
+* {{c|&lt;customfiretype&gt;}}: A ''Mod'' file can support up to 3 custom fire types. First you must open up a Custom fire type stream by using &lt;customfiretype&gt;, the value of which is the new firetype name. Then you may set additional properties, see below:
+&lt;pre&gt;
+Name: &lt;projectile&gt;
+What it does: Sets the projectile type
+
+Available Values:
+bullet: Normal Bullet
+fireball: Imp Fire Ball
+bfgball: BFG Ball
+missile: Rocket
+plasma: Plasma Shot
+
+Name: &lt;bulletdamage&gt;
+What it does: Sets bullet damage if &lt;projectile&gt; is equal to bullet.
+
+Available Values:
+0-*
+
+Name: &lt;projectilenum&gt;
+What it does: Number of projectile's fired
+
+Available Values:
+1-*
+
+Name: &lt;firesound&gt;
+What it does: Where the firing sound is defined.
+
+Available Values:
+Must be string: Example, weapons/shotgf
+
+Name: &lt;attachscript&gt;
+What it does: Attaches an ACS script to be run upon firing.
+
+Available Values:
+Must be number of script to be executed.
+
+Names: &lt;attachscript_arg1&gt;, &lt;attachscript_arg2&gt;, &lt;attachscript_arg3&gt;
+What they do: Add script arguments for attached script.
+
+Available Values:
+Integers only
+&lt;/pre&gt;
+
+A full example of {{c|&lt;customfiretype&gt;}} would then look like this:
+&lt;pre&gt;
+&lt;customfiretype&gt;ultrashotgun
+&lt;projectile&gt;bullet
+&lt;damage&gt;50
+&lt;firesound&gt;weapons/shotgf
+&lt;projectilenum&gt;50
+&lt;attachscript&gt;2
+&lt;attachscript_arg1&gt;4
+&lt;/pre&gt;
+
+Then you can use {{c|&lt;firetype&gt;ultrashotgun}} to access the new firing type. Be sure you define any custom fire types before linking them. 
+** {{c|&lt;projectile_speed&gt;}}: A modifier for Custom Firetypes, this will set the projectiles speed to a user defined value between 1-*. Bullet based fire types can not have their speed altered.
+
+====Example of enemy AI modification====
+A different example could be to tweak enemy AI:
+
+&lt;pre&gt;
+&lt;thinginfo&gt;AZombieMan
+&lt;droptype&gt;none
+&lt;fearful&gt;
+&lt;shadowman&gt;
+&lt;harmless&gt;
+&lt;/pre&gt;
+
+The above would produce a harmless Zombieman who would try to stay in the shadows and runs away from the player if visible.
+
+==Legacy==
+After being unavailable for years, in June 2021, a member of the ZDoom forums made the last two builds of GADoom available.
+
+==External links==
+* [https://redarchive.drdteam.org/files/Doom/Source%20Mods/gadoom_1.0.0.3c.zip GADoom 1.0.0.3c binary], hosted by DRD Team
+* [https://redarchive.drdteam.org/files/Doom/Source%20Mods/gadoom_1.0.0.3b.zip GADoom 1.0.0.3b binary], hosted by DRD Team
+* {{forum|t=66729|Further details on GADoom}}
+* {{forum|p=16163|GADoom v1.0.0.3c release post}}
+* {{forum|p=15831|GADoom v1.0.0.3b release post}}
+* {{forum|p=15706|GADoom v1.0.0.3 release post}}
+* {{forum|t=1323|GADoom v1.0.0.2 release thread}}
+* {{forum|t=1126|GADoom v1.0.0.1 release thread}}
+* {{forum|t=1026|GADoom v1.0.0.0 release thread}}
+* {{forum|t=739|Pre-release thread, still called ZDoom}}
+
+[[Category: ZDoom-based source ports]]</text>
+    <sha1>tjdlqfkg6xte5fdo8moga4r6ee5uf4e</sha1>
+  </revision>
+</page>

@@ -1,0 +1,119 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>Associative maps</title>
+  <ns>0</ns>
+  <id>9668</id>
+  <revision>
+    <id>53280</id>
+    <parentid>52984</parentid>
+    <timestamp>2024-10-12T09:03:55Z</timestamp>
+    <contributor>
+      <username>Blue Shadow</username>
+      <id>2021</id>
+    </contributor>
+    <minor />
+    <comment>remove {{new}}</comment>
+    <origin>53280</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="4107" sha1="eckpkw25xeyqsv1avdk4jl7be9o63hl" xml:space="preserve">{{ZScriptNote}}
+
+Associative maps are similar to their {{wp|Associative_array|C++ counterparts}}, storing a '''key''' and a '''value''' associated with it. Considered a successor to ZScript's [[Dictionary]] class, these are capable of storing more types of data as keys and values rather than being limited to just strings.
+
+== Declaration ==
+Maps can be defined as such:
+ Map&lt;k,v&gt; MyMap;
+Where ''k'' is the key variable type, and ''v'' is the value variable type.
+
+* '''Key Types''' can only be strings or integrals (int/name/TextureID/etc)
+* '''Value Types''' can be any type accepted by [[dynamic arrays]].
+Example:
+ Map&lt;Int, Object&gt; ClassMapper;
+
+== Map functions ==
+*{{c|void '''{{LE|Copy}}''' (out Map&lt;KeyType, ValueType&gt; ''other'')}}
+:Copy the contents of another map into this, replacing the current contents.
+*{{c|void '''{{LE|Move}}''' (out Map&lt;KeyType, ValueType&gt; ''other'')}}
+:Move the contents of another map into this, replacing the current contents and leaving the other map empty.
+*{{c|void '''{{LE|Swap}}''' (out Map&lt;KeyType, ValueType&gt; ''other'')}}
+:Swap the contents of both maps.
+*{{c|void '''{{LE|Clear}}''' ()}}
+:Clear the current contents.
+*{{c|uint '''{{LE|CountUsed}}''' () const}}
+:Returns the number of entries in the map.
+*{{c|ValueType '''{{LE|Get}}''' (KeyType ''key'')}}
+:Returns the value for the key. If no value exists, an empty one is created.
+*{{c|bool '''{{LE|CheckKey}}''' (KeyType ''key'') const}}
+:Returns true if a value exists for the key, false if it does not.
+*{{c|ValueType '''{{LE|GetIfExists}}''' (KeyType ''key'') const}}
+:Returns the default value without creating a new key if it does not exist.
+*{{c|ValueType, bool '''{{LE|CheckValue}}''' (KeyType ''key'') const}}
+:This is the same as {{c|[[#GetIfExists|GetIfExists]]}}, but also returns true or false depending on the key's existence.
+*{{c|void '''{{LE|Insert}}''' (KeyType ''key'', ValueType ''value'')}}
+:Sets the key to the value given, replacing it if it already exists.
+*{{c|bool '''{{LE|InsertNew}}''' (KeyType ''key'')}}
+:Sets the key to an empty value, replacing it if it already exists.
+*{{c|void '''{{LE|Remove}}''' (KeyType ''key'')}}
+:Removes a key if it exists.
+
+== MapIterator functions ==
+*{{c|bool '''{{LE|Init}}''' (out Map&lt;KeyType, ValueType&gt; ''other'')}}
+:Starts iteration for the map given, returning true if valid. {{c|[[#Next|Next]]}} must be called to get the first value.
+*{{c|bool '''{{LE|ReInit}}''' ()}}
+:Restarts iteration for the last map used, returning true if valid. {{c|Next}} must be called to get the first value.
+*{{c|bool '''{{LE|Valid}}''' ()}}
+:Returns true if the iterator is currently valid. Modifying or deleting the map it is iterating on makes it invalid.
+*{{c|bool '''{{LE|Next}}''' ()}}
+:Advances the position and returns true if there are elements left.
+:'''Warning:''' Only safe to call if valid.
+*{{c|KeyType '''{{LE|GetKey}}''' ()}}
+:Returns the key for the current element. Only safe to call if both {{c|Next}} and {{c|[[#Valid|Valid]]}} return true.
+*{{c|ValueType '''{{LE|GetValue}}''' ()}}
+:Returns the value for the current element. Only safe to call if both {{c|Next}} and {{c|Valid}} return true.
+*{{c|void '''{{LE|SetValue}}''' (ValueType ''value'')}}
+:Sets the value for the current element. Only safe to call if both {{c|Next}} and {{c|Valid}} return true.
+
+== Alternative iteration ==
+&lt;code&gt;foreach&lt;/code&gt; can be used similar to how it's done with dynamic arrays. See examples below.
+&lt;syntaxhighlight lang="csharp"&gt;
+foreach([key,] value : map/mapiterator)
+{
+    //...
+}
+&lt;/syntaxhighlight&gt;
+
+== Examples ==
+Iteration can be done this way as an alternative.
+&lt;syntaxhighlight lang="csharp"&gt;
+Map&lt;String, int&gt; testmap;
+		
+testmap.Insert("123",123);
+testmap.Insert("456",456);
+testmap.Insert("789",789);
+
+foreach( k , v : testmap )
+{
+	console.printf("k = '"..k.."' v = "..v);
+}
+
+foreach( v : testmap )
+{
+	console.printf("v = "..v);
+}
+
+MapIterator&lt;String, int&gt; testmapIt;
+
+testmapIt.Init(testmap);
+
+foreach( k , v : testmapIt )
+{
+	console.printf("k = '"..k.."' v = "..v);
+}
+
+foreach( v : testmapIt )
+{
+	console.printf("v = "..v);
+}
+&lt;/syntaxhighlight&gt;</text>
+    <sha1>eckpkw25xeyqsv1avdk4jl7be9o63hl</sha1>
+  </revision>
+</page>

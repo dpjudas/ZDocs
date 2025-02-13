@@ -1,0 +1,67 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>Strife dialog scripts and ACS</title>
+  <ns>0</ns>
+  <id>2838</id>
+  <revision>
+    <id>26379</id>
+    <parentid>26378</parentid>
+    <timestamp>2010-03-28T20:58:17Z</timestamp>
+    <contributor>
+      <username>Gez</username>
+      <id>1283</id>
+    </contributor>
+    <minor />
+    <origin>26379</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="1927" sha1="3f1c0qbfv95zixj0iysj1vaazh50mxr" xml:space="preserve">In order to compile [[DIALOGUE|Strife dialog scripts]], you will need a compiler, such as [[KSSC]] or [[Universal Strife Dialog Format|USDC]]. This article explains how to integrate these scripts further into ZDoom and ACS.
+
+== A quick tip for linking Strife Dialog and ACS ==
+
+
+Have a decorate item set up like this: 
+
+    Actor ACSQuestItem : CustomInventory
+    {                             
+    ConversationID 10              //You can use any ConversationID from 0 to 999.
+    States
+    {
+    Pickup:
+        TNT1 A 0 ACS_Execute(900,0)
+        Stop
+    }
+
+Have an option in your Strife Dialog script (here in [[KSSC]] syntax) with the following information: 
+
+    #--OPTION-- 
+    { 
+    GIVEMOBJ 10 #Gives the player the ACSQuestItem when they select this option.
+    TEXT &amp;Selecting this option will trigger a looping CheckInventory script.&amp; 
+    YESTEXT _ 
+    }
+
+And have a looping ACS script like this: 
+
+    Script 900 (void)
+    { 
+        Stuff; 
+    }
+
+Using this method, you can have an option such as "Open the door, now!" and use ACS to open the door for you (this is obviously not a good example since you can use the door specials directly in the pickup state without using ACS at all, but whatever...).
+
+However, this method opens up flexibility with events:  Rather than simply open the door, you could open the door, have the person you're talking to walk through it and shoot some badguys.
+
+Also, there is the possibility to randomize generic responses to give your characters a bit more depth, using something like this:
+
+    Script 900 (void)
+    {
+        ActivatorSound("RANDOM/sound", 127);
+    }
+
+Where "RANDOM/sound" is of course a random sound as defined in [[SNDINFO]].
+
+When you link them to ACS, Strife Dialog scripts become quite powerful and flexible, and they are easy to implement once you are used to them. The range you are limited to on ConversationID's is 0-999.
+[[Category:Guides]]</text>
+    <sha1>3f1c0qbfv95zixj0iysj1vaazh50mxr</sha1>
+  </revision>
+</page>

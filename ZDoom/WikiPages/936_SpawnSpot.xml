@@ -1,0 +1,53 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>SpawnSpot</title>
+  <ns>0</ns>
+  <id>936</id>
+  <revision>
+    <id>38909</id>
+    <parentid>38906</parentid>
+    <timestamp>2015-02-25T19:54:15Z</timestamp>
+    <contributor>
+      <username>Crimson Dusk</username>
+      <id>2000</id>
+    </contributor>
+    <origin>38909</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="1521" sha1="c6cz9gmkakqrzxpcb9hvosmxu484zo4" xml:space="preserve">int '''SpawnSpot''' (str ''classname'', int ''spottid'' [, int ''tid'' [, int ''angle'']])
+
+==Usage==
+
+'''SpawnSpot''' requires an actor (e.g. a {{class|MapSpot}}) at the location where the actor will be spawned. To spawn something using exact coordinates, use [[Spawn]]. The spawn may fail if something blocks the spawn location. To force the actor to be spawned regardless of this, use [[SpawnSpotForced]].
+
+If there are multiple spot actors with the same tid, SpawnSpot will try to spawn an actor at each one of them.
+
+Note that this function does not make teleport fog appear when the actor(s) spawn. Since the teleport effect is simply another actor, you can manually do this by spawning a {{class|TeleportFog}} actor at the same time.
+
+* ''classname'': the actor to spawn. To get a list of the things you can spawn in the game, visit the [[Classes]] pages.
+* ''spottid'': the [[thing ID]] of the actor to spawn at.
+* ''tid'': the thing ID to give the spawned thing.
+* ''angle'': [[byte angle]].
+
+The return value is the number of things spawned.
+
+== Examples ==
+
+This will spawn an {{class|DoomImp|imp}} from Doom at the map spot with tid of 64:
+
+ [[SpawnSpot]] ("{{class|DoomImp}}", 64);
+
+This will spawn a {{class|shotgun}} at the same mapspot with teleport fog and give it a tid of 200:
+
+ [[SpawnSpot]] ("{{class|Shotgun}}", 64, 200);
+ [[SpawnSpot]] ("{{class|TeleportFog}}", 64);
+
+== See also ==
+* [[SpawnSpotFacing]]
+* [[SpawnSpotForced]]
+* [[Thing_Spawn]]
+
+{{spawn functions}}
+[[category:ACS Actor functions]]</text>
+    <sha1>c6cz9gmkakqrzxpcb9hvosmxu484zo4</sha1>
+  </revision>
+</page>

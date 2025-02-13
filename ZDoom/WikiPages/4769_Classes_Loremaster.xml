@@ -1,0 +1,98 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>Classes:Loremaster</title>
+  <ns>0</ns>
+  <id>4769</id>
+  <revision>
+    <id>39853</id>
+    <parentid>35217</parentid>
+    <timestamp>2015-05-04T22:14:02Z</timestamp>
+    <contributor>
+      <username>Blue Shadow</username>
+      <id>2021</id>
+    </contributor>
+    <minor />
+    <comment>/* DECORATE definition */ Updated</comment>
+    <origin>39853</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="2521" sha1="joatg6m1dw2pyluqw0na9wwmap42cuc" xml:space="preserve">{{Actor|
+| type = Monster
+| name = The Loremaster
+| class = Loremaster
+| game = Strife
+| doomednum = 12
+| convid = 66, 63, 64
+}}[[Classes]]: {{Class}} &amp;rarr; &lt;u&gt;Loremaster&lt;/u&gt;&lt;br&gt;
+The Loremaster is the last of the five Sigil-possessing bosses in Strife (or the fourth, depending if you already killed the Oracle). He fires a chain which doesn't do much damage, although it pulls you away. This makes it extremely dangerous as you can lose a lot of health due to falling damage.
+==== [[DECORATE]] definition ====
+ ACTOR &lt;u&gt;Loremaster&lt;/u&gt;
+ {
+   {{Property|Health}} 800
+   {{Property|Speed}} 10
+   {{Property|Radius}} 15
+   {{Property|Height}} 56
+   {{Property|FloatSpeed}} 5
+   {{Property|Monster}}
+   +{{Flag|FLOAT}}
+   +{{Flag|NOBLOOD}}
+   +{{Flag|NOGRAVITY}}
+   +{{Flag|NOTDMATCH}}
+   +{{Flag|FLOORCLIP}}
+   +{{Flag|NOBLOCKMONST}}
+   +{{Flag|INCOMBAT}}
+   +{{Flag|LOOKALLAROUND}}
+   +{{Flag|NOICEDEATH}}
+   +{{Flag|NEVERRESPAWN}}
+   {{Property|DamageFactor}} "{{DamageType|Fire}}", 0.5
+   {{Property|MinMissileChance}} 150
+   {{Property|Tag}} "$TAG_PRIEST" // "PRIEST"
+   {{Property|SeeSound}} "loremaster/sight"
+   {{Property|AttackSound}} "loremaster/attack"
+   {{Property|PainSound}} "loremaster/pain"
+   {{Property|DeathSound}} "loremaster/death"
+   {{Property|ActiveSound}} "loremaster/active"
+   {{Property|Obituary}} "$OB_LOREMASTER" // "%o couldn't escape from the Lore Master's grasp."
+   {{Property|DropItem}} "{{Class|Junk}}"
+   States
+   {
+   Spawn:
+     PRST A 10 [[A_Look]]
+     PRST B 10 [[A_SentinelBob]]
+     Loop
+   See:
+     PRST A 4 [[A_Chase]]
+     PRST A 4 [[A_SentinelBob]]
+     PRST B 4 [[A_Chase]]
+     PRST B 4 [[A_SentinelBob]]
+     PRST C 4 [[A_Chase]]
+     PRST C 4 [[A_SentinelBob]]
+     PRST D 4 [[A_Chase]]
+     PRST D 4 [[A_SentinelBob]]
+     Loop
+   Melee:
+     PRST E 4 [[A_FaceTarget]]
+     PRST F 4 [[A_CustomMeleeAttack]](([[DECORATE_expressions#Mathematical_functions|random]][SpectreMelee](0, 255)&amp;9)*5)
+     PRST E 4 [[A_SentinelBob]]
+     Goto See
+   Missile:
+     PRST E 4 [[A_FaceTarget]]
+     PRST F 4 [[A_CustomMissile]]("{{Class|LoreShot}}", 32, 0)
+     PRST E 4 [[A_SentinelBob]]
+     Goto See
+   Death:
+     PDED A 6
+     PDED B 6 [[A_Scream]]
+     PDED C 6
+     PDED D 6 [[A_Fall]]
+     PDED E 6
+     PDED FGHIJIJIJKL 5
+     PDED MNOP 4
+     PDED Q 4 [[A_SpawnItemEx]]("{{Class|AlienSpectre5}}", 0, 0, 0, 0, 0, [[DECORATE_expressions#Mathematical_functions|random]][spectrespawn](0, 255)*0.0078125, 0, SXF_NOCHECKPOSITION)
+     PDED RS 4
+     PDED T -1
+     Stop
+   }
+ }</text>
+    <sha1>joatg6m1dw2pyluqw0na9wwmap42cuc</sha1>
+  </revision>
+</page>

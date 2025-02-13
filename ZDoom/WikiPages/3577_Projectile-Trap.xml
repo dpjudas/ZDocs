@@ -1,0 +1,86 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>Projectile Trap</title>
+  <ns>0</ns>
+  <id>3577</id>
+  <revision>
+    <id>35950</id>
+    <parentid>26631</parentid>
+    <timestamp>2013-03-01T01:22:33Z</timestamp>
+    <contributor>
+      <username>Deded007</username>
+      <id>1392</id>
+    </contributor>
+    <minor />
+    <comment>/* The Definition */  const template</comment>
+    <origin>35950</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="3184" sha1="hu3aat2kefm3k43smb9iiouhmtfxha9" xml:space="preserve">== Description ==
+
+Add this to your [[DECORATE]] lump, and this will add a new thing that fires projectiles in the direction of the thing. It has 3 modes. It works using [[Thing]] Arguments.
+
+*Arg0(Mode) - Determines the mode this thing is in. There are 3.
+**1 - Fires a continuous stream of projectiles, non-stop.
+**2 - Does the same, but will only fire when it can see a hostile target
+**3 - Same as 2, but unlike the other modes, this one turns and fires directly at its target.
+**Anything else defaults to 1. This includes 0.
+*Arg1(Type) - The [[Spawn numbers|SpawnID]] of the projectile. Note that it doesn't actually need to be a projectile. Could be useful as an ammo generator. Might spawn too much though.
+*Arg2(Speed) - The speed at which the projectile is thrown. This is in units per 8 tics, so eight times the value of a projectile's {{Property|Speed}}. For example, a {{Class|PlasmaBall}} has a speed property of 25, so for the projectile trap to throw it at its normal speed, you would need to use a value of 200 (25*8).
+*Arg3(Pitch) - The vertical speed for the projectile to fire at. 0 is horizontal, negative is down and positive is up.
+*Arg4(FOV) - Used for determining whether to fire in modes 2 and 3. It's the trap's field of view.
+
+To use it in your map:
+*Add the definition to the DECORATE lump
+*Add a thing of type 20005 to the map. You can change this if it gets in the way.
+*Give it the correct facing and ZHeight, and set the arguments.
+
+Other tips:
+*You can change how fast it fires by editing the first State definition duration. On the line ''&lt;nowiki&gt;TNT1 A 5 A_LookEx...&lt;/nowiki&gt;'' change the number. Higher numbers result in slower fire. DO NOT SET TO ZERO. This is the number of frames the delay lasts. 35 frames = 1 second. By default it fires at a rate of 5, or 7 rounds per second.
+*You can disable it by setting the {{flag|DORMANT}} flag and unsetting with a script.
+*Set the friendly [[Actor flags|flag]] for modes 2 and 3 to make it only react to enemies.
+
+== The Definition ==
+ ACTOR TrapProjectileLauncher 20005
+ { 
+ 	Monster
+ 	+{{flag|STANDSTILL}}
+ 	+{{flag|NOBLOCKMAP}}
+ 	+{{flag|NOGRAVITY}}
+ 	-{{flag|SHOOTABLE}}
+ 	States
+ 	{
+ 	Spawn:
+ 		TNT1 A 5 [[A_LookEx]] ({{const|LOF_NOSOUNDCHECK}}, 0, 0, 0, 0, "SpawnSkip")
+ 		Loop
+ 	SpawnSkip:
+ 	 	TNT1 A 5
+ 		TNT1 A 0 [[A_JumpIf]] (args[0]==1, "Constant")
+ 		TNT1 A 0 [[A_JumpIf]] (args[0]==2, "Automatic")
+ 		TNT1 A 0 [[A_JumpIf]] (args[0]==3, "Smart")
+        
+ 	Constant: //First Function: Always Shoot
+ 		TNT1 A 0 [[Thing_Projectile]] (0, args[1], (angle * 256 / 360)%256, args[2], args[3])
+ 		TNT1 A 0
+ 		Goto Spawn
+        
+ 	Automatic: //Second Function: Shoot when in sight
+ 		TNT1 A 0 [[A_JumpIfTargetInLOS]] (2,args[4]*256)
+ 		TNT1 A 0 [[A_Jump]] (256,2)
+ 		TNT1 A 0 [[Thing_Projectile]] (0, args[1], (angle * 256 / 360)%256, args[2], args[3])
+ 		TNT1 A 0
+ 		Goto Spawn
+ 	   
+ 	Smart: //Third Function: Same as second, but can turn.
+ 		TNT1 A 0 [[A_FaceTarget]]
+ 		TNT1 A 0 [[A_JumpIfTargetInLOS]] (2,args[4]*256)
+ 		TNT1 A 0 [[A_Jump]] (256,2)
+ 		TNT1 A 0 [[Thing_Projectile]] (0, args[1], (angle * 256 / 360)%256, args[2], args[3])
+ 		TNT1 A 0
+ 		Goto Spawn
+ 	}
+ }
+
+[[category:Guides]]</text>
+    <sha1>hu3aat2kefm3k43smb9iiouhmtfxha9</sha1>
+  </revision>
+</page>

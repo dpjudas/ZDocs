@@ -1,0 +1,153 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>CallTryPickup</title>
+  <ns>0</ns>
+  <id>9794</id>
+  <revision>
+    <id>54074</id>
+    <parentid>53010</parentid>
+    <timestamp>2024-12-20T09:06:52Z</timestamp>
+    <contributor>
+      <username>Jekyll Grim Payne</username>
+      <id>2175</id>
+    </contributor>
+    <comment>/* Usage */</comment>
+    <origin>54074</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="4288" sha1="7syt5w876gb7gp4w60xhjz4vvqwomfa" xml:space="preserve">
+
+'''{{class|Inventory}}'''
+
+{{c|bool, Actor '''CallTryPickup'''(Actor ''toucher'')}}
+
+==Usage==
+Called by {{class|Inventory}} items to enter another actor's inventory. In contrast to [[TryPickup]], this function is not virtual and cannot be overridden. It's designed to handle all the necessary checks before the item can be picked up, such as:
+* Call [[CanReceive|toucher.CanReceive(self)]] to check if the actor receiving the item applies any special rules to it.
+* Call [[CanPickup|CanPickup(toucher)]] to check if this item can be received by the toucher.
+* Call [[GiveQuestItem|GiveQuestItem(toucher)]] to handle giving of {{class|QuestItem|quest items}}.
+and others.
+
+If there's a need to move an item into another actor's inventory, this function should be called (such as &lt;code&gt;&lt;toucherpointer&gt;.CalltryPickup(&lt;itempointer&gt;)&lt;/code&gt;) instead of trying to call [[TryPickup]] directly.
+
+'''Note:''' This function does ''not'' handle the printing of the item's {{property|PickupMessage}} or the playing of its {{property|PickupSound}}, it only handles the giving of the item. Messages and sounds are handled in the '''[[Touch]]''' virtual function.
+
+=== Parameters ===
+*{{c|Actor '''toucher'''}}
+:The actor who is attempting to receive this item.
+
+=== Return values ===
+* bool
+:Returns true if the item was successfully received. Note, this doesn't guarantee that the item itself keep existing. Many classes, such as {{class|Health}}, perform their function (such as healing the toucher) and then disappear. TryPickup still returns true in this case, because technically the item was sucecssfully received.
+* Actor
+:A pointer to the actor who received the item.
+
+== Examples ==
+This version of Doom's {{class|HealthBonus}} will be instantly received by any player who enters the 256 radius around it:
+&lt;syntaxhighlight lang="csharp"&gt;
+class HealthBonus_AutoPickup : HealthBonus
+{
+	override void Tick()
+	{
+		super.Tick();
+		// Do nothing if this item is frozen or has the NOSECTOR flag
+		// (is in the process of being respawned):
+		if (isFrozen() || bNOSECTOR)
+		{
+			return;
+		}
+
+		double dist = 256;
+		let bti = BlockThingsIterator.Create(self, dist);
+		while (bti.Next())
+		{
+			let act = bti.thing;
+			if (act.player &amp;&amp; act.health &gt; 0 &amp;&amp; Distance3D(act) &lt;= dist)
+			{
+				CallTryPickup(act);
+				break;
+			}
+		}
+	}
+}&lt;/syntaxhighlight&gt;
+
+As mentioned above, this item will ''not'' print its pickupmessage or play its pickupsound, those are handled in the [[Touch]] virtual.
+
+== [[ZScript]] definition ==
+{{ZScriptDefinitionNote|actors/inventory/inventory.zs#L625}}
+&lt;syntaxhighlight lang="csharp"&gt;
+	bool, Actor CallTryPickup(Actor toucher)
+	{
+		let saved_toucher = toucher;
+		let Invstack = Inv; // A pointer of the inventories item stack.
+
+		// unmorphed versions of a currently morphed actor cannot pick up anything. 
+		if (bUnmorphed) return false, null;
+
+		//[AA] starting with true, so that CanReceive can unset it,
+		// if necessary:
+		bool res = true;
+		// [AA] CanReceive lets the actor receiving the item process it first.
+		if (!toucher.CanReceive(self))
+		{
+			res = false;
+		}
+		// CanPickup processes restrictions by player class.
+		else if (CanPickup(toucher))
+		{
+			res = TryPickup(toucher);
+		}
+		else if (!bRestrictAbsolutely)
+		{
+			// let an item decide for itself how it will handle this
+			res = TryPickupRestricted(toucher);
+		}
+		else
+			return false, null;
+
+
+		if (!res &amp;&amp; (bAlwaysPickup) &amp;&amp; !ShouldStay())
+		{
+			res = true;
+			GoAwayAndDie();
+		}
+
+		if (res)
+		{
+			GiveQuestItem(toucher);
+
+			// Transfer all inventory across that the old object had, if requested.
+			if (bTransfer)
+			{
+				while (Invstack)
+				{
+					let titem = Invstack;
+					Invstack = titem.Inv;
+					if (titem.Owner == self)
+					{
+						if (!titem.CallTryPickup(toucher)) // The object no longer can exist
+						{
+							titem.Destroy();
+						}
+					}
+				}
+			}
+			// [AA] Let the toucher do something with the item they've just received:
+			toucher.HasReceived(self);
+
+			// If the item can be shared, make sure every player gets a copy.
+			if (multiplayer &amp;&amp; !deathmatch &amp;&amp; sv_coopsharekeys &amp;&amp; bIsKeyItem)
+				ShareItemWithPlayers(toucher);
+		}
+		return res, toucher;
+	}
+&lt;/syntaxhighlight&gt;
+
+== See also ==
+* [[TryPickup]]
+* [[Touch]]
+
+[[Category:ZScript]]
+[[Category:Inventory]]</text>
+    <sha1>7syt5w876gb7gp4w60xhjz4vvqwomfa</sha1>
+  </revision>
+</page>

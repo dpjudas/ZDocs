@@ -1,0 +1,61 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>A RearrangePointers</title>
+  <ns>0</ns>
+  <id>6957</id>
+  <revision>
+    <id>50165</id>
+    <parentid>45590</parentid>
+    <timestamp>2023-03-19T03:19:15Z</timestamp>
+    <contributor>
+      <username>Cpt. Carmack</username>
+      <id>2022</id>
+    </contributor>
+    <comment>Undo revision 40409 by [[Special:Contributions/Cpt. Carmack|Cpt. Carmack]] ([[User talk:Cpt. Carmack|talk]])</comment>
+    <origin>50165</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="2257" sha1="2dynqnyehe4xdv9sog9d6c7wmbkd34e" xml:space="preserve">{{codepointer|Monster AI}}
+'''ZScript note:''' Setting pointers in ZScript is as simple as referencing them by name, and as such this function is not strictly necessary. See [[Using_pointers_in_ZScript|using pointers in ZScript]] for more information.
+
+'''A_RearrangePointers''' (pointer ''target'', pointer ''master'', pointer ''tracer'', int ''flags'')
+
+The calling actor swaps its [[actor pointer]]s.
+*''target'' corresponds to the value to store in the {{c|target}} field.
+*''master'' corresponds to the value to store in the {{c|master}} field.
+*''tracer'' corresponds to the value to store in the {{c|tracer}} field.
+
+The pointers can be any of the following:
+* {{c|AAPTR_DEFAULT}}: no change is performed.
+* {{c|AAPTR_NULL}}: no actor at all.
+* {{c|AAPTR_TARGET}}: the calling actor's {{c|target}}, if any.
+* {{c|AAPTR_MASTER}}: the calling actor's {{c|master}}, if any.
+* {{c|AAPTR_TRACER}}: the calling actor's {{c|tracer}}, if any.
+Remember that the nature of these pointers depend on the actor type and is not always intuitive.
+
+By default {{c|master}} and {{c|target}} become {{c|NULL}} if values are assigned that would cause infinite relationships, such as missiles targeting each other, masters mastering each other. The following flags can manipulate and disable the safe guards to allow for more complex relationships:
+* '''PTROP_UNSAFETARGET''' (1) &amp;mdash; do not nullify assignments that result in an infinite chain of missiles referencing each other.
+* '''PTROP_UNSAFEMASTER''' (2) &amp;mdash; do not nullify assignments that result in an infinite chain of actors referencing each other.
+* '''PTROP_NOSAFEGUARDS''' (3) &amp;mdash; same as putting in {{c|PTROP_UNSAFETARGET{{!}}PTROP_UNSAFEMASTER}}.
+
+Note that setting a target to {{c|AAPTR_NULL}} with this function does not perform all actions of [[A_ClearTarget]], that clears other related fields.
+
+== Examples ==
+This {{class|DoomImp|imp}} has a 4/256 chance to "forget" its master and its target.
+
+ ACTOR AmnesiacImp : {{Class|DoomImp}}
+ {
+   States
+   {
+   See:
+     TROO A 0 [[A_Jump]](252, 2)
+     TROO A 0 [[A_RearrangePointers]]({{const|AAPTR_NULL}}, {{const|AAPTR_NULL}}, {{const|AAPTR_DEFAULT}})
+     TROO AABBCCDD 3 [[A_Chase]]
+     Loop
+   }
+ }
+
+== See also ==
+* [[Actor pointers]]</text>
+    <sha1>2dynqnyehe4xdv9sog9d6c7wmbkd34e</sha1>
+  </revision>
+</page>

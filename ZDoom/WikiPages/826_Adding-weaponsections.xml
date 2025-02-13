@@ -1,0 +1,47 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>Adding weaponsections</title>
+  <ns>0</ns>
+  <id>826</id>
+  <revision>
+    <id>31556</id>
+    <parentid>25941</parentid>
+    <timestamp>2011-11-28T12:57:56Z</timestamp>
+    <contributor>
+      <username>Gez</username>
+      <id>1283</id>
+    </contributor>
+    <minor />
+    <origin>31556</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="1960" sha1="knpx7vr0b68vca3agx5yol6bwhyxmqo" xml:space="preserve">{{Tip|Starting with ZDoom 2.3.0, new and better ways to add weapons to slots are available.&lt;br&gt;See the article on [[weapon slots]] for more information.}}
+
+{{WarnDeprecated}}
+
+Weaponsections are used to alter the weapons that the player will use in a wad. In addition to adding these binds to the [[KEYCONF]] lump, the wad maker must also supply the sprites associated with the weapon. Sounds, however, are optional.
+
+When making a new weaponsection, the "weaponsection" command must be used so [[ZDoom]] knows to only associate this particular binding with a particular wad file.
+
+A few keywords are used when making these binds, which are as follows:
+
+* addslotdefault - This is the normal bind, and simply adds a weapon to that key.
+* setslot - This clears any binds already on this key before adding the weapon.
+* defaultbind - This adds the weapon ''only'' if the key is currently unbound ''and'' this object is not already bound to a key.
+
+An example of a KEYCONF lump which alters the weapon binding:
+
+    weaponsection MyNewWeapons
+    setslot 1 Fist
+    addslotdefault 1 CWeapMace
+    setslot 2
+
+This will clear the "1" key, and add the fist weapon from Doom. The second line adds the Cleric's Mace after the fist. Weapon names can be found from a dumpclass via the console, and are case sensitive. The final line simply removes all binds from the "2" key.
+
+The name after weaponsection specifies in which [[configuration file|ini]] section these weapon assignments will be saved. You should make this something related to your project to minimize the risk of using a section that another project also uses. "MyNewWeapons" is therefore a bad name to use when you are actually defining a weapon section, but it suffices for example purposes. If you were using this in a WAD named "The Uvlevian Empire", then "UvlevianEmpire" would be a suitable weaponsection name.
+
+A list of weapons can be found on the [[SetWeapon]] page.
+
+[[category:KEYCONF guides]]</text>
+    <sha1>knpx7vr0b68vca3agx5yol6bwhyxmqo</sha1>
+  </revision>
+</page>

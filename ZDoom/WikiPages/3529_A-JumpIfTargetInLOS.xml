@@ -1,0 +1,87 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>A JumpIfTargetInLOS</title>
+  <ns>0</ns>
+  <id>3529</id>
+  <revision>
+    <id>44161</id>
+    <parentid>42405</parentid>
+    <timestamp>2017-03-20T11:57:55Z</timestamp>
+    <contributor>
+      <username>Gez</username>
+      <id>1283</id>
+    </contributor>
+    <minor />
+    <comment>removing "new" for GZDoom 2.4.0 release</comment>
+    <origin>44161</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="5674" sha1="g2owobznsn75exp90590v0lb9t2oafp" xml:space="preserve">__NOTOC__
+{{codepointer|Jump}}
+state '''A_JumpIfTargetInLOS''' (int ''offset'' [, float ''fov'' [, int ''flags'' [, float ''dist_max'' [, float ''dist_close'']]]])&lt;br&gt; 
+state '''A_JumpIfTargetInLOS''' (str "''state''" [, float ''fov'' [, int ''flags'' [, float ''dist_max'' [, float ''dist_close'']]]])&lt;br&gt;
+{{JumpNotice}}
+This can be used with monsters, weapons, projectiles and inventory items.
+
+For weapons and inventory, jumps if the player has a suitable line target under their crosshair. With weapons and inventory, [[FOV]] is meaningless and can be omitted.
+"Suitable" is defined as:
+# The targeted actor has the {{Flag|SOLID}} flag.
+# The targeted actor has the {{Flag|SHOOTABLE}} flag.
+# The targeted actor does not have the {{Flag|NOBLOCKMAP}} flag.
+
+For monsters and seeking projectiles, the ''flags'' parameter is used to determine the actor that the calling actor looks for. In the rest of the description, "target" will refer to either:
+# The calling actor's {{c|master}}, if the actor is a [[monster]] and the JLOSF_CHECKMASTER flag is set;
+# The calling actor's {{c|tracer}}, if the actor is a [[missile]] with the {{Flag|SEEKERMISSILE}} flag and JLOSF_PROJECTILE is set. It will also refer to {{c|tracer}} if the JLOSF_CHECKTRACER is set, regardless if the actor is a missile or not;
+# The calling actor's {{c|target}}, in all other cases. This corresponds to a monster's enemy or a projectile's shooter. (It is counter-intuitive, but a projectile's {{c|target}} field does not store the projectile's actual target.)
+
+== Usage ==
+Jumps if the calling actor has a valid target (as explained above) and can currently see it. If FOV is given, it is an angle representing the size (in degrees) of the actor's sight cone. Actors outside of this cone (the center of which is the calling actor's current facing direction) are not considered to be “visible”. If omitted, no sight cone is used and instead this function jumps if the view between the caller and the target is unobstructed (the caller can see the target, regardless of facing direction, given there are no walls between the two).
+
+=== Parameters ===
+* ''state'' is label of the state to which the jump must be made.
+* ''offset'' corresponds to the number of states that must be skipped to make the jump.
+* ''fov'' corresponds to the field of vision used by the calling actor. The default value of 0 gives an all-around field of vision.
+* ''flags'': The following flags can be combined by using the {{!}} character between the constant names:
+** '''JLOSF_PROJECTILE'''&amp;nbsp;&amp;mdash; Seeking projectile: If set, the actor checks sight with the target it is seeking ({{c|tracer}} field) instead of the normal {{c|target}} field (which, for projectiles, actually corresponds to the actor that fired it). If the actor is not a projectile or does not have the {{Flag|SEEKERMISSILE}} flag set, this flag is ignored.
+** '''JLOSF_NOSIGHT'''&amp;nbsp;&amp;mdash; No sight check: Disables the sight check.
+** '''JLOSF_CLOSENOFOV'''&amp;nbsp;&amp;mdash; No FOV check if close: Disable the FOV check if the target is within ''dist_close'' distance.
+** '''JLOSF_CLOSENOSIGHT'''&amp;nbsp;&amp;mdash; No sight check if close: Disable the sight check if the target is within ''dist_close'' distance.
+** '''JLOSF_CLOSENOJUMP'''&amp;nbsp;&amp;mdash; No jump if close: Does not perform a jump if the target is within ''dist_close'' distance.
+** '''JLOSF_DEADNOJUMP'''&amp;nbsp;&amp;mdash; No jump if dead: Does not perform a jump if the target is dead.
+** '''JLOSF_CHECKMASTER'''&amp;nbsp;&amp;mdash; Check master: Use the {{c|master}} field instead of the {{c|target}} or {{c|tracer}} field.
+** '''JLOSF_TARGETLOS'''&amp;nbsp;&amp;mdash; Check target's line of sight.
+** '''JLOSF_FLIPFOV'''&amp;nbsp;&amp;mdash; Check FOV for the actor that does not make a sight check.
+** '''JLOSF_ALLYNOJUMP'''&amp;nbsp;&amp;mdash; Jump only if the actors are not allied to each other. Unfriendly monsters have no allies.
+** '''JLOSF_COMBATANTONLY'''&amp;nbsp;&amp;mdash; Jump only if the target is a monster or a player. (Particularly useful when working with a player's target, as it could be any actor.)
+** '''JLOSF_NOAUTOAIM'''&amp;nbsp;&amp;mdash; Jump only if the target is under the crosshair, taking both horizontal and vertical aims into account. This is to cater for weapons that require manual aiming by nature such as [[railgun]]s, or ones that have [[autoaim]] disabled in them with the use of the {{Flag|WEAPON.NOAUTOAIM}} flag.
+** '''JLOSF_CHECKTRACER'''&amp;nbsp;&amp;mdash; Check line of sight with the calling actor's tracer instead of target. Unlike JLOSF_PROJECTILE, this flag works on non-missile actors.
+
+:The combination of the flags JLOSF_TARGETLOS and JLOSF_FLIPFOV duplicates the behavior of [[A_JumpIfInTargetLOS]] (target line is checked, caller fov is checked).
+
+* ''dist_max'': The maximum distance between the calling actor and the target, no jumps are performed beyond it. The default value of 0 means there are no distance checks.
+* ''dist_close'': The function of this parameter depends on the ''flags'' used; it has otherwise no effect. The default value is 0.
+
+== Examples ==
+This is a modified {{Class|railgun}} that will not shoot unless it will hit something.
+
+ ACTOR ScannerRailgun : {{Class|Railgun}}
+ {
+   +{{flag|WEAPON.NOAUTOFIRE}} // Disables Automatic fire.
+   States
+   {
+   Fire:
+     RLGG E 1 [[A_JumpIfTargetInLOS]](1, 0, {{const|JLOSF_NOAUTOAIM}}) // Is there something that is being aimed at?
+     Goto Ready // Cannot fire, go back to ready
+     RLGG E 12 [[A_FireRailgun]]
+     RLGG F 6 [[A_CheckForReload]](4, "Reloaded")
+     RLGG GHIJK 6
+     RLGG L 6 [[A_ResetReloadCounter]]
+   }
+ }
+
+== See also ==
+* [[A_CheckSight]]
+* [[A_CheckSightOrRange]]
+* [[A_JumpIfInTargetLOS]]</text>
+    <sha1>g2owobznsn75exp90590v0lb9t2oafp</sha1>
+  </revision>
+</page>

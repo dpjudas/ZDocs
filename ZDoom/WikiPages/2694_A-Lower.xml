@@ -1,0 +1,53 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>A Lower</title>
+  <ns>0</ns>
+  <id>2694</id>
+  <revision>
+    <id>47266</id>
+    <parentid>47084</parentid>
+    <timestamp>2020-03-18T15:57:37Z</timestamp>
+    <contributor>
+      <username>Gez</username>
+      <id>1283</id>
+    </contributor>
+    <minor />
+    <comment>doomwiki link</comment>
+    <origin>47266</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="1584" sha1="dnktc38stvde4et4q6xd16n3c0tse99" xml:space="preserve">__NOTOC__{{codepointer|Weapon}}void '''A_Lower''' [(int ''lowerspeed'')]
+{{doomwiki|A_Lower}}
+
+== Usage ==
+This function must be called in a [[weapon]]'s Deselect state sequence. It should not be used anywhere else. It is responsible for lowering the weapon until it is off the screen and for selecting another weapon when it is done.
+
+Each time the function is called, the weapon moves further down the screen until it has reached the fully lowered position. You can therefore make a weapon lower faster than the default by calling the function more than once within the same tic, or by passing the desired speed directly.
+
+
+{{Warning|Do not call this function repeatedly in the same state inside another function, [[anonymous functions|anonymous]] or otherwise. All calls to A_Lower are executed fully inside the other function, even if the weapon has reached its ready position, resulting in unwanted side effects.}}
+
+=== Parameters ===
+*''lowerspeed'': how much the weapon is lowered by. Default is 6.
+
+== Examples ==
+Here is an example of a basic Deselect state that makes use of this function to move the weapon down towards the lowered position and then select a new weapon:
+
+ Deselect:
+    SHTG A 1 [[A_Lower]]
+    Loop
+
+This will lower the weapon down off the screen when a new weapon is selected. Once it has reached the fully lowered position, {{c|[[A_Lower]]}} will change to the new weapon that was selected.
+
+
+This weapon lowers from view twice as fast as normal:
+
+ Deselect:
+    FAST A 1 [[A_Lower]](12)
+    Loop
+
+== See also ==
+* [[A_Raise]]
+* [[Creating new weapons]]</text>
+    <sha1>dnktc38stvde4et4q6xd16n3c0tse99</sha1>
+  </revision>
+</page>

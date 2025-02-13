@@ -1,0 +1,78 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>A Fire</title>
+  <ns>0</ns>
+  <id>1705</id>
+  <revision>
+    <id>52463</id>
+    <parentid>52462</parentid>
+    <timestamp>2024-04-15T12:16:36Z</timestamp>
+    <contributor>
+      <username>Jekyll Grim Payne</username>
+      <id>2175</id>
+    </contributor>
+    <origin>52463</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="1693" sha1="43u5hnfpusbc0ku1z2exgn2q4x753ru" xml:space="preserve">{{codepointer|Missile movement}}
+{{doomwiki|A_Fire}}
+
+'''{{class|Actor}}'''
+
+void '''A_Fire'''(double ''spawnheight'' = 0)
+
+== Usage ==
+Places the calling actor directly in front of its {{c|[[actor pointer|tracer]]}}, with a z offset of ''height''. If ''height'' is not specified, it defaults to 0.
+
+Essentially, this is a specific analog of [[A_Warp]] or [[SetOrigin]] functions.
+
+=== Parameters ===
+*{{c|double '''spawnheight'''}}
+:How high above the actor's tracer the effect should appear. The default value is 0, which means it'll be warped to the tracer's bottom (legs).
+
+== [[ZScript]] definition ==
+{{ZScriptDefinitionNote|actors/doom/archvile.zs#L166}}
+&lt;syntaxhighlight lang="csharp"&gt;
+	void A_Fire(double spawnheight = 0)
+	{
+		Actor dest = tracer;
+		if (!dest || !target) return;
+				
+		// don't move it if the vile lost sight
+		if (!target.CheckSight (dest, 0) ) return;
+
+		SetOrigin(dest.Vec3Angle(24, dest.angle, spawnheight), true);
+	}&lt;/syntaxhighlight&gt;
+
+See also:
+* [[CheckSight (ZScript)]]
+* [[Vec3Angle]]
+
+== Examples ==
+The {{Class|Archvile|Arch-Vile}} from Doom uses this function in its fire attack's code to keep the fire placed on its target:
+
+ class ArchvileFire : Actor
+ {
+ 	Default
+ 	{
+ 		+{{Flag|NOBLOCKMAP}} +{{Flag|NOGRAVITY}} +{{Flag|ZDOOMTRANS}}
+ 		{{Property|RenderStyle}} "Add";
+ 		{{Property|Alpha}} 1;
+ 	}
+ 	States
+ 	{
+ 	Spawn:
+ 		FIRE A 2 BRIGHT  [[A_StartFire]];
+ 		FIRE BAB 2 BRIGHT  [[A_Fire]];
+ 		FIRE C 2 BRIGHT  [[A_FireCrackle]];
+ 		FIRE BCBCDCDCDEDED 2 BRIGHT  [[A_Fire]];
+ 		FIRE E 2 BRIGHT  [[A_FireCrackle]];
+ 		FIRE FEFEFGHGHGH 2 BRIGHT  [[A_Fire]];
+ 		Stop;
+ 	}
+ }
+
+== See also ==
+* [[A_Warp]] &amp;mdash; more flexible generalized variant of A_Fire.</text>
+    <sha1>43u5hnfpusbc0ku1z2exgn2q4x753ru</sha1>
+  </revision>
+</page>

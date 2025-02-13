@@ -1,0 +1,32 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>3D middle texture</title>
+  <ns>0</ns>
+  <id>5993</id>
+  <revision>
+    <id>43249</id>
+    <parentid>42667</parentid>
+    <timestamp>2016-10-08T11:17:59Z</timestamp>
+    <contributor>
+      <username>Gez</username>
+      <id>1283</id>
+    </contributor>
+    <minor />
+    <comment>EE now supports Z other map formats and Z heights</comment>
+    <origin>43249</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="1438" sha1="otqjqp22vez2esg8c5gffzrmooelr6l" xml:space="preserve">{{Doomwiki}}'''3D middle textures''' are a way of [[creating 3D bridges]] without needing an [[OpenGL]] renderer.
+
+While the practice of representing a bridge through vertically-offset middle textures surrounding an {{Class|InvisibleBridge}} has long been a staple of [[ZDoom]] modding, the possibility of discarding the bridge thing and relying just on the middle texture being there has been pioneered by the [[Eternity Engine]], which could not use bridge things at all given its lack of support at the time for setting a thing's Z-height (only allowed by the Hexen and textual [[map format]]s). Adopting this feature in ZDoom required overcoming the limitations of the [[linedef]] structure, whose flag field was already fully-used, and this was not a priority given the perfectly serviceable bridge things available.
+
+However, they were eventually added anyway. There are three different ways to set a linedef as being a 3D middle texture, depending on the choice of [[map format]]. From simplest to most complicated:
+#[[UDMF]]: All that is needed is checking its "midtex3d" flag (named "Walkable middle texture" in DB2 and GZDB and "3D MidTex" in Slade 3).
+#Hexen format: [[Line_SetIdentification]] has to be used, with extraflag 32.
+#Doom format: Flag bit 10 (Value 1024 or 0x400) represents the 3DMidtex flag (Same value as in Eternity.)
+
+==See also==
+* [[Sector_Attach3dMidtex]]
+[[Category:Features]][[Category:Editing concepts]]</text>
+    <sha1>otqjqp22vez2esg8c5gffzrmooelr6l</sha1>
+  </revision>
+</page>

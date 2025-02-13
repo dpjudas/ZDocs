@@ -1,0 +1,230 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>CCMDs:Informational</title>
+  <ns>0</ns>
+  <id>3923</id>
+  <revision>
+    <id>53401</id>
+    <parentid>53400</parentid>
+    <timestamp>2024-10-21T07:46:42Z</timestamp>
+    <contributor>
+      <username>Blue Shadow</username>
+      <id>2021</id>
+    </contributor>
+    <minor />
+    <comment>/* Actors and maps */ forgot that</comment>
+    <origin>53401</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="14840" sha1="gr91fzucy5bc13vfnrno5izn4mltaie" xml:space="preserve">These [[CCMDs|console commands]] are available to provide the user with information.  These can come in handy when used in conjunction with certain [[CVARs]] or other CCMDs.
+
+See the [[CCMDs]] article for general information on how to use commands.
+
+__TOC__
+
+==Actors and maps==
+
+* '''{{LE|actorlist}}''' [class or [[TID]]]
+:Prints a list of all actors present in the map, each on a line of the form {{c|ClassName at (X, Y, Z)}}. At the end of the list, the total count of found actors is printed. Passing an actor class name to the command, filters the list, listing only those with the matching class name. Passing a TID instead of a class name, filters the list by TID.
+
+* '''{{LE|actornum}}''' [class or TID]
+:Prints the total count of all actors present in the map. Passing an actor class name to the command, prints the total count of that class only. Passing a TID instead of a class name, prints the total count or actors with the matching TID.
+
+* '''{{LE|countitems}}''' [class or [[TID]]]
+:Prints a list of all countable [[item]]s present in the map, each on a line of the form {{c|ClassName at (X, Y, Z)}}. Passing a countable item's class name to the command, filters the list, listing only those with the matching class name. At the end of the list, the total count of found countable items is printed. Passing a TID instead of a class name, filters the list by TID.
+
+* '''{{LE|countitemsnum}}''' [class or TID]
+:Prints the total count of all countable items present in the map. Passing a countable item's class name to the command, prints the total count of that class only. Passing a TID instead of a class name, prints the total count of countable items with the matching TID.
+
+* '''{{LE|dumpactors}}'''
+:Outputs a list of all object classes, along with their [[editor number]], {{Property|SpawnID}}, {{Property|Game|game filter}} and the file and lump in which they were declared. This command is useful to help resolve conflicts in large scale collaborative projects. Because of the mass of information ([[ZDoom]] alone contains more than 1300 actors), this should be used along with the logfile command to capture the output and then copy and paste it into a program such as a spreadsheet. The command may take a few seconds to process all the data.
+
+* '''{{LE|dumpclasses}}''' [base class]
+:Displays a list of all classes in the game. You can use ''base class'' to limit the list to only those classes that derive from ''base class''. For example, ''dumpclasses actor'' will only show those classes that can be spawned in a level (including actors from all supported games). If you only want a list of weapons, you can use ''dumpclasses weapon''. This list can be quite long and exceed the length of the console buffer, so it is a good idea to capture its output to a file using the logfile command.
+
+* '''{{LE|dumpconversationids}}'''
+:Lists all the {{Property|ConversationID|conversation numbers}} for actors in the current game. 
+
+* '''{{LE|dumpgeometry}}'''
+:Sends to the logfile a full disassembly of the map geometry, divided into sectors, subsectors, segs, and vertices.
+
+* '''{{LE|dumpmapthings}}'''
+:Lists all the map editor numbers for actors in the current game.
+
+* '''{{LE|dumpportals}}'''
+:Sends to the logfile a complete report on all [[portal]]s used in the map, listing for each which subsectors are covered by which others.
+
+* '''{{LE|dumpspawnables}}'''
+:Lists all the [[spawn number]]s for actors in the current game. 
+
+* '''{{LE|dumpstates}}'''
+:Lists debugging information about all of the currently-defined actor's states. Probably not useful to the average user.
+
+* '''{{LE|hiddencompatflags}}'''
+:Prints the hex values of three compatibility flags fields. This allows to check whether any [[MAPINFO]] settings or [[automatic compatibility]] are enforcing certain [[compatibility options]].
+
+* '''{{LE|items}}''' [class or [[TID]]]
+:Prints a list of all [[item]]s present in the map, each on a line of the form {{c|ClassName at (X, Y, Z)}}.
+:Passing an item's class name to the command, filters the list, listing only those with the matching class name. At the end of the list, the total count of found items is printed. Passing a TID instead of a class name, filters the list by TID.
+
+* '''{{LE|itemsnum}}''' [class or TID]
+:Prints the total count of all items present in the map. Passing an item's class name to the command, prints the total count of that class only. Passing a TID instead of a class name, prints the total count of items with the matching TID.
+
+* '''{{LE|listlights}}'''
+:Prints a list of all [[dynamic light]]s, either attached or stand-alone, as well as their position, color, and radius, and the number of walls and subsectors that are affected by them.
+
+* '''{{LE|listmaps}}'''
+:Dumps a list of all maps defined in [[MAPINFO]] to the console, along with their lump names. This can make locating a map that uses a non-standard lump name easier.
+:Also lists which file contains the map.
+
+* '''{{LE|listmapsections}}'''
+:Reports on how the OpenGL renderer divided the map into sections.
+
+* '''{{LE|listsublights}}'''
+:Sends to the logfile a full report on all subsectors and how many dynamic lights each contains.
+
+* '''{{LE|mapchecksum}}''' &lt;map slot&gt; [map slot] [map slot] [...]
+: '''{{LE|mapchecksum}}''' [map slot | *] [map slot | *] [map slot | *] [...] {{new|4.13.1}}
+:Prints the MD5 checksum for the given map slots. Executing the command without arguments or passing an asterisk ({{c|*}}) instead of a map slot prints the checksum for the current map&lt;sup&gt;{{new|4.13.1}}&lt;/sup&gt;.
+:The engine uses these checksums for its [[automatic compatibility]]. It is computed by using all of the map's core data lump (not the lumps generated by a node builder): the map label if it is not empty (as it may contain [[FraggleScript]]), the [[THINGS]], [[SIDEDEFS]], [[LINEDEFS]], and [[SECTORS]] lumps, and the [[BEHAVIOR]] lump if it is present. For [[UDMF]] maps, the [[TEXTMAP]] and [[BEHAVIOR]] lumps are concerned.
+
+* '''{{LE|mapinfo}}''' [map name]
+:Prints select pieces of information about the map specified by ''map name'' (e.g. E1M8 or MAP07). If no map name is specified, the information pertains to the current map.
+
+* '''{{LE|monster}}''' [class or [[TID]]]
+:Prints a list of all living, unfriendly [[monster]]s present in the map, each on a line of the form {{c|ClassName at (X, Y, Z)}}.
+:Passing a monster's class name to the command, filters the list, listing only those with the matching class name. At the end of the list, the total count of found monsters is printed. Passing a TID instead of a class name, filters the list by TID.
+
+* '''{{LE|monsternum}}''' [class or TID]
+:Prints the total count of all living, unfriendly monsters present in the map. Passing a monster's class name to the command, prints the total count of that class only. Passing a TID instead of a class name, prints the total count of monsters with the matching TID.
+
+* '''{{LE|secret}}'''
+:If a [[SECRETS]] lump is provided and covers the current map, prints a list of hints meant to help the player find the secrets.
+
+==Players and inventory==
+
+* '''{{LE|invquery}}'''
+:Displays information about the currently-selected inventory item.
+
+* '''{{LE|myinfo}}'''
+:Prints a lot of information about the playerpawn you are controlling in a similar manner to "info".
+
+* '''{{LE|playerclasses}}'''
+:Lists all available [[player class]]es, giving for each a number (starting at zero), the class' actor name, and the class' display name.
+
+* '''{{LE|playerinfo}}''' [player]
+:Without parameters, lists the numbers for each player in the game. If you specify a ''player'', then details about that player's user info will be listed. 
+
+* '''{{LE|playersounds}}'''
+:Lists the player sounds defined by each player class and skin. 
+
+* '''{{LE|skins}}'''
+:Lists the names of the skins that were loaded when the game was started.
+
+* '''{{LE|teamlist}}'''
+:Lists the [[team]]s defined in [[TEAMINFO]].
+
+==Graphics and sound==
+
+* '''{{LE|countdecals}}'''
+:Returns the internal count of automatically generated decals. 
+
+* '''{{LE|countdecalsreal}}'''
+:Iterates through every automatically generated decal in the level and returns how many are present. Compare this value with what countdecals returns to ensure that the internal count is accurate.
+
+* '''{{LE|listsounds}}'''
+:Logs a simple, enumerated list of all the [[SNDINFO|defined sounds]].
+
+* '''{{LE|snd_listdrivers}}'''
+:Lists the drivers supported by the current {{CVAR|S|snd_output}} setting.
+
+* '''{{LE|snd_listmididevices}}'''
+:This command lists the [[MIDI device]]s available in the system. Devices in this list can be used in the {{CVAR|S|snd_mididevice}} cvar to select which device plays music. Devices with negative numbers are provided by [[ZDoom]] itself.
+
+* '''{{LE|snd_status}}'''
+:Lists information about the current sound device.
+
+* '''{{LE|soundlinks}}'''
+:Lists the links between different sounds that use the same sound data. Links are generated dynamically while you play, so it is possible for this command to give different results in different games and even at different times during the same game. 
+
+* '''{{LE|soundlist}}'''
+:Lists all the sounds defined and the lumps that they alias to. Unlike regular ''[[Doom]]'', ZDoom refers to sounds using a long name and uses a [[SNDINFO]] lump to map those to the lumps in a WAD file that contain the actual sounds. Logical sounds that refer to the same sound data will have links generated as necessary to avoid actually loading multiple copies of the same sound into memory. 
+
+* '''{{LE|textureinfo}}'''
+:Gives the total number of system textures, hardware textures, and total amount of pixels cumulated by all textures in the texture manager.
+
+* '''{{LE|vid_listadapters}}'''
+:Prints a list of all video adapters available. This command only works with either the [[ZDoom]] [[Direct3D]] renderer or the [[GZDoom]]/[[Zandronum]] [[OpenGL]] renderer. Choosing which adapter to use can be done by setting the value of the {{CVAR|R|vid_adapter}} [[console variable]].
+
+==Miscellaneous==
+* '''{{LE|clean}}'''
+:Prints the clean factors for [[menu]] scaling allowed by the current resolution.
+
+* '''{{LE|cmdlist}}''' [pattern]
+:Lists all console commands supported by the current version of ZDoom. If you specify a ''pattern'', then only those [[CCMDs]] that match the pattern will be listed. Patterns can contain the wildcards * (which substitutes for zero or more characters) and ? (which substitutes for exactly one character).
+
+* '''{{LE|currentpos}}'''
+:Prints the player's current position: X, Y and Z coordinates, angle, floor height, sector number, and sector light level.
+
+* '''{{LE|cvarlist}}''' [pattern]
+:Lists the values of all currently defined console variables. Each CVAR can also be prefaced by multiple flags. These are:
+:: {{c|A}}: Archive &amp;mdash; gets saved in the config file.
+:: {{c|U}}: User &amp;mdash; contains user info.
+:: {{c|S}}: Server &amp;mdash; contains server info.
+:: {{c|-}}: Not settable &amp;mdash; can only be changed from the command line.
+:: {{c|L}}: Latched &amp;mdash; changes do not take effect until the next game.
+:: {{c|C}}: Callback &amp;mdash; allocated and has an internal callback.
+:: {{c|*}}: Custom &amp;mdash; was created by the user and is meaningless to the game.
+:If you specify a ''pattern'', then only those CVARs that match the pattern will be listed. Patterns can contain the wildcards * (which substitutes for zero or more characters) and ? (which substitutes for exactly one character). 
+
+* '''{{LE|cvarlistplain}}'''
+:This command works similarly to [[#cvarlist|cvarlist]], except it does not include flag information or list user-created [[CVARs]]. Its primary purpose is to provide a simple list of cvars that can be exported and checked against this file to ensure it is complete.
+
+* '''{{LE|dir}}''' [path/][pattern]
+:This command lists the contents of a directory. It supports wildcards (but will not recurse into multiple directories). If ''path'' is not specified, it will display the contents of the directory the game was run from. 
+
+* '''{{LE|gameversion}}'''
+:Prints the version number and compile date of ZDoom.
+
+* '''{{LE|history}}'''
+:Prints the most recently executed [[console command]]s that you can cycle through by pressing the up and down arrow keys. Up to fifty commands might be stored in the console history.
+
+* '''{{LE|info}}''' [verbose]
+:Prints a lot of information about the actor the player is looking at. It is however unable to detect actors which have a radius or height of 0, or actors with the NOBLOCKMAP flag. If ''verbose'' is 0, only the actor name, health, and starting health are displayed.
+
+* '''{{LE|key}}''' &lt;value1&gt; [value2]
+:Translates all parameters to the command into their corresponding key values which are used internally for command and alias lookup. Probably not very useful for the average user.
+
+* '''{{LE|logfile}}''' [file]
+:If ''file'' is not specified, console logging will be stopped (if active). Otherwise, a file named ''file'' will be created on disk, and all console output will be recorded in it as well as on the screen. 
+
+* '''{{LE|linetarget}}''' [verbose]
+:Will make the game display the actor name, health, and starting health of the monster the player is looking directly at. If ''verbose'' is non-zero, additional information is displayed, similar to that printed by {{c|{{CCMD|I|info}}}}.
+
+* '''{{LE|md5sum}}''' &lt;file&gt;
+:Prints the MD5 checksum of the given file
+
+* '''{{LE|pings}}'''
+:This lists a very rough estimate of the speed of the connection between your machine and any others in the game. In reality, the values printed by this command aren't even pings; they're just the number of milliseconds that have passed since the last time you received a network packet from the other machines. 
+
+* '''{{LE|printstats}}'''
+:Prints your statistics (kills, secrets, items, and time) for each level in the current game.
+
+* '''{{LE|scriptstat}}'''
+:Lists the scripts running on the current level. 
+
+* '''{{LE|stat}}''' [page]
+:Displays profiling information. When used alone, displays a list of available displays. Use one of those as the ''page'' parameter to toggle the display on and off.
+
+* '''{{LE|utid}}''' [start [limit]]
+:Prints an unused [[TID]]. If start is 0 or omitted, then a random TID will be chosen. Otherwise, it will perform a linear search starting from  start_tid. If limit is given and non-0, then it will not check more than &lt;limit&gt; number of TIDs. Prints 0 if no suitable TID was found.
+
+* '''{{LE|wdir}}''' &lt;archive&gt;
+:Lists the contents of a loaded wad file or other archive.
+
+* '''{{LE|whereisini}}'''
+:Prints the location of the current [[zdoom.ini]] to the console. The zdoom.ini file is normally stored in the user's profile directory. It may not be immediately obvious where that is, so you can use this command to find out.
+
+[[Category:ZDoom console]]</text>
+    <sha1>gr91fzucy5bc13vfnrno5izn4mltaie</sha1>
+  </revision>
+</page>

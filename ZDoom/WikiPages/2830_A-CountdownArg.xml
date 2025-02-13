@@ -1,0 +1,41 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>A CountdownArg</title>
+  <ns>0</ns>
+  <id>2830</id>
+  <revision>
+    <id>42322</id>
+    <parentid>38205</parentid>
+    <timestamp>2016-02-21T16:57:39Z</timestamp>
+    <contributor>
+      <username>Major Cooke</username>
+      <id>1703</id>
+    </contributor>
+    <minor />
+    <origin>42322</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="1473" sha1="fyzdv01p9quozrialvihi4bd34xsjqw" xml:space="preserve">{{codepointer|Jump}}'''A_CountdownArg''' (int ''arg''[, str ''state''])
+{{JumpNotice}}
+This function counts one of the actor's args down until it reaches 0 and then changes its state, possibly killing it.
+* ''arg'': what {{property|Args|argument}} to decrement. Using a zero-based index, valid values are in the 0&amp;ndash;4 range. Any other will result in the function doing nothing.
+* ''state'': what state to set the calling actor to once the countdown is reached. Default is "Death". If such state is not defined the actor is simply removed without other effects. This only affects non-missile actors without the {{flag|SHOOTABLE}} flag.
+
+The method used to destroy the calling actor depends on its [[actor flags]].
+* If it has the {{flag|MISSILE}} flag the missile explodes.
+* Otherwise, if it has the {{flag|SHOOTABLE}} flag, the actor is dealt an amount of damage equal to its current health.
+* In all other cases the actor is placed in its "Death" state, or in ''state'' if one is provided without other effects (means it does not necessarily kills or removes the calling actor).
+
+== Examples ==
+This dispenser will throw some junk after being hit. If it has no more or damaged too much it explodes.
+ 	Wound:
+ 	DISP A 10 [[A_SpawnItemEx]]("DispenserJunk", [[random]](-16, 16), random(-16, 16), 16)
+ 	TNT1 A 0 [[A_CountdownArg]](0)
+ 	loop
+ 	Death: // reuses {{class|Rocket}}'s explosion sprites.
+ 	MISL B 8 bright [[A_Scream]]
+ 	MISL C 6 bright
+ 	MISL D 4 bright
+ 	stop</text>
+    <sha1>fyzdv01p9quozrialvihi4bd34xsjqw</sha1>
+  </revision>
+</page>

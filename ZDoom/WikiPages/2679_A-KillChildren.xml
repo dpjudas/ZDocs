@@ -1,0 +1,85 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>A KillChildren</title>
+  <ns>0</ns>
+  <id>2679</id>
+  <revision>
+    <id>46804</id>
+    <parentid>45018</parentid>
+    <timestamp>2019-07-16T06:03:55Z</timestamp>
+    <contributor>
+      <username>Quaker540</username>
+      <id>2135</id>
+    </contributor>
+    <minor />
+    <comment>Replaced the deprecated action function</comment>
+    <origin>46804</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="4208" sha1="51jd2skr0fp0ee82qrtjis7zrbky60c" xml:space="preserve">{{codepointer|Monster AI}}
+'''A_KillChildren''' [(string ''damagetype'' [, int ''flags'' [, string ''filter'' [, string ''species'' [, int ''src'' [, int ''inflict'']]]]])]
+
+==Usage==
+Called by monsters to kill all monsters spawned by the caller or by a projectile spawned by the caller of this function. Currently the only function that sets the necessary information is [[A_SpawnItemEx]]. Optionally, a damagetype parameter can be given. Note that damage inflicted by this codepointer is not affected by damage factors. Monsters with the INVULNERABLE flag are unaffected, but monsters with the NODAMAGE flag can still enter their pain state based upon damagetype.
+
+Monsters spawned with [[A_SpawnProjectile]] are not affected by this. [[A_SpawnProjectile]] was never designed to spawn monsters.
+
+==Parameters==
+*''damagetype'' - If the actor dies, the actor will enter a death state based on damagetype if present (or pain state if using NODAMAGE).
+*''flags'' - The following flags can be combined using the &lt;tt&gt;|&lt;/tt&gt; character between name constants: 
+**'''KILS_FOILINVUL''' - Kills monsters and/or missiles that have the INVULNERABLE flag.
+**'''KILS_KILLMISSILES''' - Causes missiles that are affected to enter their death state. Note that this follows the INVULNERABLE, BUDDHA and NODAMAGE rules for monsters.
+**'''KILS_NOMONSTERS''' - Don't target monsters with this function. Alone, it makes the function do nothing, but can be combined with KILS_KILLMISSILES to only affect missiles.
+**'''KILS_FOILBUDDHA''' — the ''{{Flag|BUDDHA|buddha}}'' effect is ignored when attempting to kill the actor.
+**'''KILS_EXFILTER''' — inverts the case of the class name filter; the calling actor's children are only killed if their class name does not match the value passed to ''filter''.
+**'''KILS_EXSPECIES''' — inverts the case of the [[species]] filter; the calling actor's children are only killed if their species does not match the value passed to ''species''.
+**'''KILS_EITHER''' — the calling actor's children are killed if either of their class name or [[species]] matches the values passed to ''filter'' and ''species'', respectively.
+*''filter'': the actor class to kill. The calling actor's children are only killed if their class name matches the specified filter class. Default is {{c|"None"}}. If left to "None", it will not apply a filter.
+*''species'': the actor [[species]] to kill. The calling actor's children are only killed if their species matches the specified species filter. Default is {{c|"None"}}. If left to "None", it will not apply a filter.
+* ''src'': Indicates the [[Actor pointer|actor pointer]] responsible for dealing the damage. A monster dealing the damage should use AAPTR_DEFAULT, and missiles should use AAPTR_TARGET (so monsters can identify missiles belonging to their owners and give proper credit for the kill). Default is AAPTR_DEFAULT.
+* ''inflict'': The actor doing the actual damage. By changing this, the actor's flags upon the pointed actor are taken into account instead of the calling actor's own.
+
+(Note: Unlike monsters, missiles were never meant to have damagetype specific death states and will ignore it.)
+
+== Examples ==
+The following is a variant of the {{Class|DoomImp|doom imp}}, a monster that spawns clones of itself to attack you. When killed, it will trigger [[A_KillChildren]], causing all of the spawned clones of it to die simultaneously.
+ ACTOR VoodooLeaderImp : {{Class|DoomImp}}
+ {
+   {{Property|Game}} Doom
+   {{Property|SpawnID}} 5
+   {{Property|Health}} 100
+   {{Property|Mass}} 1000
+   {{Property|PainChance}} 255
+   States
+   {
+   Missile:
+     TROO EF 8 [[A_FaceTarget]]
+     TROO G 6 [[A_SpawnItemEx]]("SoldierImp", 50, 50, 60, 0, 0, 0, 0, {{Const|SXF_SETMASTER}})
+     Goto See
+   Pain:
+     TROO H 2
+     TROO H 1 [[A_Pain]]
+     TROO H 1 [[A_DamageChildren]](1, "Voodoo")
+     Goto See
+   Death:
+     TROO I 8
+     TROO J 8 [[A_Scream]]
+     TROO K 6 [[A_KillChildren]]
+     TROO L 6 [[A_NoBlocking]]
+     TROO M -1
+     Stop
+   XDeath:
+     TROO N 5
+     TROO O 5 [[A_XScream]]
+     TROO P 5 [[A_KillChildren]]
+     TROO Q 5 [[A_NoBlocking]]
+     TROO RST 5
+     TROO U -1
+     Stop
+   }
+ }
+
+--------
+{{Planned Parenthood}}</text>
+    <sha1>51jd2skr0fp0ee82qrtjis7zrbky60c</sha1>
+  </revision>
+</page>

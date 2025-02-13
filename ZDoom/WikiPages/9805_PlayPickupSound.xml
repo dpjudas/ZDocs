@@ -1,0 +1,96 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>PlayPickupSound</title>
+  <ns>0</ns>
+  <id>9805</id>
+  <revision>
+    <id>51503</id>
+    <parentid>51501</parentid>
+    <timestamp>2024-02-02T10:21:42Z</timestamp>
+    <contributor>
+      <username>Jekyll Grim Payne</username>
+      <id>2175</id>
+    </contributor>
+    <origin>51503</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="2090" sha1="n87k7magnyblrsia1ws8qulfuan93np" xml:space="preserve">'''{{class|Inventory}}'''
+
+{{c|virtual void '''PlayPickupSound''' (Actor ''toucher'')}}
+
+==Usage==
+A [[ZScript virtual functions|virtual function]] called by {{class|Inventory}} items when they're picked up, to play their {{property|PickupSound}}. Normally called in [[Touch]], but can also be called on an item directly to play the sound. Can be overridden to modify its behavior.
+
+=== Parameters ===
+*{{c|Actor '''toucher'''}}
+:The actor who is attempting to pick up this item.
+
+== [[ZScript]] definition ==
+{{ZScriptDefinitionNote|actors/inventory/inventory.zs#L1173}}
+This function can be overridden, but the base {{class|Inventory}} class defines it as follows:
+
+&lt;syntaxhighlight lang="csharp"&gt;
+	virtual void PlayPickupSound (Actor toucher)
+	{
+		double atten;
+		int chan;
+		int flags = 0;
+
+		if (bNoAttenPickupSound)
+		{
+			atten = ATTN_NONE;
+		}
+		/*
+		else if ((ItemFlags &amp; IF_FANCYPICKUPSOUND) &amp;&amp;
+			(toucher == NULL || toucher-&gt;CheckLocalView()))
+		{
+			atten = ATTN_NONE;
+		}
+		*/
+		else
+		{
+			atten = ATTN_NORM;
+		}
+
+		if (toucher != NULL &amp;&amp; toucher.CheckLocalView())
+		{
+			chan = CHAN_ITEM;
+			flags = CHANF_NOPAUSE | CHANF_MAYBE_LOCAL;
+		}
+		else
+		{
+			chan = CHAN_ITEM;
+			flags = CHANF_MAYBE_LOCAL;
+		}
+		toucher.A_StartSound(PickupSound, chan, flags, 1, atten);
+	}
+
+&lt;/syntaxhighlight&gt;
+
+== Examples ==
+By default pickupsounds get cut off when multiple items are picked up in quick succession. This version of the {{class|Clip}} item demonstrates how this behavior can be changed, so sounds are played over each other thanks to the {{c|CHANF_OVERLAP}} flag of [[A_StartSound]]:
+&lt;syntaxhighlight lang="csharp"&gt;
+class Clip_NoSoundCutoff : Clip
+{
+	override void PlayPickupSound (Actor toucher)
+	{
+		if (toucher &amp;&amp; toucher.CheckLocalView())
+		{
+			toucher.A_StartSound(PickupSound, CHAN_ITEM, CHANF_NOPAUSE|CHANF_MAYBE_LOCAL|CHANF_OVERLAP, 1, ATTN_NORM);
+		}
+		else
+		{
+			super.PlayPickupSound(toucher);
+		}
+	}
+}&lt;/syntaxhighlight&gt;
+
+== See also ==
+* [[Touch]]
+* [[Inventory virtual functions]]
+
+[[Category:ZScript]]
+[[Category:Inventory]]
+[[Category:ZScript virtual functions]]</text>
+    <sha1>n87k7magnyblrsia1ws8qulfuan93np</sha1>
+  </revision>
+</page>

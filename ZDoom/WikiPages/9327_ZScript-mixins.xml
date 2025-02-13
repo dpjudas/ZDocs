@@ -1,0 +1,174 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>ZScript mixins</title>
+  <ns>0</ns>
+  <id>9327</id>
+  <revision>
+    <id>47180</id>
+    <parentid>47146</parentid>
+    <timestamp>2020-03-04T23:37:02Z</timestamp>
+    <contributor>
+      <username>Phantombeta</username>
+      <id>2116</id>
+    </contributor>
+    <origin>47180</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="3066" sha1="qf18rrc1nwx5b1lheg2zv5og89jbt0n" xml:space="preserve">{{ZScriptNote}}
+ZScript mixins are similar to [https://dlang.org/spec/template-mixin.html D's template mixins], which may contain a variety of data. They contain code that can be reused in several places without duplicating it.&lt;br&gt;
+Mixins currently can only be used for classes, and cannot be used across translation units.&lt;br&gt;
+Multiple mixins can be used per class as well.
+
+== Usage ==
+Mixin definitons must always be defined in the global scope - that is, outside any classes or structs.&lt;br&gt;
+A mixin definition must specify what it will be used in and a name for the mixin. Currently, the only usage type supported are classes.
+
+== Examples ==
+A simple example for inserting a mixin into classes.
+ mixin class Foo
+ {
+     int aNumber;
+     void SetMyNumber (int num)
+     {
+         aNumber = num;
+     }
+ }
+ 
+ class Bar
+ {
+     mixin Foo;
+ 
+     void AFunction ()
+     {
+         aNumber = 2;
+     }
+ }
+ 
+ class Baz : Actor
+ {
+     mixin Foo;
+ 
+     Default
+     {
+         +NOINTERACTION
+     }
+ 
+     States
+     {
+     Spawn:
+         TNT A 1 NoDelay
+         {
+             Console.Printf ("Before, aNumber is %d", aNumber);
+             SetMyNumber (10);
+             Console.Printf ("After, aNumber is %d", aNumber);
+         }
+         Stop;
+     }
+ }
+
+This is an [https://forum.zdoom.org/viewtopic.php?f=18&amp;t=66218#p1123434 advanced example], including actor flags, properties constants, states and more:
+
+ class TestActor1 : Actor
+ {
+     int foo;
+     mixin MyMixin;
+     int bar;
+ 
+     override void Tick ()
+     {
+         foo++;
+         bar = EnumConst_C;
+         Console.Printf ("foo: %d, bar: %d, baz: %d, actorPtr: %d", foo, bar, baz, !!actorPtr);
+     }
+ }
+ 
+ class TestActor2 : Actor
+ {
+     int foo;
+     int bar;
+     mixin MyMixin;
+ 
+     Default
+     {
+         +TestActor2.MYFLAG
+     }
+ 
+     States
+     {
+     Spawn:
+         BAL1 A 1;
+         Loop;
+     }
+ 
+     override void PostBeginPlay ()
+     {
+         Super.PostBeginPlay ();
+         bar = 1;
+         actorPtr = self;
+     }
+ 
+     override void Tick ()
+     {
+         foo = EnumConst_B;
+         bar *= 2;
+         Console.Printf ("foo: %d, bar: %d, baz: %d, actorPtr: %d", foo, bar, baz, !!actorPtr);
+     }
+ }
+ 
+ mixin class MyMixin
+ {
+     enum MyEnum
+     {
+         EnumConst_A,
+         EnumConst_B,
+         EnumConst_C,
+     };
+ 
+     Actor actorPtr;
+     int baz;
+ 
+     Flagdef MYFLAG: baz, 0;
+ 
+     Default
+     {
+         +SOLID
+         +ISMONSTER
+         // Can't set MYFLAG here, as it'll have the class' identifier and we can't know that in advance.
+     }
+ 
+     States
+     {
+     Spawn:
+         TROO A 1;
+         loop;
+     }
+ }
+
+This simple, concrete example replaces the imp and baron spawn states with TNT1A0 for some jumpscare fun:
+
+ mixin class JumpscareMonsterMix
+ {
+     states
+     {
+     Spawn:
+         TNT1 A 10 A_Look ();
+         wait;
+      }
+ }
+ 
+ class MixImp : DoomImp
+ {
+     mixin JumpscareMonsterMix;
+ }
+  
+ class MixBaron : BaronOfHell
+ {
+     mixin JumpscareMonsterMix;
+ }
+
+== See also ==
+* [[ZScript]]
+
+[[Category:ZScript]]</text>
+    <sha1>qf18rrc1nwx5b1lheg2zv5og89jbt0n</sha1>
+  </revision>
+</page>

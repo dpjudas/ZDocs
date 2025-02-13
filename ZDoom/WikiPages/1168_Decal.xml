@@ -1,0 +1,65 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>Decal</title>
+  <ns>0</ns>
+  <id>1168</id>
+  <revision>
+    <id>48583</id>
+    <parentid>46854</parentid>
+    <timestamp>2021-06-03T07:47:52Z</timestamp>
+    <contributor>
+      <username>Gez</username>
+      <id>1283</id>
+    </contributor>
+    <minor />
+    <origin>48583</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="4290" sha1="6ciz0ascpv07w19z6exs5kygd5jmtmt" xml:space="preserve">'''Decals''' are graphics positioned over a [[linedef]] [[texture]]. Decals can be automatically generated during the game (blood splats, scorch marks, bullet holes, etc.), or they can be placed directly in the map for decorative purposes with a {{class|Decal}} thing. Decals are defined in the [[DECALDEF]] lump.
+
+Spontaneous decals are controlled by the following console variables: {{CVAR|R|cl_bloodsplats}} determines whether blood decals are placed while {{CVAR|R|cl_missiledecals}} determines whether scorch marks are left by [[projectile]]s ([[hitscan]] attacks, including railguns, do not have a CVAR toggle).
+
+The {{CVAR|R|cl_maxdecals}} variable controls how many decals can be placed before the oldest ones are removed to allow new ones to be created; but only spontaneously-generated decals are counted. Decals placed in a map editor are not tallied and are always drawn even if cl_maxdecals is set to 0.
+
+Each decal is applied on a single [[sidedef]]. To allow decals to cover several [[linedef]]s as needed by its dimensions, ZDoom will duplicate a decal. This behavior is controlled by the {{CVAR|R|cl_spreaddecals}} variable, and affects both map-placed and automatic decals.
+
+== Blood decals ==
+The color of a blood decal depends on the bleeding actor's {{property|BloodColor}}. However, that color is not used directly, as it would generally be too bright. Instead, each of the red, green and blue values are halved to create a darker color.
+
+Actors that do not have a defined blood color generate blood decals that use the {{c|DefaultBloodColor}} values from the [[GameInfo definition]]. This color is used directly, without halving values.
+==Creating a Decal==
+* The decal graphics are to be placed in the "Graphics" [[namespace]]. This is outside of markers in a [[WAD]], and within the /graphics/ subdirectory in a [[PK3]].
+* The offset position determines from where the decal will be drawn.
+* There are two types of decal formats:
+** A normal decal is a palettized image that will display in color.
+** An alpha-map decal is an image that is drawn at varying levels of transparency. It contains no color information, but color can be assigned with the [[DECALDEF]] lump.
+
+===Normal decal===
+To create a normal decal, you need only load an image as you would any normal graphic resource. This should be a palettized image. If the image's palette contains colors that aren't available to the game you will use the decal with, you are at the mercy of ZDoom's [[palette]] remapping. The result may or may not look good. If you only intend to use the decal with one game, then it is advisable to convert it to the game's palette before you save it.
+
+Set the image offsets with [[SLADE 3]] or [[SetPNG]].
+
+===Alpha-map decal===
+Creating an alpha-map decal requires a few extra steps. First you must create an 8-bit grayscale image, with white as most-visible and black as transparent. Save this image as a grayscale PNG-8. If your image editor cannot directly save 8-bit grayscale images, you can convert the output using {{wp|ImageMagick}}'s 'convert' utility:
+
+  convert -colors 256 -colorspace GRAY &lt;infile.png&gt; &lt;outfile.png&gt;
+
+ZDoom requires the special [[PNG]] chunk {{c|alPh}} to be present to identify the image as an alpha map. This can be set with [[SLADE 3]] or [[SetPNG]].
+
+==Uses==
+* All decals need to be specified in the [[DECALDEF]] lump, no matter what the intended use is.
+* Decals can be created by weapons, or projectiles. To set these, use a special section in the [[DECALDEF]] or define a [[Actor properties|property]] for the actor.
+* Decals can be inserted directly onto walls in maps. See [[Decal Thing]].
+
+==Preventing spontaneous decals==
+Spontaneous decals (blood splatter and scorch marks) can be selectively disabled on certain walls:
+* On specific [[sidedef]]s: with the {{c|nodecals}} flag set to true in [[UDMF]] maps.
+* On specific [[texture]]s: with the {{c|nodecals}} flag set to true in the [[TEXTURES]] definition.
+* On animated textures: decals are disabled by default on animated textures unless the {{c|allowdecals}} flag is set to true in the [[ANIMDEFS]] definition.
+
+==External links==
+* {{Realm667|id=1381|Animated UAC Logo}}, showing the potential use of decals for innovative effects.
+
+[[Category:Features]][[Category:Glossary]]</text>
+    <sha1>6ciz0ascpv07w19z6exs5kygd5jmtmt</sha1>
+  </revision>
+</page>

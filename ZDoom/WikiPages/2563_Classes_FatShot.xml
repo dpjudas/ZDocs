@@ -1,0 +1,87 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>Classes:FatShot</title>
+  <ns>0</ns>
+  <id>2563</id>
+  <revision>
+    <id>48906</id>
+    <parentid>48491</parentid>
+    <timestamp>2021-12-27T11:13:13Z</timestamp>
+    <contributor>
+      <username>Jekyll Grim Payne</username>
+      <id>2175</id>
+    </contributor>
+    <comment>updated in accordance with updated ZScriptDefinitionNote template</comment>
+    <origin>48906</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="1343" sha1="99ual8v0auzwc1tub6kskr5b9mbj347" xml:space="preserve">{{Actor|
+| type = Explosive
+| name = Mancubus flamethrower projectile
+| class = FatShot
+| game = Doom2
+| spawnid = 153
+| spawnname = T_MANCUBUSSHOT 
+}}[[Classes]]: &lt;u&gt;FatShot&lt;/u&gt;
+
+
+A large fireball shot from a [[Classes:Fatso|Mancubus]].
+==== [[ZScript]] definition ====
+{{ZScriptDefinitionNote|actors/doom/fatso.zs}}
+ class FatShot : Actor
+ {
+ 	Default
+ 	{
+ 		{{Property|Radius}} 6;
+ 		{{Property|Height}} 8;
+ 		{{Property|Speed}} 20;
+ 		{{Property|Damage}} 8;
+ 		{{Property|Projectile;}}
+ 		+{{Flag|RANDOMIZE}}
+ 		+{{Flag|ZDOOMTRANS}}
+ 		{{Property|RenderStyle}} "Add";
+ 		{{Property|Alpha}} 1;
+ 		{{Property|SeeSound}} "fatso/attack";
+ 		{{Property|DeathSound}} "fatso/shotx";
+ 	}
+ 	States
+ 	{
+ 	Spawn:
+ 		MANF AB 4 BRIGHT;
+ 		Loop;
+ 	Death:
+ 		MISL B 8 BRIGHT;
+ 		MISL C 6 BRIGHT;
+ 		MISL D 4 BRIGHT;
+ 		Stop;
+ 	}
+ }
+
+==== [[DECORATE]] definition ====
+{{DecorateDefinitionNote}}
+ ACTOR &lt;u&gt;FatShot&lt;/u&gt;
+ {
+   {{Property|Radius}} 6
+   {{Property|Height}} 8
+   {{Property|Speed}} 20
+   {{Property|Damage}} 8
+   {{Property|Projectile}} 
+   +{{Flag|RANDOMIZE}}
+   {{Property|RenderStyle}} Add
+   {{Property|Alpha}} 1
+   {{Property|SeeSound}} "fatso/attack"
+   {{Property|DeathSound}} "fatso/shotx"
+   States
+   {
+   Spawn:
+     MANF AB 4 Bright
+     Loop
+   Death:
+     MISL B 8 Bright
+     MISL C 6 Bright
+     MISL D 4 Bright
+     Stop
+   }
+ }</text>
+    <sha1>99ual8v0auzwc1tub6kskr5b9mbj347</sha1>
+  </revision>
+</page>

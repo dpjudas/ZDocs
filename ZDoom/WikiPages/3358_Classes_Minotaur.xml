@@ -1,0 +1,148 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>Classes:Minotaur</title>
+  <ns>0</ns>
+  <id>3358</id>
+  <revision>
+    <id>39710</id>
+    <parentid>34959</parentid>
+    <timestamp>2015-05-03T22:17:32Z</timestamp>
+    <contributor>
+      <username>Blue Shadow</username>
+      <id>2021</id>
+    </contributor>
+    <minor />
+    <comment>/* DECORATE definition */ Updated</comment>
+    <origin>39710</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="4105" sha1="hcwa0kaxij5obls64tagedl2j712xo6" xml:space="preserve">{{Actor|
+| type = Monster
+| name = Maulotaur
+| class = Minotaur
+| game = Heretic
+| doomednum = 9
+}}[[Classes]]: &lt;u&gt;Minotaur&lt;/u&gt;&lt;br&gt;
+&amp;ensp;&amp;rarr;[[Classes:MinotaurFriend|MinotaurFriend]]&lt;br&gt;
+
+Maulotaurs are giant minotaurs who wield mauls, which explains their very D&amp;Dish portmanteau name. They sport nose rings and, apparently more modest than their distant Doom cousins, wear loincloths. The second-strongest monster of Heretic, surpassed only by [[Classes:Sorcerer1|D'Sparil]] himself, they can be considered the Heretic equivalent of Doom's [[Classes:Cyberdemon|Cyberdemons]]; though despite their greater variety of attacks they are significantly weaker. For this reason, they are found in large numbers when they are used in boss levels.
+
+In Hexen.wad, the attack sprites are lettered from F to K instead of from U to Z, and the death sprites are missing. For this reason, they are [[Sprite renaming|renamed at load time by ZDoom]] and the native action [[A_MinotaurDeath]] causes the maulotaur to enter the FadeOut state if the death sprites are missing. 
+
+When slain, they may randomly drop [[Classes:ArtiSuperHealth|mystic urns]] and [[Classes:PhoenixRodAmmo|flame orbs with ten charges]].
+
+Minotaurs use the following actor fields for specific purposes:
+;special1
+:Serves as a countdown timer for the Charge attack.
+;special2
+:Used to prevent repeating the Hammer attack more than once.
+
+Note: Maulotaurs are invulnerable while charging, dark servants aren't.
+
+==== [[DECORATE]] definition ====
+ ACTOR &lt;u&gt;Minotaur&lt;/u&gt; native
+ {
+   {{Property|Health}} 3000
+   {{Property|Radius}} 28
+   {{Property|Height}} 100
+   {{Property|Mass}} 800
+   {{Property|Speed}} 16
+   {{Property|Damage}} 7
+   {{Property|PainChance}} 25
+   {{Property|Monster}}
+   +{{Flag|DROPOFF}}
+   +{{Flag|FLOORCLIP}}
+   +{{Flag|BOSS}}
+   +{{Flag|NORADIUSDMG}}
+   +{{Flag|DONTMORPH}}
+   +{{Flag|NOTARGET}}
+   +{{Flag|BOSSDEATH}}
+   {{Property|SeeSound}} "minotaur/sight"
+   {{Property|AttackSound}} "minotaur/attack1"
+   {{Property|PainSound}} "minotaur/pain"
+   {{Property|DeathSound}} "minotaur/death"
+   {{Property|ActiveSound}} "minotaur/active"
+   {{Property|DropItem}} "{{Class|ArtiSuperHealth}}", 51
+   {{Property|DropItem}} "{{Class|PhoenixRodAmmo}}", 84, 10
+ 
+   action native [[A_MinotaurDecide]]();
+   action native [[A_MinotaurAtk1]]();
+   action native [[A_MinotaurAtk2]]();
+   action native [[A_MinotaurAtk3]]();
+   action native [[A_MinotaurCharge]]();
+   action native [[A_MinotaurLook]]();
+   action native [[A_MinotaurRoam]]();
+   action native [[A_MinotaurChase]]();
+   action native [[A_MinotaurDeath]]();
+ 
+   States
+   {
+   Spawn:
+     MNTR AB 10 [[A_MinotaurLook]]
+     Loop
+   Roam:
+     MNTR ABCD 5 [[A_MinotaurRoam]]
+     Loop
+   See:
+     MNTR ABCD 5 [[A_MinotaurChase]]
+     Loop
+   Melee:
+     MNTR V 10 [[A_FaceTarget]]
+     MNTR W 7 [[A_FaceTarget]]
+     MNTR X 12 [[A_MinotaurAtk1]]
+     Goto See
+   Missile:
+     MNTR V 10 [[A_MinotaurDecide]]
+     MNTR Y 4 [[A_FaceTarget]]
+     MNTR Z 9 [[A_MinotaurAtk2]]
+     Goto See
+   Hammer:
+     MNTR V 10 [[A_FaceTarget]]
+     MNTR W 7 [[A_FaceTarget]]
+     MNTR X 12 [[A_MinotaurAtk3]]
+     Goto See
+   HammerLoop:
+     MNTR X 12
+     Goto Hammer
+   Charge:
+     MNTR U 2 [[A_MinotaurCharge]]
+     Loop
+   Pain:
+     MNTR E 3
+     MNTR E 6 [[A_Pain]]
+     Goto See
+   Death:
+     MNTR F 6 [[A_MinotaurDeath]]
+     MNTR G 5
+     MNTR H 6 [[A_Scream]]
+     MNTR I 5
+     MNTR J 6
+     MNTR K 5
+     MNTR L 6
+     MNTR M 5 [[A_NoBlocking]]
+     MNTR N 6
+     MNTR O 5
+     MNTR P 6
+     MNTR Q 5
+     MNTR R 6
+     MNTR S 5
+     MNTR T -1 [[A_BossDeath]]
+     Stop
+   FadeOut:
+     MNTR E 6
+     MNTR E 2 [[A_Scream]]
+     MNTR E 5 [[A_SpawnItemEx]]("{{Class|MinotaurSmokeExit}}")
+     MNTR E 5
+     MNTR E 5 [[A_NoBlocking]]
+     MNTR E 5
+     MNTR E 5 [[A_SetTranslucent]](0.66, 0)
+     MNTR E 5 [[A_SetTranslucent]](0.33, 0)
+     MNTR E 10 [[A_BossDeath]]
+     Stop
+   }
+ }
+
+===Related Classes===
+[[Classes:MinotaurFX1|MinotaurFX1]], [[Classes:MinotaurFX2|MinotaurFX2]] and [[Classes:MinotaurFX3|MinotaurFX3]] are used for the maulotaur's ranged attacks.</text>
+    <sha1>hcwa0kaxij5obls64tagedl2j712xo6</sha1>
+  </revision>
+</page>

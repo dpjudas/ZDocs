@@ -1,0 +1,118 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>FONTDEFS</title>
+  <ns>0</ns>
+  <id>2894</id>
+  <revision>
+    <id>54089</id>
+    <parentid>54088</parentid>
+    <timestamp>2024-12-23T16:49:47Z</timestamp>
+    <contributor>
+      <username>Zhs2</username>
+      <id>1656</id>
+    </contributor>
+    <minor />
+    <comment>Forgot the semicolon.</comment>
+    <origin>54089</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="4544" sha1="n4c31bbbrxlgd8ksv4cfb76h5vhk72d" xml:space="preserve">This is lump used to define custom [[font]]s.  There are two types of definitions to be aware of in defining your FONTDEFS lump: templated and explicit.
+
+Templated fonts follow some simple rules to attribute a graphical lump to each character. Explicit fonts need to list each character and its associated lump explicitly.
+
+== Characters that require escaping ==
+Certain glyphs require escape sequences, surrounded by quote marks ("), in order to be used properly in a FONTDEFS definition. These are as follows:
+
+Colons (:) and semicolons (;) need only be quoted.
+    ":" STTCOLON
+    ";" STTSEMIC
+
+Quote marks (") must be quoted and escaped by a backslash (\).
+    "\"" STTQUOTE
+
+Curly brackets ({}) must be quoted and escaped by a hyphen (-).
+    "-{" STTCURLL
+    "-}" STTCURLR
+
+== Templated lists ==
+The following keywords are used in font definitions:
+;BASE:The code number of the first character. If omitted, this is 33 by default, same as FIRST. However, this can be a different value. For example, if the character lumps are numbered CHAR01 to CHAR26, you would use BASE 1 instead of BASE 33 (and in this example, you would also need FIRST 65 and COUNT 26).
+;COUNT:The total number of characters. If omitted, this is 223 by default.
+;CURSOR:Sets a graphical lump to be used as the insertion cursor if the font is used on a text input field.
+;FIRST:The ASCII value of the first character. If omitted, this is 33 by default; the ASCII value for the exclamation mark.
+;SPACEWIDTH:Explicitly defines the pixel width of a space character.
+;TEMPLATE:This keyword is used to create the names for the individual lumps, using the same formatting commands as the C function {{wp|printf}} applied to the character's ASCII code. Also, lower case characters are possible; just add the CFONT*** lumps for the lower case characters and they will be used automatically, with the following ranges: A = 65; Z = 90; a = 97; z = 122
+'''DONTTRANSLATE'''
+:The font cannot be colorized.
+
+==Explicit lists==
+These keywords are implemented for regular fonts - only for ones with explicit patches.
+;CURSOR:Sets a graphical lump to be used as the insertion cursor if the font is used on a text input field.
+;NOTRANSLATION:This excludes the listed palette indices from being colorized. 
+
+==Predefined fonts==
+=== "DOOMFONT" ===
+
+The standard message font is called "Smallfont" or "Doomfont" in ACS.  You can replace the smallfont by creating a new font with the name SMALLFNT. Otherwise, it is created from a collection of existing separate lumps. Doom and Strife feature STCFNxyz lumps, where xyz are the decimal number for the character's ASCII code (e.g., 'A' is STCFN065). Strife also feature an alternate font, SmallFont2, created in the same way from the STBFNxyz lumps. In other games, SmallFont2 is just an alias for SmallFont. In Heretic and Hexen, it is created from the FONTAxy lumps, where xy are the character's ASCII code ''minus 32'' (e.g., 'A' is FONTA33).
+
+Notes: Doom's character STCFN121 does not actually correspond to 'y' but to '|', which should be STCFN124; ZDoom remaps it appropriately in consequence, unless the 'x' and 'z' characters (STCFN120 and STCFN122) are also provided. The glyphs in Heretic and Hexen correspond to upper-case characters, even if they look like lower-case characters.
+
+You can use this example as a guide to creating your own fonts.
+
+    FONTNAME
+    {
+        Template CFONT%03d
+    }
+
+Where "FONTNAME" and "CFONT" are names appropriate to your own project.
+
+=== "STATUSFONT" ===
+
+This font only needs to contain the characters you need to print the health and armor display.
+
+    STATUSFONT
+    {
+        0 STTNUM0
+        1 STTNUM1
+        2 STTNUM2
+        3 STTNUM3
+        4 STTNUM4
+        5 STTNUM5
+        6 STTNUM6
+        7 STTNUM7
+        8 STTNUM8
+        9 STTNUM9
+        % STTPRCNT
+        / STTSLASH
+        - STTMINUS    
+        NOTRANSLATION 109	// don't touch the shadow color!
+    }
+
+=== "INDEXFONT" ===
+
+The INDEXFONT is just a leftover definition that isn't used.  To replace the smaller numbers that display the ammo count on the right hand side of the stat-bar, simply replace the graphic lumps themselves.
+
+    INDEXFONT
+    {
+        0 STYSNUM0
+        1 STYSNUM1
+        2 STYSNUM2
+        3 STYSNUM3
+        4 STYSNUM4
+        5 STYSNUM5
+        6 STYSNUM6
+        7 STYSNUM7
+        8 STYSNUM8
+        9 STYSNUM9
+        NOTRANSLATION 160
+    }
+
+== See also ==
+*[[Font format]]s
+*[[SetFont]]
+*[[SetHudSize]]
+*[[HudMessage]]
+[[Category:ZDoom special lumps]]
+[[Category:Use of fonts]]</text>
+    <sha1>n4c31bbbrxlgd8ksv4cfb76h5vhk72d</sha1>
+  </revision>
+</page>

@@ -1,0 +1,46 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>A FogSpawn</title>
+  <ns>0</ns>
+  <id>7033</id>
+  <revision>
+    <id>31301</id>
+    <timestamp>2011-09-30T20:57:46Z</timestamp>
+    <contributor>
+      <username>Gez</username>
+      <id>1283</id>
+    </contributor>
+    <comment>documented</comment>
+    <origin>31301</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="1621" sha1="s002w6bz62on3ejawhtp5x9k49vaurz" xml:space="preserve">{{DISPLAYTITLE:A_FogSpawn}}
+'''A_FogSpawn'''&lt;br /&gt;
+(no parameters)
+
+Decrements the calling actor's &lt;tt&gt;special1&lt;/tt&gt; field and does nothing if this value is still positive.
+
+Otherwise, reset this field to the value from the calling actor's &lt;tt&gt;args[2]&lt;/tt&gt; field. This value therefore serves as a frequency control on an inverse scale: the larger the value, the less often will calls to this function spawn anything.
+
+Randomly spawns at the calling actor's position a {{Class|FogPatchSmall|small}}, {{Class|FogPatchMedium|medium}} or {{Class|FogPatchLarge|large}} fog patch.
+
+The patch is given an angle corresponding to the spawner's angle plus a random deviation computed from the spawner's &lt;tt&gt;args[1]&lt;/tt&gt; field: each point of &lt;tt&gt;args[1]&lt;/tt&gt; corresponds to a maximum of about 0.7° of deviation either clockwise or counterclockwise.
+
+In addition, the patch is also given values for its &lt;tt&gt;args[]&lt;/tt&gt; and &lt;tt&gt;special2&lt;/tt&gt; fields which are meant to influence how the patch moves and how long it lives, see [[A_FogMove]] for further information on how fog patches react to these arguments:
+{| {{prettytable}}
+!Fog patch!!Set value!!Note
+|-
+|args[0] || randomly between 1 and the spawner's args[0]+1 || Controls speed
+|-
+|args[3] || spawner's args[3] || Controls lifetime
+|-
+|args[4] || 1 || Flags the fog patch as moving
+|-
+|special2 || randomly between 0 and 63 || Used for vertical bobbing
+|}
+
+This codepointer is restricted to {{Class|FogSpawner}} and derived classes.
+
+[[Category:Decorate Hexen functions]] [[Category:Decorate Restricted functions]] [[Category:Decorate Spawn functions]]{{DEFAULTSORT:FogSpawn}}</text>
+    <sha1>s002w6bz62on3ejawhtp5x9k49vaurz</sha1>
+  </revision>
+</page>

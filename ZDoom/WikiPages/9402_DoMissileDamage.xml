@@ -1,0 +1,52 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>DoMissileDamage</title>
+  <ns>0</ns>
+  <id>9402</id>
+  <revision>
+    <id>47848</id>
+    <parentid>47770</parentid>
+    <timestamp>2020-09-16T23:30:01Z</timestamp>
+    <contributor>
+      <username>Blue Shadow</username>
+      <id>2021</id>
+    </contributor>
+    <minor />
+    <comment>remove {{new}}</comment>
+    <origin>47848</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="1237" sha1="5afchyxtmdu5u0y9kj8a7o3uymr1etj" xml:space="preserve">void '''DoMissileDamage''' (Actor ''target'')
+
+==Usage==
+Causes the calling actor to inflict damage to the specified actor in the same way [[projectile]]s inflict damage to actors on impact (if defined, this also includes [[poison]]). This means that damage-related information the function needs to perform, such as {{Property|Damage|base damage}} and [[actor flags|flags]], are obtained from the calling actor.
+
+While this function can be called by non-projectile actors, it is assumed that the calling actor is a projectile, and the function's usage should generally be restricted to that.
+
+===Parameters===
+*''target'': a pointer to the actor to damage. This must not be {{c|null}}.
+
+==Examples==
+This "nice" {{Class|PlasmaBall|plasma ball}} damages its shooter when it explodes.
+ class NicePlasmaBall : {{Class|PlasmaBall}}
+ {
+     States
+     {
+     Death:
+         PLSE A 0
+         {
+             // Does the shooter exist?
+             // (for projectiles, their shooter is stored in their 'target' field).
+             if (target)
+             {
+                 // Yes, it does. Then damage it.
+                 [[DoMissileDamage]](target);
+             }
+         }
+         Goto Super::Death;
+     }
+ }
+
+[[Category:ZScript]]</text>
+    <sha1>5afchyxtmdu5u0y9kj8a7o3uymr1etj</sha1>
+  </revision>
+</page>

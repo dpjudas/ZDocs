@@ -1,0 +1,520 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>Actor states</title>
+  <ns>0</ns>
+  <id>2716</id>
+  <revision>
+    <id>54147</id>
+    <parentid>53559</parentid>
+    <timestamp>2025-01-22T11:18:25Z</timestamp>
+    <contributor>
+      <username>Jekyll Grim Payne</username>
+      <id>2175</id>
+    </contributor>
+    <comment>/* Terminology */</comment>
+    <origin>54147</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="32606" sha1="r8288k44smsxgk7htvwaktm9sqaeoig" xml:space="preserve">An [[actor]]'s states can be defined within its [[ZScript]] or [[DECORATE]] definition. State sequences describe all the behavior of the actor as well as its animation.
+
+In ZScript state behavior and data is handled by the [[Structs:State|State struct]].
+
+==Usage==
+=== Terminology ===
+There are 3 main terms when it comes to states that are sometimes confused or conflated. These terms are:
+:1. '''State'''. A state is a single instruction that can contain a [[Sprite|sprite and a sprite frame]], the state's duration in [[Tic|tics]], and, optionally, a function. When one state ends, it moves to another state. In [[ZScript]] the data of each state is stored in the {{struct|State|State struct}}.
+:2. '''State label'''. This is the "name" or header of a state sequence. "Spawn", "Death" and similar are state labels.
+:3. '''State sequence'''. This is a series of states that begins at one state label and continues up until a static instruction like &lt;code&gt;stop&lt;/code&gt;, &lt;code&gt;wait&lt;/code&gt;, &lt;code&gt;goto&lt;/code&gt; or (in {{class|CustomInventory}} only) &lt;code&gt;fail&lt;/code&gt;.
+
+This is a '''state sequence''' with 3 '''states''':
+  {{color|orange|'''Death'''}}:
+    {{color|green|SPRT}} {{color|darkgreen|A}} {{color|purple|5}} {{color|blue|A_Explode}};
+    {{color|green|SPRT}} {{color|darkgreen|BC}} {{color|purple|7}};
+    {{color|red|stop}};
+
+In the example above "Death" is a '''state label''', followed by 3 states:
+:1. {{color|green|'''SPRT'''}} (sprite), {{color|darkgreen|'''A'''}} (frame letter), {{color|purple|'''5'''}} (duration of the state in tics), {{color|blue|[[A_Explode]]}} (function called as soon as this state is entered)
+:2. {{color|green|'''SPRT'''}} (sprite), {{color|darkgreen|'''B'''}} (frame letter), {{color|purple|'''7'''}} (duration)
+:3. {{color|green|'''SPRT'''}} (sprite), {{color|darkgreen|'''C'''}} (frame letter), {{color|purple|'''7'''}} (duration)
+
+Note that &lt;code&gt;SPRT BC 7&lt;/code&gt; is ''two separate'' states, but they can be defined within one line because they have the same duration ''and'' the same sprite name.
+
+This state sequence ends with {{color|red|stop}}, which means the actor will be destroyed.
+
+An actor's state definition is started with the &lt;code&gt;States&lt;/code&gt; keyword and enclosed by braces: &lt;code&gt;{ }&lt;/code&gt;
+
+It consists of the following:
+
+===State labels===
+A state label is an identifier followed by a colon (&lt;tt&gt;:&lt;/tt&gt;). State labels give names to state sequences which can then be initiated or checked for using those names.
+
+A state label can be any alphanumeric string (within reason) and is not case sensitive. Some labels (Spawn, See, Death, Ready, Select, Deselect, Fire, etc.) are assumed to exist by the engine for certain actors.
+
+A single state can have several labels, each on a different line. However, most states do not have a label, instead they merely follow other states in sequences.
+
+===State definitions===
+The main elements of any given state are the following:
+# Its [[sprite]] name
+# Its frame letter
+# Its duration in [[tic]]s
+# Its associated [[action function]]
+# Its successor (the next state in sequence)
+It also might have additional properties which are expressed through special keywords detailed below.
+
+These consist of a sprite name, a frame letter, the duration in [[tic]]s and optionally additional keywords and an [[Action functions|action function]] name (code pointer). For example:
+ STUF C 5 Bright A_Look
+Here, {{c|STUF}} is the sprite name, {{c|C}} is the frame letter, {{c|5}} the duration, and {{c|A_Look}} the action function.
+
+The successor is defined implicitly as the next defined state, unless a goto, loop, wait, or stop keyword is used to explicitly change it. For instance:
+ STUF C 5 Bright A_Look
+ STUF D 5 Bright
+Here, the successor for the first state is the second state. The second state's successor is not defined in this example.
+
+If several states share the same sprite name, duration, keywords, and action functions, and they follow in sequence, the states can be "collapsed" together by stringing the frame letters in a word.
+ STUF ABCD 5 Bright A_Look
+Here, four different states are defined on a single line. Each of A, B, C, and D are different states. And likewise:
+ STUF VVVVVV 5 Bright A_Look
+The six V states are all entirely identical (except for their successor), but they are nonetheless separate states.
+
+When the duration runs out, the actor moves to the next state in the sequence and runs the new state's action function immediately.
+Note that setting -1 as a duration means ''infinite'' duration. The actor, once it enters this state, will never leave it on its own; though it can still be moved to a different state by external actions (e.g., suffering damage might put it in the Pain state).
+
+Random durations are possible with the {{c|random(''min'', ''max'')}} function. Alternatively, you can use [[A_SetTics]]; this allows to use full-fledged [[DECORATE expressions]] to set any kind of dynamic duration; but prevents the state from having another action function.
+
+The next state is automatically implied to be the following letter on a frame sequence, or if there aren't any more states on a line, the states defined in the next line. Alternatively, [[#Flow control|flow control]] keywords (loop, wait, goto, stop) listed after a state can change it. Jump functions such as [[A_Jump]] will ignore normal sequence logic and immediately move to their designated state, without waiting for the duration to run out first.
+
+====Variable duration====
+A state can have a random duration. Instead of defining a frame like this:
+ POSS A 10 A_Look
+You can define it as:
+ POSS A random(10,20) A_Look
+and the state will last a random duration between 10 and 20 tics, inclusive. More control can be obtained by using the [[A_SetTics]] function and [[DECORATE expressions]].
+ POSS A 0 A_Look
+ POSS A 10 A_SetTics((waterlevel + 10) - (accuracy / 10))
+
+====State keywords====
+The existing keywords can be used in a state between the duration and the action function call.
+*'''{{LE|Bright}}'''
+:The sprite will be displayed as fullbright while the actor is in this state. Note that this is ignored in [[fog]].
+*'''{{LE|CanRaise}}'''
+:Mark the state as allowing [[A_VileChase]] to target the actor provided the other conditions are met. By default, only states with a -1 (infinite) duration are eligible. Also, if a state with this keyword is reached, a monster is eligible for respawning if respawning is enabled.
+*'''{{LE|Fast}}'''
+:The state has its duration halved in fast mode (if using a [[skill definition|skill]] with the {{c|FastMonsters}} property, or the {{c|{{param|-fast}}}} command-line parameter) and for actors with the {{Flag|ALWAYSFAST}} flag. This has no effect on actors with the {{Flag|NEVERFAST}} flag.
+*'''{{LE|Light}}'''("''lightname''")
+:Adds a dynamic light to the state. See [[#Dynamic light binding|below]] for further information.
+*'''{{LE|NoDelay}}'''
+:Forces the action function associated to the state to be executed during the actor's first tic. This is only useful for the first state in an actor's Spawn sequence.
+*'''{{LE|Offset}}'''(''x'', ''y'')
+:Gives the state a sprite [[offset]], only used for [[HUD]] sprites (most relevant for {{Class|weapon}}s. Note that Offset(0, 0) is interpreted as "keep previous offset", not as "reset offset to 0, 0" for compatibility with ''[[Hexen]]'', which is the game from which this feature originates. More control over offsets can be gained by using [[A_WeaponOffset]] and [[A_OverlayOffset]] functions instead.
+*'''{{LE|Slow}}'''
+:The state has its duration doubled in slow mode (if using a [[skill definition|skill]] with the {{c|SlowMonsters}} property).
+
+====Example====
+ POSS AABBCCDD 4 A_Chase
+This defines 8 states. Each one of them uses the sprite POSS, has a duration of 4 and uses the code pointer [[A_Chase]] which is the standard walk function for monsters. Of these 8 states the first 2 will use the sprite frame 'A', the next 2 the frame 'B' and so on. The length of the frame sequence can be up to 256 characters. Valid frames are 'A'-'Z', '[', '\' and ']'. Different sprites can be freely mixed in an actor definition; however, each separate line of a state definition is limited to one sprite only.
+
+====Notes====
+* If the frames '{{c|[}}', '{{c|\}}' or '{{c|]}}' are used the frame sequence has to be enclosed in quotation marks ('{{c|"}}').
+* Sprite name and frame {{c|TNT1 A}} means no sprite, making the actor invisible for the duration of the state.
+* It is possible for a state to keep the actor's current sprite and/or frame, using special sprite names such as {{c|"----"}} or {{c|"####"}}. See the [[sprite]] page for more information.
+
+===Anonymous functions===
+You can declare an anonymous function by using braces in place of an action function at the end of a state. This allows you to call multiple action functions from a single state. A semicolon is required after each statement.
+&lt;syntaxhighlight lang="csharp"&gt;
+POSS A 4
+{
+   A_Chase(); //Parentheses are required here
+   A_SpawnItemEx("BloodyTrail", flags: SXF_NOCHECKPOSITION);
+}&lt;/syntaxhighlight&gt;
+
+'''Note:''' Anonymous functions support [[Operators (ZScript)|operators]] and [[Statements (ZScript)|statements]]. These are documented separately.
+
+====Note on termination and state jumps====
+To terminate an anonymous function early, use &lt;code&gt;return&lt;/code&gt;. It can either return a value or not. The type of value returned is used to infer the return type of the anonymous function, so if you have more than one return statement, they must all return the same type. The types are ''state'' (including jumping functions), ''int'', ''bool'' and ''float''. To jump to a new state, you can return a state, either by specifying it directly or by calling a jump function.
+&lt;syntaxhighlight lang="csharp"&gt;
+{ return state("Null"); } // Destroys the actor. All actors have a Null state by default unless overridden.
+{ return state("JumpState"); } // Guarantees a jump.
+{ return FindState("JumpState"); } // So does this.
+{ return ResolveState("JumpState"); } // So does this, but can also be used from weapons
+{ return A_Jump(256, "JumpState"); } // So does this
+{ return state(""); } //Aborts an anonymous function without jumping and plays the rest of the tics.
+{ return state(0); } //Same here.
+{ return; }&lt;/syntaxhighlight&gt;
+
+In [[ZScript]] returns require a pointer acquired via [[FindState|FindState()]] or [[ResolveState|ResolveState()]]. The primary difference is that &lt;code&gt;ResolveState()&lt;/code&gt; is context-aware and will work properly when called from {{class|PSprite}}, while &lt;code&gt;FindState()&lt;/code&gt; won't. As a result, &lt;code&gt;ResolveState()&lt;/code&gt; can be used from [[Weapon]] states, where &lt;code&gt;self&lt;/code&gt; is interpeted as the weapon's owner. For example:
+&lt;syntaxhighlight lang="csharp"&gt;
+Fire:
+	TNT1 A 0
+	{
+		// Check the weapon has enough ammo to fire:
+		if (!invoker.CheckAmmo(invoker.bAltFire, false))
+		{
+			return ResolveState("Reload"); //go to Reload sequence if not enough
+		}
+		return ResolveState(null); //otherwise continue to the next state
+	}&lt;/syntaxhighlight&gt;
+
+Note that any function that contains a conditional return in it '''must''' end with a null return (such as &lt;code&gt;return ResolveState(null)&lt;/code&gt;), so that it knows where to go if the condition isn't met.
+
+Note, [[A_Jump]]'s ability to perform a jump with randomized chance can NOT be used inside a multi-conditional statement. For example, this will not function as expected:
+&lt;syntaxhighlight lang="csharp"&gt;
+// This code will not function properly!
+SPRT A 1
+{
+    A_Quake();
+    return A_Jump(128, "Death"); //this jumps to "Death" 50% chance or returns null...
+    A_Explode(); // This will never be called!
+}
+&lt;/syntaxhighlight&gt;
+
+The reason is that in the example above {{c|A_Jump}} is ''always'' called, and when it's called, it ''always'' returns a state. In the example above it'll either return "Death", or the next state after this one, skipping everything defined below ([[A_Explode]] in the example). {{c|A_Jump}} cannot return nothing at all, so when its chance fails, it returns null (= next state).
+
+The proper way to structure the above code would be:
+&lt;syntaxhighlight lang="csharp"&gt;
+SPRT A 1
+{
+    A_Quake();
+    if (random(0,256) &gt;= 128)
+    {
+        return ResolveState("Death"); //alternatively: return A_Jump(256, "Death")
+    }
+    A_Explode();
+    return ResolveState(null);
+}
+&lt;/syntaxhighlight&gt;
+
+The difference is that the random roll is handled beforehand, and the return is simply not called at all if the chance fails.
+
+As a result, it's not recommended to use A_Jump* functions in anonymous functions, simply because their conditional parts will always abort the execution of the code block, and thus are not useful for creating function flow.
+
+===Dynamic light binding===
+It is possible to attach a dynamic light directly to an actor state in its DECORATE definition, rather than binding it to the actor in a [[GLDEFS]] lump. The dynamic light itself must still be defined in GLDEFS, however. Contrarily to lights attached to actors in GLDEFS, a binding made to a state directly in the state definition will be inherited by derived actors.
+
+This is done by adding the '''Light''' keyword, followed by the name of the light within parentheses and quote marks, in this way:
+ BLAH A 1337 Bright Light("MyLight") A_DoSomething
+
+ZDoom itself does not support dynamic lights and thus will ignore the Light keyword and its parameter, but the actor will otherwise work correctly.
+
+===Flow control===
+There are 5 different instructions that control the execution order of an actor's frames directly:
+;loop
+:Jumps to the most recently defined state label. This is used to loop the state sequence.
+:If the animation should stop at the final frame and no further actions must be taken, use the duration of -1 and put &lt;code&gt;stop&lt;/code&gt; after it instead.
+;stop
+:Stops animating this actor. Normally this is used at the end of the death sequences. If the last state before &lt;code&gt;stop&lt;/code&gt; has a duration of 0 or higher, the actor will be removed. If this is called from a {{class|PSprite}} (for example, on a weapon), the calling layer will be destroyed.
+:Note, if there are no states in the state sequence, and &lt;code&gt;stop&lt;/code&gt; is put directly after the state label, this will remove that state sequence from the actor.
+;wait
+:Loops the last defined state (not the whole state sequence, in contrast to &lt;code&gt;loop&lt;/code&gt;). This is useful if there's a need to loop the execution of a function attached to the last frame of an animation, for example.
+;fail
+:Has only one meaningful use: at the end of the '''Use''' state sequence in a {{class|CustomInventory}}. If '''Use''' ends with &lt;code&gt;fail&lt;/code&gt;, the item will not be consumed on use.
+;goto ''label'' [+''offset'']
+:Jumps to an arbitrary state in the current actor.
+:Note, if this is done in an actor inherited from another actor, and the ''label'' only exists in the parent actor, the state execution will move the parent actor's states and will not return to the current actor anymore. This is because &lt;code&gt;goto&lt;/code&gt; performs a ''static'' jump. If there's a need to perform a jump that respects inheritance, use [[A_Jump]] or [[FindState]]/[[ResolveState]].
+:Offset specifies the number of &lt;i&gt;frames&lt;/i&gt; to skip after the specified label. That is, using "goto Spawn+2" will jump to this frame:
+ Spawn:
+   TNT1 AA&lt;span style="color:red"&gt;'''A'''&lt;/span&gt;AAAAA 0
+          ^
+:In addition, if an actor is [[using inheritance]], you can use &lt;code&gt;goto Super::StateLabel&lt;/code&gt; to specifically enter the parent actor's state. The keyword "super" always refers to the immediate parent, but any parent class can be referred to by name as well, for example &lt;code&gt;goto Actor::GenericFreezeDeath&lt;/code&gt; is a valid instruction.
+
+====Important note====
+This format has been designed for maximum flexibility. As a result no assumptions are made about what the designer wants. States are never implicitly created.
+
+Also, if no flow control is used ZDoom will continue to the state provided directly after. Consecutive state labels can be used to assign the same frames to more than one state.
+
+==States==
+{{note|The term "state" is often conflated with the term "state sequence." While common practice, this is incorrect. A '''state''' is a single element of a state sequence, with one sprite, one frame letter, and one function (or one anonymous function block). A '''state sequence''' is a series of states, beginning with a state label (like "Spawn") and continuing until goto/stop/wait. An expression like "Spawn state" or "Death state" is valid, but it refers only to the first state of the specified sequence, not the whole sequence.}}
+
+These are the predefined state sequences each actor has access to:
+
+;{{LE|Spawn}}
+:Defines the state sequence entered when an actor is spawned. For monsters this is normally also the idle loop. 
+:Also entered by [[Puff#Puff_states_and_flags|bullet and railgun puffs]] when hitting a shootable non-bleeding actor.
+:'''Note:''' An actor that has just been spawned does not run the [[action functions|action function]] attach to the first frame of its Spawn sequence. For example, if a monster calls A_Look in its first frame, it won't look for enemies until the Spawn sequence is looped once. If you need to force an actor to call the function instantly upon entering the Spawn sequence, add ''NoDelay'' before the function call.
+;{{LE|Idle}}
+:Defines an alternate idle state sequence for a monster to return to when it has run out of targets.  If this state is not present, the monster will return to the Spawn state instead.
+;{{LE|See}}
+:Defines the walking animation for a monster. This state sequence is activated by functions like [[A_Look]] if they successfully find a target for the calling monster.
+;{{LE|Melee}}
+:Defines a state sequence for the melee (close-range) attack.
+:Also entered by [[Puff#Puff_states_and_flags|melee attack puffs]] when hitting a shootable non-bleeding enemy.
+;{{LE|Missile}}
+:Defines the missile (ranged) attack.
+;{{LE|Pain}}
+:Defines the pain action. Multiple Pain state sequences can be used depending on the type of damage inflicted. See [[custom damage types]].
+;{{LE|Death}}
+:Defines the normal death sequence. Multiple Death state sequences can be used depending on the type of damage that kills the actor. See [[custom damage types]]. Also entered by projectiles when hitting a wall (or an actor as well if the Crash and/or XDeath states are not defined).
+;{{LE|Death.Sky}}
+:Defines an alternate death sequence for projectiles. This is entered when hitting a sky plane while having the {{Flag|SKYEXPLODE}} flag set. Does not work on {{Class|FastProjectile|fast projectiles}}.
+'''{{LE|Death.Extreme}}'''&lt;br&gt;
+'''{{LE|XDeath}}''' (internally, Death.Extreme)
+:Defines the extreme (splatter) death sequence (if the actor's health is lower than its {{Property|GibHealth}}). Multiple XDeath state sequences can be used depending on the type of damage that kills the actor. 
+{{Warning|text=For monsters that disappear in their death animations, always ensure the Death sequence is at least 1 tic long before &lt;code&gt;stop&lt;/code&gt; is called. A [https://forum.zdoom.org/viewtopic.php?f=7&amp;t=56773&amp;p=1002660#p1002629 VM abort] can potentially happen otherwise.}}
+:Also entered by projectiles when hitting a bleeding actor (if no XDeath sequence is defined, they enter their Death state instead).
+:Also entered by [[Puff#Puff_states_and_flags|puffs]] when they hit a shootable bleeding actor, provided the puff has required flags. (Bullet and melee puffs would require {{flag|PUFFONACTORS}}, and railgun puffs require {{flag|ALWAYSPUFF}} for this to happen.
+'''{{LE|Death.Fire}}'''&lt;br&gt;
+'''{{LE|Burn}}''' (internally, Death.Fire)
+:Defines the burn ({{DamageType|Fire}}) death sequence.
+'''{{LE|Death.Ice}}'''&lt;br&gt;
+'''{{LE|Ice}}''' (internally, Death.Ice)
+:Defines the freeze ({{DamageType|Ice}}) death sequence.
+'''{{LE|Death.Disintegrate}}'''&lt;br&gt;
+'''{{LE|Disintegrate}}''' (internally, Death.Disintegrate)
+:Defines the {{DamageType|Disintegrate|disintegration}} death sequence.
+;{{LE|Raise}}
+:Defines the resurrection sequence.
+:''note:'' This is when a monster is being resurrected (ie: by an {{Class|Archvile|Arch-Vile}}), not when its resurrecting another monster.
+;{{LE|Heal}}
+:Define the healing sequence. This is entered when this monster is resurrecting another one. Note that by the time this monster enters this state sequence, the resurrection process has already started. The process is usually started either by [[A_Chase]], with the CHF_RESURRECT flag passed to it, [[A_VileChase]], or [[A_CheckForResurrection]].
+;{{LE|Crash}}
+:Defines the crash sequence. Multiple Crash sequences can be used depending on the type of damage that kills the actor. This is entered when the actor is a corpse and hits the floor.
+:Also entered by projectiles when hitting a non-bleeding actor (if no Crash sequences is defined, they enter their Death sequences instead).
+:Also entered by [[Puff#Puff_states_and_flags|any type of puff]] when hitting a wall/plane. Bullet and melee attack puffs will also enter this when hitting nothing or the sky, provided the puff has {{flag||ALWAYSPUFF}}.
+'''{{LE|Crash.Extreme}}'''
+:Defines the extreme (splatter) crash sequence. Multiple Crash.Extreme sequencess can be used depending on the type of damage that kills the actor. This is entered when the actor is a corpse and hits the floor after being gibbed.
+;{{LE|Crush}}
+:Defines the crush sequence. This is entered when the actor is crushed by ceiling/door/etc.
+;{{LE|Wound}}
+:This sequence is entered when the actor is damaged and its health is lower than its '''{{Property|WoundHealth}}''' but greater than 0.  Multiple Wound state sequences can be used depending on what type of damage is inflicted upon the actor.  See [[custom damage types]].
+;{{LE|Slam}}
+:This sequence is entered if an actor with {{flag|SKULLFLY}} hits another actor. This takes precedence over entering the Spawn or Idle sequences, or entering the See state sequence if {{flag|RETARGETAFTERSLAM}} is on.
+&lt;!--;{{LE|Slide}}
+:This state sequence is entered if an actor with {{flag|PUSHABLE}} is succesfully pushed by another actor.--&gt;
+;{{LE|Greetings}}
+:This is used by the Strife dialog system. It is entered when a conversation is about to start.
+;{{LE|Yes}}
+:This is used by the Strife dialog system. It is entered when the actor reacts positively to the player's choice.
+;{{LE|No}}
+:This is used by the Strife dialog system. It is entered when the actor reacts negatively to the player's choice.
+;{{LE|Active}}
+:This is used by Hexen-style {{Class|SwitchableDecoration|switchable decorations}}. It is entered when the actor is [[Thing_Activate|activated]].
+;{{LE|Inactive}}
+:This is used by Hexen-style {{Class|SwitchableDecoration|switchable decorations}}. It is entered when the actor is [[Thing_Deactivate|deactivated]].
+;{{LE|Bounce}}
+:This is used by bouncers with the {{Flag|USEBOUNCESTATE}} flag. It is entered when the actor bounces. Multiple bounce state sequence can be used depending on what the actor bounced off:
+:*Bounce
+:*Bounce.Floor
+:*Bounce.Ceiling
+:*Bounce.Wall
+:*Bounce.Actor
+:*Bounce.Actor.Creature
+:Partial matches work just like Pain sequences, so if an actor bounces off a floor and you don't have a Bounce.Floor state sequence, but you do have a Bounce state sequence, it will use the Bounce state sequence. Conversely, if you only have a Bounce.Floor state sequence but no Bounce state sequence, then the actor will only enter the Bounce.Floor state sequence when it bounces on a floor; bouncing off anything else will not cause it to change state. The Bounce.Actor.Creature state sequence is used for bouncing over a shootable actor without the {{Flag|NOBLOOD}} flag.
+;{{LE|LightDone}}
+:Normally used by {{class|Weapon|weapons}} and entered at the end of their '''Flash''' sequence. All weapons have this built in; it simply calls [[A_Light0]] and destroys the layer. Using it is not obligatory, as long as you remember calling [[A_Light0]] after you've called [[A_Light2]] and/or [[A_Light1]], to reset the lighting of the level.
+;{{LE|Held}}
+:A built-in sequence for {{class|Inventory}} items. This is called repeatedly while the item is in somebody's inventory. Functions pretty much like the [[DoEffect]] virtual.
+;{{LE|HoldAndDestroy}}
+:A built-in sequence for {{class|Inventory}} items. This is entered when an item is being removed from its owner's inventory.
+
+{{Class|Weapon|Weapons}} and {{Class|CustomInventory|custom inventory items}} define a few more state sequences to define their animations.
+
+Note that you can also define your own state sequences that can be referred to using [[A_Jump]] or other jump instructions.
+
+==What constitutes a state sequence==
+A '''state''' is a single instruction that contains a sprite name, a sprite frame, duration and, optionally, a function. 
+
+This is a single state with a duration of 1 [[tic]]:
+
+ POSS A 1
+
+A '''state sequence''' is a sequence of states that starts at a '''state label''' (like "Spawn", "See" etc.), and ends at a &lt;u&gt;static instruction&lt;/u&gt; like &lt;code&gt;stop&lt;/code&gt;, &lt;code&gt;goto&lt;/code&gt;, &lt;code&gt;wait&lt;/code&gt;, &lt;code&gt;loop&lt;/code&gt; or &lt;code&gt;fail&lt;/code&gt;. Dynamic instructions like the {{c|A_Jump*}} functions or [[ResolveState|{{c|return ResolveState()}}]], as well fall-throughts do ''not'' break a state sequence.
+
+This is a state sequence consisting of 4 states, each calling the same function.
+&lt;syntaxhighlight lang="csharp"&gt;
+Spawn:
+  SPRT ABCD 2 A_Look;
+  loop;
+&lt;/syntaxhighlight&gt;
+
+This is also a state sequence of 4 states; the difference is that they have different durations and only 2 of them call [[A_Look]]:
+&lt;syntaxhighlight lang="csharp"&gt;
+Spawn:
+  SPRT A 10;
+  SPRT B 5 A_Look;
+  SPRT C 10;
+  SPRT D 5 A_Look;
+  loop;
+&lt;/syntaxhighlight&gt;
+
+Each state has data associated with it (sprite, frame, duration, etc.). All of that data is stored in the {{struct|State|State struct}}. The state an actor is ''currently'' in is stored in its &lt;code&gt;curState&lt;/code&gt; field, which contains a pointer to a currently used {{struct|State|State struct}}. You can check what state sequence an actor is in by calling [[InStateSequence|{{c|InStateSequence(&lt;actorpointer&gt;.curState, &lt;actorpointer&gt;.ResolveState("&lt;desired state label&gt;")}}]].
+
+As mentioned, dynamic jumps and fall-throughs do not break a state sequence. This means, that for the purposes of the [[InStateSequence|{{c|InStateSequence}}]] check, an actor can be considered to be in multiple state sequences at the same time. For example:
+&lt;syntaxhighlight lang="csharp"&gt;
+Spawn:
+  SPRT ABCD 5;
+  TNT1 A 0 A_Jump(128, "Spawn"); //50% chance to jump back to the start of Spawn
+Death:
+  SPRT EFG 3
+  {
+    if (InStateSequence(curstate, ResolveState("Spawn")))
+    {
+      // This will always be true, because the Spawn sequence
+      // ended with a dynamic jump and a fall-through to this
+      // sequence, and as such the actor's Spawn sequence is
+      // still considered to be checked.
+    }
+    if (InStateSequence(curstate, ResolveState("Death")))
+    {
+      // However, this will also be true, because the actor
+      // is also in the Death sequence here, which begins
+      // with "Death" and ends with stop.
+    }
+  }
+  stop;
+&lt;/syntaxhighlight&gt;
+
+Running [[InStateSequence|{{c|InStateSequence}}]] fron inside an actor's state is, of course, meaningless, because we already know what state and sequence the code is in. However, this function is usually called from outside of states, such as the actor's [[Tick|{{c|Tick()}}]], and that's where it becomes relevant. For example:
+&lt;syntaxhighlight lang="csharp"&gt;
+class Test : Actor
+{
+  override void Tick()
+  {
+    super.Tick();
+    if (InStateSequence(curstate, ResolveState("Spawn")))
+    {
+      Console.PrintF("Is in Spawn"); //this will always print
+    }
+  }
+  States
+  {
+  Spawn:
+    SPRT ABCD 5;
+    TNT1 A 0 A_Jump(128, "Spawn"); //50% chance to jump back to the start of Spawn
+  Death:
+    SPRT EFG 3;
+    stop;
+  }
+}&lt;/syntaxhighlight&gt;
+
+In this example, the print will always happen, because [[A_Jump]] and a fall-through do not break the Spawn sequence. As a result, in its EFG frames the actor will still be considered to be in Spawn, since it wasn't broken. If there's a need to check that the actor is in "Death" only, use &lt;code&gt;InStateSequence(curstate, ResolveState("Death"))&lt;/code&gt;. But if there's a need to check that it's in "Spawn" but ''not'' in "Death", you will need two checks:
+
+&lt;syntaxhighlight lang="csharp"&gt;
+class Test : Actor
+{
+  override void Tick()
+  {
+    super.Tick();
+    if (InStateSequence(curstate, ResolveState("Spawn")) &amp;&amp; !InStateSequence(curstate, ResolveState("Death")))
+    {
+      Console.PrintF("Is in Spawn"); // This will print only when actor is in Spawn but not in Death
+    }
+  }
+  States
+  {
+  Spawn:
+    SPRT ABCD 5;
+    TNT1 A 0 A_Jump(128, "Spawn"); //50% chance to jump back to the start of Spawn
+  Death:
+    SPRT EFG 3;
+    stop;
+  }
+}&lt;/syntaxhighlight&gt;
+
+What's also important, &lt;code&gt;goto&lt;/code&gt; that sends the actor into the state sequence ''directly below itself'' functions exactly the same way as a fall-through and does ''not'' break a state sequence. For example, the two blocks below are &lt;u&gt;functionally identical&lt;/u&gt;:
+&lt;syntaxhighlight lang="csharp"&gt;
+Spawn:
+  SPRT ABCD 5;
+Death:
+  SPRT EFG 3;
+  stop;
+&lt;/syntaxhighlight&gt;
+&lt;syntaxhighlight lang="csharp"&gt;
+Spawn:
+  SPRT ABCD 5;
+  goto Death; //same as fall-through
+Death:
+  SPRT EFG 3;
+  stop;
+&lt;/syntaxhighlight&gt;
+Calling &lt;code&gt;InStateSequence(curstate, ResolveState("Spawn"))&lt;/code&gt; will return true on ''both'' examples above.
+
+This knowledge can be manipulated specifically to create nested state sequences. For example, let's say you want an actor to have multiple variations of its Spawn sequence:
+&lt;syntaxhighlight lang="csharp"&gt;
+Spawn:
+  TNT1 A 0 A_Jump(256, "Spawn1", "Spawn2", "Spawn3");
+Spawn1:
+  SPR1 ABCD 5;
+  TNT1 A 0 A_Jump(256, "Spawn"); //guaranteed jump followed by intentional fall-through
+Spawn2:
+  SPR2 ABCD 5;
+  TNT1 A 0 A_Jump(256, "Spawn"); //guaranteed jump followed by intentional fall-through
+Spawn3:
+  SPR3 ABCD 5;
+  TNT1 A 0 A_Jump(256, "Spawn"); //guaranteed jump followed by a state sequence break
+  wait; //ends the Spawn sequence
+&lt;/syntaxhighlight&gt;
+
+In the example above, if you call &lt;code&gt;InStateSequence(curstate, ResolveState("Spawn"))&lt;/code&gt;, it will return true for "Spawn", "Spawn1", "Spawn2" and "Spawn3", which may be a desired result if you want to consider all of these states to be a part of "Spawn". "Spawn3" ends with a &lt;code&gt;wait&lt;/code&gt; instruction, which, while never actually reached due to &lt;code&gt;A_Jump(256, "Spawn")&lt;/code&gt; above it, marks an end of the "Spawn" sequence.
+
+==Examples==
+
+This is an example of a States block with multiple state sequences. The rest of this actor has been removed for readability:
+ class {{class|ZombieMan}} : {{class|Actor}}
+ {
+ 	[...]
+ 	States
+ 	{
+ 	Spawn:
+ 		POSS AB 10 [[A_Look]];
+ 		Loop;
+ 	See:
+ 		POSS AABBCCDD 4 [[A_Chase]];
+ 		Loop;
+ 	Missile:
+  		POSS E 10 [[A_FaceTarget]];
+ 		POSS F 8 [[A_PosAttack]];
+ 		POSS E 8;
+ 		Goto See;
+  	Pain:
+ 		POSS G 3;
+ 		POSS G 3 [[A_Pain]];
+ 		Goto See;
+ 	Death:
+ 		POSS H 5;
+ 		POSS I 5 [[A_Scream]];
+ 		POSS J 5 [[A_NoBlocking]];
+ 		POSS K 5;
+ 		POSS L -1;
+ 		Stop;
+ 	XDeath:
+ 		POSS M 5;
+ 		POSS N 5 [[A_XScream]];
+ 		POSS O 5 [[A_NoBlocking]];
+ 		POSS PQRST 5;
+ 		POSS U -1;
+ 		Stop;
+ 	Raise:
+ 		POSS K 5;
+ 		POSS JIH 5;
+ 		Goto See;
+ 	}
+ }
+'''Note:''' The first state of the {{c|Spawn}} state sequence, {{c|POSS A 10}}, calls '''[[A_Look]]'''. This function is not called the very first time the zombie is spawned in the map, so it has to wait 10 tics to get into its second frame, {{c|POSS B 10}}. From then on, it will call &lt;code&gt;A_Look&lt;/code&gt; every 10 tics. If it runs out of targets, and since it has no {{c|Idle}} state sequence, it will return to its {{c|Spawn}} state sequence where it will call &lt;code&gt;A_Look&lt;/code&gt; immediately, even in the A frame.
+
+
+This example demonstrates using the stop keyword to remove a state.  This definition uses inheritance to define a tougher version of the imp that cannot be resurrected by the Arch-Vile:
+
+ class SuperImp : {{class|DoomImp}}
+ {
+      Default
+      {
+          {{property|Health}} 1500;
+          {{property|Mass}} 200;
+          {{property|PainChance}} 10;
+      }
+      States 
+      {
+      {{color|green|''// Removes the Raise sequence:''}}
+      Raise:
+          stop;
+      }
+ }
+
+==See also==
+*[[Operators (ZScript)|ZScript operators]]
+*[[Statements]]
+*[[Using inheritance]]
+*[[Structs:State]]
+
+[[Category:DECORATE]][[Category:Editing concepts]][[Category:Editing references]]</text>
+    <sha1>r8288k44smsxgk7htvwaktm9sqaeoig</sha1>
+  </revision>
+</page>

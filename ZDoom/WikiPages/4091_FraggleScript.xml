@@ -1,0 +1,657 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>FraggleScript</title>
+  <ns>0</ns>
+  <id>4091</id>
+  <revision>
+    <id>40662</id>
+    <parentid>38640</parentid>
+    <timestamp>2016-01-07T21:48:30Z</timestamp>
+    <contributor>
+      <username>Gez</username>
+      <id>1283</id>
+    </contributor>
+    <comment>/* Functions */ this was removed in commit 5474e01de8c1153c25c7d9968e4d435c54933ad9</comment>
+    <origin>40662</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="47891" sha1="lltdjetmgv7499cf1neew8vbbqeb30z" xml:space="preserve">{{WarnCompatFeature|port=[[Doom Legacy]]}}&lt;br&gt;
+
+{{Doomwiki}}
+
+'''FraggleScript''' (or '''FS''') is a simple scripting language introduced in [[SMMU]]. For [[ZDoom]] projects, the more powerful [[ACS]] should generally be preferred, especially if compatibility with [[Skulltag]] is desired.
+
+FraggleScript was designed to be embedded easily in a Doom level without changing anything in the map format, contrarily to ACS. This means that instead of using a dedicated script lump, FS code goes in the level header lump (e.g., "MAP01" or "E1M1"), since this lump is always there and yet its content is not used by anything else. The FraggleScript code in ZDoom is contained in the t_* source files. Their [[license]] is normally incompatible with some other licenses of elements included in ZDoom, however the author and right holder granted special permission to use the code anyway in ZDoom and derivatives as long as the code remains open source.
+
+FS code is divided in two broad parts: map initialization and actual scripting. These are separated in sections using a syntax similar to that of a Windows .ini file, with section headers between square brackets.
+
+==Map initialization==
+Several data about the map can be set with FS rather than in the [[MAPINFO]] lump, which neither [[SMMU]] nor [[Doom Legacy]] supported. While it might seem a more elegant approach (making such map data part of the actual map lumps rather than defined externally in a global lump), it is flawed in that this prevents the engine from accessing this data before the map is loaded &amp;mdash; for example, the "Now entering" [[intermission]] screen will be inaccurate if the next map's name is changed with FraggleScript. Console commands such as {{CCMD|I|listmaps}} will likewise not be able to print the FS-given name of the listed maps.
+
+The map initialization section begins with the header &lt;tt&gt;[level info]&lt;/tt&gt;. Since FraggleScript is parsed when the level is loaded (and therefore after MAPINFO was parsed), FraggleScript initialization will override MAPINFO.
+
+Level info uses a "key = value" syntax similar to that of some .ini file, with one such instruction per line. Contrarily to the script section, instructions are not terminated with a semi-colon, but by a new line. Strings are not quoted. Keywords include:
+;consolecmd: Runs the corresponding console command at map start up. Note that those are Legacy/SMMU console commands, not ZDoom [[console command]]s. See the section on FS console commands below.
+;creator: Name of the level author. While some ports implemented special features for this field (e.g. to display such names for a couple of seconds after loading the map), this has no effect whatsoever in ZDoom.
+;drown: Whether drowning (for instance, in [[Boom]]-style [[deep water]]) is possible or not. By default, the presence of FraggleScript code in a level header disables drowning since [[Doom Legacy]] does not present this feature and some maps made for it include extensive underwater areas. This use a boolean number: use 0 for false and 1 for true. Example: &lt;tt&gt;drown = 1&lt;/tt&gt;
+;gravity: The strength of the [[gravity]] on the map, as a percentage: 100 corresponds to default gravity. Note that in [[MAPINFO]] definition, the default gravity is 800, not 100, so to convert a FraggleScript level info section to a MAPINFO definition, you will have to multiply this value by eight.
+;ignore: Whether the entire level info block should be ignored altogether or not. This is a compatibility workaround. This allows to create maps that are compatible with [[Doom Legacy]] and for which this port will use the level info block, as well as with ZDoom which will instead rely only on the content of the ZMAPINFO lump. This use a boolean number: use 0 for false and 1 for true. Example: &lt;tt&gt;ignore = 1&lt;/tt&gt;
+;interpic: The name of the picture lump displayed as the background of the tally intermission screen at the end of the level.
+;levelname: Name of the level. Example: &lt;tt&gt;levelname = Derelict Shipwreck&lt;/tt&gt;
+;music: Music lump for the level. FS will look first for the name given, then for the same prefixed with "O_" and finally for the same prefixed with "D_". That means that for example, &lt;tt&gt;music = shawn&lt;/tt&gt; will be successful in a ''[[Doom II]]'' map as the [[IWAD]] does contain a music lump named D_SHAWN.
+;nextlevel: Lump name of the next level's header, as reached with a normal exit.
+;nextsecret: Lump name of the next level's header, as reached with a secret exit.
+;partime: Par time of the level, in seconds. Example: &lt;tt&gt;partime = 500&lt;/tt&gt; corresponds to eight minutes and twenty seconds.
+;skyname: The name of the sky texture for the level. Example: &lt;tt&gt;skyname = zzwolf9&lt;/tt&gt;
+
+FraggleScript will ignore unknown level info keys, therefore the ZDoom additions ("drown" and "ignore") will not cause compatibility issues with other FS-supporting ports, and likewise some FS features with no effect in ZDoom (such as the "creator" field) will not trigger errors either.
+
+=== Console commands ===
+For the purpose of allowing the consolecmd keyword to work, ZDoom emulates &amp;mdash; within FS [level info] blocks only &amp;mdash; a subset of the relevant console commands.
+;allowjump &lt;int value&gt;: Allows [[jumping]] if value is non-null, disallows it otherwise.
+;gimme &lt;string name&gt;: Give the player an item. For FS item names, [[#Names|see below]].
+;gravity &lt;float value&gt;: Changes the [[gravity]] value. Normal gravity is represented by 1.0. Note that this is redundant with the "gravity" keyword, which however is a percentage. To convert it into a ZDoom MAPINFO value, multiply by 800.
+;gr_fogcolor &lt;int RGB value&gt;: Sets the [[fade color]], as with the "fade" MAPINFO option. The color must be presented as a single integer value corresponding to the color expressed as an ARGB value.
+;gr_fogdensity &lt;int value&gt;: Sets the [[fog]] density. {{openGLsmall}} This corresponds roughly to setting the following OpenGL-specific options in [[MAPINFO options for GZDoom's GL renderer|MAPINFO]]: &lt;tt&gt;fogdensity = (value * 70) / 400&lt;/tt&gt;; &lt;tt&gt;outsidefogdensity = 0&lt;/tt&gt;; &lt;tt&gt;skyfog = 0&lt;/tt&gt; as well as the normal MAPINFO option of &lt;tt&gt;outsidefog = 0&lt;/tt&gt;. Using this is therefore a lot less flexible than using the aforementioned MAPINFO features; and furthermore it is not implemented in the software renderer.
+;viewheight &lt;float value&gt;: Changes all player's {{Property|Player.ViewHeight|view height}} to the given value. Note that this change will apparently not persist after respawning in a multiplayer game {{verification}}.
+;map &lt;string line&gt;: Allows to warp to a new map. The rest of the command line must include the lump name of the target map's level header, and may feature the following parameters as well: &lt;tt&gt;-skill &lt;value&gt;&lt;/tt&gt; to use the given skill level; &lt;tt&gt;-monsters &lt;value&gt;&lt;/tt&gt; to play with monsters (non-null value) or without (null value); and &lt;tt&gt;-noresetplayers&lt;/tt&gt; not to reset the players' health inventory.
+
+Any other console command is not implemented and will have no effect.
+
+== Scripting ==
+The scripting block begins with the &lt;tt&gt;[scripts]&lt;/tt&gt; header. A [[GZDoom]] innovation is the '''FSGLOBAL''' lump. It can contain scripts that will be available in any map without their own FS code in their header, similarly to [[ACS]] [[libraries]].
+
+The scripting block contains variables, functions and scripts.
+
+=== Variables ===
+Global variables are declared and initialized directly in the block, outside of any script. Local variables are declared and initialized within a script. FS variables are more powerful than ACS variables: while ACS only knows integers, FS does have real strings. There is also a "mobj" variable type which contains an actor; whereas ACS has to make do with integers and [[TID]]s (which admittedly can be more useful).
+
+Variable types:
+*string
+*int
+*mobj
+*fixed
+*float
+Internally, fixed and float variables are represented in the same way.
+
+In addition, variables can have special modifiers put in front of them:
+*const
+*hub
+Const variables cannot be modified after initialization. However, the hub modifier has no effect &amp;mdash; [[SMMU]]'s implementation of [[hub]]s was incomplete and faulty. Variable [[scope]] is therefore limited to local or global; there is no hub or world scope available.
+
+FS variables are weakly typed and easily converted, at least between number types or towards strings. Attempting to cast a mobj as a number will always return -1; as a string it will always return the class name.
+
+=== Scripts ===
+As in [[ACS]], scripts are defined with the "script" keyword followed by a number which serves as the script identifier. The script instructions are then enclosed within curly braces and follow a C-like syntax. Contrarily to ACS, however, there is only one [[script types|script type]] (so there are no keywords such as ENTER and so on) and scripts cannot be passed parameters. Scripts also do not return any value, so there is no equivalent to [[ACS_ExecuteWithResult]].
+
+==== Flow control ====
+FS scripts can use the keywords &lt;tt&gt;for&lt;/tt&gt;, &lt;tt&gt;while&lt;/tt&gt;, and &lt;tt&gt;if&lt;/tt&gt;/&lt;tt&gt;elseif&lt;/tt&gt;/&lt;tt&gt;else&lt;/tt&gt; to create conditional or iterative blocks. They work in the same fashion as they do in ACS; with the exception of &lt;tt&gt;elseif&lt;/tt&gt; which is specific to FS and would be represented by separated &lt;tt&gt;else if&lt;/tt&gt; keywords in ACS.
+
+==== Functions ====
+Since there are varied data types in FraggleScript, the return type of functions is important. The following functions are available. A quick description is given for non-trivial functions.
+
+Note that many functions are bugged, incomplete, or unimplemented dummies. Note also that a lot of them lack sanity checks. Bad FraggleScript code can seriously affect the engine's stability and may lead to freezes or crashes.
+
+* fixed '''{{LE|Abs}}'''(value)
+* fixed '''{{LE|ACos}}'''(value)
+* void '''{{LE|AmbientSound}}'''(name)
+:Plays the given sound on the AUTO channel. The name can be a ZDoom [[SNDINFO]] logical name, or a sound lump name with or without the "DS" prefix. (In ''[[Heretic]]'' and ''[[Hexen]]'', ZDoom will start by looking for lumps without the DS prefix and try again with the DS prefix if it didn't find any without. In ''[[Doom]]'', ''[[Strife]]'', ''[[Chex Quest]]'' and the other [[IWAD|games]], it will instead start by adding the DS prefix and look for the plain name as a fallback option.)
+* fixed '''{{LE|ASin}}'''(value)
+* fixed '''{{LE|ATan}}'''(value)
+* void '''{{LE|Beep}}'''()
+:Plays the sound "misc/chat" on the AUTO channel.
+* void '''{{LE|Break}}'''()
+:This function serves to break out of a for or while loop. FraggleScript implemented this feature as a function rather than a keyword.
+* int '''{{LE|CeilingHeight}}'''(int tag_number[, int set_height[, int crush])
+:If a second parameter is given, all sectors with the [[tag]] tag_num will have their ceiling move instantly to set_height (provided they aren't already active). If the third parameter is given and non-null, this movement will inflict crushing damage if required. The function returns 0 if a ceiling movement was demanded but blocked, or the (possibly new) height of the earliest tagged sector otherwise.
+* string '''{{LE|CeilingTexture}}'''(int tag_number[, string set_tex])
+:If a second parameter is given, all sectors with the [[tag]] tag_num will have their ceiling texture instantly changed to set_tex. The function returns the (possibly new) texture name of the earliest tagged sector.
+* void '''{{LE|ChangeHubLevel}}'''()
+:This function is not implemented in ZDoom and will provoke an error warning that the FS hub system is permanently disabled if used.
+* void '''{{LE|ChangeMusic}}'''(string name)
+:Like the "music" level info keyword, this will try to find a music lump with the exact name, then prefixed with O_, and finally prefixed with D_. If no music lump is found at all, it will stop playing music.
+* void '''{{LE|ChangeTag}}'''(int tag_num, int new_tag)
+:Changes the [[tag]] of all sector tagged tag_num to new_tag. This function is a GZDoom innovation, originally motivated as a workaround for some issue in MAP02 of [[RTC-3057]].
+* string '''{{LE|CheckCVar}}'''(string cvar)
+:Not implemented, always return "0".
+* int '''{{LE|CheckInventory}}'''(int player_num, string item)
+:Returns the count of item in the player's inventory. Keyword "armor" is reserved as an alias for {{Class|BasicArmor}}, "health" is reserved to find the player's health instead. Any other name will be interpreted as a ZDoom actor name for some inventory item. This function is a GZDoom innovation.
+* void '''{{LE|ClearCamera}}'''()
+:Resets the player's viewpoint to the playerpawn mobj.
+* int '''{{LE|Clock}}'''()
+:Returns the number of hundredth of second since the beginning of the level. Since this value is derived from the internal &lt;tt&gt;gametic&lt;/tt&gt; counter, there may be precision issues as the engine clock operates at [[tic|35 Hz]], not 100 Hz.
+* void '''{{LE|CloseDoor}}'''(int tag_num[, int speed])
+:Closes all tagged doors. If a speed parameter is given, it is used as a multiplier (1 is the default speed and corresponds to a speed of 16 in [[Door_Close]]).
+* void '''{{LE|Continue}}'''()
+:Skip directly to the next iteration of the loop. FraggleScript implemented this feature as a function rather than a keyword.
+* fixed '''{{LE|Cos}}'''(value)
+* void '''{{LE|DamageObj}}'''([mobj target,] int amount)
+:Inflicts amount points of damage to the target. If no target is specified, the script activator is used as a default.
+* void '''{{LE|DeleteHUPic}}'''(int handle)
+:Deletes the HUD picture identified by the handle. Note: the FS HUD picture code is incomplete and untested.
+* void '''{{LE|ExitLevel}}'''()
+* void '''{{LE|ExitSecret}}'''()
+* fixed '''{{LE|Exp}}'''(value)
+* void '''{{LE|FadeLight}}'''(int tag_num, int level[, int speed])
+:Fades the light level of each tagged sector by speed points per [[tic]]. The default speed is 1. Tagged sectors who already have a lighting effect (through a script or from their [[sector type]]) are unaffected.
+* fixed '''{{LE|FixedValue}}'''(value)
+* fixed '''Floor''' (value)
+* int '''{{LE|FloorHeight}}'''(int tag_number[, int set_height[, int crush])
+:If a second parameter is given, all sectors with the [[tag]] tag_num will have their floor move instantly to set_height (provided they aren't already active). If the third parameter is given and non-null, this movement will inflict crushing damage if required. The function returns 0 if a floor movement was demanded but blocked, or the (possibly new) height of the earliest tagged sector otherwise.
+* string '''{{LE|FloorTexture}}'''(int tag_number[, string set_tex])
+:If a second parameter is given, all sectors with the [[tag]] tag_num will have their floor texture instantly changed to set_tex. The function returns the (possibly new) texture name of the earliest tagged sector.
+* int '''{{LE|Gamemode}}'''()
+:Returns 0 for single-player, 1 for [[cooperative]] and 2 for [[deathmatch]]. Contrarily to the ACS [[GameType]] function, it does not detect title maps.
+* int '''{{LE|Gameskill}}'''()
+:Returns the skill level, using the same value as the ACS [[GameSkill]] function. See the  acsreturn property in [[MAPINFO/Skill definition|skill definitions]].
+* void '''{{LE|GiveInventory}}'''(player, string item[, int count])
+:Gives the named item to the identified player. This function is a GZDoom innovation and uses DECORATE actor names.
+* void '''{{LE|Goto}}'''(string label)
+:Jumps to the given label in the script. FraggleScript implemented this feature as a function rather than a keyword.
+* void '''{{LE|HealObj}}'''([mobj target,] int amount)
+:Heals amount points of damage to the target. If no target is specified, the script activator is used as a default.
+* void '''{{LE|Include}}'''(string lumpname)
+:Parses the given lump as a FraggleScript lump. This is generally used at the beginning of the [scripts] block to include the things.h definition file. Note that this does not work like a #include preprocessor directive. It will not work if the included lump contains labels or section headers, for example.
+* void '''{{LE|Input}}'''()
+:Prints an error message telling you the function is not available.
+* int '''{{LE|IntValue}}'''(value)
+* int '''{{LE|IsPlayerObj}}'''([mobj object])
+:Returns 1 if the object is a player, 0 otherwise. If no object is specified, the script activator is used as a default.
+* void '''{{LE|KillInSector}}'''(int tag)
+:Kills all actors in all tagged sectors. This function is a GZDoom innovation.
+* void '''{{LE|KillObj}}'''([mobj target])
+: Kills the target. If no target is specified, the script activator is used as a default.
+* int '''{{LE|LevelNum}}'''()
+:Returns the current level's number. (See levelnum property in [[MAPINFO/Map definition|MAPINFO]].) This function is a GZDoom innovation.
+* int '''{{LE|LightLevel}}'''(int tag_number[, int set_level])
+:If a second parameter is given, all sectors with the [[tag]] tag_num will have their light level change instantly to set_level. The function returns the (possibly new) light level of the earliest tagged sector.
+* void '''{{LE|LineAttack}}'''(mobj shooter, int angle, int damage)
+:Sends a [[hitscan]] attack from the shooter object at the given [[angle]], expressed on a scale from 0 to 7: 0 is east, 1 north-east, 2 north, etc. until 7 which is south east. This attack will use the standard {{Class|BulletPuff|bullet puff}}.
+* int '''{{LE|LineFlag}}'''(int linenum, int flag[, int set])
+:This function is only here for Legacy maps. The implementation is completely useless. It identifies the line by its number (not by a [[tag]]) and the flags are also set or unset by their numerical value. If the third parameter is present and null, the flag will be unset, if non-null it will be set. In all cases, including if there is no third parameter, the function returns the value of the flag if it is set, 0 otherwise. [[Line_SetBlocking]]
+* void '''{{LE|LineTrigger}}'''(int type[, int tag])
+:Creates a virtual [[linedef]] with the given special and optionally tag. This uses [[Doom format]] line type values, the special is therefore interpreted by the current [[map translator]].
+* fixed '''{{LE|Log}}'''(value)
+* void '''{{LE|Ls}}'''(int special[, int arg0[, int arg1[, int arg2[, int arg3[, int arg4]]]]])
+:Executes the given [[special]]. This one uses the [[Hexen format]] special values and therefore does not need translating, contrarily to LineTrigger. This is a GZDoom innovation, however it is also possible instead to directly call a special by name.
+* int '''{{LE|MapThingNumExist}}'''(int number)
+:Returns 1 if an actor with this thing number (as determined by the map editor) exists, 0 otherwise. Can be used to prevent script errors, notably before casting an int to a mobj.
+* int '''{{LE|MapThings}}'''()
+:Returns the number of things placed in the map editor.
+* fixed '''{{LE|Max}}'''(value1, value2)
+* int '''{{LE|MaxPlayerAmmo}}'''(player, int/string ammo_type[, int value])
+:If the third parameter is given, sets the given player's max amount of the given ammo type to value. Returns the (possibly new) max amount of the given ammo that the given player has. If ammo_type is a number, only values from 0 to 3 (corresponding respectively to {{Class|Clip}}, {{Class|Shell}}, {{Class|Cell}}, and {{Class|RocketAmmo}}) are allowed. If it is a string, any valid DECORATE actor name is accepted.
+* void '''{{LE|Message}}'''(string text)
+:Prints the given text as a message to the activator. Roughly equivalent to [[Log]] from [[ACS]] or [[A_Log]] from [[DECORATE]].
+* fixed '''{{LE|Min}}'''(value1, value2)
+* fixed '''{{LE|MobjHeight}}'''(mobj target[, value])
+:If a second parameter is passed, sets the target mobj's height to this value. Returns the target's (possibly new) height, or 0 if the target was invalid. This is a GZDoom innovation.
+* fixed '''{{LE|MobjMomx}}'''(mobj target[, value])
+:If a second parameter is passed, sets the target mobj's x-axis velocity to this value. Returns the target's (possibly new) x-axis velocity, or 0 if the target was invalid. MobjMomy and MobjMomz work in the same way for the other two axes.
+* fixed '''{{LE|MobjMomy}}'''(mobj target[, value])
+* fixed '''{{LE|MobjMomz}}'''(mobj target[, value])
+* fixed '''{{LE|MobjRadius}}'''(mobj target[, value])
+:If a second parameter is passed, sets the target mobj's radius to this value. Returns the target's (possibly new) radius, or 0 if the target was invalid. This is a GZDoom innovation.
+* mobj '''{{LE|MobjTarget}}'''(mobj m1[, mobj m2])
+:If a second parameter is passed and m2 is a valid mobj, sets the m1's target to be m2 and put m1 in its See: state with the "JUSTHIT" flag to incite it to attack. Returns m1's target, or NULL if m1 is invalid.
+* mobj '''{{LE|MobjValue}}'''(value)
+* void '''{{LE|ModifyHUPic}}'''(int handle, string texture, int xpos, int ypos)
+:Sets the HUD picture with the given handle to use the given texture and x/y positions. Note: the FS HUD picture code is incomplete and untested. This function will not work because it it will use the wrong parameter for the texture name: instead of using the given string, it will interpret as a texture name the number given for the handle.
+* int '''{{LE|MoveCamera}}'''(mobj camera, mobj targetobj, fixed targetheight, fixed movespeed, fixed targetangle, fixed anglespeed)
+:Moves the camera towards targetobj's position at targetheight, by a step of movespeed. Simultaneously rotates the camera's direction from its current angle towards targetangle, by a step of anglespeed. Returns 1 if the camera actually moved, 0 otherwise.
+* void '''{{LE|MoveCeiling}}'''(int tag_num, int dest_height[, fixed speed[, int crush[, int silent]]])
+:Moves all tagged sectors' ceilings towards dest_height, provided they are not already moving. The default speed corresponds to a speed of 8 for [[Ceiling_MoveToValue]]; the speed parameter is used as a multiplier. If the fourth parameter is given and non-null, the movement will crush actors if needed; if the fifth is given and non-null, the movement will be silent.
+* void '''{{LE|MoveFloor}}'''(int tag_num, int dest_height[, fixed speed[, int crush[, int silent]]])
+:Moves all tagged sectors' floors towards dest_height, provided they are not already moving. The default speed corresponds to a speed of 8 for [[Floor_MoveToValue]]; the speed parameter is used as a multiplier. If the fourth parameter is given and non-null, the movement will crush actors if needed; if the fifth is given and non-null, the movement will be silent.
+* int '''{{LE|NewHUPic}}'''(string texture, int xpos, int ypos)
+:Creates a new HUD picture from texture at the given x and y position. Returns the handle for this picture. Note: the FS HUD picture code is incomplete and untested.
+* fixed '''{{LE|ObjAngle}}'''([mobj target])
+:Returns the target mobj's [[angle]]. If no target is specified, the script activator is used as a default.
+* void '''{{LE|ObjAwaken}}'''([mobj target])
+:[[Thing_Activate|Activates]] the target mobj. If no target is specified, the script activator is used as a default.
+* int '''{{LE|ObjDead}}'''([mobj target])
+:Returns 1 if the target mobj has 0 or less health or has the {{Flag|CORPSE}} flag; 0 otherwise. If no target is specified, the script activator is used as a default.
+* int '''{{LE|ObjFlag}}'''([mobj target, ]int flag_num[, int set])
+:If the third parameter is given and non-null, the flag at bit flagnum is set for the target; if given and null the flag is unset. Returns flag_num if the flag is set on the target, 0 otherwise or if the target is invalid. If no target is specified, the script activator is used as a default.
+* int '''{{LE|ObjHealth}}'''([mobj target])
+:Returns the target mobj's health or 0 if the mobj is invalid. If no target is specified, the script activator is used as a default.
+* int '''{{LE|ObjSector}}'''([mobj target])
+:Returns the tag of the sector that the target mobj is in or 0 if the mobj is invalid. If no target is specified, the script activator is used as a default.
+* int '''{{LE|ObjState}}'''([mobj target, ]int state_code)
+:Puts the target in the state identified by the following code: 0 = Spawn, 1 = See, 2 = Missile, 3 = Melee, 4 = Pain, 5 = Death, 6 = Raise, 7 = XDeath, 8 = Crash. However, the value must be between 1 and 9 inclusive, because the programmer forgot about 0-based arrays. Using 9 is undefined behavior (will probably crash), and using the Spawn state is impossible. Further, Legacy itself uses the values from 8 to 16 anyway. Returns 1 if the operation was successful, 0 otherwise.
+* int '''{{LE|ObjType}}'''([mobj target])
+:Returns the type number of the target mobj. This is a lousy hack which only works for the standard actors and it is quite inefficient, as it will simply test each of the Doom/Boom actor classes in order to see if the target is of that type. For mobj belonging to a non-standard Boom class, it will return -1. If no target is specified, the script activator is used as a default.
+* fixed '''{{LE|ObjX}}'''([mobj target])
+:Returns the X coordinate of the target mobj. If no target is specified, the script activator is used as a default. The ObjY and ObjZ function behave in the same way for the other two axes.
+* fixed '''{{LE|ObjY}}'''([mobj target])
+* fixed '''{{LE|ObjZ}}'''([mobj target])
+* void '''{{LE|OpenDoor}}'''(int tag_num[, int wait[, int speed]])
+:Opens all tagged doors. If a wait parameter is given and non-null, the door will wait this amount of hundredth of second before closing. If a speed parameter is given, it is used as a multiplier (1 is the default speed and corresponds to a speed of 16 in [[Door_Open]]).
+* void '''{{LE|PlayDemo}}'''(string lump_name)
+:Does nothing. [[Demo]] compatibility &amp;mdash; especially with a very different engine such as [[Doom Legacy]] &amp;mdash; is too fickle and complicated to allow this feature to be reliably implemented and maintained; so it is ignored instead.
+* int '''{{LE|Player}}'''([mobj target])
+:Returns the target's player number if it is a player, or -1 otherwise. If no target is specified, the script activator is used as a default.
+* int '''{{LE|PlayerAddFrag}}'''(player1[, player2])
+:Increases the player1's [[frag]] counter by one point. If player2 is given, player1 is considered to have fragged this player in particular; otherwise the frag added is non-specific. Returns player1's increased fragcount, either the global or the one specific to player2, as apppropriate.
+* int '''{{LE|PlayerAmmo}}'''(player, int ammo_type[, int value])
+:If the third parameter is given, sets the given player's amount of the given ammo type to value, respecting the normal maximum. Returns the (possibly new) amount of the given ammo that the given player has. Only values from 0 to 3 (corresponding respectively to {{Class|Clip}}, {{Class|Shell}}, {{Class|Cell}}, and {{Class|RocketAmmo}}) are allowed for ammo_type.
+* int '''{{LE|PlayerInGame}}'''(player)
+:Returns 1 if the given player is in-game, 0 otherwise.
+* int '''{{LE|PlayerKeys}}'''(player, int key_code[, givetake])
+:This function is limited to the six vanilla Doom keys, given these code in order: 0 = {{Class|BlueCard}}, 1 = {{Class|YellowCard}}, 2 = {{Class|RedCard}}, 3 = {{Class|BlueSkull}}, 4 = {{Class|YellowSkull}}, 5 = {{Class|RedSkull}}. If the givetake parameter is not given, the function returns 1 if the player has the given key and 0 otherwise. If the givetake parameter is given and null, the key is taken from the player; if given and non-null, it is given instead; in either case the function returns 0.
+* void '''{{LE|PlayerMsg}}'''(player, string message)
+:Prints the given message but only for the given player. Roughly equivalent to [[Log]] from [[ACS]] or [[A_Log]] from [[DECORATE]].
+* string '''{{LE|PlayerName}}'''([player])
+:Returns the name of the player. If no target is specified, the script activator is used as a default. If the activator does not correspond to a player, a script error happens.
+* mobj '''{{LE|PlayerObj}}'''(player)
+:Returns the mobj corresponding to the given player's current {{Class|PlayerPawn|pawn}}.
+* int '''{{LE|PlayerSelectedWeapon}}'''(player[, int weapon_code])
+:Returns a code corresponding to one of the standard Doom weapons: 0 = {{Class|Fist}}, 1 = {{Class|Pistol}}, 2 = {{Class|Shotgun}}, 3 = {{Class|Chaingun}}, 4 = {{Class|RocketLauncher}}, 5 = {{Class|PlasmaRifle}}, 6 = {{Class|BFG9000}}, 7 = {{Class|Chainsaw}}, 8 = {{Class|SuperShotgun}}. If the second parameter is passed, this code is used to change the player's current weapon to the given one. Warning: the function does not check whether the player actually has this weapon in inventory!
+* void '''{{LE|PlayerTip}}'''(player, string message)
+:Prints the message but only for the given player. Roughly equivalent to [[Print]] from [[ACS]] or [[A_Print]] from [[DECORATE]].
+* int '''{{LE|PlayerWeapon}}'''(player, int weapon_code)
+:Returns 1 if the player has the given weapon in inventory, 0 otherwise. This function uses the same code as PlayerSelectedWeapon.
+* fixed '''{{LE|PointToAngle}}'''(fixed x1, fixed y1, fixed x2, fixed y2)
+:Returns the [[angle]] between point 1 and point 2.
+* fixed '''{{LE|PointToDist}}'''(fixed x1, fixed y1, fixed x2, fixed y2)
+:Returns the distance between point 1 and point 2.
+* fixed '''{{LE|Pow}}'''(value, power)
+* void '''{{LE|Print}}'''(string message)
+:Prints the given text as a message. Roughly equivalent to [[Log]] from [[ACS]] or [[A_Log]] from [[DECORATE]].
+* void '''{{LE|PushThing}}'''(mobj target, fixed angle, fixed force)
+:Pushes the thing in the given angle with the given force.
+* void '''{{LE|RadiusAttack}}'''(mobj spot, mobj source, int damage)
+:Similar to a simplified version of [[A_Explode]], centered around the spot mobj and credited (for infighting and attributing kills) to the source mobj. The amount of damage can be chosen, but not the radius or any of the other options A_Explode offers.
+* int '''{{LE|ReactionTime}}'''(mobj target[, int duration])
+:If the second paramater is given, sets the target's {{Property|ReactionTime}} to that value. The duration, as usual in FraggleScript, is expressed in hundredth of second. This can be used to temporarily freeze things. Returns the (possibly new) actual value of the target's reaction time (in [[tic]]s, not in hundredth of second).
+* void '''{{LE|RemoveObj}}'''(mobj target)
+:Destroys and removes the target mobj from the game entirely. Do not try using it on a player mobj...
+* void '''{{LE|Resurrect}}'''(mobj target)
+:Revives the target mobj, provided it has a Raise: state (therefore it cannot be used on players).
+* void '''{{LE|Return}}'''()
+: Terminates the current script instantly. FraggleScript implemented this feature as a function rather than a keyword.
+* int '''{{LE|Rnd}}'''()
+:Returns a random number from 0 to 255.
+* void '''{{LE|RunCommand}}'''(string command)
+:Runs an SMMU console command. See [[#Console commands|above]] for a list of supported commands.
+* int '''{{LE|ScriptRunning}}'''(int script_num)
+:Returns 1 if the given FS script is currently running, 0 otherwise.
+* void '''{{LE|ScriptWait}}'''(int script_num)
+:Suspends execution of the calling script until the given FS script has finished running.
+* void '''{{LE|ScriptWaitPre}}'''(int script_num)
+:Suspends execution of the calling script until the given FS script has started running.
+* void '''{{LE|SectorColormap}}'''(int tag_num, string color)
+:Does nothing. Commented out with the explanation that it isn't compatible with Boom or ZDoom and doesn't work right in Legacy either.
+* void '''{{LE|SetCamera}}'''(mobj target[, fixed angle[, int height[, fixed pitch]]])
+:Creates a camera viewpoint on the target mobj. If the height is given, it is used as an absolute value; otherwise the viewpoint is placed 41 units above the target mobj's base. Pitch can be between 50.0 and -50, a pitch value of 0 is straight ahead, negative pitch is up and positive pitch is down.
+* void '''{{LE|SetColor}}'''(int tag_num, {int color}/{int r, int g, int b})
+:Sets the colormap of all tagged sector to the given color. You can use either a single value corresponding to an ARGB color code, or three different parameters for the red, green and blue components. This is a GZDoom innovation, used as an alternative to the non-working SectorColormap function.
+* void '''{{LE|SetCorona}}'''(int corona_num, int whattochange, float value)
+:Does nothing, not implemented.
+* void '''{{LE|SetHUPicDisplay}}'''(int handle, int visible)
+:Sets the HUD picture with the given handle to be visible if the second parameter is a value greater than 0, invisible otherwise.
+* void '''{{LE|SetLineBlocking}}'''(int num_tag, int blocking)
+:Sets all the lines with the given tag to be blocking or not depending on the value of the second parameter: 0 is not blocking, 1 corresponds to BLOCKF_CREATURES from [[Line_SetBlocking]] and 2 corresponds to BLOCKF_EVERYTHING. Note that none of the other blocking flags can be changed by this function; so using Line_SetBlocking is preferable.
+* void '''{{LE|SetLineMonsterBlocking}}'''(int num_tag, int blocking)
+:Sets all the lines with the given tag to have the BLOCKF_MONSTERS flag from [[Line_SetBlocking]] if blocking is positive, or to lose this flag otherwise.
+* void '''{{LE|SetLineTexture}}'''({int tag, int side, int position, string texture}/{int tag, string texture, int side, int sections})
+:This function was implemented in two different ways by [[Doom Legacy]] and the [[Eternity Engine]] (before the latter ceased supporting FraggleScript altogether). ZDoom checks which version is used by looking if the fourth argument is a string or not. In either case, tag is the tag of the lines, texture the name of the texture you want to use, and side is 0 for front side, 1 for back. In the Eternity version, position is 1 for lower texture, 2 for middle, and 3 for upper, and only one can be set at once. In the Legacy version, sections is 1 for upper, 2 for middle and 4 for lower, and the values can be combined together to change one, two or all three textures at once.
+* void '''{{LE|SetLineTrigger}}'''(int tag, int type)
+:Sets all tagged lines to be of the given type. This is a [[Doom format]] type, which is passed through a [[map translator]], not a Hexen-type [[action special]]. This is a GZDoom innovation.
+* void '''{{LE|SetObjPosition}}'''(mobj target, int x[, int y[, int z]])
+:Moves the target actor to the given position in the world.
+* int '''{{LE|SetWeapon}}'''(player, string weapon)
+:Switch the given player's selected weapon to the one given, using [[DECORATE]] actor names. This function does check first that the weapon exists and is present in the given player's inventory. Returns 1 if it could successfully select it, 0 otherwise. This is a GZDoom innovation.
+* void '''{{LE|SilentTeleport}}'''([mobj target,] int tag)
+:Teleports the target to the tagged sector without spawning a {{Class|TeleportFog}}. If no target is specified, the script activator is used as a default.
+* fixed '''{{LE|Sin}}'''(value)
+* int '''{{LE|SkinColor}}'''(player[, int color])
+:Not implemented.
+* mobj '''{{LE|Spawn}}'''(type, int x, int y[, int angle[, int z[, bool zrel]]])
+:Type can be a constant or identifier ([[#Identifiers|see below]]), a ZDoom class name, or a mobj variable. If a mobj variable is used, the type will be the same as the referenced actor. Because of a [[Doom Legacy]] bug, this ignores the {{Flag|SPAWNCEILING}} flag, if you want to spawn an object on the ceiling with this function you will have to provide a z value of 0x7FFFFFFF. Returns the spawned actor in case of success.
+* void '''{{LE|SpawnExplosion}}'''(type, fixed x, fixed y[, fixed z])
+:Type can be a constant or identifier ([[#Identifiers|see below]]), a ZDoom class name, or a mobj variable. If a mobj variable is used, the type will be the same as the referenced actor. Spawns the given type at the given position (on the floor, if no z position is given), and instantly sets it in its death state. Also plays the spawned actor's death sound.
+* void '''{{LE|SpawnMissile}}'''(mobj source, mobj dest, type)
+:Type can be a constant or identifier ([[#Identifiers|see below]]), a ZDoom class name, or a mobj variable. If a mobj variable is used, the type will be the same as the referenced actor. Makes the source mobj fire a missile of the given type towards the dest mobj.
+* mobj '''{{LE|SpawnShot2}}'''(type, mobj source[, fixed zofs])
+:Type can be a constant or identifier ([[#Identifiers|see below]]), a ZDoom class name, or a mobj variable. If a mobj variable is used, the type will be the same as the referenced actor. Makes the source mobj fire a missile of the given type right ahead. (If, instead of a mobj, the integer value -1 is passed, it uses the script's activator as the source.) If the zofs parameter is given, it is used as an offset to the z position of the source.
+* fixed '''{{LE|Sqrt}}'''(value)
+* void '''{{LE|StartScript}}'''(int script_num)
+:Starts the given FS script. (For starting [[ACS]] scripts, use [[ACS_Execute]] directly.)
+* void '''{{LE|StartSectorSound}}'''(int tag_num, string sound)
+:Makes all tagged sectors play the given sound. See AmbientSound above for further information of how the sound can be named.
+* void '''{{LE|StartSkill}}'''(int skill_level)
+:Prints an error message explaining this function is not supported. Theoretically, starts a new game at the given skill.
+* void '''{{LE|StartSound}}'''(mobj source, string sound)
+:Makes the given mobj play the given sound on the BODY channel. See AmbientSound above for further information of how the sound can be named.
+* string '''{{LE|StringValue}}'''(value)
+* void '''{{LE|TagWait}}'''(int tag_num)
+:Suspends execution of the calling script until all sectors with the given tag have stopped moving.
+* void '''{{LE|TakeInventory}}'''(player, string item[, int amount])
+:Removes all or the given amount of the named item from the given player. This function is a GZDoom innovation and uses DECORATE actor names.
+* fixed '''{{LE|Tan}}'''(value)
+* void '''{{LE|Teleport}}'''([mobj target,] int tag) 
+:Teleports the target to the tagged sector and spawns {{Class|TeleportFog}} at both original position and destination. If no target is specified, the script activator is used as a default. 
+* int '''{{LE|TestLocation}}'''([mobj target])
+:Returns 1 if the target mobj is not blocked by anything at its current location, otherwise returns 0. If no target is specified, the script activator is used as a default. 
+* int '''{{LE|ThingCount}}'''(type)
+:Returns the amount of things of the given type are present (and not dead) in the map. Contrarily to the [[ACS]] [[ThingCount]] function, this cannot count things by their [[TID]]. This function is a GZDoom innovation.
+* void '''{{LE|TimedTip}}'''(int duration, string message)
+:Prints the given message for the given duration in hundredth of second. Roughly equivalent to [[Print]] from [[ACS]] or [[A_Print]] from [[DECORATE]].
+* void '''{{LE|Tip}}'''(string message)
+:Prints the given message for the {{CVAR|M|con_midtime|default duration}}. Roughly equivalent to [[Print]] from [[ACS]] or [[A_Print]] from [[DECORATE]].
+* void '''{{LE|Wait}}'''(int duration)
+:Suspends execution of the calling script for the given duration in hundredth of second.
+* void '''{{LE|WallGlow}}'''()
+:Does nothing. Commented out as "Development garbage!"
+
+== Actor names and numbers ==
+Since FraggleScript does not originate from ZDoom, it does not necessarily use the same names and constant identifiers as ZDoom and ACS do.
+=== Identifiers ===
+Identifiers are constants used to represent actor classes and flags for use with certain functions. They are defined in things.h &amp;mdash; traditionally, the [scripts] section will begin with the statement &lt;tt&gt;include("things.h");&lt;/tt&gt; for this reason. In ZDoom, this file is available for reference in zdoom.pk3 as '''things.h.txt'''. Like [[vanilla Doom]], SMMU identified mobj types by their index in the mobj table &amp;mdash; the association between a number and an actor class is therefore not arbitrary, but corresponds to the class's [[DeHackEd]] number. In order, we have:
+{| {{prettySortable}}
+!Identifier!!Value!!Class!!Type
+|-
+|PLAYER||0||{{Class|DoomPlayer}}||Player
+|-
+|TROOPER||1||{{Class|ZombieMan}}||Monster
+|-
+|SHOTGUY||2||{{Class|ShotgunGuy}}||Monster
+|-
+|ARCHVILE||3||{{Class|Archvile}}||Monster
+|-
+|VILEFIRE||4||{{Class|ArchvileFire}}||SFX
+|-
+|REVENANT||5||{{Class|Revenant}}||Monster
+|-
+|REVENANTMISL||6||{{Class|RevenantTracer}}||Projectile
+|-
+|SMOKE||7||{{Class|RevenantTracerSmoke}}||SFX
+|-
+|MANCUBUS||8||{{Class|Fatso}}||Monster
+|-
+|MANCUBUSSHOT||9||{{Class|FatShot}}||Projectile
+|-
+|CHAINGUY||10||{{Class|ChaingunGuy}}||Monster
+|-
+|IMP||11||{{Class|DoomImp}}||Monster
+|-
+|DEMON||12||{{Class|Demon}}||Monster
+|-
+|SPECTRE||13||{{Class|Spectre}}||Monster
+|-
+|CACODEMON||14||{{Class|Cacodemon}}||Monster
+|-
+|BARONOFHELL||15||{{Class|BaronOfHell}}||Monster
+|-
+|BARONSHOT||16||{{Class|BaronBall}}||Projectile
+|-
+|HELLKNIGHT||17||{{Class|HellKnight}}||Monster
+|-
+|LOSTSOUL||18||{{Class|LostSoul}}||Monster
+|-
+|SPIDERMASTERMIND||19||{{Class|SpiderMastermind}}||Monster
+|-
+|ARACHNOTRON||20||{{Class|Arachnotron}}||MonsterMonster
+|-
+|CYBERDEMON||21||{{Class|Cyberdemon}}||Monster
+|-
+|PAINELEMENTAL||22||{{Class|PainElemental}}||Monster
+|-
+|WOLFSS||23||{{Class|WolfensteinSS}}||Monster
+|-
+|KEEN||24||{{Class|CommanderKeen}}||Monster
+|-
+|BOSSBRAIN||25||{{Class|BossBrain}}||Monster
+|-
+|BOSSSPIT||26||{{Class|BossEye}}||Monster
+|-
+|BOSSTARGET||27||{{Class|BossTarget}}||Monster
+|-
+|SPAWNSHOT||28||{{Class|SpawnShot}}||Projectile
+|-
+|SPAWNFIRE||29||{{Class|SpawnFire}}||SFX
+|-
+|BARREL||30||{{Class|ExplosiveBarrel}}||Obstacle
+|-
+|IMPSHOT||31||{{Class|DoomImpBall}}||Projectile
+|-
+|CACOSHOT||32||{{Class|CacodemonBall}}||Projectile
+|-
+|FLYINGROCKET||33||{{Class|Rocket}}||Projectile
+|-
+|FLYINGPLASMA||34||{{Class|PlasmaBall}}||Projectile
+|-
+|FLYINGBFG||35||{{Class|BFGBall}}||Projectile
+|-
+|ARACHPLAZ||36||{{Class|ArachnotronPlasma}}||Projectile
+|-
+|PUFF||37||{{Class|BulletPuff}}||SFX
+|-
+|BLOOD||38||{{Class|Blood}}||SFX
+|-
+|TFOG||39||{{Class|TeleportFog}}||SFX
+|-
+|IFOG||40||{{Class|ItemFog}}||SFX
+|-
+|TELEPORTMAN||41||{{Class|TeleportDest}}||SFX
+|-
+|EXTRABFG||42||{{Class|BFGExtra}}||SFX
+|-
+|GREENARMOR||43||{{Class|GreenArmor}}||Health &amp;amp; Armor
+|-
+|BLUEARMOR||44||{{Class|BlueArmor}}||Health &amp;amp; Armor
+|-
+|HEALTHPOTION||45||{{Class|HealthBonus}}||Health &amp;amp; Armor
+|-
+|ARMORHELMET||46||{{Class|ArmorBonus}}||Health &amp;amp; Armor
+|-
+|BLUEKEYCARD||47||{{Class|BlueCard}}||Key
+|-
+|REDKEYCARD||48||{{Class|RedCard}}||Key
+|-
+|YELLOWKEYCARD||49||{{Class|YellowCard}}||Key
+|-
+|YELLOWSKULLKEY||50||{{Class|YellowSkull}}||Key
+|-
+|REDSKULLKEY||51||{{Class|RedSkull}}||Key
+|-
+|BLUESKULLKEY||52||{{Class|BlueSkull}}||Key
+|-
+|STIMPACK||53||{{Class|Stimpack}}||Health &amp;amp; Armor
+|-
+|MEDIKIT||54||{{Class|Medikit}}||Health &amp;amp; Armor
+|-
+|SUPERCHARGE||55||{{Class|Soulsphere}}||Powerup
+|-
+|INVULNERABILITY||56||{{Class|InvulnerabilitySphere}}||Powerup
+|-
+|BESERKPACK||57||{{Class|Berserk}}||Powerup
+|-
+|INVISIBILITY||58||{{Class|BlurSphere}}||Powerup
+|-
+|RADSUIT||59||{{Class|RadSuit}}||Powerup
+|-
+|AUTOMAP||60||{{Class|Allmap}}||Powerup
+|-
+|LITEAMP||61||{{Class|Infrared}}||Powerup
+|-
+|MEGASPHERE||62||{{Class|Megasphere}}||Powerup
+|-
+|CLIP||63||{{Class|Clip}}||Ammo
+|-
+|BULLETBOX||64||{{Class|ClipBox}}||Ammo
+|-
+|ROCKET||65||{{Class|RocketAmmo}}||Ammo
+|-
+|ROCKETBOX||66||{{Class|RocketBox}}||Ammo
+|-
+|ECELL||67||{{Class|Cell}}||Ammo
+|-
+|ECELLPACK||68||{{Class|CellPack}}||Ammo
+|-
+|SHELLS||69||{{Class|Shell}}||Ammo
+|-
+|SHELLBOX||70||{{Class|ShellBox}}||Ammo
+|-
+|BACKPACK||71||{{Class|Backpack}}||Ammo
+|-
+|BFG||72||{{Class|BFG9000}}||Weapon
+|-
+|CHAINGUN||73||{{Class|Chaingun}}||Weapon
+|-
+|CHAINSAW||74||{{Class|Chainsaw}}||Weapon
+|-
+|RLAUNCHER||75||{{Class|RocketLauncher}}||Weapon
+|-
+|PLASMAGUN||76||{{Class|PlasmaRifle}}||Weapon
+|-
+|SHOTGUN||77||{{Class|Shotgun}}||Weapon
+|-
+|SUPERSHOTGUN||78||{{Class|SuperShotgun}}||Weapon
+|-
+|TALLTECHLAMP||79||{{Class|TechLamp}}||Obstacle
+|-
+|SHORTTECHLAMP||80||{{Class|TechLamp2}}||Obstacle
+|-
+|FLOORLAMP||81||{{Class|Column}}||Obstacle
+|-
+|TALLGRNPILLAR||82||{{Class|TallGreenColumn}}||Obstacle
+|-
+|SHRTGRNPILLAR||83||{{Class|ShortGreenColumn}}||Obstacle
+|-
+|TALLREDPILLAR||84||{{Class|TallRedColumn}}||Obstacle
+|-
+|SHRTREDPILLAR||85||{{Class|ShortRedColumn}}||Obstacle
+|-
+|SKULLCOLUMN||86||{{Class|SkullColumn}}||Obstacle
+|-
+|HEARTCOLUMN||87||{{Class|HeartColumn}}||Obstacle
+|-
+|EVILEYE||88||{{Class|EvilEye}}||Obstacle
+|-
+|SKULLROCK||89||{{Class|FloatingSkull}}||Obstacle
+|-
+|GRAYTREE||90||{{Class|TorchTree}}||Obstacle
+|-
+|TALLBLUFIRESTICK||91||{{Class|BlueTorch}}||Obstacle
+|-
+|TALLGRNFIRESTICK||92||{{Class|GreenTorch}}||Obstacle
+|-
+|TALLREDFIRESTICK||93||{{Class|RedTorch}}||Obstacle
+|-
+|SHRTBLUFIRESTICK||94||{{Class|ShortBlueTorch}}||Obstacle
+|-
+|SHRTGRNFIRESTICK||95||{{Class|ShortGreenTorch}}||Obstacle
+|-
+|SHRTREDFIRESTICK||96||{{Class|ShortRedTorch}}||Obstacle
+|-
+|STALAGMITE||97||{{Class|Stalagtite}}||Obstacle
+|-
+|TALLTECHPILLAR||98||{{Class|TechPillar}}||Obstacle
+|-
+|CANDLE||99||{{Class|Candlestick}}||Obstacle
+|-
+|CANDELABRA||100||{{Class|Candelabra}}||Obstacle
+|-
+|TWITCHCORPSE1||101||{{Class|BloodyTwitch}}||Victim
+|-
+|TWITCHCORPSE2||110||{{Class|Meat2}}||Victim
+|-
+|HANGINGMAN1||102||{{Class|Meat3}}||Victim
+|-
+|HANGINGMAN2||103||{{Class|Meat4}}||Victim
+|-
+|HANGINGMAN3||104||{{Class|Meat5}}||Victim
+|-
+|HANGINGMAN4||105||{{Class|NonsolidMeat2}}||Victim
+|-
+|HANGINGMAN5||106||{{Class|NonsolidMeat4}}||Victim
+|-
+|HANGINGMAN6||107||{{Class|NonsolidMeat3}}||Victim
+|-
+|HANGINGMAN7||108||{{Class|NonsolidMeat5}}||Victim
+|-
+|HANGINGMAN8||109||{{Class|NonsolidTwitch}}||Victim
+|-
+|DEADCACO||111||{{Class|DeadCacodemon}}||Gore
+|-
+|DEADPLAYER||112||{{Class|DeadMarine}}||Gore
+|-
+|DEADTROOPER||113||{{Class|DeadZombieMan}}||Gore
+|-
+|DEADDEMON||114||{{Class|DeadDemon}}||Gore
+|-
+|DEADLOSTSOUL||115||{{Class|DeadLostSoul}}||Gore
+|-
+|DEADIMP||116||{{Class|DeadDoomImp}}||Gore
+|-
+|DEADSERGEANT||117||{{Class|DeadShotgunGuy}}||Gore
+|-
+|SLOP||118||{{Class|GibbedMarine}}||Gore
+|-
+|SLOP2||119||{{Class|GibbedMarineExtra}}||Gore
+|-
+|SKULLPOLE1||120||{{Class|HeadsOnAStick}}||Gore
+|-
+|BLOODPOOL1||121||{{Class|Gibs}}||Gore
+|-
+|SKULLPOLE2||122||{{Class|HeadOnAStick}}||Gore
+|-
+|SKULLPILE||123||{{Class|HeadCandles}}||Gore
+|-
+|DEADCORPSE1||124||{{Class|DeadStick}}||Victim
+|-
+|TWITCHCORPSE3||125||{{Class|LiveStick}}||Victim
+|-
+|TREE||126||{{Class|BigTree}}||Obstacle
+|-
+|BURNINGBARREL||127||{{Class|BurningBarrel}}||Obstacle
+|-
+|HANGINGMAN9||128||{{Class|HangNoGuts}}||Victim
+|-
+|HANGINGMAN10||129||{{Class|HangBNoBrain}}||Victim
+|-
+|HANGINGMAN11||130||{{Class|HangTLookingDown}}||Victim
+|-
+|HANGINGMAN12||131||{{Class|HangTSkull}}||Victim
+|-
+|HANGINGMAN13||132||{{Class|HangTLookingUp}}||Victim
+|-
+|HANGINGMAN14||133||{{Class|HangTNoBrain}}||Victim
+|-
+|BLOODPOOL2||134||{{Class|ColonGibs}}||Gore
+|-
+|BLOODPOOL3||135||{{Class|SmallBloodPool}}||Gore
+|-
+|BLOODPOOL4||136||{{Class|BrainStem}}||Gore
+|-
+|PUSH||137||{{Class|PointPusher}}||Special
+|-
+|PULL||138||{{Class|PointPuller}}||Special
+|}
+
+=== Names ===
+The following are the item names that can be used with the consolecmd "gimme". When the name differs from the ZDoom name, this one is listed afterwards.
+*Armor: {{Class|GreenArmor}}
+*{{Class|Berserk}}
+*BFG: {{Class|BFG9000}}
+*{{Class|Chaingun}}
+*{{Class|Chainsaw}}
+*Fullmap: {{Class|Allmap}}
+*Map: {{Class|Allmap}}
+*Plasma: {{Class|PlasmaRifle}}
+*Rocket: {{Class|RocketLauncher}}
+*{{Class|Shotgun}}
+*{{Class|SuperShotgun}}
+In addition, these keywords are available and behave in the same way as they do in ZDoom's {{CCMD|D|give}} console command.
+*Health: heals back to starting health
+*Ammo: maxes out all ammo count
+*Keys: gives all keys
+*Weapons: gives all weapons
+No other word is recognized &amp;mdash; you cannot use "consolecmd = gimme all" or "consolecmd = gimme backpack" or any unlisted inventory item.
+
+
+[[Category:Features]][[Category:Glossary]]</text>
+    <sha1>lltdjetmgv7499cf1neew8vbbqeb30z</sha1>
+  </revision>
+</page>

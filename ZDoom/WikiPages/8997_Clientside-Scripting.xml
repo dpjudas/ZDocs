@@ -1,0 +1,215 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>Clientside Scripting</title>
+  <ns>0</ns>
+  <id>8997</id>
+  <revision>
+    <id>49955</id>
+    <parentid>43683</parentid>
+    <timestamp>2022-12-11T12:16:23Z</timestamp>
+    <contributor>
+      <username>Boondorl</username>
+      <id>2606</id>
+    </contributor>
+    <minor />
+    <comment>/* How client-siding works from a technical point of view */</comment>
+    <origin>49955</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="8589" sha1="6ohto3500z3mhuauncu605h481arz5h" xml:space="preserve">{{STFeature}}
+
+Client-side scripting is an advanced topic for Zandronum, as you have to be proficient with ACS/decorate/understanding the engine, but also the concept of client/server architecture.
+
+This allows you to create such things as an on screen mouse, your own custom HUD display, and much more. You cannot do these things with regular net scripts as everyone will see them, or you'll flood the connection with rendering packets.
+
+== Why and when to do client-side ==
+
+Client-side scripting is designed so you can run commands on a client that are supposed to be localized to the client only. Any "CLIENTSIDE" script will never return back to the server (unless you know what you're doing). Once you run it, it's isolated on the machine forever and will terminate on the machine that ran it (unless this changes in the future, but it probably won't).
+
+When you send an image over the Internet as a HudMessage, the server:
+* Takes the name of the message
+* Compresses it into an instruction
+* Sends it over the Internet to you
+* Your computer receives it
+* Displays it on the screen
+
+This is a lot of work and consumes bandwidth. Thus, the solution is when you want to run something that clients can see without using bandwidth, you will run a client-side script.
+
+== How client-siding works from a technical point of view ==
+
+The computers are connected to one another through the Internet. You have:
+* The server computer at one end
+* The client computer at the other
+* A connection of wires in between
+
+The client and server send out packets of information to one another. A packet is just a bunch of bytes that the server and client know how to read. The packets are delivered via UDP, which is a protocol that sends out a packet and only does that. It doesn't care if the packet reaches the other destination, it's job is only to send. The other end of the spectrum is a TCP connection, which ensures all the packets arrive (or kills the connection if it gets no response back after a certain amount of time if the programmer wants). We use UDP because TCP is not feasible with internet games, as any 'out of order' packet causes TCP to back up, resend, verify...etc, meaning you would freeze in your spot if any packet was lost or happened to be received out of order.
+
+The downside of UDP is that you have no idea if the packet reaches the location or not. We are fine with this in Doom because we don't care about "what you did 1 second ago". We only care about the "now". Zandronum implements a mix between UDP and TCP for important messages, this is called RUDP (''reliable'' UDP). This means it gives you UDP sending, but resends the packet if the client doesn't respond that it got it. RUDP is something that is coded on top of UDP, there is no official technical spec for 'RUDP'.
+
+
+It is important to note:
+
+* '''Client to Server''' = UDP
+* '''Server to Client''' = RUDP (for purposes of this article anyways)
+
+Therefore, when the server sends an ACS command to the client to active a CLIENTSIDE script, it will be on a reliable internet channel. When we're trying to send from the client to the server, it's sent through an unreliable channel. We will discuss this later when trying to communicate both ways.
+
+The client and server have their own set of variables! This means when you have this in your code:
+ #include "zcommon.acs"
+ 
+ int myinteger = 2;
+ 
+ script 123 (void)
+ {
+ }
+
+If a server script changes &lt;tt&gt;myinteger&lt;/tt&gt;, it is ''not'' updated in the client variables. If you run a CLIENTSIDE script that prints &lt;tt&gt;myinteger&lt;/tt&gt; after the server changes &lt;tt&gt;myinteger&lt;/tt&gt; to 12, the client will print '2'. This is the same for client's to the server as well, if the client changes a variable value, the server will not be informed of the change.
+
+== How the Client operates compared to the Server ==
+
+The client itself does three main things:
+
+1) Polls user input
+2) Renders the world
+3) Receives data from the server
+
+The client relies on server input, and then interpolates the actors and world on the machine. For example, when you see a monster walking in a straight line, this is all done on the client's end. It is not constantly getting movement data for monsters. The client is running through the decorate code on its own blindly, assuming that is what the server sees. The only time it changes is when the server sends an angle change or state change (or something the client cannot predict on its own safely).
+
+'''Example:'''
+Let us say we have a DoomImp walking around. If we put an ACS script in one of it's states, the script you attach will be run based on its flags.
+&lt;pre&gt;
+Actor NewDoomImp : DoomImp replaces DoomImp
+{
+	States
+	{
+	Pain:
+		PLAY F 5
+		PLAY F 5 ACS_ExecuteAlways(444, 0) // Print
+		PLAY F 5 ACS_ExecuteAlways(445, 0) // PrintBold
+		Goto See
+	}
+}&lt;/pre&gt;
+
+Assume in ACS we have:
+ script 444 (void) CLIENTSIDE
+ {
+     Log(s: "Logged!");
+ }
+
+
+In this case the client is running DECORATE on its end and performs the function fully clientside, logging the text. The server will never run the script so "Logged!" will never appear in the server console.
+
+== CLIENTSIDE example 1: Calling one from console ==
+
+You can call NET CLIENTSIDE scripts from the console very easily, and all the instructions will happen on the client:
+ script 123 (void) NET CLIENTSIDE
+ {
+     PrintBold(s: "Hello :)");
+ }
+
+ puke -123 // Negative means 'puke always'
+
+This will only appear on the client who puked it and no one else sees it. This is because when it's executed on the client, it stays on the client. PrintBold doesn't send some print instruction to the server, it's all localized on the client.
+
+== CLIENTSIDE example 2: Running from types like OPEN, ENTER... etc ==
+
+Open scripts will executed by the world when the level loads on the client (i.e. upon connection):
+
+ script 1 OPEN CLIENTSIDE
+ {
+     // Code here
+ }
+
+* ENTER scripts are activated by players when they first join, as per usual:
+ script 2 ENTER CLIENTSIDE
+ {
+     // Performed when any player joins the game.
+ }
+
+* The same holds true for RESPAWN:
+ script 3 RESPAWN CLIENTSIDE
+ {
+     // Code here run any time after any player dies and respawns
+ }
+
+* You can combine script types
+ script 4 OPEN NET CLIENTSIDE
+ {
+     // Runs on connect, but the user can also puke it whenever
+ }
+
+== CLIENTSIDE example 3: Running from Decorate ==
+Lets say you want upon taking damage to display an image on the client.
+
+1) Make the CLIENTSIDE script in ACS
+ script 123 (void) CLIENTSIDE
+ {
+     SetFont("MYIMAGE");
+     HudMessage(s: "a"; ...);
+ }
+
+
+2) When the player takes damage, call the script
+ // Assuming this class is chosen by the player
+ Actor MyDoomPlayer : DoomPlayer
+ {
+     States
+     {
+     ...
+     Pain:
+         PLAY A 1 ACS_ExecuteAlways(123, 0)
+         ...
+     }
+ }
+
+Now whenever you take damage as this player class, script 123 will run on the client.
+
+== Server to Client ==
+
+You can run a script on the server that invokes a clientside script. If the server tries to call an ACS script that is CLIENTSIDE, it instead tells the clients to execute it:
+
+If we have this code:
+ script 900 (void) NET
+ {
+ 	Log(s: "On the server");
+ 	ACS_ExecuteAlways(901, 0);
+ }
+
+ script 901 (void) CLIENTSIDE
+ {
+ 	Log(s: "On the client");
+ }
+
+In this case, script 900 is run on the server an 901 is run on the client. This can be used to transmit information from client to server:
+ script 900 (int data, int moredata, int evenmoredata) NET
+ {
+ 	Log(s: "On the server");
+ 	ACS_ExecuteAlways(901, 0, data, moredata, evenmoredata);
+ }
+
+ script 901 (int a, int b, int c) CLIENTSIDE
+ {
+ 	Log(s: "The server sent us: ", d: a, s: " ", d: b, s: " ", d: c);
+ }
+
+This way, you can store integers from the server on the client if you choose to do so.
+
+It should be noted that sending a string from the server to the client will not work if it is generated from strParam(). Therefore making hudmessages clientsided is a bit tedious.
+
+== Client to Server ==
+The way to go from Client -&gt; Server is by puking scripts with [[RequestScriptPuke]].
+
+It requires a NET script. The obvious problem is that anyone can call this script from the console, so it's dangerous to use for anything important since all data comes from clients. You can get the PlayerNumber() from the script being puked and it will be linked to the player who called it.
+
+ script 222 (int numFromClient) NET
+ {
+ }
+  
+ script 223 (void) CLIENTSIDE
+ {
+     RequestScriptPuke (222, 1);
+ }
+
+Remember that client packets are unreliable which means that there is no guarantee whatsoever that your puked message will ever reach the server.</text>
+    <sha1>6ohto3500z3mhuauncu605h481arz5h</sha1>
+  </revision>
+</page>

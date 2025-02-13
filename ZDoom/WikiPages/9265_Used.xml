@@ -1,0 +1,95 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>Used</title>
+  <ns>0</ns>
+  <id>9265</id>
+  <revision>
+    <id>53025</id>
+    <parentid>51719</parentid>
+    <timestamp>2024-08-29T09:49:17Z</timestamp>
+    <contributor>
+      <username>Jekyll Grim Payne</username>
+      <id>2175</id>
+    </contributor>
+    <origin>53025</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="2661" sha1="3o9z31e3zomgok04e8edholxzcih13p" xml:space="preserve">__NOTOC__
+{{note|Not to be confused with '''[[Use]]''', which is an {{class|Inventory}} virtual function called when the item is activated by its owner from their inventory.}}
+
+'''[[Classes:Actor|Actor]]'''
+
+{{c|virtual bool '''Used''' (Actor ''user'')}}
+
+==Usage==
+Used to execute some code upon interacting with an actor by using it. It is called when the player presses ''use'' against the actor, provided it does not have the {{Flag|USESPECIAL}} flag set and the [[action special]] assigned to it is not {{c|[[UsePuzzleItem]]}}. Although, if the actor satisfies one or both of these conditions, but its action special activation process fails, the function gets a chance to be called still.
+
+Note, this function is not involved in the '''[[activation]]''' process, in contrast to [[Activate]] and [[Deactivate]].
+
+===Parameters===
+*{{c|Actor '''user'''}}
+:A pointer to the using actor.
+
+===Return value===
+* bool - signifies the success or failure of the use action (returning &lt;code&gt;true&lt;/code&gt; and &lt;code&gt;false&lt;/code&gt; respectively). By default the return value is not tied to anything and doesn't cause the actor to do anything {{verification}}, but custom logic can be attached to it.
+
+==Examples==
+This odd {{Class|ExplosiveBarrel|barrel}} explodes immediately when the player uses it while possessing the {{Class|BFG9000|BFG}}.
+ class OddBarrel : {{Class|ExplosiveBarrel}}
+ {
+     override bool '''Used''' (Actor user)
+     {
+         if (user &amp;&amp; user.[[CountInv]]("{{Class|BFG9000}}"))
+         {
+             [[A_Die]]();
+             return true;
+         }
+ 
+         return false;
+     }
+ }
+This version of the {{class|TechLamp|tech lamp}} can be manually switched on and off by pressing Use next to it:
+&lt;syntaxhighlight lang="csharp"&gt;
+class SwitchableLamp : TechLamp
+{
+	bool lamp_on; //Used to track whether the lamp is on
+
+	override bool Used (Actor user)
+	{
+		if (!lamp_on)
+		{
+			// Attach dynamic light, play a standard switch sound
+			// and move to the LampOn state label:
+			A_AttachLight('lamplight', DynamicLight.PulseLight, "DDDDFF", 96, 99, DYNAMICLIGHT.LF_ATTENUATE, (0,0,72), 0.4);
+			A_StartSound("switches/normbutn");
+			SetStateLabel("LampOn");
+		}
+		else
+		{
+			// Remove the light, play the sound, change states:
+			A_RemoveLight('lamplight');
+			A_StartSound("switches/normbutn");
+			SetStateLabel("Spawn");
+		}
+		// flip the value of lamp_on:
+		lamp_on = !lamp_on;
+		return true;
+	}
+
+	States
+	{
+	Spawn:
+		TLMP C -1;
+		stop;
+	LampOn:
+		// This is how the regular TechLamp looks:
+		TLMP ABCD 4 Bright;
+		Loop;
+	}
+}&lt;/syntaxhighlight&gt;
+
+[[Category:ZScript]]
+[[Category:ZScript virtual functions]]
+[[Category:Actor virtual functions]]</text>
+    <sha1>3o9z31e3zomgok04e8edholxzcih13p</sha1>
+  </revision>
+</page>

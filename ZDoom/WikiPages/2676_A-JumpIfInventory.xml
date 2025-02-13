@@ -1,0 +1,160 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>A JumpIfInventory</title>
+  <ns>0</ns>
+  <id>2676</id>
+  <revision>
+    <id>49114</id>
+    <parentid>46785</parentid>
+    <timestamp>2022-04-30T20:41:54Z</timestamp>
+    <contributor>
+      <username>Blue Shadow</username>
+      <id>2021</id>
+    </contributor>
+    <minor />
+    <comment>/* Armor Addon */</comment>
+    <origin>49114</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="4784" sha1="9jrprbo1z0m9snc7w79kyclejyz738k" xml:space="preserve">__NOTOC__
+{{codepointer|Jump}}
+state '''A_JumpIfInventory''' (string "''inventorytype''", int ''amount'', int ''offset''[, int ''owner''])&lt;br&gt;
+state '''A_JumpIfInventory''' (string "''inventorytype''", int ''amount'', str "''state''"[, int ''owner''])
+{{JumpNotice}}
+== Usage ==
+Checks the amount of ''inventorytype'' items in the actor's inventory.  If there are at least ''amount'', the jump is performed.  The ''offset'' parameter specifies how many frames ahead to jump.
+
+If ''amount'' is greater than the maximum amount, the jump will be performed.
+
+Note that if ''amount'' is 0, the jump is only performed if the actor is carrying the maximum number of that item.  This is useful for checking whether the player has the maximum amount of ammo for a particular weapon, regardless of whether or not he's found a backpack.
+
+If one of the [[actor pointers]] is specified, it will check their inventory instead of the calling actor's own. By default, AAPTR_DEFAULT refers to itself and is used when left unspecified or blank.
+
+== Examples ==
+===Shotgun reload===
+Here's a shotgun with a Counterstrike (or whatever the hell you want to call it)-style reloading system.
+
+  actor DukeShotgun: {{class|Weapon}} 22009
+  {
+      {{property|Weapon.AmmoType}} "InsertedShell"
+      {{property|Weapon.AmmoType2}} "{{class|Shell}}"
+      {{property|Weapon.AmmoGive}} 0
+      {{property|Weapon.AmmoGive2}} 8
+      {{property|Weapon.AmmoUse}} 1
+  
+      {{property|Scale}} 0.625
+  
+      {{property|AttackSound}} "duke/shotgun"
+      {{property|Inventory.PickupSound}} "misc/w_pkup"
+  
+      {{property|Inventory.PickupMessage}} "Shotgun!"
+      {{property|Obituary}} "%o was wiped out by %k."
+  
+      States
+      {
+        Select:
+          SHTG A 1 [[A_Raise]]
+          Loop
+          
+        Deselect:
+          DSHTG A 1 [[A_Lower]]
+          Loop
+          
+        Ready:
+          SHTG A 1 [[A_WeaponReady]]
+          loop
+          
+        Fire:
+          SHTG A 2 [[A_GunFlash]]
+          SHTG F 2 [[A_FireBullets]](2.0, 1.0, 8, 4)
+          SHTG EDCBA 3
+          SHTG G 5 [[A_FireProjectile]]("ShotgunShell",90,0)
+          SHTG HIJIHG 4
+          SHTG A 0 [[A_JumpIfNoAmmo]]("ReloadStart_Fire")
+          SHTG A 0 [[A_Refire]]
+          Goto Ready
+          
+        Flash:
+          SHTF AB 2 bright
+          Stop
+          
+        AltFire:
+          goto ReloadStart
+  
+        ReloadStart:
+          SHTR A 0 '''A_JumpIfInventory'''("{{class|Shell}}", 1, 1)
+          goto NoReload
+  
+          SHTR A 0 '''A_JumpIfInventory'''("InsertedShell", 0, "NoReload")
+          SHTR GH 3
+          goto ReloadLoop
+  
+        ReloadLoop:
+          TNT1 A 0 [[A_TakeInventory]]("{{class|Shell}}", 1)
+          SHTR I 3 [[A_GiveInventory]]("InsertedShell", 1)
+          SHTR J 3 [[A_PlaySound]]("weapons/sshotl")
+          TNT1 A 0 '''A_JumpIfInventory'''("InsertedShell", 0, "ReloadEnd")
+          TNT1 A 0 '''A_JumpIfInventory'''("{{class|Shell}}", 1, "ReloadLoop")
+          Goto ReloadEnd
+  
+        ReloadEnd:
+          SHT3 HG 3
+          Goto Ready
+  
+        NoReload:
+          TNT1 A 0
+          Goto Ready
+  
+        Spawn:
+          SHTD A -1
+          Stop
+      }
+  }
+
+===Armor Addon===
+This is an armor shard that is supposed to increase your armor if you are wearing one and have less than 150 armor. But it does not work: if you pick a {{Class|GreenArmor}}, then try to pick this item up, you will not succeed. The GreenArmor set the maximum amount for {{Class|BasicArmor}} to 100, so the first jump is executed despite falling 50 points short of the 150 value requested.
+ ACTOR ArmorShard : {{Class|CustomInventory}}
+ {
+ 	States
+ 	{
+ 	Spawn:
+ 		BON2 A -1
+ 		Stop
+ 	Pickup:
+ 		TNT1 A 0 '''A_JumpIfInventory'''("{{Class|BasicArmor}}", 150, "NoNeed")
+ 		TNT1 A 0 '''A_JumpIfInventory'''("{{Class|BasicArmor}}",   1, "CanAdd")
+ 	NoNeed:
+ 		TNT1 A 0
+ 		Stop
+ 	CanAdd:
+ 		TNT1 A 0 [[A_GiveInventory]]("{{Class|ArmorBonus}}")
+ 		Stop
+ 	}
+ }
+
+And here is the fixed version: it involves using a workaround by putting the maximum of 150 in a variant armor bonus.
+
+ ACTOR ShardBonus : {{Class|ArmorBonus}}
+ {
+ 	-{{flag|INVENTORY.ALWAYSPICKUP}}
+ 	{{property|Armor.MaxSaveAmount}} 150
+ }
+ ACTOR ArmorShard : {{Class|CustomInventory}}
+ {
+ 	States
+ 	{
+ 	Spawn:
+ 		BON2 A -1
+ 		Stop
+ 	Pickup:
+ 		TNT1 A 0 '''A_JumpIfInventory'''("{{Class|BasicArmor}}",   1, "CanAdd")
+ 		Stop
+ 	CanAdd:
+ 		TNT1 A 0 [[A_GiveInventory]]("ShardBonus")
+ 		Stop
+ 	}
+ }
+
+A test for at least 80 {{Class|RocketAmmo|rockets}} would likewise have to find a similar workaround, probably by checking first for the presence of a {{Class|Backpack}}. This is not a fool-proof solution, however, as the maximum ammo capacity can be modified through scripting or by picking up another type of {{Class|BackpackItem}}.</text>
+    <sha1>9jrprbo1z0m9snc7w79kyclejyz738k</sha1>
+  </revision>
+</page>

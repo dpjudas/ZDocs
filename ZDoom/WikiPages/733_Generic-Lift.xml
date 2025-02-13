@@ -1,0 +1,65 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>Generic Lift</title>
+  <ns>0</ns>
+  <id>733</id>
+  <revision>
+    <id>40634</id>
+    <parentid>40187</parentid>
+    <timestamp>2016-01-03T00:59:19Z</timestamp>
+    <contributor>
+      <username>Eevee</username>
+      <id>44</id>
+    </contributor>
+    <comment>mention doom defaults, add table of boom delays</comment>
+    <origin>40634</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="1539" sha1="rquxf08l2nei2db1qbph8fubdg6kv5y" xml:space="preserve">{{DISPLAYTITLE:Generic_Lift}}
+{{Special|203|tag, speed, delay, type, height|General BOOM linetype|Lift|type2=Platform}}
+
+* ''tag'': Tag of affected sector, or 0 to use the line's back side.
+* ''speed'': Lift's [[Definitions#Sector_movement_speed|movement speed]].  Doom's standard lifts move at 32, and blazing lifts move at 64.
+* ''delay'': Octics before reversing direction.  Doom waits for 24 octics (3 seconds).
+* ''type'': Specifies what type of platform this is; see below.
+* ''height'': Distance to move; only used when ''target'' is 0.
+
+This special encapsulates [[Boom]]'s generalized lifts.
+
+== Parameters ==
+
+=== Delay ===
+Because the largest values used in Boom maps could not fit in tics in the Hexen map format, this generalized special uses values in octics. For reference, the following table provides equivalence for the values available in Boom. Use the values from the octics column. You can also use any arbitrary value you want.
+{| {{prettytable}}
+! Seconds !! Tics !! Octics !! Notes
+|-
+| 1 || 35 || 8 ||
+|-
+| 3 || 105 || 24 || Equivalent to vanilla lift delay
+|-
+| 4.7 || 165 || ~38 ||
+|-
+| 10 || 350 || 80 ||
+|}
+
+=== Type ===
+
+{| {{prettytable}}
+!Value!!Target!!Default [[sound sequence]]
+|-
+|0||[[Plat_UpByValue]]||Platform
+|-
+|1||[[Plat_DownWaitUpStay]]||Platform
+|-
+|2||Plat_DownToNearestFloor (does not exist as an explicit action special)||Platform
+|-
+|3||Plat_DownToLowestCeiling (does not exist as an explicit action special)||Platform
+|-
+|4||[[Plat_PerpetualRaise]]||Floor
+|}
+
+== Examples ==
+
+{{noexamples}}</text>
+    <sha1>rquxf08l2nei2db1qbph8fubdg6kv5y</sha1>
+  </revision>
+</page>

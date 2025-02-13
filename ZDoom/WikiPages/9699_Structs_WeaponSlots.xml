@@ -1,0 +1,45 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>Structs:WeaponSlots</title>
+  <ns>0</ns>
+  <id>9699</id>
+  <revision>
+    <id>51145</id>
+    <parentid>50787</parentid>
+    <timestamp>2023-12-29T18:44:21Z</timestamp>
+    <contributor>
+      <username>Jekyll Grim Payne</username>
+      <id>2175</id>
+    </contributor>
+    <minor />
+    <comment>/* Static */</comment>
+    <origin>51145</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="1502" sha1="mhx72zxkwptdj3maogzlgooqf4f52jt" xml:space="preserve">{{ZScriptNote}}
+
+The '''WeaponSlots''' [[Structs|struct]] contains functions that interact with [[Weapon slots|weapon slots]].
+
+== Methods ==
+All WeaponSlots methods are defined as ''native'', meaning their inner workings are handled on the C++ side of the engine.
+=== Static ===
+*{{c|static void}} '''SetupWeaponSlots'''(PlayerPawn ''pp'')
+:Sets up weapon slots for the specified [[PlayerPawn]]. PlayerPawn actors call this function on themselves in their {{c|[[PostBeginPlay]]}}.
+
+=== Dynamic ===
+These methods have to be called on a pointer to a WeaponSlots instance. One is always created for each player and stored in the '''weapons''' field of their [[Structs:PlayerInfo|PlayerInfo]] struct. As such, these methods require the &lt;code&gt;player.weapons.&lt;/code&gt; prefix to be called.
+*{{c|bool, int, int}} '''LocateWeapon'''(class&lt;Weapon&gt; ''weap'')
+:Checks whether the specified weapon class is assigned to a slot. Has 3 return values:
+::1. ''bool'' — true if the weapon is assigned to a slot
+::2. ''int'' — the number of the slot the weapon is assigned to (from 0 to 9, but 0 is actually the 10th slot in order)
+::3. ''int'' — the index of the weapon (i.e. its position in the slot, starting with 0).
+*{{c|class&lt;Weapon&gt;}} '''GetWeapon'''(int ''slot'', int ''index'')
+:Returns the class of a weapon in the specified slot and index.
+*{{c|int}} '''SlotSize'''(int ''slot'')
+:Returns the number of weapons assigned to the specified slot.
+
+[[Category:Weapon]]
+[[Category:ZScript]]
+[[Category:Structs]]</text>
+    <sha1>mhx72zxkwptdj3maogzlgooqf4f52jt</sha1>
+  </revision>
+</page>

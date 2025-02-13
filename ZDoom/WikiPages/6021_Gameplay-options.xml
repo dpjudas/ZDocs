@@ -1,0 +1,193 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>Gameplay options</title>
+  <ns>0</ns>
+  <id>6021</id>
+  <revision>
+    <id>49568</id>
+    <parentid>49402</parentid>
+    <timestamp>2022-09-30T22:03:04Z</timestamp>
+    <contributor>
+      <username>Blue Shadow</username>
+      <id>2021</id>
+    </contributor>
+    <minor />
+    <comment>remove {{new}} tags for 4.8.0</comment>
+    <origin>49568</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="10245" sha1="54cojx3xiqlm1djxo9mglkof3muw6yk" xml:space="preserve">{{menutrail|Main menu|Options menu}}
+[[File:GameplayOptions.png|thumb|The gameplay options menu in [[Technophobia Overdose]].]]
+The '''Gameplay options''' menu gives an interface to change various miscellaneous settings, mostly but not only the [[DMFlags|death match flags]]. Its [[MENUDEF]] name is {{c|GameplayOptions}} and it can be summoned with the {{c|{{CCMD|O|menu_gameplay}}}} console command.
+
+*'''{{LE|Teamplay|teamplay}}''' (On/Off)
+:{{c|{{CVAR|C|teamplay}}}}
+:If on, players are put into teams.
+*'''{{LE|Team damage scalar|teamdamage}}''' (0.0&amp;mdash;1.0 by 0.05 increments)
+:{{c|{{CVAR|C|teamdamage}}}}
+:Scale damage inflicted by friendly fire in team play, from no damage to full damage.
+*'''{{LE|Smart autoaim|sv_smartaim}}''' (Off/On/Never friends/Only monsters)
+:{{c|{{CVAR|C|sv_smartaim}}}}
+:Affects how [[autoaim]] works.
+*'''{{LE|Falling damage|sv_fallingdamage}}''' (Off/Old/Hexen/Strife)
+:{{c|{{CVAR|C|sv_fallingdamage}}}}
+:Chooses which [[falling damage]] algorithm to use by default. [[MAPINFO]] [[map definition]]s may override it.
+*'''{{LE|Drop weapon|sv_weapondrop}}''' (Yes/No)
+:{{c|{{CVAR|C|sv_weapondrop}}}}
+:Allows or disallows dropping weapons.
+*'''{{LE|Double ammo|sv_doubleammo}}''' (Yes/No)
+:{{c|{{CVAR|C|sv_doubleammo}}}}
+:Enables or disables the use of the DoubleAmmoFactor rather than AmmoFactor in the [[skill definition]] for the current skill.
+*'''{{LE|Infinite ammo|sv_infiniteammo}}''' (Yes/No)
+:{{c|{{CVAR|C|sv_infiniteammo}}}}
+:Toggles infinite ammo mode on or off. Firing a weapon does not use up ammo when this is on.
+*'''{{LE|Infinite inventory|sv_infiniteinventory}}''' (Yes/No)
+:{{c|{{CVAR|C|sv_infiniteinventory}}}}
+:Toggles infinite inventory mode on or off. Using an artifact does not remove it from the inventory when this is on.
+*'''{{LE|No monsters|sv_nomonsters}}''' (Yes/No)
+:{{c|{{CVAR|C|sv_nomonsters}}}}
+:Enables or disables monsters in the level.
+*'''{{LE|No monsters to exit|sv_killallmonsters}}''' (Yes/No)
+:{{c|{{CVAR|C|sv_killallmonsters}}}}
+:If on, exiting a level is not possible as long as monsters remain.
+*'''{{LE|Monsters respawn|sv_monsterrespawn}}''' (Yes/No)
+:{{c|{{CVAR|C|sv_monsterrespawn}}}}
+:Allows to enable monster respawning regardless of skill settings.
+*'''{{LE|No respawn|sv_norespawn}}''' (Yes/No)
+:{{c|{{CVAR|C|sv_norespawn}}}}
+:Allows to disable monster respawning regardless of skill settings.
+*'''{{LE|Items respawn|sv_itemrespawn}}''' (Yes/No)
+:{{c|{{CVAR|C|sv_itemrespawn}}}}
+:Enables or disables item respawning after pickup.
+*'''{{LE|Big powerups respawn|sv_respawnsuper}}''' (Yes/No)
+:{{c|{{CVAR|C|sv_respawnsuper}}}}
+:Enables or disables respawning of pickups with the {{Flag|INVENTORY.BIGPOWERUP}} flag.
+*'''{{LE|Fast monsters|sv_fastmonsters}}''' (Yes/No)
+:{{c|{{CVAR|C|sv_fastmonsters}}}}
+:Allows to enable fast monsters regardless of skill settings.
+*'''{{LE|Monsters Nightmare Reflexes|sv_instantreaction}}''' (Yes/No)
+:{{c|{{CVAR|C|sv_instantreaction}}}}
+:Allows [[monster]]s to immediately perform their first ranged attack since spawning without having to take a few steps first.
+*'''{{LE|Degeneration|sv_degeneration}}''' (Yes/No)
+:{{c|{{CVAR|C|sv_degeneration}}}}
+:If degeneration is on, players slowly lose health when over 100%, as in Quake.
+*'''{{LE|Allow autoaim|sv_noautoaim}}''' (No/Yes)
+:{{c|{{CVAR|C|sv_noautoaim}}}}
+:Allows or disallows [[autoaim]].
+*'''{{LE|Allow Vertical Bullet Spread|sv_novertspread}}''' (No/Yes)
+:{{c|{{CVAR|C|sv_novertspread}}}}
+:Controls whether or not to allow [[Player_setup#Vertical_Bullet_Spread|vertical bullet spread for weapons]].
+:Note that weapons which have vertical bullet spread as part of their original behavior, such as the {{Class|SuperShotgun|super shotgun}}, are unaffected by this option.
+*'''{{LE|Allow suicide|sv_disallowsuicide}}''' (No/Yes)
+:{{c|{{CVAR|C|sv_disallowsuicide}}}}
+:Allows or disallows the use of the {{CCMD|D|kill}} console command.
+*'''{{LE|Allow jump|sv_jump}}''' (Default/Off/On)
+:{{c|{{CVAR|C|sv_jump}}}}
+:Allows or disallows jumping. "Default" uses the [[MAPINFO]] settings, while "off" and "on" override them.
+*'''{{LE|Allow crouch|sv_crouch}}''' (Default/Off/On)
+:{{c|{{CVAR|C|sv_crouch}}}}
+:Allows or disallows crouching. "Default" uses the [[MAPINFO]] settings, while "off" and "on" override them.
+:'''{{LE|Allow freelook|sv_freelook|sv_nofreelook}}''' (Default/Off/On)
+:{{c|{{CVAR|C|sv_freelook}}}}
+:Allows or disallows [[free look|looking up and down]].
+:''Default'' uses the [[MAPINFO]] settings, while ''Off'' and ''On'' override them.
+*'''{{LE|Allow FOV|sv_nofov}}''' (No/Yes)
+:{{c|{{CVAR|C|sv_nofov}}}}
+:Allows or disallows modifying the [[FOV]].
+*'''{{LE|Allow BFG aiming|sv_nobfgaim}}''' (No/Yes)
+:{{c|{{CVAR|C|sv_nobfgaim}}}}
+:Allows or disallows aiming with the {{Class|BFG9000}}. (A common trick consists in aiming at the ground so the {{Class|BFGBall|ball}} explodes sooner and opponents have less time to move away from the [[hitscan]] tracers.)
+*'''{{LE|Allow automap|sv_noautomap}}''' (No/Yes)
+:{{c|{{CVAR|C|sv_noautomap}}}}
+:Allows or disallows looking at the automap.
+*'''{{LE|Automap allies|sv_noautomapallies}}''' (No/Yes)
+:{{c|{{CVAR|C|sv_noautomapallies}}}}
+:Selects whether allies are shown on the automap.
+*'''{{LE|Allow spying|sv_disallowspying}}''' (No/Yes)
+:{{c|{{CVAR|C|sv_disallowspying}}}}
+:Allows or disallows spying on other players.
+*'''{{LE|Chasecam cheat|sv_chasecam}}''' (Yes/No)
+:{{c|{{CVAR|C|sv_chasecam}}}}
+:Allows or disallows the third-person camera.
+*'''{{LE|Check ammo for weapon switch|sv_dontcheckammo}}''' (No/Yes)
+:{{c|{{CVAR|C|sv_dontcheckammo}}}}
+:Chooses whether having ammunition in your inventory is needed to be able to switch to a weapon.
+*'''{{LE|Killing Romero kills all his spawns|sv_killbossmonst}}''' (Yes/No)
+:{{c|{{CVAR|C|sv_killbossmonst}}}}
+:This option makes it so the death of the {{Class|BossBrain}} kill all monsters created by the {{Class|BossEye}} before ending the level, allowing a 100% kill tally on the intermission screen.
+*'''{{LE|Count monsters in end level sectors|sv_nocountendmonst}}''' (No/Yes)
+:{{c|{{CVAR|C|sv_nocountendmonst}}}}
+:This option makes monsters placed in sectors with the dDamage_End [[sector special|type]] (as used in ''[[Doom]]'' E1M8) not count towards the total.
+
+==Deathmatch settings==
+*'''{{LE|Weapons stay|sv_weaponstay}}''' (Yes/No)
+:{{c|{{CVAR|C|sv_weaponstay}}}}
+:Lets weapon stay when picked up, allowing other players (or respawned players) to grab them as well.
+*'''{{LE|Allow powerups|sv_noitems}}''' (No/Yes)
+:{{c|{{CVAR|C|sv_noitems}}}}
+:If set to "no", powerups and artifacts are not spawned on the map.
+*'''{{LE|Allow health|sv_nohealth}}''' (No/Yes)
+:{{c|{{CVAR|C|sv_nohealth}}}}
+:If set to "no", health items are not spawned on the map.
+*'''{{LE|Allow armor|sv_noarmor}}''' (No/Yes)
+:{{c|{{CVAR|C|sv_noarmor}}}}
+:If set to "no", armor items are not spawned on the map.
+*'''{{LE|Spawn farthest|sv_spawnfarthest}}''' (Yes/No)
+:{{c|{{CVAR|C|sv_spawnfarthest}}}}
+:If set to "yes", [[ZDoom]] will attempt to respawn players at the spawn point the farthest away from other players.
+*'''{{LE|Same map|sv_samelevel}}''' (Yes/No)
+:{{c|{{CVAR|C|sv_samelevel}}}}
+:If set to "yes", the level is restarted after the exit intermission, instead of moving on to the next map.
+*'''{{LE|Force respawn|sv_forcerespawn}}''' (Yes/No)
+:{{c|{{CVAR|C|sv_forcerespawn}}}}
+:If enabled, this automatically respawn players after a few seconds instead of letting them wait as long as they want.
+*'''{{LE|Allow exit|sv_noexit}}''' (No/Yes)
+:{{c|{{CVAR|C|sv_noexit}}}}
+:If exit is disallowed, activating an exit line (switch or teleporter) kills the player instead; the level can only be left once the time limit or [[frag]] limit hits.
+*'''{{LE|Barrels respawn|sv_barrelrespawn}}''' (Yes/No)
+:{{c|{{CVAR|C|sv_barrelrespawn}}}}
+:Allows {{Class|ExplosiveBarrel|barrels}}, or any other actor calling [[A_BarrelDestroy]] to respawn after destruction.
+*'''{{LE|Respawn protection|sv_respawnprotect}}''' (Yes/No)
+:{{c|{{CVAR|C|sv_respawnprotect}}}}
+:If enabled, this gives a few seconds of invulnerability to respawning players in order to prevent "spawn camping".
+*'''{{LE|Lose frag if fragged|sv_losefrag}}''' (Yes/No)
+:{{c|{{CVAR|C|sv_losefrag}}}}
+:If this is on, a player's [[frag]] count decreases whenever said player is killed.
+*'''{{LE|Keep frags gained|sv_keepfrags}}''' (Yes/No)
+:{{c|{{CVAR|C|sv_keepfrags}}}}
+:If on, players keep their [[frag]] count from one map to the next. 
+*'''{{LE|No team switching|sv_noteamswitch}}''' (Yes/No)
+:{{c|{{CVAR|C|sv_noteamswitch}}}}
+:If on, players cannot change teams in a teamplay match after the map has started. 
+
+==Cooperative Settings==
+*'''{{LE|Spawn multiplayer weapons|sv_noweaponspawn|Spawn multi. weapons}}''' (No/Yes)
+:{{c|{{CVAR|C|sv_noweaponspawn}}}}
+:By setting it to "no", this allows to disable spawning of multiplayer-only weapons in cooperative mode, with the assumption that these extra weapons are there for deathmatch only.
+*'''{{LE|Lose entire inventory|sv_cooploseinventory}}''' (Yes/No)
+:{{c|{{CVAR|C|sv_cooploseinventory}}}}
+:If set to "yes", a player's inventory is reset when respawning after death.
+*'''{{LE|Keep keys|sv_cooplosekeys}}''' (No/Yes)
+:{{c|{{CVAR|C|sv_cooplosekeys}}}}
+:If set to "no", a player respawns without keys.
+*'''{{LE|Keep weapons|sv_cooploseweapons}}''' (No/Yes)
+:{{c|{{CVAR|C|sv_cooploseweapons}}}}
+:If set to "no", a player respawns with a pistol start.
+*'''{{LE|Keep armor|sv_cooplosearmor}}''' (No/Yes)
+:{{c|{{CVAR|C|sv_cooplosearmor}}}}
+:If set to "no", a player respawns without armor.
+*'''{{LE|Keep powerups|sv_cooplosepowerups}}''' (No/Yes)
+:{{c|{{CVAR|C|sv_cooplosepowerups}}}}
+:If set to "no", a player respawns without active powerups.
+*'''{{LE|Keep ammo|sv_cooploseammo}}''' (No/Yes)
+:{{c|{{CVAR|C|sv_cooploseammo}}}}
+:If set to "no", a player respawns without ammo.
+*'''{{LE|Lose half ammo|sv_coophalveammo}}''' (Yes/No)
+:{{c|{{CVAR|C|sv_coophalveammo}}}}
+:If set to "yes", a player's ammo count is halved when respawning.
+*'''{{LE|Spawn where died|sv_samespawnspo}}''' (Yes/No)
+:{{c|{{CVAR|C|sv_samespawnspot}}}}
+:If set to "yes", a player respawns at the place of death (unless it was in an instant-death [[sector]]) instead of at the player start.
+[[Category:Menus]]</text>
+    <sha1>54cojx3xiqlm1djxo9mglkof3muw6yk</sha1>
+  </revision>
+</page>

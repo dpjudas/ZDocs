@@ -1,0 +1,101 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>A GunFlash</title>
+  <ns>0</ns>
+  <id>2697</id>
+  <revision>
+    <id>53828</id>
+    <parentid>53827</parentid>
+    <timestamp>2024-11-22T10:19:06Z</timestamp>
+    <contributor>
+      <username>Jekyll Grim Payne</username>
+      <id>2175</id>
+    </contributor>
+    <origin>53828</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="4513" sha1="4k76getiawxw2wyf4tgqx4xg9zawhxb" xml:space="preserve">{{codepointer|Weapon}}
+{{doomwiki|A_GunFlash}}
+
+'''{{class|Weapon}}'''
+
+{{c|action void '''A_GunFlash'''(statelabel ''flash'' {{=}} null, int ''flags'' {{=}} 0)}}
+
+==Usage==
+Usually called in a {{class|Weapon|weapon's}} Fire or AltFire sequence. Creates a new {{class|PSprite|sprite layer}} above the weapon and sets it to the ''flash'' [[Actor states|state sequence]] (by default it's "Flash" when this function is called from Fire, and "AltFlash" when called from AltFire). The flash sprite layer is always created on layer 1000 (this number can also be retrieved through a global [[ZScript_variables#Constants|constant]] &lt;code&gt;PSP_FLASH&lt;/code&gt;).
+
+In addition to that, this function changes the stae of the the {{class|PlayerPawn}} that is firing the weapon to Missile, which usually depicts the player firing their gun (the animation and duration of the Missile sequence is not related to the behavior of the weapon, unless a custom system for that is explicitly coded by the project's author)
+
+The intended original use for this function is to draw a muzzle flash on top of the weapon, so that muzzle flash could be drawn fullbright with the help of the {{c|bright}} keyword, without making the whole weapon fullbright. In GZDoom, however, this function is largely moot, because '''[[A_Overlay]]''' offers the same functionality, except the author can choose any layer number they want. Very often it's actually beneficial to drawn a muzzle flash ''below'' the weapon rather than above it (by using negative layers, like -1000), since this would mean they won't have to worry about carefully cutting out the shape of the gun's barrel from the muzzle flash (since the flash would be drawn below it).
+
+With the addition of [[A_Overlay]], the only remaining use for [[A_GunFlash]] is its ability to send the PlayerPawn owner to its Missile state. That can still be done by simply calling [[A_GunFlash]], even if no Flash state sequence exists in the weapon.
+
+===Parameters===
+*{{c|StateLabel '''flashlabel'''}}
+:The state sequence to enter. If this is &lt;code&gt;null&lt;/code&gt;&lt;sup&gt;{{Zscriptfeaturesmall}}&lt;/sup&gt; or &lt;code&gt;""&lt;/code&gt; (empty string)&lt;sup&gt;{{Decoratefeaturesmall}}&lt;/sup&gt;, the function will automatically use "Flash" (if called in Fire) or "AltFlash" (if called int AltFire).
+*{{c|int '''flags'''}}
+:Only one flag is currently supported:
+:* '''GFF_NOEXTCHANGE''' — the {{class|PlayerPawn}}'s state sequence will ''not'' be set to Missile.
+
+=== Note on illumination ===
+Typically [[A_Light1]] and/or [[A_Light2]] are called in the Flash sequence in order to illuminate the level for the player, imitating the bright flash of a firing weapon. Doing this is optional, and nowadays other approaches are possible, such as using '''[[A_AttachLight]]''' or '''[[A_AttachLightDef]]''' to spawn a [[Dynamic light|dynamic light]] instead.
+
+Note, if using [[A_Light1]]/[[A_Light2]], the flash sequence MUST either call [[A_Light0]] afterwards, or end with a &lt;code&gt;goto LightDone&lt;/code&gt; instruction (LightDone is a built-in state sequence of the {{class|Weapon}} class that simply calls [[A_Light0]] and removes the sprite layer). &lt;u&gt;If this isn't done, the whole map's light level will remain permanently raised&lt;/u&gt; and will be raised further with each subsequennt weapon attack!
+
+== Examples ==
+Note: this is just an example of Fire and Flash sequences, not a compelte weapon code.
+
+ Fire:
+     DEAG C 3 
+     {
+       [[A_StartSound]]("weapons/eagle", {{const|CHAN_WEAPON}});
+       '''A_GunFlash()'''; {{color|darkgreen|// This should be run the same time as the gun fires.}}
+       [[A_FireBullets]](5, 7, 1, 50);
+     }
+     Goto Ready;
+ Flash:
+     DEFL A 1 Bright [[A_Light1]];
+     DEFL A 2 Bright [[A_Light2]];
+     goto LightDone;
+
+== [[ZScript]] definition ==
+{{ZScriptDefinitionNote|actors/inventory/weapons.zs#L192}}
+&lt;syntaxhighlight lang="csharp"&gt;
+	action void A_GunFlash(statelabel flashlabel = null, int flags = 0)
+	{
+		let player = player;
+
+		if (null == player || player.ReadyWeapon == null)
+		{
+			return;
+		}
+		if (!(flags &amp; GFF_NOEXTCHANGE))
+		{
+			player.mo.PlayAttacking2 ();
+		}
+
+		Weapon weapon = player.ReadyWeapon;
+		state flashstate = null;
+
+		if (flashlabel == null)
+		{
+			if (weapon.bAltFire)
+			{
+				flashstate = weapon.FindState('AltFlash');
+			}
+			if (flashstate == null)
+			{
+				flashstate = weapon.FindState('Flash');
+			}
+		}
+		else
+		{
+			flashstate = weapon.FindState(flashlabel);
+		}
+		player.SetPsprite(PSP_FLASH, flashstate);
+	}
+&lt;/syntaxhighlight&gt;
+
+[[Category:StateProvider]]</text>
+    <sha1>4k76getiawxw2wyf4tgqx4xg9zawhxb</sha1>
+  </revision>
+</page>

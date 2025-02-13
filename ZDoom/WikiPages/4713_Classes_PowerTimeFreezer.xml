@@ -1,0 +1,165 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>Classes:PowerTimeFreezer</title>
+  <ns>0</ns>
+  <id>4713</id>
+  <revision>
+    <id>54144</id>
+    <parentid>36551</parentid>
+    <timestamp>2025-01-20T11:07:56Z</timestamp>
+    <contributor>
+      <username>Jekyll Grim Payne</username>
+      <id>2175</id>
+    </contributor>
+    <origin>54144</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="4806" sha1="dcmg976kjxqadl3maz3mzc23x9ngh6p" xml:space="preserve">{{actor|
+| type = Power
+| name = Time freeze power
+| class = PowerTimeFreezer
+}}[[Classes]]: {{Class}} &amp;rarr; {{Class|Inventory}} &amp;rarr; {{Class|Powerup}} &amp;rarr; &lt;u&gt;PowerTimeFreezer&lt;/u&gt;&lt;br&gt;
+{{: Powerup definition}}
+
+When '''PowerFreezer''' is in a player's inventory, every non-player-controlled actor that does not have the {{Flag|NOTIMEFREEZE}} flag set will be frozen. This effect is very similar to the one provided by the &lt;code&gt;freeze&lt;/code&gt; [[CCMDs|console cheat]], however, the powerup comes with a bit of extra flair: it'll pause the music when received, and when the powerup is about to run out, the level will be quickly frozen and unfrozen for a few tics rather than instantly.
+
+Notes:
+* GZDoom doesn't come with a {{class|PowerupGiver}} for this powerup, so if you want to make a world pickup for it, you'll have to add it.
+* In [[ZScript]] there's no need to use this powerup simply as a "pause level" effect. Instead, simply calling {{struct|LevelLocals|{{c|level.SetFrozen(true)}}}} will have the same effect.
+* If you need to freeze a ''specific'' actor instead of all actors, set that actor's &lt;code&gt;freezetics&lt;/code&gt; field to a positive value, and the actor will be frozen for that number of [[tic|game tics]].
+
+== [[ZScript]] definition ==
+{{ZScriptDefinitionNote|actors/inventory/powerups.zs}}
+&lt;syntaxhighlight lang="csharp"&gt;
+class PowerTimeFreezer : Powerup
+{
+	Default
+	{
+		Powerup.Duration -12;
+	}
+	
+	//===========================================================================
+	//
+	// InitEffect
+	//
+	//===========================================================================
+
+	override void InitEffect()
+	{
+		int freezemask;
+
+		Super.InitEffect();
+
+		if (Owner == null || Owner.player == null)
+			return;
+
+		// When this powerup is in effect, pause the music.
+		S_PauseSound(false, false);
+
+		// Give the player and his teammates the power to move when time is frozen.
+		freezemask = 1 &lt;&lt; Owner.PlayerNumber();
+		Owner.player.timefreezer |= freezemask;
+		for (int i = 0; i &lt; MAXPLAYERS; i++)
+		{
+			if (playeringame[i] &amp;&amp;
+				players[i].mo != null &amp;&amp;
+				players[i].mo.IsTeammate(Owner)
+			   )
+			{
+				players[i].timefreezer |= freezemask;
+			}
+		}
+
+		// [RH] The effect ends one tic after the counter hits zero, so make
+		// sure we start at an odd count.
+		EffectTics += !(EffectTics &amp; 1);
+		if ((EffectTics &amp; 1) == 0)
+		{
+			EffectTics++;
+		}
+		// Make sure the effect starts and ends on an even tic.
+		if ((Level.maptime &amp; 1) == 0)
+		{
+			Level.SetFrozen(true);
+		}
+		else
+		{
+			// Compensate for skipped tic, but beware of overflow.
+			if(EffectTics &lt; 0x7fffffff)
+				EffectTics++;
+		}
+	}
+
+	//===========================================================================
+	//
+	// APowerTimeFreezer :: DoEffect
+	//
+	//===========================================================================
+
+	override void DoEffect()
+	{
+		Super.DoEffect();
+		// [RH] Do not change LEVEL_FROZEN on odd tics, or the Revenant's tracer
+		// will get thrown off.
+		// [ED850] Don't change it if the player is predicted either.
+		if (Level.maptime &amp; 1 || (Owner != null &amp;&amp; Owner.player != null &amp;&amp; Owner.player.cheats &amp; CF_PREDICTING))
+		{
+			return;
+		}
+		// [RH] The "blinking" can't check against EffectTics exactly or it will
+		// never happen, because InitEffect ensures that EffectTics will always
+		// be odd when Level.maptime is even.
+		Level.SetFrozen ( EffectTics &gt; 4*32 
+			|| (( EffectTics &gt; 3*32 &amp;&amp; EffectTics &lt;= 4*32 ) &amp;&amp; ((EffectTics + 1) &amp; 15) != 0 )
+			|| (( EffectTics &gt; 2*32 &amp;&amp; EffectTics &lt;= 3*32 ) &amp;&amp; ((EffectTics + 1) &amp; 7) != 0 )
+			|| (( EffectTics &gt;   32 &amp;&amp; EffectTics &lt;= 2*32 ) &amp;&amp; ((EffectTics + 1) &amp; 3) != 0 )
+			|| (( EffectTics &gt;    0 &amp;&amp; EffectTics &lt;= 1*32 ) &amp;&amp; ((EffectTics + 1) &amp; 1) != 0 ));
+	}
+
+	//===========================================================================
+	//
+	// APowerTimeFreezer :: EndEffect
+	//
+	//===========================================================================
+
+	override void EndEffect()
+	{
+		Super.EndEffect();
+
+		// If there is an owner, remove the timefreeze flag corresponding to
+		// her from all players.
+		if (Owner != null &amp;&amp; Owner.player != null)
+		{
+			int freezemask = ~(1 &lt;&lt; Owner.PlayerNumber());
+			for (int i = 0; i &lt; MAXPLAYERS; ++i)
+			{
+				players[i].timefreezer &amp;= freezemask;
+			}
+		}
+
+		// Are there any players who still have timefreezer bits set?
+		for (int i = 0; i &lt; MAXPLAYERS; ++i)
+		{
+			if (playeringame[i] &amp;&amp; players[i].timefreezer != 0)
+			{
+				return;
+			}
+		}
+
+		// No, so allow other actors to move about freely once again.
+		Level.SetFrozen(false);
+
+		// Also, turn the music back on.
+		S_ResumeSound(false);
+	}
+}
+&lt;/syntaxhighlight&gt;
+
+== [[DECORATE]] definition ==
+{{DecorateDefinitionNote}}
+ ACTOR &lt;u&gt;PowerTimeFreezer&lt;/u&gt; : {{Class|Powerup}} native
+ {
+   {{Property|Powerup.Duration}} -12
+ }</text>
+    <sha1>dcmg976kjxqadl3maz3mzc23x9ngh6p</sha1>
+  </revision>
+</page>

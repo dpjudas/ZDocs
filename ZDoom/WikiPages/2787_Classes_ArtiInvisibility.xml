@@ -1,0 +1,53 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>Classes:ArtiInvisibility</title>
+  <ns>0</ns>
+  <id>2787</id>
+  <revision>
+    <id>39352</id>
+    <parentid>38882</parentid>
+    <timestamp>2015-04-29T17:28:11Z</timestamp>
+    <contributor>
+      <username>Blue Shadow</username>
+      <id>2021</id>
+    </contributor>
+    <minor />
+    <comment>/* DECORATE definition */ Updated</comment>
+    <origin>39352</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="1147" sha1="5h28ixhfkmbm0tkxqc0cnsyriiifsne" xml:space="preserve">{{Actor|
+| type = Artifact
+| name = Shadowsphere
+| class = ArtiInvisibility
+| game = Heretic
+| doomednum = 75
+| spawnid = 135
+| spawnname = T_ITEMINVISIBILITY 
+}}[[Classes]]: [[Classes:Inventory|Inventory]]&amp;rarr;[[Classes:PowerupGiver|PowerupGiver]]&amp;rarr;&lt;u&gt;ArtiInvisibility&lt;/u&gt;
+
+The Shadowsphere has an aspect nearly reminiscent of the "sphere" powerups from Doom by its name and its aspect as a round, grimacing face. When used, this artifact makes the player [[Classes:PowerGhost|ghostly]]: nearly invisible, and intangible to most projectiles in the game (see the {{flag|THRUGHOST}} flag).
+
+
+==== [[DECORATE]] definition ====
+ ACTOR &lt;u&gt;ArtiInvisibility&lt;/u&gt; : {{Class|PowerupGiver}}
+ {
+   +{{Flag|COUNTITEM}}
+   +{{Flag|FLOATBOB}}
+   +{{Flag|INVENTORY.PICKUPFLASH}}
+   {{Property|RenderStyle}} Translucent
+   {{Property|Alpha}} 0.4
+   {{Property|Inventory.RespawnTics}} 4230
+   {{Property|Inventory.Icon}} ARTIINVS
+   {{Property|Powerup.Type}} {{Class|PowerGhost|Ghost}}
+   {{Property|Inventory.PickupMessage}} "$TXT_ARTIINVISIBILITY"
+   {{Property|Tag}} "$TAG_ARTIINVISIBILITY"
+   States
+   {
+   Spawn:
+     INVS A 350 Bright
+     Loop
+   }
+ }</text>
+    <sha1>5h28ixhfkmbm0tkxqc0cnsyriiifsne</sha1>
+  </revision>
+</page>

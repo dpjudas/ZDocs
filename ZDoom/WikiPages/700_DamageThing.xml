@@ -1,0 +1,54 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>DamageThing</title>
+  <ns>0</ns>
+  <id>700</id>
+  <revision>
+    <id>49026</id>
+    <parentid>32878</parentid>
+    <timestamp>2022-02-24T11:48:36Z</timestamp>
+    <contributor>
+      <username>Enjay</username>
+      <id>416</id>
+    </contributor>
+    <minor />
+    <origin>49026</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="1699" sha1="97pag8vjzyi1i1p8tab4p5ntzc8g4xs" xml:space="preserve">{{Special|73|amount, mod|Thing}}
+
+* ''amount'': The amount of damage to deal. If negative, it will heal.
+* ''mod'': The obituary message that will appear if a player is killed. Uses same values as [[Thing_Damage]].  Damage types are found on the [[Damage_types]] page.
+
+==Usage==
+
+Hurts the thing that activated the special. If ''amount'' is 0, then the thing is guaranteed to be killed regardless of any invulnerability (including [[CCMDs:Debug|God and Buddha]]). If a player is killed with this special, the game reports “Player died.” as the obituary.
+
+==Examples==
+
+This script simulates the player being set on fire. It takes a parameter, which is the strength of the fire, from 1 to 20. Anything above 10 is extremely deadly.
+
+ script 165 (int power)
+ {
+ 	if (power &gt; 20)
+ 		power = 20;
+ 	
+ 	while (power &gt; 0)
+ 	{
+ 		[[FadeTo]](255, 240, 0, 0.05 * power, 1.0);
+ 		DamageThing(power);
+ 		[[AmbientSound]]([[Predefined Sounds|"vile/firecrkl"]], 5 * power--);
+ 		[[Delay]](35);
+ 	}
+ }
+
+The script first checks that the power variable is not set too high. Then, it loops using a “while” loop, checking to see if the fire still has power left each time. Inside the loop, the first command gives the screen a yellow glow depending on the power of the fire. The second command damages the player based on the power. The third command plays the Arch Vile's fire crackle effect and also reduces power by one (see the double minus). The last line delays the next strike.
+
+----
+
+There is an example of this command in the [[ActivatorTID]] article for a script that can be placed on a line so that the line kills any monster that crosses it, but leaves players be.
+
+==External links==
+* {{oldref}}</text>
+    <sha1>97pag8vjzyi1i1p8tab4p5ntzc8g4xs</sha1>
+  </revision>
+</page>

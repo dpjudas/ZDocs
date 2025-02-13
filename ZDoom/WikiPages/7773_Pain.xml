@@ -1,0 +1,51 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>Pain</title>
+  <ns>0</ns>
+  <id>7773</id>
+  <revision>
+    <id>44273</id>
+    <parentid>41071</parentid>
+    <timestamp>2017-03-20T13:20:32Z</timestamp>
+    <contributor>
+      <username>Gez</username>
+      <id>1283</id>
+    </contributor>
+    <minor />
+    <comment>removing "new" for GZDoom 2.4.0 release</comment>
+    <origin>44273</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="2945" sha1="cm39u14kwqimw18zipscdd612w7k3kr" xml:space="preserve">'''Pain''' in Doom engine games is an [[actor]]'s reaction to taking [[damage]]. When an actor (typically a [[monster]]) takes damage, it has a random chance (depending on its {{Property|PainChance}} value) of entering into an appropriate [[actor states|Pain state]], if it has it defined. Pain chances and pain states can be specific to certain [[damage types]], or generic. Normally, if a damage-specific pain state is missing, it will default to generic Pain state, provided the damage received after any {{Property|DamageFactor}}/{{Class|Armor}}/{{Class|PowerProtection}} post processing is done with a result greater than zero. A source of damage normally causes pain of its damage type, but this can be overridden by setting a {{Property|PainType}}.
+
+Pain chances are defined with PainChance [&lt;name&gt;,] &lt;value&gt; where value is a number between 0 and 256. The higher the number, the easier it is for the monster to enter a pain chance based on type. If no name is provided, the generic pain chance is defined. For example:
+
+ {{Property|PainChance}} "Electricity", 40
+
+In this example, there is a 40/256 (15.625%) chance to react to the Electricity damage type, provided the damage they receive is not zero. If the amount of damage is absorbed (by armor, power-ups, and other similar effects), they will not enter their pain states.
+
+In addition, actors can have a {{Property|PainThreshold}} property, preventing them from entering their pain state if the damage received is below the threshold.
+
+Several flags are readily available which can be used to modify different factors for entering pain states based on the actor's damage factors, pain chances, and flags.
+
+The following flags modify a monster (or other vulnerable actor) by itself, and its reaction modifiers when being attacked:
+*'''{{Flag|NOPAIN}}''' - The actor will never enter its pain state under any circumstances.
+*'''{{Flag|ALLOWPAIN}}''' -  The actor is always subject to its pain chance, even if actor is invulnerable or calculated damage is zero.
+**'''''Exceptions:''''' -  Attacks with a natural damage of zero and attacks with the PAINLESS flag set will not cause pain.
+
+The following flags modify aggressive actors that actually deal the damage to monsters, such as [[projectile]]s or [[puff]]s:
+*'''{{Flag|CAUSEPAIN}}''' - The victim is always subject to its pain chance, even if actor is invulnerable or damage is zero.
+**'''''Exceptions:''''' If the actor taking damage has the PainThreshold property of 1 or higher, then this flag will be negated if damage is 0.
+*'''{{Flag|FORCEPAIN}}''' - The victim will always enter its pain state (bypassing pain chance).
+*'''{{Flag|PAINLESS}}''' - The actor will never cause the victim to enter its pain state, under any circumstances.
+
+The flags take the following priority, from highest to lowest, in the ZDoom engine:
+*NOPAIN
+*PAINLESS
+*FORCEPAIN
+*CAUSEPAIN
+*ALLOWPAIN
+
+[[Category:Glossary]][[Category:Technical aspects]]</text>
+    <sha1>cm39u14kwqimw18zipscdd612w7k3kr</sha1>
+  </revision>
+</page>

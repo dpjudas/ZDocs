@@ -1,0 +1,60 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>ChangeSkill</title>
+  <ns>0</ns>
+  <id>571</id>
+  <revision>
+    <id>37542</id>
+    <parentid>32877</parentid>
+    <timestamp>2014-01-13T12:17:00Z</timestamp>
+    <contributor>
+      <username>Gez</username>
+      <id>1283</id>
+    </contributor>
+    <origin>37542</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="1535" sha1="sm0iy36frwajes2e4hisy9uytermh0y" xml:space="preserve">{{Special|179|skill|Miscellaneous}}
+
+Skill: The skill that the game will be changed to. The default skill levels are:
+* 0&amp;nbsp;&amp;mdash; Very Easy
+* 1&amp;nbsp;&amp;mdash; Easy
+* 2&amp;nbsp;&amp;mdash; Normal
+* 3&amp;nbsp;&amp;mdash; Hard
+* 4&amp;nbsp;&amp;mdash; Nightmare!
+
+==Usage==
+
+Changes the current skill of the game. The skill change will take affect at the next map change. Instead of numbers (0&amp;mdash;4), you can also use the following (defined in '''zdefs.acs'''):
+
+* '''SKILL_VERY_EASY'''
+* '''SKILL_EASY'''
+* '''SKILL_NORMAL'''
+* '''SKILL_HARD'''
+* '''SKILL_VERY_HARD'''
+
+Using these will greatly increase code readability. Note, however, that ZDoom can support up to 16 skill levels, though only [[UDMF]] maps can provide skill filters for skills above 4.
+
+==Examples==
+
+This is a simple example script which ends the level, adjusting the skill according to a very primitive inspection of the player's final state. The script works just like an [[Exit_Normal]] special.
+
+ script 100 (int pos)
+ {
+ 	int health = [[GetActorProperty]](0, APROP_HEALTH);
+ 	
+ 	if (health &lt; 25 &amp;&amp; [[GameSkill]]() &gt; SKILL_VERY_EASY)
+ 		ChangeSkill(GameSkill() - 1);
+ 	
+ 	if (health &gt; 100 &amp;&amp; GameSkill() &lt; SKILL_HARD)
+ 		ChangeSkill(GameSkill() + 1);
+ 	
+ 	Exit_Normal(pos);	
+ }
+
+First the health of the player is found. Then, if they are particularly low on health, and it is possible to reduce the skill, the skill is dropped a level. On the other hand, if they are doing very well, the skill is increased. Finally the level is exited as normal.
+
+==External links==
+* {{oldref}}</text>
+    <sha1>sm0iy36frwajes2e4hisy9uytermh0y</sha1>
+  </revision>
+</page>

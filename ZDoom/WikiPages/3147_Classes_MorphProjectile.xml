@@ -1,0 +1,71 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>Classes:MorphProjectile</title>
+  <ns>0</ns>
+  <id>3147</id>
+  <revision>
+    <id>45171</id>
+    <parentid>44354</parentid>
+    <timestamp>2017-05-02T15:02:43Z</timestamp>
+    <contributor>
+      <username>Blue Shadow</username>
+      <id>2021</id>
+    </contributor>
+    <minor />
+    <comment>Remove {{new}}</comment>
+    <origin>45171</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="3986" sha1="bi35p7pnpn1vxnzo3ja2rzpchrcljn2" xml:space="preserve">{{Actor|
+| type = Internal
+| name = Morph projectile base class
+| class = MorphProjectile
+}}[[Classes]]: &lt;u&gt;MorphProjectile&lt;/u&gt;&lt;br&gt;
+&amp;ensp;&amp;rarr;[[Classes:EggFX|EggFX]]&lt;br&gt;
+&amp;ensp;&amp;rarr;[[Classes:PorkFX|PorkFX]]&lt;br&gt;
+
+&lt;u&gt;MorphProjectile&lt;/u&gt; is the base class for projectiles that morph actors into other actors (such as the [[Classes:ArtiEgg|Morph Ovum]]). By inheriting from it you can create custom morph projectiles.
+==== [[DECORATE]] definition ====
+ ACTOR &lt;u&gt;MorphProjectile&lt;/u&gt; native
+ {
+   {{Property|Damage}} 1
+   {{Property|Projectile}}
+   -{{Flag|ACTIVATEIMPACT}}
+   -{{Flag|ACTIVATEPCROSS}}
+ }
+
+==== Using in [[DECORATE]] ====
+The &lt;u&gt;MorphProjectile&lt;/u&gt; base class defines the following properties which are available to all inventory subclasses:
+
+{{:MorphProjectile properties}}
+
+==== Notes ====
+Actors can be defined such that they are unable to unmorph once morphed (the duration property is ignored) or cannot be morphed (most bosses have this).
+
+For the morph style, it is important to be aware that when given health by a normal means, a maximum of 30 health is imposed and no stamina applied on top; furthermore, various other effects such as limited (or no) weapon switching and the inability to pick up items are hardcoded into the game or affected in other ways that to a DECORATE coder seem totally unpredictable. The reason for this new functionality being added was to bring the effects of morphing under DECORATE control and make it predictable. To this end, new flags will be added from time to time.
+
+If an unmorph attempt fails, the engine will try to unmorph the player automatically every two seconds until it succeeds. Failure occurs if the player is stuck in something (solid object, wall, low ceiling, crusher, etc). MRF_UNDOALWAYS can be used to ignore stuck checking and unmorph them regardless.
+
+Until the existence of [[Classes:PowerMorph|morph powerups]], invulnerability protected the player against morphing because it always occurred as the result of an attack; however, an invulnerable player should obviously be able to morph themselves, hence the introduction of the MRF_WHENINVULNERABLE flag. ''&lt;u&gt;MorphProjectile&lt;/u&gt;s recognize this flag but ignore it, in order to preserve the integrity of the invulnerability effect.''
+
+When a player unmorphs, the engine by default takes away whichever weapon the player is wielding at the time; the assumptions behind this are no longer valid due to enhancements to the game made by ZDoom. With the MRF_LOSEACTUALWEAPON flag, the player only loses the weapon given upon morphing; furthermore, if the weapon was one that the player ''already had'' before morphing, it is not taken away at all. This new behavior is actually a bug fix, but must be activated via a style flag because existing mods may depend upon the old behavior.
+
+When a player is morphed the TID can now be transferred via the MRF_NEWTIDBEHAVIOUR flag. This new behavior is actually a bug fix, but must be activated via a style flag because existing mods may depend upon the old behavior.
+
+By default, an actor stays both morphed and dead if killed while morphed. The engine's normal thing spawn checks are also applied to an unmorphing actor and by default, the engine retries a failed unmorph every two seconds until it succeeds. Forcing the unmorph to occur via the MRF_UNDOBYDEATHFORCED flag makes sense if the monster will die upon unmorphing, because corpses are by default non-solid; however, using MRF_UNDOBYDEATHFORCED and MRF_UNDOBYDEATHSAVES together could leave an unmorphed but resurrected actor stuck inside a wall or even another actor, so use these flags with care.
+
+For a flash actor, specifying "" or omitting the relevant property altogether means "use the default". To have no flash at all, a silent flash or a sound but no visible effect, define and specify the following actor or one like it:
+
+ ACTOR NoFlash
+ {
+  // SeeSound "mysounds/myflashsound"
+  RenderStyle None
+  States
+  {
+  Spawn:
+   TNT1 A 1
+   Stop
+  }
+ }</text>
+    <sha1>bi35p7pnpn1vxnzo3ja2rzpchrcljn2</sha1>
+  </revision>
+</page>

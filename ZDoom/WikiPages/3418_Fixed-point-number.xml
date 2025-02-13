@@ -1,0 +1,45 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>Fixed point number</title>
+  <ns>0</ns>
+  <id>3418</id>
+  <revision>
+    <id>39068</id>
+    <parentid>35789</parentid>
+    <timestamp>2015-04-22T16:37:59Z</timestamp>
+    <contributor>
+      <username>Major Cooke</username>
+      <id>1703</id>
+    </contributor>
+    <minor />
+    <comment>Just added some comments of what it looks like after conversion.</comment>
+    <origin>39068</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="1178" sha1="tfds0thgu7880v8ynpa42q0ekkl43e7" xml:space="preserve">ZDoom commonly represents fixed point numbers as 32-bit integers with the integer part of the represented number stored in the top 16 bits, and with the fractional part (65536ths) stored the lower 16 bits.
+
+In other words, the fixed point representation of a number is that number times 65536.
+
+To do multiplies and divides on fixed point numbers in [[ACS]] scripts, you can use functions such as [[FixedMul]] and [[FixedDiv]].
+
+You can convert an integer to a fixed point representation of that integer simply by shifting your desired integer left 16 bits:
+
+  int myCoolInteger = 72;
+  int myCoolFixedPointValue = myCoolInteger &lt;&lt; 16; //Result is 4718592
+
+Going the other way is just as easy...
+
+  int myCoolFixedPointValue = 4718592;
+  int myCoolInteger = myCoolFixedPointValue &gt;&gt; 16; //Result is 72
+
+You can also specify fixed point numbers as literals in ACS scripts:
+
+  int myFixedPointNumber = 1.5;
+
+myFixedPointNumber is now (1.5 * 65536) = 98304. If an integer value is intended, you ''must'' use a decimal point e.g. 4.0 or use the left shift described above; ACS does not know what type a number is supposed to be.
+
+==See also==
+* [[Definitions]]
+[[Category:Glossary]]</text>
+    <sha1>tfds0thgu7880v8ynpa42q0ekkl43e7</sha1>
+  </revision>
+</page>

@@ -1,0 +1,49 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>ClearInventory</title>
+  <ns>0</ns>
+  <id>972</id>
+  <revision>
+    <id>40599</id>
+    <parentid>40594</parentid>
+    <timestamp>2015-12-25T20:26:12Z</timestamp>
+    <contributor>
+      <username>Edward850</username>
+      <id>1492</id>
+    </contributor>
+    <minor />
+    <comment>Missed line break</comment>
+    <origin>40599</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="887" sha1="5ncc0mer4ext25bwjcjug5n1wlo3rnl" xml:space="preserve">void '''ClearInventory'''(void);
+
+==Usage==
+
+This will clear the player's inventory of weapons, ammo, armor and usable items.
+
+Note: This will not remove an inventory item or weapon that is flagged with the {{flag|INVENTORY.UNDROPPABLE}} flag. An explicit call to [[TakeInventory]] is required to remove such items.
+
+If the function is run with no activator (for example an [[Script_types|OPEN script]] or removing an existing activator with [[SetActivator]]), it will run for and affect all active players in the game.
+
+For a list of things to give, see [[Inventory]].
+
+==Examples==
+
+This example works cleanly in Doom.
+
+ script 50 (void)
+ {
+ 	[[Print]](s:"You hand your weapons over to security.");
+ 	[[ClearInventory]]();
+ 	[[GiveInventory]]("{{class|Fist}}", 1);
+ }
+
+==See also==
+* [[GiveInventory]]
+* [[TakeInventory]]
+* [[ClearActorInventory]]
+
+[[category:ACS Inventory functions]]</text>
+    <sha1>5ncc0mer4ext25bwjcjug5n1wlo3rnl</sha1>
+  </revision>
+</page>

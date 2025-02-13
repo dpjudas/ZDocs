@@ -1,0 +1,52 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>Classes:ArtiHealth</title>
+  <ns>0</ns>
+  <id>2614</id>
+  <revision>
+    <id>39714</id>
+    <parentid>38859</parentid>
+    <timestamp>2015-05-03T22:20:00Z</timestamp>
+    <contributor>
+      <username>Blue Shadow</username>
+      <id>2021</id>
+    </contributor>
+    <minor />
+    <comment>/* DECORATE definition */ Updated</comment>
+    <origin>39714</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="1048" sha1="8kryhvb4gmj93poqin7hqjsyzu8ki9w" xml:space="preserve">{{Actor|
+| type = Artifact
+| name = Quartz Flask
+| class = ArtiHealth
+| game = Raven
+| doomednum = 82
+| spawnid = 24
+| spawnname = T_ITEMHEALTHFLASK 
+}}[[Classes]]: [[Classes:Inventory|Inventory]]&amp;rarr;[[Classes:HealthPickup|HealthPickup]]&amp;rarr;&lt;u&gt;ArtiHealth&lt;/u&gt;
+
+The Quartz Flask artifact in Heretic and Hexen.  This is a floating flask filled with a purple liquid that can be held in the inventory and restores 25% health (up to 100%) when used. On Skill 1 this is automatically used when your health is low.
+
+==== [[DECORATE]] definition ====
+ ACTOR &lt;u&gt;ArtiHealth&lt;/u&gt; : {{Class|HealthPickup}}
+ {
+   {{Property|Health}} 25
+   +{{Flag|COUNTITEM}}
+   +{{Flag|FLOATBOB}}
+   +{{Flag|INVENTORY.PICKUPFLASH}}
+   +{{Flag|INVENTORY.FANCYPICKUPSOUND}}
+   {{Property|Inventory.Icon}} ARTIPTN2
+   {{Property|Inventory.PickupSound}} "misc/p_pkup"
+   {{Property|Inventory.PickupMessage}} "$TXT_ARTIHEALTH" // "QUARTZ FLASK"
+   {{Property|Tag}} "$TAG_ARTIHEALTH"
+   {{Property|HealthPickup.AutoUse}} 1
+   States
+   {
+   Spawn:
+     PTN2 ABC 4
+     Loop
+   }
+ }</text>
+    <sha1>8kryhvb4gmj93poqin7hqjsyzu8ki9w</sha1>
+  </revision>
+</page>

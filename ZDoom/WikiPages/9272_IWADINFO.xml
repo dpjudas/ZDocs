@@ -1,0 +1,157 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>IWADINFO</title>
+  <ns>0</ns>
+  <id>9272</id>
+  <revision>
+    <id>53312</id>
+    <parentid>53091</parentid>
+    <timestamp>2024-10-12T10:56:17Z</timestamp>
+    <contributor>
+      <username>Blue Shadow</username>
+      <id>2021</id>
+    </contributor>
+    <minor />
+    <comment>{{git}} -&gt; {{new}} for 4.13.0</comment>
+    <origin>53312</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="8110" sha1="pczdpau214hgahpqg2dw63j21ebqwdw" xml:space="preserve">'''IWADINFO''' allows the engine to identify data files that serve as stand-alone games ([[IWAD]]), rather than mods. Detected games will be listed in the [[IWAD selection box]] on startup. The engine comes with its internal IWADINFO lump (in game_support.pk3) to detect the classic games, but games created for GZDoom can now feature their own custom IWADINFO to declare themselves as standalone games. GZDoom will scan files with either the {{c|.iwad}} or {{c|.ipk3}} extensions for the presence of an IWADINFO lump. IWAD files without this extension (such as {{c|doom2.wad}} for example) are not scanned for presence of an IWADINFO lump and therefore rely on GZDoom's internal list.
+
+Custom IWADINFO lumps and the lump in game_support.pk3 follow a similar syntax, except custom IWADINFOs are expected to only define one IWAD and not include a file list. Note that standalone games will not process [[GAMEINFO]], as this other lump is only scanned for files loaded as mods.
+
+ IWad
+ {
+ 	''properties''
+ 	''etc''
+ 	''...''
+ }
+
+== Properties ==
+{{list|Property|Description|content=
+
+{{-|{{LE|Name}} {{=}} "&lt;string&gt;"
+|The game's name. This appears in the game selection list, as well as acting as the window title in windowed mode when {{c|i_friendlywindowtitle}} is enabled.}}
+
+{{-|{{LE|AutoName}} {{=}} "&lt;string&gt;"
+|The name used for your game in the ini files. You can use a completely stand alone name to completely separate your game from pre-existing configurations...
+&lt;pre&gt;AutoName = "MyCustomGame"&lt;/pre&gt;
+...or you can inherit the autoloads etc. from a pre-existing game while allowing separate configuration specific to your game.
+&lt;pre&gt;AutoName = "Heretic.MyCustomGame"&lt;/pre&gt;
+Do not use an already existing internal name for your AutoName - you must use a different name. Otherwise, your resources will be overwritten by internal engine assets. "Doom.MyCustomGame" is okay - "Doom.id.Doom1" is not.}}
+
+{{-|{{LE|IWADName}} {{=}} "&lt;filename&gt;"
+|Only used in the internal lump to identify files that do not have the custom {{c|.iwad}} or {{c|.ipk3}} extensions. Ignored in custom lumps, which describe the file containing them.}}
+
+{{-|{{LE|SupportWAD}} {{=}} "&lt;filename&gt;"
+|{{new|4.13.0}}
+An additional file to load if present.
+
+This was originally implemented to load {{c|{{dw|id24res.wad}}}} alongside the [[Doom]] games.}}
+
+{{-|{{LE|Config}} {{=}} "&lt;string&gt;"
+|Similar to AutoName, but for keybinds etc. You can use a completely stand alone name to completely separate your game from pre-existing configurations...
+&lt;pre&gt;Config = "MyCustomGame"&lt;/pre&gt;
+...or you can use a pre-existing game's name to use their settings.
+&lt;pre&gt;Config = "Doom"&lt;/pre&gt;}}
+
+{{-|{{LE|Game}} {{=}} "&lt;string&gt;"
+|The core GZDoom game used as a base. Possible values are:
+* Doom
+* Chex
+* Heretic
+* Hexen
+* Strife
+If in doubt (or if your game has no ties to any of the original games) just use Doom.}}
+
+{{-|{{LE|MapInfo}} {{=}} "&lt;lump name&gt;"
+|Specify a base [[MAPINFO]] lump to load ''before'' your game's MAPINFO lump (if present). If you've defined everything in your MAPINFO's [[MAPINFO/GameInfo_definition|gameinfo block]], this is optional. Otherwise, you may wish to inherit from one of the default GZDoom definitions.
+&lt;pre&gt;Mapinfo = "mapinfo/doom2.txt"&lt;/pre&gt;}}
+
+{{-|{{LE|NoKeyboardCheats}}
+|Disables [[cheat code]]s. Note that cheat codes are still usable if the {{c|{{CVAR|C|allcheats}}}} [[console variable]] is set to ''true''.}}
+
+{{-|{{LE|SkipBexStringsIfLanguage}}
+|{{new|4.13.0}}
+{{moreinfo}}}}
+
+{{-|{{LE|Compatibility}} {{=}} "&lt;string&gt;", "&lt;string&gt;"...
+|Set certain compatibility flags. These probably aren't very useful for stand-alone games.
+* "NoTextcolor" (Used to disable text colouring in [[Chex Quest 3]] due to bad TEXTCOLO lump)
+* "Poly1" ([[CVARs:Configuration#compat_polyobj|Compatibility flag]] for polyobjects in MAP36 of [[Hexen]])
+* "Poly2" ([[CVARs:Configuration#compat_polyobj|Compatibility flag]] for polyobjects in MAP47 of [[Deathkings of the Dark Citadel]])
+* "Shareware" (Used for shareware versions of games)
+* "Teaser2" (Used for the "new version" of the [[Strife]] Teaser demo)
+* "Extended" (Used for [[Heretic: Shadow of the Serpent Riders]])
+* "Shorttex" ([[CVARs:Configuration#compat_shorttex|Compatibility flag]] used for all [[Doom]] IWADs)
+* "Stairs" ([[CVARs:Configuration#compat_stairs|Compatibility flag]] used for [[TNT: Evilution]])}}
+
+{{-|{{LE|MustContain}} {{=}} "&lt;lump name&gt;", "&lt;lump name&gt;"...
+|Only used in the internal lump to validate external files by verifying they have the expected content, and to resolve ambiguity when different IWADs can use the same name. Ignored in custom lumps, which describe the file containing them.}}
+
+{{-|{{LE|DeleteLumps}} {{=}} "&lt;string&gt;", "&lt;string&gt;"...
+|Effectively ignores the specified IWAD lumps while loading the game. Used to delete certain "placeholder"-style lumps in the BigFont used by [[Heretic]] and [[Hexen]]. This probably isn't very useful for stand-alone games.
+&lt;pre&gt;DeleteLumps = "FONTB01", "FONTB02", "FONTB03", "FONTB04", "FONTB06"&lt;/pre&gt;}}
+
+{{-|{{LE|BannerColors}} {{=}} "&lt;foreground color&gt;", "&lt;background color&gt;"
+|The same as STARTUPCOLORS in [[GAMEINFO]].}}
+
+{{-|{{LE|IgnoreTitlePatches}} {{=}} &lt;integer&gt;
+|Ignores the "(C)WILVxx" graphic lumps used for level names in all of the official [[Doom]] IWADs so that they can be properly localized by [[LANGUAGE]]. This probably isn't very useful for stand-alone games.}}
+
+{{-|{{LE|Load}} {{=}} "&lt;string&gt;", "&lt;string&gt;"...
+|Specifies another archive to be auto-loaded alongside the current game. Used by ''[[Strife]]'' for VOICES.WAD, and by [[Hacx]] for GZDoom-specific data.}}
+
+{{-|{{LE|Required}} {{=}} "&lt;string&gt;"
+|Specifies that another game is required for this game to work. If that game does not exist, this game will not appear on the IWAD list. Use the game's name string, not its filename!
+&lt;pre&gt;Required = "Hexen: Beyond Heretic"&lt;/pre&gt;
+Probably not enormously useful for standalone games.}}
+
+{{-|{{LE|StartupType}} {{=}} "&lt;startup type&gt;"
+|Optional and presumably the same as the [[GAMEINFO]] implementation.}}
+
+{{-|{{LE|StartupSong}} {{=}} "&lt;lump name&gt;"
+|Optional and presumably the same as the [[GAMEINFO]] implementation.}}
+
+{{-|{{LE|LoadLights}} {{=}} &lt;integer&gt;
+|Controls loading of {{c|light.pk3}} file. This property is effective only if its [[GAMEINFO#LOADLIGHTS|GAMEINFO equivalent]] is set to -1, or is not used entirely. Possible values are:
+*0: prevents the file from being loaded.
+*1: loads the file.
+*-1: leaves the option of loading the file to the user (default).}}
+
+{{-|{{LE|LoadBrightmaps}} {{=}} &lt;integer&gt;
+|Controls loading of {{c|brightmaps.pk3}} file. This property is effective only if its [[GAMEINFO#LOADBRIGHTMAPS|GAMEINFO equivalent]] is set to -1, or is not used entirely. Possible values are:
+*0: prevents the file from being loaded.
+*1: loads the file.
+*-1: leaves the option of loading the file to the user (default).}}
+
+{{-|{{LE|LoadWidescreen}} {{=}} &lt;integer&gt;
+|Controls loading of {{c|game_widescreen_gfx.pk3}} file. This property is effective only if its [[GAMEINFO#LOADWIDESCREEN|GAMEINFO equivalent]] is set to -1, or is not used entirely. Possible values are:
+*0: prevents the file from being loaded.
+*1: loads the file.
+*-1: leaves the option of loading the file to the user (default).}}
+
+{{-|{{LE|DiscordAppId}} {{=}} "&lt;string&gt;"
+|Set to a Discord App ID to appear as that game in Discord's rich presence system. If not entered, will default to a generic "GZDoom" app. Only useful for standalone games.
+This property is effective only if its [[GAMEINFO#DISCORDAPPID|GAMEINFO equivalent]] is set to {{c|""}}, or is not used entirely.}}
+
+{{-|{{LE|SteamAppId}} {{=}} "&lt;string&gt;"
+|Set to a Steam App ID to appear as that game in Discord's rich presence system. Only useful for standalone games.
+This property is effective only if its [[GAMEINFO#STEAMAPPID|GAMEINFO equivalent]] is set to {{c|""}}, or is not used entirely.}}
+
+}}
+
+== Example ==
+ IWad
+ {
+ 	Name = "My Kickass Custom Game"
+ 	AutoName = "MyCustomGame"
+ 	Game = "Doom"
+ 	Config = "Doom"
+ 	StartupType = "Hexen"
+ 	BannerColors = "ff ff ff", "c9 00 00"
+ }
+
+[[Category:ZDoom special lumps]]</text>
+    <sha1>pczdpau214hgahpqg2dw63j21ebqwdw</sha1>
+  </revision>
+</page>

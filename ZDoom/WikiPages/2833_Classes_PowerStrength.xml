@@ -1,0 +1,95 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>Classes:PowerStrength</title>
+  <ns>0</ns>
+  <id>2833</id>
+  <revision>
+    <id>53717</id>
+    <parentid>53716</parentid>
+    <timestamp>2024-11-13T11:32:56Z</timestamp>
+    <contributor>
+      <username>Jekyll Grim Payne</username>
+      <id>2175</id>
+    </contributor>
+    <minor />
+    <origin>53717</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="2591" sha1="ghwkf706d0qrz4cuay1j3o0kg4ualob" xml:space="preserve">{{actor|
+| type = Power
+| name = Super strength power
+| class = PowerStrength
+}}[[Classes]]: [[Classes:Inventory|Inventory]]&amp;rarr;[[Classes:Powerup|Powerup]]&amp;rarr;&lt;u&gt;PowerStrength&lt;/u&gt;&lt;br&gt;
+&amp;ensp;&amp;ensp; [[Hierarchical class list|(more)]]
+
+
+'''PowerStrength''' is one of the many powerups based on the base '''{{class|Powerup}}''' class. It's designed specifically for Doom's {{class|Berserk}} item, and thus comes with built-in Berserk-specific effects, such as temporary screen reddening and unlimited duration, so it might not be a very good choice for similar but more generalized effects.
+
+Note: &lt;u&gt;Fist damage increase is NOT a part of this powerup&lt;/u&gt;. Fist's function [[A_Punch]] simply explicitly checks for the presence of this powerup in the player's inventory, and, if it finds it, the damage of [[A_Punch]] is increased. If a custom weapon with a custom punch attack is used, [[FindInventory]] or [[CountInv]] will be needed to check for the presence of the powerup. If you want to create an actual damage-increasing powerup, see  '''{{class|PowerDamage}}''' instead.
+
+=== [[ZScript]] definition ===
+{{ZScriptDefinitionNote|actors/inventory/powerups.zs}}
+&lt;syntaxhighlight lang="csharp"&gt;
+class PowerStrength : Powerup
+{
+	Default
+	{
+		Powerup.Duration 1;
+		Powerup.Color "ff 00 00", 0.5;
+		+INVENTORY.HUBPOWER
+	}
+	
+	override bool HandlePickup (Inventory item)
+	{
+		if (item.GetClass() == GetClass())
+		{ // Setting EffectTics to 0 will force Powerup's HandlePickup()
+		  // method to reset the tic count so you get the red flash again.
+			EffectTics = 0;
+		}
+		return Super.HandlePickup (item);
+	}
+
+	//===========================================================================
+	//
+	// APowerStrength :: DoEffect
+	//
+	//===========================================================================
+
+	override void Tick ()
+	{
+		// Strength counts up to diminish the fade.
+		EffectTics += 2;
+		Super.Tick();
+	}
+
+	//===========================================================================
+	//
+	// APowerStrength :: GetBlend
+	//
+	//===========================================================================
+
+	override color GetBlend ()
+	{
+		// slowly fade the berserk out
+		int cnt = 128 - (EffectTics&gt;&gt;3);
+
+		if (cnt &gt; 0)
+		{
+			return Color(BlendColor.a*cnt/256,
+				BlendColor.r, BlendColor.g, BlendColor.b);
+		}
+		return 0;
+	}
+	
+}&lt;/syntaxhighlight&gt;
+
+=== [[DECORATE]] definition ===
+{{DecorateDefinitionNote}}
+ ACTOR &lt;u&gt;PowerStrength&lt;/u&gt; : {{Class|Powerup}} native
+ {
+   {{Property|Powerup.Duration}} 1
+   {{Property|Powerup.Color}} 255, 0, 0, 0.5
+   +{{Flag|INVENTORY.HUBPOWER}}
+ }</text>
+    <sha1>ghwkf706d0qrz4cuay1j3o0kg4ualob</sha1>
+  </revision>
+</page>

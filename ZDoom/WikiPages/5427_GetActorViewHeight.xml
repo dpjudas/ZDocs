@@ -1,0 +1,65 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>GetActorViewHeight</title>
+  <ns>0</ns>
+  <id>5427</id>
+  <revision>
+    <id>35813</id>
+    <parentid>27356</parentid>
+    <timestamp>2013-02-10T21:35:14Z</timestamp>
+    <contributor>
+      <username>Deded007</username>
+      <id>1392</id>
+    </contributor>
+    <minor />
+    <comment>formatting</comment>
+    <origin>35813</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="1616" sha1="da4bjxz6u1dpa5x4oa9dzpx0z7kjm13" xml:space="preserve">__NOTOC__
+fixed '''GetActorViewHeight''' (int ''tid'')
+
+== Usage ==
+
+This returns the view height of the actor, as a fixed point value. For a player, this corresponds to the {{Property|Player.ViewHeight}} property, modified by crouching if needs be. For other actors, it corresponds to the {{Property|CameraHeight}} if one is defined, or defaults to half their height otherwise.
+
+=== Parameters ===
+
+* ''tid'': [[TID]] of the actor.
+
+=== Return value ===
+
+The view height of the actor, as a [[Definitions|fixed point]] value.
+
+== Examples ==
+This script will train a camera with a tid of 1 on the player and adjust its pitch to stay with the player even if crouched.  Unfortunately it appears that as of version 2.4.1 this function does not possess the capacity to accept a tid of 0 and retrieve the activator's data.
+ script 1 (void)
+ {
+  int x, y, z, dist, angle, pitch;
+  [[ChangeCamera]](1, 0, {{const|FALSE}});
+  //To overcome GetActorViewHeight limitation...
+  if (![[ActivatorTID]]())
+    [[Thing_ChangeTID]](0, 1000 + [[PlayerNumber]]());
+    
+  while ({{const|TRUE}})
+  {
+    x = [[GetActorX]](0) - [[GetActorX]](1);
+    y = [[GetActorY]](0) - [[GetActorY]](1);
+    z = [[GetActorZ]](0) + [[GetActorViewHeight]]([[ActivatorTID]]()) - [[GetActorZ]](1);
+    angle = [[VectorAngle]](x, y);
+    
+    if ((angle + 0.125) % 0.5 &gt; 0.25)
+      dist = [[FixedDiv]](y, [[sin]](angle));
+    else
+      dist = [[FixedDiv]](x, [[cos]](angle));
+      
+    pitch = -[[VectorAngle]](dist, z);
+    [[SetActorAngle]](1, angle);
+    [[SetActorPitch]](1, pitch);
+    [[delay]](1);
+  }
+ }
+
+[[Category:ACS Information functions]]</text>
+    <sha1>da4bjxz6u1dpa5x4oa9dzpx0z7kjm13</sha1>
+  </revision>
+</page>

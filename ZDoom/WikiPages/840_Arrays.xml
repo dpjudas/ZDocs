@@ -1,0 +1,105 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>Arrays</title>
+  <ns>0</ns>
+  <id>840</id>
+  <revision>
+    <id>50193</id>
+    <parentid>44109</parentid>
+    <timestamp>2023-04-06T09:53:31Z</timestamp>
+    <contributor>
+      <username>Jekyll Grim Payne</username>
+      <id>2175</id>
+    </contributor>
+    <comment>Added a note that this is about ACS, and a link to ZScript arrays</comment>
+    <origin>50193</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="6328" sha1="0jeubuaaolgbsrvu9mt3b8pnn3upm1r" xml:space="preserve">{{Note|This page covers the use of arrays in [[ACS]]. For [[ZScript]] arrays see [[ZScript_variables#Arrays|here]].}}
+'''Arrays''' are groups of variables which are distinguished by indexed numbers.  If you're familiar with C, Java, or any other language that supports arrays (which is most, if not all major ones), then you shouldn't have any problems, but here's a simple lesson for those not familiar with arrays.
+
+Where a variable holds a single value, an array holds an ordered collection of values accessible by a number known as an '''index'''.  Arrays have names just like any other variable, but you access the specific values by following the name with the index value.
+
+To declare an array you use the following syntax: ''datatype arrayName[size]'';
+
+Where '''datatype''' is one of ACS's supported [[Data types]], '''arrayName''' is a unique name given to the array so you can refer to it elsewhere in the code, and '''size''' is the number of elements the array will hold.
+
+Here are some examples of array declarations:
+
+ int array1[4];&lt;br&gt;
+ int array2[3] = { 1, 5, 9 };&lt;br&gt;
+ str array3[2][2] = {{"This is", "a two"}, {"dimensional", "array"}};
+
+As with all variables in [[ACS]], every value of an array will be initialized to '0', so if you define a rather large array you need not worry about initializing every variable out of fear of referencing one without a number (that tip is for the C programmers out there, anyone else probably needn't worry).  The number between the brackets is called the size when you're declaring it, and the index when you're accessing it (in [[ACS|scripts]] or [[functions]]).  All arrays must have script, map, global or world [[scope]] (the last two are special case arrays though).
+
+Probably the hardest part of arrays is the index variable in relation to the size.  If you define an array with a size of four, you do so as in the first example above.  However to access the fourth element, you must use &lt;tt&gt;array1[3]&lt;/tt&gt; because the array indices start at 0.  The easiest way to remember it is to just subtract one from the number you want.  If you want the 10th element, you need to access index 9.  If you want the first element, then you access index 0.
+
+Arrays can also be multidimensional.  Another way of putting this is that you can have arrays of arrays (of arrays of arrays of arrays... depending on how many dimensions you need).
+
+ // An array of 4 integers.
+ int normalArray[4] = { 1, 2, 3, 4 };
+ 
+ // A 2D array of 4 arrays of size 2.  So there are 4x2 or 8 elements total.
+ int array2D[4][2] = {
+                       { 1, 2 },
+                       { 3, 4 },
+                       { 5, 6 },
+                       { 7, 8 },
+                     };
+
+Pay careful attention to the use of the braces in the 2D array initialization example above.  You can see for the normal array one pair of braces is used to fill the array with numbers.  In the 2D array, the outermost braces specify the first dimension ([4]) and each of the 4 values are themselves arrays of size 2, the second dimension ([2]).  You access specific elements in the 2D element by using both indices.  If you wanted the value '''6''' from the example above, the indices to use are 2 and 1 (remember indices are 0-based!)
+
+ print(d: array2D[2][1] ); // Prints 6
+
+Another useful way to think about it is that where an array could be considered a ''list'' of items, a 2D array would be a ''grid'' of items.  ACS supports arrays of greater dimensions as well (3D, 4D, etc.).  Each extra dimension works by adding another index notation at the end of the array name.  Please note though that complexity of arrays increases linearly with each dimension. Arr[2] has 2 elements, arr[2][2] has 4, arr[2][2][2] has 8, arr[2][2][2][2] has 16, etc., so consider carefully how many dimensions you need.  If you are considering a high dimension array, you may be overthinking your problem.
+
+
+== Examples ==
+In this example we will have a different message print out depending on how many health potions out of 100 the player picks up in 30 seconds. If you want a different message for every ten (10, 20, 30 etc.) potions then you'd have to do something like this without arrays:
+
+ script 1 (int potions)
+ {
+    if(potions &gt;= 100)
+       [[print]](s:"Best potion picker-upper EVER!");
+    else if(potions &gt;= 90)
+       [[print]](s:"Nearly perfect!");
+    else if(potions &gt;= 80)
+       [[print]](s:"Wow that's a lot of potions!");
+    else if(potions &gt;= 70)
+       [[print]](s:"That was great!");
+    else if(potions &gt;= 60)
+       [[print]](s:"Pretty good!");
+    else if(potions &gt;= 50)
+       [[print]](s:"Not too bad");
+    else if(potions &gt;= 40)
+       [[print]](s:"You're decent");
+    else if(potions &gt;= 30)
+       [[print]](s:"You did kinda good");
+    else if(potions &gt;= 20)
+       [[print]](s:"You're okay sorta");
+    else if(potions &gt;= 10)
+       [[print]](s:"You're bad at this");
+    else
+       [[print]](s:"You suck!");
+ }
+
+That's horribly long and ugly.  Now with arrays you could simply define each string in an array as so and make the code much smaller:
+
+ str strings[11] = { "You suck!", "You're bad at this", "You're okay sorta", 
+                 "You did kinda good", "You're decent", "Not too bad", 
+                 "Pretty good!", "That was great!", 
+                 "Wow that's a lot of potions!", "Nearly perfect!", 
+                 "Best potion picker-uper EVER!" };
+ 
+ script 1 (int potions)
+ {
+    int potionindex = potions / 10;
+    if (potionindex &lt; 0) potionindex = 0;
+    if (potionindex &gt; 10) potionindex = 10;
+    [[print]](s:strings[potionindex]);
+ }
+
+And thus you've reduced that long script to a single line and an array. If you notice the integer passed to script 1 is the number of potions, with thresholds that are multiple of 10 (so 0, 10, 20, ... , 90, or 100), so if you take that value and divide it by 10 you'll get the corresponding index. Therefore, collecting 20 potions will yield index 20 / 10 which is equal to 2, giving you index 2, meaning string 3 in the array, the message "You're okay sorta". To avoid problems with out-of-bound indices (if the player cheated to pick up more than 109 potions, or somehow managed to obtain a negative potion count), a couple of instructions "clamp" the variable used as an index between 0 and 10.
+[[category:ACS guides]]</text>
+    <sha1>0jeubuaaolgbsrvu9mt3b8pnn3upm1r</sha1>
+  </revision>
+</page>

@@ -1,0 +1,232 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>Actor virtual functions</title>
+  <ns>0</ns>
+  <id>9741</id>
+  <revision>
+    <id>53278</id>
+    <parentid>52991</parentid>
+    <timestamp>2024-10-12T09:03:03Z</timestamp>
+    <contributor>
+      <username>Blue Shadow</username>
+      <id>2021</id>
+    </contributor>
+    <minor />
+    <comment>remove {{new}}</comment>
+    <origin>53278</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="13963" sha1="jv8exjondtppg8kb8i31pco985ezizk" xml:space="preserve">*void '''[[MarkPrecacheSounds]]'''()
+:Called when ''sound'' variables are to be cached for faster access via those variables (e.g. AttackSound, ActiveSound, etc.). Useful for caching custom ''sound'' variables.
+
+*void '''[[BeginPlay]]'''()
+:Called just after the actor is created and before '''PostBeginPlay''' and the first call to '''Tick'''.
+
+{{: Thinker virtual functions}}
+
+*void '''[[Activate]]'''(Actor activator)
+:Called when an actor is activated (specific meaning of activation and possible conditions are described [[Activation|'''here''']]).
+
+*void '''[[Deactivate]]'''(Actor ''activator'')
+:Called when an actor is deactivated (specific meaning of deactivation and possible conditions are described [[Activation|'''here''']]).
+
+*int '''{{LE|[[DoSpecialDamage]]}}'''(Actor ''target'', int ''damage'', name ''damagetype'')
+:Called by projectiles when they're about to hit and deal damage to another actor. Called before '''TakeSpecialDamage'''. Heretic's [[Classes:PhoenixFX1|Phoenix Rod missile]] uses this to tell D'Sparil to teleport away and not take damage when hit by it.
+
+*int '''[[TakeSpecialDamage]]'''(Actor inflictor, Actor source, int damage, Name damagetype)
+:Called from the damage taker when they're about to take damage but haven't yet. The return value is the new damage to be taken. This occurs after all forms of damage modifiers are applied.
+
+*void '''[[Die]]'''(Actor source, Actor inflictor, int dmgflags = 0, Name MeansOfDeath = 'none')
+:Called when an actor is killed (a damaging attack causes an actor's health to fall less than or equal to 0)
+
+*bool '''[[Slam]]'''(Actor victim)
+:Called when an actor that has {{flag|SKULLFLY}} set collides with another. Normally called by {{Class|LostSoul|Lost Souls}} and {{Class|Minotaur|Maulotaurs}}. Returning true tells the caller to ignore the rest of the collision code with the victim it hit while returning false uses standard collision behavior.
+:*''victim'' - The actor the caller is colliding with.
+
+*void '''[[Touch]]'''(Actor toucher)
+:Called when an actor with the {{flag|SPECIAL}} flag gets touched by another. Normally only used by {{Class|Inventory}} and {{Class|SpectralMonster}}.
+
+*bool '''[[CanTouchItem]]'''(Inventory item)
+:Called when an actor is touching an item but has not yet picked it up. Returning true tells the engine to touch the item while returning false does the opposite.
+:*''item'' - The item the caller is touching.
+
+*bool '''[[CanReceive]]'''(Inventory item)
+: Called from Inventory's &lt;code&gt;CallTryPickup()&lt;/code&gt; before other checks to determine if this actor can receive the item.
+
+*void '''[[HasReceived]]'''(Inventory item)
+: Called at the end of Inventory's &lt;code&gt;CallTryPickup()&lt;/code&gt;, once the item has been received by the actor. Allows to perform additional behavior when items are received without overriding and copying &lt;code&gt;TryPickup()&lt;/code&gt; just to do it.
+
+*bool '''[[CanCollideWith]]'''(Actor other, bool passive)
+:Called when two actors may be capable of colliding are about to collide with each other. This function is called from both actors involved in the collision. The return value determines if the collision is possible between the two actors.
+
+*void '''[[CollidedWith]]'''(Actor other, bool passive)
+:Called when two actors capable of colliding with each other actually do so. This function is called from both actors involved in the collision.
+
+*bool '''[[CanCrossLine]]'''([[Structs:Line|Line]] crossing, [[ZScript_variables|Vector3]] next)
+:Called any time the actor is about to cross a [[linedef]], this is called after most checks on [https://github.com/coelckers/gzdoom/blob/master/src/playsim/p_map.cpp#L809 PIT_CheckLine] have ran. Returning false will make the actor be blocked by the line.
+:'''NOTE''' This virtual needs the actor to have the {{flag|CROSSLINECHECK}} flag to run.
+:*''crossing'' - The line that was checked to see if the actor can cross it.
+:*''next'' - The absolute Vector3 coordinates in which the actor will be moved to if the check succeeds.
+
+*void '''[[FallAndSink]]'''(double grav, double oldfloorz)
+:Called when the actor is falling and when sinking inside of deep water based on the [[Transfer_Heights]] special or swimmable [[3D floors]]. Can be used in conjunction with the [[DECORATE_expressions#Variables|waterdepth and waterlevel variables]].
+:*''grav'' - The current gravity of the actor, returns the same value as [[GetGravity]].
+:*''oldfloorz'' - The absolute floor Z coordinate of the sector that the actor is currently sinking within.
+
+*bool '''[[CanResurrect]]'''(Actor other, bool passive)
+:Called right before a dead actor is about to be resurrected. This function is called from both the dead actor and its resurrecter. If one of the actors returns false then the dead actor will not be resurrected. If both return true then standard resurrection behavior is used.
+
+*bool '''[[SpecialBlastHandling]]'''(Actor source, double strength)
+:Called when an actor is to be blasted by a disc of repulsion. If false is returned, the actor will not be blasted. If true, standard blast behavior is used.
+:*''source'' - The actor calling the blast function
+:*''strength'' - The current strength level of the blast
+
+*int '''[[SpecialMissileHit]]'''(Actor victim)
+:Called when a missile hits an actor. This is called after all other collision checks. Returning one of the following values will determine what the missile does next:
+
+*int '''[[SpecialBounceHit]]'''(Actor ''bounceMobj'', Line ''bounceLine'', SecPlane ''bouncePlane'')
+:Called when a bouncing projectile collides with an actor, line or plane, based on its flags.
+
+*bool '''[[Used]]'''(Actor user)
+:Called when an actor is used by a player with the use button. Returns false if the actor wasn't used, otherwise returning true.
+
+*class&lt;Actor&gt; '''[[GetBloodType]]'''(int type)
+:Returns the class type that the actor's blood uses. This will account for classes that replace it i.e. custom blood types
+:*''type'' - The specific blood type to return.
+:*0 - Returns the class type for standard blood
+:*1 - Returns the class type for blood splatters
+:*2 - Returns the class type for axe blood
+
+*int '''[[GetGibHealth]]'''()
+:Returns the health value that an actor will gib at upon death.
+
+*double '''[[GetDeathHeight]]'''()
+:Returns the height of the actor when it dies. This will take special deaths into account if the actor is already dead after calling it.
+
+*string '''[[GetObituary]]'''(Actor victim, Actor inflictor, Name mod, bool playerattack)
+:Returns the appropriate obituary for an actor's death depending on how it died.
+
+*int '''{{LE|OnDrain}}'''(Actor victim, int damage, Name dmgtype)
+:Called when an actor is {{Class|PowerDrain|draining health}} from another actor. Returns the amount of health to be drained.
+:*''victim'' - The actor whose health is being drained.
+:*''damage'' - The amount of damage dealt in the attack.
+:*''dmgtype'' - The damage type applied to the attack.
+
+*bool '''[[OnGiveSecret]]'''(bool printmsg, bool playsound)
+:Called when an actor discovers a secret. Returning false stops the default message from being displayed.
+:*''printmsg'' - Whether or not a message is to be displayed
+:*''playsound'' - Whether or not a sound is to be played
+
+*bool '''[[PreTeleport]]'''(Vector3 destpos, double destangle, int flags)
+:Called before an actor is teleported to a new location. Returning false stops the teleport.
+:*''destpos'' - The 3D position the actor is being teleported to
+:*''destangle'' - The angle the actor wishes to face after teleporting
+:*''flags'' - The teleportation flags to use in the action
+
+*void '''[[PostTeleport]]'''(Vector3 destpos, double destangle, int flags)
+:Called after an actor teleports to a new location. Can be used to apply special behavior after the fact.
+:*''destpos'' - The 3D position the actor teleported to
+:*''destangle'' - The angle the actor faced after teleporting
+:*''flags'' - The teleportation flags used in the action
+
+*bool '''[[OkayToSwitchTarget]]'''(Actor other)
+:Checks to see if the actor can switch its target to the new one upon being damaged. Returning false tells the caller not to switch targets
+:*''other'' - The new target the caller wants to switch to
+
+*bool '''[[Grind]]'''(bool items)
+:Called when an actor is crushed by the environment (e.g. crushers, Hexen's polyobjects, etc.). Returns true if standard crushing behavior should be used.
+:*''items'' - Set to true if dropped items are to be crushed alongside the caller.
+
+*clearscope int '''[[GetMaxHealth_(Actor)|GetMaxHealth]]'''(bool withupgrades = false) const
+:Returns the health an actor spawns with.
+
+*int '''[[DamageMobj]]'''(Actor inflictor, Actor source, int damage, Name mod, int flags = 0, double angle = 0)
+:Called by the actor whenever it takes damage. Returns the amount of damage the caller actually took from the attack.
+
+*bool '''[[ShouldSpawn]]'''()
+:Determines whether an actor should spawn into the map. If false is returned the actor will not be spawned at all.
+
+*void '''[[PlayerLandedMakeGruntSound]]'''(Actor onmobj)
+:{{moreinfo}}
+
+*void '''[[SpawnLineAttackBlood]]'''(Actor attacker, Vector3 bleedpos, double SrcAngleFromTarget, int originaldamage, int actualdamage)
+:Spawns the blood after an actor takes damage from a hitscan attack.
+:*''attacker'' - The source of the hitscan attack.
+:*''bleedpos'' - The 3D position to spawn the blood.
+:*''SrcAngleFromTarget'' - The angle the hitscan attack traveled normalized to a range between -180 and 180 degrees
+:*''originaldamage'' - The unmodified damage to deal by the hitscan attack.
+:*''actualdamage'' - The actual amount of damage the caller took.
+
+*void '''[[ApplyKickback]]'''(Actor inflictor, Actor source, int damage, double angle, Name mod, int flags)
+:Calle by an actor when it's dealt damage and must be thrusted by the attack.
+
+*void '''[[AddInventory]]'''(Inventory item)
+:Adds an item to the caller's inventory.
+:*''item'' - The item to be added to the caller's inventory.
+
+*void '''[[RemoveInventory]]'''(Inventory item)
+:Removes an item from the caller's inventory
+:*''item'' - The item to be removed from the caller's inventory.
+
+*bool '''[[UseInventory]]'''(Inventory item)
+:Uses an item in the caller's inventory. Returns true if the item was used successfully.
+:*''item'' - The item to be used.
+
+*void '''[[ClearInventory]]'''()
+:Destroys all valid inventory items of the caller.
+
+*Actor, int, int '''[[MorphedDeath]]'''()
+:Called when an actor dies while morphed. Returns three values:
+:*A pointer to the original actor before it was morphed.
+:*The style of morph of the original actor.
+:*The amount of health the original actor has.
+
+*void '''[[PreMorph]]'''(Actor mo, bool current)
+:Called right before an actor morphs on both the original actor and the newly created morph actor.
+:*''mo'' - A pointer to the other actor in the morph. If the original actor, this is the morph actor. If the morph actor, this is the original actor.
+:*''current'' - True if the caller is the newly created morph actor.
+
+*void '''[[PostMorph]]'''(Actor mo, bool current)
+:Called right after an actor morphs on both the original actor and the newly created morph actor.
+:*''mo'' - A pointer to the other actor in the morph. If the original actor, this is the morph actor. If the morph actor, this is the original actor.
+:*''current'' - True if the caller is the newly created morph actor.
+
+*void '''[[PreUnmorph]]'''(Actor mo, bool current)
+:Called right before an actor changes back on both the original actor and the morph actor.
+:*''mo'' - A pointer to the other actor in the morph. If the original actor, this is the morph actor. If the morph actor, this is the original actor.
+:*''current'' - True if the caller is the original actor.
+
+*void '''[[PostUnmorph]]'''(Actor mo, bool current)
+:Called right after an actor changes back on both the original actor and the morph actor.
+:*''mo'' - A pointer to the other actor in the morph. If the original actor, this is the morph actor. If the morph actor, this is the original actor.
+:*''current'' - True if the caller is the original actor.
+
+*bool '''[[Morph]]'''(Actor activator, class&lt;PlayerPawn&gt; playerclass, class&lt;MorphedMonster&gt; monsterclass, int duration = 0, int style = 0, class&lt;Actor&gt; morphflash = null, class&lt;Actor&gt;unmorphflash = null)
+:Called when a morph function is used. Returns true if the actor was successfully morphed.
+:*''activator'' - The actor responsible for the morph. Only used when players are morphing.
+:*''playerclass'' - The class type to use if a player is morphing.
+:*''monsterclass'' - The class type to use if a monster is morphing.
+:*''duration'' - The duration of the morph in tics.
+:*''style'' - The style of morphing to use.
+:*''morphflash'' - The class type to use when spawning a flash as the actor morphs.
+:*''unmorphflash''- The class type to use when spawning a flash as the actor unmorphs.
+
+*bool '''[[UnMorph]]'''(Actor activator, int flags, bool force)
+:Called when a morphed actor is going to unmorph. Returns true if the actor successfully unmorphed.
+:*''activator'' - The actor responsible for the unmorph. Only used when players are unmorphing.
+:*''flags'' - The flags to check when a player is unmorphing. Only '''MRF_STANDARDUNDOING''' is used by default.
+:*''force'' - If true, don't collision check when unmorphing back into the original actor.
+
+*bool '''[[MorphMonster]]'''(Class&lt;Actor&gt; spawntype, int duration, int style, Class&lt;Actor&gt; enter_flash, Class&lt;Actor&gt; exit_flash)
+:Called when a monster is being morphed. Returns true if the monster morphed successfully.
+:*''spawntype'' - The class type to use for the newly created morph actor.
+:*''duration'' - The duration of the morph in tics.
+:*''style'' - The style of morphing to use.
+:*''enter_flash'' - The class type to use when spawning a flash as the monster morphs.
+:*''exit_flash'' - The class type to use when spawning a flash as the monster unmorphs.
+
+[[Category:ZScript]]
+[[Category:ZScript virtual functions]]
+[[Category:Actor virtual functions]]</text>
+    <sha1>jv8exjondtppg8kb8i31pco985ezizk</sha1>
+  </revision>
+</page>

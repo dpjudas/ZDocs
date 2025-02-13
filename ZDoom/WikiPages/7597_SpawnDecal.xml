@@ -1,0 +1,46 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>SpawnDecal</title>
+  <ns>0</ns>
+  <id>7597</id>
+  <revision>
+    <id>48760</id>
+    <parentid>48720</parentid>
+    <timestamp>2021-09-22T14:06:10Z</timestamp>
+    <contributor>
+      <username>Blue Shadow</username>
+      <id>2021</id>
+    </contributor>
+    <minor />
+    <comment>remove {{new}} for 4.6.0</comment>
+    <origin>48760</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="1746" sha1="f8i4k6li2sysegy0f4mlrg6d10uimlt" xml:space="preserve">__NOTOC__
+int '''SpawnDecal''' (int ''tid'', str ''decalname'' [, int ''flags'' [, fixed ''angle'' [, int ''zoffset'' [, int ''distance'']]]])
+
+== Usage ==
+Creates a [[decal]] on a wall by tracing a line from the actor with the specified [[TID]] until hitting said wall, on which the decal is then created. If ''tid'' is 0, the tracing is done from the activator of the script.
+
+=== Parameters ===
+*''tid'': The TID of the actor.
+*''decalname'': The name of the decal to create, as defined in [[DECALDEF]].
+*''flags'': These can be combined by using the | character:
+**'''SDF_ABSANGLE'''&amp;nbsp;&amp;mdash; If present, ''angle'' is an absolute angle. Otherwise, it is relative to the origin actor's angle.
+**'''SDF_PERMANENT'''&amp;nbsp;&amp;mdash; If present, the decal will stay indefinitely, and will not be removed if the maximum amount of decals present at once in a level is reached (this is controlled by the {{C|{{CVAR|R|cl_maxdecals}}}} [[CVARs|console variable]]).
+**'''SDF_FIXED_ZOFF'''&amp;nbsp;&amp;mdash; If present, ''zoffset'' is treated as a [[fixed point number|fixed-point value]] rather than an integer.
+**'''SDF_FIXED_DISTANCE'''&amp;nbsp;&amp;mdash; If present, ''distance'' is treated as a fixed-point value rather than an integer.
+:Default is 0.
+*''angle'': The direction in which to search for a wall. This is a [[Definitions#Fixed_point_angles|fixed point angle]]. Default is 0.
+*''zoffset'': The offset from the middle of the origin actor for the Z height of the decal. Y-flipped decal will have reverse offset. Default is 0.
+*''distance'': The maximum distance to search for a wall. Default is 64.
+
+== Return value ==
+The return value of the function is the number of decals spawned.
+
+== Examples ==
+{{noexamples}}
+
+[[category:ACS Actor functions]]</text>
+    <sha1>f8i4k6li2sysegy0f4mlrg6d10uimlt</sha1>
+  </revision>
+</page>

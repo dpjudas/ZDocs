@@ -1,0 +1,58 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>AimLineAttack</title>
+  <ns>0</ns>
+  <id>9904</id>
+  <revision>
+    <id>53882</id>
+    <parentid>52642</parentid>
+    <timestamp>2024-11-25T10:34:34Z</timestamp>
+    <contributor>
+      <username>Jekyll Grim Payne</username>
+      <id>2175</id>
+    </contributor>
+    <minor />
+    <comment>/* See also */ fixed link</comment>
+    <origin>53882</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="1983" sha1="sk2101ihjs7b9umbkmzwwemgio0lj2k" xml:space="preserve">
+'''{{class|Actor}}'''
+
+native double '''AimLineAttack'''(double ''angle'', double ''distance'', out FTranslatedLineTarget ''pLineTarget'' = null, double ''vrange'' = 0., int ''flags'' = 0, Actor ''target'' = null, Actor ''friender'' = null)
+
+== Usage ==
+Performs vertical aiming for a hitscan attack. Usually the value is then passed to [[LineAttack (ZScript)|'''LineAttack''']] to perform a [[Hitscan|hitscan attack]]. The main purpose of this function is to handle vertical autoaim, while respecting various autoaim options, such as [[CVARs:Configuration#sv_smartaim|{{c|sv_smartaim}}]] and others.
+
+=== Parameters ===
+*{{c|double '''angle'''}}
+:Absolute horizontal angle towards the actor to calculate the pitch to.
+*{{c|double '''distance'''}}
+:Maximum distance towards the actor. If the actor is beyond that distance, pitch will not be adjusted.
+*{{c|out FTranslatedLineTarget '''pLineTarget'''}}
+:If a pointer to a {{struct|FTranslatedLineTarget|FTranslatedLineTarget struct}} is passed here, will output data into it.
+*{{c|double '''vrange'''}}
+:{{moreinfo}}
+*{{c|int '''flags'''}}
+:Flags that modify the function's behavior. Multiple flags can be combined with &lt;code&gt;|&lt;/code&gt;. The following flags are available:
+:*{{c|ALF_FORCENOSMART}} — ignore [[CVARs:Configuration#sv_smartaim|{{c|sv_smartaim}}]] settings.
+:*{{c|ALF_CHECK3D}} — {{moreinfo}}
+:*{{c|ALF_CHECKNONSHOOTABLE}} — {{moreinfo}}
+:*{{c|ALF_CHECKCONVERSATION}} — {{moreinfo}}
+:*{{c|ALF_NOFRIENDS}} — don't adjust pitch if the actor is a friend of the shooter
+:*{{c|ALF_PORTALRESTRICT}} — only work through portals with a global offset (to be used for stuff that cannot remember the calculated FTranslatedLineTarget info)
+:*{{c|ALF_NOWEAPONCHECK}} — ignore the {{flag|Weapon.NOAUTOAIM}} flag on the player's weapon
+*{{c|Actor '''target'''}}
+:{{moreinfo}}
+*{{c|Actor '''friender'''}}
+:{{moreinfo}}
+
+== Examples ==
+{{noexamples}}
+
+== See also ==
+*[[LineAttack (ZScript)|LineAttack]]
+
+[[Category:ZScript]]</text>
+    <sha1>sk2101ihjs7b9umbkmzwwemgio0lj2k</sha1>
+  </revision>
+</page>

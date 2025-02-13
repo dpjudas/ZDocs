@@ -1,0 +1,196 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>CCMDs:Other</title>
+  <ns>0</ns>
+  <id>7034</id>
+  <revision>
+    <id>53199</id>
+    <parentid>50242</parentid>
+    <timestamp>2024-10-03T11:18:47Z</timestamp>
+    <contributor>
+      <username>Blue Shadow</username>
+      <id>2021</id>
+    </contributor>
+    <comment>restart CCMD name change from git commit ca9ab7b</comment>
+    <origin>53199</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="9209" sha1="fngt8wgfsag5oqbp513sxlhk0znog6o" xml:space="preserve">These [[CCMDs|console commands]] are used for other miscellaneous functions.
+__TOC__
+
+* '''{{LE|bench}}''' (Windows only)
+:This command collects rendering speed data for five seconds then appends this information to a file called {{c|benchmarks.txt}} (creating it if needed). To provide reliable data, it needs to be called from a bound key rather than from the console.
+
+* '''{{LE|cachesound}}''' &lt;sound names&gt;
+:Loads and caches all of the listed sound names.
+
+* '''{{LE|clear}}'''
+:Clears the console of all text.
+
+* '''{{LE|clearnodecache}}'''
+:Deletes all cached [[GL node]]s that may have been generated.
+
+* '''{{LE|debug_restart}}''' [params]
+:Restart the engine. The parameters will be interpreted as if they were [[command line parameters]]. E.g., {{c|debug_restart -iwad plutonia}} will quit the current game and instead load ''[[Plutonia]]'' as the [[IWAD]].
+:Prior to {{cs|ca9ab7b}}, this command was known as {{c|restart}}.
+
+* '''{{LE|exit}}'''
+:This is a synonym for [[#quit|quit]] and quits the game.
+
+* '''{{LE|gc}}''' &lt;"command"&gt;
+:This controls various aspects of the {{wp|Garbage_collection_(computer_science)|collector}}. The issued command can be one of those:
+:*{{c|stop}}: stops the garbage collector entirely by setting the threshold of allocated memory to reach before the next cycle is started to an absurdly large value.
+:*{{c|now}}: starts a garbage collection cycle by setting the threshold to the current size of allocated memory.
+:*{{c|full}}: collects everything in one fell swoop.
+:*{{c|pause [size]}}: if no size is given, gives the size of the pause, in percentage of memory use, between each cycle of the garbage collector; otherwise set it to the given value. A pause of 150 corresponds to waiting for memory use to increase by half before the next cycle is started. Higher values mean larger pauses, which mean slower collection.
+:*{{c|stepmul [size]}}: gives the size of the step multiplier if no size is given, or set the step multiplier to the given value otherwise. A step is 1024 bytes, so a stepmul of 400 means the garbage collector will sweep at least 409 600 bytes of allocated memory on each cycle.
+
+*'''{{LE|load}}''' &lt;filename&gt;
+:Loads the given [[savegame]] file.
+
+* '''{{LE|menuconsole}}'''
+:Closes all [[menu]]s and toggles the [[console]]. This is used to open the console from the [[options menu]]'s "Go to console" entry. Calling it from the console will close it.
+
+* '''{{LE|openconfig}}'''
+:Opens the directory where the [[configuration file]] is stored.
+
+* '''{{LE|opensaves}}'''
+:Opens the directory where [[savegames]] are stored.
+
+* '''{{LE|openscreenshots}}'''
+:Opens the directory where [[screenshot]]s are stored.
+
+* '''{{LE|quickload}}'''
+:Loads the last quicksaved game.
+
+* '''{{LE|quicksave}}'''
+:Quick saves the game.
+
+* '''{{LE|quit}}'''
+:Exits ZDoom and saves the [[configuration file]] to disk.
+
+* '''{{LE|reverbedit}} (Windows only)
+:Opens the [[REVERBS]] [[reverbedit|environment editor]].
+
+*'''{{LE|save}}''' &lt;filename&gt; ["description"]
+:Save the current game in the given [[savegame]] file. Optionally, a description of up to 24 characters can be provided too.
+
+* '''{{LE|snd_reset}}'''
+:Restarts the ZDoom sound system, including external [[software synthesizer]]s such as [[FluidSynth]] and [[TiMidity++]] if needed, and rereading the [[DMXGUS]] lump if using the [[GUS]] emulator or the [[GENMIDI]] lump if using [[OPL synth emulation]]. Use this if you have changed audio settings which did not take effect immediately.
+
+* '''{{LE|undocolorpic}}'''
+:This command only has an effect when called by the [[select color]] [[menu]]. It undoes any change made since the menu was opened.
+
+* '''{{LE|vid_restart}}'''
+:This command currently has no effect.
+
+* '''{{LE|writeini}}''' [filename]
+:Saves the current settings to the [[configuration file]]. Optionally, a filename can be provided to write to a different file.
+
+* '''{{LE|writemidi}}''' &lt;filename&gt;
+:If the currently playing song is a [[MIDI]] variant, it is written to disk. If successful, the current song will restart, since MIDI file generation involves a simulated playthrough of the song. This allows to use [[ZDoom]] to convert the [[MUS]], [[HMI]], [[HMP]], and [[XMI]] formats to MIDI.
+
+* '''{{LE|writeopl}}''' [songname] &lt;filename&gt;
+:If the currently playing song is a [[MUS]]/[[MIDI]] song being played through the [[OPL synth emulation]], then you just need to specify the filename. Otherwise, you need to provide the songname (such as D_E1M1) as well. The resulting file can be played with {{vgmpfw|RDOSPlay|linkonly=1}} or {{vgmpfw|AdPlug|linkonly=1}}. If the given filename has a .dro extension, then the [[DRO]] v1.0 format will be used, otherwise the data will use the [[RAW]] format.
+
+* '''{{LE|writewave}}''' &lt;filename&gt; [sample rate]
+:If the current song can be represented as a waveform, dump it to the specified file on disk. The sample rate parameter is merely a suggestion, and the dumper is free to ignore it.
+
+==CVar control==
+* '''{{LE|reset2defaults}}'''
+:Resets all [[console variables]] and key bindings to their default values.
+
+* '''{{LE|reset2saved}}'''
+:Resets all [[console variables]] and key bindings to the values they currently have in [[the ini]].
+
+* '''{{LE|resetcvar}}''' &lt;[[CVARs|cvar]]&gt;
+: Resets ''cvar'' to the default value.
+
+* '''{{LE|toggle}}''' &lt;[[CVARs|cvar]]&gt;
+:Toggles the value of ''cvar'' between false and true (zero and  non-zero).
+
+==Demo==
+* '''{{LE|playdemo}}''' &lt;demo&gt;
+:Plays a demo. The demo can be a file on disk or a lump in a wad.
+* '''{{LE|recordmap}}''' &lt;filename&gt; &lt;map name&gt; [dm|coop]
+:Starts a new game on the specified map, recording a demo to the specified filename. Passing {{c|*}} instead of a map name records a demo of the current map. Optionally the {{c|dm}} or {{c|coop}} keyword can be added to set the game mode to emulated [[multiplayer]]. Without this keyword the game mode defaults to single-player.
+
+* '''{{LE|stop}}'''
+:Stops demo recording and exits the game.
+* '''{{LE|timedemo}}'''
+:Plays a demo as fast as the refresh rate will allow and displays the average framerate attained during playback. Due to limitations in the current demo system, this command will also exit the game when the demo finishes.
+
+==Music control==
+* '''{{LE|playlist}}''' &lt;playlist.m3u&gt; [shuffle|position]
+:Loads a WinAmp .m3u playlist. Any music that would normally be played will be ignored, and the songs in the playlist will be played instead. If you add the word {{c|shuffle}} after the name of the .m3u file, the playlist will be replayed in a random order. In place of shuffle, you can also specify ''position'', a number corresponding to the song number in the playlist you want to play first.
+* '''{{LE|playlistnext}}'''
+:Plays the next song in the playlist.
+* '''{{LE|playlistpos}}''' &lt;position&gt;
+:Starts playing the song at the specified ''position'' in the playlist.
+* '''{{LE|playlistprev}}'''
+:Plays the previous song in the playlist.
+* '''{{LE|playliststatus}}'''
+:Displays the number of songs in the playlist and the currently playing song.
+* '''{{LE|stopmus}}'''
+:Stops playing the current song.
+
+==Menu control==
+* '''{{LE|closemenu}}'''
+:Closes the current [[menu]]. This is mainly useful to be called from [[MENUDEF|custom menus]] as a means to close the menu and return to the game.
+* '''{{LE|menu_advsound}}'''
+:Activates the [[advanced sound options]] menu.
+* '''{{LE|menu_automap}}'''
+:Activates the [[automap options]] menu.
+* '''{{LE|menu_compatibility}}'''
+:Activates the [[compatibility options]] menu.
+* '''{{LE|menu_display}}'''
+:Activates the [[display options]] menu.
+* '''{{LE|menu_endgame}}'''
+:Asks the user if they want to end the current game, and returns to the title screen if they do.
+* '''{{LE|menu_game}}'''
+:Activates the [[new game menu]].
+* '''{{LE|menu_gameplay}}'''
+:Activates the [[gameplay options]] ([[dmflags]]) menu.
+* '''{{LE|menu_help}}'''
+:Displays the [[help screen]].
+* '''{{LE|menu_joystick}}'''
+:Activates the [[joystick options|joystick/game controller configuration]] menu.
+* '''{{LE|menu_keys}}'''
+:Activates the [[customize controls]] menu.
+* '''{{LE|menu_load}}'''
+:Activates the [[load game menu]].
+* '''{{LE|menu_main}}'''
+:Activates the [[main menu]].
+* '''{{LE|menu_mapcolors}}'''
+:Activates the [[set custom colors|custom automap colors]] menu.
+* '''{{LE|menu_messages}}'''
+:Activates the [[message options]] menu.
+* '''{{LE|menu_modreplayer}}'''
+:Activates the [[module replayer options]] menu.
+* '''{{LE|menu_mouse}}'''
+:Activates the [[mouse options|mouse configuration]] menu.
+* '''{{LE|menu_options}}'''
+:Activates the [[options menu]].
+* '''{{LE|menu_player}}'''
+:Activates the [[player setup]] menu.
+* '''{{LE|menu_quit}}'''
+:Activates the [[quit menu]] which asks the user if they want to quit, and quits if they do.
+* '''{{LE|menu_save}}'''
+:Activates the [[save game menu]].
+* '''{{LE|menu_scoreboard}}'''
+:Activates the [[scoreboard options]] menu.
+* '''{{LE|menu_sound}}'''
+:Activates the [[sound options]] menu.
+* '''{{LE|menu_video}}'''
+:Activates the [[set video mode|video mode]] menu.
+* '''{{LE|openmenu}}''' &lt;menu_name&gt;
+:Opens the given [[menu]], using its [[MENUDEF]] name.
+
+==See also==
+
+*[[CVARs]]
+*[[CCMDs]]
+
+[[Category:ZDoom console]]</text>
+    <sha1>fngt8wgfsag5oqbp513sxlhk0znog6o</sha1>
+  </revision>
+</page>

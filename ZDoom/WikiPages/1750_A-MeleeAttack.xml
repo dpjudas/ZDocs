@@ -1,0 +1,55 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>A MeleeAttack</title>
+  <ns>0</ns>
+  <id>1750</id>
+  <revision>
+    <id>23556</id>
+    <parentid>23163</parentid>
+    <timestamp>2009-08-03T20:06:20Z</timestamp>
+    <contributor>
+      <username>Gez</username>
+      <id>1283</id>
+    </contributor>
+    <minor />
+    <origin>23556</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="882" sha1="7dmbn15dq13yceqxacn36d4d5ehmlvq" xml:space="preserve">{{DISPLAYTITLE:A_MeleeAttack}}
+{{WarnDeprecated|[[A_CustomMeleeAttack]]}}
+'''A_MeleeAttack'''
+
+(no parameters)
+
+
+Performs a melee attack.
+
+[[Actor properties|Properties]] used:
+:*'''meleedamage''' ''value''
+::Amount of damage, The formula is random(1,8)*''value''.
+:*'''meleerange''' ''value''
+::Maximum distance at which the attack can still hit something.
+:*'''meleesound''' ''soundname''
+::Sound being played if the actual attack happens.
+
+== Examples ==
+This is a stronger version of the [[Classes:Demon|Demon]] which uses [[A_MeleeAttack]] for its bite:
+
+  actor UltraDemon : Demon
+  {
+     health 800
+     speed 15
+     meleedamage 10
+     meleerange 64
+     meleesound "ultdemon/bite"
+     states
+     {
+       Melee:
+         SRG2 EF 6 [[A_FaceTarget]]
+         SRG2 G 6 [[A_MeleeAttack]]
+     }
+  }
+
+[[category:Decorate Generic Attack functions]]{{DEFAULTSORT:MeleeAttack}}</text>
+    <sha1>7dmbn15dq13yceqxacn36d4d5ehmlvq</sha1>
+  </revision>
+</page>

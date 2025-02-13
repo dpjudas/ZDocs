@@ -1,0 +1,69 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>Warp</title>
+  <ns>0</ns>
+  <id>7857</id>
+  <revision>
+    <id>51056</id>
+    <parentid>44299</parentid>
+    <timestamp>2023-12-04T13:31:05Z</timestamp>
+    <contributor>
+      <username>Jekyll Grim Payne</username>
+      <id>2175</id>
+    </contributor>
+    <comment>Added note</comment>
+    <origin>51056</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="5442" sha1="nrbo9bri8acpnl2o5dl1cp2je3z7hu2" xml:space="preserve">__NOTOC__
+{{note|This function is for [[ACS]]. Not to be confused with the [[ZScript]] function [[Warp (ZScript)|Warp]].}}
+bool '''Warp''' (int ''tid'', fixed ''xofs'', fixed ''yofs'', fixed ''zofs'', fixed ''angle'', int ''flags'' [, str ''success_state'' [, bool ''exact'' [, fixed ''heightoffset'' [, fixed ''radiusoffset'' [, fixed ''pitch'']]]]])
+
+== Usage ==
+Teleports the calling actor to the actor with the matching {{c|[[TID|tid]]}} (reference actor).
+
+=== Parameters ===
+*''tid'': The {{c|tid}} of the actor to teleport to.
+*''xofs'': Specifies how far forward/backward in front/behind of the reference actor the calling actor will appear. Positive numbers result in the actor spawning in front, and behind for negative.
+*''yofs'': Specifies how far to the side the calling actor will appear to the reference actor. Positive numbers are further to the reference actor's right, while negative numbers spawn them more to the left.
+*''zofs'': Specifies how high off the ground to appear. Positive numbers mean a higher altitude, negative means under the reference actor and possibly into the ground.
+*''angle'': Specifies the offset to add after the calling actor sets its angle to the reference actor's angle.
+*''flags'': Flags which can be used to alter the behavior and appearance of the warp. More than one flag can be combined by using the pipe | character between the constant names:
+:Flags that affect the behavior:
+
+:*'''WARPF_ABSOLUTEOFFSET''' — Do not apply the angle to the xy-offset.
+:*'''WARPF_ABSOLUTEANGLE''' — Use the angle parameter as an absolute angle (not an offset).
+:*'''WARPF_ABSOLUTEPOSITION''' — Treat x, y and z offset parameters as absolute coordinates for the calling actor's position, instead of being relative to the reference actor's. This flag overrides WARPF_ABSOLUTEOFFSET, but can still add the z offset of floorz when used with WARPF_TOFLOOR.
+:*'''WARPF_USECALLERANGLE''' — Use the calling actor's angle instead of the reference actor's. Note: The angle will add itself to the caller's angle and cause it to orbit around the reference. The greater the angle, the faster it will orbit.
+:*'''WARPF_NOCHECKPOSITION''' — Blindly accept any resultant position.
+:*'''WARPF_STOP''' — Reduce caller velocity to 0 when the move is completed.
+:*'''WARPF_TOFLOOR''' — Set caller z relative to floor z where teleported to, instead of relative to reference actor.
+:*'''WARPF_TESTONLY''' — Does not warp the actor, but still allows it to jump to the success state (see below) if it were to warp. This is useful for checking things and causing chains to occur, such as with inventory items.
+:*'''WARPF_BOB''' — Gets the float bob offsets of the reference actor and offsets it to follow with it.
+:*'''WARPF_MOVEPTR''' — The reference actor does the warping instead of the calling actor, and all the flags apply. The calling actor is still responsible for performing a state jump and determining success, however.
+:*'''WARPF_USEPTR''' — If set, the first parameter changes to accept an [[actor pointer]] instead of a {{c|tid}}.
+:*'''WARPF_COPYVELOCITY''' — Copies the exact velocity of the actor, which is relative only to the reference actor's own, regardless of what angle the warped actor receives.
+:*'''WARPF_COPYPITCH''' — Gains the same pitch as the reference actor, and then adds ''pitch'' after it, if any.
+
+:Flags to customize appearance of the warp:
+
+:*'''WARPF_INTERPOLATE''' — Keep old interpolation data (make it appear as if actor moved from its previous location).
+:*'''WARPF_WARPINTERPOLATION''' — Modify interpolation data with the vector PlayerNewPosition - PlayerOldPosition.
+:*'''WARPF_COPYINTERPOLATION''' — Copies the actor's interpolation data for itself, allowing the actor to mimic the reference actor closely.
+*''success_state'': An optional state to jump to in the event of success. Default is {{c|""}}.
+*''exact'': Specifies whether or not partial state name matches are accepted for the success state. If set to {{c|true}}, the calling actor must have a state with a name that exactly matches the specified success state's name. If set to {{c|false}}, however, partial name match is enough (see [[SetActorState]] for further information and examples). Default is {{c|false}}.
+*''heightoffset'': A multiplier for the reference actor's {{Property|Height|height}}. This allows for further adjustment to the calling actor's z-offset by way of adding the result of multiplying the reference actor's height by the passed value to the z-offset. Default is 0.
+*''radiusoffset'': A multiplier for the reference actor's {{Property|Radius|radius}}. Similar to ''heightoffset'' but using radius instead.
+*''pitch'': The amount of pitch to add to the offset, negative values aim the actor higher while positive will lower it. Unlike angle, this is not copied unless WARPF_COPYPITCH is specified for compatibility purposes.
+
+'''NOTE:''' If the actor being orbited stops existing, and the success state is defined, it will ultimately fail to jump. Even if success state is left undefined, though, it will fail to move at all. The success state can be useful for getting rid of orbiting/external actors when the main actor is no longer being used.
+
+=== Return value ===
+The function returns {{c|false}} if the reference actor does not exist or the warping is unsuccessful, otherwise it returns {{c|true}}.
+
+== Example ==
+{{noexamples}}
+ 	
+[[category:ACS Actor functions]]</text>
+    <sha1>nrbo9bri8acpnl2o5dl1cp2je3z7hu2</sha1>
+  </revision>
+</page>

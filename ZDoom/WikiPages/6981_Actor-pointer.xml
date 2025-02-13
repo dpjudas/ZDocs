@@ -1,0 +1,318 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>Actor pointer</title>
+  <ns>0</ns>
+  <id>6981</id>
+  <revision>
+    <id>54027</id>
+    <parentid>54026</parentid>
+    <timestamp>2024-12-05T12:27:55Z</timestamp>
+    <contributor>
+      <username>Jekyll Grim Payne</username>
+      <id>2175</id>
+    </contributor>
+    <comment>/* DECORATE &amp; ACS */</comment>
+    <origin>54027</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="19226" sha1="7rhzwyqsts7ia8xyxy1bntoex98fraj" xml:space="preserve">'''Actor pointers''' are used to keep track of an [[actor]]'s relationships with others, such as which one spawned them, or which ones they spawned.
+
+== Target, master and tracer ==
+There are 3 main pointers pointers that are available to all {{class|Actor}} classes, both in [[ZScript]] and [[DECORATE]]:
+* target
+* tracer
+* master
+
+[[ZScript]], however, offers a plethora of other pointers, both for actors and for more specific classes.
+
+These pointers are used differently, depending on which type of actor they're used in:
+
+=== Projectiles ===
+* target: A projectile's target is '''not''' the actor that it will seek after. Instead, this is the actor who fired the projectile (though a little counter-intuitive at that).
+* tracer: This is set automatically only if the projectile has the +SEEKERMISSILE flag and calls a seeking function, like [[A_SeekerMissile]]. This is the actor the projectile will home at.
+* master: Unused by default.
+
+=== Monsters ===
+* master: Unused by default. Can be set if the monster was spawned using [[A_SpawnItemEx]] with the SXF_SETMASTER flag, or is transferred over with the SXF_TRANSFERPOINTERS flag.
+* target: This refers to whom the monster is chasing and will attack when called upon with [[A_Chase]].
+* tracer: Unused.
+
+=== Special cases ===
+Many special actors have different handling for these pointers which do not fit in the generic categories above. They include:
+* Projectiles that call [[A_Explode]] will use their &lt;code&gt;target&lt;/code&gt; as the source responsible for damage inflicted by the explosion (unless the &lt;code&gt;XF_NOTMISSILE&lt;/code&gt; flag is passed to the function).
+* {{Class|SpawnShot}} ([[A_SpawnFly]] and [[A_SpawnSound]] will move it towards its target, not its tracer as with other projectiles).
+* {{Class|Archvile}} ([[A_VileTarget]] assigns its &lt;code&gt;tracer&lt;/code&gt; to the spawned {{Class|ArchvileFire}}, and [[A_VileAttack]] detonates the fire)
+* {{Class|MinotaurFriend}} uses the &lt;code&gt;tracer&lt;/code&gt; pointer to keep track of the player who summoned it.
+* {{Class|HolyTail}} ([[A_CHolyTail]] uses the &lt;code&gt;tracer&lt;/code&gt; pointer to manage its {{Class|HolyTailTrail|trail}}).
+* {{Class|Lightning}} and derived classes use the &lt;code&gt;tracer&lt;/code&gt;, &lt;code&gt;target&lt;/code&gt; and &lt;code&gt;lastenemy&lt;/code&gt; pointers to manage cohesion between the various components of the lightning column.
+* {{Class|Dragon}} (its dedicated movement functions use the tracer fields as path nodes for its navigation)
+* {{Class|TeleportFog}} uses the actor who teleported as the &lt;code&gt;target&lt;/code&gt;.
+This list is not exhaustive.
+
+== [[ZScript]]==
+ZScript can utilize all of the above mentioned DECORATE pointers (&lt;code&gt;target&lt;/code&gt;, &lt;code&gt;master&lt;/code&gt; and &lt;code&gt;tracer&lt;/code&gt;), but also features a wide range of unique pointers. In addition, custom pointers can be declared.
+
+Some of the most commonly used actor pointers in ZScript are:
+* '''self'''
+:Can be used by any [[ZScript classes|ZScript class]] and points to the class itself.
+* '''owner'''
+:Used by [[Inventory|inventory items]] and anything that inherits from them. This pointer refers to the actor that is holding the item.
+* '''invoker'''
+:Appears in the context of classes based on {{class|StateProvider}}, of which currently there are only two: {{class|Weapon}} and {{class|CustomInventory}}. This pointer is used in the states of those classes (outside of the Spawn state, which is used while the Weapon/CustomInventory is simply a pickup in the world) and action functions defined in those classes (such as [[A_FireBullets]]). In the context of these functions, &lt;code&gt;self&lt;/code&gt; becomes the {{class|PlayerPawn}} owner of the Weapon/CustomInventory, while &lt;code&gt;invoker&lt;/code&gt; points to the Weapon/CustomInventory itself.
+* '''player'''
+:Used by the {{class|PlayerPawn}} class and poitns to the related {{struct|PlayerInfo}} struct. PlayerInfo itself features a lot of unique pointers.
+* '''mo'''
+:Used by the {{struct|PlayerInfo}} struct, and points to the {{class|PlayerPawn}} actor attached to it.
+* '''LastHeard''', '''LastEnemy''', '''LastLookActor'''
+:Used by {{flag|ISMONSTER|enemies}}, these pointers are normally initially obtained with [[A_Look]] and similar functions and are used by the enemy to track its target when it can't be seen. To make an enemy completely forget about the target it was chasing, all of these pointers plus '''target''' must be set to &lt;code&gt;null&lt;/code&gt; (alternatively, [[A_ClearTarget]] can be called).
+* '''BlockingMobj'''
+:Points to another actor that is blocking the movement of the current actor.
+* '''DamageSource''' {{new|4.13.0}}
+:Used by [[Puff|hitscan puffs]], points to the actor responsible for the attack that spawned the puff.
+
+{{note|Pointers listed above are pointers to instances of the Actor class only. However, actors have pointers to many non-Actor objects as well, such as &lt;code&gt;BlockingLine&lt;/code&gt; that points to a {{struct|Line}} that blocks the actor's movement, or &lt;code&gt;cursector&lt;/code&gt; that points to the {{struct|Sector}} the actor is currently is in, and others. You can find the full list of actors fields [https://github.com/ZDoom/gzdoom/blob/master/wadsrc/static/zscript/actors/actor.zs on GZDoom Github reponsitory]}}
+
+Pointers in ZScript can (and often need to) be stringed together. For example, to access the currently selected weapon from an inventory item, &lt;code&gt;owner.player.readyweapon&lt;/code&gt; is needed. 
+
+When killed, this version of [[DoomImp|Imp]] will spawn another Imp which has 500 health, is twice as slow and appears twice as big:
+
+&lt;syntaxhighlight lang="csharp"&gt;
+class DoomImpEnhanced : DoomImp replaces DoomImp
+{
+	States 
+	{
+	Death:
+		#### # 0 
+		{
+			A_NoBlocking();
+			Actor foo = Spawn("DoomImp",pos);
+			if (foo) //it's important to null-check the spawned actor, just in case
+			{
+				foo.health = 500;
+				foo.scale *= 2;
+				foo.speed *= 0.5;
+			}
+		}
+		#### # 1 A_FadeOut(0.01);
+		wait;
+	}
+}
+&lt;/syntaxhighlight&gt;
+Note, this doesn't cause recursive spawning of DoomImpEnhanced, because the [[Spawn (ZScript)|Spawn]] function in ZScript by default spawns a specific class forcefully, ignoring [[Actor replacement]] rules.
+
+=== Declaration and scope ===
+Like all variables, pointers can be class-wide (class-scoped, i.e. available anywhere inside the class):
+&lt;syntaxhighlight lang="csharp"&gt;
+class MyClass : ParentClass
+{
+  Actor foo; // This pointer is available anywhere within MyClass
+  ... // the rest of the code
+}&lt;/syntaxhighlight&gt;
+...and local (i.e. available only within a specific code block/function):
+&lt;syntaxhighlight lang="csharp"&gt;
+class MyClass : ParentClass
+{
+  void MyFunction()
+  {
+    Actor foo; // This pointer is available only within MyFunction()
+    ... // the rest of the function
+  }
+}
+
+class MyActor : Actor
+{
+  States
+  {
+  Spawn:
+    PLAY A 10
+    {
+      Actor foo; // This is only available within this anonymous function
+      ...
+    }
+    loop;
+  }
+}&lt;/syntaxhighlight&gt;
+
+=== Casting ===
+
+In the examples above, the type of the pointer is &lt;code&gt;Actor&lt;/code&gt;, which means it can point to a specific instance of an actor on the level. If a pointer is not only declared but immediately pointed to something, the &lt;code&gt;Actor&lt;/code&gt; part can be replaced with &lt;code&gt;let&lt;/code&gt;—this keyword sets the type automatically:
+&lt;syntaxhighlight lang="csharp"&gt;
+// Spawns a DoomImp at the same position as the calling actor
+// and casts it to 'foo':
+Actor foo = Spawn('DoomImp', pos);
+
+// So does this:
+let foo = Spawn('DoomImp', pos);
+&lt;/syntaxhighlight&gt;
+
+The type of the pointer doesn't have to be &lt;code&gt;Actor&lt;/code&gt;; it ''can'' point to a more specific class, like {{class|Inventory}}. However, the majority of already existing pointers (like &lt;code&gt;target&lt;/code&gt;/&lt;code&gt;master&lt;/code&gt;/&lt;code&gt;tracer&lt;/code&gt;) or pointers returned by common functions, like [[Spawn (ZScript)|{{c|Spawn}}]], are always implicitly &lt;code&gt;Actor&lt;/code&gt; pointers. This means that these pointers will only give you access to functions, fields and properties defined in the {{class|Actor}} class, but not to the ones defined in its child classes like {{class|Inventory}} or {{class|Weapon}}. That's why for example this is not possible:
+&lt;syntaxhighlight lang="csharp"&gt;
+// This won't compile!
+
+// This code tries to spawn a Soulsphere, and then
+// increase its amount x2. This causes an error,
+// because Spawn returns an Actor pointer, but the
+// 'amount' field is only defined in Inventory and
+// doesn't exist in Actor:
+let foo = Spawn('Soulsphere', pos);
+foo.amount *= 2;
+&lt;/syntaxhighlight&gt;
+
+To get around this limitation, you need '''type casting'''. Type casting lets you tell the engine that this specific actor is not just an Actor, but a more specific class. The syntax for this is:
+&lt;syntaxhighlight lang="csharp"&gt;
+SpecificClass ptr = SpecificClass(otherpointer);
+
+// This is also valid and works the same way:
+let ptr = SpecificClass(otherpointer);
+&lt;/syntaxhighlight&gt;
+This example implies that &lt;code&gt;otherpointer&lt;/code&gt; is a generic pointer type (like Actor), and the author knows that it's actually an instance of SpecificClass, and tells the engine that &lt;code&gt;ptr&lt;/code&gt; should become a pointer to SpecificClass. Doing this sets the type of &lt;code&gt;ptr&lt;/code&gt; as SpecificClass (rather than Actor) and unlocks access to fields, pointers and functions defined in SpecificClass.
+
+'''Note:''' while &lt;code&gt;let ptr = SpecificClass(otherpointer)&lt;/code&gt; is valid, &lt;code&gt;SpecificClass ptr = otherpointer&lt;/code&gt; is ''not'' valid and will not perform a cast. The casting itself is the &lt;code&gt;SpecificClass(otherpointer)&lt;/code&gt; part.
+
+To be able to spawn an item and modify its properties, it looks like this:
+&lt;syntaxhighlight lang="csharp"&gt;
+let foo = Inventory(Spawn('Soulsphere', pos));
+// Null-check to make sure the cast didn't fail:
+if (foo)
+{
+  foo.amount *= 2;
+}
+&lt;/syntaxhighlight&gt;
+
+In the example above we can also cast the result of {{c|Spawn}} as &lt;code&gt;Soulsphere&lt;/code&gt;, but since the field we want to modify it is defined in {{class|Inventory}}, not in {{class|Soulsphere}} specifically, we can cast to a more general class.
+
+Casting combined with null-checking can also be used as a form of an inheritance check instead of the [[Operators_(ZScript)#is_.28class_inheritance.29|'''is''' operator]]:
+&lt;syntaxhighlight lang="csharp"&gt;
+let foo = Zombieman(target);
+if (foo)
+{
+  // This code will only execute if the target pointer
+  // points to a Zombieman, or an actor that inherits
+  // from Zombieman.
+}
+&lt;/syntaxhighlight&gt;
+
+=== Action functions, Weapon and CustomInventory ===
+Classes based on {{class|StateProvider}} (currently this is {{class|Weapon}} and {{class|CustomInventory}}) have special handling of pointers within their states. With the exception of the Spawn state sequence (which is treated the same way as in any other actor), the state sequences of these classes have to interact with 3 different entities at the same time: the item/weapon itself; its owner (the player); the {{class|PSprite}} class which is responsible for handling the actual animations. As a result, pointers in these state sequences are treated as follows:
+*'''invoker''' — this is the item/weapon itself
+*'''self''' — this is ''not'' the  item/weapon itself; this pointer actually pointers to the owner, i.e. the {{class|PlayerPawn}} that is currently using the item/weapon
+:This pointer can be strung together further: &lt;code&gt;self.player&lt;/code&gt; will point to the {{struct|PlayerInfo}} struct of the owner; &lt;code&gt;self.player.mo&lt;/code&gt; will point to the owner again, but this time cast as PlayerInfo, not Actor.
+
+The same rules apply to the functions defined with the [[ZScript_functions#Function_types|'''action''' modifier]]. The majority of functions defined in the {{class|Weapon}} class are defined as '''action''' functions (for example, this applies to all [[Category:Decorate_Weapon_attack_functions|Weapon attack functions]]). Within the context of those functions, &lt;code&gt;invoker&lt;/code&gt; is the weapon, while &lt;code&gt;self&lt;/code&gt; is its owner.
+
+'''Note:''' the &lt;code&gt;action&lt;/code&gt; modifiedr should not be confused with [[Action functions|DECORATE action functions]]. In DECORATE terminology any function that can be called from an actor state is called an "action function"; in ZScript the majority of Actor functions are ''not'' defined as &lt;code&gt;action&lt;/code&gt;, and don't need to be, and the &lt;code&gt;action&lt;/code&gt; modifier only applies to functions where diferentiating between invoker and self is relevant. If a regular, non-StateProvider actor uses an &lt;code&gt;action&lt;/code&gt; function, in it invoker and self will be identical.
+
+== DECORATE &amp; ACS ==
+Several [[DECORATE]] and [[ACS]] functions support custom retrieval and assignment of pointer values. The data location or method of retrieval is specified using named pointer selectors.
+
+In contrast to [[ZScript]], these pointers function as internal constants that can point to a specific actor.
+
+All pointers are automatically supported by all implementing functions, unless the function documentation specifies otherwise.
+
+{| class="wikitable" 
+|- style="font-weight:bold; text-align:center;"
+! [[ACS]] constant
+! [[DECORATE]] constant
+! [[ZScript]] analog
+! style="text-align:left;" | Static?
+! style="text-align:left;" | Modifiable?
+! Explanation
+|-
+| AAPTR_NULL
+| AAPTR_NULL
+| {{c|null}}
+| style="background-color:#96fffb;" | Yes
+| style="background-color:#FFCB2F;" | No
+| A null pointer. In ZScript this is not limited to actors.
+|-
+| AAPTR_DEFAULT
+| AAPTR_DEFAULT
+| {{c|self}}&lt;br /&gt;{{c|Actor(self)}}
+| style="background-color:#ffcb2f;" | No
+| style="background-color:#FFCB2F;" | No
+| Returns the source actor itself (null if there is no source actor).&lt;br /&gt;&lt;br /&gt;In ZScript, this is not limited to actors. If the context is ambiguous, ZScript may require using {{c|Actor(self)}} to explicitly&lt;br /&gt;tell the code the pointer is an actor in this instance.
+|-
+| AAPTR_PLAYER#
+| AAPTR_PLAYER#
+| {{c|players[#].mo}}&lt;br /&gt;&lt;br /&gt;Note: In ZScript # would be 1 value smaller,&lt;br /&gt;because player numbers in ZScript begin with 0
+| style="background-color:#96fffb;" | Yes
+| style="background-color:#FFCB2F;" | No
+| Pointers to the {{class|PlayerPawn}} of the specified player. Note, in DECORATE these pointers begin with 1, but in&lt;br /&gt;ZScript player numbers begin with 0. In ZScript the global &lt;code&gt;players&lt;/code&gt; array contains all players'&lt;br /&gt;{{struct|PlayerInfo}} structs, and those structs have a &lt;code&gt;mo&lt;/code&gt; pointer to their PlayerPawn actors.&lt;br /&gt;So, DECORATE's {{c|AAPTR_PLAYER1}} is equal to {{c|players[0].mo}} in ZScript.&lt;br /&gt;&lt;br /&gt;For ZScript, see also '''[[PlayerNumber]]'''.&lt;br /&gt;&lt;br /&gt;''Scripting tip'': AAPTR_PLAYER1 points to player 1. AAPTR_PLAYER1&lt;&lt;X (shift bits X up) points to player (1 + X).&lt;br /&gt;This fact can be applied in ACS loops if you need to reference each active player in sequence.
+|-
+| AAPTR_MASTER
+| AAPTR_MASTER
+| {{c|master}}
+| style="background-color:#FFCB2F;" | No
+| style="background-color:#96fffb;" | Yes
+| The actor's [[Actor_pointer#Target,_master_and_tracer|master]] pointer. Players normally don't have masters.
+|-
+| AAPTR_TARGET
+| AAPTR_TARGET
+| {{c|target}}
+| style="background-color:#FFCB2F;" | No
+| style="background-color:#96fffb;" | Yes
+| The actor's [[Actor_pointer#Target,_master_and_tracer|target]] pointer. Players normally don't have targets.&lt;br /&gt;&lt;br /&gt;Note: Most functions use a special approach to find the target of a player; checking what they are&lt;br /&gt;aiming/looking at. This corresponds to AAPTR_PLAYER_GETTARGET. To make a single function that&lt;br /&gt;conforms to this standard, use the selector combination AAPTR_TARGET|AAPTR_PLAYER_GETTARGET.&lt;br /&gt;The most applicable method will be used (AAPTR_PLAYER_GETTARGET for any player).&lt;br /&gt;
+|-
+| AAPTR_TRACER
+| AAPTR_TRACER
+| {{c|tracer}}
+| style="background-color:#FFCB2F;" | No
+| style="background-color:#96fffb;" | Yes
+| The actor's [[Actor_pointer#Target,_master_and_tracer|target]] tracer. Players normally don't have tracers.
+|-
+| AAPTR_FRIENDPLAYER
+| AAPTR_FRIENDPLAYER
+| {{c|players[friendplayer].mo}}
+| style="background-color:#FFCB2F;" | No
+| style="background-color:#FFCB2F;" | No
+| If it's a {{flag|FRIENDLY}} monster, this will be a pointer to the player they're friendly to. This is only relevant in&lt;br /&gt;multiplayer, where friendly monsters may not be equally friendly to everyone.&lt;br /&gt;&lt;br /&gt;Note, in ZScript the &lt;code&gt;friendplayer&lt;/code&gt; field is numeric field on an actor, so to get the actual {{class|PlayerPawn}}&lt;br /&gt;of that player, checking the &lt;code&gt;players&lt;/code&gt; global array is necessary. Also, if calling from a different actor/class,&lt;br /&gt;{{c|friendplayer}} will have to be prefixed with a pointer to the actor whose friendplayer you want to get.&lt;br /&gt;&lt;br /&gt;&lt;br /&gt;For more details on friendliness in ZScript, see '''[[IsFriend]]''' and '''[[IsHostile]]''' functions.
+|-
+| AAPTR_GET_LINETARGET
+| AAPTR_LINETARGET
+| rowspan="2" | None. See '''[[AimTarget]]''' actor function&lt;br /&gt;for obtaining the same pointers in ZScript.
+| style="background-color:#FFCB2F;" | No
+| style="background-color:#FFCB2F;" | No
+| Get the actor in the line of sight. This is similar to {{c|AAPTR_PLAYER_GETTARGET}}, except it is used for&lt;br /&gt;non-player actors.
+|-
+| AAPTR_PLAYER_GETTARGET
+| AAPTR_PLAYER_GETTARGET
+| style="background-color:#FFCB2F;" | No
+| style="background-color:#FFCB2F;" | No
+| Get the actor in the player's line of sight. Most target-specific functions use this approach to determining the player's target.&lt;br /&gt;This only works if the actor has the '''{{Flag|SHOOTABLE}}''' and '''{{Flag|SOLID}}''' flags, and also lacks the &lt;br /&gt;'''{{Flag|NOBLOCKMAP}}''' flag, much like [[A_JumpIfTargetInLOS]].
+|-
+| AAPTR_PLAYER_GETCONVERSATION
+| AAPTR_PLAYER_GETCONVERSATION
+| {{c|player.ConversationNPC}}
+| style="background-color:#FFCB2F;" | No
+| style="background-color:#FFCB2F;" | No
+| Get the actor currently talking to the player. Best used from a Strife dialogue that gives a custom inventory item, or starts&lt;br /&gt;a script with [[ACS_ExecuteWithResult]] (as it processes immediately).&lt;br /&gt;&lt;br /&gt;In ZScript this pointer is defined in the {{struct|PlayerInfo}} struct and is not available for the base Actor class.
+|}
+
+'''Assignment'''
+
+The following selectors expose fields for manipulation: AAPTR_MASTER, AAPTR_TARGET and AAPTR_TRACER.
+
+Assignment operations will often, but not necessarily, prevent some assignments from occuring. Examples of such events are:
+* An actor pointing to itself
+* An infinite chain of references (two actors referencing eachother as master or target)
+
+Prevention may involve cancelling the operation, or setting the pointer to NULL. Details on this should be included in the documentation of the individual function.
+
+''Revision information - assigning to pointers'': Significant changes to this functionality are unlikely. Functions that support a set of selectors different from ''AAPTR_MASTER, AAPTR_TARGET, AAPTR_TRACER'' should list the supported features, along with any needed revision information.
+
+== See also ==
+* [[A_CheckFlag]]
+* [[A_GiveInventory]]
+* [[A_GiveToTarget]]
+* [[A_JumpIfInTargetInventory]]
+* [[A_JumpIfInventory]]
+* [[A_RearrangePointers]]
+* [[A_TakeInventory]]
+* [[A_TakeFromTarget]]
+
+* [[SetActivator]]
+* [[SetPointer]]
+
+[[Category:Glossary]][[Category:Editing concepts]][[Category:DECORATE]][[Category:ACS guides]]</text>
+    <sha1>7rhzwyqsts7ia8xyxy1bntoex98fraj</sha1>
+  </revision>
+</page>

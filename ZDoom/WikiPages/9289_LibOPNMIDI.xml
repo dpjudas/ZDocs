@@ -1,0 +1,69 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>LibOPNMIDI</title>
+  <ns>0</ns>
+  <id>9289</id>
+  <revision>
+    <id>47887</id>
+    <parentid>47886</parentid>
+    <timestamp>2020-10-06T21:07:56Z</timestamp>
+    <contributor>
+      <username>Wohlstand</username>
+      <id>2594</id>
+    </contributor>
+    <minor />
+    <comment>Added note about OPNA chips</comment>
+    <origin>47887</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="4127" sha1="5hznn5d32vw3x5u6tr1kh400tltrvhi" xml:space="preserve">'''libOPNMIDI''' - is a software MIDI synthesizer based on {{wp|Yamaha YM2612|OPN2}} and {{wp|Yamaha YM2608|OPNA}} chips emulation. It is the one of [[software synthesizer]]s offered by ZDoom which does not use [[sound fonts]]. It's similar to [[OPL synth emulation]] synthesizer, however, it has a different base and workflow algorithm and does use of different FM chip than {{wp|Yamaha YMF262|OPL3}}). It's an alternative FM based MIDI synthesizer which introduces the usage of a chip notable by {{wp|Sega Genesis|Sega Megadrive}} game console which was never used for MIDI. It has one default embedded bank with a partial XG set and has a support of custom banks in WOPN format which gives the ability to build a complete GS or XG compatible bank that has more than 128 melodic and 80 percussion instruments. In GZDoom, OPN2-specific options can be edited from the [[advanced sound options]] menu.
+
+== Features ==
+* OPN2 and OPNA emulation
+* Customizable bank of FM patches (You have to use the [https://github.com/Wohlstand/OPN2BankEditor bank editor] to create own timbre banks)
+* Pitch-bender with adjustable range
+* Vibrato that responds to RPN/NRPN parameters
+* Sustain (a.k.a. Pedal hold) and Sostenuto enable/disable
+* Use automatic arpeggio with chords to relieve channel pressure
+* Support for multiple concurrent MIDI synthesizers (per-track device/port select FF 09 message), can be used to overcome 16 channel limit
+* Partial support for GS and XG standards (having more instruments than in one 128:128 GM set and ability to use multiple channels for percussion purposes, and support for some GS/XG exclusive controllers)
+* CC74 "Brightness" affects a modulator scale (to simulate frequency cut-off on WT synths)
+* Portamento support (CC5, CC37, and CC65)
+* SysEx support that supports some generic, GS, and XG features
+* Full-panning stereo option
+
+== OPN2 cores ==
+The OPN2/OPNA core emulates a number of OPN2/OPNA chips. GZDoom extends them with features that did not exist on the emulated hardware, notably full [[MIDI]] stereo panning (OPN2 limited to 3 panning positions), though such enhancements can be turned off from the [[advanced sound options]] menu. There are three different cores available:
+
+;MAME YM2612:
+:This OPN2 core comes from the {{wp|MAME}} project. It is available under the {{wp|GNU General Public License|GNU GPL}}.
+
+;Nuked OPN2:
+:This OPN2 core was contributed by Alexey Khokholov. Note that it is much heavier than the Nuked OPL3 emulator and may cause lag on slow systems when you have used more than three virtual chips.
+
+;GENS 2.10:
+:This OPN2 core comes from the GENS project of the Sega Genesis emulator. This core is the fastest but very inaccurate and lacks the support of SSG-EG.
+
+;Neko Project II Kai OPNA:
+:This OPNA core comes from the [http://domisan.sakura.ne.jp/article/np2kai/np2kai.html Neko Project II Kai] project of NEC PC98 Japanese computers emulator. This core is one of the fastest, it is more accurate than GENS include the support of SSG-EG with minor incorrectness. It is available under the {{wp|MIT License}}.
+
+;MAME YM2608:
+:This OPNA core comes from the {{wp|MAME}} project. It is available under the {{wp|GNU General Public License|GNU GPL}}.
+
+;PMDWin OPNA:
+:This OPNA core comes from the [https://github.com/pbarfuss/PMDWinS036 PMDWinS036] project. This core is one of the fastest, it gives some distortions of resulted sound while releasing notes.
+
+== See also ==
+* [[OPL synth emulation]]
+* [[libADLMIDI]]
+* [[Sound options]]
+
+== External links ==
+* [https://github.com/Wohlstand/OPN2BankEditor OPN2 Bank Editor] - a utility that allows the creation of custom WOPN banks are can be used with this synthesizer.
+* [https://github.com/Wohlstand/libOPNMIDI libOPNMIDI] - GitHub page that contains latest source code of this synthesizer and related documentation.
+* [https://github.com/Wohlstand/OPN2BankEditor/blob/master/Specifications/WOPN-and-OPNI-Specification.txt WOPN format specification] - A complete specification of WOPN bank format used by this synthesizer.
+* [http://mamedev.org/ MAME]
+* [http://www.gens.me/ GENS]
+[[Category:Audio systems]]</text>
+    <sha1>5hznn5d32vw3x5u6tr1kh400tltrvhi</sha1>
+  </revision>
+</page>

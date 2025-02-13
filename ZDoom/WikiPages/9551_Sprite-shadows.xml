@@ -1,0 +1,56 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>Sprite shadows</title>
+  <ns>0</ns>
+  <id>9551</id>
+  <revision>
+    <id>52980</id>
+    <parentid>50594</parentid>
+    <timestamp>2024-08-22T10:40:32Z</timestamp>
+    <contributor>
+      <username>Blue Shadow</username>
+      <id>2021</id>
+    </contributor>
+    <minor />
+    <comment>remove {{new}}</comment>
+    <origin>52980</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="2395" sha1="tmr4q8yr1jyy2yoikjxm6rzcr0ih976" xml:space="preserve">{{gzdoomfeature}}
+
+__NOTOC__
+
+[[File:SpriteShadowsExample.png|right|thumb|500px|An example of sprite shadows being cast by an [[Classes:DoomImp|Imp]], a [[Classes:FloatingSkull|floating skull]] (Using {{flag|CASTSPRITESHADOW}}.), and a player.]]
+
+Sprite shadows are a [[GZDoom]]-specific feature added in [[GZDoom_version_history#4.6.0|GZDoom 4.6.0]] that allows actors to cast shadows similar to [[Build]] engine games such as ''Duke Nukem 3D''. They work by creating a copy of the actors' sprite that is set to the[[Actor properties#RenderStyle| Stencil]] render style, made black, set to an alpha of 0.5, and crushed to 15% the Y scale of the original sprite, then drawn behind all other actor sprites. Sprite shadows can also fade based on how far off the ground the actor is.
+
+=== Options ===
+
+GZDoom has 2 options related to sprite shadows, the first option is r_actorspriteshadow, which can be found in the [[Display options]] under the name "Sprite shadows", it has 3 modes:
+
+==== Default ====
+:Sprite shadows are only drawn on actors that explicitly have the {{flag|CASTSPRITESHADOW}} flag on.
+
+==== Monsters and players ====
+:Sprite shadows are drawn on monsters (Any actor with the {{flag|ISMONSTER}} flag.), and on players. {{flag|NOSPRITESHADOW}} can be used to prevent monsters from casting a shadow, but won't work on [[Player class|player classes]].
+
+==== Off ====
+:Sprite shadows are not drawn regardless of the actor flags.
+
+
+There also exist the following [[CVAR]]s, which are not exposed to the options menu, and have to be changed through the [[console]].
+* ''r_actorspriteshadowdist'': Controls how far (In map units.) from the camera shadows should be drawn, the default value is 1500.
+* ''r_actorspriteshadowalpha'': The base alpha of the sprite shadows, default is 0.5. 1.0 is fully opaque.
+* ''r_actorspriteshadowfadeheight'': The height above the ground where actor shadows fully fade off. Default is 0, meaning that shadows don't fade with distance off the ground at all.
+
+=== Flags ===
+GZDoom has 2 flags pertaining to sprite shadows.
+
+*'''{{LE|CASTSPRITESHADOW}}'''
+: Makes the actor cast a sprite shadow if the option is set to Default, or set to Monsters and players, but the actor isn't either of those.
+*'''{{LE|NOSPRITESHADOW}}'''
+: Prevents the actor from casting a sprite shadow regardless of the option.
+
+[[Category:Features]] [[Category:Technical aspects]]</text>
+    <sha1>tmr4q8yr1jyy2yoikjxm6rzcr0ih976</sha1>
+  </revision>
+</page>

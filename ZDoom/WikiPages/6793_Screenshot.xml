@@ -1,0 +1,50 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>Screenshot</title>
+  <ns>0</ns>
+  <id>6793</id>
+  <revision>
+    <id>33084</id>
+    <parentid>32449</parentid>
+    <timestamp>2012-06-10T21:56:16Z</timestamp>
+    <contributor>
+      <username>Gez</username>
+      <id>1283</id>
+    </contributor>
+    <minor />
+    <comment>removing dead ST forum links</comment>
+    <origin>33084</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="2948" sha1="tm79odtguflvwjo3s1cjwdcznagrr3i" xml:space="preserve">A '''screenshot''' is a capture of the screen as an image, created by the {{CCMD|D|screenshot}} [[console command]], by default bound to the {{wp|Print_screen|print screen}} key. [[ZDoom]] screenshots are by default in [[PNG]], but PCX screenshots can be made as well by setting the {{CVAR|C|screenshot_type}} [[console variable]] to "pcx".
+
+The {{CVAR|C|screenshot_dir}} variable, if not empty, will determine where screenshots are written by default. If empty, [[ZDoom]]'s home directory is used; or the C:\ZDOOMDAT. The {{Param|-shotdir}} parameter can also be used and overrides the [[CVAR]].
+
+Other console variables that affect screenshots include:
+*{{CVAR|C|png_gamma}}: if you have set a high gamma level to compensate for a dark screen, such as an aging {{wp|Cathode_ray_tube|CRT}} affected by phosphor decay, it is advised to set a lower gamma level for screenshots if you intend to post them on messageboards, to prevent the colors from being washed out. The default value, means that screenshots use the same gamma as the screen.
+*{{CVAR|C|png_level}}: change the compression level for [[PNG]] screenshots, from 0 to 9. The default value is 5.
+*{{CVAR|C|screenshot_quiet}}: Determines whether a [[message]] is printed or not to announce the screenshot was created.
+
+==Creating clean screenshots==
+You may want to create "clean" screenshots showing only the level, and not the [[HUD]], [[crosshair]], [[message]]s, weapon sprite, etc. For this, you can create an [[alias]] that will disable these features and then take a screenshot. The following commands, inspired by the [[Skulltag]] expansion pack, will create a set of aliases that will allow to save the current configuration in custom variables, hide all parts of the HUD, and restore the saved configuration.
+ alias	savescrn	"set ep_screenblocks ${{CVAR|R|screenblocks}}; set ep_crosshair ${{CVAR|R|crosshair}}; 
+                          set ep_show_messages ${{CVAR|M|show_messages}}"
+ alias	resetsrn	"r_drawplayersprites 1;crosshair $ep_crosshair;
+                          screenblocks $ep_screenblocks;show_messages $ep_show_messages"
+ alias	hidescrn	"r_drawplayersprites 0;screenblocks 12;crosshair 0;show_messages 0"
+ alias	cleansrn	"savescrn;hidescrn;wait;screenshot;wait;resetsrn"
+In this example, the "cleansrn" command is used to create clean screenshots.
+
+==Creating batches of screenshots==
+The following sequence of console commands will take a screenshot every frame. You can use an external program to assemble these into a video, if desired.
+ screenshot_type "png"
+ screenshot_quiet true
+ alias autoshot "screenshot; wait 1; autoshot"
+ autoshot
+If you use the autoshot alias, the command alias autoshot will stop automatic screenshot taking before you hit 10000 screenshots (approximately 4 minutes, 45 seconds). {{verification}}
+
+==See also==
+*[[:Category:Screenshots|Gallery]] of [[ZDoom]] and [[GZDoom]] screenshots.
+[[Category:Features]][[Category:Glossary]]</text>
+    <sha1>tm79odtguflvwjo3s1cjwdcznagrr3i</sha1>
+  </revision>
+</page>

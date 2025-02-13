@@ -1,0 +1,107 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>A SpawnItemEx</title>
+  <ns>0</ns>
+  <id>3265</id>
+  <revision>
+    <id>52288</id>
+    <parentid>52109</parentid>
+    <timestamp>2024-04-06T00:00:36Z</timestamp>
+    <contributor>
+      <username>Jekyll Grim Payne</username>
+      <id>2175</id>
+    </contributor>
+    <minor />
+    <origin>52288</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="9970" sha1="cifpdycxh7kykcpgv0b5mc051za685p" xml:space="preserve">{{DISPLAYTITLE:A_SpawnItemEx}}
+'''{{class|Actor}}'''
+
+bool, Actor '''A_SpawnItemEx''' (class&lt;Actor&gt; ''missile'', double ''xofs'' = 0, double ''yofs'' = 0, double ''zofs'' = 0, double ''xvel'' = 0, double ''yvel'' = 0, double ''zvel'' = 0, double ''angle'' = 0, int ''flags'' = 0, int ''failchance'' = 0, int ''tid'' = 0)
+
+==Usage==
+Spawns an actor at the specified offset away from the calling actor, facing the given angle, and with the indicated velocity.
+
+The function does not spawn [[monster|monster]]-based actors if the calling actor was {{DamageType|Massacre|massacred}}.
+
+===Parameters===
+* {{c|Class&lt;Actor&gt; '''missile'''}}
+:The class name of the actor to spawn. This can be any actor type.
+* {{c|double '''xofs'''}}
+: {{c|double '''yofs'''}}
+: {{c|double '''zofs'''}}
+:Offsets from the calling actor to spawn the new actor at. {{c|xofs}} is forward/backward, {{c|yofs}} is right/left, {{c|zofs}} is up/down.
+* {{c|double '''xvel'''}}
+: {{c|double '''yvel'''}}
+: {{c|double '''zvel'''}}
+:Velocity to give to the spawned actor, relative to the calling actor's facing angle. {{c|xvel}} is forward/backward, {{c|yvel}} is right/left, {{c|zvel}} is up/down.
+* {{c|double '''angle'''}}
+:Offsets the spawned actor's angle from the calling actor by the specified amount. At &lt;code&gt;0&lt;/code&gt; uses the calling actor's angle. Positive numbers rotate the spawned actor to the left, negative numbers turn it to the right in relation to the actor.
+* {{c|int '''flags'''}}
+:Multiple flags can be combined with &lt;code&gt;|&lt;/code&gt;. The following flags are available:
+:* '''SXF_TRANSFERTRANSLATION''' - the spawned actor uses the same [[translation]] as the calling actor, provided the spawned actor {{Flag|DONTTRANSLATE|can be translated}}. This flag takes precedence over {{c|SXF_USEBLOODCOLOR}}.
+:* '''SXF_ABSOLUTEPOSITION''' - applies the spawn offsets according to the absolute XY axes of the map, rather than relative to the direction the calling actor is facing.
+:* '''SXF_ABSOLUTEANGLE''' - use the '''angle''' parameter as an absolute angle instead of a relative one to the calling actor's angle.
+:* '''SXF_ABSOLUTEVELOCITY''' - the spawned actor will have its velocity set in absolute values instead of relative derived from the calling actor's velocities along the X, Y and Z axis.
+:* '''SXF_SETMASTER''' - sets the spawned actor's &lt;code&gt;master&lt;/code&gt; pointer to the caller (see [[Actor pointers]]), making the spawned actor its "minion". Master and minions do not attack each other, and this relationship allows the use of functions that affect one another, such as {{c|[[A_DamageMaster]]}} and {{c|[[A_GiveToChildren]]}}. This flag takes precedence over {{c|SXF_TRANSFERPOINTERS}} when setting the {{c|master}} field.
+:* '''SXF_NOCHECKPOSITION''' - do not check the destination for room before spawning. This flag is only meaningful if the spawned actor is [[monster]] based, as only actors of this type are tested for room normally.
+:* '''SXF_TELEFRAG''' - kills any actor that would prevent the new actor from spawning. This flag implies SXF_NOCHECKPOSITION.
+:* '''SXF_CLIENTSIDE''' - client-side spawning only. {{STFeaturesmall}}
+:* '''SXF_TRANSFERAMBUSHFLAG''' - if the calling actor has the {{flag|AMBUSH}} flag set, then the spawned actor will have it as well.
+:* '''SXF_TRANSFERPITCH''' - transfers the calling actor's {{property|Pitch|pitch}} to the spawned actor. Note that this has no effect on the spawned actor's velocities. If you want the calling actor's pitch to be taken into account for the spawned actor's trajectory, use a formula such as this one: {{c|A_SpawnItemEx (&lt;type&gt;,cos(pitch)*&lt;Dist. from spawner&gt;,&lt;yofs&gt;,&lt;zofs&gt;-(sin(pitch)*&lt;Dist. from spawner&gt;),cos(pitch)*&lt;Projectile speed&gt;,0,-sin(pitch)*&lt;Projectile speed&gt;,&lt;angle&gt;,&lt;flags&gt;,&lt;chance&gt;)}}
+:* '''SXF_TRANSFERPOINTERS''' - transfers the calling actor's {{c|master}}, {{c|target}}, and {{c|tracer}} fields to the spawned actor. SXF_SETMASTER, SXF_SETTARGET and SXF_SETTRACER take precedence over this flag.
+:* '''SXF_USEBLOODCOLOR''' - uses the calling actor's {{c|{{Property|BloodColor}}}} as the source of [[translation]] to be applied to the spawned actor, provided the spawned actor {{Flag|DONTTRANSLATE|can be translated}}. If no {{c|BloodColor}} is specified, no translation is applied. {{c|SXF_TRANSFERTRANSLATION}} takes precedence over this flag.
+:* '''SXF_CLEARCALLERTID''' - if the actor is spawned successfully, the calling actor will have its [[TID]] set to 0. 
+:* '''SXF_MULTIPLYSPEED''' - multiplies the spawned actor's velocity by its {{c|{{Property|Speed}}}} property.
+:* '''SXF_TRANSFERSCALE''' - transfers the current scale factor of the calling actor to the spawned actor.
+:* '''SXF_TRANSFERSPECIAL''' - transfers the calling actor's special and arguments to the spawned actor.
+:* '''SXF_CLEARCALLERSPECIAL''' - if the actor is spawned successfully, the calling actor will have its special and arguments removed.
+:* '''SXF_TRANSFERSTENCILCOL''' - transfers the calling actor's {{c|{{Property|StencilColor}}}} to the spawned actor.
+:* '''SXF_TRANSFERALPHA''' - transfers the calling actor's {{Property|Alpha|alpha}} to the spawned actor.
+:* '''SXF_TRANSFERRENDERSTYLE''' - transfers the calling actor's {{Property|RenderStyle|render style}} to the spawned actor.
+:* '''SXF_SETTARGET''' - sets the [[#Originator|originator]] as the spawned actor's target. This flag takes precedence over SXF_TRANSFERPOINTERS when setting the {{c|target}} field.
+:* '''SXF_SETTRACER''' - sets the originator as the spawned actor's tracer. This flag takes precedence over SXF_TRANSFERPOINTERS when setting the {{c|tracer}} field.
+:* '''SXF_NOPOINTERS''' - clears the spawned actor's {{c|target}}, {{c|master}} and {{c|tracer}} fields. If the spawned actor is monster based, it also prevents it from becoming [[CopyFriendliness|affiliated]] with the originator if the originator is also monster based, or becoming a {{Flag|FRIENDLY|friendly monster}} that is allied with the originator if it is a player. SXF_SETTARGET, SXF_SETMASTER and SXF_SETTRACER take precedence over this flag, while this flag takes precedence over SXF_TRANSFERPOINTERS.
+:* '''SXF_ORIGINATOR''' - explicitly sets the calling actor as the originator. This is only meaningful if the calling actor is missile based, as actors of this type cannot be originators normally.
+:* '''SXF_TRANSFERSPRITEFRAME''' - transfers the calling actor's current sprite and frame letter to the spawned actor. This only works if the spawned actor's first spawn sprite (and/or frame) has the [[Sprite#Special_names|reserved special name for the sprite and frame letter]].
+:* '''SXF_TRANSFERROLL''' - transfers the calling actor's '''roll''' angle to the spawned actor.
+:* '''SXF_ISTARGET''' - the spawned actor becomes the calling actor's [[Actor_pointer#Target.2C_master_and_tracer|target]].
+:* '''SXF_ISMASTER''' - the spawned actor becomes the calling actor's [[Actor_pointer#Target.2C_master_and_tracer|master]].
+:* '''SXF_ISTRACER''' - the spawned actor becomes the calling actor's [[Actor_pointer#Target.2C_master_and_tracer|tracer]].
+* {{c|int '''failchance'''}}
+:This is the chance (out of 256) that the actor has of not spawning. If this is 0, the actor's chance of spawning is 100%. If it is 256, it will never spawn. Default is 0.
+* {{c|int '''tid'''}}
+:The [[TID]] to assign to the spawned actor. Passing [[DECORATE_expressions#Variables|{{c|tid}}]], allows for the spawned actor to have the same TID as the calling actor. In conjunction with SXF_CLEARCALLERTID, this can be used to transfer a TID from the calling actor to the spawned actor.
+
+===Originator===
+The '''originator''' is the actor that is considered to be the "spawner" actor. Normally, the originator is the same as the calling actor of the function, except in the case of [[missile]]-based actors. A missile-based actor cannot be the originator unless it is explicitly set to be (see SXF_ORIGINATOR). If not, then the originator is whatever non-missile actor that it considers to be its spawner or shooter. If this actor does not exist, then there is no originator in this case.
+
+=== Return value ===
+The function returns two values:
+*A boolean based on whether the actor successfully spawned or not. An actor that does not spawn because of chance or [[#Usage|massacre]] always counts as success.
+*A pointer to the spawned actor. If the actor fails to spawn due to chance or massacre, the returned value is {{c|null}}. When testing for space to spawn the actor in, the actor is spawned, tested and then immediately destroyed if it fails the test. The returned value in this case is still a pointer to the actor, not {{c|null}}. The space test is performed on monster-based actors only.
+So based on the above, it is important to check for both of these values in order to determine whether an actor has truly spawned or not.
+
+== Examples ==
+The following actor is a variant of the Heretic {{Class|Pod|explosive pod}} that leaves a {{Class|PoisonCloud|poison cloud}} behind it as well. It uses A_SpawnItemEx so as to make use of the SXF_TRANSFERPOINTERS flag. This way, the monster or player responsible for blowing up the pod will be known as the source of damage created by the poison cloud. This makes sure that deathmatch frags are credited to the proper player, and allows barrel-based infighting to happen. The ''yofs'' is set to 28 so as to mimic closely the [[A_PoisonBagInit]] function which is not accessible to pod actors.
+This example also uses [[ZScript named arguments]] to avoid the need to define the arguments where the default value (0) is used.
+ class PoisonPod : {{Class|Pod}}
+ {
+     Default
+     {
+         {{Property|DeathSound}} "PoisonPod/Puff";
+     }
+ 
+     States
+     {
+     Death:
+         PPOD C 5 Bright [[A_RemovePod]];
+         PPOD D 5 Bright [[A_Scream]];
+         PPOD E 5 Bright [[A_Explode]];
+         PPOD F 10 Bright [[A_SpawnItemEx]]("{{Class|PoisonCloud}}", zofs: 28, flags:{{const|SXF_TRANSFERPOINTERS}});
+         Stop;
+     }
+ }</text>
+    <sha1>cifpdycxh7kykcpgv0b5mc051za685p</sha1>
+  </revision>
+</page>

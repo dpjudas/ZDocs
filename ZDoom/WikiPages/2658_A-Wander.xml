@@ -1,0 +1,81 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>A Wander</title>
+  <ns>0</ns>
+  <id>2658</id>
+  <revision>
+    <id>49317</id>
+    <parentid>46787</parentid>
+    <timestamp>2022-06-22T08:17:50Z</timestamp>
+    <contributor>
+      <username>Inkoalawetrust</username>
+      <id>2604</id>
+    </contributor>
+    <comment>Added mention of DONTFOLLOWPLAYERS.</comment>
+    <origin>49317</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="2740" sha1="kcpdz386o3c4soj2f5tysr17q2rasac" xml:space="preserve">{{DISPLAYTITLE:A_Wander}}
+void '''A_Wander''' [(int ''flags'')]
+
+== Usage ==
+Makes the actor wander around aimlessly, as used by [[Strife]]'s [[Classes:Peasant|peasants]]. An actor will not play active sounds, attack players, or attack any other target when calling this function, unlike [[A_Chase]]. '''A_Wander''' does nothing when the actor calling it has the '''{{flag|STANDSTILL}}''' flag set. For {{flag|FRIENDLY|friendly}} monsters, the default behavior of this function is to make them follow the player. To make friendly monsters calling this function actually wander around instead, you should use the {{flag|DONTFOLLOWPLAYERS}} flag.
+
+== Parameters ==
+*''flags'': The following flags can be combined using the | symbol:
+** '''CHF_NORANDOMTURN''' - Actor will not attempt to turn during their chasing frames at random. They will only turn when they encounter an obstacle.
+** '''CHF_NODIRECTIONTURN''' - Actor will not turn its angle to face the direction of travel.
+** '''CHF_STOPIFBLOCKED''' - Actor cannot turn away from obstacles blocking it. It will simply not move, but can still angle itself.
+
+:* '''CHF_DONTTURN''' - Implies CHF_NORANDOMTURN and CHF_STOPIFBLOCKED.
+
+== Examples ==
+
+Here is an example of an {{Class|DoomImp|Imp}} that wanders around randomly looking for players.
+
+ actor ImpScout : {{Class|DoomImp}}
+ {
+ States {
+   Spawn:
+     TROO AA 3 '''A_Wander'''
+     TROO A 0 [[A_Look]]
+     TROO BB 3 '''A_Wander'''
+     TROO B 0 [[A_Look]]
+     TROO CC 3 '''A_Wander'''
+     TROO C 0 [[A_Look]]
+     TROO DD 3 '''A_Wander'''
+     TROO D 0 [[A_Look]]
+     loop
+  }
+ }
+
+[[A_Look]] has to repeatedly be called to check for players while it is wandering around.
+It is also interesting that A_Wander can be in a different way used.
+This {{Class|Cacodemon}} for example is able to teleport, but it's not a real teleport. It just gets invisible and walks around for 0 tics and gets
+visible again:
+
+ actor TeleCaco : {{Class|Cacodemon}}
+ {
+ States {
+    See:
+     HEAD A 0 [[A_Jump]](16,"Tele")
+     HEAD A 4 [[A_Chase]]
+     loop
+    Tele:
+     HEAD A 1 [[A_SetRenderStyle]](0.8, STYLE_Translucent)
+     HEAD A 1 [[A_SetRenderStyle]](0.6, STYLE_Translucent)     
+     HEAD A 1 [[A_SetRenderStyle]](0.4, STYLE_Translucent)
+     HEAD A 1 [[A_SetRenderStyle]](0.2, STYLE_Translucent)
+     TNT1 AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA 0 '''A_Wander'''
+     HEAD A 1 [[A_SetRenderStyle]](0.2, STYLE_Translucent)
+     HEAD A 1 [[A_SetRenderStyle]](0.4, STYLE_Translucent)
+     HEAD A 1 [[A_SetRenderStyle]](0.6, STYLE_Translucent)
+     HEAD A 1 [[A_SetRenderStyle]](0.8, STYLE_Translucent)
+     HEAD A 1 [[A_SetRenderStyle]](1.0, STYLE_Translucent)
+     Goto See
+  }
+ }
+
+[[category:Decorate Monster AI functions]]{{DEFAULTSORT:Wander}}</text>
+    <sha1>kcpdz386o3c4soj2f5tysr17q2rasac</sha1>
+  </revision>
+</page>

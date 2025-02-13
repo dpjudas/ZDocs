@@ -1,0 +1,142 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>MAPINFO/Intermission definition</title>
+  <ns>0</ns>
+  <id>6180</id>
+  <revision>
+    <id>54198</id>
+    <parentid>47161</parentid>
+    <timestamp>2025-02-08T18:00:11Z</timestamp>
+    <contributor>
+      <username>Inkoalawetrust</username>
+      <id>2604</id>
+    </contributor>
+    <comment>Documented new cutscene sub-block.</comment>
+    <origin>54198</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="6745" sha1="1zkftigv3j68ywkkj1hsioopdwipljj" xml:space="preserve">An Intermission definition begins with the keyword "intermission" followed by a name.
+
+An intermission is composed of different sub-blocks, which each define a "step". When a step is finished, the intermission goes to the next step, until the end is reached. The '''Link''' properties allows to go to a different intermission instead. The '''GotoTitle''' step effectively ends the intermission.
+
+==Intermission commands==
+'''Intermission''' ''name'' { ''properties'' }
+:Defines an Intermission block. 
+
+==Intermission properties==
+The following properties are supported within an Intermission definition:
+{{list|Property|Description|content=
+{{-|Link {{=}} &lt;name&gt;
+|Links to another intermission after the end of this intermission.}}
+{{-|Cast {}
+|Defines a cast block as a step for the intermission. See below for cast properties.}}
+{{-|Fader {}
+|Defines a fader block as a step for the intermission. See below for fader properties.}}
+{{-|GotoTitle {}
+|Goes to the title screen. This effectively ends the intermission and the game.}}
+{{-|Image {}
+|Defines an image block as a step for the intermission. See below for image properties.}}
+{{-|Scroller {}
+|Defines a scroller block as a step for the intermission. See below for scroller properties.}}
+{{-|TextScreen {}
+|Defines a text screen block as a step for the intermission. See below for text screen properties.}}
+{{-|Wiper {}
+|Defines a wiper block as a transition between two steps in the intermission. See below for wiper properties.}}
+{{-|Cutscene {} {{git|206c229}}
+|Defines a cutscene block that plays a video as a step during the intermission. See below for cutscene properties.}}
+}}
+
+===Generic properties===
+The following properties are supported within any sub-block:
+{{list|Property|Description|content=
+{{-|Background {{=}} &lt;image&gt;[, &lt;tile&gt;]
+|Defines which image lump to use as the background for this intermission step. Optional parameters can be given. If ''tile'' is non-zero, the image is displayed at its resolution and tiled on the screen. If 0 or omitted, the image is stretched.}}
+&lt;!-- {{-|CDMusic {{=}} &lt;track&gt;[, &lt;CDID&gt;]
+|Defines which music to use during this step of the intermission if an audio CD is available in an optical drive. A CD ID can be given optionally to only play the track if the CD is the one expected.}} --&gt;
+{{-|Draw {{=}} &lt;image&gt;, &lt;x&gt;, &lt;y&gt;
+|Draws the specified image using the specified offsets. Coordinates for offsets range from (0, 0) for the top-left corner to (319, 199) for the bottom-right corner.}}
+{{-|DrawConditional {{=}} &lt;condition&gt;, &lt;image&gt;, &lt;x&gt;, &lt;y&gt;
+|As Draw, but specifies a condition for the drawing. Possible conditions include {{Class|PlayerPawn|player class}} names or '''Multiplayer'''.}}
+{{-|Music {{=}} &lt;song&gt;[, &lt;order&gt;]
+|Defines which music to use during this step of the intermission. For [[music format]]s which support sub-songs, an optional parameter allows to choose which to play.}}
+{{-|Sound {{=}} &lt;sound&gt;
+|Defines a sound to be played upon entering this intermission step.}}
+{{-|Time {{=}} &lt;length&gt;
+|Defines how long this step of the intermission should last. A positive value is an amount in seconds; a negative value is an amount in [[tic]]s.}}
+}}
+
+===Cast properties===
+The following properties are supported within a cast sub-block:
+{{list|Property|Description|content=
+{{-|CastClass {{=}} &lt;name&gt;
+|Defines which [[actor]] [[class]] to use for this cast call.}}
+{{-|CastName {{=}} &lt;string&gt;
+|Defines the string that is displayed during the cast call. If the string starts with a '''$''' character, it is interpreted as an identifier to a [[LANGUAGE]] string.}}
+{{-|AttackSound {{=}} &lt;label&gt;, &lt;offset&gt;, &lt;sound&gt;
+|Defines which sound to play at which moment of which attack. ''Label'' must be either "Melee" or "Missile", ''offset'' must be a positive or null value, and ''sound'' must be a logical sound name as defined in [[SNDINFO]].}}
+}}
+
+===Fader properties===
+The following properties are supported within a fader sub-block:
+{{list|Property|Description|content=
+{{-|FadeType {{=}} &lt;type&gt;
+|Defines how the fade proceeds. Possible types are '''FadeIn''' (default) and '''FadeOut'''.}}
+}}
+
+===Image properties===
+Image sub-blocks have no additional properties.
+
+===Scroller properties===
+The following properties are supported within a scroller sub-block:
+{{list|Property|Description|content=
+{{-|Background2 {{=}} &lt;lump&gt;
+|Defines the picture used for the destination screen.}}
+{{-|InitialDelay {{=}} &lt;length&gt;
+|Specifies how long to wait before scrolling begins. A positive value is an amount in [[tic]]s, a negative value is an amount in seconds. Default delay is '''0'''.}}
+{{-|ScrollDirection {{=}} &lt;type&gt;
+|Defines how the scroll proceeds. Possible directions are '''Up''', '''Down''', '''Left''' and '''Right''' (default).}}
+{{-|ScrollTime {{=}} &lt;length&gt;
+|Specifies how long it takes for the scroll to end. A positive value is an amount in [[tic]]s, a negative value is an amount in seconds. Default time is '''640'''.}}
+}}
+
+===TextScreen properties===
+The following properties are supported within a text screen sub-block:
+{{list|Property|Description|content=
+{{-|Position {{=}} &lt;x&gt;, &lt;y&gt;
+|Defines the position of the text. Default is (-1, -1), which means to use the values specified in the [[MAPINFO/GameInfo definition|GameInfo]] block.}}
+{{-|Text {{=}} &lt;line&gt;[, [other line[, ...]]
+|Use the specified text for the content of the text screen. An unlimited amount of parameters can be given, each will be its own line.}}
+{{-|TextColor {{=}} &lt;value&gt;
+|Specifies the color to use for the text. See the [[TEXTCOLO]] lump for more information about text colors. Default color is '''Untranslated'''.}}
+{{-|TextDelay {{=}} &lt;length&gt;
+|Specifies the delay to use when drawing the text. A positive value is the length in [[tic]], a negative value is the length in seconds. Default delay is '''10'''.}}
+{{-|TextLump {{=}} &lt;lump&gt;
+|Tells to use the given lump as the source of the text displayed by the text screen.}}
+{{-|TextSpeed {{=}} &lt;value&gt;
+|Specifies the speed at which the text is written on the screen. Default speed is '''2'''.}}
+}}
+
+===Wiper properties===
+The following properties are supported within a wiper sub-block:
+{{list|Property|Description|content=
+{{-|WipeType {{=}} &lt;type&gt;
+|Defines how the [[screen wipe]] proceeds. Possible types are '''Crossfade''', '''Melt''', '''Burn''' and '''Default''' (default).}}
+}}
+
+===Cutscene properties===
+The following properties are supported within a cutscene sub-block:
+{{:Cutscene MAPINFO properties}}
+
+==Examples==
+Example of a cast sub block using the Nitrogolem from Heretic: 
+ Cast
+ {
+   CastClass = "MummyLeader"
+   CastName = "Nitrogolem"
+   AttackSound = "Missile", 1, "mummy/head"
+   AttackSound = "Melee", 1, "mummy/attack2"
+ }
+
+[[Category:MAPINFO|Intermission]]</text>
+    <sha1>1zkftigv3j68ywkkj1hsioopdwipljj</sha1>
+  </revision>
+</page>

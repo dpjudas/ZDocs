@@ -1,0 +1,49 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>Classes:KoraxBolt</title>
+  <ns>0</ns>
+  <id>4626</id>
+  <revision>
+    <id>34773</id>
+    <parentid>18382</parentid>
+    <timestamp>2012-10-25T14:23:53Z</timestamp>
+    <contributor>
+      <username>Blue Shadow</username>
+      <id>2021</id>
+    </contributor>
+    <minor />
+    <comment>/* DECORATE definition */</comment>
+    <origin>34773</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="806" sha1="3fye1ht6p4nznz3wxxhkexxy9q74snl" xml:space="preserve">{{actor|
+| type = Explosive
+| name = Korax command bolt
+| class = KoraxBolt
+| game = Hexen
+}}[[Classes]]: &lt;u&gt;Korax&lt;/u&gt;&lt;br&gt;
+A special type of projectile thrown by [[Classes:Korax|Korax]] that rises directly to the ceiling. It actually creates a new copy of itself at a higher height with [[A_KBoltRaise]] and then destroys itself the fourth time it calls [[A_KBolt]].
+==== [[DECORATE]] definition ====
+ ACTOR &lt;u&gt;KoraxBolt&lt;/u&gt;
+ {
+   {{Property|Radius}} 15
+   {{Property|Height}} 35
+   {{Property|Projectile}}
+   -{{Flag|ACTIVATEPCROSS}}
+   -{{Flag|ACTIVATEIMPACT}}
+   {{Property|RenderStyle}} Add
+ 
+   action native [[A_KBolt]]();
+   action native [[A_KBoltRaise]]();
+ 
+   States
+   {
+   Spawn:
+     MLFX I 2 Bright
+     MLFX J 2 Bright [[A_KBoltRaise]]
+     MLFX IJKLM 2 Bright [[A_KBolt]]
+     Stop
+   }
+ }</text>
+    <sha1>3fye1ht6p4nznz3wxxhkexxy9q74snl</sha1>
+  </revision>
+</page>

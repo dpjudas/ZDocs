@@ -1,0 +1,151 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>Classes:SpiderMastermind</title>
+  <ns>0</ns>
+  <id>2604</id>
+  <revision>
+    <id>48931</id>
+    <parentid>48613</parentid>
+    <timestamp>2021-12-27T11:16:45Z</timestamp>
+    <contributor>
+      <username>Jekyll Grim Payne</username>
+      <id>2175</id>
+    </contributor>
+    <comment>updated in accordance with updated ZScriptDefinitionNote template</comment>
+    <origin>48931</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="3456" sha1="2bujaiq2bqwaxp8mxjfpqmhbjluul9e" xml:space="preserve">{{Actor|
+| type = Monster
+| name = Spider Mastermind
+| class = SpiderMastermind
+| game = Doom
+| doomednum = 7
+| thingindex = 20
+| spawnid = 7
+| spawnname = T_SPIDERMASTERMIND
+}}
+[[Classes]]: &lt;u&gt;SpiderMastermind&lt;/u&gt;
+
+
+The Spider Mastermind (a.k.a. the Spiderdemon) is the endboss of [[Doom]]. Although with 3000 HPs, it doesn't have as much health as the [[Classes:Cyberdemon|Cyberdemon]], but its chaingun is essentially a sped-up version of [[Classes:ShotgunGuy|Sergeant's]] shotgun (firing 3 bullets per shot), making this enemy especially deadly.
+
+Doom 2 manual jokingly describes Spider Mastermind as [[Classes:Arachnotron|Arachnotron's]] "mom" and implies this demon is actually female.
+
+==== [[ZScript]] definition ====
+{{ZScriptDefinitionNote|actors/doom/spidermaster.zs}}
+ class SpiderMastermind : Actor
+ {
+ 	Default
+ 	{
+ 		{{Property|Health}} 3000;
+ 		{{Property|Radius}} 128;
+ 		{{Property|Height}} 100;
+ 		{{Property|Mass}} 1000;
+ 		{{Property|Speed}} 12;
+ 		{{Property|PainChance}} 40;
+ 		{{Property|Monster}};
+ 		+{{Flag|BOSS}}
+ 		+{{Flag|MISSILEMORE}}
+ 		+{{Flag|FLOORCLIP}}
+ 		+{{Flag|NORADIUSDMG}}
+ 		+{{Flag|DONTMORPH}}
+ 		+{{Flag|BOSSDEATH}}
+ 		{{Property|SeeSound}} "spider/sight";
+ 		{{Property|AttackSound}} "spider/attack";
+ 		{{Property|PainSound}} "spider/pain";
+ 		{{Property|DeathSound}} "spider/death";
+ 		{{Property|ActiveSound}} "spider/active";
+ 		{{Property|Obituary}} "$OB_SPIDER";
+ 		{{Property|Tag}} "$FN_SPIDER";
+ 	}
+ 	States
+ 	{
+ 	Spawn:
+ 		SPID AB 10 [[A_Look]];
+ 		Loop;
+ 	See:
+ 		SPID A 3 [[A_Metal]];
+ 		SPID ABB 3 [[A_Chase]];
+ 		SPID C 3 [[A_Metal]];
+ 		SPID CDD 3 [[A_Chase]];
+ 		SPID E 3 [[A_Metal]];
+ 		SPID EFF 3 [[A_Chase]];
+ 		Loop;
+ 	Missile:
+ 		SPID A 20 BRIGHT [[A_FaceTarget]];
+ 		SPID G 4 BRIGHT [[A_SPosAttackUseAtkSound]];
+ 		SPID H 4 BRIGHT [[A_SPosAttackUseAtkSound]];
+ 		SPID H 1 BRIGHT [[A_SpidRefire]];
+ 		Goto Missile+1;
+ 	Pain:
+ 		SPID I 3;
+ 		SPID I 3 [[A_Pain]];
+ 		Goto See;
+ 	Death:
+ 		SPID J 20 [[A_Scream]];
+ 		SPID K 10 [[A_NoBlocking]];
+ 		SPID LMNOPQR 10;
+ 		SPID S 30;
+ 		SPID S -1 [[A_BossDeath]];
+ 		Stop;
+ 	}
+ }
+==== [[DECORATE]] definition ====
+{{DecorateDefinitionNote}}
+ ACTOR &lt;u&gt;SpiderMastermind&lt;/u&gt;
+ {
+   {{Property|Health}} 3000
+   {{Property|Radius}} 128
+   {{Property|Height}} 100
+   {{Property|Mass}} 1000
+   {{Property|Speed}} 12
+   {{Property|PainChance}} 40
+   {{Property|Monster}}
+   {{Property|MinMissileChance}} 160
+   +{{Flag|BOSS}}
+   +{{Flag|MISSILEMORE}}
+   +{{Flag|FLOORCLIP}}
+   +{{Flag|NORADIUSDMG}}
+   +{{Flag|DONTMORPH}}
+   +{{Flag|BOSSDEATH}}
+   {{Property|SeeSound}} "spider/sight"
+   {{Property|AttackSound}} "spider/attack"
+   {{Property|PainSound}} "spider/pain"
+   {{Property|DeathSound}} "spider/death"
+   {{Property|ActiveSound}} "spider/active"
+   {{Property|Obituary}} "$OB_SPIDER"
+   States
+   {
+   Spawn:
+     SPID AB 10 [[A_Look]]
+     Loop
+   See:
+     SPID A 3 [[A_Metal]]
+     SPID ABB 3 [[A_Chase]]
+     SPID C 3 [[A_Metal]]
+     SPID CDD 3 [[A_Chase]]
+     SPID E 3 [[A_Metal]]
+     SPID EFF 3 [[A_Chase]]
+     Loop
+   Missile:
+     SPID A 20 Bright [[A_FaceTarget]]
+     SPID G 4 Bright [[A_SPosAttackUseAtkSound]]
+     SPID H 4 Bright [[A_SPosAttackUseAtkSound]]
+     SPID H 1 Bright [[A_SpidRefire]]
+     Goto Missile+1
+   Pain:
+     SPID I 3
+     SPID I 3 [[A_Pain]]
+     Goto See
+   Death:
+     SPID J 20 [[A_Scream]]
+     SPID K 10 [[A_NoBlocking]]
+     SPID LMNOPQR 10
+     SPID S 30
+     SPID S -1 [[A_BossDeath]]
+     Stop
+   }
+ }</text>
+    <sha1>2bujaiq2bqwaxp8mxjfpqmhbjluul9e</sha1>
+  </revision>
+</page>

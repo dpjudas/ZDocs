@@ -1,0 +1,61 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>SetActivatorToTarget</title>
+  <ns>0</ns>
+  <id>5425</id>
+  <revision>
+    <id>35899</id>
+    <parentid>35015</parentid>
+    <timestamp>2013-02-12T18:22:22Z</timestamp>
+    <contributor>
+      <username>Deded007</username>
+      <id>1392</id>
+    </contributor>
+    <minor />
+    <comment>formatting</comment>
+    <origin>35899</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="1438" sha1="lre18hofnx9r6cjfawvi02eu4dftf7i" xml:space="preserve">__NOTOC__
+
+bool '''SetActivatorToTarget''' (int ''tid'')
+
+== Usage ==
+
+This changes the activator of the script to the current target of the first actor found with the specified tid. Using a tid of 0 uses the current activator's target.
+
+The search pattern works like this:
+* If the tid being referenced is a living player, the new activator is first thing the player is aiming at.
+* If the tid being referenced is a living monster, the new activator is the monster's target.
+* If the tid being referenced is something that has died, the new activator is its killer.
+* If the tid being referenced is a projectile, the new activator is the actor who fired it.
+* If the actor has no target, the activator is the actor itself.
+* If there are no actors with the given tid, the function returns 0 and leaves the current activator unchanged.
+
+=== Parameters ===
+
+* ''tid'': [[TID]] of the actor whose target will become the activator.
+
+=== Return value ===
+
+Returns true if the new activator exists. If there were no actors with the supplied tid, this function returns false and the activator is left unchanged.
+
+== Examples ==
+This example will destroy the first non-player actor that the player aims at.
+
+ script 1 {{SType|Enter}}
+ {
+   while ([[PlayerNumber]]() &gt;= 0)
+   {
+     [[SetActivatorToTarget]](0);
+     [[Delay]](1);
+   }
+   [[Thing_Destroy]](0, {{const|YES}});
+ }
+
+== See also ==
+*[[SetActivator]]
+
+[[category:ACS Actor functions]]</text>
+    <sha1>lre18hofnx9r6cjfawvi02eu4dftf7i</sha1>
+  </revision>
+</page>

@@ -1,0 +1,397 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>Classes:Shape2D</title>
+  <ns>0</ns>
+  <id>9389</id>
+  <revision>
+    <id>52828</id>
+    <parentid>52315</parentid>
+    <timestamp>2024-08-06T14:34:14Z</timestamp>
+    <contributor>
+      <username>Jekyll Grim Payne</username>
+      <id>2175</id>
+    </contributor>
+    <comment>/* Non-static */</comment>
+    <origin>52828</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="20267" sha1="osyodl0nb3zs4kpsn03v504cwusynl4" xml:space="preserve">{{ZScriptNote}}
+
+'''Shape2D''' is a class that can be used to create arbitrary flat shapes to be rendered to the screen, or create shaped masks for other shapes or graphics. This is usually used in combination with [[DrawShape]], [[DrawShapeFill]] and/or [[SetStencil]].
+
+This class can be more difficult to use than most since it requires knowledge of texture coordinate mapping and how shapes are created via triangles. When used correctly, however, it can be very powerful for manipulating how textures are drawn on the screen. A common use case would be to turn a square camera texture into a circular one to mimic a weapon scope. The nice part about shapes are that they entirely remove the need to use additional textures to mask unwanted parts on the main texture and can be freely rotated (which, in turn, rotates the texture in it). They can also be reused meaning they can be cached to help save on performance. The largest downside is that they must be scaled manually since no position or size handling is done on it when drawn.
+
+= Explanation =
+===Vertex===
+A 2D coordinate (x and y pair) that corresponds to a pixel on the screen. The coordinates utilized by vertices are abstract scalar coordinates, which can later be scaled to real [[Structs:Screen|screen]] or [[Classes:BaseStatusBar|HUD]] coordinates. For that reason, vertices are usually placed in a -1.0-1.0 range.
+
+The scaling is best performed with the help of the '''Shape2DTransform''' class (documented below). The origin of these abstract coordinates (0,0) is considered to be at the top left corner, and most of the time it should be treated as the center of the shape, while the vertices of the shape are drawn around it (hence the -1.0-1.0 range); this simplifies later scaling and rotation. This way the shape becomes a unit version of the target shape: for example, a square shape with sides equal to 1.0, a circule with a radius of 1.0 — this will make applying transformations to the shape easy.
+
+When a vertex is pushed to a shape, it is given an index. Indices start with 0 (the very first vertex in the shape) go in order (0, 1, 2, 3 ...). Indices cannot be changed after the vertex is pushed, nor can individual vertices be removed.
+
+===UV Coordinate===
+A 2D coordinate (u and v pair) that corresponds to a location on the texture being drawn. UV coordinates are abstract, similar to vertexes, but in contrast to vertex positions, they're not supposed to be scaled to any virtual or real resolution. Instead, those coordinates exist within the bounding box of the texture used by the shape, which encompasses the whole texture. The UV coordinate of (0,0) is the top left of the box, and a UV coordinate of (1,1) is the bottom right of the box. The actual physical size/resolution of the texture is irrelevant in this case; you can view this coordinate as a percentage of the texture's width and height. For instance, if you have a UV coordinate in our shape at (0.5,0.25), it is always interpreted as "point at half of the texture's width and a quarter of its height." Thus, for a 128x128 texture that would correspond to the pixel at (64,32); for a 64x32 texture that would correspond to the pixel at (32,8). 
+
+When a UV coordinate is pushed to a shape, it is also given an index, with the same rules as vertices. This is important, because &lt;u&gt;each UV coordinate will match the vertex with the same index&lt;/u&gt;. Generally, the shape created by the UV coordinates is meant to match the shape of the vertices (otherwise you get odd texture warping). Anything outside of the shape you define by the UV coordinates will not be drawn allowing you to customize which parts of the texture are visible and which aren't. Indices cannot be changed after the UV coordinate is pushed nor can individual coordinates be removed.
+
+'''The number of vertices and UV coordinates in a shape must be the same'''. Attempts to draw shapes without them matching will cause a VM abort.
+
+UV coordinates are only relevant if the Shape is used to draw an actual graphic. If it's used to create a flat color fill or a mask (both require [[DrawShapeFill]]), the vertex coordinates are used directly, and UV coordiantes are ignored. Since you're still required to push a UV coordinate for each created vertex, so in case of a flat fill you can push (0,0) UV coordinates for each vertex.
+
+===Triangle===
+In computer graphics surfaces are often made up of a series of interconnected triangles. Triangles are used since they are the simplest shape that can be created making them a great foundation for building other shapes (even shapes like circles). GZDoom's Shapes are no different and must have triangles defining their surface for the texture to draw on. For example, a square shape would consist of 2 triangles; a circle shape would consist of multiple triangles, each originating from the circle's center. For example, let's assume we're working with a square. Its vertex positions are at (0,0), (1,0), (1,1), and (0,1) in that order, with indices of 0, 1, 2, and 3 respectively. If you slice a square in half diagonally from one corner to the other, two triangles are created. One can be created with vertex indices 0, 1, 2; and the other with vertex indices 0, 3, 2. These two triangles cover the entire surface of the square, and those are the values we would push for our triangles. Generally all of your triangles will start from a single point, often vertex 0, but this is not required. If an area of the shape's surface doesn't have a triangle then nothing will be drawn there. Individual triangles cannot be removed after being pushed.
+
+=Shape2D=
+== Methods ==
+=== Non-static ===
+*{{c|void '''SetTransform'''(Shape2DTransform ''transform'')}}
+:Applies the transformation defined by ''transform'' to the shape
+*{{c|void '''Clear'''(int ''which'' }}={{c| C_Verts|C_Coords|C_Indices)}}
+:Clears information about the shape. Can be the following:
+::*'''{{c|Shape2D.C_Verts}}''' - Clear the shape's vertices
+::*'''{{c|Shape2D.C_Coords}}''' - Clear the shape's uv coordinates
+::*'''{{c|Shape2D.C_Indices}}''' - Clear the triangles defining the surface
+*{{c|void '''PushVertex'''(Vector2 ''v'')}}
+:Pushes a vertex at the absolute xy position on the screen
+*{{c|void '''PushCoord'''(Vector2 ''c'')}}
+:Pushes a uv coordinate on the texture. Ideally this would use values with a range between [0,1]
+:Note: If the intention is to use [[DrawShapeFill|Screen.DrawShapeFill]] to draw a flat color shape rather than a texture, coordinates are irrelevant ''but they're still  needed''. Passing &lt;code&gt;(0, 0)&lt;/code&gt; for each vertex in this case is a valid approach.
+*{{c|void '''PushTriangle'''(int ''a'', int ''b'', int ''c'')}}
+:Pushes a triangle whose three points are at the indices for vertex a, vertex b, and vertex c
+
+= Shape2DTransform =
+This class serves as a helper class for manipulating Shapes. It includes extended functionality for helping out with scaling, rotating, and translating the shape on the screen. This class should be used to handle modifying the shape since it provides a decent performance boost compared to writing functions to handle it manually. To set a shape's transform, create an instance of this class, set up the transformations via the methods below, and then call SetTransform() on the shape, passing it the created object. The order you apply the transformations is important and should generally be applied in the order of scaling first, rotating second, and translating third.
+
+== Methods ==
+=== Non-static ===
+*{{c|void '''Clear'''()}}
+:Remove any applied transformations
+*{{c|void '''Rotate'''(double ''angle'')}}
+:Rotate the vertex coordinates (and thus the texture in the shape) by ''angle'' degrees about the top left of the screen. Positive values rotate clockwise while negative values rotate counterclockwise
+*{{c|void '''Scale'''(Vector2 ''scaleVec'')}}
+:Scale the x and y vertex offsets by ''scaleVec.x'' and ''scaleVec.y'' respectively
+*{{c|void '''Translate'''(Vector2 ''translateVec'')}}
+:Shift the x and y vertex coordinates by ''translateVec.x'' and ''traslateVec.y'' amount respectively
+*{{c|void '''From2D'''(double ''m00'', double ''m01'', double ''m10'', double ''m11'', double ''vx'', double ''vy'')}}
+:Creates a transformation from an already existing matrix with the parameter names specifying the position in that matrix. ''vx'' and ''vy'' represent the coordinates to translate by.
+
+= Examples =
+&lt;syntaxhighlight lang="csharp"&gt;
+// Create our square
+let square = new("Shape2D");
+
+// Set the vertices of the square (corresponds to a location on the screen)
+// This square is centered at the origin of the screen and each side has a length of 1, making it great for scaling
+square.PushVertex((-0.5,-0.5));
+square.PushVertex((0.5,-0.5));
+square.PushVertex((0.5,0.5));
+square.PushVertex((-0.5,0.5));
+
+// Set the uv coordinates of the texture (defines which point of the texture maps to which vertex)
+square.PushCoord((0,0));
+square.PushCoord((1,0));
+square.PushCoord((1,1));
+square.PushCoord((0,1));
+
+// Set the triangles of the square using the vertex indices (creates a surface to draw the texture on)
+square.PushTriangle(0,1,2);
+square.PushTriangle(0,2,3);
+
+// Now the we have our square set up, let's scale it and draw it somewhere else on the screen
+
+// Create the transformer
+let transformation = new("Shape2DTransform");
+
+// Note: order is important here! You should always scale first, rotate second, and translate last to ensure your shape changes how you expect it to
+transformation.Scale((300, 300)); // Scale the square so each side has a length of 300
+transformation.Rotate(90); // Rotate the square by 90 degrees clockwise
+transformation.Translate((Screen.GetWidth() / 2, Screen.GetHeight() / 2)); // Move the shape to the center of the screen
+
+// Apply the transformation to our square
+square.SetTransform(transformation);
+
+// Draws the rotated square with 300x300 dimensions in the center of the screen
+// Note: This must be done from a function designed for drawing such as RenderOverlay/Underlay() or BaseStatusBar's Draw()
+Screen.DrawShape(myTexture, false, square);
+&lt;/syntaxhighlight&gt;
+
+In this example a circular shape is created in a [[Classes:BaseStatusBar|ZScript HUD]] and then filled with red color with [[DrawShapeFill]], placed at the top center of the screen. The shape is scaled relative to how much health the player has. This example also shows how to apply HUD coordinates to it so that it's positioned correctly:
+
+&lt;syntaxhighlight lang="csharp"&gt;
+class MyCustomHUD : DoomStatusBar
+{
+	const CIRCLEANGLES = 360.0;
+
+	Shape2D circle;
+	Shape2DTransform circleTransf;
+
+	override void Draw(int state, double ticFrac)
+	{
+		super.Draw(state, ticfrac);
+
+		// Draw this only in fullscreen mode:
+		if (state == HUD_FullScreen)
+		{
+			// Create a shape if it hasn't been
+			// created yet:
+			if (!circle)
+			{
+				circle = New("Shape2D");
+				// First, define a vertex for the center
+				// of the circle. It's offset from the
+				// top left angle of the shape by a half:
+				Vector2 cc = (0.5, 0.5);
+				circle.PushVertex(cc);
+				// Coordinates are not relevant for a
+				// shape fill, so just push (0,0);
+				circle.PushCoord((0,0));
+				// This determines how many points will
+				// comprise the edge of our circle. This
+				// value can be larger for a smoother shape:
+				int steps = 60;
+				// This determines the start angle at which
+				// we begin drawing the shape. 0 is equal to
+				// left side:
+				double ang = 0;
+				// This determines how much the angle of the outer
+				// vertex will shift with each step. This depends
+				// on how many steps we want to take, as defined
+				// with 'steps' above:
+				double angStep = CIRCLEANGLES / steps;
+				// Now create the vertices for the outer edge of
+				// the circle. The position is calcualted with
+				// cos and sin, and then the angle is shifted
+				// by adding angStep to it:
+				for (int i = 0; i &lt; steps; i++)
+				{
+					double c = cos(ang);
+					double s = sin(ang);
+					circle.PushVertex((c,s));
+					circle.PushCoord((0,0));
+					ang += angStep;
+				}
+				// Now we need to create triangles for each vertex.
+				// This bit is a little tricky. We start with 1
+				// because we pushed vertex 0 earlier manually:
+				for (int i = 1; i &lt;= steps; i++)
+				{
+					// Get the index of the next vertex:
+					int next = i+1;
+					// If that index is larger than steps, this means
+					// the circle has looped around, so deduct steps
+					// from this value: this essentially makes it
+					// equal to 1, the first outer vertex of the circle:
+					if (next &gt; steps)
+					{
+						next -= steps;
+					}
+					// Finally, push the triangle. Each triangle must
+					// begin with vertex 0, because that's the
+					// vertex at the center. The other two vertices
+					// are on the side of the circle:
+					circle.PushTriangle(0, i, next);
+				}
+			}
+			// Create a transform if it's not created yet:
+			if (!circleTransf)
+			{
+				circleTransf = New("Shape2DTransform");
+			}
+
+			// Get the value of health and convert it to
+			// a 0.0 - 1.0 multiplier:
+			double health = CPlayer.mo.health;
+			double maxHealth = CPlayer.mo.GetMaxHealth(true);
+			double fac = Clamp(health / maxhealth, 0.0, 1.0);
+
+			// This is our base radius:
+			double rad = 32;
+			// If hud_aspectscale CVAR is true (default), the HUD is stretched by
+			// a factor of 1.2, so we'll need to factor that into positioning:
+			double aspect = CVar.GetCVar('hud_aspectscale', CPlayer).GetBool() ? 1.2 : 1.0;
+			// Since transformation is reapplied every frame, it has to be
+			// cleared first:
+			circleTransf.Clear();
+			// Scale it to the required radius relative to the HUD's resolution:
+			Vector2 hudscale = GetHudScale();
+			circleTransf.Scale((rad,rad) * hudscale.x * fac); //and multiply by health fraction
+			// Place horizontally at the center, and them move it down vertically
+			// by the value of its radius:
+			circleTransf.Translate((Screen.GetWidth() * 0.5, rad * hudscale.y / aspect));
+			circle.SetTransform(circleTransf);
+			// Fill with red. Remember that this function uses BGR colors,
+			// not RGB:
+			Screen.DrawShapeFill(color(0,0,255),  1.0, circle);
+		}
+	}
+}&lt;/syntaxhighlight&gt;
+
+== Helpful templates ==
+{{note|Note, in these examples the shape is created every frame. In practice, it's best to cache the shape into a class field and only create it once; same for {{c|Shape2DTransform}}.}}
+Here are a few templates for creating shapes. All of these templates can be used both for textured shapes (see [[DrawShape|Screen.DrawShape]]) and untextured ones (see [[DrawShapeFill|Screen.DrawShapeFill]]). Note, as usual, you will need a {{c|Shape2DTransform}} instance and a {{c|[[DrawShape]]}}/{{c|[[DrawShapeFill]]}} call to actually draw these shapes.
+
+All the examples below create shapes centered around the origin point of the shape, since they're symmetrical. You can change that by adding (0.5, 0.5) to the coordinates of the starting vertex. In that case, maths applied to the texture coordinates can be dropped (the {{c|texOfs}} field, where used, can be set to (0,0)), and simply the same values can be passed both to {{c|PushVertex}} and {{c|PushCoord}}. If you want to use {{c|[[DrawShapeFill]]}} only, without a texture, then you can use {{c|(0,0)}} for all {{c|PushCoord}} calls.
+
+Creates a square shape in the (-0.5-0.5, -0.5-0.5) range centered around (0,0):
+&lt;syntaxhighlight lang="csharp"&gt;
+Shape2D squareShape = New('Shape2D');
+// Create vertices:
+Vector2 p = (-0.5, -0.5); //start at top left corner
+squareShape.PushVertex(p);
+squareShape.PushVertex((p.x, -p.y));
+squareShape.PushVertex((-p.x, p.y));
+squareShape.PushVertex((-p.x, -p.y));
+// Create texture coordinates:
+squareShape.PushCoord((0,0));
+squareShape.PushCoord((0,1));
+squareShape.PushCoord((1,0));
+squareShape.PushCoord((1,1));
+// Create triangles:
+squareShape.PushTriangle(0,1,2);
+squareShape.PushTriangle(1,2,3);
+&lt;/syntaxhighlight&gt;
+
+Creates a disk shape in the (-0.5-0.5, -0.5-0.5) range centered around (0,0):
+&lt;syntaxhighlight lang="csharp"&gt;
+Shape2D diskShape = New('Shape2D');
+// Create center vertex:
+Vector2 cmid = (0, 0);
+diskShape.PushVertex(cmid);
+// Texture offsets relative to vertex positions, 
+// since textures use 0.0-1.0 range:
+Vector2 texOfs = (0.5, 0.5);
+diskShape.PushCoord(cmid + texOfs);
+int steps = 60; //60 vertices on the edge
+double angStep = 360.0 / steps; //angle difference between each edge vertex
+Vector2 p = (0, -0.5); //first edge vertex (top)
+for (int i = 0; i &lt; steps; i++)
+{
+	diskShape.PushVertex(p);
+	diskShape.PushCoord(p + texOfs);
+	p = Actor.RotateVector(p, angStep);
+}
+// Create triangles. Each triangle must connect
+// the center vertex with two edge vertices. We begin at 1,
+// because 0 is the coordinate of the center:
+for (int i = 1; i &lt;= steps; i++)
+{
+	int next = i+1;
+	// If the next vertex is beyond 'steps',
+	// that means we've looped around,
+	// so go back to vertex 1:
+	if (next &gt; steps)
+	{
+		next = 1;
+	}
+	// Create a triangle between center,
+	// edge vertex and the next edge vertex:
+	diskShape.PushTriangle(0, i, next);
+}
+&lt;/syntaxhighlight&gt;
+
+Creates a ring shape (not filled, as opposed to the disk):
+&lt;syntaxhighlight lang="csharp"&gt;
+Shape2D ringShape = New('Shape2D');
+int steps = 60;
+double angStep = 360.0 / steps;
+Vector2 startVert = (0, -0.5); //vertex coordinate
+Vector2 p = startVert;
+// Texture offsets relative to vertex positions, 
+// since textures use 0.0-1.0 range:
+Vector2 texOfs = (0.5, 0.5);
+// Map vertices for the outer circle:
+for (int i = 0; i &lt; steps; i++)
+{
+	ringShape.PushVertex(p);
+	ringShape.PushCoord(p + texOfs);
+	p = Actor.RotateVector(p, angStep);
+}
+// Reduce the Y by 10% and map the
+// vertices for the inner circle:
+p = (startVert.x, startVert.y * 0.9);
+for (int i = 0; i &lt; steps; i++)
+{
+	ringShape.PushVertex(p);
+	ringShape.PushCoord(p + texOfs);
+	p = Actor.RotateVector(p, angStep);
+}
+// Create triangles between the outer circle
+// and the inner circle. Each step is a rectangle,
+// so it requires two triangles:
+for (int i = 0; i &lt; steps; i++)
+{
+	// The next vertex of the outer circle:
+	int next = i+1;
+	// If we went too far, loop around:
+	if (next &gt;= steps)
+	{
+		next -= steps;
+	}
+	// Push triangle between current, next,
+	// and the vertex of the inner circle below
+	// the current one:
+	ringShape.PushTriangle(i, next, i + steps);
+	// Get the next vertex in the INNER circle:
+	int nextInner = i + steps + 1;
+	// If we went too far, loop around:
+	if (nextInner &gt;= steps*2)
+	{
+		nextInner -= steps;
+	}
+	// Push triangle between next, the vertex of the 
+	// inner circle below the current one, and the
+	// one after that:
+	ringShape.PushTriangle(next, i + steps, nextInner);
+}&lt;/syntaxhighlight&gt;
+
+Creates a cross shape in the (-0.5-0.5, -0.5-0.5) range centered around (0,0) by overlaying a vertical bar and a horizontal bar; thickness determines the thickness of the bars relative to their length:
+&lt;syntaxhighlight lang="csharp"&gt;
+// Define length and thickness of the bars:
+double length = 1;
+double thickness = length*0.25;
+// Texture offsets relative to vertex positions, 
+// since textures use 0.0-1.0 range:
+Vector2 texOfs = (0.5, 0.5);
+// Top center point:
+Vector2 p = (0, -0.5);
+// Define starting vertex position,
+// then calculate the rest for the
+// vertical bar:
+Vector2 p1 = (p.x - thickness*0.5, p.y);
+shape.PushVertex(p1);
+shape.PushCoord(p1 + texOfs);
+p1 = (p.x + thickness*0.5, p.y);
+shape.PushVertex(p1);
+shape.PushCoord(p1 + texOfs);
+p1 = (p.x - thickness*0.5, p.y + length);
+shape.PushVertex(p1);
+shape.PushCoord(p1 + texOfs);
+p1 = (p.x + thickness*0.5, p.y + length);
+shape.PushVertex(p1);
+shape.PushCoord(p1 + texOfs);
+//Do the same for the horizontal bar:
+p = (p.y, p.x);
+p1 = (p.x, p.y - thickness*0.5);
+shape.PushVertex(p1);
+shape.PushCoord(p1 + texOfs);
+p1 = (p.x, p.y + thickness*0.5);
+shape.PushVertex(p1);
+shape.PushCoord(p1 + texOfs);
+p1 = (p.x + length, p.y - thickness*0.5);
+shape.PushVertex(p1);
+shape.PushCoord(p1 + texOfs);
+p1 = (p.x + length, p.y + thickness*0.5);
+shape.PushVertex(p1);
+shape.PushCoord(p1 + texOfs);
+// Create triangles:
+shape.PushTriangle(0, 1, 2);
+shape.PushTriangle(1, 2, 3);
+shape.PushTriangle(4, 5, 6);
+shape.PushTriangle(5, 6, 7);&lt;/syntaxhighlight&gt;
+
+[[Category:ZScript]]
+[[Category:BaseStatusBar]]
+[[Category:Screen]]
+[[Category:ZScript guides]]</text>
+    <sha1>osyodl0nb3zs4kpsn03v504cwusynl4</sha1>
+  </revision>
+</page>

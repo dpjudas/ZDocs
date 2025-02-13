@@ -1,0 +1,68 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>Classes:PlasmaBall1</title>
+  <ns>0</ns>
+  <id>5575</id>
+  <revision>
+    <id>49981</id>
+    <parentid>33819</parentid>
+    <timestamp>2022-12-16T21:01:36Z</timestamp>
+    <contributor>
+      <username>Jekyll Grim Payne</username>
+      <id>2175</id>
+    </contributor>
+    <comment>added zscript definition</comment>
+    <origin>49981</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="1255" sha1="6c0rw7361v55l74v52jsr7jp37316jl" xml:space="preserve">{{Actor|
+| type = Explosive
+| name = Beta plasma rifle bolt
+| class = PlasmaBall1
+| game = Doom
+}}[[Classes]]: {{Class|PlasmaBall}}&amp;rarr;&lt;u&gt;PlasmaBall1&lt;/u&gt;&lt;br&gt;
+&amp;nbsp;&amp;rarr;{{Class|PlasmaBall2}}&lt;br&gt;
+
+A green projectile fired from the player's {{Class|PlasmaRifle|plasma rifle}} and {{Class|BFG9000|BFG 9000}} in the press-release beta version of Doom. It bounces off floors and ceilings without losing momentum, but explodes when it impacts a wall. Used alongside [[Classes:PlasmaBall2|PlasmaBall2]].
+==== [[ZScript]] definition ====
+{{ZScriptDefinitionNote|actors/doom/weaponplasma.zs#L78}} 
+&lt;syntaxhighlight lang="csharp"&gt;
+class PlasmaBall1 : PlasmaBall
+{
+	Default
+	{
+		Damage 4;
+		BounceType "Classic";
+		BounceFactor 1.0;
+		Obituary "$OB_MPBFG_MBF";
+	}
+	States
+	{
+	Spawn:
+		PLS1 AB 6 Bright;
+		Loop;
+	Death:
+		PLS1 CDEFG 4 Bright;
+		Stop;
+	}
+}&lt;/syntaxhighlight&gt;
+==== [[DECORATE]] definition ====
+{{DecorateDefinitionNote}}
+ ACTOR &lt;u&gt;PlasmaBall1&lt;/u&gt; : {{Class|PlasmaBall}}
+ {
+   {{Property|Damage}} 4
+   {{Property|BounceType}} "Classic"
+   {{Property|BounceFactor}} 1.0
+   {{Property|Obituary}} "$OB_MPBFG_MBF" // "%o was burned by %k's BFG."
+   States
+   {
+   Spawn:
+     PLS1 AB 6 Bright
+     Loop
+   Death:
+     PLS1 CDEFG 4 Bright
+     Stop
+   }
+ }</text>
+    <sha1>6c0rw7361v55l74v52jsr7jp37316jl</sha1>
+  </revision>
+</page>

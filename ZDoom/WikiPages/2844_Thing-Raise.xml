@@ -1,0 +1,56 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>Thing Raise</title>
+  <ns>0</ns>
+  <id>2844</id>
+  <revision>
+    <id>53242</id>
+    <parentid>45031</parentid>
+    <timestamp>2024-10-07T10:11:16Z</timestamp>
+    <contributor>
+      <username>Jekyll Grim Payne</username>
+      <id>2175</id>
+    </contributor>
+    <origin>53242</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="1384" sha1="eg8p7bxvxx42bieir217ttjjx34ic2r" xml:space="preserve">{{DISPLAYTITLE:Thing_Raise}}
+{{Special|17|tid, nocheck|Thing|Raise}}
+
+* ''tid'': The [[TID]] of the thing(s) you want to resurrect.
+* ''nocheck'': If non-zero, no check for room before resurrecting is performed.
+
+Resurrects the specified thing like an {{Class|archvile}} does. If ''tid'' is 0, it tries to resurrect the activator. This special does not work on [[player]]s.
+
+==Examples==
+This script will print a message on the screen and cause the tagged monsters to resurrect, though it will only do that on skill difficulty 3 or higher.
+ Script 1 (int tid)
+ {
+   If([[GameSkill]]() &gt;= {{const|SKILL_HARD}})
+   {
+     [[Print]](s:"Prepare to die!!");
+     [[Delay]](52);
+     [[Thing_Raise]](tid);
+   }
+ }
+
+This {{Class|ZombieMan|zombie}} will keep coming back up each time it is dispatched normally without being gibbed.
+ ACTOR ResZombieMan : {{Class|ZombieMan}}
+ {
+   States
+   {
+   Death:
+     POSS H 5
+     POSS I 5 [[A_Scream]]
+     POSS J 5 [[A_NoBlocking]]
+     POSS K 5
+     POSS L random(35, 105) // Wait between 1-3 seconds before rising
+     POSS L -1 [[Thing_Raise]](0)
+     Stop
+   }
+ }
+Note that for the special to have an effect like in the above example, the state from which the special is called has to have an infinite duration (this is not the case if the {{c|[[Actor_states#CanRaise|CanRaise]]}} state flag is used).
+
+[[Category:Monster resurrection functions]]</text>
+    <sha1>eg8p7bxvxx42bieir217ttjjx34ic2r</sha1>
+  </revision>
+</page>

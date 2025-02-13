@@ -1,0 +1,385 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>Operators</title>
+  <ns>0</ns>
+  <id>2888</id>
+  <revision>
+    <id>51290</id>
+    <parentid>51220</parentid>
+    <timestamp>2024-01-23T13:43:58Z</timestamp>
+    <contributor>
+      <username>Jekyll Grim Payne</username>
+      <id>2175</id>
+    </contributor>
+    <minor />
+    <origin>51290</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="14610" sha1="2urzi4y2kfl35cd45sqt5l3bkhanbtu" xml:space="preserve">{{Note|This page is for [[ACS]]. For [[ZScript]] operators see [[Operators (ZScript)|'''here''']].}}
+
+This is all the operators supported by [[ACS]] as well as a basic description of each. You will have to find out for yourself all the different ways you can use them. If you have some background in C/C++ then you will be able to pick up on this fast as much of it is the same.
+
+=== '=' (binary) ===
+Assignment Operator&lt;br&gt;
+This operator takes the value on the right and then stores it into the variable on the left. Unless an expression is being passed directly to a function or script then it must have some sort of an assignment operator associated to it.
+
+Basic usage:
+ x = 2;
+
+=== '+' (binary) === 
+Addition Operator&lt;br&gt;
+Adds two numbers together
+
+Basic usage:
+ z = x + y;
+If you want to add a number back into a variable then see the '+=' 
+operator.
+
+=== '-' (unary) ===
+Sign Change Operator&lt;br&gt;
+When used in front of a number it changes the sign of that variable.
+
+Basic usage:
+ y = -x;
+
+=== '-' (binary) ===
+Subtraction Operator&lt;br&gt;
+This subtracts two integers from each other.
+
+Basic usage:
+ z = x - y;
+If you want to subract a number back into a variable then see the '-=' operator.
+
+=== '*' (binary) ===
+Multiplication Operator&lt;br&gt;
+This multiplies two numbers together.
+
+Basic usage:
+ z = x * y;
+If you want to multiply a number back into a variable then see the '*=' operator.
+
+=== '/' (binary) ===
+Division Operator&lt;br&gt;
+This divides two numbers together. Note that since ACS does not support floating point you can only get the integer portion of the result; the decimal part is cut off. Also be careful not to divide by zero as this will cause an error.
+
+Basic usage: (Where y is non-zero)
+ z = x / y;
+If you want to divide a number back into a variable then see the '/=' operator.
+
+=== '%' (binary) ===
+Modulous Operator&lt;br&gt;
+This operator performs a division operation on two values and returns the remainder of the operation (if any). For example, in math 10/3 is 3R1 so in acs 10 / 3 would return 3 and 10 % 3 would return 1.
+Basic usage: (Where y is non-zero)
+ z = x % y;
+If you want to mod a number back into a variable then see the '%=' operator.
+
+=== '&amp;' (binary) ===
+Bitwise AND Operator&lt;br&gt;
+This operator takes the bits of the left and right side and logically ANDs them together. 
+See the following table:
+     | p &amp; q
+ p q |
+ 0 0 |   0
+ 0 1 |   0
+ 1 0 |   0
+ 1 1 |   1
+A bit in the resulting value will only be 1 if the corresponding bits in both input values are also 1.
+
+For example, 9 &amp; 10 would result in 8, because 1001 (9) &amp; 1010 (10) = 1000 (8).  The most common usage for this operator is to check whether certain bits in a value are set.
+
+Basic usage:
+ z = x &amp; y;
+
+In a conditional statement:
+ if (x &amp; y) { statement }
+
+If you want to logically AND the whole statement rather than each bit individually then see the '&amp;&amp;' operator.
+If you want to logically AND a number back into a variable then see the '&amp;=' operator.
+
+=== '|' (binary) ===
+Bitwise OR Operator&lt;br&gt;
+This operator takes the bits of two numbers and logically ORs them together.  See the following table:
+The OR truth table:
+     | p | q
+ p q |
+ 0 0 |   0
+ 0 1 |   1
+ 1 0 |   1
+ 1 1 |   1
+A bit in the resulting value will be 1 if either or both of the corresponding bits in the input values are 1.  If both bits are 0, the resulting bit will also be 0.
+
+For example, 9 | 10 would result in 11 because 1001 (9) | 1010 (10) = 1011 (11).  The most common usage is to set a particular bit within a value.
+
+Basic usage:
+ z = x | y;
+If you want to logically OR a whole statement rather than each bit then see the '||' operator.
+If you want to logically OR a number back into a variable then see the '|=' operator.
+
+=== '^' (binary) ===
+Bitwise XOR Operator (sometimes refered to as EOR as well)&lt;br&gt;
+This is the exclusive-or operator and logically XORs the bits of two numbers together. See the following table:
+     | p ^ q
+ p q |
+ 0 0 |   0
+ 0 1 |   1
+ 1 0 |   1
+ 1 1 |   0
+A bit in the resulting value will be 1 only if the corresponding bits in the input values are different (0 &amp; 1 or 1 &amp; 0).  If the input bits are the same, the bit in the resulting value will be 0.
+
+For example, 9 ^ 10 will return 3 because 1001 (9) ^ 1010 (10) = 0011 (3).
+
+Basic usage:
+ z = x ^ y;
+If you want to logically XOR a number back into a variable then you should see the '^=' variable.
+
+=== '~' (unary) ===
+Bitwise NOT Operator.&lt;br&gt;
+This inverts every bit in the input value. See the following table:
+   | ~p
+ p |
+ 0 |  1
+ 1 |  0
+A bit in the resulting value will be 1 if the corresponding bit in the input value is 0, and vice versa.
+
+For example, if you were to logically NOT the binary number 0101 (5) the result would be 1010 (10).  Note however that ACS uses 32-bit signed integers and so the actual statement ~5 would result in a very large negative number.
+
+Basic usage:
+ y = ~x;
+If you want to logically NOT a whole statement rather than each bit then see the '!' operator.
+
+=== '&lt;&lt;' (binary) ===
+Bitwise Left Shift Operator&lt;br&gt;
+This operator takes all the bits of the value on the left and shifts them by the number on the right. So if you have 7 and left shift it 1 then you have 14 because 0111 &lt;&lt; 1 = 1110. 
+
+Note that this is exactly the same thing as multiplying the number on the left by the corresponding power of 2 on the right.  For example, 4 &lt;&lt; 3 = 32 because 2^3 is 8 and 8 times 4 is 32.
+
+Note also that the bits don't "wrap" during this operation; if the left-most bit is a 1 and you shift it to the left, that value will be lost and a 0 bit will be added on the right side of the number.  e.g. 1011 &lt;&lt; 1 = 0110, as opposed to 0111. (Note that ACS uses 32-bit integers, however.)
+
+Basic usage:
+ z = x &lt;&lt; y;
+If you want to shift the bits of a variable left and store it back into itself then see the '&lt;&lt;=' operator.
+
+=== '&gt;&gt;' (binary) ===
+Bitwise Right Shift Operator&lt;br&gt;
+This is the same thing as the left shift operator but the exact opposite. It takes the number on the left and moves its bits right by the number on the right. So 6 &gt;&gt; 1 = 3 because 0 1 1 0 &gt;&gt; 1 = 0 0 1 1.
+
+Note: this is exactly the same as dividing a number the cooresponding power of 2 but faster. So, 24 &gt;&gt; 3 = 3 because 2^3 is 8 and 24 / 8 = 3.
+
+Note 2: if you shift the bits off the variable then you lose the bit. If you take 1 and shift it 1: 1 &gt;&gt; 1 then you have zero because the bit got shifted off.
+
+Basic usage:
+ z = x &gt;&gt; y;
+If you want to shift the bits of a variable right and store it back into itself then see the '&gt;&gt;=' operator.
+=== '==' (binary) ===
+Relational Equals To Operator.&lt;br&gt;
+This compares two statements and then returns a true if they equal and a false if they don't.
+Basic usage:
+ z = x == y;
+=== '!=' (binary) ===
+Relational Doesn't Equal To Operator&lt;br&gt;
+This compares two statements and then returns a true if the don't equal and false if they do.
+Basic usage:
+ z = x != y;
+=== '&gt;' (binary) ===
+Relational Greater Than Operator&lt;br&gt;
+This compares two statements and then returns true if the value on the left is greater than the value on the right or false otherwise; if the two are equal, it will return false.
+Basic usage:
+ z = x &gt; y;
+
+=== '&gt;=' (binary) ===
+Relational Greater Than or Equal To Operator&lt;br&gt;
+This compares two statements and then returns true if the value on the left is greater than or equal to the value on the right or false otherwise.
+Basic usage:
+ z = x &gt;= y;
+
+=== '&lt;' (binary) ===
+Relational Less Than Operator&lt;br&gt;
+This compares two statements and then returns true if the value on the left is smaller than the value on the right or false otherwise; if the two are equal it will return false.
+Basic usage:
+ z = x &lt; y;
+
+=== '&lt;=' (binary) ===
+Relational Less Than or Equal To Operater&lt;br&gt;
+This compares two statements and then returns true if the value on the left is smaller than or equal to the value on the right, or false otherwise.
+Basic usage:
+ z = x &lt;= y;
+
+=== '&amp;&amp;' (binary) ===
+Logical AND Operator&lt;br&gt;
+This operator compares two statements and returns true if both statements are true, or false if either or both are false.  See the following table:
+     | p &amp; q
+ p q |
+ 0 0 |   0
+ 0 1 |   0
+ 1 0 |   0
+ 1 1 |   1
+Note that since any non-zero number is true, then this returns true: 4 &amp;&amp; 3
+It's best used when linking together relational operators.
+Basic usage:
+ if (x &amp;&amp; y) { statement }
+It can also be used for assignement:
+ z = x &amp;&amp; y
+Linking together relational operators:
+ z = x == y &amp;&amp; a != b
+
+=== '||' (binary) ===
+Logical OR Operator&lt;br&gt;
+This operator compares two statements and returns true if either or both statements are true, or false if both are false.  See the following table:
+     | p &amp; q
+ p q |
+ 0 0 |   0
+ 0 1 |   1
+ 1 0 |   1
+ 1 1 |   1
+Note that since any non-zero number is true, this will return a true statement: 4 || 0.  It's best used when linking together relational operators.
+Basic usage:
+ if (x || y) { statement }
+It can also be used for assignment:
+ z = x || y;
+Linking together relational operators:
+ z = x == y || a != b
+
+=== '!' (unary) ===
+Logical NOT Operator&lt;br&gt;
+This operator gives the inverse condition of a statement.  If placed before a true statement, it will return false, and vice versa.  It's best used with relational operators and other logical operators.
+
+Basic usage:
+ y = !x
+Used in logical operators:
+ z = !(x &amp;&amp; y) &amp;&amp; (x || Y)
+This statement will only be executed if a is ''false'':
+ if (!a) { statement }
+
+=== '+=' (binary) ===
+Addition Assignment Operator&lt;br&gt;
+This operator takes the value on the right, adds it to the value of the variable on the left, and then stores it back into the variable. It is the equivalent of n = n + y.
+Basic usage:
+ x += y;
+
+=== '++' (unary) ===
+Increment Operator&lt;br&gt;
+This operator adds one to a variable and stores the result back into itself. It is the similar to n += 1 or n = n + 1.
+Basic usage:
+
+ x++;
+ ++x;
+
+When embedded within an assignment statement or coditional, the placement of the operator determines what value is returned from the variable.  If the operator is placed on the left side of the variable, the variable will first be incremented, and then its value will be returned; otherwise, its value will be returned first, and then it will be incremented.
+
+Examples:
+
+This will return true if x is 2 when the line is reached:
+
+ // Increment x, then check its value.
+ if (++x) == 3 ...
+
+This will return false if x is 2 when the line is reached:
+
+ // Check the value of x, then increment it.
+ if (x++) == 3 ...
+
+At the end of this next example, x will be one more than y:
+
+ // Assign y, then increment x.
+ int y = x++;
+
+=== '-=' (binary) ===
+Subtraction Assignment Operator&lt;br&gt;
+This operator takes the value on the right, subtracts it from the value of the variable on the left, and then stores it back into the variable. It is the equivalent of n = n - y.
+Basic usage:
+ x -= y;
+
+=== '--' (unary) ===
+Decrement Operator&lt;br&gt;
+This operator subtracts one from a variable and stores the result back into itself. It is the similar to n -= 1 or n = n - 1.
+Basic usage:
+
+ x--;
+ --x;
+
+When embedded within an assignment statement or conditional, the placement of the operator determines what value is returned from the variable.  If the operator is placed on the left side of the variable, the variable will first be decremented, and then its value will be returned; otherwise, its value will be returned first, and then it will be decremented.
+
+Examples:
+
+This will return true if x is 4 when the line is reached:
+
+ // Decrement x, then check its value.
+ if (--x) == 3 ...
+
+This will return false if x is 4 when the line is reached:
+
+ // Check the value of x, then decrement it.
+ if (x--) == 3 ...
+
+At the end of this next example, x will be one less than y:
+
+ // Assign y, then decrement x.
+ int y = x--;
+
+=== '*=' (binary) ===
+Multiplication Assignment Operator&lt;br&gt;
+This operator takes the value on the right, multiplies it to the value of the variable on the left, and then stores it back into the variable. It is the equivalent of n = n * y.
+Basic usage:
+ x *= y;
+=== '/=' (binary) ===
+Division Assignment Operator&lt;br&gt;
+This operator takes the value on the right, divides the value of the variable by it, and then stores it back into the variable. It is the equivalent of n = n /y.
+
+Note: all the limitaions of the division operator carry over so see the '/' operator if you are not sure. 
+
+Basic usage:
+ x /= y;
+=== '%=' (binary) ===
+Modulous Assignment Operator&lt;br&gt;
+This operator takes the value on the right, divides the value of the variable by it, returns the remainder and then stores it back into the variable. It is the equivalent of n = n % y.
+
+Note: if you are unsure on how this operator works then see the modulous operator:, '%', for more info.
+
+Basic usage:
+ x %= y;
+
+=== '&amp;=' (binary) ===
+Bitwise AND Assignment Operator&lt;br&gt;
+This operator takes the value on the right, logically ANDs all the bits of it to the value of the variable on the left, and then stores it back into the variable. It is the equivalent of n = n &amp; y.
+
+Note: See the Bitwise AND, '&amp;', operator for more info on how this operator works. 
+
+Basic usage:
+ x &amp;= y;
+=== '|=' (binary) ===
+Bitwise OR Assignment Operator&lt;br&gt;
+This operator takes the value on the right, logically ORs all the bits of it to the value of the variable on the left, and then stores it back into the variable. It is the equivalent of n = n | y.
+
+Note: See the Bitwise OR, '|', operator for more info on how this operator works.
+
+Basic usage:
+ x |= y;
+=== '^=' (binary) ===
+Bitwise XOR Assignment Operator&lt;br&gt;
+This operator takes the value on the right, logically XORs all the bits of it to the value of the variable on the left, and then stores it back into the variable. It is the equivalent of n = n ^ y.
+
+Note: See the Bitwise XOR, '^', operator for more info on how this operator works.
+
+Basic usage:
+ x ^= y;
+=== '&lt;&lt;=' (binary) ===
+Bitwise Left Shift Assignment Operator&lt;br&gt;
+This operator takes the value on the right, shifts the bits of the value of the variable on the left by the that number, and then stores it back into the variable. It is the equivalent of n = n &lt;&lt; y.
+
+Note: See the Bitwise Left Shift, '&lt;&lt;', operator for more info on how this operator works.
+
+Basic usage:
+ x &lt;&lt;= y;
+=== '&gt;&gt;=' (binary) ===
+Bitwise Right Shift Assignment Operator&lt;br&gt;
+This operator takes the value on the right, shifts the bits of the value of the variable on the right by that number, and then stores it back into the variable. It is the equivalent of n = n &gt;&gt; y.
+
+Note: See the Bitwise Right Shift, '&gt;&gt;', operator for more info on how this operator works.
+
+Basic usage:
+ x &gt;&gt;= y;
+
+__NOTOC__
+[[Category:ACS]][[Category:Glossary]]</text>
+    <sha1>2urzi4y2kfl35cd45sqt5l3bkhanbtu</sha1>
+  </revision>
+</page>

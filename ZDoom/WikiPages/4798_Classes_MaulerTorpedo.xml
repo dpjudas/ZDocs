@@ -1,0 +1,56 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>Classes:MaulerTorpedo</title>
+  <ns>0</ns>
+  <id>4798</id>
+  <revision>
+    <id>36465</id>
+    <parentid>30729</parentid>
+    <timestamp>2013-05-14T16:54:31Z</timestamp>
+    <contributor>
+      <username>Blue Shadow</username>
+      <id>2021</id>
+    </contributor>
+    <comment>/* DECORATE definition */ Updated.</comment>
+    <origin>36465</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="1072" sha1="m9n1xr1xhju480msrmeubv3d0apk75k" xml:space="preserve">{{Actor|
+| type = Explosive
+| name = Mauler torpedo
+| class = MaulerTorpedo
+| game = Strife
+}}[[Classes]]: &lt;u&gt;MaulerTorpedo&lt;/u&gt;&lt;br&gt;
+The projectile fired by the {{class|Mauler2|mauler's}} secondary fire mode. Not really damaging on direct impact, but summons a devastating {{class|MaulerTorpedoWave|wave of projectiles}} upon detonation.
+==== [[DECORATE]] definition ====
+ ACTOR &lt;u&gt;MaulerTorpedo&lt;/u&gt;
+ {
+   {{Property|Speed}} 20
+   {{Property|Height}} 8
+   {{Property|Radius}} 13
+   {{Property|Damage}} 1
+   {{Property|DamageType}} {{DamageType|Disintegrate}}
+   {{Property|Projectile}}
+   +{{Flag|STRIFEDAMAGE}}
+   {{Property|MaxStepHeight}} 4
+   {{Property|RenderStyle}} Add
+   {{Property|SeeSound}} "weapons/mauler2fire"
+   {{Property|DeathSound}} "weapons/mauler2hit"
+   {{Property|Obituary}} "$OB_MPMAULER" // "%o was viciously vaporized by %k."
+ 
+   action native [[A_MaulerTorpedoWave]]();
+ 
+   States
+   {
+   Spawn:
+     TORP ABCD 4 Bright
+     Loop
+   Death:
+     THIT AB 8 Bright
+     THIT C 8 Bright [[A_MaulerTorpedoWave]]
+     THIT DE 8 Bright
+     Stop
+   }
+ }</text>
+    <sha1>m9n1xr1xhju480msrmeubv3d0apk75k</sha1>
+  </revision>
+</page>

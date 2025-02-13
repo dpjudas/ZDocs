@@ -1,0 +1,51 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>Zandronum: GameType</title>
+  <ns>0</ns>
+  <id>9004</id>
+  <revision>
+    <id>43690</id>
+    <timestamp>2017-01-08T22:43:08Z</timestamp>
+    <contributor>
+      <username>Tiger</username>
+      <id>2074</id>
+    </contributor>
+    <comment>Created a new page that splits away from the ZDoom GameType, this page is dedicated to the Zandronum engine.</comment>
+    <origin>43690</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="921" sha1="serkeainn41wtgig4y4k75cvmy7ql22" xml:space="preserve">{{STFeature}}
+int '''GameType''' (void)
+
+== Usage ==
+
+Returns the game type currently being played.
+
+=== Return value ===
+
+The game type currently being played. For readability there are definitions defined in zdefs.acs as follows:
+
+*'''GAME_SINGLE_PLAYER''' = 0
+:Solo play.
+*'''GAME_NET_COOPERATIVE''' = 1
+:Cooperative net game.
+*'''GAME_NET_DEATHMATCH''' = 2
+:Deathmatch net game.
+*'''GAME_TITLE_MAP''' = 3
+:Title map
+*'''GAME_NET_TEAMGAME''' = 4
+:Team game net game. This includes CTF, Skulltag, Domination, and the generic "Team Game", but not Team Deathmatch, Team LMS, or Team Possession.
+
+== Examples ==
+
+With this command it is possible to do things such as give an explanation about the map to the player.
+
+ script 1 [[script types|ENTER]]
+ {
+     if ([[GameType]] () != {{const|GAME_NET_DEATHMATCH}})
+         [[Print]] (s:"This is a deathmatch only map!");
+     else
+         [[Print]] (s:"BobDM1\nBy Bob");
+ }</text>
+    <sha1>serkeainn41wtgig4y4k75cvmy7ql22</sha1>
+  </revision>
+</page>

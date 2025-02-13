@@ -1,0 +1,51 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>A BishopMissileWeave</title>
+  <ns>0</ns>
+  <id>2668</id>
+  <revision>
+    <id>34279</id>
+    <parentid>25111</parentid>
+    <timestamp>2012-09-06T10:36:41Z</timestamp>
+    <contributor>
+      <username>Gez</username>
+      <id>1283</id>
+    </contributor>
+    <minor />
+    <comment>codepointer template</comment>
+    <origin>34279</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="792" sha1="5tfeu2yihuv6jqmaashhrhfrfizc8ci" xml:space="preserve">{{codepointer|Hexen|Missile movement}}'''A_BishopMissileWeave''' {{deprecated}}
+
+(no parameters)
+
+
+This can only be used on projectiles and makes them move on a spiraling path. The exact behavior depends on the frequency with which this function is called. You have to call this function repeatedly to have a permanent effect.
+
+This function can be duplicated in a more generic way with [[A_Weave]](2, 2, 2.0, 1.0).
+
+==Example==
+Here is an example of a projectile that has a similar behavior to the Dark Bishop's missile.
+
+  ACTOR DarkBall
+  {
+    Radius 8
+    Height 6
+    Damage 10
+    Speed 20
+    PROJECTILE
+    +Randomize
+    States
+      {
+      Spawn:
+      DRKB A 1 A_BishopMissileWeave
+      DRKB B 1 A_BishopMissileWeave
+      loop
+      Death:
+      DRKB CDE 3
+      Stop
+    }
+  }</text>
+    <sha1>5tfeu2yihuv6jqmaashhrhfrfizc8ci</sha1>
+  </revision>
+</page>

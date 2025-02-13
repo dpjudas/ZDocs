@@ -1,0 +1,67 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>Classes:RedCard</title>
+  <ns>0</ns>
+  <id>2554</id>
+  <revision>
+    <id>51427</id>
+    <parentid>39266</parentid>
+    <timestamp>2024-01-31T12:25:57Z</timestamp>
+    <contributor>
+      <username>Jekyll Grim Payne</username>
+      <id>2175</id>
+    </contributor>
+    <comment>/* DECORATE definition */</comment>
+    <origin>51427</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="910" sha1="hmwxwcu1ivrc5elkyqrfq13b5zs1qpg" xml:space="preserve">{{Actor|
+| type = Key
+| name = Red keycard
+| class = RedCard
+| game = Doom
+| doomednum = 13
+| spawnid = 86
+| spawnname = T_REDKEYCARD 
+}}
+[[Classes]]: [[Classes:Inventory|Inventory]]&amp;rarr;[[Classes:Key|Key]]&amp;rarr;[[Classes:DoomKey|DoomKey]]&amp;rarr;&lt;u&gt;RedCard&lt;/u&gt;
+
+
+A Red keycard that opens red doors in Doom.
+
+
+==== [[ZScript]] definition ====
+{{ZScriptDefinitionNote|actors/doom/doomkeys.zs#L50C1-L64C2}}
+&lt;syntaxhighlight lang="csharp"&gt;
+class RedCard : DoomKey
+{
+	Default
+	{
+		Inventory.Pickupmessage "$GOTREDCARD";
+		Inventory.Icon "STKEYS2";
+	}
+	States
+	{
+	Spawn:
+		RKEY A 10;
+		RKEY B 10 bright;
+		loop;
+	}
+}&lt;/syntaxhighlight&gt;
+
+==== [[DECORATE]] definition ====
+{{DecorateDefinitionNote}}
+ ACTOR &lt;u&gt;RedCard&lt;/u&gt; : {{Class|DoomKey}}
+ {
+   {{Property|Inventory.PickupMessage}} "$GOTREDCARD"
+   {{Property|Inventory.Icon}} "STKEYS2"
+   States
+   {
+   Spawn:
+     RKEY A 10
+     RKEY B 10 Bright
+     Loop
+   }
+ }</text>
+    <sha1>hmwxwcu1ivrc5elkyqrfq13b5zs1qpg</sha1>
+  </revision>
+</page>

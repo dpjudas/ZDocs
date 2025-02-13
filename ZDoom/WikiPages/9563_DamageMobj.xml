@@ -1,0 +1,79 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>DamageMobj</title>
+  <ns>0</ns>
+  <id>9563</id>
+  <revision>
+    <id>54060</id>
+    <parentid>53565</parentid>
+    <timestamp>2024-12-16T09:39:10Z</timestamp>
+    <contributor>
+      <username>Jekyll Grim Payne</username>
+      <id>2175</id>
+    </contributor>
+    <minor />
+    <comment>/* Return value */</comment>
+    <origin>54060</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="3089" sha1="p8p5ui9bam74p97wsho8irasrvnx1fr" xml:space="preserve">__NOTOC__
+
+'''[[Classes:Actor|Actor]]'''
+
+virtual int '''DamageMobj'''(Actor ''inflictor'', Actor ''source'', int ''damage'', Name ''mod'', int ''flags'' = 0, double ''angle'' = 0)
+
+==Usage==
+A [[ZScript virtual functions|virtual function]] called by the actor whenever it takes damage. Returns the amount of damage the caller actually took from the attack.
+
+Can be both overridden on a specific actor in order to add something to the moment they take damage, and also called on an actor directly to deal damage to them.
+
+There are a few important things to keep in mind when overriding [[DamageMobj]]:
+* If &lt;code&gt;super.DamageMobj(...)&lt;/code&gt; isn't called, &lt;u&gt;no damage will be dealt&lt;/u&gt;. Just &lt;code&gt;return&lt;/code&gt;'ing a positive value doesn't deal the damage by itself.
+* This function can be called &lt;u&gt;multiple times per the same [[tic]]&lt;/u&gt;., because an actor can be damaged multiple times at once. This concerns not only attacks from different sources that hit at the same time, but also attacks from the same source, such as a shotgun blast (each pellet is a separate hitscan and thus a separate instance of damage).
+* The base function call (handled in C++, not ZScript) also includes a '''[[TakeSpecialDamage]]''' call, which will modify the value that DamageMobj returns.
+
+===Parameters===
+*{{c|Actor '''inflictor'''}}
+:The actor dealing the damage. This is a [[projectile]] or a [[puff]] if one was used. For monster melee attacks this is the same as the source.
+*{{c|Actor '''source'''}}
+:The actor responsible for the inflictor. This is the actor who actually performed the attack. Can be &lt;code&gt;null&lt;/code&gt; if the damage is dealt without a source, for example by a damaging floor.
+*{{c|int '''damage'''}}
+:The amount of damage to deal.
+*{{c|Name '''mod'''}}
+:The damage type applied to the attack. Regular attacks use {{c|'Normal'}}, hitscan attacks use {{c|'Hitscan'}}.
+*{{c|int '''flags'''}}
+:The damage flags to use in the attack:
+{{: ZScript damage flags}}
+*{{c|double '''angle'''}}
+:The absolute angle for thrusting enemies from the damage if {{c|DMG_USEANGLE}} is set.
+
+===Return value===
+*''int'' - meant to inform the code about how much damage was dealt. This is &lt;u&gt;purefly informative&lt;/u&gt; and will not deal any damage, unless &lt;code&gt;super.DamageMobj(...)&lt;/code&gt; is called.
+
+==Examples==
+This version of the [[Classes:Zombieman|Zombieman]] will take no damage from [[Projectile|projectiles]]:
+&lt;syntaxhighlight lang="csharp"&gt;
+class ZombiemanNoProjectiles : Zombieman
+{
+	override int DamageMobj (Actor inflictor, Actor source, int damage, Name mod, int flags, double angle)
+	{
+		if (inflictor &amp;&amp; inflictor.bMISSILE)
+		{
+			return 0;
+		}
+		
+		return super.DamageMobj(inflictor, source, damage, mod, flags, angle);
+	}
+}
+&lt;/syntaxhighlight&gt;
+
+Note, similar behavior can be achieved with the {{flag|NONSHOOTABLE}} flag, but that will completely disable collision with projectiles, while this override disables damage.
+
+==See also==
+* [[ZScript virtual functions|Virtual functions]]
+
+[[Category:ZScript]]
+[[Category:ZScript virtual functions]]
+[[Category:Actor virtual functions]]</text>
+    <sha1>p8p5ui9bam74p97wsho8irasrvnx1fr</sha1>
+  </revision>
+</page>

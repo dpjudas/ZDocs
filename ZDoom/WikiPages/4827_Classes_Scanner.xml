@@ -1,0 +1,47 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>Classes:Scanner</title>
+  <ns>0</ns>
+  <id>4827</id>
+  <revision>
+    <id>39986</id>
+    <parentid>35408</parentid>
+    <timestamp>2015-05-17T15:25:06Z</timestamp>
+    <contributor>
+      <username>Blue Shadow</username>
+      <id>2021</id>
+    </contributor>
+    <minor />
+    <comment>/* DECORATE definition */ Updated</comment>
+    <origin>39986</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="873" sha1="c9jl8ukuj1ljxvhcjpsbpmp07ezptyw" xml:space="preserve">{{Actor|
+| type = Artifact
+| name = Scanner
+| class = Scanner
+| game = Strife
+| doomednum = 2027
+| convid = 165
+}}[[Classes]]: [[Classes:Inventory|Inventory]]&amp;rarr;[[Classes:PowerupGiver|PowerupGiver]]&amp;rarr;&lt;u&gt;Scanner&lt;/u&gt;&lt;br&gt;
+The scanner displays the location of Actors on the automap. It's effectively the same as the IDDT cheatcode.
+==== [[DECORATE]] definition ====
+ ACTOR &lt;u&gt;Scanner&lt;/u&gt; : {{Class|PowerupGiver}} native
+ {
+   +{{Flag|FLOORCLIP}}
+   +{{Flag|INVENTORY.FANCYPICKUPSOUND}}
+   {{Property|Inventory.MaxAmount}} 1
+   {{Property|Tag}} "$TAG_SCANNER" // "Scanner"
+   {{Property|Inventory.Icon}} "I_PMUP"
+   {{Property|Powerup.Type}} "{{Class|PowerScanner|Scanner}}"
+   {{Property|Inventory.PickupSound}} "misc/i_pkup"
+   {{Property|Inventory.PickupMessage}} "$TXT_SCANNER" // "You picked up the scanner."
+   States
+   {
+   Spawn:
+     PMUP AB 6
+     Loop
+   }
+ }</text>
+    <sha1>c9jl8ukuj1ljxvhcjpsbpmp07ezptyw</sha1>
+  </revision>
+</page>

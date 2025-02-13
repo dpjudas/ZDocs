@@ -1,0 +1,33 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>A LightningClip</title>
+  <ns>0</ns>
+  <id>5546</id>
+  <revision>
+    <id>23849</id>
+    <timestamp>2009-08-11T10:01:24Z</timestamp>
+    <contributor>
+      <username>Gez</username>
+      <id>1283</id>
+    </contributor>
+    <comment>Created page with '{{DISPLAYTITLE:A_LightningClip}} '''A_LightningClip'''&lt;br /&gt; (no parameters)  If the calling actor has the FLOORHUGGER flag and does not have a valid &lt;tt&gt;lastenemy&lt;/tt&gt; field, th…'</comment>
+    <origin>23849</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="1421" sha1="bcxnh2qp16a4qbcr3ze5jm8y90nbicg" xml:space="preserve">{{DISPLAYTITLE:A_LightningClip}}
+'''A_LightningClip'''&lt;br /&gt;
+(no parameters)
+
+If the calling actor has the FLOORHUGGER flag and does not have a valid &lt;tt&gt;lastenemy&lt;/tt&gt; field, the function does nothing.
+
+Otherwise, clips to the appropriate surface (the floor if a floorhugger, the ceiling otherwise &amp;mdash; this function will not work logically if the calling actor has neither the FLOORHUGGER nor the CEILINGHUGGER flags). A floorhugger's target is set to its lastenemy's tracer, a ceilinghugger's target is instead set directly to its tracer. (A missile normally uses the target field to keep track of its owner, but a missile using this codepointer cannot.)
+
+If a floorhugger, the calling actor and its companion designated by the &lt;tt&gt;lastenemy&lt;/tt&gt; field are then thrust by one unit either to the left (50% chance if its &lt;tt&gt;special1&lt;/tt&gt; field is less than 2, 100% if that field is less than -2) or to the right (the rest of the time). The &lt;tt&gt;special1&lt;/tt&gt; field is incremented when going to the left, and decremented when going to the right.
+
+If its target is dead, the calling actor then explodes, otherwise it is aimed, and thrust by half its speed, towards the target.
+
+This codepointer is restricted to {{Class|LightningCeiling}} and derived classes.
+
+[[Category:Decorate Hexen functions]] [[Category:Decorate Missile movement functions]] [[Category:Decorate Restricted functions]]{{DEFAULTSORT:LightningClip}}</text>
+    <sha1>bcxnh2qp16a4qbcr3ze5jm8y90nbicg</sha1>
+  </revision>
+</page>

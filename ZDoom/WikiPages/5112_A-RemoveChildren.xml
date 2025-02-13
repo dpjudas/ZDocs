@@ -1,0 +1,94 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>A RemoveChildren</title>
+  <ns>0</ns>
+  <id>5112</id>
+  <revision>
+    <id>46803</id>
+    <parentid>44179</parentid>
+    <timestamp>2019-07-16T06:03:43Z</timestamp>
+    <contributor>
+      <username>Quaker540</username>
+      <id>2135</id>
+    </contributor>
+    <minor />
+    <comment>Replaced the deprecated action function</comment>
+    <origin>46803</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="3957" sha1="g70zf5ymamemyd4q6xtd04ywjnyc9hg" xml:space="preserve">{{codepointer|Monster AI}}
+'''A_RemoveChildren''' [(bool ''all'' [, int ''flags'' [, string ''filter'' [, string ''species'']]])]
+
+==Usage==
+Called by monsters to completely remove all monsters spawned by the caller or by a projectile spawned by the caller of this function. If ''all'' is false or not specified, only dead children are removed. Currently the only function that sets the necessary information is [[A_SpawnItemEx]].
+
+Note that with SXF_ORIGINATOR, projectiles can create its own children, meaning they will not be attached to their projectiles masters.
+
+Monsters spawned with [[A_SpawnProjectile]] are not affected by this. [[A_SpawnProjectile]] was never designed to spawn monsters.
+
+This function can target actors that are non-monsters, but only by using flags.
+
+=== Parameters ===
+*''all'': if this is {{c|false}}, only dead children are removed. Otherwise, if {{c|true}}, all children are removed, dead and alive. Default is {{c|false}}.
+*''flags'': the following flags can be combined using the {{!}} character between name constants:
+**'''RMVF_MISSILES''' - Allows removal of missiles associated with the pointer.
+**'''RMVF_NOMONSTERS''' - The function will not remove monsters and simply skip them. By default, before the introduction of assigning masters to missiles, similar functions would only work on monsters. To ensure consistency, only monsters are allowed for removal by default.
+**'''RMVF_MISC''' - Allows removal of things that are neither missile nor monster.
+**'''RMVF_EVERYTHING''' - Overrides all other flags. Disables discrimination and removes the actor of any type regardless of what it is.
+**'''RMVF_EXFILTER''' — inverts the case of the class name filter; the calling actor's children are only removed if their class name does not match the value passed to ''filter''.
+**'''RMVF_EXSPECIES''' — inverts the case of the [[species]] filter; the calling actor's children are only removed if their species does not match the value passed to ''species''.
+**'''RMVF_EITHER''' — the calling actor's children are removed if either of their class name or [[species]] matches the values passed to ''filter'' and ''species'', respectively.
+*''filter'': the actor class to remove. The calling actor's children are only removed if their class name matches the specified filter class. Default is {{c|"None"}}.
+*''species'': the actor [[species]] to remove. The calling actor's children are only removed if their species matches the specified species filter. Default is {{c|"None"}}.
+
+== Examples ==
+The following is a variant on the {{Class|DoomImp|doom imp}}, a monster that spawns clones of itself to attack you.
+Upon being killed, its death state triggers [[A_RemoveChildren]], removing all of the dead clones it 
+had spawned, before killing the living ones using [[A_KillChildren]].
+This is so that the fresh corpses of the clones may still be revived somehow by a different monster.
+ ACTOR VoodooLeaderImp : {{Class|DoomImp}}
+ {
+   {{Property|Game}} Doom
+   {{Property|SpawnID}} 5
+   {{Property|Health}} 100
+   {{Property|Mass}} 1000
+   {{Property|PainChance}} 255
+   States
+   {
+   Missile:
+     TROO G 0 [[A_Jump]](256, "Missile1", "Missile2")
+   Missile1:
+     TROO EF 8 [[A_FaceTarget]]
+     TROO G 6 [[A_SpawnItemEx]]("SoldierImp", 50, 50, 60, 0, 0, 0, 0, {{Const|SXF_SETMASTER}})
+     Goto See
+   Missile2:
+     TROO EF 8 [[A_FaceTarget]] 
+     TROO G 6 [[A_RaiseChildren]]
+     Goto See
+   Pain:
+     TROO H 2
+     TROO H 1 [[A_Pain]]
+     TROO H 1 [[A_DamageChildren]](1, "Voodoo")
+     Goto See
+   Death:
+     TROO I 8 [[A_RemoveChildren]]({{Const|FALSE}})
+     TROO J 8 [[A_Scream]]
+     TROO K 6 [[A_KillChildren]]
+     TROO L 6 [[A_NoBlocking]]
+     TROO M -1
+     Stop
+   XDeath:
+     TROO N 5 [[A_RemoveChildren]]({{Const|FALSE}})
+     TROO O 5 [[A_XScream]]
+     TROO P 5 [[A_KillChildren]]
+     TROO Q 5 [[A_NoBlocking]]
+     TROO RST 5
+     TROO U -1
+     Stop
+   }
+ }
+
+--------
+{{Planned Parenthood}}</text>
+    <sha1>g70zf5ymamemyd4q6xtd04ywjnyc9hg</sha1>
+  </revision>
+</page>

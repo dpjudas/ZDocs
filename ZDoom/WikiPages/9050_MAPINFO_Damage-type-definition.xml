@@ -1,0 +1,99 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>MAPINFO/Damage type definition</title>
+  <ns>0</ns>
+  <id>9050</id>
+  <revision>
+    <id>52397</id>
+    <parentid>52256</parentid>
+    <timestamp>2024-04-11T16:51:19Z</timestamp>
+    <contributor>
+      <username>Jekyll Grim Payne</username>
+      <id>2175</id>
+    </contributor>
+    <minor />
+    <comment>/* Examples */</comment>
+    <origin>52397</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="2862" sha1="h8sry834m6ynlylyr2skxy13t99uuir" xml:space="preserve">A [[damage type]] definition begins with the keyword "DamageType". This defines [[custom damage types]]. The syntax is as follows:
+
+ DamageType &lt;Name&gt;
+ {
+     &lt;properties&gt;
+ }
+
+==DamageType properties==
+The following properties are supported within a DamageType definition:
+{{list|Property|Description|content=
+
+{{-|{{LE|Factor}} {{=}} &lt;value&gt;
+|When an actor has no specific damage factor for this damage type, the globally defined damage factor is applied. The fallback damage factor (Normal) is also applied if it is defined. Default is 1.0.}}
+
+{{-|{{LE|ReplaceFactor}}
+|If specified, the fallback damage factor (Normal) is not applied to this damage type.}}
+
+{{-|{{LE|NoArmor}}
+|If specified, damage of this type always bypasses armor.}}
+
+{{-|{{LE|Obituary}} {{=}} "&lt;string&gt;"
+|The default [[actor properties#Obituaries|obituary]] for this damage type. This is used if the source of damage is unknown or does not define an {{Property|Obituary|obituary}} of its own.}}
+}}
+
+
+{{note|The actor property {{Property|DamageFactor}} always applies, unless damage factors are omitted completely. Declaring a damage type does nothing to change that.}}
+
+==Examples==
+
+This damage type does no damage unless an actor is explicitly vulnerable to it.
+ DamageType SpecialDamage
+ {
+     Factor = 0
+     ReplaceFactor // Not truly necessary, since we multiply by 0.
+ }
+ 
+ {{comment|In [[ZScript]]:}}
+ class MySpecialActor : Actor
+ {
+     Default
+     {
+         DamageFactor 'SpecialDamage', 1.0 {{comment|Explicitly vulnerable; global setting does not apply.}}
+     }
+ }
+
+
+When you declare a damage type, you reset any existing definitions to defaults. This example redefines "{{DamageType|Drowning}}" to affect armor (silly, but possible).
+ DamageType {{DamageType|Drowning}}
+ {
+     {{comment|Declaring a damagetype with no explicit properties causes}}
+     {{comment|it to apply armor, have a default damage factor of 1.0 and}}
+     {{comment|apply the fallback damagefactor ({{DamageType|Normal}}) from the victim.}}
+ }
+
+This one redefines "Drowning" to ignore fallback damage factor.
+ DamageType {{DamageType|Drowning}}
+ {
+     NoArmor {{comment|Drowning should not affect armor}}
+     ReplaceFactor {{comment|All actors that have no explicit damagefactor for drowning should use the global value from this definition}}
+     {{comment|Default Factor 1.0}}
+ }
+
+ class VulnerableThing : Actor
+ {
+    Default
+    {
+        {{Property|DamageFactor}} '{{DamageType|Normal}}', 1.5; {{comment|Takes extra damage for attacks that have no specific damage factor}}
+        {{comment|We have changed {{DamageType|Drowning}} so that it ignores DamageFactor "{{DamageType|Normal}}" by ReplaceFactor}}
+    }
+ }
+
+
+This example demonstrates the use the {{c|Obituary}} property.
+ DamageType GreenGoo
+ {
+     Obituary = {{color|darkred|"%o got gooed."}}
+ }
+
+[[Category:MAPINFO|Damage type]]</text>
+    <sha1>h8sry834m6ynlylyr2skxy13t99uuir</sha1>
+  </revision>
+</page>

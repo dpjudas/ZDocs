@@ -1,0 +1,57 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>Classes:Snout</title>
+  <ns>0</ns>
+  <id>4701</id>
+  <revision>
+    <id>34827</id>
+    <parentid>18512</parentid>
+    <timestamp>2012-11-05T14:46:27Z</timestamp>
+    <contributor>
+      <username>Blue Shadow</username>
+      <id>2021</id>
+    </contributor>
+    <minor />
+    <comment>/* DECORATE definition */</comment>
+    <origin>34827</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="784" sha1="tc88c2k4ef5up5i246ekwlplnfzj78o" xml:space="preserve">{{Actor|
+| type = Weapon
+| name = Snout
+| class = Snout
+| game = Hexen
+}}[[Classes]]: [[Classes:Weapon|Weapon]]&amp;rarr;&lt;u&gt;Snout&lt;/u&gt;&lt;br&gt;
+The weapon used by players morphed into a [[Classes:PigPlayer|pig]].
+==== [[DECORATE]] definition ====
+ ACTOR &lt;u&gt;Snout&lt;/u&gt; : {{Class|Weapon}}
+ {
+   {{Property|Weapon.SelectionOrder}} 10000
+   +{{Flag|WEAPON.DONTBOB}}
+   +{{Flag|WEAPON.MELEEWEAPON}}
+   {{Property|Weapon.Kickback}} 150
+   {{Property|Weapon.YAdjust}} 10
+ 
+   action native [[A_SnoutAttack]]();
+ 
+   States
+   {
+   Ready:
+     WPIG A 1 [[A_WeaponReady]]
+     Loop
+   Deselect:
+     WPIG A 1 [[A_Lower]]
+     Loop
+   Select:
+     WPIG A 1 [[A_Raise]]
+   Fire:
+     WPIG A 4 [[A_SnoutAttack]]
+     WPIG B 8 [[A_SnoutAttack]]
+     Goto Ready
+   Grunt:
+     WPIG B 8
+     Goto Ready
+   }
+ }</text>
+    <sha1>tc88c2k4ef5up5i246ekwlplnfzj78o</sha1>
+  </revision>
+</page>

@@ -1,0 +1,68 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>GiveBody</title>
+  <ns>0</ns>
+  <id>9220</id>
+  <revision>
+    <id>53713</id>
+    <parentid>53712</parentid>
+    <timestamp>2024-11-13T11:03:07Z</timestamp>
+    <contributor>
+      <username>Jekyll Grim Payne</username>
+      <id>2175</id>
+    </contributor>
+    <minor />
+    <comment>/* Parameters */</comment>
+    <origin>53713</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="2707" sha1="45i6kqka1ynblo318h1x8qaztn2zocx" xml:space="preserve">'''{{class|Actor}}'''
+
+{{c|native bool '''GiveBody''' (int ''num'', int ''max'' }}={{c| 0)}}
+
+==Usage==
+Heals the calling actor. This function does nothing if the actor is dead.
+
+===Parameters===
+*{{c|int '''num'''}}
+:The amount by which to heal, which is in the range of -65536 and 65536.
+:*If this is a &lt;u&gt;negative value&lt;/u&gt;, it acts as a &lt;u&gt;percentage&lt;/u&gt; by which the actor's health is set to if its health as a percentage is below that value.
+:*If it is &lt;u&gt;positive&lt;/u&gt;, it simply &lt;u&gt;adds that value to the the actor's health&lt;/u&gt;; in this case, the {{c|HealthFactor}} [[Skill_definition|skill property]] is taken into account when determining the final amount, but only if the actor to heal is a player. If the final amount results in less than 1, it is set to 1.
+*{{c|int '''max'''}}
+:The maximum value the actor's health can reach when healed. This is only relevant if the actor to heal is a player actor and ''num'' is positive. If this is 0, the actor is healed up to its maximum health, otherwise if it is positive, it is healed up to the sum of that value and the {{Class|MaxHealth|maximum health gain}} the actor may have, disregarding its maximum health. Non-player actors are healed up to their [[SpawnHealth|spawn health]], and as such, this parameter is ignored for them. Default is 0.
+:'''Note''': if &lt;code&gt;GiveBody&lt;/code&gt; is called on a {{class|PlayerPawn}} whose &lt;code&gt;bonushealth&lt;/code&gt; field was modified (by an item like [[Classes:MaxHealth|MaxHealth]]), the &lt;code&gt;bonushealth&lt;/code&gt; value will be automatically ''added'' to the second argument value. So, for example, if &lt;code&gt;bonushealth&lt;/code&gt; is 50, and you want to increase player's current health to 150, you need to call &lt;code&gt;GiveBody(150,100)&lt;/code&gt;, NOT &lt;code&gt;GiveBody(150,150)&lt;/code&gt;, because 50 will be added to the 2nd argument automatically.
+
+===Return value===
+* ''bool'' - Returns &lt;code&gt;true&lt;/code&gt; if the actor is successfully healed, otherwise it returns &lt;code&gt;false&lt;/code&gt;.
+
+==Examples==
+Assuming the player's maximum health is 200, this item sets their health to 50 points (which equals to 25% of their maximum health) upon pickup, but only if it is lower than that. If it is equal or higher, healing fails, and thus the item is not picked up.
+ class HealthPack : {{Class|Inventory}}
+ {
+     Default
+     {
+         {{Property|Inventory.PickupMessage}} "Picked up a health pack.";
+     }
+ 
+     override bool [[TryPickup]] (in out {{Class|Actor}} toucher)
+     {
+         if (toucher.[[GiveBody]](-25))
+         {
+             [[GoAwayAndDie]]();
+             return true;
+         }
+ 
+         return false;
+     }
+ 
+     States
+     {
+     Spawn:
+         STIM A -1;
+         Stop;
+     }
+ }
+
+[[Category:ZScript]]</text>
+    <sha1>45i6kqka1ynblo318h1x8qaztn2zocx</sha1>
+  </revision>
+</page>

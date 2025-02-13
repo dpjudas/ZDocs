@@ -1,0 +1,55 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>MAPINFO/Conversation number definition</title>
+  <ns>0</ns>
+  <id>7820</id>
+  <revision>
+    <id>44294</id>
+    <parentid>41011</parentid>
+    <timestamp>2017-03-20T13:26:01Z</timestamp>
+    <contributor>
+      <username>Gez</username>
+      <id>1283</id>
+    </contributor>
+    <minor />
+    <comment>removing "new" for GZDoom 2.4.0 release</comment>
+    <origin>44294</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="1417" sha1="365k4bh6ngkc96kqo7n4zkmydf22kqw" xml:space="preserve">A conversation number definition begins with the keyword “''ConversationIDs''”, followed by a list of actor names and their assigned conversation numbers. The syntax is as follows:
+
+ ConversationIDs
+ {
+   &lt;number&gt; = &lt;class&gt;
+ }
+
+Conversation number assignments through this method are overridden by the {{Property|ConversationID|DECORATE one}}. Actors can be assigned multiple conversation numbers, and already-assigned conversation numbers can be mapped to nothing by passing {{c|None}} instead of an actor class name. They can also be mapped to other actors.
+
+==Examples==
+
+In this example, actor ByStander is given conversation number 2851 and actor ShopKeeper is given two conversation numbers; 1205 and 3677.
+ ConversationIDs
+ {
+   2851 = ByStander
+   1205 = ShopKeeper
+   3677 = ShopKeeper
+ }
+
+
+This example clears conversation numbers 2 and 5, which are used in ''[[Strife]]'' by the {{Class|WeaponSmith|weapon smith}} and {{Class|Medic|medic}}, respectively, and effectively preventing any conversations from being initiated with them.
+ ConversationIDs
+ {
+   2 = None
+   5 = None
+ }
+
+
+This one remaps conversation number 4, which is used in ''Strife'' by the {{Class|Armorer|armorer}}, to the weapon smith, and thus making the armorer have the [[DIALOGUE|dialogue]] of the smith. Awkward, but doable nonetheless.
+ ConversationIDs
+ {
+   4 = {{Class|WeaponSmith}}
+ }
+
+[[Category:MAPINFO|Conversation number]]</text>
+    <sha1>365k4bh6ngkc96kqo7n4zkmydf22kqw</sha1>
+  </revision>
+</page>

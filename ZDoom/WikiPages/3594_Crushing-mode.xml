@@ -1,0 +1,36 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>Crushing mode</title>
+  <ns>0</ns>
+  <id>3594</id>
+  <revision>
+    <id>45045</id>
+    <parentid>44474</parentid>
+    <timestamp>2017-05-02T13:18:37Z</timestamp>
+    <contributor>
+      <username>Blue Shadow</username>
+      <id>2021</id>
+    </contributor>
+    <minor />
+    <comment>Remove {{new}}</comment>
+    <origin>45045</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="1605" sha1="e7cq97ecft41qnf0mlfipkk1p5hd94h" xml:space="preserve">[[Crusher|Crushing]] works differently in ''[[Hexen]]'' than in the other Doom engine games.
+
+In ''[[Doom]]'', when a ceiling crusher starts hurting an actor it still continues moving down, sometimes at a reduced speed. For slow crushers this is normally ok. However, this behavior will cause problems with extremely fast crushers that inflict a high amount of damage. Actors can get stuck in such crushers without actually dying. However, floor crushers do not continue moving up in similar circumstances.
+
+Hexen changed this behavior so that ceiling crushers behave like floor crushers and stop moving once they start hurting something. They only continue their movement if the trapped actor either leaves the sector or dies. This mode ensures that nothing can ever get stuck in a crusher but it also makes it possible that an actor being crushed can move out of the sector.
+
+To expose the different behavior to mappers, all crushing action specials have been extended by a ''crushmode'' parameter. This parameter can have 3 values:
+
+*0: Compatibility: Use the game's default mode (Doom mode for Doom, Heretic and Strife, Hexen mode for Hexen), plus in Doom mode ceiling crushers with a speed of exactly 8 will slow down upon hitting an obstacle.
+*1: Always use "Doom mode" with no slowdown upon hitting an obstacle.
+*2: Always use "Hexen mode"
+*3: Always use "Doom mode" and slowdown upon hitting an obstacle.
+
+Note that this parameter allows to use the "keep moving" behavior even for floor crushers. To get the "normal" behavior, always use the value 2 for floor crushers.
+
+[[category:Game concepts]]</text>
+    <sha1>e7cq97ecft41qnf0mlfipkk1p5hd94h</sha1>
+  </revision>
+</page>

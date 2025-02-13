@@ -1,0 +1,85 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>Multiplayer</title>
+  <ns>0</ns>
+  <id>845</id>
+  <revision>
+    <id>53081</id>
+    <parentid>46384</parentid>
+    <timestamp>2024-09-13T08:53:00Z</timestamp>
+    <contributor>
+      <username>Gez</username>
+      <id>1283</id>
+    </contributor>
+    <comment>/* Multiplayer source ports */</comment>
+    <origin>53081</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="7044" sha1="4as70spqdskufrsp8ypilsjo2urraoc" xml:space="preserve">'''Multiplayer''' is a term used to represent a game with multiple players. This can be in a competition style, such as deathmatch, or a cooperative style of play against the game's monsters.
+
+==Technical details==
+[[ZDoom]] uses {{wp|User Datagram Protocol|UDP/IP}} for all network play. The game state is tracked on a peer-to-peer system, unlike the [[csDoom]] derivatives or [[Zandronum]], which are much better suited to larger-scale games because of their focus on client-server architecture. ZDoom's advantage, however, is its low bandwidth usage (averaging 300 bytes per second per node) and lack of the "host-advantage" phenomena (the networking is lock-step). Map "scale" (enemy count, complexity, etc) also has no affect on bandwidth, due to netgames in ZDoom only needing to send player control data.
+
+Multiplayer games must be started either from the command line or from a launcher of some sort. A sample set of command lines follows:
+
+ zdoom -host 2 -warp 01 -skill 4
+ zdoom -host 2 -deathmatch -warp 01
+ zdoom -join 192.168.0.1
+ zdoom -host 1 +map map29
+
+For more commands, see [[Command line parameters#Multiplayer options|Command line parameters]] and [[CVARs:Configuration#Multiplayer_and_bot_settings|CVars]].
+*The first command line tells the computer to host two nodes (itself and one other), warp immediately to MAP01, and set the skill level to Ultra-Violence.
+*The second one also hosts two, but uses the default skill level (Hurt Me Plenty), and sets the game mode to deathmatch.
+*The third one joins a server hosting any kind of game, at the specified IP address, and on default port 5029.
+*The fourth one starts a solo multiplayer game on map29. The game will therefore start immediately with all multiplayer rules with just one player. A map must be specified.
+
+A person joining a game does not need to specify any additional parameters aside from loading any custom [[WAD]]s or [[DeHackEd]] patches that the host is using. Using custom levels and patches that are not in use by everyone in the game will cause consistency failures and the game will desynchronize.
+
+Due to the only requirement to connect to netgames is an IP address, you can also play ZDoom online using the hosts WAN address. There are some added requirements depending on which netmode you use if you have 3 or more players, explained below in this article.
+
+If you want a simple way to organize network games with random people, you can use a tool such as [[Doom Connector]] to find opponents and to set up a game.
+
+==Game modes==
+ZDoom supports three different multiplayer game modes. [[#Multiplayer source ports|Multiplayer source ports]] may also implement additional game modes, such as Capture The Flag or Domination.
+
+===Deathmatch===
+Deathmatch is a multiplayer game style pioneered by [[Doom]] in which players face off against each other, connected to a common area via a network.
+
+* A point, called a [[frag]], is granted to a player whenever he or she kills an opponent.
+* Upon death, players restart at a random [[deathmatch start]].
+* Players spawn with all keys, and keys are never placed on the map (there is currently no clean way to circumvent this).
+
+===Team deathmatch===
+Team deathmatch is a variant of deathmatch where players are placed into two or more [[team]]s. Players score frags by killing members of opposing teams. [[Gameplay options]] allow to reduce or remove friendly fire damage.
+
+===Cooperative===
+Cooperative gameplay, often referred to as co-op or coop, is a multiplayer game mode in which human players cooperate against a given game's monsters. Cooperative play is the default game mode if the -deathmatch parameter is not specified at the command line.
+
+==Network modes==
+ZDoom provides two networking modes to change how nodes connect to each-other. Depending on networking conditions, one may be more favorable then the other. You can force a netmode using the [[Command_line#-netmode|'-Netmode #' command line parameter]].
+
+===Peer-to-Peer===
+Netmode 0, the default, is the traditional netmode. The faster of the two, each node talks to each other node directly, and the game is only slowed down by the slowest connection between two nodes. In Internet games, this does require all nodes to be able to contact all other nodes, or the game will appear to lock up when it starts (this only applies if you have 3 or more players). [[wikipedia:Hole punching (networking)|Hole punching]] is used by all guest nodes to connect to other nodes.
+
+===Packet Server===
+Netmode 1, which must be forced on, is an alternate mode added to ZDoom. The slowest of the two (depending on networking conditions), each node talks to the arbitrator (typically the first player), and the arbitrator then routes the info to each other node. As you are adding the time it takes the arbitrator to route the information to each node, Internet games can be slowed down significantly by this netmode, but with the advantage of a simpler network setup (only the host needs to be contactable).
+It's recommended that you do not force this netmode in 2 player games, as it's not needed (nothing changes about how the connection is initiated and maintained) and just results in larger packets.
+
+==Savegames==
+It is possible to create [[savegame]]s in multiplayer (useful for cooperative gamemode). When saving, the save is written on each computer using the same filename between each. Loading a savegame, however, must be done from the command line. Both the host and each joiners must use [[Command_line_parameters#-loadgame|-loadgame]] name_of_savefile in addition to -host or -join. It is not possible to load while the game is already in progress.
+
+==Multiplayer source ports==
+There are five ZDoom-based ports that have improved networking code, specialized for online multiplayer:
+
+*[[csDoom]] is no longer being maintained. It was based on ZDoom's [[version history#1.22|version 1.22]] source code and had its own network code. csDoom was the first client/server multiplayer port.
+*[[Odamex]] is a continuation of csDoom developed with a "back to basics" approach. It has support for some features of ZDoom 1.23 beta so as to compete with ZDaemon.
+*[[Skulltag]], not just a multiplayer-oriented source port, but full multiplayer mod with new [[weapon]]s, [[bot]]s with their own set of unique character traits, new levels designed to make use of the special features available in that port, and more. It was based on the modern ZDoom 2.x codebase but is no longer maintained.
+*[[Zandronum]] is the successor of Skulltag. The additional weapons, levels and other extra content have been moved to an optional add-on pack, but it is otherwise fully compatible with Skulltag.
+*[[ZDaemon]] is another continuation of csDoom by a different team and with additional features, including some features from ZDoom 1.23 betas, such as [[slope]]s. It is the only source port to be closed source.
+[[Category:Glossary]]
+
+==Forum==
+* {{Forum|t=45124|ZDoom multiplayer setup, troubleshooting and FAQ}}
+* {{Forum|view=forum|f=5|Networking forum}}</text>
+    <sha1>4as70spqdskufrsp8ypilsjo2urraoc</sha1>
+  </revision>
+</page>

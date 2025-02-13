@@ -1,0 +1,56 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>Classes:Sorcerer2FX1</title>
+  <ns>0</ns>
+  <id>2648</id>
+  <revision>
+    <id>39334</id>
+    <parentid>34052</parentid>
+    <timestamp>2015-04-29T17:19:33Z</timestamp>
+    <contributor>
+      <username>Blue Shadow</username>
+      <id>2021</id>
+    </contributor>
+    <minor />
+    <comment>/* DECORATE definition */ Updated</comment>
+    <origin>39334</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="1097" sha1="a2hk7lqp8q2sype62hmfjgtal3uy6k5" xml:space="preserve">{{Actor|
+| type = Explosive
+| name = D'Sparil's lightning bolt
+| class = Sorcerer2FX1
+| game = Heretic
+| spawnid = 145
+| spawnname = T_DSPARILBLUESHOT 
+}}[[Classes]]: &lt;u&gt;Sorcerer2FX1&lt;/u&gt;&lt;br&gt;
+The lightning bolt thrown by [[Classes:Sorcerer2|D'Sparil]]. Its impact doesn't deal much damage, but the accompanying explosion does, nearly as powerful as that of a [[Classes:Rocket|rocket]]. The native action [[A_BlueSpark]] spawns two [[Classes:Sorcerer2FXSpark|sparks]] thrown in random directions at random speeds.
+
+==== [[DECORATE]] definition ====
+ ACTOR &lt;u&gt;Sorcerer2FX1&lt;/u&gt;
+ {
+   {{Property|Radius}} 10
+   {{Property|Height}} 6
+   {{Property|Speed}} 20
+   {{Property|FastSpeed}} 28
+   {{Property|Damage}} 1
+   {{Property|Projectile}}
+   -{{Flag|ACTIVATEIMPACT}}
+   -{{Flag|ACTIVATEPCROSS}}
+   {{Property|RenderStyle}} Add
+ 
+   action native [[A_BlueSpark]]();
+    
+   States
+   {
+   Spawn:
+     FX16 ABC 3 Bright [[A_BlueSpark]]
+     Loop
+   Death:
+     FX16 G 5 Bright [[A_Explode]]([[DECORATE_expressions#Mathematical_functions|random]][S2FX1](80,111))
+     FX16 HIJKL 5 Bright
+     Stop
+   }
+ }</text>
+    <sha1>a2hk7lqp8q2sype62hmfjgtal3uy6k5</sha1>
+  </revision>
+</page>

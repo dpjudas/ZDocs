@@ -1,0 +1,117 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>Classes:SummoningDoll</title>
+  <ns>0</ns>
+  <id>4528</id>
+  <revision>
+    <id>53758</id>
+    <parentid>53750</parentid>
+    <timestamp>2024-11-19T08:48:08Z</timestamp>
+    <contributor>
+      <username>Jekyll Grim Payne</username>
+      <id>2175</id>
+    </contributor>
+    <origin>53758</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="2218" sha1="khtycalnt1chk1brcfwn6kop62mxxiq" xml:space="preserve">{{Actor|
+| type = Explosive
+| name = Dark servant summoning doll
+| class = SummoningDoll
+| game = Hexen
+}}[[Classes]]: &lt;u&gt;SummoningDoll&lt;/u&gt;&lt;br&gt;
+
+The projectile thrown when using a [[Classes:ArtiDarkServant|Dark Servant Artifact]] to summon a dark servant (who is a [[Classes:MinotaurFriend|friendly Maulotaur]]). If there was not enough space for a Maulotaur to spawn, it just drops the {{class|ArtiDarkServant|artifact itself}}.
+
+=== [[ZScript]] definition ===
+{{ZScriptDefinitionNote|actors/hexen/summon.zs}}
+&lt;syntaxhighlight lang="csharp"&gt;
+class SummoningDoll : Actor
+{
+	Default
+	{
+		Speed 20;
+		+NOBLOCKMAP +DROPOFF +MISSILE
+		+NOTELEPORT
+	}
+
+	States
+	{
+	Spawn:
+		SUMN A 4;
+		Loop;
+	Death:
+		SUMN AA 4;
+		SUMN A 4 A_Summon;
+		Stop;
+	}
+	
+	//============================================================================
+	//
+	// A_Summon
+	//
+	//============================================================================
+
+	void A_Summon()
+	{
+		Actor mo = Spawn("MinotaurFriend", pos, ALLOW_REPLACE);
+		if (mo)
+		{
+			if (mo.TestMobjLocation() == false || !tracer)
+			{ // Didn't fit - change back to artifact
+				mo.Destroy();
+				Actor arti = Spawn("ArtiDarkServant", Pos, ALLOW_REPLACE);
+				if (arti) arti.bDropped = true;
+				return;
+			}
+
+			// Careful! The Minotaur might have been replaced 
+			// so only set the time if we got a genuine one.
+			MinotaurFriend m = MinotaurFriend(mo);
+			if (m) m.StartTime = level.maptime;
+			
+			if (tracer.bCorpse)
+			{	// Master dead
+				mo.tracer = null;		// No master
+			}
+			else
+			{
+				mo.tracer = tracer;		// Pointer to master
+				Inventory power = Inventory(Spawn("PowerMinotaur"));
+				power.CallTryPickup(tracer);
+				mo.SetFriendPlayer(tracer.player);
+			}
+
+			// Make smoke puff
+			Spawn("MinotaurSmoke", Pos, ALLOW_REPLACE);
+			A_StartSound(mo.ActiveSound, CHAN_VOICE);
+		}
+	}	
+}
+&lt;/syntaxhighlight&gt;
+
+=== [[DECORATE]] definition ===
+{{DecorateDefinitionNote}}
+ ACTOR &lt;u&gt;SummoningDoll&lt;/u&gt;
+ {
+   {{Property|Speed}} 20
+   +{{Flag|NOBLOCKMAP}}
+   +{{Flag|DROPOFF}}
+   +{{Flag|MISSILE}}
+   +{{Flag|NOTELEPORT}}
+ 
+   action native [[A_Summon]]();
+ 
+   States
+   {
+   Spawn:
+     SUMN A 4
+     Loop
+   Death:
+     SUMN AA 4
+     SUMN A 4 [[A_Summon]]
+     Stop
+   }
+ }</text>
+    <sha1>khtycalnt1chk1brcfwn6kop62mxxiq</sha1>
+  </revision>
+</page>

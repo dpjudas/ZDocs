@@ -1,0 +1,87 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>A RadiusThrust</title>
+  <ns>0</ns>
+  <id>2937</id>
+  <revision>
+    <id>53323</id>
+    <parentid>53166</parentid>
+    <timestamp>2024-10-12T11:07:08Z</timestamp>
+    <contributor>
+      <username>Blue Shadow</username>
+      <id>2021</id>
+    </contributor>
+    <minor />
+    <comment>{{git}} -&gt; {{new}} for 4.13.0</comment>
+    <origin>53323</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="3712" sha1="r39tfswfpmi1skjn2e8dsua43w8hd7s" xml:space="preserve">{{codepointer|Generic Attack}}
+void '''A_RadiusThrust''' [(int ''force'' [, int ''distance'' [, int ''flags'' [, int ''fullthrustdistance'' [, name ''species'']]]])]
+
+==Usage==
+Makes the calling actor thrust away actors nearby from it. This is similar to {{c|[[A_Explode]]}} but without the damage. Although, affected actors could take damage if they collide with a wall or each other, akin to {{c|[[A_Blast]]}}.
+
+Uses '''[[RadiusAttack]]''' internally.
+
+===Parameters===
+* ''force'': how powerful the blast is. The velocity of the blast is determined as: {{c|force / (2 * mass)}}, so a force of 40000 pushes away an actor of 1000 {{Property|Mass|mass}} (the mass of a {{Class|BaronOfHell|baron of hell}}) with a velocity of 20 units/tic (the speed of a {{Class|rocket}}) at the very center of the blast. Negative values push actors towards the center of the source. Default is 128.
+* ''distance'': how far the blast extends. At the center, actors take the full force of the blast. At the outer edge, this many units away, actors are not pushed at all. The value passed to ''force'' is used to determine the distance if this parameter is 0 or less. Default is -1.
+* ''flags'': the following flags can be combined by using the | character between the constant names:
+** '''RTF_AFFECTSOURCE''' — Affect source: if this flag is set, the shooter of the projectile is affected. This is set by default.
+** '''RTF_NOIMPACTDAMAGE''' — No impact damage: if this flag is set, actors thrust away do not cause melee damage on impact.
+** '''RTF_NOTMISSILE''' — Not a missile: if set, the calling actor is considered to be the source. By default, the calling actor is assumed to be a projectile, and the source is therefore considered to be the calling actor's [[actor pointer|target]].
+** '''RTF_THRUSTZ''' — Apply thrust to vertical velocity as well as horizontal. By default, the function does not apply Z velocity at all. This flag overrides the {{c|{{CVAR|C|compat_explode1}}}} compatibility flag.
+** '''RTF_CIRCULARTHRUST''' — Blast actors away with more physically accurate momentum. When enabled, RTF_THRUSTZ is ignored. {{new|4.13.0}} 
+* ''fullthrustdistance'': the radius that actors will be subject to the full force of the blast. Default is 0.
+* ''species'': the actor [[species]] to thrust. Only actors whose species matches this are thrust. Default is {{c|"None"}}.
+
+== [[ZScript]] definition ==
+{{ZScriptDefinitionNote|actors/attacks.zs#L640}}
+&lt;syntaxhighlight lang="csharp"&gt;
+	void A_RadiusThrust(int force = 128, double distance = -1.0, int flags = RTF_AFFECTSOURCE, double fullthrustdistance = 0.0, name species = "None")
+	{
+		if (force == 0) force = 128;
+		if (distance &lt;= 0.0) distance = abs(force);
+		bool nothrust = false;
+
+		if (target)
+		{
+			nothrust = target.bNoDamageThrust;
+			// Temporarily negate MF2_NODMGTHRUST on the shooter, since it renders this function useless.
+			if (!(flags &amp; RTF_NOTMISSILE))
+			{
+				target.bNoDamageThrust = false;
+			}
+		}
+		RadiusAttack (target, force, distance, DamageType, flags | RADF_NODAMAGE, fullthrustdistance, species);
+		CheckSplash(distance);
+		if (target) target.bNoDamageThrust = nothrust;
+	}&lt;/syntaxhighlight&gt;
+
+== Examples ==
+The following example shows a projectile that blows objects away with a force of 500 within a 64 unit radius affecting the shooter:
+
+ class WindyProjectile : {{Class|Actor}}
+ {
+     Default
+     {
+         {{Property|Height}} 4;
+         {{Property|Radius}} 2;
+         {{Property|Projectile}};
+     }
+ 
+     States
+     {
+     Spawn:
+         WIND ABCDEFGHIJK 2 [[A_RadiusThrust]](500, 64, {{const|RTF_AFFECTSOURCE}});
+         WIND LMNO 2;
+         Stop;
+     }
+ }
+
+== See also ==
+* [[RadiusAttack]]
+* [[A_Explode]]</text>
+    <sha1>r39tfswfpmi1skjn2e8dsua43w8hd7s</sha1>
+  </revision>
+</page>

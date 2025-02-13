@@ -1,0 +1,42 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>Classes:SectorPointLight</title>
+  <ns>0</ns>
+  <id>4933</id>
+  <revision>
+    <id>40156</id>
+    <parentid>37068</parentid>
+    <timestamp>2015-05-22T07:12:23Z</timestamp>
+    <contributor>
+      <username>Blue Shadow</username>
+      <id>2021</id>
+    </contributor>
+    <minor />
+    <comment>/* DECORATE definition */ Updated</comment>
+    <origin>40156</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="1100" sha1="4zrmj01z1dro4qd9vpqhg1fmevnbmk2" xml:space="preserve">{{Actor|
+| type = Dynamic light
+| name = Sector point light
+| class = SectorPointLight
+| doomednum = 9803
+| game = OpenGL
+}}[[Classes]]: [[Classes:DynamicLight|DynamicLight]]&amp;rarr;[[Classes:PointLight|PointLight]]&amp;rarr;&lt;u&gt;SectorPointLight&lt;/u&gt;&lt;br&gt;
+&amp;ensp;&amp;rarr;[[Classes:SectorPointLightAdditive|SectorPointLightAdditive]]&lt;br&gt;
+&amp;ensp;&amp;rarr;[[Classes:SectorPointLightSubtractive|SectorPointLightSubtractive]]&lt;br&gt;A sector point light takes four arguments:
+:''1'': Red value of the light
+:''2'': Green value of the light
+:''3'': Blue value of the light
+:''4'': Scale
+
+The scale is divided by 8 and multiplied by the sector's light level to give the intensity. In this way, a sector point light's radius varies in function of the ambient sector light. This can be used to good effect near flickering ceiling lamps or on windows open to a [[lightning|dark and stormy night]].
+
+All dynamic lights can be toggled on and off with [[Thing_Activate]] and [[Thing_Deactivate]].
+==== [[DECORATE]] definition ====
+ ACTOR &lt;u&gt;SectorPointLight&lt;/u&gt; : {{Class|PointLight}}
+ {
+   {{Property|DynamicLight.Type}} "Sector"
+ }</text>
+    <sha1>4zrmj01z1dro4qd9vpqhg1fmevnbmk2</sha1>
+  </revision>
+</page>

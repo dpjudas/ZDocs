@@ -1,0 +1,173 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>Sector</title>
+  <ns>0</ns>
+  <id>1006</id>
+  <revision>
+    <id>53444</id>
+    <parentid>46721</parentid>
+    <timestamp>2024-10-30T11:34:46Z</timestamp>
+    <contributor>
+      <username>Jekyll Grim Payne</username>
+      <id>2175</id>
+    </contributor>
+    <origin>53444</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="8451" sha1="ilv8yyshbqaxlny19jgxffoozabmm63" xml:space="preserve">{{doomwiki}}A '''sector''' is an enclosed area made up of lines in the map.  Sectors are referenced by the [[sidedef]]s linked to the enclosing [[linedef]]s.  Sectors must be closed areas, as in all sidedefs that reference them must make up one or more closed shapes.  Note that having unclosed sectors is possible, and can be used for a few special effects, but can cause unpredictable results, including crashes, if used incorrectly.
+
+A sector does not need to enclose only one area of the map.  To avoid redundancy, two separate areas of the map can be defined by one sector, thus copying all the properties of one area to the other.  However, the engine treats these separate shapes as the same sector. For instance, sounds entering one area of the sector will be heard by enemies in the other.  This can be used intentionally to allow sounds generated in one area of the map to alert enemies in another, unconnected area. If two doors are the same sector, using [[Door_Raise]] on either door will cause both to open.
+
+In [[ZScript]] sector data is stored in the {{struct|Sector|'''Sector''' struct}}. Pointers to sectors can be obtained by iterating over {{struct|LevelLocals|'''levels.sectors'''}}, or from an actor's {{c|cursector}} field, and by other means, such as [[LineTrace]].
+
+==Specification==
+{| {{prettytable}}
+|-
+!Bytes!!Data type!!Description!!Notes
+|-
+|0-1||LE 16-bit signed||Floor height||
+|-
+|2-3||LE 16-bit signed||Ceiling height||
+|-
+|4-11||8-bit array||Floor texture||
+|-
+|12-19||8-bit array||Ceiling texture||
+|-
+|20-21||LE 16-bit signed||Light level||[[Vanilla Doom]] rounded the light level to the nearest multiple of 8, ZDoom shows unique light levels for all values
+|-
+|22-23||LE 16-bit unsigned||[[Sector specials|Sector special]]||
+|-
+|24-25||LE 16-bit unsigned||Sector tag||For use with [[Action specials]] that refer to a sector by its tag
+|}
+
+
+==UDMF properties==
+
+The [[Universal Doom Map Format]] allows to set a number of properties on sectors. Unless otherwise specified, default values for integers and floats is 0, and {{c|false}} for booleans. They include:
+{| {{prettytable}}
+!Name!!Type!!Description
+|-
+|{{c|xpanningfloor}}||float||X texture offset of floor texture, Default = 0.0.
+|-
+|{{c|ypanningfloor}}||float||Y texture offset of floor texture, Default = 0.0.
+|-
+|{{c|xpanningceiling}}||float||X texture offset of ceiling texture, Default = 0.0.
+|-
+|{{c|ypanningceiling}}||float||Y texture offset of ceiling texture, Default = 0.0.
+|-
+|{{c|xscalefloor}}||float||X texture scale of floor texture, Default = 1.0.
+|-
+|{{c|yscalefloor}}||float||Y texture scale of floor texture, Default = 1.0.
+|-
+|{{c|xscaleceiling}}||float||X texture scale of ceiling texture, Default = 1.0.
+|-
+|{{c|yscaleceiling}}||float||Y texture scale of ceiling texture, Default = 1.0.
+|-
+|{{c|rotationfloor}}||float||Rotation of floor texture in degrees, Default = 0.0.
+|-
+|{{c|rotationceiling}}||float||Rotation of ceiling texture in degrees, Default = 0.0.
+|-
+|{{c|ceilingplane_a}}||float||rowspan="4"|Define the plane equation for the sector's ceiling.&lt;br /&gt;Default is a horizontal plane at 'heightceiling'.&lt;br /&gt;'heightceiling' will still be used to calculate texture alignment.&lt;br /&gt;The plane equation will only be used if all 4 values are given.
+|-
+|{{c|ceilingplane_b}}||float
+|-
+|{{c|ceilingplane_c}}||float
+|-
+|{{c|ceilingplane_d}}||float
+|-
+|{{c|floorplane_a}}||float||rowspan="4"|Define the plane equation for the sector's floor.&lt;br /&gt;Default is a horizontal plane at 'heightfloor'.&lt;br /&gt;'heightfloor' will still be used to calculate texture alignment.&lt;br /&gt;The plane equation will only be used if all 4 values are given.
+|-
+|{{c|floorplane_b}}||float
+|-
+|{{c|floorplane_c}}||float
+|-
+|{{c|floorplane_d}}||float
+|-
+|{{c|lightfloor}}||integer||The floor's light level. Default is 0.
+|-
+|{{c|lightceiling}}||integer||The ceiling's light level. Default is 0.
+|-
+|{{c|lightfloorabsolute}}||bool||true = 'lightfloor' is an absolute value. Default is relative to the owning sector's light level.
+|-
+|{{c|lightceilingabsolute}}||bool||true = 'lightceiling' is an absolute value. Default is relative to the owning sector's light level.
+|-
+|{{c|alphafloor}}||float||translucency of floor plane (only has meaning with [[Sector_SetPortal]]) Default is 1.0.
+|-
+|{{c|alphaceiling}}||float||translucency of ceiling plane (only has meaning with [[Sector_SetPortal]]) Default is 1.0.
+|-
+|{{c|renderstylefloor}}||string||floor plane renderstyle (only has meaning with [[Sector_SetPortal]]), can be "translucent" or "add", default is "translucent".{{openGLsmall}}
+|-
+|{{c|renderstyleceiling}}||string||ceiling plane renderstyle (only has meaning with [[Sector_SetPortal]]), can be "translucent" or "add", default is "translucent". {{openGLsmall}}
+|-
+|{{c|gravity}}||float||Sector's [[gravity]]. Default is 1.0.
+|-
+|{{c|lightcolor}}||integer||Sector's light color as RRGGBB value, default = 0xffffff. Removes the need for {{Class|ColorSetter}} thing.
+|-
+|{{c|fadecolor}}||integer||Sector's fog color as RRGGBB value, default = 0x000000. Removes the need for {{Class|FadeSetter}} thing.
+|-
+|{{c|desaturation}}||float||Color desaturation factor. 0 = none, 1 = full, default = 0. Removes the need for {{Class|ColorSetter}} thing.
+|-
+|{{c|silent}}||bool||Actors in this sector make no sound,
+|-
+|{{c|nofallingdamage}}||bool||Falling damage is disabled in this sector
+|-
+|{{c|dropactors}}||bool||Actors drop with instantly moving floors
+|-
+|{{c|norespawn}}||bool||Players cannot respawn in this sector
+|-
+|{{c|soundsequence}}||string||The sound sequence to play when this sector moves. Placing a [[sound sequence thing]] in the sector will override this property.
+|-
+|{{c|hidden}}||bool||if true this sector will not be drawn on the textured [[automap]].
+|-
+|{{c|waterzone}}||bool||Sector is [[Deep_water#Water_zone|under water and swimmable]]. Removes the need for using {{Class|WaterZone}} things.
+|-
+|{{c|moreids}}||string||Additional sector [[tag]]s, specified as a space-separated list of numbers, e.g., {{c|"2 666 1003 4505"}}.
+|-
+|{{c|damageamount}}||integer||Amount of damage inflicted by this sector. Default = 0. If this is 0, all other damage properties will be ignored. Setting damage through these properties will override any damage set through [[sector special]]s. Setting this to a negative value will create a healing sector.
+|-
+|{{c|damagetype}}||string||[[Damage type]] for sector damage, Default = "None" (generic damage).
+|-
+|{{c|damageinterval}}||integer||Interval in [[tics]] between damage application. Default = 32.
+|-
+|{{c|leakiness}}||integer||Probability of leaking through {{Class|RadSuit|radiation suit}} (0 = never, 256 = always). Default = 0.
+|-
+|{{c|damageterraineffect}}||bool||If true, a [[TERRAIN|terrain]] splash is spawned at the end of each damage interval. Default = false.
+|-
+|{{c|damagehazard}}||bool||If true, the damage model is changed to ''[[Strife]]'''s delayed damage for the given sector. Default = false.
+|-
+|{{c|floorterrain}}||string||Sets the terrain for the sector's floor. Default is to use the flat texture's terrain definition.
+|-
+|{{c|ceilingterrain}}||string||Sets the terrain for the sector's ceiling. Default is to use the flat texture's terrain definition.
+|-
+|{{c|portal_ceil_alpha}}||float||Translucency of ceiling portal. The default value of 0 means "not visible".
+|-
+|{{c|portal_ceil_blocksound}}||bool||Ceiling portal blocks sound.
+|-
+|{{c|portal_ceil_disabled}}||bool||Ceiling portal is disabled.
+|-
+|{{c|portal_ceil_nopass}}||bool||Ceiling portal blocks movement if set to {{c|true}}.
+|-
+|{{c|portal_ceil_norender}}||bool||Ceiling portal is not rendered.
+|-
+|{{c|portal_ceil_overlaytype}}||string||Defines translucency style. It can either be {{c|"translucent"}} (default) or {{c|"additive"}}.
+|-
+|{{c|portal_floor_alpha}}||float||Translucency of floor portal. The default value of 0 means "not visible".
+|-
+|{{c|portal_floor_blocksound}}||bool||Floor portal blocks sound.
+|-
+|{{c|portal_floor_disabled}}||bool||Floor portal is disabled.
+|-
+|{{c|portal_floor_nopass}}||bool||Floor portal blocks movement if set to {{c|true}}.
+|-
+|{{c|portal_floor_norender}}||bool||Floor portal is not rendered.
+|-
+|{{c|portal_floor_overlaytype}}||string||Defines translucency style. It can either be {{c|"translucent"}} (default) or {{c|"additive"}}.
+|-
+|{{c|noattack}}||bool||If {{c|true}}, monsters in the sector do not attack.
+|}
+[[Category:Glossary]]
+
+== See also ==
+* [[Structs:Sector]]</text>
+    <sha1>ilv8yyshbqaxlny19jgxffoozabmm63</sha1>
+  </revision>
+</page>

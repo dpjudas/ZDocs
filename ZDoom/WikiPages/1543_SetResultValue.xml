@@ -1,0 +1,54 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>SetResultValue</title>
+  <ns>0</ns>
+  <id>1543</id>
+  <revision>
+    <id>48425</id>
+    <parentid>48424</parentid>
+    <timestamp>2021-03-30T16:22:51Z</timestamp>
+    <contributor>
+      <username>Blue Shadow</username>
+      <id>2021</id>
+    </contributor>
+    <minor />
+    <comment>/* Examples */ updated the strifehelp.acs link</comment>
+    <origin>48425</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="1844" sha1="7dm2emhus5nh2kchcz9jg7h5vuogbzr" xml:space="preserve">void '''SetResultValue''' (int ''value'')
+
+==Usage==
+
+When a script is executed, it has an associated “result value”. This is somewhat akin to a [[functions|function]]'s return value. Normally, a script's result value is 1, but '''SetResultValue''' can be used to change this to something else. However, you must use '''SetResultValue''' before calling any functions that make the script wait, such as [[Delay]] or [[TagWait]]. After the script starts waiting, its result value can no longer be changed.
+
+The following are uses for a script's result value:
+
+;Psuedo-functions
+:If you execute a script with [[ACS_ExecuteWithResult]], ACS_ExecuteWithResult will return the script's result value. This lets you use a script as if it was a function.
+
+;Switches
+:If you place the ACS_ExecuteWithResult special on a switch linedef, you can use '''SetResultValue''' to prevent the normal switch action from taking place (e.g. because the script did not perform any action). If the script's result value is set to 0, the switch texture will not be changed, nor will the switch sound be played.
+
+;[[DECORATE]]
+:You can use ACS_ExecuteWithResult in {{Class|CustomInventory}} item's state chains to notify the item about the success or failure of the state chain.
+
+==Examples==
+
+This shows how '''SetResultValue''' is used with [[ACS_ExecuteWithResult]] to retrieve a return value from another script.
+
+ script 1 (void)
+ {
+     [[Print]](d:[[ACS_ExecuteWithResult]](2, 0, 0, 0)); //prints 667
+ }
+ 
+ script 2 (void)
+ {
+     SetResultValue(667);
+ }
+
+As this command was added specifically so that many of [[Strife]]'s unique specials could be implemented through ACS, [https://github.com/coelckers/gzdoom/blob/master/wadsrc/static/strifehelp.acs strifehelp.acs] is also a good place to see this command in action.
+
+[[category:ACS Information functions]]</text>
+    <sha1>7dm2emhus5nh2kchcz9jg7h5vuogbzr</sha1>
+  </revision>
+</page>

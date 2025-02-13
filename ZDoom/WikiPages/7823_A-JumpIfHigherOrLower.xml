@@ -1,0 +1,43 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>A JumpIfHigherOrLower</title>
+  <ns>0</ns>
+  <id>7823</id>
+  <revision>
+    <id>44296</id>
+    <parentid>42645</parentid>
+    <timestamp>2017-03-20T13:26:25Z</timestamp>
+    <contributor>
+      <username>Gez</username>
+      <id>1283</id>
+    </contributor>
+    <minor />
+    <comment>removing "new" for GZDoom 2.4.0 release</comment>
+    <origin>44296</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="2428" sha1="ttcmu9qv7i02m0068bt6aezy3f6rj8u" xml:space="preserve">{{codepointer|Jump}}
+state '''A_JumpIfHigherOrLower''' (str "''high''", str "''low''" [, float ''offsethigh'' [, float ''offsetlow'' [, bool ''includeHeight'' [, pointer ''ptr'']]]])
+{{JumpNotice}}
+==Usage==
+Jumps to either the high state or the low state if the [[actor pointer]] ''ptr'' is higher or lower than the calling actor's self based upon z-height. If the pointed actor is higher than the calling actor, adds (or subtracts) ''offsethigh'' to its check, and vice versa if the pointer is lower. ''includeHeight'' is important to consider as this can radically change the behavior of the function.
+
+Either state jump can be disabled by leaving the space between the quotation marks empty ("" without parenthesis and no spaces between), but at least one state jump must be enabled to have any effect.
+
+===Parameters===
+*''high'': State jump the calling actor goes to if the pointer is higher. Set to "" to disable.
+*''low'': State jump the calling actor goes to if the pointer is lower. Set to "" to disable.
+*''offsethigh'': Default is 0. Offsets the calling actor's height or z (see ''includeHeight'') for the pointer being above the caller by this amount. Positive values require the pointer to be this much higher over the calling actor's height in order to jump to the high state. Negative values allow the pointer to be lower by this much and successfully trigger the high state jump.
+*''offsetlow'': Default is 0. Offsets the calling actor's z check for the pointer being below the caller by this amount. Negative values will require the pointer to be lower. Positive values will allow the pointer to rise above the callers z by this much, depending on ''includeHeight''.
+*''includeHeight'': Defaults to true. When enabled, this works two-fold.
+** The function will factor in the '''caller's height''' if the pointer is above the caller.
+** Inversely, it will factor in the '''pointer's height''' if the pointer is below the caller.
+** If set to false, the function will simply compare z positions without adding height. ''offsethigh'' and ''offsetlow'' are still added in, however.
+*''ptr'': Defaults to AAPTR_TARGET. Checks the following [[actor pointer]]. Can take any pointer except AAPTR_DEFAULT and AAPTR_NULL; the function was built to check another actor, not itself, and will do nothing in that regard.
+
+== Examples ==
+{{noexamples}}
+
+[[category:Decorate Jump functions]]{{DEFAULTSORT:JumpIfHigherOrLower}}</text>
+    <sha1>ttcmu9qv7i02m0068bt6aezy3f6rj8u</sha1>
+  </revision>
+</page>

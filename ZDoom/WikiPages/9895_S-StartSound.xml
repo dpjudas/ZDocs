@@ -1,0 +1,63 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>S StartSound</title>
+  <ns>0</ns>
+  <id>9895</id>
+  <revision>
+    <id>54159</id>
+    <parentid>54071</parentid>
+    <timestamp>2025-01-29T11:34:42Z</timestamp>
+    <contributor>
+      <username>Inkoalawetrust</username>
+      <id>2604</id>
+    </contributor>
+    <comment>Documented S_StartSoundAt().</comment>
+    <origin>54159</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="2318" sha1="cw7c9bngwet5qarg0b633vr3lufdlbf" xml:space="preserve">{{DISPLAYTITLE:S_StartSound}}
+
+{{c|native static void '''S_StartSound'''(Sound ''sound_id'', int ''channel'', int ''flags'' }}={{c| 0, float ''volume'' }}={{c| 1, float ''attenuation'' }}={{c| ATTN_NORM, float ''pitch'' }}={{c| 0.0, float ''startTime'' }}={{c| 0.0)}}
+
+== Usage ==
+Plays a sound, similar to [[A_StartSound]], but not attached to an {{class|Actor|actor}}. This can be called in any [[Object scopes and versions|scope]], and, in contrast to [[A_StartSound]], can be played from UI, for example, from [[ZScript menus|a custom menu]]. However, this sound cannot originate from a point in the world.
+
+=== Parameters ===
+The parameters are similar to those used by [[A_StartSound]], but with different names and sometimes different defaults.
+
+*{{c|Sound '''sound_id'''}}
+:The sound to play, as defined in [[SNDINFO]].
+*{{c|int '''channel'''}}
+:The channel to use. In contrast to [[A_StartSound]], this argument is required and has no default value.
+{{:StartSound channels}}
+*{{c|int '''flags'''}}
+{{: StartSound flags}}
+*double '''volume'''
+:The volume of the sound, which ranges from 0 to 1.0. Default 1.0.
+*{{c|double '''attenuation'''}}
+:Does nothing, since the sound has no origin point.
+*{{c|double '''pitch'''}}
+:The sound pitch to play the sound with. Default is 0, which means the engine uses whatever pitch shift (range) that is defined in SNDINFO, if any. For non-zero values anything lower than 1.0 will slow down the sound, while higher values speed it up.
+*{{c|double '''startTime'''}}
+:Sets how much of the sound to skip when starting. The value can be anywhere between 0 and 1.0, translating to 0% to 100%. Default is 0.
+
+== S_StartSoundAt ==
+{{git|a1460e8}}
+
+{{c|native static void '''S_StartSoundAt'''(Vector3 ''pos'', Sound ''sound_id'', int ''channel'', int ''flags'' }}={{c| 0, float ''volume'' }}={{c| 1, float ''attenuation'' }}={{c| ATTN_NORM, float ''pitch'' }}={{c| 0.0, float ''startTime'' }}={{c| 0.0)}}
+
+Functions exactly like ''S_StartSound'', except that the first parameter, ''pos'', allows for making the sound in question play at an arbitrary coordinate instead of being attached to any actor.
+
+== Examples ==
+{{noexamples}}
+
+== See also ==
+* [[A_StartSound]]
+* [[S_PauseSound]]
+* [[S_ResumeSound]]
+* [[S_GetLength]]
+
+[[Category:ZScript]]
+[[Category:ZScript sound functions]]</text>
+    <sha1>cw7c9bngwet5qarg0b633vr3lufdlbf</sha1>
+  </revision>
+</page>

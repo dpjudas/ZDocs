@@ -1,0 +1,48 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>Classes:MaulerTorpedoWave</title>
+  <ns>0</ns>
+  <id>4799</id>
+  <revision>
+    <id>36466</id>
+    <parentid>30730</parentid>
+    <timestamp>2013-05-14T16:55:58Z</timestamp>
+    <contributor>
+      <username>Blue Shadow</username>
+      <id>2021</id>
+    </contributor>
+    <comment>/* DECORATE definition */ Updated.</comment>
+    <origin>36466</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="830" sha1="nz51pbn3fpxv6d1z3ntehfsd82ksgwx" xml:space="preserve">{{Actor|
+| type = Explosive
+| name = Mauler mini-torpedo
+| class = MaulerTorpedoWave
+| game = Strife
+}}[[Classes]]: &lt;u&gt;MaulerTorpedoWave&lt;/u&gt;&lt;br&gt;
+The {{class|Mauler2|mauler's}} alternate mode detonation effect. 80 of these projectiles are launched upon detonation by the mauler's {{class|MaulerTorpedo|torpedo}}.
+==== [[DECORATE]] definition ====
+ ACTOR &lt;u&gt;MaulerTorpedoWave&lt;/u&gt;
+ {
+   {{Property|Speed}} 35
+   {{Property|Radius}} 13
+   {{Property|Height}} 13
+   {{Property|Damage}} 10
+   {{Property|DamageType}} {{DamageType|Disintegrate}}
+   {{Property|Projectile}}
+   +{{Flag|STRIFEDAMAGE}}
+   {{Property|MaxStepHeight}} 4
+   {{Property|RenderStyle}} Add
+   {{Property|Obituary}} "$OB_MPMAULER" // "%o was viciously vaporized by %k."
+   States
+   {
+   Spawn:
+     TWAV AB 9 Bright
+   Death:
+     TWAV C 9 Bright
+     Stop
+   }
+ }</text>
+    <sha1>nz51pbn3fpxv6d1z3ntehfsd82ksgwx</sha1>
+  </revision>
+</page>

@@ -1,0 +1,51 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>Classes:Armor</title>
+  <ns>0</ns>
+  <id>2737</id>
+  <revision>
+    <id>52235</id>
+    <parentid>33972</parentid>
+    <timestamp>2024-04-02T18:54:37Z</timestamp>
+    <contributor>
+      <username>Jekyll Grim Payne</username>
+      <id>2175</id>
+    </contributor>
+    <origin>52235</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="1077" sha1="q88i6c46ve40mrms85urhqg38bq48uz" xml:space="preserve">{{Actor|
+| type = Internal
+| name = Armor
+| class = Armor
+}}[[Classes]]: [[Classes:Inventory|Inventory]]&amp;rarr;&lt;u&gt;Armor&lt;/u&gt;&lt;br&gt;
+&amp;ensp;&amp;rarr;[[Classes:BasicArmor|BasicArmor]]&lt;br&gt;
+&amp;ensp;&amp;rarr;[[Classes:BasicArmorBonus|BasicArmorBonus]]&lt;br&gt;
+&amp;ensp;&amp;rarr;[[Classes:BasicArmorPickup|BasicArmorPickup]]&lt;br&gt;
+&amp;ensp;&amp;rarr;[[Classes:HexenArmor|HexenArmor]]
+
+&lt;u&gt;Armor&lt;/u&gt; is an internal class that is used as a base class for various types of internal armor classes. It does not have any particular use that is worth mentioning. The only thing it does is to provide a default pickup sound for its subclasses.
+
+=== [[ZScript]] definition ===
+{{ZScriptDefinitionNote|actors/inventory/armor.zs#L36}}
+&lt;syntaxhighlight lang="csharp"&gt;
+class Armor : Inventory
+{
+	Default
+	{
+		Inventory.PickupSound "misc/armor_pkup";
+		+INVENTORY.ISARMOR
+	}
+}&lt;/syntaxhighlight&gt;
+
+=== [[DECORATE]] definition ===
+{{DecorateDefinitionNote}}
+ ACTOR &lt;u&gt;Armor&lt;/u&gt; : {{Class|Inventory}} native
+ {
+   {{Property|Inventory.PickupSound}} "misc/armor_pkup"
+ }
+
+== See also ==
+[[:Category:Armor|Classes in the Armor category]]</text>
+    <sha1>q88i6c46ve40mrms85urhqg38bq48uz</sha1>
+  </revision>
+</page>

@@ -1,0 +1,58 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>Named script</title>
+  <ns>0</ns>
+  <id>7110</id>
+  <revision>
+    <id>35863</id>
+    <parentid>33642</parentid>
+    <timestamp>2013-02-11T02:35:10Z</timestamp>
+    <contributor>
+      <username>Deded007</username>
+      <id>1392</id>
+    </contributor>
+    <minor />
+    <comment>notoc</comment>
+    <origin>35863</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="2018" sha1="q6cgnsxw9rlf7f8rh3yy34av15waxtj" xml:space="preserve">[[ZDoom]] can now support using [[script]] names instead of numbers in [[ACS]]. So, instead of using
+ Script 1 (void)
+ {
+    &lt;some instructions&gt;
+ }
+It is possible to use:
+ Script "My named script" (void)
+ {
+    &lt;some instructions&gt;
+ }
+
+The main advantage is to prevent script collision. For example, you can use script names containing the name of your mod to make them truly unique. Internally, the script name is converted to a unique negative number.
+
+This requires [[ACC]] v1.51 or later for compilation.
+
+Work on named scripts began with {{rev|3358}}, and the bulk of the work ended with {{rev|3374}}, with minor additions and fixes up to {{rev|3405}}.
+
+==Console==
+Just as {{CCMD|D|puke}} is used to execute numbered scripts, {{CCMD|D|pukename}} can be used to execute named scripts from the console. If your script name includes spaces, you have to enclose it within quotes, for example:
+ pukename "healing script"
+If you have to enclose the pukename instruction itself within quote (for creating an [[alias]] or [[binding]], for example), use escaped quotes:
+ alias help "pukename \"healing script\""
+ bind h "pukename \"healing script\""
+
+==Action specials==
+Currently, named script functions are supported for ACS and [[DECORATE]] only; they do not exist as [[action specials]]. However, with the ZDoom namespace of the [[Universal Doom Map Format]], an alternative is available with the {{c|arg0str}} property.
+
+For UDMF, keep using the old specials (use ACS_Execute instead of ACS_NamedExecute, for example). Go to the Custom tab, and add a new "arg0str" property to the thing or linedef. Type the name of the script there. The script number will be ignored.
+
+'''[[Doom Builder 2]] note:''' Do not include quotation marks around the property field ''arg0str'' or the ''name of the script'' in the value field, as this will cause DB2 to crash.
+
+==Forum threads==
+* {{forum|t=31998|Named scripts}}
+* {{forum|t=32276|A little trouble with pukename}}
+[[Category:ACS]]
+==See also==
+{{script functions}}
+__NOTOC__</text>
+    <sha1>q6cgnsxw9rlf7f8rh3yy34av15waxtj</sha1>
+  </revision>
+</page>

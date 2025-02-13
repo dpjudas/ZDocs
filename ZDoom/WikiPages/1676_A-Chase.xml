@@ -1,0 +1,75 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>A Chase</title>
+  <ns>0</ns>
+  <id>1676</id>
+  <revision>
+    <id>54054</id>
+    <parentid>52690</parentid>
+    <timestamp>2024-12-11T14:09:22Z</timestamp>
+    <contributor>
+      <username>Jekyll Grim Payne</username>
+      <id>2175</id>
+    </contributor>
+    <comment>Formatting, added parent class</comment>
+    <origin>54054</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="3851" sha1="28msba2iocdqlsbqmglooftz14a8bz1" xml:space="preserve">__NOTOC__{{DISPLAYTITLE:A_Chase}}
+{{doomwiki|A_Chase}}
+'''{{class|Actor}}'''
+
+{{c|native void '''A_Chase'''(statelabel ''melee'' {{=}} '_a_chase_default', statelabel ''missile'' {{=}} '_a_chase_default', int ''flags'' {{=}} 0)}}
+
+==Usage==
+This is the standard monster walking function which has to be used in the walking frames of a monster. Typically, it is used in an actor's "See" [[Actor_states|state]] or a custom equivalent. When called, actors usually change their directions to a strict 45 degree angle to give the effect of pursuit. This angle changes based on which direction the target is, no matter if the calling actor can see it or not.
+
+===Parameters===
+{{note|passing {{c|"_a_chase_default"}} to both the ''melee'' and ''missile'' parameters, puts the function in its default-behavior mode. In this mode, the monster jumps to {{c|Melee}} and {{c|Missile}} states when performing melee and ranged attacks, respectively, does not strafe randomly, plays its {{Property|ActiveSound|active sound}}, and moves twice as fast in ''Nightmare!'' difficulty setting or equivalent. Additionally, the ''flags'' parameter is ignored.}}
+*{{c|StateLabel '''melee'''}}
+:The state to jump to when the monster decides to perform a melee attack. If this is &lt;code&gt;null&lt;/code&gt;&lt;sup&gt;{{Zscriptfeaturesmall}}&lt;/sup&gt;/0 or &lt;code&gt;""&lt;/code&gt; (empty string)&lt;sup&gt;{{Decoratefeaturesmall}}&lt;/sup&gt;, the monster will not be able to enter the melee state while chasing. 
+:Default is {{c|'_a_chase_default'}} which uses the actor's &lt;code&gt;MeleeState&lt;/code&gt; variable (which, by default, points to the "Melee" state sequence).
+*{{c|StateLabel '''missile'''}}
+:The state to jump to when the monster decides to perform a ranged attack. If this is &lt;code&gt;null&lt;/code&gt;&lt;sup&gt;{{Zscriptfeaturesmall}}&lt;/sup&gt;/0 or &lt;code&gt;""&lt;/code&gt; (empty string)&lt;sup&gt;{{Decoratefeaturesmall}}&lt;/sup&gt;, the monster will not be able to enter the ranged state while chasing. 
+:Default is {{c|'_a_chase_default'}} which uses the actor's &lt;code&gt;MissileState&lt;/code&gt; variable (which, by default, points to the "Missile" state sequence).
+*{{c|int '''flags'''}}
+:Determines how the monster will behave when the function is called. Default is 0. Because of the special way in which {{c|A_Chase}} handles its state jumps, the preceding state parameters must be specified or these flags will be ignored.
+{{: Chase flags}}
+
+===Notes===
+*This function is not subject to the same rules as other jump functions are in [[Actor_states#Anonymous_Functions|anonymous functions]], and cannot be used inside if/else statements. {{c|A_Chase}} will perform its jump, no matter what circumstances apply. This is because it's not a jump function; rather than returning a state pointer, it changes the actor's current state directly.
+*Because this function and its variants have the capacity to put the actor into an attack state, they should not be used during the first tic of one of those states, as it may result in infinite recursion, which will usually manifest itself in the engine as a crash.
+
+==Examples==
+Here is an example of a new monster which uses the optional range attack as well as a melee attack if it is close to its target, like the {{Class|Revenant}}.
+
+ class Scurymonster : {{Class|Actor}}
+ {
+     Default
+     {
+         {{property|Monster}};
+         {{property|Height}} 20;
+         {{property|Radius}} 16;
+         {{property|Speed}} 10;
+     }
+ 
+     States
+     {
+     Spawn:
+         MONS A 10 [[A_Look]];
+         Loop;
+     See:
+         MONS ABCD 4 [[A_Chase]]("Meleeattack", "Cowattack");
+         Loop;
+     Cowattack:
+         MONS E 5 [[A_SpawnProjectile]]("Cowmissile"); {{comment|Example class name, not included in GZDoom}}
+         Goto See;
+     Meleeattack:
+         MONS F 5 [[A_CustomMeleeAttack]](5);
+         Goto See;
+     }
+ }
+
+[[category:Decorate Monster AI functions]]{{DEFAULTSORT:Chase}}</text>
+    <sha1>28msba2iocdqlsbqmglooftz14a8bz1</sha1>
+  </revision>
+</page>

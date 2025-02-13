@@ -1,0 +1,146 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>Making configurable actors in DECORATE</title>
+  <ns>0</ns>
+  <id>9549</id>
+  <revision>
+    <id>48791</id>
+    <parentid>48671</parentid>
+    <timestamp>2021-10-04T00:57:59Z</timestamp>
+    <contributor>
+      <username>Inkoalawetrust</username>
+      <id>2604</id>
+    </contributor>
+    <minor />
+    <comment>Fixed a mistake with the color code used for a code block.</comment>
+    <origin>48791</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="11706" sha1="bo2wyw0ree74mrbgp3ddjlkx93plw5i" xml:space="preserve">{{Note|This guide covers making configurable actors in DECORATE through using custom arguments, and mostly targeted towards [[Zandronum]], but this information can also be applied to use custom arguments in ZScript too.}}
+
+''Guide written by [[User:inkoalawetrust|inkoalawetrust]]''
+
+So, let's say you want to make an actor such as a monster, but you want to be able to expose certain aspects of it to the level editor, so you or other mappers can change parts of the actor without creating multiple versions of it, how could you do this ? Well if you are using ZScript, then you would [[Using user variables in ZScript|use user variables]], but in DECORATE, [[User variable|user variables only act as internal variables]], so they are not exposed to the level editor, to make an actor that can interface with the level editor in DECORATE, you need to use custom arguments.
+
+__TOC__
+
+== Getting started ==
+Every actor has an [[Actor_properties#Arg|args[]]] field, this field is normally used to pass parameters to an [[action special]] given to the actor, similarly to how an action special is given to a [[linedef]], like shown below:
+
+[[File:Actor_action_special.png|frame|none|An instance of what the args[] field/array is normally used for.]]
+
+However, in DECORATE (And ZScript), you can read the integer values passed to the args[] array, which allows you to use the array to make [[action functions]] that support expressions such as [[A_JumpIf]] only execute if one of the numbers/integers passed to a specific "part" (Member) of the args[] array equals, or is more or less than a given number, to use an easier to understand example, try making an actor that calls A_JumpIf, but only if args[0] equals 123:
+
+ {{color|green|A_JumpIf}} (args[{{color|blue|0}}] == {{color|blue|123}}, {{color|green|"CoolStateName"}})
+
+Or do the same, but make the state jump only occur if args[1] is less than 123:
+
+ {{color|green|A_JumpIf}} (args[{{color|blue|1}}] &lt; {{color|blue|123}}, {{color|green|"CoolStateName"}})
+
+Before we continue, keep in mind that args[] is an array as was mentioned before, if you don't know what that is, then don't worry too much about it, just know that it's a container that stores multiple variables/values, and each variable/value in this container is called a "member".
+
+== Using the args[] array to make a configurable actor ==
+Now that you have a basic understanding of how the args[] array works on an actor and how to access it, we can use it to make something like this custom Imp, whose angle is determined by the value given in its args[0] field, and will immediately die if the value set on its args[1] field is above 0. Try writing this yourself and messing with the lines that rely on the args[] array in different ways to get more comfortable with using custom arguments:
+
+ {{color|blue|Actor}} CustomImp : DoomImp {{color|blue|Replaces}} DoomImp
+ {
+ 	{{color|blue|States}}
+ 	{
+ 		{{color|blue|Spawn}}:
+ 			TNT1 A {{color|blue|0}}
+ 			TNT1 A {{color|blue|0}} {{color|green|[[A_SetAngle]]}} (args[{{color|blue|0}}])
+ 			TNT1 A {{color|blue|0}} {{color|green|A_JumpIf}} (args[{{color|blue|1}}] &gt; {{color|blue|0}},{{color|green|"GetKilled"}})
+ 			TROO AB {{color|blue|10}} {{color|green|A_Look}}
+ 			{{color|blue|Loop}}
+ 		GetKilled:
+ 			TNT1 A {{color|blue|0}} {{color|green|[[A_Die]]}}
+ 	}
+ }
+
+Now you can run this code, and if you wrote it correctly, we can now place this Imp replacement on a map, open the things' Edit Thing window, go to the Action/Tag/Misc tab and mess with the actors' custom arguments to get results, I'll give the first input box a value of 90, and add a value to the second box.
+
+[[File:Imp_arguments.png|frame|none]]
+
+When we start up L/GZDoom or Zandronum, the Imp should be facing at an angle of 90 degrees and immediately die.
+
+== Integrating custom arguments to the editor ==
+Now that you know how to use custom arguments to make configurable actors, you may have noticed something, the argument fields are totally unnamed and unmarked, so every time you use the custom arguments of a configurable actor (e.g. a rain spawner), you have to figure out where each custom argument is which out of the 5 available argument boxes. Yet, built-in ZDoom actors like [[Dynamic light|dynamic lights]], which also use custom arguments themselves, have each of their argument fields named in the editor, is there a way you could do that too ?
+
+[[File:Light actor arguments.png|frame|none|A screenshot of the named arguments the built-in dynamic light actors have.]]
+
+Yes there is, to give names to your custom arguments and even tooltips and drop down menus, you can use [[editor keys]] to further integrate your custom actor to the editor, and make using it more user friendly.
+
+{{Note|Editor keys are placed in the same location [[actor properties]] and [[Actor flags|flags]] go to in both DECORATE and ZScript.}}
+=== Naming your custom arguments ===
+First things first, we need to be able to give a name to our custom arguments, to make it easier for people to use the actor, to name an argument, you can use the //$ArgN editor key, where N is the number of your argument field. So for example, say you've got a cowardly [[Classes:Demon|Pinky]] that uses its' arg[4] field to turn the [[Actor flags#Frightened|Frightened]] flag on if the fields' value isn't 0. So to give that field a name, we would type the //$ArgN key like this on the actors' definition:
+
+ {{color|green|//$Arg4 Toggle cowardice}}
+
+=== Adding tooltips to your custom arguments ===
+Now that our flag switching argument is named, you may have noticed that it's not too clear what it does to people who haven't read or written the actors' code like you have, so to explain to people what the argument does, without making them flip through external documentation files. You can use the //$ArgNTooltip editor key to create tooltips. Which will create a tooltip that underlines the argument name and makes it blue, the tooltip will appear when you hover over the arguments' name.
+
+ {{color|green|//$Arg4Tooltip When turned on, makes the Pinky run away from its imminent demise.}}
+
+But maybe your tooltip is a bit too long, and you want to break the tooltip box to multiple lines, to do that, you can type \n anywhere in the tooltips' description to break the text that comes after into a new line, like shown below, where the tooltip text from the above example is broken into two almost equally long lines.
+
+ {{color|green|//$Arg4Tooltip When turned on, makes the Pinky\nrun away from its imminent demise.}}
+
+After adding these two editor keys for the custom flag changing argument, it should look like this in the editor:
+
+[[File:Named_argument_and_tooltip.png|none|frame]]
+
+=== Creating drop down menus for custom arguments ===
+Before we begin, to be able to use drop down menus for custom arguments, you'll first have to specify that the argument should be an enum and not just an integer/number, to do that you need to type a new line with the //$ArgNType key, then add the number 11 to it afterwards to specify that it's an enum, a list of all possible argument types that can be assigned by the //$ArgNType key can be found [[Editor_keys#Argument_types|here]].
+
+Note: '''Enums are in essence a way to assign names to numbers/integers.'''
+
+==== Using the default drop down menus ====
+Since the Pinky's argument only turns a flag on or off, it only really needs to be a True or False switch, not a number input box. Thankfully, you can also use and make ([[#Making your own drop down menus|Described below]]) drop down menus for your arguments, to use a drop down menu for an argument that is effectively just an on (1) or off (0) switch like the Pinky example, you can make use of the //$ArgNEnum editor key. A list of enums built-in to UDB can be found [https://github.com/jewalky/UltimateDoomBuilder/blob/master/Build/Configurations/Includes/Doom_misc.cfg#L439 here].
+
+With this basic info on what an enum is, how to use them, and what enums are built into Ultimate Doom Builder. You can use the //$ArgNEnum key, followed by the name of one of the built-in enums, in this case we'll pick the True/False switch enum, which is called ''falsetrue'', so now your two keys should look like this:
+
+ {{color|green|//$Arg4Type 11}}
+ {{color|green|//$Arg4Enum falsetrue}}
+
+And now the Pinkys' Cowardice toggle argument should start using a drop down menu that only has a True or False switch. Instead of a number input box.
+
+[[File:Enumerated_argument.png|none|frame|The custom argument should now look like this.]]
+
+==== Making your own drop down menus ====
+While the built-in Boolean enum types are useful, and may well be all that's needed in most of your own use cases, you may eventually want to make your own enums, that have their own numbers/integers and corresponding names. To make a new enum from scratch, you need to use the //$ArgNEnum key like above, but instead of following the key with the name of pre-existing enum. You add { } brackets, and inside them use the following syntax:
+
+ &lt;span style="color:#008000"&gt;//$Arg4Enum {number = "name"; number = "name"; number = "name";}&lt;/span&gt;
+
+Where number is, well, a number that is then checked for by your code, and name is the name of that number, that will appear in the drop down menu. Every entry should be ended by a semicolon (;). '''And the entire enum block should be in the same line''', doing this will not work and trigger startup errors:
+
+ {{color|green|//$Arg4Enum}}
+ {
+ 	{{color|blue|1}} = {{color|green|"Option1"}};
+ 	{{color|blue|2}} = {{color|green|"Option2"}};
+ 	{{color|blue|3}} = {{color|green|"Option3"}};
+ }
+
+Now, here is a real world example of a custom Cacodemon that uses a custom enum drop down menu to change its' behavior based on the exact named number value picked from the menu.
+
+ 	{{color|green|//$Arg0 Attack modes}}
+ 	{{color|green|//$Arg0Tooltip "Toggles between the Cacodemons' different AI modes:\nStandard: Normal Cacodemon behaviour\nEvasive: Attempts to avoid being hit by its' target\nEvasive &amp; Aggresive: Avoids being hit and attacks more fiercely"}}
+ 	{{color|green|//$Arg0Type 11}}
+ 	&lt;span style="color:#008000"&gt;//$Arg0Enum {0 = "Standard"; 1 = "Evasive"; 2 = "Evasive &amp; Aggressive";}&lt;/span&gt;
+
+== Full example ==
+
+Below is a link to a full, real world example of a custom [[Classes:Cacodemon|Cacodemon]] that uses most of the information covered in this guide, it has 3 toggleable AI modes that change its' behavior through a custom enum, a customizable field of view, which also uses a [[user variable]], and both custom arguments have names and tooltips explaining what they do included. It is also compatible with Zandronum, the actor can be used as a reference on how to make use of custom arguments, and of what a real world usage case of the information covered in this guide looks like.
+
+https://drive.google.com/file/d/1tNmd7pkPPf8vOoNhJAGAeZ5iZFOcrSwN/view?usp=sharing
+
+Note: The ACS code used by the actor isn't really relevant to the guide, only the main DECORATE file is.
+
+== Tips ==
+
+* You can only have up to 5 custom arguments.
+* Custom arguments only support numbers/integers, unlike ZScript user variables which [[Using user variables in ZScript#Supported_user_variable_types|support several more variable types]]. Also yes, all [[Editor_keys#Argument_types|the argument types available through //$ArgNType]] are still just integer numbers.
+* Because action specials also use the args field, you cannot have an actor that both uses custom arguments and an action special. This applies to built-in actors that use the args[] array too, such as dynamic light actors.
+
+[[Category:Editing concepts]] [[Category:DECORATE]] [[Category:DECORATE guides]] [[Category:Guides]]</text>
+    <sha1>bo2wyw0ree74mrbgp3ddjlkx93plw5i</sha1>
+  </revision>
+</page>

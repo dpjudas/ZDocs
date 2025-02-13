@@ -1,0 +1,63 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>Classes:CFlameMissile</title>
+  <ns>0</ns>
+  <id>4547</id>
+  <revision>
+    <id>34213</id>
+    <parentid>20097</parentid>
+    <timestamp>2012-09-05T11:08:52Z</timestamp>
+    <contributor>
+      <username>Blue Shadow</username>
+      <id>2021</id>
+    </contributor>
+    <comment>/* DECORATE definition */ Updated.</comment>
+    <origin>34213</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="1000" sha1="ot93aou1mtulc25ieeqd3ub7kuxwghb" xml:space="preserve">{{Actor|
+| type = Explosive
+| name = Firestom missile
+| class = CFlameMissile
+| game = Hexen
+}}[[Classes]]: [[Classes:FastProjectile|FastProjectile]]&amp;rarr;&lt;u&gt;CFlameMissile&lt;/u&gt;&lt;br&gt;
+{{desc}}
+==== [[DECORATE]] definition ====
+ ACTOR &lt;u&gt;CFlameMissile&lt;/u&gt; : {{Class|FastProjectile}} native
+ {
+   {{Property|Speed}} 200
+   {{Property|Radius}} 14
+   {{Property|Height}} 8
+   {{Property|Damage}} 8
+   {{Property|DamageType}} "Fire"
+   +{{Flag|INVISIBLE}}
+   {{Property|RenderStyle}} Add
+   {{Property|Obituary}} "$OB_MPCWEAPFLAME"
+ 
+   action native [[A_CFlamePuff]]();
+   action native [[A_CFlameMissile]]();
+ 
+   States
+   {
+   Spawn:
+     CFFX A 4 Bright
+     CFFX A 1 [[A_CFlamePuff]]
+     Goto Death+1
+   Death:
+     CFFX A 1 Bright [[A_CFlameMissile]]
+     CFFX ABC 3 Bright
+     CFFX D 4 Bright
+     CFFX E 3 Bright
+     CFFX F 4 Bright
+     CFFX G 3 Bright
+     CFFX H 4 Bright
+     CFFX I 3 Bright
+     CFFX J 4 Bright
+     CFFX K 3 Bright
+     CFFX L 4 Bright
+     CFFX M 3 Bright
+     Stop
+   }
+ }</text>
+    <sha1>ot93aou1mtulc25ieeqd3ub7kuxwghb</sha1>
+  </revision>
+</page>

@@ -1,0 +1,54 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>Classes:FlameLarge</title>
+  <ns>0</ns>
+  <id>4362</id>
+  <revision>
+    <id>39499</id>
+    <parentid>34554</parentid>
+    <timestamp>2015-04-30T21:37:45Z</timestamp>
+    <contributor>
+      <username>Blue Shadow</username>
+      <id>2021</id>
+    </contributor>
+    <minor />
+    <comment>/* DECORATE definition */ Updated</comment>
+    <origin>39499</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="802" sha1="6xkmk3ox5fv95tpyi0w04l83h8xt6k2" xml:space="preserve">{{Actor|
+| type = Light source
+| name = Large flame
+| class = FlameLarge
+| game = Hexen
+| doomednum = 10503
+| spawnid = 99
+| spawnname = T_PERMLARGEFLAME 
+}}[[Classes]]: [[Classes:SwitchableDecoration|SwitchableDecoration]]&amp;rarr;&lt;u&gt;FlameLarge&lt;/u&gt;&lt;br&gt;
+&amp;ensp;&amp;rarr;[[Classes:FlameLarge2|FlameLarge2]]&lt;br&gt;
+{{desc}}
+==== [[DECORATE]] definition ====
+ ACTOR &lt;u&gt;FlameLarge&lt;/u&gt; : {{Class|SwitchableDecoration}}
+ {
+   +{{Flag|NOTELEPORT}}
+   +{{Flag|INVISIBLE}}
+   {{Property|Radius}} 15
+   {{Property|RenderStyle}} Add
+   States
+   {
+   Active:
+     FFLG A 0 Bright [[A_PlaySound]]("Ignite")
+   Spawn:
+     FFLG A 2 Bright
+     FFLG A 2 Bright [[A_UnHideThing]]
+     FFLG ABCDEFGHIJKLMNOP 4 Bright
+     Goto Spawn+6
+   Inactive:
+     FFLG DCB 2
+     FFLG A 2 [[A_HideThing]]
+     FFLG A 200 
+     Wait
+   }
+ }</text>
+    <sha1>6xkmk3ox5fv95tpyi0w04l83h8xt6k2</sha1>
+  </revision>
+</page>

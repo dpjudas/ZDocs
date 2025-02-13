@@ -1,0 +1,108 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>Creating simple decorations</title>
+  <ns>0</ns>
+  <id>2721</id>
+  <revision>
+    <id>37485</id>
+    <parentid>21705</parentid>
+    <timestamp>2013-12-26T23:07:26Z</timestamp>
+    <contributor>
+      <username>Gez</username>
+      <id>1283</id>
+    </contributor>
+    <minor />
+    <origin>37485</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="4197" sha1="5flqhqe9rjsb7bn8h9256rh0tho2rfr" xml:space="preserve">{{WarnDeprecated|the modern [[DECORATE]] format}}
+
+The general form for a simple decoration in [[the old DECORATE format]] is:
+
+    &lt;name&gt;
+    {
+        &lt;properties&gt;
+    }
+
+&lt;Name&gt; is the decoration's name and needs to be unique among all the [[classes]] defined in the source code and any you define in [[DECORATE]].
+
+There are several properties you can use: 
+
+* DoomEdNum &lt;x&gt; - &lt;x&gt; is the thing number you use to place it in an editor. 
+* SpawnNum &lt;x&gt; - &lt;x&gt; is the number you use to create it with the [[Thing_Spawn]] specials. 
+* Sprite &lt;ABCD&gt; - &lt;ABCD&gt; is the name of the sprite to use.
+* Frames "ABCD" is a special sequence of characters that defines the animation to use for the actor. A sequence definition looks like this:
+    "&lt;rate&gt;:&lt;frames&gt;,&lt;rate&gt;:&lt;frames&gt;,&lt;rate&gt;:&lt;frames&gt;,..."
+
+Rate is a number describing the number of tics between frames in this sequence. If you don't specify it, then a rate of 4 is used. Frames is a list of consecutive frame characters. Each frame can be postfixed with the asterisk (*) character to indicate that it is fullbright. 
+    ShortRedTorch looks like this: 
+    "ABCD" 
+    HeadCandles looks like this: 
+    "6:AB" 
+    TechLamp looks like this: 
+    "A*B*C*D*" 
+    BloodyTwich looks like this: 
+    "10:A, 15:B, 8:C, 6:B" 
+Notice that if you want an animation with a non-constant rate, you can use commas to separate multiple sequences in the string used with the Frames property. 
+* Alpha &lt;x&gt; - &lt;x&gt; is a number in the range [0, 1] and modifies the RenderStyle. 
+* RenderStyle &lt;style&gt; - &lt;style&gt; is the method used to draw this decoration. It can be one of: 
+    STYLE_None - Invisible. 
+    STYLE_Normal - Nothing special. 
+    STYLE_Fuzzy - Spectre effect. 
+    STYLE_SoulTrans - Translucent, amount comes from transsouls cvar. 
+    STYLE_OptFuzzy - Spectre or translucent, depending on cvar r_drawfuzz. 
+    STYLE_Translucent - Actor is see-through. 
+    STYLE_Add - Actor is see-through and brightens the background. 
+
+* Radius &lt;x&gt; - &lt;x&gt; is the "radius" of this actor's bounding box. 
+* Height &lt;x&gt; - &lt;x&gt; is its height. 
+* Translation1 &lt;x&gt; - &lt;x&gt; is 0, 1, or 2 and corresponds to the standard Doom translations of gray, brown, and red. 
+* Translation2 &lt;x&gt; - &lt;x&gt; is 0-255 and corresponds to a translation you set up in a level using ACS. 
+* Solid - Blocks movement. 
+* NoSector - Is not drawn but affects movement. 
+* NoBlockmap - Is drawn but does not interact with the world. 
+* SpawnCeiling - Spawns on the ceiling. 
+* NoGravity - Does not fall with gravity. 
+* LowGravity - Does not accelerate as quickly while falling. 
+* WindThrust - Can be thrust by wind. I'm not sure if I have this fully implemented yet. It works for Heretic's windy sectors, but I don't think it works with Boom wind yet. 
+* SpawnFloat - Spawns at a random height between the floor and ceiling. Versions 2.0.61 and earlier of ZDoom have a bug that causes this to work unreliably when the ceiling is more than 297 units above the floor.
+* Pushable - Can be pushed. 
+* CannotPush - Cannot push other things that get in the way if it is being pushed. 
+* FloatBob - Bobs like Heretic's and Hexen's items. 
+* Reflective - Reflects missiles. 
+* DontSplash - Does not splash in liquids. 
+* FloorClip - Bottom pixels get cut off the sprite on floor clipping flats defined in the TEXTURE lump.
+* Scale &lt;x&gt; - Scales the sprite with a factor if &lt;x&gt;:1. Ex: Use 0.5 to draw a 100 unit image across 50 map units.
+
+An example follows:
+
+    FastBloodyTwich 
+    { 
+        DoomEdNum 20000 
+        Sprite GOR1 
+        Frames "1:A*B*C*B*, 10:ABCB" 
+        SpawnCeiling 
+        Solid 
+        NoGravity 
+        Radius 16 
+        Height 68 
+    } 
+
+Note: You can add a category comment to your Thing for [[Doom Builder]] to put this thing in a specific category of the Game Configuration you choose in Doom Builder. Things defined in the DECORATE lump that do '''not''' have this category comment will be added to a new category called "DECORATE" in Doom Builder.
+
+Here is an example:
+
+    SmallLamp
+    {
+        DoomEdNum 20001
+        Sprite SLMP
+        Frames "ABCD"
+        Solid
+        Radius 16
+        Height 56
+        //$Category lights
+    }
+
+[[category:Old Decorate format]]</text>
+    <sha1>5flqhqe9rjsb7bn8h9256rh0tho2rfr</sha1>
+  </revision>
+</page>

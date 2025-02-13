@@ -1,0 +1,60 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>DrawShapeFill</title>
+  <ns>0</ns>
+  <id>9653</id>
+  <revision>
+    <id>52830</id>
+    <parentid>49870</parentid>
+    <timestamp>2024-08-06T15:30:08Z</timestamp>
+    <contributor>
+      <username>Jekyll Grim Payne</username>
+      <id>2175</id>
+    </contributor>
+    <comment>/* Examples */</comment>
+    <origin>52830</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="2755" sha1="gfku7mohi5csxm8yl00u7txkztr7x68" xml:space="preserve">{{ZScriptNote}}
+__NOTOC__
+
+'''[[Structs:Screen|Screen]]'''
+
+native static vararg void '''DrawShapeFill'''(Color col, double amount, Shape2D s, ...)
+
+== Usage ==
+Fills a predefined [[Classes:Shape2D|Shape]] in with a specified color. Note that the colors used are BGR instead of the usual way i.e. 0xFF would be red instead of blue. This method can be used to to create mono-colored areas on the screen that have unique shapes without having to rely on textures. [[Dim]] can be used if simple squares are desired.
+
+'''Note:''' ABGR colors are best specified by a hex value. For instance, if a color of pure red with full opaqueness is desired, the value 0xFF0000FF should be used. The first FF specifies the alpha, the next two 00 specify the level of blue and green respectively, and the last FF specifies the level of red. If a tag says only "BGR" then the first FF specifying the alpha can be completely left out. 
+
+'''Warning:''' This can only be called from within functions that are specifically designed to draw HUD elements (e.g. BaseStatusBar's [[Draw]] or EventHandler's RenderOverlay).
+
+=== Parameters ===
+*''col'' - The BGR color to fill the shape in with
+*''amount'' - The alpha to use for the shape
+*''s'' - The predefined shape to pass to the function. See [[Classes:Shape2D|Shape]] for creating custom shapes
+*''tags'' - Tags allow for any number of optional arguments to be specified in any order. Tags are set with the following syntax:
+ Screen.DrawShapeFill(0xFF, 0.5, myShape, DTA_LegacyRenderStyle, STYLE_Add); // etc
+with the tag first followed by its value. Valid tags:
+:*(int) '''DTA_Color''' - An ABGR color that the shape's final colors (after all other color operations) are blended with
+:*(int) '''DTA_ColorOverlay''' - Applies an ARGB color overlay on top of the shape. In this case, 0xFF0000FF is fully opaque blue
+:*(int) '''DTA_Desaturate''' - If set to a value greater than 0, fully desaturates the shape
+:*(int) '''DTA_LegacyRenderStyle''' - Sets the render style via the STYLE_* constants. See: [[A_SetRenderStyle#Parameters|render styles]]
+:*(bool) '''DTA_NoOffset''' - The shape ignores the global offsets for the screen when drawing it
+:*(int) '''DTA_ClipTop''' - Clip anything above this position on the screen
+:*(int) '''DTA_ClipBottom''' - Clip anything below this position on the screen
+:*(int) '''DTA_ClipLeft''' - Clip anything to the left of this position on the screen
+:*(int) '''DTA_ClipRight''' - Clip anything to the right of this position on the screen
+::*'''Note:''' Clipping rectangles take precedence over the DTA_Clip* tags
+
+== Examples ==
+See examples on the '''[[Classes:Shape2D#Examples|Shape2D page]]'''.
+
+== See also ==
+* [[DrawShape]]
+* {{class|Shape2D}}
+
+[[Category:ZScript]]
+[[Category:Screen]]</text>
+    <sha1>gfku7mohi5csxm8yl00u7txkztr7x68</sha1>
+  </revision>
+</page>

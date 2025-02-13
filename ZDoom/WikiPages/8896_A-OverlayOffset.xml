@@ -1,0 +1,53 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>A OverlayOffset</title>
+  <ns>0</ns>
+  <id>8896</id>
+  <revision>
+    <id>47854</id>
+    <parentid>47853</parentid>
+    <timestamp>2020-09-18T22:43:53Z</timestamp>
+    <contributor>
+      <username>Quaker540</username>
+      <id>2135</id>
+    </contributor>
+    <minor />
+    <comment>Made the page a bit more like A_WeaponOffset</comment>
+    <origin>47854</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="2126" sha1="gqwwrm55gbydvglkvrfxkh33sjg7rm1" xml:space="preserve">{{DISPLAYTITLE: A_OverlayOffset}}
+'''A_OverlayOffset''' [(int ''layer''[, float ''x''[, float ''y''[, int ''flags'']]]])]
+
+== Usage ==
+Works just like [[A_WeaponOffset]] with the ability to adjust other layers, and can be called by weapons, players and inventory items. Offsets a weapon by the defined amount of ''x'' and ''y'' similar to the ''[[Offset]]'' frame keyword. This function has the following differences from the aforementioned ''Offset'' ability:
+
+*Offsets are '''floats''', not integers.
+*Offsets are not lost when firing a weapon.
+*Offsets stack on top of weapon bobbing and behave independently, allowing [[A_WeaponReady]] calls to it with the WRF_NOBOB flag.
+*Specifying the default coordinates does not serve as a preservative. They are absolute.
+*Offsets can go beyond screen limitations.
+*Because this is an action function itself, [[DECORATE_expressions|Decorate expressions]] can be used.
+
+'''NOTE:''' If an overlay has ''PSPF_ADDWEAPON'', it will inherit the weapon's offsets, which default to (0,32) if none is specified. This should be kept in mind when offsetting the overlay. Simply set the X and Y offsets to 0 to have the overlay follow the weapon's position. This does not apply to [[A_WeaponOffset]] as that strictly targets the weapon layer itself, never overlays.
+== Parameters ==
+*''layer'' - The layer to adjust.
+*''x'' - Adjusts horizontal position based on positive (right) or negative (left) numbers. Default is 0.
+*''y'' - Adjusts vertical position. Default is 32. Larger values lower the weapon, and vice versa.
+*''flags'' - Flags can be combined with the | separator.
+:*'''WOF_KEEPX''' - ''x'' parameter will not be used.
+:*'''WOF_KEEPY''' - ''y'' parameter will not be used.
+:*'''WOF_ADD''' - Adds the current x and y parameters to the current offsets instead of overriding them. Also implies interpolation (see below).
+:*'''WOF_INTERPOLATE''' - Interpolates the offset between tics, smoothing out the animation.
+
+== Examples ==
+{{noexamples}}
+
+== See Also ==
+*[[A_Overlay]]
+*[[A_OverlayFlags]]
+*[[A_WeaponOffset]]
+
+{{DEFAULTSORT:OverlayOffset}}[[category:Decorate Weapon functions]]</text>
+    <sha1>gqwwrm55gbydvglkvrfxkh33sjg7rm1</sha1>
+  </revision>
+</page>

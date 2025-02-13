@@ -1,0 +1,49 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>ThrustThing</title>
+  <ns>0</ns>
+  <id>699</id>
+  <revision>
+    <id>46771</id>
+    <parentid>46770</parentid>
+    <timestamp>2019-07-09T10:13:37Z</timestamp>
+    <contributor>
+      <username>Blue Shadow</username>
+      <id>2021</id>
+    </contributor>
+    <minor />
+    <origin>46771</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="1275" sha1="260kqahwuovcp1wfok1q3qxhy64tejy" xml:space="preserve">{{Special|72|angle, force, nolimit, tid|Thing}}
+
+* ''angle'': [[Definitions#Byte_Angles|Byte angle]] to thrust the thing 
+* ''force'': The force, in units per tic (1 second = 35 tics), to apply to the thing.
+* ''nolimit'': Must be set to 1 if the thrust is larger than 30
+* ''tid'': [[TID]] of the thing to thrust. If this is 0, the activator of the special is affected itself.
+
+Thrusts the thing with the given '''tid''' in the direction specified by '''angle''' with the given '''force'''. Can be easily combined with [[ThrustThingZ]].
+
+'''ThrustThing''' can also be used to thrust based on actor angle. 
+
+ ThrustThing(angle * 256 / 360, 0, 0, 0)
+ ThrustThing(angle * 256 / 360 + 64, 0, 0, 0)
+
+The first line will thrust in the direction the actor is facing. Adding +64, +128, or +192 will thrust to the right, backwards, or left, respectively.
+
+==Examples==
+This script combines ThrustThing with ThrustThingZ to spawn an {{Class|arachnotron}}, and make it jump ~500 map units into the air and ~200 map units to the east.
+
+ Script "Arachnotron jump" (void)
+ {
+     [[SpawnSpotFacingForced]]("{{Class|Arachnotron}}", 142, 143);
+     [[Delay]](1);
+     [[ThrustThingZ]](143, 115, 0, 0);
+     Delay(18);
+     [[ThrustThing]](0, 10, 1, 143);
+ }
+
+==External links==
+* {{oldref}}</text>
+    <sha1>260kqahwuovcp1wfok1q3qxhy64tejy</sha1>
+  </revision>
+</page>

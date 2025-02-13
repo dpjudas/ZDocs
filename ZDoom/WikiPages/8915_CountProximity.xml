@@ -1,0 +1,51 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>CountProximity</title>
+  <ns>0</ns>
+  <id>8915</id>
+  <revision>
+    <id>45461</id>
+    <parentid>45136</parentid>
+    <timestamp>2017-07-18T17:11:16Z</timestamp>
+    <contributor>
+      <username>Blue Shadow</username>
+      <id>2021</id>
+    </contributor>
+    <minor />
+    <comment>The return value is an integer, not a state.</comment>
+    <origin>45461</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="2452" sha1="ix9llqonad2gptykijoytt2rq93k43h" xml:space="preserve">{{codepointer|Jump}}
+int '''CountProximity''' (str ''classname'', float ''distance'' [, int ''flags'' [, int ''ptr'']])
+==Usage==
+Behaves similarly to [[A_CheckProximity]] but returns a number of actors found instead of jumping.
+Performs a check to see if an actor of type ''classname'' is within ''distance''. These conditions can be modified with ''flags'' and will count any actor, as long as it is the same ''classname''. Can be performed based upon the actor's pointer as well.
+
+===Parameters===
+*''classname'': The name of the actor to check for.
+*''distance'': Determines how far this function should search for the actors, similar to [[A_JumpIfCloser]]. Must be greater than 0.
+*''flags'': Can be combined using the '|' separator. Default is 0.
+**'''CPXF_ANCESTOR''': Search the inheritance of an actor, if it has any, for a partial match akin to [[CheckClass]].
+**'''CPXF_NOZ''': Disables Z height checking -- the function will only care about the actor being in range for X and Y coordinates, regardless of how high or low an actor is.
+
+Only one of the two following may be used due to mutual exclusion:
+:*'''CPXF_COUNTDEAD''': By default, the function only counts living actors. This causes the function to also accept dead ones. This only makes sense for monsters.
+:*'''CPXF_DEADONLY''': Inverses the function to only count dead monsters instead of living ones.
+:*'''CPXF_CHECKSIGHT''': Restricts actor counting to only those which can be seen.
+:*'''CPXF_SETTARGET''': Sets the first actor matching ''classname'' as the calling actor's target.
+:*'''CPXF_SETMASTER''': Sets the first actor matching ''classname'' as the calling actor's master.
+:*'''CPXF_SETTRACER''': Sets the first actor matching ''classname'' as the calling actor's tracer.
+'''Note''': CPXF_EXACT and CPXF_LESSOREQUAL do nothing with this function and should not be used.
+
+The following flags rely on using one of the SET* flags above:
+:*'''CPXF_FARTHEST''': The actor gets the furthest ''classname'' actor within ''distance'' from the pointer's location.
+:*'''CPXF_CLOSEST''': The actor gets the closest ''classname'' actor within ''distance'' to the pointer's location.
+:*'''CPXF_SETONPTR''': The pointer exchange is set on the calling actor's pointer instead of itself.
+
+*''ptr'': The [[actor pointer]] to do the checking around. The jump is only performed by the original calling actor, however. Default is {{c|{{const|AAPTR_DEFAULT}}}}.
+
+== Examples ==
+{{noexamples}}</text>
+    <sha1>ix9llqonad2gptykijoytt2rq93k43h</sha1>
+  </revision>
+</page>

@@ -1,0 +1,73 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>Classes:MWeapFrost</title>
+  <ns>0</ns>
+  <id>4638</id>
+  <revision>
+    <id>39652</id>
+    <parentid>34780</parentid>
+    <timestamp>2015-05-02T21:21:10Z</timestamp>
+    <contributor>
+      <username>Blue Shadow</username>
+      <id>2021</id>
+    </contributor>
+    <minor />
+    <comment>/* DECORATE definition */ Updated</comment>
+    <origin>39652</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="1380" sha1="6f3b57ai4364vbzfhhuyi41uhb1imd7" xml:space="preserve">{{Actor|
+| type = Weapon
+| name = Frost shards spell
+| class = MWeapFrost
+| game = Hexen
+| doomednum = 53
+| spawnid = 36
+| spawnname = MAGESHARDS 
+}}[[Classes]]: [[Classes:Inventory|Inventory]]&amp;rarr;[[Classes:Weapon|Weapon]]&amp;rarr;[[Classes:MageWeapon|MageWeapon]]&amp;rarr;&lt;u&gt;MWeapFrost&lt;/u&gt;&lt;br&gt;
+The [[Classes:MagePlayer|Mage]]'s second weapon, the Frost Shards spell uses 3 blue mana to spawn a wide cone of {{Class|FrostMissile|ice projectiles}}.
+==== [[DECORATE]] definition ====
+ ACTOR &lt;u&gt;MWeapFrost&lt;/u&gt; : {{Class|MageWeapon}}
+ {
+   +{{Flag|BLOODSPLATTER}}
+   {{Property|Weapon.SelectionOrder}} 1700
+   {{Property|Weapon.AmmoUse1}} 3
+   {{Property|Weapon.AmmoGive1}} 25
+   {{Property|Weapon.KickBack}} 150
+   {{Property|Weapon.YAdjust}} 20
+   {{Property|Weapon.AmmoType1}} "{{Class|Mana1}}"
+   {{Property|Inventory.PickupMessage}} "$TXT_WEAPON_M2" // "FROST SHARDS"
+   {{Property|Obituary}} "$OB_MPMWEAPFROST"
+   {{Property|Tag}} "$TAG_MWEAPFROST"
+ 
+   action native [[A_FireConePL1]]();
+ 
+   States
+   {
+   Spawn:
+     WMCS ABC 8 Bright
+     Loop
+   Select:
+     CONE A 1 [[A_Raise]]
+     Loop
+   Deselect:
+     CONE A 1 [[A_Lower]]
+     Loop
+   Ready:
+     CONE A 1 [[A_WeaponReady]]
+     Loop
+   Fire:
+     CONE B 3
+     CONE C 4
+   Hold:
+     CONE D 3
+     CONE E 5
+     CONE F 3 [[A_FireConePL1]]
+     CONE G 3
+     CONE A 9
+     CONE A 10 [[A_ReFire]]
+     Goto Ready
+   }
+ }</text>
+    <sha1>6f3b57ai4364vbzfhhuyi41uhb1imd7</sha1>
+  </revision>
+</page>

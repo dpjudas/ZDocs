@@ -1,0 +1,29 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>A CHolySeek</title>
+  <ns>0</ns>
+  <id>7328</id>
+  <revision>
+    <id>32703</id>
+    <timestamp>2012-05-05T22:28:06Z</timestamp>
+    <contributor>
+      <username>Blzut3</username>
+      <id>413</id>
+    </contributor>
+    <comment>May want to double check this function since it does quite a bit.</comment>
+    <origin>32703</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="1260" sha1="5ng07pb945xe0dce2we10386u2aa3af" xml:space="preserve">{{codepointer|r=Hexen}}
+'''A_CHolySeek'''&lt;br&gt;
+(''no parameter'')&lt;br&gt;
+
+Decrements health by one point and if it drops to zero, divides the x/y velocity of the projectile by 4 and jumps to the Death state.  The first frame of the Death state will have it's duraction decreased by 0-3 tics.
+
+If the projectile has a tracer target, then it will try to seek the target.  The sensitivity of the seeking is determined by the value contained in the first argument.  For it to seek, the target must be at least that many degrees away from the projectile and will turn at most two times the value.  Every 15 tics, the value of the first argument is set to 5-17.  On an independent 15 tic timer, the seeking will change the z velocity of the projectile by at most 15 units.  Should the target be lost (due to death for example) the {{Flag|MISSILE}} flag will be restored and the {{Flag|NOCLIP}} and {{Flag|SKULLFLY}} flags will be unset.
+
+Finally, the function uses the value in special2 to perform weaving.  The upper two bytes of special2 contain the x/y weave index and the lower two bytes contain the z weave index.  The indices will be increased by some value 0-4 and then modulated by 64.
+
+This codepointer is restricted to {{Class|HolySpirit}} and derived classes.</text>
+    <sha1>5ng07pb945xe0dce2we10386u2aa3af</sha1>
+  </revision>
+</page>

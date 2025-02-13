@@ -1,0 +1,109 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>Classes:FWeapAxe</title>
+  <ns>0</ns>
+  <id>4652</id>
+  <revision>
+    <id>39479</id>
+    <parentid>34506</parentid>
+    <timestamp>2015-04-30T21:25:05Z</timestamp>
+    <contributor>
+      <username>Blue Shadow</username>
+      <id>2021</id>
+    </contributor>
+    <minor />
+    <comment>/* DECORATE definition */ Updated</comment>
+    <origin>39479</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="2654" sha1="5wnm3titrzknxw1cygeseujsfg7bnhy" xml:space="preserve">{{Actor|
+| type = Weapon
+| name = Timon's axe
+| class = FWeapAxe
+| game = Hexen
+| doomednum = 8010
+| spawnid = 27
+| spawnname = T_FIGHTERAXE 
+}}[[Classes]]: [[Classes:Inventory|Inventory]]&amp;rarr;[[Classes:Weapon|Weapon]]&amp;rarr;[[Classes:FighterWeapon|FighterWeapon]]&amp;rarr;&lt;u&gt;FWeapAxe&lt;/u&gt;&lt;br&gt;
+The {{Class|FighterPlayer|Fighter}}'s second weapon, Timon's Axe, is a short range weapon, which can also be used if the player has no {{Class|Mana1|blue mana}}, although with less power.
+==== [[DECORATE]] definition ====
+ ACTOR &lt;u&gt;FWeapAxe&lt;/u&gt; : {{Class|FighterWeapon}} native
+ {
+   {{Property|Weapon.SelectionOrder}} 1500
+   +{{Flag|WEAPON.AXEBLOOD}}
+   +{{Flag|WEAPON.AMMO_OPTIONAL}}
+   +{{Flag|WEAPON.MELEEWEAPON}}
+   {{Property|Weapon.AmmoUse1}} 2
+   {{Property|Weapon.AmmoGive1}} 25
+   {{Property|Weapon.KickBack}} 150
+   {{Property|Weapon.YAdjust}} -12
+   {{Property|Weapon.AmmoType1}} "{{Class|Mana1}}"
+   {{Property|Inventory.PickupMessage}} "$TXT_WEAPON_F2"
+   {{Property|Obituary}} "$OB_MPFWEAPAXE"
+   {{Property|Tag}} "$TAG_FWEAPAXE"
+ 
+   action native [[A_FAxeCheckUp]]();
+   action native [[A_FAxeCheckReady]]();
+   action native [[A_FAxeCheckAtk]]();
+   action native [[A_FAxeAttack]]();
+   action native [[A_FAxeCheckUpG]]();
+   action native [[A_FAxeCheckReadyG]]();
+ 
+   States
+   {
+   Spawn:
+     WFAX A -1
+     Stop
+   Select:
+     FAXE A 1 [[A_FAxeCheckUp]]
+     Loop
+   Deselect:
+     FAXE A 1 [[A_Lower]]
+     Loop
+   Ready:
+     FAXE A 1 [[A_FAxeCheckReady]]
+     Loop
+   Fire:
+     FAXE B 4 [[Offset]](15, 32) [[A_FAxeCheckAtk]]
+     FAXE C 3 [[Offset]](15, 32)
+     FAXE D 2 [[Offset]](15, 32)
+     FAXE D 1 [[Offset]](-5, 70) [[A_FAxeAttack]]
+     FAXE D 2 [[Offset]](-25, 90)
+     FAXE E 1 [[Offset]](15, 32)
+     FAXE E 2 [[Offset]](10, 54)
+     FAXE E 7 [[Offset]](10, 150)
+     FAXE A 1 [[Offset]](0, 60) [[A_ReFire]]
+     FAXE A 1 [[Offset]](0, 52)
+     FAXE A 1 [[Offset]](0, 44)
+     FAXE A 1 [[Offset]](0, 36)
+     FAXE A 1
+     Goto Ready
+   SelectGlow:
+     FAXE L 1 [[A_FAxeCheckUpG]]
+     Loop
+   DeselectGlow:
+     FAXE L 1 [[A_Lower]]
+     Loop
+   ReadyGlow:
+     FAXE LLL 1 [[A_FAxeCheckReadyG]]
+     FAXE MMM 1 [[A_FAxeCheckReadyG]]
+     Loop
+   FireGlow:
+     FAXE N 4 [[Offset]](15, 32)
+     FAXE O 3 [[Offset]](15, 32)
+     FAXE P 2 [[Offset]](15, 32)
+     FAXE P 1 [[Offset]](-5, 70) [[A_FAxeAttack]]
+     FAXE P 2 [[Offset]](-25, 90)
+     FAXE Q 1 [[Offset]](15, 32)
+     FAXE Q 2 [[Offset]](10, 54)
+     FAXE Q 7 [[Offset]](10, 150)
+     FAXE A 1 [[Offset]](0, 60) [[A_ReFire]]
+     FAXE A 1 [[Offset]](0, 52)
+     FAXE A 1 [[Offset]](0, 44)
+     FAXE A 1 [[Offset]](0, 36)
+     FAXE A 1
+     Goto ReadyGlow
+   }
+ }</text>
+    <sha1>5wnm3titrzknxw1cygeseujsfg7bnhy</sha1>
+  </revision>
+</page>

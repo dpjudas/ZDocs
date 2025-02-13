@@ -1,0 +1,52 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>Classes:TargetPractice</title>
+  <ns>0</ns>
+  <id>3073</id>
+  <revision>
+    <id>43546</id>
+    <parentid>40124</parentid>
+    <timestamp>2016-12-24T13:58:43Z</timestamp>
+    <contributor>
+      <username>JHodge</username>
+      <id>2512</id>
+    </contributor>
+    <origin>43546</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="750" sha1="717dole2jam53a5sd1j1927lkhrckov" xml:space="preserve">{{Actor|
+| type = Interactive object
+| name = Shooting range practice target
+| class = TargetPractice
+| game = Strife
+| doomednum = 208
+| convid = 205
+}}[[Classes]]: &lt;u&gt;TargetPractice&lt;/u&gt;&lt;br&gt;
+Spinning target, used for weapon testing
+==== [[DECORATE]] definition ====
+ ACTOR &lt;u&gt;TargetPractice&lt;/u&gt;
+ {
+   {{Property|Health}} 99999999
+   {{Property|PainChance}} 255
+   {{Property|Radius}} 10
+   {{Property|Height}} 72
+   {{Property|Mass}} 9999999
+   +{{Flag|SOLID}}
+   +{{Flag|SHOOTABLE}}
+   +{{Flag|NOBLOOD}}
+   +{{Flag|INCOMBAT}}
+   +{{Flag|NODAMAGE}}
+   {{Property|PainSound}} "misc/metalhit"
+   States
+   {
+   Spawn:
+     HOGN A 2 [[A_CheckTerrain]]
+     Loop
+   Pain:
+     HOGN B 1 [[A_CheckTerrain]]
+     HOGN C 1 [[A_Pain]]
+     Goto Spawn
+   }
+ }</text>
+    <sha1>717dole2jam53a5sd1j1927lkhrckov</sha1>
+  </revision>
+</page>

@@ -1,0 +1,55 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>SetAirSupply</title>
+  <ns>0</ns>
+  <id>5381</id>
+  <revision>
+    <id>36011</id>
+    <parentid>26621</parentid>
+    <timestamp>2013-03-01T04:05:08Z</timestamp>
+    <contributor>
+      <username>Deded007</username>
+      <id>1392</id>
+    </contributor>
+    <minor />
+    <comment>links, templates, clean up</comment>
+    <origin>36011</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="1439" sha1="566mnkz5vd5wmy2ltaom03664129lj8" xml:space="preserve">__NOTOC__
+bool '''SetAirSupply''' (int ''playernum'', int ''tics'')
+
+
+Sets the amount of tics remaining in a player's air supply.
+=== Parameters ===
+* ''playernum'': Player number. This information can be obtained through [[PlayerNumber]].
+* ''tics'': the desired duration in tics before the player will start to drown.
+
+This function targets only players since monsters do not have an air supply&amp;nbsp;&amp;mdash; drowning is not implemented for them.
+
+=== Return value ===
+The function returns {{c|TRUE}} if a player's air supply was successfully altered, {{c|FALSE}} if there are no players for this number.
+
+== Examples ==
+This script checks the player's health and gives the player an air supply bonus when above 100 health.  It should be executed from an {{Class|SecActEyesDive|Eyes Go Below Surface}} actor.  The extra air is calculated as a percentage of the players health above 100 where 100 health adds 0% and 200 health adds 100% (giving 700 for 100 health, 1050 for 150 health, up to 1400 for 200 health).
+
+ script 1 (void)
+ {
+   int health, air;
+   health = [[GetActorProperty]](0, {{const|APROP_Health}});
+   air = [[GetAirSupply]]([[PlayerNumber]]());
+   
+   if (health &gt; 100 &amp;&amp; air &lt;= 700)
+   {
+     air = 700 * (health - 100) / 100 + 700;
+     [[SetAirSupply]]([[PlayerNumber]](), air);
+   }
+   else if (health &lt;= 100 &amp;&amp; air &gt; 700)
+   {
+     [[SetAirSupply]]([[PlayerNumber]](), 700);
+   }
+ }
+
+[[category:ACS Actor functions]]</text>
+    <sha1>566mnkz5vd5wmy2ltaom03664129lj8</sha1>
+  </revision>
+</page>

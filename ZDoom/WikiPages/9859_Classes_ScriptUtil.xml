@@ -1,0 +1,41 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>Classes:ScriptUtil</title>
+  <ns>0</ns>
+  <id>9859</id>
+  <revision>
+    <id>52122</id>
+    <timestamp>2024-03-27T17:14:39Z</timestamp>
+    <contributor>
+      <username>Jekyll Grim Payne</username>
+      <id>2175</id>
+    </contributor>
+    <comment>Created page with "'''ScriptUtil''' is a [[ZScript]] class that functions as a container for several static utility functions. It has no other functionality.  == Methods == === Static === *{{c|s..."</comment>
+    <origin>52122</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="2274" sha1="350t8l7gyyl0iafrdceqb62wh16m7rm" xml:space="preserve">'''ScriptUtil''' is a [[ZScript]] class that functions as a container for several static utility functions. It has no other functionality.
+
+== Methods ==
+=== Static ===
+*{{c|static void '''[[GiveInventory (ScriptUtil)|GiveInventory]]''' (Actor ''activator'', Name ''type'', int ''amount'')}}
+:Gives an item (specified by ''type'') to the ''activator'' or to all players (if ''activator'' is null).
+*{{c|static void '''[[TakeInventory (ScriptUtil)|TakeInventory]]''' (Actor ''activator'', Name ''type'', int ''amount'')}}
+:Takes an item (specified by ''type'') from the ''activator'' or from all players (if ''activator'' is null).
+*{{c|static void '''ClearInventory''' (Actor ''activator'')}}
+:Calls [[ClearInventory]] to clear the inventory of the ''activator'' or of all players (if ''activator'' is null).
+*{{c|static int '''SetWeapon''' (Actor ''activator'', class&lt;Inventory&gt; cls)}}
+:If the ''activator'' is a {{struct|PlayerInfo|player}}, switches their weapon to ''cls''.
+*{{c|static void '''SetMarineWeapon''' (LevelLocals ''Level'', Actor ''activator'', int ''tid'', int ''marineweapontype'')}}
+:Finds all instances of the {{class|ScriptedMarine}} class with [[TID]] of ''tid'' on the level and switches their weapon to ''marineweapontype''.
+*{{c|static void '''SetMarineSprite''' (LevelLocals ''Level'', Actor ''activator'', int ''tid'', class&lt;Actor&gt; type)}}
+:Finds all instances of the {{class|ScriptedMarine}} class with [[TID]] of ''tid'' on the level and changes their sprites to use the sprites from the ''type'' actor class.
+*{{c|static int '''PlayerMaxAmmo''' (Actor ''activator'', class&lt;Actor&gt; type, int newmaxamount }}={{c| int.min, int newbpmaxamount }}={{c| int.min)}}
+:Checks the ''activator''s inventory for the ''type'' {{class|Ammo}} class and sets its {{property|Inventory.MaxAmount}} to ''newmaxamount'' and its {{property|Ammo.BackpackMaxAmount}} to ''newbpmaxamount''. Returns the ammo's new &lt;code&gt;maxamount&lt;/code&gt;.
+*{{c|static int '''PlayerAmmo''' (Actor ''activator'', class&lt;Inventory&gt; type, int newamount }}={{c| int.min)}}
+:Checks the ''activator''s inventory for the ''type'' {{class|Ammo}} class and sets its current &lt;code&gt;amount&lt;/code&gt; to ''newamount''. Returns the updated &lt;code&gt;amount&lt;/code&gt;.
+
+[[Category:ZScript]]
+[[Category:Inventory]]</text>
+    <sha1>350t8l7gyyl0iafrdceqb62wh16m7rm</sha1>
+  </revision>
+</page>

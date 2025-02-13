@@ -1,0 +1,88 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>Structs:Font</title>
+  <ns>0</ns>
+  <id>9682</id>
+  <revision>
+    <id>53126</id>
+    <parentid>53123</parentid>
+    <timestamp>2024-09-27T21:07:55Z</timestamp>
+    <contributor>
+      <username>Jekyll Grim Payne</username>
+      <id>2175</id>
+    </contributor>
+    <minor />
+    <comment>/* Methods */</comment>
+    <origin>53126</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="2704" sha1="jymczgsjj0t4d406fv2ctr08zcsi8at" xml:space="preserve">{{ZScriptNote}}
+
+The '''Font''' struct contains functions and data related to the use of fonts in ZScript.
+
+== Methods ==
+=== Static ===
+Static methods require the &lt;code&gt;Font.&lt;/code&gt; prefix.
+
+*{{c|int '''FindFontColor'''(Name color)}}
+:Retrieves a font color. The argument &lt;code&gt;color&lt;/code&gt; must be a color name defined in the [[TEXTCOLO]] lump.
+
+* {{c|Font '''FindFont'''(Name fontname)}}
+:Returns a pointer to a font.
+
+* {{c|Font '''GetFont'''(Name fontname)}}
+:{{Template:Moreinfo}}
+
+=== Non-static ===
+Dynamic methods must be called on a font-type pointer.
+
+* {{c|int '''GetCharWidth'''(int code)}}
+:Returns the width of the provided character in the given font.
+
+* {{c|int '''StringWidth'''(String code)}}
+:Returns the width of the provided string in the given font in pixels.
+:&lt;code&gt;code&lt;/code&gt;: a text string.
+
+* {{c|int '''GetMaxAscender'''(String code)}}
+:{{Template:Moreinfo}}
+
+* {{c|bool '''CanPrint'''(String code)}}
+:Returns true if the provided string can be printed in the given font.
+
+* {{c|int '''GetHeight'''()}}
+:Returns the height of the given font in pixels.
+
+* {{c|int '''GetDisplacement'''()}}
+:{{Template:Moreinfo}}
+
+* {{c|String '''GetCursor'''()}}
+:Returns the character used as a cursor in the given font (see [[FONTDEFS]]).
+
+* {{c|double '''GetBottomAlignOffset'''(int code)}}
+:{{Template:Moreinfo}}
+
+* {{c|double '''GetDisplayTopOffset'''(int code)}}
+:{{Template:Moreinfo}}
+
+* {{c|BrokenLines '''BreakLines'''(String text, int maxlen)}}
+:Breaks the given string into multiple lines (according to the maximum length provided with &lt;code&gt;maxlen&lt;/code&gt;), puts them in an instance of a {{class|BrokenLines}} class and returns a pointer to that instance.
+:&lt;code&gt;BrokenLines&lt;/code&gt; methods &lt;code&gt;Count()&lt;/code&gt;, &lt;code&gt;StringWidth(int line)&lt;/code&gt; and &lt;code&gt;StringAt(int line)&lt;/code&gt; can be used to interact with the text.
+
+* {{c|int '''GetGlyphHeight'''(int code)}}
+:Returns the height of the specified glyph in pixels. For example, &lt;code&gt;myfont.GetGlyphHeight("0")&lt;/code&gt; will return the height of the 0 glyph in &lt;code&gt;myfont&lt;/code&gt; font.
+
+* {{c|int '''GetDefaultKerning'''()}}
+:{{Template:Moreinfo}}
+
+==Font colors==
+Most string drawing functions in ZScript have a translation argument that allows applying a color translation to the text. The possible color values are specified in the ''EColorRange'' enum in the Font class, and they can be retrieved with &lt;code&gt;Font.&lt;desired color&gt;&lt;/code&gt;.
+
+Colors can also be specified inside the strings directly, by using the code &lt;code&gt;\c#&lt;/code&gt; where # is the desired color letter. The table below lists both the EColorRange values and the \c codes:
+
+{{: Text colors}}
+
+[[Category:ZScript]]
+[[Category:Structs]]
+[[Category:Use of fonts]]</text>
+    <sha1>jymczgsjj0t4d406fv2ctr08zcsi8at</sha1>
+  </revision>
+</page>

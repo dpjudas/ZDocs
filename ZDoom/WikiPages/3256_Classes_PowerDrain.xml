@@ -1,0 +1,54 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>Classes:PowerDrain</title>
+  <ns>0</ns>
+  <id>3256</id>
+  <revision>
+    <id>53724</id>
+    <parentid>45174</parentid>
+    <timestamp>2024-11-13T12:09:55Z</timestamp>
+    <contributor>
+      <username>Jekyll Grim Payne</username>
+      <id>2175</id>
+    </contributor>
+    <origin>53724</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="1388" sha1="hpdf0fwvgbselt0cn0r9s0w1s0dcne3" xml:space="preserve">__NOTOC__{{actor|
+| type = Power
+| name = Health drain power
+| class = PowerDrain
+}}[[Classes]]: {{Class|Inventory}}&amp;rarr;{{Class|Powerup}}&amp;rarr;&lt;u&gt;PowerDrain&lt;/u&gt;&lt;br&gt;
+&amp;ensp;&amp;ensp; [[Hierarchical class list|(more)]]
+
+{{: Powerup definition}}
+
+'''PowerDrain''' heals its owner whenever it deals damage to another actor. The amount healed is determined by its '''{{property|Power.Strength}}''' property, which is equal to 0.5 by default (50% of damage).
+
+'''Note:''' The effects of this powerup are NOT handled by the powerup itself. Instead, they're handled fully internally, in the C++ side of the engine (as can be seen [https://github.com/ZDoom/gzdoom/blob/1e4f17639556daed8ff44a4d85e7753fafd538c0/src/playsim/p_interaction.cpp#L1433 '''here''']). However, a similar effect could be achieved manually by creating a powerup with a [[ModifyDamage]] override that calls [[GiveBody]] to heal its owner whenever they're about to deal damage.
+
+=== [[ZScript]] definition ===
+{{ZScriptDefinitionNote|actors/inventory/powerups.zs}}
+&lt;syntaxhighlight lang="csharp"&gt;
+class PowerDrain : Powerup
+{
+	Default
+	{
+		Powerup.Strength 0.5;
+		Powerup.Duration -60;
+	}
+}
+
+&lt;/syntaxhighlight&gt;
+
+=== [[DECORATE]] definition ===
+{{DecorateDefinitionNote}}
+ ACTOR &lt;u&gt;PowerDrain&lt;/u&gt; : {{Class|Powerup}} native
+ {
+   {{Property|Powerup.Duration}} -60
+ }
+
+== See also ==
+*[[ZScript virtual functions#OnDrain|OnDrain]]</text>
+    <sha1>hpdf0fwvgbselt0cn0r9s0w1s0dcne3</sha1>
+  </revision>
+</page>

@@ -1,0 +1,48 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>Classes:BlasterPuff</title>
+  <ns>0</ns>
+  <id>3645</id>
+  <revision>
+    <id>40394</id>
+    <parentid>34139</parentid>
+    <timestamp>2015-09-16T16:46:18Z</timestamp>
+    <contributor>
+      <username>Blue Shadow</username>
+      <id>2021</id>
+    </contributor>
+    <minor />
+    <comment>/* DECORATE definition */ Missing hit sound from git commit 211f122</comment>
+    <origin>40394</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="666" sha1="f2w7sj6mqlnrw7os5r9d6ipl4iz05hy" xml:space="preserve">{{Actor|
+| type = Explosive
+| name = Blaster puff
+| class = BlasterPuff
+| game = Heretic
+}}[[Classes]]: &lt;u&gt;BlasterPuff&lt;/u&gt;&lt;br&gt;
+
+The sprites spawned when a shot from the [[Classes:Blaster|dragon claw]] hits something. If it hits a wall, the crash state is activated. If it hits an actor, the spawn state is activated.
+
+==== [[DECORATE]] definition ====
+ ACTOR &lt;u&gt;BlasterPuff&lt;/u&gt;
+ {
+   +{{Flag|NOBLOCKMAP}}
+   +{{Flag|NOGRAVITY}}
+   +{{Flag|PUFFONACTORS}}
+   {{Property|RenderStyle}} Add
+   {{Property|SeeSound}} "weapons/blasterhit"
+   States
+   {
+   Crash:
+     FX17 ABCDE 4 Bright
+     Stop
+   Spawn:
+     FX17 FG 3 Bright
+     FX17 HIJKL 4 Bright
+     Stop
+   }
+ }</text>
+    <sha1>f2w7sj6mqlnrw7os5r9d6ipl4iz05hy</sha1>
+  </revision>
+</page>

@@ -1,0 +1,125 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>Classes:MBFHelperDog</title>
+  <ns>0</ns>
+  <id>5577</id>
+  <revision>
+    <id>48916</id>
+    <parentid>48478</parentid>
+    <timestamp>2021-12-27T11:14:35Z</timestamp>
+    <contributor>
+      <username>Jekyll Grim Payne</username>
+      <id>2175</id>
+    </contributor>
+    <comment>updated in accordance with updated ZScriptDefinitionNote template</comment>
+    <origin>48916</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="2613" sha1="52frnxa3bqeuszu702ns6x114cbiar3" xml:space="preserve">{{Actor|
+| type = Monster
+| name = Dog
+| class = MBFHelperDog
+| doomednum = 888
+}}
+[[Classes]]: &lt;u&gt;MBFHelperDog&lt;/u&gt;&lt;br&gt;
+
+The Marines' Best Friends, who gave their name to the [[MBF]] port, intended as an alternative to coop bots. They have an extremely high amount of hit points (as many as a {{Class|HellKnight|Hell Knight}}!) to compensate for their inability to pick up health items such as {{Class|Medikit|medikits}}. This makes them unbalanced if used as enemies; but despite that, they are not allied to the player by default.
+==== [[ZScript]] definition ====
+{{ZScriptDefinitionNote|actors/shared/dog.zs}}
+ class MBFHelperDog : Actor
+ {
+   default
+   {
+     {{Property|Health}} 500;
+     {{Property|Speed}} 10;
+     {{Property|PainChance}} 180;
+     {{Property|Radius}} 12;
+     {{Property|Height}} 28;
+     {{Property|Mass}} 100;
+     {{Property|Monster}};
+     +{{Flag|JUMPDOWN}}
+     {{Property|ActiveSound}} "dog/active";
+     {{Property|AttackSound}} "dog/attack";
+     {{Property|DeathSound}} "dog/death";
+     {{Property|PainSound}} "dog/pain";
+     {{Property|SeeSound}} "dog/sight";
+     {{Property|Obituary}} "$OB_DOG";
+     {{Property|Tag}} "$FN_DOG";
+   }
+   States
+   {
+   Spawn:
+     DOGS AB 10 [[A_Look]];
+     Loop;
+   See:
+     DOGS AABBCCDD 2 [[A_Chase]];
+     Loop;
+   Melee:
+     DOGS EF 8 [[A_FaceTarget]];
+     DOGS G 8 [[A_SargAttack]];
+     Goto See;
+   Pain:
+     DOGS H 2;
+     DOGS H 2 [[A_Pain]];
+     Goto See;
+   Death:
+     DOGS I 8;
+     DOGS J 8 [[A_Scream]];
+     DOGS K 4;
+     DOGS L 4 [[A_Fall]];
+     DOGS M 4;
+     DOGS N -1;
+   Raise:
+     DOGS NMLKJI 5;
+     Goto See;
+   }
+ }
+
+==== [[DECORATE]] definition ====
+{{DecorateDefinitionNote}}
+ ACTOR &lt;u&gt;MBFHelperDog&lt;/u&gt;
+ {
+   {{Property|Health}} 500
+   {{Property|Speed}} 10
+   {{Property|PainChance}} 180
+   {{Property|Radius}} 12
+   {{Property|Height}} 28
+   {{Property|Mass}} 100
+   {{Property|Monster}}
+   +{{Flag|JUMPDOWN}}
+   {{Property|ActiveSound}} "dog/active"
+   {{Property|AttackSound}} "dog/attack"
+   {{Property|DeathSound}} "dog/death"
+   {{Property|PainSound}} "dog/pain"
+   {{Property|SeeSound}} "dog/sight"
+   {{Property|Obituary}} "$OB_DOG" // "%o was mauled by a dog."
+   States
+   {
+   Spawn:
+     DOGS AB 10 [[A_Look]]
+     Loop
+   See:
+     DOGS AABBCCDD 2 [[A_Chase]]
+     Loop
+   Melee:
+     DOGS EF 8 [[A_FaceTarget]]
+     DOGS G 8 [[A_SargAttack]]
+     Goto See
+   Pain:
+     DOGS H 2
+     DOGS H 2 [[A_Pain]]
+     Goto See
+   Death:
+     DOGS I 8
+     DOGS J 8 [[A_Scream]]
+     DOGS K 4
+     DOGS L 4 [[A_Fall]]
+     DOGS M 4
+     DOGS N -1
+   Raise:
+     DOGS NMLKJI 5
+     Goto See
+   }
+ }</text>
+    <sha1>52frnxa3bqeuszu702ns6x114cbiar3</sha1>
+  </revision>
+</page>

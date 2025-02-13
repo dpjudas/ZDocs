@@ -1,0 +1,588 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>Compile GZDoom on Linux</title>
+  <ns>0</ns>
+  <id>7610</id>
+  <revision>
+    <id>53066</id>
+    <parentid>50197</parentid>
+    <timestamp>2024-09-07T16:25:36Z</timestamp>
+    <contributor>
+      <username>Dileepvr</username>
+      <id>2636</id>
+    </contributor>
+    <minor />
+    <comment>Added libvpx to all the dependencies lists</comment>
+    <origin>53066</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="19383" sha1="41vc4vwuzzsj7w9h5wn9mgitazxouvs" xml:space="preserve">'''Open a terminal and copy and paste the whole code box for each step.'''
+
+== Notes ==
+Starting with commit [https://github.com/coelckers/gzdoom/commit/c219811a542e0d6aae38b920ae9e257c5c2286c1 c219811a5]:
+&lt;pre&gt;
+cd ~/gzdoom_build/gzdoom &amp;&amp;
+git show c219811a542e0d6aae38b920ae9e257c5c2286c1
+&lt;/pre&gt;
+consider GZDoom as licensed under the GPL, therefore; the following is unnecessary but will be keep in this tutorial for the users who still need to use GZDoom 2.x or older versions: [[#Download FMOD]], liboutput_sdl.so, the FMOD library file, the environment variable LD_LIBRARY_PATH and the CMake variables NO_FMOD, FMOD_LIBRARY and FMOD_INCLUDE_DIR.
+
+The minimum requirement for GZDoom 2.2 and later is OpenGL 2.0, so if you get the following error:
+
+'''Unsupported OpenGL version.'''
+
+'''At least OpenGL 2.0 is required to run GZDoom.'''
+
+you will have to use [[#GZDoom 1.8.6]] instead. Keep in mind that this version is several years old and no longer maintained. It will also have problems with more recent actively maintained mods.
+
+== Install dependencies ==
+[[GZDoom]] needs certain tools and development files in order to compile:
+* '''Required'''
+** gcc 4.8 or later
+** make
+** cmake 2.8.7 or later
+** SDL 2.0.2 or later
+** libGL and libGLU ''(SDL or libSDL pull in libGLU)'' or any other GL implementation provider.
+** ZMusic
+* '''Recommended'''
+** GTK3 or GTK2
+** git ''(needed in order to [[Git repository|download the source]] and compile in commit meta data)''
+** nasm 0.98.39 or later ''(x86-32 only)''
+* '''Optional'''
+** zlib ''(GZDoom has a copy of it and will be statically compiled in if not found)''
+** libbzip2 ''(possibly static)''
+** libjpeg ''(possibly static)''
+** libgme or game-music-emu ''(possibly static)''
+** SDL 1.2.8 or later 1.2.x versions ''(for GZDoom 1.x)''
+** libglew ''(for GZDoom 1.x)''
+** [http://zdoom.org/files/fmod/ FMOD Ex] 4.36.x or later or [http://www.fmod.org/download/ FMOD Studio] ''(for GZDoom 1.x and 2.x)''
+* '''Runtime'''
+** gxmessage ''(optional - needed to show the crash log in a window)''
+** kdialog ''(optional - for KDE users)''
+** fluidsynth ''(optional - for [[MIDI]] playback)''
+
+In addition to or instead of [[FMOD Ex|FMOD]], [[OpenAL]] can be used for sound in which case the following are required:
+* [http://kcat.strangesoft.net/openal.html libopenal]
+* libmpg123
+* libsndfile
+
+Install the following as root/superuser:
+
+=== Debian/Ubuntu ===
+&lt;pre&gt;
+sudo apt-get install g++ make cmake libsdl2-dev git zlib1g-dev \
+libbz2-dev libjpeg-dev libfluidsynth-dev libgme-dev libopenal-dev \
+libmpg123-dev libsndfile1-dev libgtk-3-dev timidity nasm \
+libgl1-mesa-dev tar libsdl1.2-dev libglew-dev libvpx-dev
+&lt;/pre&gt;
+
+=== Fedora ===
+&lt;pre&gt;
+dnf install gcc-c++ make cmake SDL2-devel git zlib-devel bzip2-devel \
+libjpeg-turbo-devel fluidsynth-devel game-music-emu-devel openal-soft-devel \
+libmpg123-devel libsndfile-devel gtk3-devel timidity++ nasm \
+mesa-libGL-devel tar SDL-devel glew-devel libvpx-devel
+&lt;/pre&gt;
+
+=== openSUSE ===
+&lt;pre&gt;
+zypper si -d gzdoom
+&lt;/pre&gt;
+
+=== Mageia ===
+&lt;pre&gt;
+a='' &amp;&amp; [ "$(uname -m)" = x86_64 ] &amp;&amp; a=64
+urpmi gcc-c++ make cmake lib${a}sdl2.0-devel git lib${a}zlib-devel \
+lib${a}bzip2-devel lib${a}jpeg-devel lib${a}fluidsynth-devel \
+lib${a}gme-devel lib${a}openal-devel lib${a}mpg123-devel lib${a}sndfile-devel \
+lib${a}gtk+3.0-devel lib${a}cairo-devel TiMidity++ nasm \
+lib${a}mesagl1-devel tar lib${a}SDL-devel lib${a}glew-devel lib${a}vpx-devel
+&lt;/pre&gt;
+
+=== Arch Linux ===
+&lt;pre&gt;
+pacman -S --needed gcc make cmake sdl2 git zlib bzip2 libjpeg-turbo \
+fluidsynth libgme openal mpg123 libsndfile gtk3 timidity++ nasm \
+mesa glu tar sdl glew libvpx
+&lt;/pre&gt;
+
+=== Gentoo ===
+&lt;pre&gt;
+emerge -avn sys-devel/gcc sys-devel/make dev-util/cmake media-libs/libsdl2 \
+dev-vcs/git sys-libs/zlib app-arch/bzip2 media-libs/libjpeg-turbo media-sound/fluidsynth \
+media-libs/game-music-emu media-libs/openal media-sound/mpg123 media-libs/libsndfile \
+x11-libs/gtk+ media-sound/timidity++ dev-lang/nasm media-libs/mesa \
+media-libs/glu app-arch/tar media-libs/libsdl media-libs/glew media-libs/libvpx
+&lt;/pre&gt;
+
+Update (29.12.2016):
+Jacendi overlay has an ebuild for gzdoom
+&lt;pre&gt;
+emerge -n layman
+layman -a jacendi-overlay
+emerge -av gzdoom
+&lt;/pre&gt;
+
+=== PCLinuxOS ===
+&lt;pre&gt;
+a='' &amp;&amp; [ "$(uname -m)" = x86_64 ] &amp;&amp; a=64
+apt-get install gcc-c++ make cmake lib${a}sdl2.0-devel git zlib1-devel \
+lib${a}bzip2-devel lib${a}jpeg62-devel lib${a}fluidsynth1-devel lib${a}openal-devel \
+lib${a}mpg123-devel lib${a}sndfile-devel lib${a}gtk+3.0-devel TiMidity++ nasm \
+lib${a}mesagl1-devel tar lib${a}SDL-devel lib${a}glew-devel lib${a}vpx-devel
+&lt;/pre&gt;
+
+=== Solus ===
+&lt;pre&gt;
+sudo eopkg install g++ make cmake binutils glibc-devel pkg-config sdl2-devel \
+git zlib-devel bzip2-devel libjpeg-turbo-devel fluidsynth-devel openal-soft-devel \
+mpg123-devel libsndfile-devel libgtk-3-devel nasm mesalib-devel \
+libglu-devel tar sdl1-devel glew-devel libvpx
+&lt;/pre&gt;
+
+'''Do the following sections as normal user.'''
+
+== Compile ZMusic ==
+Create zmusic_build directory:
+&lt;pre&gt;
+mkdir -pv ~/zmusic_build
+&lt;/pre&gt;
+
+Download the [[ZMusic]] source and create build directory:
+&lt;pre&gt;
+cd ~/zmusic_build &amp;&amp;
+git clone https://github.com/ZDoom/ZMusic.git zmusic &amp;&amp;
+mkdir -pv zmusic/build
+&lt;/pre&gt;
+
+To compile ZMusic:
+&lt;pre&gt;
+cd ~/zmusic_build/zmusic/build &amp;&amp;
+cmake .. -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=/usr &amp;&amp;
+make
+&lt;/pre&gt;
+
+When you wish to update ZMusic, copy and paste the following:
+&lt;pre&gt;
+cd ~/zmusic_build/zmusic &amp;&amp;
+git pull
+&lt;/pre&gt;
+and compile.
+
+To install ZMusic:
+&lt;pre&gt;
+cd ~/zmusic_build/zmusic/build &amp;&amp;
+sudo make install
+&lt;/pre&gt;
+
+To uninstall ZMusic:
+&lt;pre&gt;
+cd ~/zmusic_build/zmusic/build &amp;&amp;
+while IFS= read -r file || [ -n "$file" ]; do
+sudo rm -v -- "$file"
+done &lt; install_manifest.txt
+&lt;/pre&gt;
+
+== Create gzdoom_build directory ==
+&lt;pre&gt;
+mkdir -pv ~/gzdoom_build
+&lt;/pre&gt;
+
+== Download and prepare the source ==
+Download the GZDoom source and create an out of tree build directory:
+&lt;pre&gt;
+cd ~/gzdoom_build &amp;&amp;
+git clone https://github.com/ZDoom/gzdoom.git &amp;&amp;
+mkdir -pv gzdoom/build
+&lt;/pre&gt;
+
+and run the following commands:
+&lt;pre&gt;
+cd gzdoom
+git config --local --add remote.origin.fetch +refs/tags/*:refs/tags/*
+git pull
+&lt;/pre&gt;
+
+== Download FMOD ==
+For GZDoom 2.x or older versions.
+
+Download FMOD and extract files to gzdoom directory:
+&lt;pre&gt;
+cd ~/gzdoom_build &amp;&amp;
+wget -nc http://zdoom.org/files/fmod/fmodapi44464linux.tar.gz &amp;&amp;
+tar -xvzf fmodapi44464linux.tar.gz -C gzdoom
+&lt;/pre&gt;
+
+Starting with commit [https://github.com/coelckers/gzdoom/commit/3ddc3d8febfa631b031dbd7073a29bfde55967e4 3ddc3d8fe], now you can compile GZDoom with OpenAL sound support and optinally disable/enable FMOD sound support. If you want to disable FMOD sound support, run:
+&lt;pre&gt;
+cd ~/gzdoom_build/gzdoom/build &amp;&amp;
+cmake .. -DNO_FMOD=ON
+&lt;/pre&gt;
+and [[#Compiling|compile]].
+
+If afterwards you want to enable FMOD sound support, run:
+&lt;pre&gt;
+cd ~/gzdoom_build/gzdoom/build &amp;&amp;
+cmake .. -DNO_FMOD=OFF
+&lt;/pre&gt;
+
+== Compiling ==
+To compile GZDoom:
+&lt;pre&gt;
+a='' &amp;&amp; [ "$(uname -m)" = x86_64 ] &amp;&amp; a=64
+c="$(lscpu -p | grep -v '#' | sort -u -t , -k 2,4 | wc -l)" ; [ "$c" -eq 0 ] &amp;&amp; c=1
+cd ~/gzdoom_build/gzdoom/build &amp;&amp;
+rm -f output_sdl/liboutput_sdl.so &amp;&amp;
+if [ -d ../fmodapi44464linux ]; then
+f="-DFMOD_LIBRARY=../fmodapi44464linux/api/lib/libfmodex${a}-4.44.64.so \
+-DFMOD_INCLUDE_DIR=../fmodapi44464linux/api/inc"; else
+f='-UFMOD_LIBRARY -UFMOD_INCLUDE_DIR'; fi &amp;&amp;
+cmake .. -DCMAKE_BUILD_TYPE=Release $f &amp;&amp;
+make -j$c
+&lt;/pre&gt;
+A development version of GZDoom will be compiled if you do not do [[#Latest stable version]] or [[#GZDoom 1.8.6]].
+
+Assuming all goes well, a gzdoom binary should be produced. To start GZDoom, the following command should work:
+&lt;pre&gt;
+./gzdoom
+&lt;/pre&gt;
+If GZDoom complains you do not have any IWADs set up, make sure that you have your [[IWAD]] files placed in the same directory as GZDoom, in ~/.config/gzdoom/, $DOOMWADDIR, or /usr/local/share/. Alternatively, you can edit ~/.config/gzdoom/gzdoom.ini or ~/.config/gzdoom/zdoom.ini to set the path for your IWADs.
+
+=== Latest stable version ===
+Show the latest stable version:
+&lt;pre&gt;
+cd ~/gzdoom_build/gzdoom &amp;&amp;
+git tag -l | grep -v 9999 | grep -E '^g[0-9]+([.][0-9]+)*$' |
+sed 's/^g//' | sort -n -t . -k 1,1 -k 2,2 -k 3,3 -k 4,4 |
+tail -n 1 | sed 's/^/g/'
+&lt;/pre&gt;
+
+If you want to compile the latest stable version, run:
+&lt;pre&gt;
+cd ~/gzdoom_build/gzdoom &amp;&amp;
+Tag="$(git tag -l | grep -v 9999 | grep -E '^g[0-9]+([.][0-9]+)*$' |
+sed 's/^g//' | sort -n -t . -k 1,1 -k 2,2 -k 3,3 -k 4,4 |
+tail -n 1 | sed 's/^/g/')" &amp;&amp;
+git checkout --detach refs/tags/$Tag
+&lt;/pre&gt;
+and [[#Compiling|compile]].
+
+After compiling, [[#Backup|backing up]] and optionally [[#Installation|installing]] the latest stable version, run:
+&lt;pre&gt;
+cd ~/gzdoom_build/gzdoom &amp;&amp;
+git checkout master
+&lt;/pre&gt;
+
+=== GZDoom 1.8.6 ===
+If your graphics card does not support OpenGL 2.0 or higher, you may want to compile GZDoom 1.8.6. The minimum requirement is OpenGL 1.3.
+
+First, you need to install gcc 5.x or lower:
+&lt;pre&gt;
+sudo apt-get install gcc-5 g++-5
+&lt;/pre&gt;
+
+Inside the build directory, run cmake with these arguments -DCMAKE_C_COMPILER=/path/to/compiler/gcc -DCMAKE_CXX_COMPILER=/path/to/compiler/g++, for example:
+&lt;pre&gt;
+cd ~/gzdoom_build/gzdoom/build &amp;&amp;
+cmake .. -DCMAKE_C_COMPILER=/usr/bin/gcc-5 \
+-DCMAKE_CXX_COMPILER=/usr/bin/g++-5
+&lt;/pre&gt;
+
+Now checkout GZDoom 1.8.6:
+&lt;pre&gt;
+cd ~/gzdoom_build/gzdoom &amp;&amp;
+git checkout --detach refs/tags/g1.8.6
+&lt;/pre&gt;
+and [[#Compiling|compile]]. Please note that GZDoom 1.8.6 is old and unsupported. If you run into problems you are on your own.
+
+== Backup ==
+If you want to backup GZDoom, do the following:
+
+Create and name a directory with the corresponding GZDoom version/revision, build type and copy gzdoom, gzdoom.pk3, lights.pk3, brightmaps.pk3, game_support.pk3 and game_widescreen_gfx.pk3 to it. If you compiled GZDoom 2.x or older versions with FMOD sound support, copy liboutput_sdl.so to the destination directory.
+&lt;pre&gt;
+cd ~/gzdoom_build/gzdoom/build &amp;&amp;
+if [ -f CMakeCache.txt ]; then
+k="$(sed -n 's/.*CMAKE_BUILD_TYPE:STRING=\(.*\)/\1/p' CMakeCache.txt)"; else k=''; fi &amp;&amp;
+if [ -n "$k" ]; then b="-BuildType$k"; else b=''; fi &amp;&amp;
+BACKUPGZDOOM="../../$(sed -n 's/.*#define GIT_DESCRIPTION "\(.*\)".*/\1/p' ../src/gitinfo.h)$b" &amp;&amp;
+mkdir -pv "$BACKUPGZDOOM" &amp;&amp;
+o=output_sdl/liboutput_sdl.so &amp;&amp; if [ -f "$o" ]; then l="$o"; else l=''; fi &amp;&amp;
+if [ game_support.pk3 -nt zd_extra.pk3 ]; then p=game_support.pk3; else p=zd_extra.pk3; fi &amp;&amp;
+cp -v gzdoom gzdoom.pk3 lights.pk3 brightmaps.pk3 game_widescreen_gfx.pk3 $p $l \
+"$BACKUPGZDOOM"/
+&lt;/pre&gt;
+
+Files are located at:
+
+/home/&lt;your username&gt;/gzdoom_build/&lt;your newly created directory&gt;
+
+== Updating ==
+When you wish to update GZDoom, copy and paste the following:
+&lt;pre&gt;
+cd ~/gzdoom_build/gzdoom &amp;&amp;
+git pull
+&lt;/pre&gt;
+
+When the update finish, go to [[#Compiling]].
+
+== Installation ==
+* '''gzdoom''' = Stable version
+* '''gzdoom-alpha''' = Development version
+
+Commands beginning with "sudo" will require temporary superuser privileges.
+
+If you want to install GZDoom, do the following:
+
+Create /usr/games/gzdoom and /usr/games/gzdoom-alpha directories:
+&lt;pre&gt;
+sudo mkdir -pv /usr/games/gzdoom /usr/games/gzdoom-alpha
+&lt;/pre&gt;
+
+Copy gzdoom, gzdoom.pk3, lights.pk3, brightmaps.pk3, game_support.pk3, game_widescreen_gfx.pk3 and the soundfonts and fm_banks directories to /usr/games/gzdoom/ or /usr/games/gzdoom-alpha/. If you compiled GZDoom 2.x or older versions with FMOD sound support, copy liboutput_sdl.so and the FMOD library file to the destination directory.
+&lt;pre&gt;
+a='' &amp;&amp; [ "$(uname -m)" = x86_64 ] &amp;&amp; a=64
+cd ~/gzdoom_build/gzdoom/build &amp;&amp;
+h="$(sed -n 's/.*#define GIT_HASH "\(.*\)".*/\1/p' ../src/gitinfo.h)" &amp;&amp;
+if [ -z "$(git describe --exact-match --tags $h 2&gt;/dev/null)" ]; then
+d=-alpha; else d=''; fi &amp;&amp;
+o=output_sdl/liboutput_sdl.so &amp;&amp; if [ -f "$o" ]; then l="$o \
+../fmodapi44464linux/api/lib/libfmodex${a}-4.44.64.so"; else l=''; fi &amp;&amp;
+if [ game_support.pk3 -nt zd_extra.pk3 ]; then p=game_support.pk3; else p=zd_extra.pk3; fi &amp;&amp;
+sudo cp -rv gzdoom gzdoom.pk3 lights.pk3 brightmaps.pk3 game_widescreen_gfx.pk3 $p soundfonts fm_banks $l \
+/usr/games/gzdoom$d/
+&lt;/pre&gt;
+
+Create launch script:
+&lt;pre&gt;
+cd ~/gzdoom_build/gzdoom/build &amp;&amp;
+h="$(sed -n 's/.*#define GIT_HASH "\(.*\)".*/\1/p' ../src/gitinfo.h)" &amp;&amp;
+if [ -z "$(git describe --exact-match --tags $h 2&gt;/dev/null)" ]; then
+d=-alpha; else d=''; fi &amp;&amp;
+printf %s "\
+#! /bin/sh
+# The following command is for GZDoom 2.x or older versions
+export LD_LIBRARY_PATH=/usr/games/gzdoom$d
+exec /usr/games/gzdoom$d/gzdoom \"\$@\"
+" &gt; gzdoom$d.sh &amp;&amp;
+chmod 755 gzdoom$d.sh &amp;&amp;
+sudo mv -v gzdoom$d.sh /usr/bin/gzdoom$d
+&lt;/pre&gt;
+
+Now from a terminal you should be able to run '''gzdoom''' or '''gzdoom-alpha''' from any user account.
+
+=== Uninstallation ===
+Remove /usr/games/gzdoom directory and all its files:
+&lt;pre&gt;
+sudo rm -rfv /usr/games/gzdoom
+&lt;/pre&gt;
+
+Remove gzdoom script:
+&lt;pre&gt;
+sudo rm -fv /usr/bin/gzdoom
+&lt;/pre&gt;
+
+Remove /usr/games/gzdoom-alpha directory and all its files:
+&lt;pre&gt;
+sudo rm -rfv /usr/games/gzdoom-alpha
+&lt;/pre&gt;
+
+Remove gzdoom-alpha script:
+&lt;pre&gt;
+sudo rm -fv /usr/bin/gzdoom-alpha
+&lt;/pre&gt;
+
+== Developing ==
+This page has helped you compile GZDoom, but perhaps you are interested in debugging the code or submitting code changes or fixes for inclusion. This section is intended for more advanced users who may be unfamiliar to CMake or debugging on Linux systems.
+
+=== Debugging ===
+'''Prerequisite:'''
+
+* [http://www.gnu.org/software/gdb/ gdb]
+
+Maybe you have found a way to make GZDoom crash, and are interested in debugging it. First, you need to compile a debug build of GZDoom. Inside the build directory, invoke CMake to set up for compiling, but this time, the build type is set to Debug:
+&lt;pre&gt;
+cd ~/gzdoom_build/gzdoom/build
+cmake .. -DCMAKE_BUILD_TYPE=Debug
+&lt;/pre&gt;
+Optionally, you may want to use some of the [[#Build options]].
+
+After CMake is done, run &lt;code&gt;make&lt;/code&gt; or to speed up compilation, run &lt;code&gt;make -j&lt;number&gt;&lt;/code&gt;, a recommended value for the &lt;code&gt;-j&lt;/code&gt; option is the number of physical cores:
+&lt;pre&gt;
+make
+&lt;/pre&gt;
+
+To run GZDoom under a debugger such as gdb, use the following command:
+&lt;pre&gt;
+gdb gzdoom
+&lt;/pre&gt;
+
+Now gdb should have you in its own command prompt:
+&lt;pre&gt;
+(gdb)
+&lt;/pre&gt;
+
+You probably want to log the output, so lets output to a file gzdoomdebug.log:
+&lt;pre&gt;
+(gdb) set logging on gzdoomdebug.log
+&lt;/pre&gt;
+
+Now start GZDoom by typing in run, and pressing enter:
+&lt;pre&gt;
+(gdb) run
+&lt;/pre&gt;
+
+Or put any [[command line parameters]] to gzdoom after run:
+&lt;pre&gt;
+(gdb) run &lt;command line parameters&gt;
+&lt;/pre&gt;
+
+If GZDoom crashes, gdb may be able to tell you the source file and line number it crashed in. Typing in the command backtrace or bt will produce information telling the last function calls, showing how execution got to the point where it crashed:
+&lt;pre&gt;
+(gdb) backtrace
+&lt;/pre&gt;
+All output will be copied into the gzdoomdebug.log, which can then be scrutinized later, or perhaps posted to the {{forum|Bugs forum|view=forum|f=2}} for other developers to look at.
+
+To exit gdb's command prompt, type quit, q or press Ctrl-D:
+&lt;pre&gt;
+(gdb) quit
+&lt;/pre&gt;
+If you want to free up space, run &lt;code&gt;make clean&lt;/code&gt; to remove the files generated by the compilation.
+
+=== Build options ===
+{|class="wikitable" width="72%"
+|+ &lt;span style="text-decoration: underline"&gt;CMake options&lt;/span&gt;
+|-
+!width="10%"|Options!!width="35%"|Description!!width="55%"|Example
+|-
+|NO_GTK=ON||Disable GTK+ dialogs.||cmake .. -DNO_GTK=ON
+|-
+|NO_FMOD=ON||Disable FMOD sound support.||cmake .. -DNO_FMOD=ON
+|-
+|NO_OPENAL=ON||Disable OpenAL sound support.||cmake .. -DNO_OPENAL=ON
+|-
+|FMOD_LIBRARY||Set path for FMOD library file.||cmake .. -DFMOD_LIBRARY=/path/to/libfmodex(64)-x.y.z.so
+|-
+|FMOD_INCLUDE_DIR||Set path for FMOD include directory.||cmake .. -DFMOD_INCLUDE_DIR=/path/to/include/dir
+|-
+|CMAKE_C_COMPILER||Set path for C compiler.||cmake .. -DCMAKE_C_COMPILER=/path/to/compiler/gcc
+|-
+|CMAKE_CXX_COMPILER||Set path for C++ compiler.||cmake .. -DCMAKE_CXX_COMPILER=/path/to/compiler/g++
+|}
+
+{|class="wikitable" width="72%"
+|+ &lt;span style="text-decoration: underline"&gt;CMake build types&lt;/span&gt;
+|-
+!width="10%"|Types!!width="45%"|Description!!width="45%"|Example
+|-
+|Debug||Debug information, -O1 optimization.||cmake .. -DCMAKE_BUILD_TYPE=Debug
+|-
+|Release||No debug information, -O3 optimization.||cmake .. -DCMAKE_BUILD_TYPE=Release
+|-
+|RelWithDebInfo||Debug information, -O2 optimization. Useful for finding optimization bugs that only show up in Release.||cmake .. -DCMAKE_BUILD_TYPE=RelWithDebInfo
+|-
+|MinSizeRel||Similar to Release but with less optimizations in order to save space.||cmake .. -DCMAKE_BUILD_TYPE=MinSizeRel
+|}
+
+== How to increase Zandronum/GZDoom OpenGL FPS ==
+Commands beginning with "sudo" will require temporary superuser privileges.
+
+Run [[Zandronum]]/GZDoom, start a new game, open [[console]] and type [[CVARs:Debug#vid_fps|vid_fps 1]], see how many FPS are displayed and exit Zandronum/GZDoom.
+
+If you do not use Intel graphics, go to [[#Disable Vertical Synchronization for Zandronum/GZDoom]].
+
+=== Enable SandyBridge's New Acceleration ===
+'''Prerequisite:'''
+
+'''Debian/Ubuntu'''
+* xserver-xorg-video-intel &gt;= 2.19
+
+'''Fedora'''
+* xorg-x11-drv-intel &gt;= 2.19
+
+'''openSUSE'''
+* xf86-video-intel &gt;= 2.19
+
+'''Mageia'''
+* x11-driver-video-intel &gt;= 2.19
+
+'''Arch Linux'''
+* xf86-video-intel &gt;= 2.19
+
+'''Gentoo'''
+* x11-drivers/xf86-video-intel &gt;= 2.19
+
+'''PCLinuxOS'''
+* x11-driver-video-intel &gt;= 2.19
+
+'''Solus'''
+* xorg-driver-video-intel &gt;= 2.19
+
+If your Intel driver version is 2.21.14-1 / 2.21.15-2 or higher:
+&lt;pre&gt;
+grep 'SNA compiled:' /var/log/Xorg.0.log
+&lt;/pre&gt;
+go to [[#Disable Vertical Synchronization for Zandronum/GZDoom]].
+
+Intel SNA is useful on all Intel graphics, not just SandyBridge.
+
+Create /etc/X11/xorg.conf.d directory:
+&lt;pre&gt;
+sudo mkdir -pv /etc/X11/xorg.conf.d
+&lt;/pre&gt;
+
+Create 99-intel.conf file:
+&lt;pre&gt;
+cat &lt;&lt;'EOF' &gt; 99-intel.conf
+Section "Device"
+    Identifier "Intel Graphics"
+    Driver "intel"
+    Option "AccelMethod" "sna"
+EndSection
+EOF
+&lt;/pre&gt;
+
+Move 99-intel.conf to /etc/X11/xorg.conf.d/:
+&lt;pre&gt;
+sudo mv -v 99-intel.conf /etc/X11/xorg.conf.d/
+&lt;/pre&gt;
+and logout and login.
+
+=== Disable Vertical Synchronization for Zandronum/GZDoom ===
+Do the following step if you are using a GZDoom version prior to commit [https://github.com/coelckers/gzdoom/commit/4eb32a50e3151968e1b2285688ce98da98fedd9f 4eb32a50e]. The following step works for the open-source graphics drivers.
+
+Create ~/.drirc file:
+&lt;pre&gt;
+cat &lt;&lt;'EOF' &gt; ~/.drirc
+&lt;driconf&gt;
+    &lt;device screen="0" driver="dri2"&gt;
+        &lt;application name="zandronum" executable="zandronum"&gt;
+            &lt;option name="vblank_mode" value="0"/&gt;
+        &lt;/application&gt;
+        &lt;application name="gzdoom" executable="gzdoom"&gt;
+            &lt;option name="vblank_mode" value="0"/&gt;
+        &lt;/application&gt;
+    &lt;/device&gt;
+&lt;/driconf&gt;
+EOF
+&lt;/pre&gt;
+
+Run Zandronum/GZDoom, start a new game, open [[console]] and type [[CVARs:Debug#vid_fps|vid_fps 1]], see how many FPS are displayed, you should get more FPS than before.
+
+=== Reverting changes ===
+Remove ~/.drirc file:
+&lt;pre&gt;
+rm -fv ~/.drirc
+&lt;/pre&gt;
+
+Remove 99-intel.conf file:
+&lt;pre&gt;
+sudo rm -fv /etc/X11/xorg.conf.d/99-intel.conf
+&lt;/pre&gt;
+and logout and login.
+
+== External links ==
+* [https://github.com/coelckers/gzdoom Git Repository]
+* [https://github.com/doomtech/gzdoom Git svn mirror of the now dead GZDoom SVN repository]
+
+[[Category:Guides]][[Category:Technical aspects]][[Category:GZDoom]]</text>
+    <sha1>41vc4vwuzzsj7w9h5wn9mgitazxouvs</sha1>
+  </revision>
+</page>

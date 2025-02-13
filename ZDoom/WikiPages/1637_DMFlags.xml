@@ -1,0 +1,208 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>DMFlags</title>
+  <ns>0</ns>
+  <id>1637</id>
+  <revision>
+    <id>52488</id>
+    <parentid>49588</parentid>
+    <timestamp>2024-04-21T11:19:16Z</timestamp>
+    <contributor>
+      <username>Jekyll Grim Payne</username>
+      <id>2175</id>
+    </contributor>
+    <comment>Added DMFlags3</comment>
+    <origin>52488</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="9031" sha1="mzchznd39ijsunsa23nusxew8n175hh" xml:space="preserve">*(These DMFlags are ZDoom-specific.  Zandronum DMFLAGS can be found [[Zandronum: DMFlags|here]].)
+There are 2 [[CVARs]] in [[ZDoom]] that control certain gameplay flags, namely '''DMFLAGS''' and '''DMFLAGS2'''.  Most only affect Deathmatch games, hence the name, however others only affect Cooperative games and some work in all game modes.
+
+You can set the flags via the in-game menu ([[Options menu|Options]] &amp;rarr; [[Gameplay options]]), however you can also set the options directly from the command line or [[console]].
+
+At the console, type "dmflags[2] XXXX", where XXXX is a number representing which flags should be toggled.  This number is created by adding the values for each argument you want to use.
+
+To make the change effective from the command line, use "+set dmflags[2] XXXX".
+
+The following table lists each of the flags currently available, along with the values needed, which [[CVARs|CVAR]] you should put that value in, and what the default state of each setting is (on or off).  Contrary to how one might expect it to function, the setting is simply toggled from the default when the value is set.  For example, adding 2048 to DMFLAGS turns Infinite Ammo on, however adding 131072 to DMFLAGS2 turns [[freelook]] '''off''', since on is the default state.
+
+In a multiplayer game, only the host can change these settings unless SV_Cheats is 1.
+
+Note that this following table may fall out of date between versions. '''Always refer to ZDoom's [[Gameplay options]] menu for the correct values.'''
+&lt;br /&gt;(Up-to-date as of ZDoom 2.9 pre-2175-g4f21ff2 64bit.  GZDoom 3.x also shares these same DMFlags and their enumerations.)
+
+= DMFlags =
+{| {{prettytable}}
+!Flag Name !! CVar !! Default !! Value !! Description
+|-
+|Allow Health (DM) || DMFlags || ON || 1 || Allows players to pick up items which restore health
+|-
+|Allow Powerups (DM) || DMFlags || ON || 2 || Allows players to pick up and use powerup items
+|-
+|Weapons Stay (DM) || DMFlags || OFF || 4 || Weapons aren't removed from the map when a player picks them up; Doesn't work with weapons dropped by enemies
+|-
+|Falling damage (Old) || DMFlags || OFF || 8 || Damages the player when they fall too far; uses old ZDoom damage calculation
+|-
+|Falling damage (Hexen) || DMFlags || OFF || 16 || Damages the player when they fall too far; uses Hexen's damage calculation
+|-
+|Falling damage (Strife) || DMFlags || OFF || 24 || Damages the player when they fall too far; uses Strife's damage calculation
+|-
+|Same Map (DM) || DMFlags || OFF || 64 || After exiting, the current map is started over instead of proceeding to the next
+|-
+|Spawn Farthest (DM) || DMFlags || OFF || 128 || Tries to spawn players far away from each other in a Deathmatch game
+|-
+|Force Respawn || DMFlags || OFF || 256 || Forces the player to respawn a few seconds after death
+|-
+|Allow Armor (DM) || DMFlags || ON || 512 || Allows players to pick up items which give armor
+|-
+|Allow Exit (DM) || DMFlags || ON || 1024 || If off, trying to exit the level by normal means will kill the offending player instead
+|-
+|Infinite ammo || DMFlags || OFF || 2048 || All players have infinite ammo
+|-
+|No monsters || DMFlags || OFF || 4096 || Monsters placed in the map don't appear; does not stop monsters from spawning via scripts, however
+|-
+|Monsters respawn || DMFlags || OFF || 8192 || Monsters who are killed automatically respawn; this is the default behavior for the Nightmare skill setting
+|-
+|Items respawn || DMFlags || OFF || 16384 || Basic items, such as weapons and ammo, respawn after being picked up
+|-
+|Fast monsters || DMFlags || OFF || 32768 || Monsters move and react faster; this is the default behavior for the Nightmare skill setting
+|-
+|Allow jump || DMFlags || ON || 65536 || Players are allowed to jump; can be overridden in the [[MAPINFO]] lump
+|-
+|Allow [[freelook]] || DMFlags || ON || 262144 || Players are allowed to look up and down; can be overridden in the [[MAPINFO]] lump
+|-
+|Allow FOV || DMFlags || ON || 1048576 || Players are allowed to change their FOV (Field of Vision) from the default
+|-
+|Spawn multi. weapons (Coop) || DMFlags || ON || 2097152 || If off, weapons marked as Multiplayer Only in the map won't appear in Cooperative games
+|-
+|Allow crouch || DMFlags || ON || 4194304 || Players are allowed to crouch; can be overridden in the [[MAPINFO]] lump
+|-
+|Lose entire inventory (Coop) || DMFlags || OFF || 16777216 || Players lose everything in their inventory upon death (Coop only)
+|-
+|Keep keys (Coop) || DMFlags || ON || 33554432 || If off, players lose keys upon death (Coop only)
+|-
+|Keep weapons (Coop) || DMFlags || ON || 67108864 || If off, players lose all weapons upon death and are given the standard pistol and 50 bullets on respawn (Coop only)
+|-
+|Keep armor (Coop) || DMFlags || ON || 134217728 || If off, armor is reset to 0% on death (Coop only)
+|-
+|Keep powerups (Coop) || DMFlags || ON || 268435456 || If off, powerups are lost on death (Coop only)
+|-
+|Keep ammo (Coop) || DMFlags || ON || 536870912 || If off, ammo is lost on death and the player starts with only 50 bullets (Coop only)
+|-
+|Lose half ammo (Coop) || DMFlags || OFF || 1073741824 || If on, half of the player's ammo is removed on death (Coop only)
+|}
+
+= DMFlags2 =
+{| {{prettytable}}
+!Flag Name !! CVar !! Default !! Value !! Description
+|-
+|Drop weapon || DMFlags2 || OFF || 2 || Drops the player's currently selected weapon on death
+|-
+|No team changing (DM) || DMFlags2 || OFF || 16 || If on, players cannot change teams in a teamplay match after the map has started.
+|-
+|Double ammo || DMFlags2 || OFF || 64 || If on, ammo pickups are doubled.
+|-
+|Degeneration || DMFlags2 || OFF || 128 || Players have their health slowly drained when over 100%
+|-
+|Allow BFG aiming || DMFlags2 || ON || 256 || Players are allowed to aim BFG shots up and down; turn off to prevent the BFG from being fired into the ground to generate instant tracers
+|-
+|Barrels respawn (DM) || DMFlags2 || OFF || 512 || Respawns barrels in a Deathmatch game
+|-
+|Respawn protection (DM) || DMFlags2 || OFF || 1024 || Players who are respawning are invulnerable for a few seconds
+|-
+|Spawn where died (Coop) || DMFlags2 || OFF || 4096 || If on, players respawn at the spot they died, unless they died in an instant-death sector (Sector type 115). (Coop only)
+|-
+|Keep frags gained (DM) || DMFlags2 || OFF || 8192 || If on, players keep their frag count from one map to the next.
+|-
+|No respawn || DMFlags2 || OFF || 16384 || If enabled, players will not be able to respawn after dying.
+|-
+|Lose frag on death (DM) || DMFlags2 || OFF || 32768 || Players lose a frag each time they die.
+|-
+|Infinite inventory || DMFlags2 || OFF || 65536 || Inventory items aren't removed when used.
+|-
+|No monsters to exit || DMFlags2 || OFF || 131072 || Players cannot exit the map until all monsters are killed
+|-
+|Allow automap || DMFlags2 || ON || 262144 || Players are allowed to access their automap
+|-
+|Automap allies || DMFlags2 || ON || 524288 || Players can see other friendly players on the automap
+|-
+|Allow spying || DMFlags2 || ON || 1048576 || Players can use the spynext [[CCMDs|command]] to see through their allies' eyes
+|-
+|Chasecam cheat || DMFlags2 || OFF || 2097152 || Players are allowed to use the third-person chase cam
+|-
+|Disallow Suicide || DMFlags2 || OFF || 4194304 || Players cannot die due to self-inflicted damage
+|-
+|Allow Autoaim || DMFlags2 || ON || 8388608 || Player weapons cannot auto aim
+|-
+|Check ammo for weapon switch || DMFlags2 || ON || 16777216 || ???
+|-
+|Icon of Sins death kis its spawns || DMFlags2 || ON || 33554432 || ???
+|-
+|End sector counts for kill % || DMFlags2 || ON || 67108864 || ???
+|-
+|Big powerups respawn || DMFlags2 || OFF || 134217728 || Powerups, such as the Invisibility and Invulnerability, respawn after being picked up
+|-
+|Allow vertical bullet spread || DMFlags2 || OFF || 1073741824 ||[[Player_setup#Vertical_Bullet_Spread|Vertical bullet spread for weapons]] is allowed
+|}
+
+== DMFlags3 ==
+{| class="wikitable" 
+|-
+! Flag Name
+! CVar
+! Default
+! Value
+! Description
+|-
+| No player cliping (coop)
+| DMFlags3
+| OFF
+| 1
+| Players can walk through and shoot through each other
+|-
+| Share keys (coop)
+| DMFlags3
+| OFF
+| 2
+| Keys and other core items will be given to all players in coop
+|-
+| Local pickups (coop)
+| DMFlags3
+| OFF
+| 4
+| Items are picked up client-side rather than fully taken by the client who picked it up
+|-
+| No local pickups of dropped items (coop)
+| DMFlags3
+| OFF
+| 8
+| Drops from Actors aren't picked up locally
+|-
+| Don't spawn coop-only items (coop)
+| DMFlags3
+| OFF
+| 16
+| Items that only appear in co-op are disabled
+|-
+| Don't spawn coop-only things (coop)
+| DMFlags3
+| OFF
+| 32
+| Any Actor that only appears in co-op is disabled
+|-
+| Remember last weapon (coop)
+| DMFlags3
+| OFF
+| 64
+| When respawning in co-op, keep the last used weapon out instead of switching to the best new one.
+|-
+| Pistol start (coop)
+| DMFlags3
+| OFF
+| 128
+| Take player inventory when exiting to the next level.
+|}
+
+[[category:ZDoom console]]</text>
+    <sha1>mzchznd39ijsunsa23nusxew8n175hh</sha1>
+  </revision>
+</page>

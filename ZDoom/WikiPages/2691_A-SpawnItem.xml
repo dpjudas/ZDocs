@@ -1,0 +1,132 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>A SpawnItem</title>
+  <ns>0</ns>
+  <id>2691</id>
+  <revision>
+    <id>46930</id>
+    <parentid>46929</parentid>
+    <timestamp>2019-09-27T14:12:45Z</timestamp>
+    <contributor>
+      <username>Blue Shadow</username>
+      <id>2021</id>
+    </contributor>
+    <minor />
+    <comment>Added info about the "originator"</comment>
+    <origin>46930</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="5676" sha1="b0k6kl0zivsu9cxqx3xuvtg8q34ybcn" xml:space="preserve">{{codepointer|Spawn}}__NOTOC__bool, Actor '''A_SpawnItem''' [(class&lt;Actor&gt; ''missile'' [, double ''distance'' [, double ''zheight'' [, bool ''useammo'' [, bool ''transfer_translation'']]]])]
+
+{{superseded|A_SpawnItemEx}}
+== Usage ==
+Spawns the specified actor at the specified distance and height relative to the calling actor.
+
+The function does not spawn [[monster|monster]]-based actors if the calling actor was {{DamageType|Massacre|massacred}} or there is not enough space for them to spawn.
+
+If both the [[#Originator|originator]] and spawned actor are monster based, the spawned actor becomes [[CopyFriendliness|affiliated]] with the originator. If, however, the originator is a player, the spawned actor, in this case, becomes a {{Flag|FRIENDLY|friendly monster}} which is allied with that player.
+
+=== Parameters ===
+*''missile'': the name of the actor to spawn. This can be any actor type, not just [[missile]]s. Default is {{c|"{{Class|Unknown}}"}}.
+*''distance'': the distance from the calling actor to spawn the actor. Positive values shift the spawn point forwards, while negative values shift it backwards. Default is 0.
+*''zheight'': how far from the bottom of the calling actor to spawn the actor. Positive values shift the spawn point upwards, while negative values shift it downwards. Default is 0.
+*''useammo'': whether or not ammo is required in order to spawn the actor if the function is called from a player's weapon, as well as whether or not to form a master/minion relationship between the [[#Originator|originator]] and the spawned actor. Master and minions do not attack each other, and this relationship allows the use of functions that affect one another, such as {{c|[[A_DamageMaster]]}} and {{c|[[A_GiveToChildren]]}}. If this is ''true'', ammo is required and the relationship is formed, otherwise, if this is ''false'', ammo is not required and the relationship is not formed. Default is ''true''.
+*''transfer_translation'': if this is ''true'', the spawned actor uses the same [[translation]] as the calling actor, provided the spawned actor {{Flag|DONTTRANSLATE|can be translated}}. Default is ''false''.
+
+=== Originator ===
+The '''originator''' is the actor that is considered to be the "spawner" actor. Normally, the originator is the same as the calling actor of the function, except in the case of [[missile]]-based actors. A missile-based actor cannot be the originator, since the originator is whatever non-missile actor that it considers to be its spawner or shooter. If this actor does not exist, then there is no originator in this case.
+
+=== Return value ===
+The function returns two values:
+*A boolean based on whether the actor successfully spawned or not. An actor that does not spawn because of lack of ammo or [[#Usage|massacre]] always counts as success.
+*A pointer to the spawned actor. If the actor fails to spawn due to lack of ammo or massacre, the returned value is {{c|null}}. When testing for space to spawn the actor in, the actor is spawned, tested and then immediately destroyed if it fails the test. The returned value in this case is still a pointer to the actor, not {{c|null}}. The space test is performed on monster-based actors only.
+So based on the above, it is important to check for both of these values in order to determine whether an actor has truly spawned or not.
+
+== Examples ==
+ class TerranMarine : ScriptedMarine2
+ {
+     Default
+     {
+         {{Property|Obituary}} "%o was killed by a Terran Marine.";
+         {{Property|Translation}} "112:127=198:207";
+         {{Property|DropItem}} "{{Class|Clip}}", 256;
+         DropItem "GreenMedikit", 128;
+         DropItem "GreenStimpack", 128;
+         DropItem "{{Class|GreenArmor}}", 16;
+         DropItem "{{Class|BlueArmor}}", 8;
+         DropItem "ArmorRed", 4;
+         DropItem "ArmorGray", 2;
+         +{{Flag|FRIENDLY}}
+         {{Property|ActiveSound}} "starcraft/active";
+         {{Property|DeathSound}} "starcraft/death";
+     }
+ 
+     States
+     {
+     Spawn:
+         PLY2 A 4 [[A_Look]];
+         PLY2 B 4;
+         Goto See;
+     See:
+         PLY2 AABBCCDD 2 [[A_FastChase]];
+         PLY2 A 0 [[NoiseAlert]](0, 0);
+         Loop;
+     Pain:
+         PLY2 G 4;
+         PLY2 G 4 [[A_Pain]];
+         Goto Spawn+3;
+     Missile:
+         PLY2 E 8 [[A_FaceTarget]];
+         PLY2 E 2 [[A_PlaySound]]("starcraft/marinef1", {{const|CHAN_WEAPON}});
+         PLY2 F 2 [[A_CustomBulletAttack]](5.6, 0, 1, 5, "{{Class|BulletPuff}}", 0);
+         PLY2 E 2 A_FaceTarget;
+         PLY2 F 2 A_CustomBulletAttack(5.6, 0, 1, 5, "BulletPuff", 0);
+         PLY2 E 2 A_FaceTarget;
+         PLY2 F 2 A_CustomBulletAttack(5.6, 0, 1, 5, "BulletPuff", 0);
+         PLY2 E 10 [[A_CPosRefire]];
+         Goto Missile+1;
+     Death:
+         PLY2 H 10;
+         PLY2 I 10 [[A_Scream]];
+         PLY2 J 10 [[A_NoBlocking]];
+         PLY2 KLM 10;
+         PLY2 N 0 [[A_SpawnItem]]("SpawnTMarine");
+         PLY2 N 512;
+         Goto DDisp;
+     DDisp:
+         PLY2 N 4 [[A_FadeOut]](0.05);
+         Loop;
+     XDeath:
+         PLY2 O 5;
+         PLY2 P 5 [[A_XScream]];
+         PLY2 Q 5 A_NoBlocking;
+         PLY2 RSTUV 5;
+         PLY2 W 0 [[A_SpawnItem]]("SpawnTMarine");
+         PLY2 W 512;
+         Goto XDisp;
+     XDisp:
+         PLY2 W 4 [[A_FadeOut]](0.05);
+         Loop;
+     Raise:
+         PLY2 MLKJIH 5;
+         Goto See;
+     }
+ }
+ 
+ class SpawnTMarine : {{Class|Actor}}
+ {
+     States
+     {
+     Spawn:
+         ALLY A 128;
+         TFOG A 8
+         {
+             A_PlaySound("misc/teleport");
+             [[A_SpawnItemEx]]("TerranMarine", 0, 0, 0, 0, 0, 0, 0, 64, 0);
+         }
+         TFOG BCDEFGHIJ 8;
+         Stop;
+     }
+ }</text>
+    <sha1>b0k6kl0zivsu9cxqx3xuvtg8q34ybcn</sha1>
+  </revision>
+</page>

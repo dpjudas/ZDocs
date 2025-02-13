@@ -1,0 +1,66 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>Exit Normal</title>
+  <ns>0</ns>
+  <id>670</id>
+  <revision>
+    <id>44667</id>
+    <parentid>35126</parentid>
+    <timestamp>2017-04-03T17:47:06Z</timestamp>
+    <contributor>
+      <username>Gez</username>
+      <id>1283</id>
+    </contributor>
+    <comment>xlat</comment>
+    <origin>44667</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="2082" sha1="e5q9g645dc8jlnqu7wbnsylpyknybot" xml:space="preserve">{{DISPLAYTITLE:Exit_Normal}}
+{{Special|243|pos|Exit}}
+
+* ''pos'': Corresponds to destination player start spot arg0 
+
+==Usage==
+
+Teleports the player to the next map defined for this map in [[MAPINFO]] and to the player start spot whose arg0 matches pos. If you are making a vanilla-style doom map, just use 0.
+
+Note that the map will not immediately exit as soon as this command is encountered; instead, a flag will be set that causes the map to exit during processing of the next [[tic]]. Therefore, if there are any further commands in the ACS script it's present in, they will be executed up until the first delay.  To ensure that the script halts immediately at this command, make it the final command within its script or put a &lt;code&gt;[[terminate]]&lt;/code&gt;/&lt;code&gt;[[delay]](1)&lt;/code&gt; command immediately after it.
+
+==Examples==
+
+This command is generally used on lines or sectors, and less often in scripts. However, some unusual situations can be created using scripting. A locked exit can be made by using a script and accessing it with a [[ACS_LockedExecute]] special.
+
+Another example is an exit which can be activated, for example by turning on a power generator.
+
+ bool exit = FALSE;
+ 
+ script 1 (void)
+ {
+ 	if (exit)
+ 		'''Exit_Normal'''(0);
+ 	else
+ 		[[Print]](s:"You need to activate the power first.");
+ }
+ 
+ script 10 (int sector)
+ {
+ 	exit = TRUE;
+ 	[[Light_RaiseByValue]](sector, 96);
+ 	[[Print]](s:"Power restored.");
+ }
+
+Script 1 controls access to the exit. It should be set to a switch and flagged as repeatable. Script 10 restores the power to the area. The sector tag is passed as a parameter, and it raises the light level there to represent the lights coming back on with the power.
+
+== Conversions from linedef types ==
+The following Doom map format types can be converted as :
+{| {{prettytable}}
+!Type!!Conversion!!Trigger
+|-
+|{{icon|Doom}} 11:S1 Exit (Normal) || Exit_Normal (0) || Player Use
+|-
+|{{icon|Doom}} 52:W1 Exit (Normal) || Exit_Normal (0) || Player Cross
+|-
+|{{icon|Boom}} 197:G1 Exit (Normal) || Exit_Normal (0) || Attack Hit, Missile Cross
+|}</text>
+    <sha1>e5q9g645dc8jlnqu7wbnsylpyknybot</sha1>
+  </revision>
+</page>

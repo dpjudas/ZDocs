@@ -1,0 +1,95 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>Structs:State</title>
+  <ns>0</ns>
+  <id>9616</id>
+  <revision>
+    <id>53850</id>
+    <parentid>53112</parentid>
+    <timestamp>2024-11-23T14:42:36Z</timestamp>
+    <contributor>
+      <username>Jekyll Grim Payne</username>
+      <id>2175</id>
+    </contributor>
+    <minor />
+    <comment>/* Methods */</comment>
+    <origin>53850</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="4521" sha1="8lr13cirt26npgp5z66xohejcawat3y" xml:space="preserve">{{ZScriptNote}}
+States are what store information about the current animation and logical state of an Actor or [[A_Overlay|overlay]]. A state is ''not'' the entire sequence of a label but the single frame that defines what something is doing at that very moment. For instance:
+
+ Fire:
+   PISG A 4;
+   PISG B 6 A_FirePistol;
+   PISG C 4;
+   PISG B 5 A_ReFire;
+   Goto Ready;
+
+In the above case, there's not one state, but four. PISG A, B, C, and then B again all define separate states. They are all combined under one ''state sequence'' with the first being given the ''state label'' '''Fire'''. This also applies for stacked frames:
+
+ Ready:
+   WEAP AAA 4 A_WeaponReady;
+   WEAP BCB 4 A_WeaponReady;
+   Loop;
+
+The above has six states, WEAP A, A, A, B, C, and B. When using a function like '''ResolveState''', the state returned is the one defined at the given label. For instance, calling '''ResolveState("Fire")''' would return the state '''PISG A 4;'''
+
+An Actor's state can be gotten at any time via its &lt;code&gt;curstate&lt;/code&gt; field, e.g. &lt;code&gt;myActorPointer.curstate&lt;/code&gt;.
+
+A {{class|PSprite}} current state can be obtained by first obtaining the PSprite pointer with [[Classes:PSprite#Non-static_2|{{c|FindPSprite}}]] on a {{struct|PlayerInfo}} pointer, e.g. &lt;code&gt;&lt;PlayerPawn pointer&gt;.player.FindPSprite(&lt;layer number&gt;)&lt;/code&gt;, and from there PSprite's current state is its &lt;code&gt;curstate&lt;/code&gt; field.
+
+==Fields==
+'''Note:''' All fields are defined as ''readonly''.
+*{{c|State '''NextState'''}}
+:Stores a pointer to the next state in the sequence. If '''null''', the Actor/PSprite is set to terminate after this state.
+*{{c|int '''sprite'''}}
+:The index of the sprite to use for this state. This is the same as [[GetSpriteIndex]] with the name of the sprite the state uses. This has a few notable base values:
+:*0 - Sprite is set to [[TNT1]]
+:*1 - State is set to be fixed i.e. doesn't change sprite or frame
+:*2 - Sprite is set to use the same sprite as the previous state
+*{{c|int16 '''Tics'''}}
+:The base duration of the state measured in tics.
+*{{c|uint16 '''TicRange'''}}
+:If non-zero, defines a random range for the duration. This is done via &lt;code&gt;Tics + Random2[StateTics]() % (TicRange + 1)&lt;/code&gt;
+*{{c|uint8 '''Frame'''}}
+:The frame id to use for this state e.g. A = 0, B = 1, etc.
+*{{c|uint8 '''UseFlags'''}}
+:Defines where the state can be used e.g. in [[Classes:Weapon|weapon]] overlays, in [[CustomInventory]] overlays, etc.
+*{{c|int '''Misc1'''}}
+:The x offset to give a {{class|PSprite}} layer via the '''Offset''' keyword.
+*{{c|int '''Misc2'''}}
+:The y offset to give an {{class|PSprite}} layer via the '''Offset''' keyword.
+*{{c|uint16 '''bSlow'''}}
+:The state is marked with the '''Slow''' keyword.
+*{{c|uint16 '''bFast'''}}
+:The state is marked with the '''Fast''' keyword.
+*{{c|bool '''bFullbright'''}}
+:The state is marked with the '''Bright''' keyword.
+*{{c|bool '''bNoDelay'''}}
+:The state is marked with the '''NoDelay''' keyword. This only has effect in the first state of the Spawn sequence.
+*{{c|bool '''bSameFrame'''}}
+:The state uses the same frame as the previous state.
+*{{c|bool '''bCanRaise'''}}
+:The state is marked with the '''CanRaise''' keyword.
+*{{c|bool '''bDehacked'''}}
+:The state has been replaced via [[DeHackEd]].
+
+==Methods==
+===Non-static===
+*{{c|int '''DistanceTo'''(State ''other'')}}
+:Returns the number of states from the current state to another state. {{verification}}
+*{{c|bool '''ValidateSpriteFrame'''()}}
+:Returns true if the sprite for the state is valid (uses an existing graphic or [[TNT1]]). This is usually similar to calling {{c|GetSpriteTexture()}} and then calling [[Structs:TextureID#Methods|{{c|IsValid()}}]] on the result, however, {{c|IsValid()}} returns true for TNT1A0, whereas {{c|ValidateSpriteFrame}} doesn't. Among other things, this is important when checking sprites on actors who were spawned dynamically (i.e. through [[Spawn (ZScript)|Actor.Spawn]] or derivative functions) but have no valid sprites: when that happens, all their sprites are remapped to TNT1A0 so that the actor can exist but not render. {{c|ValidateSpriteName}} will catch these cases and report sprites as missing.
+*{{c|TextureID, bool, Vector2 '''[[GetSpriteTexture]]'''(int ''rotation'', int ''skin'' }}={{c| 0, Vector2 ''scale'' }}={{c| (0,0))}}
+
+*{{c|bool '''InStateSequence'''(State ''base'')}}
+:A non-static version of [[InStateSequence]] that can be called directly on a state.
+
+== See also ==
+*[[Actor states]]
+
+[[Category:ZScript]]
+[[Category:Structs]]</text>
+    <sha1>8lr13cirt26npgp5z66xohejcawat3y</sha1>
+  </revision>
+</page>

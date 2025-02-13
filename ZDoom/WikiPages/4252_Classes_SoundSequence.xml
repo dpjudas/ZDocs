@@ -1,0 +1,53 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>Classes:SoundSequence</title>
+  <ns>0</ns>
+  <id>4252</id>
+  <revision>
+    <id>39801</id>
+    <parentid>37033</parentid>
+    <timestamp>2015-05-04T21:46:11Z</timestamp>
+    <contributor>
+      <username>Blue Shadow</username>
+      <id>2021</id>
+    </contributor>
+    <minor />
+    <comment>/* DECORATE definition */ Updated</comment>
+    <origin>39801</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="2699" sha1="4aqtdovpuc3cbbk5983ug7e3afjn2y8" xml:space="preserve">{{Actor|
+| type = Map spot
+| name = Sound sequence
+| class = SoundSequence
+| doomednum = 14066
+}}[[Classes]]: &lt;u&gt;SoundSequence&lt;/u&gt;&lt;br&gt;
+&amp;ensp;&amp;rarr;[[Classes:HereticSoundSequence1|HereticSoundSequence1]]&lt;br&gt;
+&amp;ensp;&amp;rarr;[[Classes:HereticSoundSequence2|HereticSoundSequence2]]&lt;br&gt;
+&amp;ensp;&amp;rarr;[[Classes:HereticSoundSequence3|HereticSoundSequence3]]&lt;br&gt;
+&amp;ensp;&amp;rarr;[[Classes:HereticSoundSequence4|HereticSoundSequence4]]&lt;br&gt;
+&amp;ensp;&amp;rarr;[[Classes:HereticSoundSequence5|HereticSoundSequence5]]&lt;br&gt;
+&amp;ensp;&amp;rarr;[[Classes:HereticSoundSequence6|HereticSoundSequence6]]&lt;br&gt;
+&amp;ensp;&amp;rarr;[[Classes:HereticSoundSequence7|HereticSoundSequence7]]&lt;br&gt;
+&amp;ensp;&amp;rarr;[[Classes:HereticSoundSequence8|HereticSoundSequence8]]&lt;br&gt;
+&amp;ensp;&amp;rarr;[[Classes:HereticSoundSequence9|HereticSoundSequence9]]&lt;br&gt;
+&amp;ensp;&amp;rarr;[[Classes:HereticSoundSequence10|HereticSoundSequence10]]&lt;br&gt;
+
+Plays sound sequence number ''args[0]'' from the list of environmental sound sequences. It is possible to define in [[DECORATE]] sound sequences which have a preset argument value for use in Doom-format maps for Doom, Heretic or Strife. SoundSequence actors are not to be confused with the actorless [[sound sequence thing]]s.
+
+A SoundSequence actor has two modes of operation:
+
+#If the sound sequence assigned to it has a slot, then a separate {{Class|SoundSequenceSlot}} actor is spawned (if not already present), and the sound sequence is added to the slot's list of choices. The sound sequence actor is then destroyed, never to be heard from again. The SoundSequence for the slot is automatically played on the new SoundSequenceSlot actor, and it should at some point execute the randomsequence command so that it can pick one of the other sequences to play. The slot sequence should also end with restart so that more than one sequence will have a chance to play. In this mode, it is very much like &lt;tt&gt;world $ambient&lt;/tt&gt; sounds defined in [[SNDINFO]] but more flexible. This is the mode used by all [[HereticAmbience|predefined Heretic sound sequences]].
+#If the sound sequence assigned to it has no slot, then it will play the sequence when activated and cease playing the sequence when deactivated. In this mode, it is very much like &lt;tt&gt;point $ambient&lt;/tt&gt; sounds defined in SNDINFO but, again, more flexible.
+
+To assign a sound sequence, set the SoundSequence's first argument to the ID of the corresponding environment sequence you want to use, as defined in the [[SNDSEQ]] lump. If that sequence is a multiple-choice sequence, then the second argument selects which choice it picks.
+
+==== [[DECORATE]] definition ====
+ ACTOR &lt;u&gt;SoundSequence&lt;/u&gt; native
+ {
+   +{{Flag|NOSECTOR}}
+   +{{Flag|NOBLOCKMAP}}
+   +{{Flag|DONTSPLASH}}
+ }</text>
+    <sha1>4aqtdovpuc3cbbk5983ug7e3afjn2y8</sha1>
+  </revision>
+</page>

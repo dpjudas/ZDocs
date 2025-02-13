@@ -1,0 +1,59 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>Classes:ZXmasTree</title>
+  <ns>0</ns>
+  <id>4495</id>
+  <revision>
+    <id>39645</id>
+    <parentid>34757</parentid>
+    <timestamp>2015-05-02T21:16:04Z</timestamp>
+    <contributor>
+      <username>Blue Shadow</username>
+      <id>2021</id>
+    </contributor>
+    <minor />
+    <comment>/* DECORATE definition */ Updated</comment>
+    <origin>39645</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="759" sha1="sf8sb37zdw6ht42lac3yy4s66urrzdy" xml:space="preserve">{{Actor|
+| type = Breakable
+| name = Spruce tree
+| class = ZXmasTree
+| game = Hexen
+| doomednum = 8068
+}}[[Classes]]: &lt;u&gt;ZXmasTree&lt;/u&gt;&lt;br&gt;
+{{desc}}
+==== [[DECORATE]] definition ====
+ ACTOR &lt;u&gt;ZXmasTree&lt;/u&gt;
+ {
+   {{Property|Radius}} 11
+   {{Property|Height}} 130
+   {{Property|Health}} 20
+   {{Property|Mass}} 0x7fffffff
+   +{{Flag|SOLID}}
+   +{{Flag|SHOOTABLE}}
+   +{{Flag|NOBLOOD}}
+   +{{Flag|NOICEDEATH}}
+   {{Property|DeathSound}} "TreeExplode"
+   States
+   {
+   Spawn:
+     XMAS A -1
+     Stop
+   Burn:
+     XMAS B 6 Bright
+     XMAS C 6 Bright [[A_Scream]]
+     XMAS D 5 Bright
+     XMAS E 5 Bright [[A_Explode]](30, 64)
+     XMAS F 5 Bright
+     XMAS G 4 Bright
+     XMAS H 5
+     XMAS I 4 [[A_NoBlocking]]
+     XMAS J 4
+     XMAS K -1
+     Stop
+   }
+ }</text>
+    <sha1>sf8sb37zdw6ht42lac3yy4s66urrzdy</sha1>
+  </revision>
+</page>

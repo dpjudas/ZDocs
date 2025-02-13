@@ -1,0 +1,57 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>PlayerClass</title>
+  <ns>0</ns>
+  <id>2886</id>
+  <revision>
+    <id>36587</id>
+    <parentid>35510</parentid>
+    <timestamp>2013-05-29T11:36:57Z</timestamp>
+    <contributor>
+      <username>Gez</username>
+      <id>1283</id>
+    </contributor>
+    <minor />
+    <origin>36587</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="1492" sha1="9dd8bzwgk4hmz1a2f219eqrxtycvikx" xml:space="preserve">int '''PlayerClass''' (int ''playernumber'')
+
+==Usage==
+
+Returns the number of the player's [[player class]]. The corresponding numbers are in the order of how they are entered into the [[MAPINFO/GameInfo definition|MAPINFO]] or [[KEYCONF]] lumps (MAPINFO comes first). To see the numbers during runtime use the {{CCMD|I|playerclasses}} console command to output all the classes into the console. If the returned number is -1 that means the activator was either a monster or out of player range.
+
+While not too useful, the following constants are given for the hexen classes:
+*'''CLASS_FIGHTER''' - Fighter (0)
+*'''CLASS_CLERIC''' - Cleric (1)
+*'''CLASS_MAGE''' - Mage (2)
+
+==Examples==
+
+This example script (works for Hexen only) just prints the player class of the activator using the [[PlayerNumber]] function:
+
+ #include "zcommon.acs"
+ script 1 (void)
+ {
+       switch(PlayerClass(PlayerNumber()))
+       {
+             case CLASS_FIGHTER:
+                  print(s:"You are a fighter!");
+                  break;
+             case CLASS_CLERIC:
+                  print(s:"You are a cleric!");
+                  break;
+             case CLASS_MAGE:
+                  print(s:"You are a mage!");
+                  break;
+             case -1:
+                  //monster activated the script but we do not care about that
+             default:
+                  //something happened but we are just gonna break
+                  break;
+         }
+ }
+
+[[category:ACS Information functions]]</text>
+    <sha1>9dd8bzwgk4hmz1a2f219eqrxtycvikx</sha1>
+  </revision>
+</page>

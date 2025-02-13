@@ -1,0 +1,64 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>Classes:Spectre</title>
+  <ns>0</ns>
+  <id>2460</id>
+  <revision>
+    <id>48904</id>
+    <parentid>48441</parentid>
+    <timestamp>2021-12-27T11:13:00Z</timestamp>
+    <contributor>
+      <username>Jekyll Grim Payne</username>
+      <id>2175</id>
+    </contributor>
+    <comment>updated in accordance with updated ZScriptDefinitionNote template</comment>
+    <origin>48904</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="1493" sha1="4oyuytl03ae5813ux5i3gsbqrspve92" xml:space="preserve">{{Actor|
+| type = Monster
+| name = Spectre
+| class = Spectre
+| game = Doom
+| doomednum = 58
+| thingindex = 14
+| spawnid = 9
+| spawnname = T_SPECTRE
+}}[[Classes]]: [[Classes:Demon|Demon]]&amp;rarr;&lt;u&gt;Spectre&lt;/u&gt;
+
+The spectre is effectively the same as the {{Class|demon}}, with the difference that it is rendered with the "[[fuzz]]y" partial invisibility effect. This can optionally be changed with the {{CVAR|R|r_drawfuzz}} and (in [[OpenGL]] renderers) {{CVAR|R|gl_fuzztype}} [[console variables]].
+
+==== [[ZScript]] definition ====
+{{ZScriptDefinitionNote|actors/doom/demon.zs#L57}} 
+ class Spectre : Demon
+ {
+ 	Default
+ 	{
+ 		+{{Flag|SHADOW}}
+ 		{{Property|RenderStyle}} "OptFuzzy";
+ 		{{Property|Alpha}} 0.5;
+ 		{{Property|SeeSound}} "spectre/sight";
+ 		{{Property|AttackSound}} "spectre/melee";
+ 		{{Property|PainSound}} "spectre/pain";
+ 		{{Property|DeathSound}} "spectre/death";
+ 		{{Property|ActiveSound}} "spectre/active";
+ 		{{Property|Obituary}} "$OB_SPECTREHIT";
+ 		{{Property|Tag}} "$FN_SPECTRE";
+ 	}
+ }
+==== [[DECORATE]] definition ====
+{{DecorateDefinitionNote}}
+ ACTOR &lt;u&gt;Spectre&lt;/u&gt; : {{Class|Demon}}
+ {
+   +{{Flag|SHADOW}}
+   {{Property|RenderStyle}} OptFuzzy
+   {{Property|Alpha}} 0.5
+   {{Property|SeeSound}} "spectre/sight"
+   {{Property|AttackSound}} "spectre/melee"
+   {{Property|PainSound}} "spectre/pain"
+   {{Property|DeathSound}} "spectre/death"
+   {{Property|ActiveSound}} "spectre/active"
+   {{Property|HitObituary}} "$OB_SPECTREHIT" // "%o was eaten by a spectre."
+ }</text>
+    <sha1>4oyuytl03ae5813ux5i3gsbqrspve92</sha1>
+  </revision>
+</page>

@@ -1,0 +1,132 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>ApplyKickback</title>
+  <ns>0</ns>
+  <id>9780</id>
+  <revision>
+    <id>51373</id>
+    <parentid>51318</parentid>
+    <timestamp>2024-01-29T11:48:37Z</timestamp>
+    <contributor>
+      <username>Jekyll Grim Payne</username>
+      <id>2175</id>
+    </contributor>
+    <minor />
+    <comment>/* Usage */</comment>
+    <origin>51373</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="3886" sha1="afar216yl0bgdixv5bibz3lvp29m3rs" xml:space="preserve">'''{{class|Actor}}'''
+
+{{c|virtual void '''ApplyKickback'''(Actor ''inflictor'', Actor ''source'', int ''damage'', double ''angle'', Name ''mod'', int ''flags'')}}
+
+==Usage==
+Called by an actor when they're hit by an attack and must be pushed by it, in accordance with the {{property|ProjectileKickback}} or {{property|Weapon.KickBack}} property of the attack inflictor. This function can be overridden to make class-specific changes to the kickback behavior.
+
+By default, the function tries to apply {{property|ProjectileKickback}} (if {{c|inflictor}} is present and is a projectile), or, if the attacker is a player, the {{property|Weapon.KickBack}} property of the player's current weapon. Otherwise, the [[MAPINFO/GameInfo definition|{{c|defkickback}} MAPINFO property]] will be used. The function also accounts for the {{c|KickbackFactor}} value of the [[MAPINFO/Skill_definition|current skill]].
+
+===Parameters===
+*{{c|Actor '''inflictor'''}}
+:The actor dealing the damage. This is the missile for projectiles and the puff for hitscan attacks. For monster melee attacks this is the same as the source.
+*{{c|Actor '''source'''}}
+:The actor responsible for the inflictor.
+*{{c|int '''damage'''}}
+:The amount of damage to deal.
+*{{c|double '''angle'''}}
+:The absolute angle for thrusting enemies from the damage if {{c|DMG_USEANGLE}} is set.
+*{{c|Name '''mod'''}}
+:The damage type applied to the attack. Regular attacks use {{c|'Normal'}}, hitscan attacks use {{c|'Hitscan'}}.
+*{{c|int '''flags'''}} - The damage flags to use in the attack:
+{{: ZScript damage flags}}
+:Note: The list of flags is the same as used by [[DamageMobj]] and other damage-related functions, but, naturally, this function will not be called if {{c|DMG_THRUSTLESS}} is used.
+
+==[[ZScript]] definition==
+{{ZScriptDefinitionNote|actors/interaction.zs#L4}}
+&lt;syntaxhighlight lang="csharp"&gt;
+virtual void ApplyKickback(Actor inflictor, Actor source, int damage, double angle, Name mod, int flags)
+{
+	double ang;
+	int kickback;
+	double thrust;
+
+	if (inflictor &amp;&amp; inflictor.projectileKickback)
+		kickback = inflictor.projectileKickback;
+	else if (!source || !source.player || !source.player.ReadyWeapon)
+		kickback = gameinfo.defKickback;
+	else
+		kickback = source.player.ReadyWeapon.Kickback;
+
+	kickback = int(kickback * G_SkillPropertyFloat(SKILLP_KickbackFactor));
+	if (kickback)
+	{
+		Actor origin = (source &amp;&amp; (flags &amp; DMG_INFLICTOR_IS_PUFF)) ? source : inflictor;
+
+		if (flags &amp; DMG_USEANGLE)
+		{
+			ang = angle;
+		}
+		else if (origin.pos.xy == pos.xy)
+		{
+			// If the origin and target are in exactly the same spot, choose a random direction.
+			// (Most likely cause is from telefragging somebody during spawning because they
+			// haven't moved from their spawn spot at all.)
+			ang = frandom[Kickback](0., 360.);
+		}
+		else
+		{
+			ang = origin.AngleTo(self);
+		}
+
+		thrust = mod == 'MDK' ? 10 : 32;
+		if (Mass &gt; 0)
+		{
+			thrust = clamp((damage * 0.125 * kickback) / Mass, 0., thrust);
+		}
+
+		// Don't apply ultra-small damage thrust
+		if (thrust &lt; 0.01) thrust = 0;
+
+		// make fall forwards sometimes
+		if ((damage &lt; 40) &amp;&amp; (damage &gt; health)
+			&amp;&amp; (pos.Z - origin.pos.Z &gt; 64)
+			&amp;&amp; random[Kickback](0, 1)
+			// [RH] But only if not too fast and not flying
+			&amp;&amp; thrust &lt; 10
+			&amp;&amp; !bNoGravity
+			&amp;&amp; !bNoForwardFall
+			&amp;&amp; (inflictor == NULL || !inflictor.bNoForwardFall)
+			)
+		{
+			ang += 180.;
+			thrust *= 4;
+		}
+		if (source &amp;&amp; source.player &amp;&amp; (flags &amp; DMG_INFLICTOR_IS_PUFF)
+			&amp;&amp; source.player.ReadyWeapon != NULL &amp;&amp;	(source.player.ReadyWeapon.bSTAFF2_KICKBACK))
+		{
+			// Staff power level 2
+			Thrust(10, ang);
+			if (!bNoGravity)
+			{
+				Vel.Z += 5.;
+			}
+		}
+		else
+		{
+			Thrust(thrust, ang);
+		}
+	}
+}
+&lt;/syntaxhighlight&gt;
+
+==Examples==
+{{noexamples}}
+
+==See also==
+*[[DamageMobj]]
+*[[ModifyDamage]]
+
+[[Category:ZScript]]
+[[Category:ZScript virtual functions]]
+[[Category:Actor virtual functions]]</text>
+    <sha1>afar216yl0bgdixv5bibz3lvp29m3rs</sha1>
+  </revision>
+</page>

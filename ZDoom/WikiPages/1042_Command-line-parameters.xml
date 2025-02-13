@@ -1,0 +1,270 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>Command line parameters</title>
+  <ns>0</ns>
+  <id>1042</id>
+  <revision>
+    <id>50179</id>
+    <parentid>50157</parentid>
+    <timestamp>2023-03-22T03:21:56Z</timestamp>
+    <contributor>
+      <username>Blue Shadow</username>
+      <id>2021</id>
+    </contributor>
+    <minor />
+    <comment>remove {{gzdoomfeaturesmall}}</comment>
+    <origin>50179</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="18094" sha1="ojyledd0y1uabbs6z6yiw8crb6k1c1p" xml:space="preserve">{{doomwiki|parameter}}A '''command line parameter''' is simply a keyword and, if needs be, associated value typed after the executable's name on the command line. They should not be confused with [[console commands]]! A command line parameter is entered ''before'' the game is even launched; whereas console commands are entered during the game in the [[console]].
+
+A typical command line looks like: 
+
+ zdoom -skill 4 -warp 24
+
+“-skill 4” and “-warp 24” are two of the command line parameters [[ZDoom]] supports. There are several others, described below:
+
+===Configuration options===
+
+;{{LE|-2|2}}
+:Forces all video modes to use pixel doubling, resulting in the final video mode being two times larger than specified.
+
+;{{LE|-4|4}}
+:Forces all video modes to use pixel quadrupling, resulting in the final video mode being four times larger than specified.
+
+;{{LE|-bits|bits}} ''numbits''
+:Specifies the display depth. Currently, only 8 is supported (for the software renderer).
+
+;{{LE|-width|width}} ''x''
+;{{LE|-height|height}} ''y''
+:Specifies the desired resolution of the screen. If only one of -width or -height is specified, ZDoom will try to guess the other one based on a standard aspect ratio. If the specified resolution is not supported by your SDL/DirectDraw drivers, ZDoom will try various resolutions until it either finds one that works, or it will finally give up. To determine which resolutions ZDoom can use, use the {{CCMD|D|vid_describemodes}} command from the console once you have started the game.
+
+;{{LE|-blockmap|blockmap}}
+:Causes ZDoom to ignore all the [[BLOCKMAP]] information a map provides and generate it instead. This is equivalent to {{c|+{{CCMD|C|set}} {{CVAR|C|genblockmap}} 1}}.
+
+;{{LE|-cdrom|cdrom}}
+:Causes ZDoom to look for [[savegame]]s and zdoom.cfg in a directory called C:\ZDOOMDAT. [[Screenshot]]s will also be saved in this directory.
+
+;{{LE|-config|config}} ''configfile''
+:Causes ZDoom to use an alternative [[configuration file]]. If ''configfile'' does not exist, it will be created.
+
+;{{LE|-iwad|iwad}} ''iwadfile[.wad]''
+:The [[IWAD]] file specified after this parameter will be used as the game IWAD file.
+:ZDoom will look for the IWAD in the current directory, in the same directory as zdoom.exe, in the directory set in the DOOMWADDIR environment variable, and in the directory set in the HOME environment variable. &lt;!-- needs to be checked again whether this may not actually be $HOME/.zdoom instead --&gt; {{verification}}
+
+;{{LE|-nocdaudio|nocdaudio}}
+:Disables CD audio. Since only the Windows version supports CD audio, other versions ignore this option. {{verification}}
+
+;{{LE|-noidle|noidle}} (Windows only)
+:When the user presses Alt-Tab to switch from ZDoom to another window, ZDoom will normally reduce its priority class so that it does not slow the rest of the system down. By specifying this parameter, ZDoom will try to run at full speed even when it is not the active window.
+
+;{{LE|-nojoy|nojoy}} (Windows only)
+:Disables joystick support. If you have an old-fashioned gameport (non-USB) device attached, it can slow down the game even if you do not intend to use it. Use -nojoy to avoid the slowdown that comes from polling it for input. Only the Windows version supports a joystick.
+
+;{{LE|-nomusic|nomusic}}
+:Prevents the playback of music.
+
+;{{LE|-nosfx|nosfx}}
+:Prevents the playback of sound effects.
+
+;{{LE|-nosound|nosound}}
+:Disables both music and sound effects.
+
+;{{LE|-nostartup|nostartup}}
+:Disables the [[startup lumps|startup screens]] used by ''[[Heretic]]'', ''[[Hexen]]'' and ''[[Strife]]'', and use the [[Doom]] text-mode startup instead.
+
+;{{LE|-oldsprites|oldsprites}}
+:Disables [[sprite renaming]]. Unless you are playing a mod for ''[[Heretic]]'', ''[[Hexen]]'' or ''[[Strife]]'' that replaced a few select sprites, you do not need this.
+
+;{{LE|-savedir|savedir}} ''path''
+:Specifies an alternate directory to use for [[savegame|saved files]]. If this is not specified, ZDoom stores them in the directory indicated by the {{CVAR|C|save_dir}} CVAR.
+
+===Play options===
+
+;{{LE|-avg|avg}}
+:Stands for “Austin Virtual Gaming”. Automatically advances to the next level after 20 minutes. This is equivalent to {{c|+{{CCMD|C|set}} {{CVAR|C|timelimit}} 20}} or [[#timer|-timer]] 20.
+
+;{{LE|-fast|fast}}
+:Sets the [[dmflags]] CVAR to make the monsters as fast as in Nightmare mode even if you are not playing Nightmare.
+
+;{{LE|-nomonsters|nomonsters}}
+:Sets the dmflags CVAR so that monsters are not spawned on levels.
+
+;{{LE|-respawn|respawn}}
+:Sets the dmflags CVAR so that monsters respawn even if you are not playing at Nightmare difficulty.
+
+;{{LE|-timer|timer}} ''x''
+:Causes ZDoom to automatically advance to the next level after ''x'' minutes. This is equivalent to {{c|+{{CCMD|C|set}} {{CVAR|C|timelimit}} ''x''}}.
+
+;{{LE|-turbo|turbo}} ''x
+:Causes player movement to be ''x''% as fast as normal. Valid values are 10&amp;ndash;255, with 100 being normal. Values larger than 100 are considered cheating. This is equivalent to {{c|+{{CCMD|C|set}} {{CVAR|C|turbo}} ''x''}}.
+
+===Loading options===
+
+;{{LE|-deh|deh}} ''dehfile[.deh]''
+:Causes ZDoom to apply a [[DeHackEd]] or .bex patch to the game. This must be a text patch; binary patches are not supported. (As far as I know, most patches are text patches, so this should not be too much of a problem.) Also, only patch format 6 is known to be supported. Other formats may or may not work properly. If the .deh extension is omitted, ZDoom will automatically add it.
+
+;{{LE|-bex|bex}} ''bexfile[.bex]''
+:This is the same as -deh, except the default file extension is .bex.
+
+;{{LE|-file|file}} ''file1[.wad]'' ''file2[.wad]'' ''file3[.wad]'' ...
+:Used to load one or more PWAD files which generally contain user-created levels. Files listed further right take precedence to files listed before them, so as an example, if both file1.wad and file2.wad contain have a MAP01, the MAP01 in file2.wad will be used instead of the one in file1.wad. If the .wad extension is omitted, ZDoom will automatically add it.
+:Using this parameter is no longer needed, &lt;tt&gt;zdoom file1.wad file2.wad file3.wad&lt;/tt&gt; will work just as well as &lt;tt&gt;zdoom -file  file1.wad file2.wad file3.wad&lt;/tt&gt;.
+
+;{{LE|-allowduplicates|allowduplicates}}
+:{{verification}}
+:When loading files with {{c|-file}}, files with the same name are discarded from the load list to prevent potential errors as a result. This command allows such files to be loaded regardless.
+
+;{{LE|-noautoload|noautoload}}
+:Prevents files from being [[autoload]]ed based on the “AutoLoad” sections in the user's [[configuration file]]. This flag also disables autoloading of [[zvox.wad]] and the [[skins]] directory. This can be useful if you use files which are autoloaded when playing normally, but want to load without them for debugging purposes or to play a mod which might be incompatible with them.
+
+;{{LE|-noautoexec|noautoexec}}
+:Disables the execution of the [[CCMDs#AutoExec|autoexec.cfg]] files.
+
+;{{LE|-loadgame|loadgame}} ''saveXX.[zds]''
+:Automatically loads the specified [[savegame]]. To find out a save's file name, press F1 while it is highlighted in the save or load menu. If you do not include the .zds extension, ZDoom will automatically add it for you.
+
+;{{LE|-playdemo|playdemo}} ''demofile[.lmp]''
+:ZDoom will automatically play the specified [[demo]] when it starts. If the .lmp extension is omitted, it will automatically be added.
+
+;{{LE|-record|record}} ''demofile[.lmp]''
+:Records a [[demo]]. The {{param|-warp}} parameter or +map command should also be used if you do not want to record the demo on MAP01 or E1M1. You may only record from the start of a map. Loading a [[savegame]] and recording from there is unsupported.
+
+:To stop the demo recording, use the “stop” console command. If the .lmp extension is omitted, it will automatically be added. Unlike [[vanilla Doom]], only one person in a multiplayer game needs to specify the -record parameter if they want to record a demo. However, if someone quits before the person recording the demo does, the person recording will automatically quit, too, because demos do not have a way to record when a player leaves the game.
+
+;{{LE|+playerclass|playerclass}} ''class'' 
+:Only relevant when playing a game with several available player classes. Without mods, this applies to ''[[Hexen]]'' only. For example:
+::+playerclass Fighter
+::+playerclass Cleric
+::+playerclass Mage
+::+playerclass Random
+
+;{{LE|-skill|skill}} ''x''
+:Sets the initial skill level. This is overridden if you start a new game from the New Game menu.
+:Note that this is different from the {{CVAR|C|skill}} CVAR, which ranges from 0-4.
+
+;{{LE|-timedemo|timedemo}} ''demofile[.lmp]''
+:Plays back a [[demo]] faster than -playdemo and displays a framerate when the demo is over. If the .lmp extension is omitted, it will automatically be added.
+
+;{{LE|-warp|warp}} ''m''
+;-warp ''e'' ''m''
+:For ''[[Doom II]]'', ''[[Final Doom]]'', ''[[Hexen]]'' and ''[[Strife]]'', starts the game on map ''m''. For ''[[Chex Quest]]'', ''[[Doom]]'' and ''[[Heretic]]'', starts the game on episode ''e'', map ''m''. The +{{CCMD|D|map}} command can also be used to perform this action, but it expects the actual name of the map (e.g. MAP01, E1M1).
+
+;{{LE|-warpwipe|warpwipe}}
+:Forces a [[screen wipe]] to happen after loading a map immediately at startup. Useless unless used in conjunction with -warp or +map.
+
+;{{LE|-xlat|xlat}} ''file''
+:Specify a different default [[map translator]] to use if one isn't specified in [[MAPINFO]]. The default translators are &lt;tt&gt;xlat/doom.txt&lt;/tt&gt; for [[Doom]], [[Chex Quest]], [[Action Doom 2: Urban Brawl|Urban Brawl]] and [[Harmony]]; &lt;tt&gt;xlat/heretic.txt&lt;/tt&gt; for [[Heretic]] and [[Hexen]] (though Hexen maps normally need no translator since only [[map format|Doom-format]] maps are translated) and &lt;tt&gt;xlat/strife.txt&lt;/tt&gt; for [[Strife]]. For playing an [[Eternity Engine]] mod, the &lt;tt&gt;xlat/eternity.txt&lt;/tt&gt; file can be used, though keep in mind that many Eternity features are not implemented in ZDoom and will not work even after translation. You can specify your own custom translator.
+
+===Debug options===
+While not a true command line parameter, the {{CCMD|C|set}} console command can be called from the command line by prefixing it with '+'. For example, {{c|+{{CCMD|C|set}} {{CVAR|D|developer}} 1}} will print a bunch of debugging messages to the console. Other useful [[CVARs]] that can be set in this way for debugging purposes include {{CVAR|D|debuganimated}}, {{CVAR|D|dumpspawnedthings}}, {{CVAR|D|showloadtimes}} and {{CVAR|D|script_debug}}.
+
+;{{LE|-0|0}}
+:Resets the window position to the top-left corner of the screen.
+
+;{{LE|-debugfile|debugfile}}
+:Causes ZDoom to write network debugging information to a file called debug''N''.txt where ''N'' is your player number.
+
+;{{LE|-devparm|devparm}}
+:Prints a message telling you that you “useless mode is activated”. With the original Doom, using -devparm was the only way to take [[screenshot]]s. With ZDoom, screenshot is just another command, so -devparm serves no real purpose.
+
+;{{LE|-dumpjit|dumpjit}}
+:Outputs a result of the [[ZScript]] [https://en.wikipedia.org/wiki/Just-in-time_compilation JIT-compilation to Assembler] to the external file "dumpjit.txt".
+
+;{{LE|-hashfiles|hashfiles}}
+:Produces a file {{c|fileinfo.txt}} which contains the MD5 hash for every lump and resource ZDoom can load, along with version information and launch parameters. This is useful for synchronization diagnostics with demos and netgames.
+
+;{{LE|-noblit|noblit}}
+:Causes ZDoom not to update the display on the screen, but it still draws everything to an internal buffer. Only useful with -timedemo.
+
+;{{LE|-nodraw|nodraw}}
+:Causes ZDoom not to draw anything at all. Only useful with -timedemo.
+
+;{{LE|-norun|norun}}
+:Quits the game just before video initialization. To be used to check for errors in scripts without actually running the game.
+
+;{{LE|-stdout|stdout}}
+:(Win32 only)
+:Sends all output to a system console. Unix and MacOS builds of ZDoom will always do that.
+
+===Multiplayer options===
+
+;{{LE|-altdeath|altdeath}}
+:Informs ZDoom that you will be playing a [[deathmatch]] game and sets the [[dmflags]] CVAR so that items other than invulnerability and invisibilty respawn after being picked up. Only player 1 needs to specify this.
+
+;{{LE|-deathmatch|deathmatch}}
+:Informs ZDoom that you will be playing a deathmatch game and sets the dmflags CVAR so that weapons stay behind when a player picks them up. Only player 1 needs to specify this.
+
+;{{LE|-dup|dup}} ''x''
+:Causes ZDoom to transmit fewer player movement commands across the network. Valid values range from 1&amp;ndash;9. For example, -dup 2 would cause ZDoom to send half as many movements as normal.
+
+;{{LE|-extratic|extratic}}
+:Causes ZDoom to send a backup copy of every movement command across the network.
+
+;{{LE|-host|host}} ''x''
+:This machine will function as a host for a multiplayer game with ''x'' players (including this machine). It will wait for other machines to connect using the -join parameter and then start the game when everyone is connected.
+
+;{{LE|-join|join}} ''host's IP address[:host's port]''
+:Connect to a host for a multiplayer game.
+
+;{{LE|-net|net}} ''console-number'' ''hosts'' ...
+:Informs ZDoom that you will be playing a network game. Using the -host/-join parameters instead is strongly recommended because they are much easier to use.
+
+;{{LE|-netmode|netmode}} 0 or 1
+:Changes the network mode the game uses (Peer-to-Peer or Packet Server). More information on each mode can be found on the [[Multiplayer#Network_modes|Multiplayer]] page.
+
+;{{LE|-port|port}} ''x''
+:Specifies an alternate IP port for this machine to use during a network game. By default, port 5029 is used.
+
+&lt;!-- This category holds Zandronum specific CLI arguments that is not available in the ZDoom engine. [Tiger] --&gt;
+===Zandronum Specific===
+
+;{{LE|-nobroadcast|nobroadcast}}
+:When used with '-host', the server will not advertise within the ''Local Area Network'' (aka LAN).
+
+;{{LE|-private|private}}
+:When used with '-host', the server will not publicly broadcast to the ''master server''.
+
+;{{LE|-upnp |upnp}} ''[port number]''
+:Enable [https://en.wikipedia.org/wiki/Universal_Plug_and_Play Universal Plug-and-Play] support on ''Zandronum''. The game server tries to automatically add a port mapping on the router that connects the game server to the internet. The external port of the mapping can be overridden if invoked with "-upnp portNumber". For example: &lt;code&gt;-upnp 10666&lt;/code&gt;
+
+;{{LE|-useip|useip}} ''x.y.z.w''
+:This will set ''Zandronum'' to only listen to the network adapter that contains the specified IPv4 address.  However, if this command is not used, by default, ''Zandronum'' will listen from all network adapters that are available within the system.  This command can be ignored if there is no multiple network adapters, or if wanting ''Zandronum'' to listen to all network adapters available.  For example: &lt;code&gt;-useip 192.168.0.3&lt;/code&gt;
+
+;{{LE|-noinput|noinput}} (GNU/Linux Only)
+:Available in the ''GNU/Linux'' platform, the console will only print messages but will never accept and input within the game server's console directly.  The game server can still be controlled remotely, but not directly within the actual server. '''Note: This does not hide the output from ''Zandronum'' from your current shell.''' You can do that by appending to following to your command line parameters: &lt;code&gt;&gt; /dev/null 2&gt;&amp;1&lt;/code&gt;
+
+;{{LE|-exec|exec}} ''Directory''
+:Executes a script file that houses configurations such as settings that can be used within the virtual world and generalized game server specific settings, such as how votes are managed.  For example of usage: &lt;code&gt;-exec "..\..\My Configurations\SpecialServer.cfg"&lt;/code&gt;
+
+;{{LE|-record|record}} ''Directory''
+:When used, Zandronum will record all actions that take place within the multiplayer game.  These demos can be played back later with the &lt;code&gt;-playdemo&lt;/code&gt; parameter and the same exact WAD files.  An example of its usage: &lt;code&gt;zandronum -iwad Doom2.wad -file STCTF.wad ICantBelieveItsNotButter.pk3 -record ".\MyZandronumDemo.cld"&lt;/code&gt;
+
+;{{LE|-playdemo|playdemo}} ''Directory''
+:Plays back the specified demo file. In order to play the previously recorded demo, it is necessary to include the exact PWADs and in its precise order of which the wad files were recorded, failure to do so could result into an error from the Zandronum engine.  An example of its usage: &lt;code&gt;zandronum -iwad Doom2.wad -file STCTF.wad ICantBelieveItsNotButter.pk3 -playdemo ".\MyZandronumDemo.cld"&lt;/code&gt;
+
+;{{LE|-optfile|optfile}} ''Directory''
+:The game server can allow the ability for connecting-clients (players) to join the game server without needing the optional listed PWAD's.  However, it is recommended to use this feature for additional customizations such as: announcers, music, high resolution textures, 3D Models, Voxel packs, etc.  For example: &lt;code&gt;-optfile "C:\Games\Zandronum\WADs\SVDoom.wad"&lt;/code&gt;
+
+===Other options===
+In addition to the above parameters, [[console commands]] can be included on the command line by preceding them with a '+'. If you wish to change a CVAR in this manner, it is a good idea to use the {{CCMD|C|set}} command. This is because any set commands will be executed just after the config file is loaded, and all other commands are executed after every game subsystem has been initialized. For example, to turn on developer messages when you start ZDoom, use the command line:
+
+ zdoom +set developer 1
+
+instead of
+
+ zdoom +developer 1
+
+If you use the second line, you will miss out on all the developer messages
+that get generated during the startup process.
+
+==See also==
+*[[CCMDs]] (Console commands)
+*[[CVARs]] (Console variables)
+*[[Frontend]]
+
+Remember, if you are not comfortable with the frequent use of the command line, you may enter these commands into any text editor, then save the document with a .bat extension for future use.
+
+[[category:Game concepts]]</text>
+    <sha1>ojyledd0y1uabbs6z6yiw8crb6k1c1p</sha1>
+  </revision>
+</page>

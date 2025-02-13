@@ -1,0 +1,58 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>A PlaySoundEx</title>
+  <ns>0</ns>
+  <id>3177</id>
+  <revision>
+    <id>47286</id>
+    <parentid>43407</parentid>
+    <timestamp>2020-04-22T05:10:55Z</timestamp>
+    <contributor>
+      <username>Zrrion the insect</username>
+      <id>2062</id>
+    </contributor>
+    <minor />
+    <comment>A_PlaySound is also deprecated, pointed to A_StartSound instead</comment>
+    <origin>47286</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="1500" sha1="kyid0wq82wp226t6143x8mo16xhvfy4" xml:space="preserve">{{WarnDeprecated|[[A_StartSound]]|1544}}
+
+{{DISPLAYTITLE:A_PlaySoundEx}}
+'''A_PlaySoundEx''' (sound''whattoplay'', string ''slot'' [, bool ''loop'' [, int ''attenuation'']])&lt;br&gt;
+
+==Usage==
+
+Plays the a sound on the specified channel.  Each actor has its own set of channels to play sounds on, so sounds played by different actors will not affect each other.  This function allows sounds to be played on a specific channel, which can allow for multiple sounds generated from one actor simultaneously that would normally cut each other off, or other special effects.
+
+===Parameters===
+
+* ''whattoplay'': The “nice name” of the sound to play. See [[SNDINFO]] for how to define this.
+* ''slot'': The channel to play the sound on. Sound played on separate channels will not interfere with each other. Valid values are:
+**Auto
+**Weapon
+**Voice
+**Item
+**Body
+**SoundSlot5
+**SoundSlot6
+**SoundSlot7
+* ''loop'': If true, the sound will play in a continuous loop.
+* ''attenuation:'' Controls how the sound falls off with distance. Legal values are:
+**-1: the sound drops off rapidly with distance.
+**0: the sound plays as normal ('''default''').
+**1: the sound plays at full volume everywhere in the level.
+**2: the sound plays at full volume everywhere in the level and in surround sound.
+
+==Examples==
+
+ 	Missile:
+ 		GRNA A 3
+ 		GRNA B 3 [[A_SposAttack]]
+ 		GRNA C 3 '''A_PlaysoundEx'''("Grunt/Attack","Weapon")
+ 		GRNA DEFG 3
+ 		Goto See
+
+[[category:Decorate Sound functions]]{{DEFAULTSORT:PlaySoundEx}}</text>
+    <sha1>kyid0wq82wp226t6143x8mo16xhvfy4</sha1>
+  </revision>
+</page>

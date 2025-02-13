@@ -1,0 +1,162 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>Classes:HealthPickup</title>
+  <ns>0</ns>
+  <id>2732</id>
+  <revision>
+    <id>52180</id>
+    <parentid>36531</parentid>
+    <timestamp>2024-04-02T10:43:50Z</timestamp>
+    <contributor>
+      <username>Jekyll Grim Payne</username>
+      <id>2175</id>
+    </contributor>
+    <origin>52180</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="3829" sha1="frd4u1lkqz2n2rkx9nu97g9ddk0u9f9" xml:space="preserve">__NOTOC__
+
+{{Actor|
+| type = Internal
+| name = Health pickup
+| class = HealthPickup
+}}[[Classes]]: [[Classes:Inventory|Inventory]]&amp;rarr;&lt;u&gt;HealthPickup&lt;/u&gt;&lt;br&gt;
+&amp;ensp;&amp;rarr;[[Classes:ArtiHealth|ArtiHealth]]&lt;br&gt;
+&amp;ensp;&amp;rarr;[[Classes:ArtiSuperHealth|ArtiSuperHealth]]&lt;br&gt;
+&amp;ensp;&amp;rarr;[[Classes:MedicalKit|MedicalKit]]&lt;br&gt;
+&amp;ensp;&amp;rarr;[[Classes:MedPatch|MedPatch]]&lt;br&gt;
+&amp;ensp;&amp;rarr;[[Classes:SurgeryKit|SurgeryKit]]&lt;br&gt;
+
+&lt;u&gt;HealthPickup&lt;/u&gt;s are items that are placed in the inventory and give some health when activated. The base class &lt;u&gt;HealthPickup&lt;/u&gt; is never used directly. It is always the base class for predefined items (like Heretic's [[Classes:ArtiHealth|Quartz Flask]] or for items defined in [[DECORATE]].
+
+The maximum amount of health that can be given with a &lt;u&gt;HealthPickup&lt;/u&gt; is the current default maximum health which normally is 100.
+
+
+== Using in [[ZScript]] and [[DECORATE]] ==
+&lt;u&gt;HealthPickup&lt;/u&gt;s use the basic [[Classes:Inventory|Inventory properties]] to define their behavior as inventory items. The only new information they require is the amount of health they give. For this they use the standard '''health''' [[Actor properties|actor property]].
+
+=== Additional properties ===
+{{:HealthPickup properties}}
+
+==Examples==
+ class MedKit : &lt;u&gt;HealthPickup&lt;/u&gt;
+ {
+   Default
+   {
+     {{property|Health}} 25;
+     {{property|Inventory.MaxAmount}} 15;
+     {{property|Inventory.Icon}} "I_MDKT";
+     {{property|Inventory.PickupMessage}} "You picked up the Medkit."; {{LanguageCodeNote}}
+     +COUNTITEM
+   }
+   States
+   {
+   Spawn:
+     MEDK A -1;
+     stop;
+   }
+ }
+
+ class MedPatch : &lt;u&gt;HealthPickup&lt;/u&gt;
+ {
+   Default
+   {
+     {{property|Health}} 10;
+     {{property|HealthPickup.Autouse}} 3;
+     {{property|Inventory.MaxAmount}} 20;
+     {{property|Inventory.Icon}} "I_STMP";
+     {{property|Inventory.PickupMessage}} "You picked up the Med patch."; {{LanguageCodeNote}}
+   }
+   States
+   {
+   Spawn:
+     STMP A -1;
+     Stop;
+   }
+ }
+
+== [[ZScript]] definition ==
+{{ZScriptDefinitionNote|actors/inventory/health.zs#L117}}
+&lt;syntaxhighlight lang="csharp"&gt;
+class HealthPickup : Inventory
+{
+	int autousemode;
+
+	property AutoUse: autousemode;
+
+	Default
+	{
+		Inventory.DefMaxAmount;
+		+INVENTORY.INVBAR
+		+INVENTORY.ISHEALTH
+	}
+	
+	//===========================================================================
+	//
+	// CreateCopy
+	//
+	//===========================================================================
+
+	override Inventory CreateCopy (Actor other)
+	{
+		Inventory copy = Super.CreateCopy (other);
+		copy.health = health;
+		return copy;
+	}
+
+	//===========================================================================
+	//
+	// CreateTossable
+	//
+	//===========================================================================
+
+	override Inventory CreateTossable (int amount)
+	{
+		Inventory copy = Super.CreateTossable (-1);
+		if (copy != NULL)
+		{
+			copy.health = health;
+		}
+		return copy;
+	}
+
+	//===========================================================================
+	//
+	// HandlePickup
+	//
+	//===========================================================================
+
+	override bool HandlePickup (Inventory item)
+	{
+		// HealthPickups that are the same type but have different health amounts
+		// do not count as the same item.
+		if (item.health == health)
+		{
+			return Super.HandlePickup (item);
+		}
+		return false;
+	}
+
+	//===========================================================================
+	//
+	// Use
+	//
+	//===========================================================================
+
+	override bool Use (bool pickup)
+	{
+		return Owner.GiveBody (health, 0);
+	}
+
+	
+}&lt;/syntaxhighlight&gt;
+
+== [[DECORATE]] definition ==
+{{DecorateDefinitionNote}}
+ ACTOR &lt;u&gt;HealthPickup&lt;/u&gt; : {{Class|Inventory}} native 
+ {
+   {{Property|Inventory.DefMaxAmount}}
+   +{{Flag|INVENTORY.INVBAR}}
+ }</text>
+    <sha1>frd4u1lkqz2n2rkx9nu97g9ddk0u9f9</sha1>
+  </revision>
+</page>

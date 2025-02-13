@@ -1,0 +1,85 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>SpawnPlayerMissile</title>
+  <ns>0</ns>
+  <id>9924</id>
+  <revision>
+    <id>53074</id>
+    <parentid>52756</parentid>
+    <timestamp>2024-09-12T18:25:47Z</timestamp>
+    <contributor>
+      <username>Jekyll Grim Payne</username>
+      <id>2175</id>
+    </contributor>
+    <comment>/* Parameters */</comment>
+    <origin>53074</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="4185" sha1="06fc4ocdn21q15dtft3i8ipfqppvzk5" xml:space="preserve">'''{{class|Actor}}'''
+
+native Actor, Actor '''SpawnPlayerMissile'''(class&lt;Actor&gt; ''type'', double ''angle'' = 1e37, double ''x'' = 0, double ''y'' = 0, double ''z'' = 0, out FTranslatedLineTarget ''pLineTarget'' = null, bool ''nofreeaim'' = false, bool ''noautoaim'' = false, int ''aimflags'' = 0)
+
+== Usage ==
+A generalized function for spawning [[Projectile|projectiles]] that are meant to be fired by the player. For ease of access, it's defined in the {{class|Actor}} class and does not require casting the calling actor as {{class|PlayerPawn}}.
+
+'''[[A_FireProjectile]]''' serves as a {{class|Weapon}}-specific wrapper for this function with added functionality, and thus it's recommended to use it in weapons instead. Using [[SpawnPlayerMissile]] is warranted for cases when the {{class|PlayerPawn}} must fire a projectile indirectly (for example, by using an inventory item).
+
+Other than not being a Weapon function, [[SpawnPlayerMissile]] also doesn't imply any ammo consumption
+
+=== Parameters ===
+*{{c|class&lt;Actor&gt; '''type'''}}
+:The projectile class to fire. Technically, can be any actor, but is meant to be used on [[Projectile|projectiles]].
+*{{c|double '''angle'''}}
+:The absolute {{verification}} angle to fire the projectile at. The default value of &lt;code&gt;1e37&lt;/code&gt; equals "use the calling actor's angle".
+*{{c|double '''x'''}}
+:Horizontal offset from the actor's vertical center to spawn the projectile at.
+*{{c|double '''y'''}}
+:Vertical offset from the projectile's vertical spawn to the projectile at.
+*{{c|double '''z'''}}
+:Vertical position to spawn the projectile at (the '''y''' argument is added on top). The default value of 0 spawns at the actor's attack height (for the {{class|PlayerPawn}} it's calculated from {{property|Height}} and {{property|Player.AttackZOffset}}.
+*{{c|out FTranslatedLineTarget '''pLineTarget'''}}
+:Can take a pointer to the previously defined '''{{struct|FTranslatedLineTarget}}''' struct. The function will fill it with information, such as &lt;code&gt;linetarget&lt;/code&gt;.
+*{{c|bool '''nofreeaim'''}}
+:{{moreinfo}}
+*{{c|bool '''noautoaim'''}}
+:{{moreinfo}}
+*{{c|int '''aimflags'''}}
+:A list of flags. Multiple flags can be combined with &lt;code&gt;|&lt;/code&gt;.
+{{: Aimflags}}
+
+Note that [[SpawnPlayerMissile]] doesn't define an argument for pitch. Instead the calling actor's pitch is used directly to determine at which pitch the projectile must be fired. Adding pitch to it requires modifying the actor's &lt;code&gt;pitch&lt;/code&gt; field directly (this is how [[A_FireProjectile]] does it, for example — it modifies the PlayerPawn's pitch, fires the projectile, then restores the PlayerPawn's pitch).
+
+===Return values===
+Just like [[A_FireProjectile]], this returns two Actor pointers, both pointing to the projectile that was fired. While they point to the same actor, they're created with different conditions:
+* The first pointer is only created if the projectile managed to enter its [[Actor states|Spawn state sequence]]. If the projectile is fired an an enemy, object or a wall at a point-blank range, it'll instead immediately enter its Death (Crash, XDeath, etc.) state sequence, completely skipping Spawn, and this pointer will be '''null'''.
+* The second pointer is ''always'' created, regardless of the state sequence the projectile entered.
+As such, if there's a need to modify some properties of the projectile, the second pointer should be used, because the first one is simply not guaranteed to exist. (The second pointer should still be null-checked for safety, but normally it will never be null).
+
+== Examples == 
+This example is from Hexen's {{class|ArtiPoisonBagShooter|generic flechette}}: it fires a projectile defined in the actor's {{property|MissileType}} property:
+&lt;syntaxhighlight lang="csharp"&gt;
+	override bool Use (bool pickup)
+	{
+		Class&lt;Actor&gt; missiletype = MissileName;
+		if (missiletype != null)
+		{
+			Actor mo = Owner.SpawnPlayerMissile(missiletype);
+			if (mo != null)
+			{
+				// automatic handling of seeker missiles
+				if (mo.bSeekerMissile)
+				{
+					mo.tracer = Owner.target;
+				}
+				return true;
+			}
+		}
+		return false;
+	}&lt;/syntaxhighlight&gt;
+
+== See also ==
+* [[A_FireProjectile]]
+
+[[Category:ZScript]]</text>
+    <sha1>06fc4ocdn21q15dtft3i8ipfqppvzk5</sha1>
+  </revision>
+</page>

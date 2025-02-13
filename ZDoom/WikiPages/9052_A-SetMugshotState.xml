@@ -1,0 +1,48 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>A SetMugshotState</title>
+  <ns>0</ns>
+  <id>9052</id>
+  <revision>
+    <id>52902</id>
+    <parentid>52900</parentid>
+    <timestamp>2024-08-15T19:47:21Z</timestamp>
+    <contributor>
+      <username>Jekyll Grim Payne</username>
+      <id>2175</id>
+    </contributor>
+    <minor />
+    <origin>52902</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="966" sha1="hjpf6txu1ase4aj5nzm09b725l0mknc" xml:space="preserve">{{DISPLAYTITLE:A_SetMugshotState}}
+{{note|This page is about a [[ZScript]] function. For a similar [[ACS]] function see '''[[SetMugShotState]]'''.}}
+
+'''{{class|Actor}}'''
+
+{{c|native void '''A_SetMugshotState'''(String ''name'')}}
+
+== Usage ==
+Sets the current [[mugshot]] to the specified state. The state must exist (be defined in [[SBARINFO]]). The state you set will only be interrupted by damage or if the player picks up a weapon, provided the mugshot supports it.
+
+== Examples ==
+The player grins when they pick up this {{Class|Berserk|berserk pack}}.
+ class GrinBerserk : {{Class|Berserk}}
+ {
+     States
+     {
+     Pickup:
+         TNT1 A 0 '''A_SetMugshotState'''("Grin");
+         Goto Super::Pickup;
+     }
+ }
+
+Note: the '''Pickup''' state can be used because {{class|Berserk}} is based on {{class|CustomInventory}} rather than {{class|PowerupGiver}} like most powerup pickups.
+
+== See also ==
+* [[SBARINFO]]
+* [[SetMugShotState]]
+
+[[Category:ZScript]]</text>
+    <sha1>hjpf6txu1ase4aj5nzm09b725l0mknc</sha1>
+  </revision>
+</page>

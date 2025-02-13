@@ -1,0 +1,71 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>Floor LowerToHighest</title>
+  <ns>0</ns>
+  <id>612</id>
+  <revision>
+    <id>44666</id>
+    <parentid>33505</parentid>
+    <timestamp>2017-04-03T17:45:06Z</timestamp>
+    <contributor>
+      <username>Gez</username>
+      <id>1283</id>
+    </contributor>
+    <comment>xlat</comment>
+    <origin>44666</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="3174" sha1="i80flhrcshmgfkm6hx4zexr3jkgjbck" xml:space="preserve">{{DISPLAYTITLE:Floor_LowerToHighest}}
+{{Special|242|tag, speed, adjust, force_adjust|Floor|LowerToHighest}}
+
+* ''tag'': Tag of affected sector 
+* ''speed'': How quickly the floor moves 
+* ''adjust'': Amount of difference from target height + 128 
+* ''force_adjust'': Forces to apply the adjusted height.
+
+Lowers a tagged [[sector]]'s floor to the height of the highest surrounding floor + ''adjust'' - 128. So if you want the floor to lower to the height of the highest surrounding floor, use an ''adjust'' of 128. If you want it to lower to 8 units below the other floor, use an ''adjust'' of 120. Similar for other values of ''adjust''. If ''tag'' is 0, then the sector on the [[linedef|line]]'s back side is used.
+
+The adjustment is normally done only if the lowest found floor height is different from the tagged sector's current floor height. However, if force_adjust is set to 1, it is done nonetheless.
+
+== Examples ==
+{{noexamples}}
+
+== Conversions from linedef types ==
+The following Doom map format types can be converted as Floor_LowerToHighest:
+{| {{prettytable}}
+!Type!!Conversion!!Trigger
+|-
+|{{icon|Doom}} 19:W1 Floor To Highest Adjacent Floor || Floor_LowerToHighest (tag, {{xlat|F_SLOW}}, 128) || Player Cross
+|-
+|{{icon|Doom}} 36:W1 Floor To 8 Above HAF Fast || Floor_LowerToHighest (tag, {{xlat|F_FAST}}, 136) || Player Cross
+|-
+|{{icon|Heretic}} 36:W1 Floor To 8 Above HAF Fast || Floor_LowerToHighest (tag, {{xlat|F_FAST}}, 136, 1) || Player Cross
+|-
+|{{icon|Strife}} 36:W1 Floor To Highest Adjacent Floor Fast || Floor_LowerToHighest (tag, {{xlat|F_FAST}}, 128) || Player Cross
+|-
+|{{icon|Doom}} 45:SR Floor To Highest Adjacent Floor || Floor_LowerToHighest (tag, {{xlat|F_SLOW}}, 128) || Player Use, Repeatable
+|-
+|{{icon|Doom}} 70:SR Floor To 8 Above HAF Fast || Floor_LowerToHighest (tag, {{xlat|F_FAST}}, 136) || Player Use, Repeatable
+|-
+|{{icon|Heretic}} 70:SR Floor To 8 Above HAF Fast || Floor_LowerToHighest (tag, {{xlat|F_FAST}}, 136, 1) || Player Use, Repeatable
+|-
+|{{icon|Strife}} 70:SR Floor To Highest Adjacent Floor Fast || Floor_LowerToHighest (tag, {{xlat|F_FAST}}, 128) || Player Use, Repeatable
+|-
+|{{icon|Doom}} 71:S1 Floor To 8 Above HAF Fast || Floor_LowerToHighest (tag, {{xlat|F_FAST}}, 136) || Player Use
+|-
+|{{icon|Heretic}} 71:S1 Floor To 8 Above HAF Fast || Floor_LowerToHighest (tag, {{xlat|F_FAST}}, 136, 1) || Player Use
+|-
+|{{icon|Strife}} 71:S1 Floor To Highest Adjacent Floor Fast || Floor_LowerToHighest (tag, {{xlat|F_FAST}}, 128) || Player Use
+|-
+|{{icon|Doom}} 83:WR Floor To Highest Adjacent Floor || Floor_LowerToHighest (tag, {{xlat|F_SLOW}}, 128) || Player Cross, Repeatable
+|-
+|{{icon|Doom}} 98:WR Floor To 8 Above HAF Fast || Floor_LowerToHighest (tag, {{xlat|F_FAST}}, 136) || Player Cross, Repeatable
+|-
+|{{icon|Heretic}} 98:WR Floor To 8 Above HAF Fast || Floor_LowerToHighest (tag, {{xlat|F_FAST}}, 136, 1) || Player Cross, Repeatable
+|-
+|{{icon|Strife}} 98:WR Floor To Highest Adjacent Floor Fast || Floor_LowerToHighest (tag, {{xlat|F_FAST}}, 128) || Player Cross, Repeatable
+|-
+|{{icon|Doom}} 102:S1 Floor To Highest Adjacent Floor || Floor_LowerToHighest (tag, {{xlat|F_SLOW}}, 128) || Player Use
+|}</text>
+    <sha1>i80flhrcshmgfkm6hx4zexr3jkgjbck</sha1>
+  </revision>
+</page>

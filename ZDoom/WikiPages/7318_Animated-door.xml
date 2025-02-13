@@ -1,0 +1,31 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>Animated door</title>
+  <ns>0</ns>
+  <id>7318</id>
+  <revision>
+    <id>40647</id>
+    <parentid>32679</parentid>
+    <timestamp>2016-01-03T04:46:11Z</timestamp>
+    <contributor>
+      <username>Eevee</username>
+      <id>44</id>
+    </contributor>
+    <comment>the ceiling moves FIRST</comment>
+    <origin>40647</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="1651" sha1="1shk68kfh3z20gfqzbmpkvdtm4jruox" xml:space="preserve">An '''animated door''' is a feature originating from ''[[Strife]]'' and completing some unfinished and unused code in ''[[Doom]]'' meant to create ''Wolfenstein 3D''-style sliding doors.
+
+An animated door is created with the special [[Door_Animated]] and the [[ANIMDEFS#Animated_doors|ANIMDEFS]] lump.
+
+Contrarily to [[polyobject]]s, which can be used to implement actual sliding doors, an animated door is a variant of the [[vertical door]]: the sector must have a height of zero, and the door texture is placed on the upper texture. While opening, the door sector's ceiling instantly raises and sets the "Impassable" flag on both sides, then plays the opening animation (as defined in ANIMDEFS), at the end of which the "Impassable" flag is removed. While closing, the reverse happens: the lines are set blocking, the animation is played backwards, the ceiling is instantly lowered, and the lines are set unblocking.
+
+If a solid actor blocks the door's closing movement, the door remains open. Contrarily to vertical doors and polyobjects, it will not start to move and abort, since the movement itself is instantaneous and silent.
+
+The door's [[sound sequence]] is determined by its texture animation. It cannot be overridden by a [[sound sequence thing]] since it is not a property of the sector.
+
+'''Note:''' Only two [[linedef]]s will be animated; the one activated and the first two-sided line found with the same texture belonging also to the door sector. Doors with more complex shapes than the usual thin rectangle (such as a cross-shaped connection between four sectors) will not behave correctly.
+[[Category:Features]][[Category:Glossary]]</text>
+    <sha1>1shk68kfh3z20gfqzbmpkvdtm4jruox</sha1>
+  </revision>
+</page>

@@ -1,0 +1,145 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>SBARINFO</title>
+  <ns>0</ns>
+  <id>3524</id>
+  <revision>
+    <id>53445</id>
+    <parentid>51239</parentid>
+    <timestamp>2024-10-30T11:42:49Z</timestamp>
+    <contributor>
+      <username>Jekyll Grim Payne</username>
+      <id>2175</id>
+    </contributor>
+    <comment>/* HUD definitions */</comment>
+    <origin>53445</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="10962" sha1="damq1177tnjc4k88vdkcwss5fff8c20" xml:space="preserve">'''SBARINFO''' allows for custom [[status bar|status bars]] {{deprecated}} and [[mugshot|mugshots]] to be made.  Only the last SBARINFO lump will be read.  If there is a need for more than one SBARINFO lump another can be included with the #include function. (#include syntax is identical to [[DECORATE]].) Note, if a [[Classes:BaseStatusBar|ZScript HUD]] is defined in [[MAPINFO]] via {{c|StatusBarClass}}, it'll override any present SBARINFO HUDs.
+
+The syntax requires that all image names be in quotes. If using a graphic which is longer than 8 characters in the name, the long name must be specified in the following form by using the full name structure inside associated directories:
+ "graphics/longimagename"
+When something must have no image, for example the "off" sprite in a weapon indicator when you don't have that weapon, you can specify "" for "no image, leave it blank (unless otherwise noted)". The string "nullimage" can also be used for this. Note: an empty image cannot currently be used in place of the "default" argument of [[DrawMugShot]].
+
+Mugshot scripting may be used with the default Doom status bar. To do so, you simply need not to define any status bars.
+
+Where flags are specified the pipe operator ("|") can be used instead of commas. Boolean values must be written as {{c|true}} or {{c|false}}.
+
+= Mug shots =
+The mug shot can be scripted with a series of states. A list of states with a special purpose is given below:
+;Normal:The default face when starting.
+;Pain:When the player has been damaged.
+;Ouch:Shown instead of pain when the player loses more than 20 hit points at once.
+;Rampage:Shown when the player holds down one of the fire buttons. In [[ZScript]] this happens when the &lt;code&gt;attackdown&lt;/code&gt; field in the current player's [[Structs:PlayerInfo|PlayerInfo struct]] remains &lt;code&gt;true&lt;/code&gt; continuously for 2 seconds (70 [[tic|tics]]).
+;Grin:Weapon pickup face.
+;Death:Normal death.
+;XDeath:Extreme death, used when the player is gibbed. This state must be enabled by a flag in [[GetMugShot]] ([[Classes:BaseStatusBar|ZScript]]) or [[DrawMugShot]] (SBARINFO).
+;God:Standard Invulnerability.
+;GodAnimated:Animated Invulnerability. This state must be enabled by a flag in [[GetMugShot]] ([[Classes:BaseStatusBar|ZScript]]) or [[DrawMugShot]] (SBARINFO).
+In addition you can also create pain, ouch, death, and xdeath states for any custom damage types that may be in use. The syntax for that is "State.DamageType".
+&lt;pre&gt;mugshot "StateName"[, flags, ...]
+{
+	frame duration;
+	// OR
+	{frame1[, ...]} duration;
+}&lt;/pre&gt;
+
+Each frame may be 5 letters long (proper prefix will be added later) and may have a duration of -1 (infinite) or any positive number (except for 0). In addition you can list frame names in braces to have SBarInfo pick a random graphic from those named. Every frame must end in a semi-colon.
+
+Now there are some flags (listed after the state name) that you can use to change how SBarInfo reads the frames. They are as follows:
+;{{c|health}}:Makes the last character of every frame represent the health level. It works by adding the level to the character specified in the definition so you may use any style you want as long as the characters are consecutive (ST0A, ST0B, ST0C, etc would be fine as long as you specify ST0A in SBARINFO).
+;{{c|health2}}:Same as {{c|health}} except it applies the effect to the second character from the end.
+;{{c|healthspecial}}:Applies {{c|health}} to the middle frame and {{c|health2}} to all other frames.
+;{{c|directional}}:Changes the meaning of frames in braces. Instead of picking a random frame, it will pick one of three frames like so: {{c|{right, middle, left}}}. This is only useful for the pain or ouch states which calculate the direction of damage. Otherwise only the middle will be shown.
+
+SBARINFO supports custom mugshot states with custom names, which can be called by the ACS function [[SetMugShotState]] or the Decorate/ZScript function [[SetMugShotState|A_SetMugshotState]].
+
+== Examples ==
+An example of mug shot definitions:
+&lt;pre&gt;mugshot "Normal", health2
+{
+	{ST00, ST01, ST02} 17;
+}&lt;/pre&gt;
+
+= HUD definitions =
+{{Warning|The use of SBARINFO to define HUDs is [[Deprecation|deprecated]] in GZDoom. Authors should consider using '''[[ZScript]]''' and define their HUD via the '''{{class|BaseStatusBar}}''' class instead.}}
+==Top-level commands==
+{{list|Command|Description|content=
+{{-|Base &lt;game&gt;|Sets the status bar to the specified game.  As of right now the resulting status bar can not be modified.  Valid games are '''Doom''', '''Heretic''', '''Hexen''', '''Strife''', and '''None'''.}}
+{{-|CompleteBorder &lt;bool&gt;|If {{c|true}}, continues drawing the border where the status bar is normally placed. Using this will remove the [[HOM]]. If {{c|false}}, the border is not drawn behind the status bar.}}
+{{-|[[CreatePopup]]|Sets the transition effect for the specified popup ({{c|log}}, {{c|keys}}, or {{c|status}}).}}
+{{-|Height &lt;height&gt;|Sets the height of the status bar.  When set you will be expected to cover all the area between points (0, 200-height) and (320, 200).  If the area is not covered, a [[HOM]] will be drawn instead.
+'''Note:''' If {{c|fullscreenoffsets}} is used, then Height will not perform correctly and will end up too tall in most cases. They should not be used together.}}
+{{-|InterpolateHealth &lt;bool&gt; [, &lt;speed&gt;]|Interpolates the value drawn for health.  This is useful for [[DrawGem|drawing life bars]] so that the gem will smoothly move between positions like in ''[[Heretic]]'' and ''[[Hexen]]''. Speed is by default set to 8 which is the same as used for ''Heretic'' (''Hexen'' used 6).  Speed is measured in hp per [[tic]].}}
+{{-|InterpolateArmor &lt;bool&gt; [, &lt;speed&gt;]|Similar to InterpolateHealth, interpolates the value drawn for armor.  Speed is set to 8 by default.}}
+{{-|LowerHealthCap &lt;bool&gt;|Sets whether health should go no lower than 0.  Default is {{c|true}}.}}
+{{-|MonospaceFonts &lt;bool&gt;, &lt;character&gt;[, &lt;alignment&gt;]|Monospaces all [[font]]s to the specified character of their font.  Alignment changes the position of off size characters within their spacing.  Valid arguments are left (default), center, or right.}}
+{{-|Resolution &lt;x&gt;, &lt;y&gt;|Sets the base resolution for the status bar.  By default this is 320x200.}}
+{{-|[[StatusBar]]|Begins the drawing routine for the specified status bar.}}
+}}
+
+==Status bar commands==
+The following commands must be placed after a [[StatusBar]] command.
+{{list|Command|Description|content=
+{{-|Alpha &lt;amount&gt;|Increases the translucency for the following sub block.}}
+{{-|AspectRatio &lt;ratio&gt;|Executes the following sub block only if the player is using the specified aspect ratio. Ratio can be "4:3", "5:4", "16:9", or "16:10".}}
+{{-|[[DrawBar]]|Draws a ''[[Hexen]]''-style bar with a length proportional to a value.}}
+{{-|[[DrawGem]]|Draws a ''[[Heretic]]''-style life or armor gem.}}
+{{-|[[DrawKeyBar]]|Draws the inventory icon of all the [[key]]s the player is holding.}}
+{{-|[[DrawInventoryBar]]|Draws an inventory bar.}}
+{{-|[[DrawImage]]|Draws an image to the screen at the specified coordinates.}}
+{{-|[[DrawMugShot]]|Draws a mug shot.}}
+{{-|[[DrawNumber]]|Draws a number corresponding to a special value.}}
+{{-|[[DrawSelectedInventory]]|Draws the currently selected inventory item.}}
+{{-|[[DrawShader]]|Draws a transparency gradient.}}
+{{-|[[DrawString]]|Draws a text string.}}
+{{-|[[DrawSwitchableImage]]|Conditionally draws an image.}}
+{{-|Else|Executes the following sub-block if the previous was not executed.}}
+{{-|GameMode &lt;gamemode&gt; [, ...]|Executes the following sub block only if the user is playing one of the specified game modes.  Valid game modes are {{c|singleplayer}}, {{c|cooperative}}, {{c|deathmatch}}, and {{c|teamgame}}.}}
+{{-|HasWeaponPiece &lt;weapon&gt;, &lt;piecenum&gt;|Executes the following sub block if the player is holding the specified piece for the specified weapon.}}
+{{-|[[IfCVarInt]]|Executes the following sub block if the specified [[CVARs|console variable]]'s value is greater than or equal to (or less than) the specified value.}}
+{{-|[[IfHealth]]|Executes the following sub block if the player's health is greater than or equal to (or less than) the specified value.}}
+{{-|[[IfInvulnerable]]|Executes the following sub block if the player is (not) invulnerable.}}
+{{-|[[IfWaterLevel]]|Executes the following sub block if the player's [[Swimming#Waterlevel|waterlevel]] is greater than or equal to (or less than) the specified value.}}
+{{-|[[InInventory]]|Executes the following sub block if the specified item or items are (or not) in the players inventory.}}
+{{-|InventoryBarNotVisible|Executes the following sub block if the player does not have the inventory bar active.}}
+{{-|IsSelected [not] &lt;weapon1&gt; [, &lt;weapon2&gt;]|Executes the following sub block only if the player is (not) using one of the two specified weapons.}}
+{{-|PlayerClass &lt;classname&gt; [, &lt;classname2&gt; [, &lt;classname3&gt;]]|Executes the following sub block only if the player is one of the specified classes (represented by their display name).}}
+{{-|PlayerType &lt;classname&gt; [, &lt;classname2&gt; [, &lt;classname3&gt;]]|Executes the following sub block only if the player is one of the specified classes (represented by their actor class name). Unlike 'PlayerClass' this command is capable of handling inheritance so it also gets executed if the current player class is a subclass of one of the passed class names.}}
+{{-|UsesAmmo [not]|Checks if the current weapon uses an ammo type (either primary or secondary).  If so it will execute the sub block.  Adding "not" will invert the result.}}
+{{-|UsesSecondaryAmmo [not]|Checks if the current weapon has a secondary ammo type.  If so it will execute the sub block.  Adding "not" will invert the result.}}
+{{-|WeaponAmmo [not] &lt;ammo1&gt; [{&amp;&amp; {{!}} &lt;nowiki&gt;||&lt;/nowiki&gt;} &lt;ammo2&gt;]|Executes the sub block only if the weapon uses the specified ammo (be it primary or secondary).  If ammo2 is specified then the result will depend on the operator.  If "&amp;&amp;" is used then both ammo types must match one or the other.  If "&lt;nowiki&gt;||&lt;/nowiki&gt;" is used then only one ammo type must match.  If the weapon does not use any ammo then it will always evaluate to true.  The "not" inverses the result.}}
+}}
+
+== Examples ==
+Finally, an example of using the 'fullscreenoffsets' statusbar flag:
+&lt;pre&gt;Statusbar FullScreen, FullScreenOffsets
+{
+	//Bottom Left
+	//Lives from Inventory with Icon
+	DrawImage "LIFEA0", 14, -1;
+	DrawNumber 1, CONFONT, WHITE, Life, 35, -10;
+
+	//Top Right
+	//Keys
+	DrawKeyBar 2, vertical, 13, -8, 0;
+
+	//Bottom Right
+	//Points Variable from Global Array 0, index PlayerNumber()
+	DrawNumber 8, CONFONT, WHITE, GlobalArray 0 , -2, -25;
+
+	//Ammo and Icon
+	DrawImage AmmoIcon1, -105, -1;
+	DrawNumber 2, CONFONT, WHITE, Ammo1, -80, -10;
+
+	//Health and Icon
+	DrawImage "HLTHE0", -50, -1;
+	DrawNumber 3, CONFONT, WHITE, Health, -2, -10;
+}&lt;/pre&gt;
+
+== See also ==
+*[[Default status bars]]
+[[Category:ZDoom special lumps]]
+[[Category:SBARINFO]]</text>
+    <sha1>damq1177tnjc4k88vdkcwss5fff8c20</sha1>
+  </revision>
+</page>

@@ -1,0 +1,149 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>Classes:MinotaurFriend</title>
+  <ns>0</ns>
+  <id>3401</id>
+  <revision>
+    <id>53753</id>
+    <parentid>34960</parentid>
+    <timestamp>2024-11-13T23:29:12Z</timestamp>
+    <contributor>
+      <username>Jekyll Grim Payne</username>
+      <id>2175</id>
+    </contributor>
+    <origin>53753</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="3565" sha1="h99k2fun6oulhnvlnbaaaezoah9oi5k" xml:space="preserve">{{Actor|
+| type = Monster
+| name = Dark Servant
+| class = MinotaurFriend
+| game = Hexen
+}}[[Classes]]: [[Classes:Minotaur|Minotaur]]&amp;rarr;&lt;u&gt;MinotaurFriend&lt;/u&gt;&lt;br&gt;
+
+Dark servants are [[Classes:Minotaur|maulotaurs]] summoned through the [[Classes:ArtiDarkServant|dark servant artifact]] who attack the foes of his invoker. Excepted for this change of allegiance, they behave identically to Heretic's maulotaurs, but vanish in a puff of smoke when vanquished, and leave neither corpse nor items behind.
+
+For this reason, Hexen does not have all the frames corresponding to the Maulotaur's death, and as a consequence the other sprites are labeled differently. However, ZDoom [[Sprite renaming|renames the Hexen attack sprites]] to prevent conflicts and it is thus possible to use maulotaurs in Hexen and dark servants in Heretic with all their correct animations, as long as the needed sprites are provided.
+
+Minotaur friends use the following actor fields for specific purposes: 
+;StartTime
+:moment it was summoned &amp;mdash; this field is absent from other actors
+;tracer
+:player that summoned it
+
+=== [[ZScript]] definition ===
+{{ZScriptDefinitionNote|actors/raven/minotaur.zs}}
+&lt;syntaxhighlight lang="csharp"&gt;
+class MinotaurFriend : Minotaur
+{
+	int StartTime;
+	
+	Default
+	{
+		Health 2500;
+		-DROPOFF
+		-BOSS
+		-DONTMORPH
+		+FRIENDLY
+		+NOTARGETSWITCH
+		+STAYMORPHED
+		+TELESTOMP
+		+SUMMONEDMONSTER
+		RenderStyle "Translucent";
+		Alpha 0.3333;
+		DropItem "None";
+	}
+	States
+	{
+	Spawn:
+		MNTR A 15;
+		MNTR A 15 A_SetTranslucent(0.66, 0);
+		MNTR A 3 A_SetTranslucent(1, 0);
+		Goto Super::Spawn;
+	Idle:
+		Goto Super::Spawn;
+	Death:
+		Goto FadeOut;
+	}
+	
+	//----------------------------------------------------------------------------
+	//
+	// 
+	//
+	//----------------------------------------------------------------------------
+
+	override void BeginPlay ()
+	{
+		Super.BeginPlay ();
+		StartTime = -1;
+	}
+
+	override void Die (Actor source, Actor inflictor, int dmgflags, Name MeansOfDeath)
+	{
+		Super.Die (source, inflictor, dmgflags, MeansOfDeath);
+
+		if (tracer &amp;&amp; tracer.health &gt; 0 &amp;&amp; tracer.player)
+		{
+			// Search thinker list for minotaur
+			ThinkerIterator it = ThinkerIterator.Create("MinotaurFriend");
+			MinotaurFriend mo;
+
+			while ((mo = MinotaurFriend(it.Next())) != null)
+			{
+				if (mo.health &lt;= 0) continue;
+				// [RH] Minotaurs can't be morphed, so this isn't needed
+				//if (!(mo.flags&amp;MF_COUNTKILL)) continue;		// for morphed minotaurs
+				if (mo.bCorpse) continue;
+				if (mo.StartTime &gt;= 0 &amp;&amp; (level.maptime - StartTime) &gt;= MAULATORTICS) continue;
+				if (mo.tracer != null &amp;&amp; mo.tracer.player == tracer.player) break;
+			}
+
+			if (mo == null)
+			{
+				Inventory power = tracer.FindInventory("PowerMinotaur");
+				if (power != null)
+				{
+					power.Destroy ();
+				}
+			}
+		}
+	}	
+}
+&lt;/syntaxhighlight&gt;
+
+=== [[DECORATE]] definition ===
+{{DecorateDefinitionNote}}
+ ACTOR &lt;u&gt;MinotaurFriend&lt;/u&gt; : {{Class|Minotaur}} native
+ {
+   {{Property|Health}} 2500
+   -{{Flag|DROPOFF}}
+   -{{Flag|BOSS}}
+   -{{Flag|DONTMORPH}}
+   +{{Flag|FRIENDLY}}
+   +{{Flag|NOTARGETSWITCH}}
+   +{{Flag|STAYMORPHED}}
+   +{{Flag|TELESTOMP}}
+   +{{Flag|SUMMONEDMONSTER}}
+   {{Property|RenderStyle}} Translucent
+   {{Property|Alpha}} 0.3333
+   {{Property|DropItem}} "None"
+   States
+   {
+   Spawn:
+     MNTR A 15
+     MNTR A 15 [[A_SetTranslucent]](0.66, 0)
+     MNTR A 3 [[A_SetTranslucent]](1, 0)
+     Goto Super::Spawn
+   Idle:
+     Goto Super::Spawn
+   Death:
+     Goto FadeOut
+   }
+ }
+
+=== See also ===
+* {{class|Minotaur}}
+* {{class|ArtiDarkServant}}
+* {{class|PowerMinotaur}}</text>
+    <sha1>h99k2fun6oulhnvlnbaaaezoah9oi5k</sha1>
+  </revision>
+</page>

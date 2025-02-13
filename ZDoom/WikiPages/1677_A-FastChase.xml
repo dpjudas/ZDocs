@@ -1,0 +1,44 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>A FastChase</title>
+  <ns>0</ns>
+  <id>1677</id>
+  <revision>
+    <id>37740</id>
+    <parentid>34298</parentid>
+    <timestamp>2014-03-19T08:26:39Z</timestamp>
+    <contributor>
+      <username>Blue Shadow</username>
+      <id>2021</id>
+    </contributor>
+    <minor />
+    <comment>General formatting.</comment>
+    <origin>37740</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="1106" sha1="bdossbglau445waiqgw4gjmnxrw3aff" xml:space="preserve">{{codepointer|Monster AI}}'''A_FastChase'''
+
+(no parameters)
+{{Superseded|A_Chase}}
+
+This function makes the calling actor advance on its target while randomly attempting to strafe left or right. The actor may enter an attack state (if it has one) at any time. As this function maintains a certain distance between the calling actor and its target, it is not always advisable to use it for actors who only possess a melee attack.
+
+The {{Class|FighterBoss|three}} {{Class|ClericBoss|“player}} {{Class|MageBoss|bosses”}} in ''[[Hexen]]'' use this function to obtain their distinctive movement.
+
+Note that the calling actor will ignore their {{c|{{Property|MaxDropOffHeight}}}} [[Actor_properties|property]] when strafing, and so may strafe off cliffs or into pits from which they cannot escape. Setting the '''{{flag|NODROPOFF}}''' flag will prevent this from happening.
+
+== Examples ==
+
+Here is an example of a {{Class|cacodemon}} which tries to dodge attacks and strafe around the player.
+
+ ACTOR Smartcaco : {{Class|Cacodemon}}
+ {
+   States
+   {
+   See:
+     HEAD A 2 [[A_FastChase]]
+     Loop
+   }
+ }</text>
+    <sha1>bdossbglau445waiqgw4gjmnxrw3aff</sha1>
+  </revision>
+</page>

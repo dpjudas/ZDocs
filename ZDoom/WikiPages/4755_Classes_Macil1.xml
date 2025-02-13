@@ -1,0 +1,82 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>Classes:Macil1</title>
+  <ns>0</ns>
+  <id>4755</id>
+  <revision>
+    <id>40523</id>
+    <parentid>39856</parentid>
+    <timestamp>2015-11-27T01:39:07Z</timestamp>
+    <contributor>
+      <username>Blue Shadow</username>
+      <id>2021</id>
+    </contributor>
+    <minor />
+    <comment>/* DECORATE definition */ Change(s) from git commit 01917d9</comment>
+    <origin>40523</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="1607" sha1="4lne5f4r8t8fu93vzgqulzf4dvxznhi" xml:space="preserve">{{Actor|
+| type = Monster
+| name = Macil
+| class = Macil1
+| game = Strife
+| doomednum = 64
+| convid = 49, 48, 49
+}}[[Classes]]: &lt;u&gt;Macil1&lt;/u&gt;&lt;br&gt;
+&amp;ensp;&amp;rarr;[[Classes:Macil2|Macil2]]&lt;br&gt;
+Macil is the brave leader of The Front, sworn to fight for freedom and justice! This particular variation of Macil is essentially immune to harm.
+==== [[DECORATE]] definition ====
+ ACTOR &lt;u&gt;Macil1&lt;/u&gt;
+ {
+   {{Property|Health}} 95
+   {{Property|Radius}} 20
+   {{Property|Height}} 56
+   {{Property|Speed}} 8
+   {{Property|PainChance}} 250
+   {{Property|Monster}}
+   -{{Flag|COUNTKILL}}
+   +{{Flag|NOTDMATCH}}
+   +{{Flag|NOICEDEATH}}
+   +{{Flag|NOSPLASHALERT}}
+   +{{Flag|NODAMAGE}}
+   +{{Flag|NEVERRESPAWN}}
+   {{Property|DamageFactor}} "{{DamageType|Fire}}", 0.5
+   {{Property|MinMissileChance}} 150
+   {{Property|SeeSound}} "macil/sight"
+   {{Property|PainSound}} "macil/pain"
+   {{Property|ActiveSound}} "macil/active"
+   {{Property|CrushPainSound}} "misc/pcrush"
+   {{Property|Tag}} "$TAG_MACIL1" // "MACIL"
+   {{Property|Obituary}} "$OB_MACIL" // "%o should have never rebelled against Macil."
+   {{Property|DropItem}} "{{Class|BoxOfBullets}}"
+   {{Property|MaxStepHeight}} 16
+   {{Property|MaxDropoffHeight}} 32
+   States
+   {
+   Spawn:
+     LEDR C 5 [[A_Look2]]
+     Loop
+     LEDR A 8
+     Loop
+     LEDR B 8
+     Loop
+     LEAD ABCD 6 [[A_Wander]]
+     Loop
+   See:
+     LEAD AABBCCDD 3 [[A_Chase]]
+     Loop
+   Missile:
+   Death:
+     LEAD E 2 [[A_FaceTarget]]
+     LEAD F 2 Bright [[A_ShootGun]]
+     LEAD E 1 [[A_SentinelRefire]]
+     Loop
+   Pain:
+     LEAD Y 3
+     LEAD Y 3 [[A_Pain]]
+     Goto See
+   }
+ }</text>
+    <sha1>4lne5f4r8t8fu93vzgqulzf4dvxznhi</sha1>
+  </revision>
+</page>

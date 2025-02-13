@@ -1,0 +1,40 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>A LichAttack</title>
+  <ns>0</ns>
+  <id>5479</id>
+  <revision>
+    <id>25642</id>
+    <parentid>23731</parentid>
+    <timestamp>2010-02-15T17:14:42Z</timestamp>
+    <contributor>
+      <username>Gez</username>
+      <id>1283</id>
+    </contributor>
+    <minor />
+    <origin>25642</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="1536" sha1="agbqga29v19q3gugqbu5u3xejrfn7pj" xml:space="preserve">{{DISPLAYTITLE:A_LichAttack}}
+'''A_LichAttack'''&lt;br /&gt;
+(no parameters)
+
+Results in one of four attacks, depending on the proximity of the target and on random chance. If the target is within melee range: melee bite attack for 6d8 damage
+Otherwise, spawns one {{Class|HeadFX1|ice ball}}, a column of {{Class|HeadFX3|fireballs}} or a {{Class|Whirlwind|whirlwind}} with a probability that varies with whether the target is "close" (between melee range and 512 map units) or far (more than 512 map units).
+{|  border="1" cellspacing="0" 
+!colspan="3"|Probabilities
+|-
+!Attack!!Close!!Far
+|-
+|{{Class|HeadFX1|Ice ball}}||20%||60%
+|-
+|{{Class|HeadFX3|Fireballs}}||40%||20%
+|-
+|{{Class|Whirlwind}}||40%||20%
+|}
+
+If choosing the ice ball attack, this function also plays the "ironlich/attack2" sound on the BODY channel. For the fireball column attack, it is the "ironlich/attack1" sound that is played; and a total of six fireballs are created, the first of which is put in the NoGrow state while the remainings have their health value set to twice their "number" and their damage value set to 0. If a whirlwind is chosen, "ironlich/attack3" is played and the whirlwind is set to have the calling actor's &lt;tt&gt;target&lt;/tt&gt; as its own &lt;tt&gt;tracer&lt;/tt&gt; field, its Z position decreased by 32 units, its &lt;tt&gt;special1&lt;/tt&gt; and &lt;tt&gt;2&lt;/tt&gt; fields to 60 and 50 respectively, and its health to 700.
+
+[[Category:Decorate Heretic functions]] [[Category:Decorate Classic attack functions]] [[Category:Decorate Restricted functions]]{{DEFAULTSORT:LichAttack}}</text>
+    <sha1>agbqga29v19q3gugqbu5u3xejrfn7pj</sha1>
+  </revision>
+</page>

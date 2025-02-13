@@ -1,0 +1,53 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>ZScript Hello World</title>
+  <ns>0</ns>
+  <id>9269</id>
+  <revision>
+    <id>49729</id>
+    <parentid>48514</parentid>
+    <timestamp>2022-11-08T23:29:03Z</timestamp>
+    <contributor>
+      <username>Combinebobnt</username>
+      <id>1950</id>
+    </contributor>
+    <comment>Add class keywords</comment>
+    <origin>49729</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="1849" sha1="axr24lrigxr1u9vgk25gn50apnoafq4" xml:space="preserve">This is a bare-bones bit of ZScript that logs "Hello World!" into the console, using [[Events and handlers|Event Handlers]]. Note that due to the nature of ZScript, this only shows a particular set of features in ZScript.
+
+First, we need to set the ZScript version so we can use all available features. (If we do not do this, GZDoom will assume for compatibility reasons that the target version is 2.3.0 and refuse to compile anything with features from later versions.)
+
+As of the creation of this page, the latest release of GZDoom is 4.5.0, so we will insert the following:
+  [[Object scopes and versions|version]] "4.5.0"
+
+Ideally "Hello World!" should be printed when the player first enters the map. This would be governed by an [[Events and handlers|Event Handler]], in particular '''WorldLoaded''', which is executed when a map has finished loading. Thus, we will create an Event Handler called '''HelloWorldHandler''', and override its '''WorldLoaded''' method.
+  version "4.5.0"
+  
+  class HelloWorldHandler : EventHandler
+  {
+      override void WorldLoaded (WorldEvent e)
+      {
+      }
+  }
+
+Now, we just need to make it print "Hello World!" when the world gets loaded. We can use '''console.printf''' to print to the console:
+  // Put this in a ZSCRIPT lump
+  version "4.5.0"
+  
+  class HelloWorldHandler : EventHandler
+  {
+      override void WorldLoaded (WorldEvent e)
+      {
+          console.printf("Hello World!");
+      }
+  }
+This code should print "Hello World!" when the player enters a map. This doesn't quite happen yet though, there is one caveat left. GZDoom does not load Event Handlers automatically, so we have to use the [[MAPINFO/GameInfo definition|gameinfo section of MAPINFO]] to specify this event handler should run.
+  // Put this in a MAPINFO lump
+  gameinfo
+  {
+      AddEventHandlers = "HelloWorldHandler"
+  }</text>
+    <sha1>axr24lrigxr1u9vgk25gn50apnoafq4</sha1>
+  </revision>
+</page>

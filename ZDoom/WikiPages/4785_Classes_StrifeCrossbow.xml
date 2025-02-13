@@ -1,0 +1,78 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>Classes:StrifeCrossbow</title>
+  <ns>0</ns>
+  <id>4785</id>
+  <revision>
+    <id>40133</id>
+    <parentid>36454</parentid>
+    <timestamp>2015-05-22T06:55:49Z</timestamp>
+    <contributor>
+      <username>Blue Shadow</username>
+      <id>2021</id>
+    </contributor>
+    <minor />
+    <comment>/* DECORATE definition */ Updated</comment>
+    <origin>40133</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="1761" sha1="rhzh8yk70xkbjuxpniuz1msujkykg44" xml:space="preserve">{{Actor|
+| type = Weapon
+| name = Crossbow
+| class = StrifeCrossbow
+| game = Strife
+| doomednum = 2001
+| convid = 194, 188, 192
+}}[[Classes]]: [[Classes:Inventory|Inventory]]&amp;rarr;[[Classes:Weapon|Weapon]]&amp;rarr;[[Classes:StrifeWeapon|StrifeWeapon]]&amp;rarr;&lt;u&gt;StrifeCrossbow&lt;/u&gt;&lt;br&gt;
+&amp;ensp;&amp;rarr;[[Classes:StrifeCrossbow2|StrifeCrossbow2]]&lt;br&gt;
+Your first proper weapon in Strife, the crossbow has two modes. This is the first mode, in which it fires [[Classes:ElectricBolts|electric bolts]]. This does more damage to mechanical targets.
+==== [[DECORATE]] definition ====
+ ACTOR &lt;u&gt;StrifeCrossbow&lt;/u&gt; : {{Class|StrifeWeapon}}
+ {
+   +{{flag|FLOORCLIP}}
+   {{property|Weapon.SelectionOrder}} 1200
+   +{{flag|WEAPON.NOALERT}}
+   {{property|Weapon.AmmoUse1}} 1
+   {{property|Weapon.AmmoGive1}} 8
+   {{property|Weapon.AmmoType1}} "{{Class|ElectricBolts}}"
+   {{property|Weapon.SisterWeapon}} "{{Class|StrifeCrossbow2}}"
+   {{property|Inventory.PickupMessage}} "$TXT_STRIFECROSSBOW" // "You picked up the crossbow"
+   {{property|Tag}} "$TAG_STRIFECROSSBOW1" // "Crossbow"
+   {{property|Inventory.Icon}} "CBOWA0"
+ 
+   action native [[A_ClearFlash]] ();
+   action native [[A_ShowElectricFlash]] ();
+   action native [[A_FireArrow]] (class&lt;Actor&gt; proj);
+ 
+   States
+   {
+   Spawn:
+     CBOW A -1
+     Stop
+   Ready:
+     XBOW A 0 [[A_ShowElectricFlash]]
+     XBOW A 1 [[A_WeaponReady]]
+     Wait
+   Deselect:
+     XBOW A 1 [[A_Lower]]
+     Loop
+   Select:
+     XBOW A 1 [[A_Raise]]
+     Loop
+   Fire:
+     XBOW A 3 [[A_ClearFlash]]
+     XBOW B 6 [[A_FireArrow]]("{{Class|ElectricBolt}}")
+     XBOW C 4
+     XBOW D 6
+     XBOW E 3
+     XBOW F 5
+     XBOW G 0 [[A_ShowElectricFlash]]
+     XBOW G 5 [[A_CheckReload]]
+     Goto Ready+1
+   Flash:
+     XBOW KLM 5
+     Loop
+   }
+ }</text>
+    <sha1>rhzh8yk70xkbjuxpniuz1msujkykg44</sha1>
+  </revision>
+</page>

@@ -1,0 +1,37 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>TITLEMAP</title>
+  <ns>0</ns>
+  <id>2968</id>
+  <revision>
+    <id>46732</id>
+    <parentid>42530</parentid>
+    <timestamp>2019-05-25T08:00:12Z</timestamp>
+    <contributor>
+      <username>Kappes Buur</username>
+      <id>88</id>
+    </contributor>
+    <comment>added example map</comment>
+    <origin>46732</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="1739" sha1="f3kntm59awxhj5x333sm1m8kv7ib2qm" xml:space="preserve">A '''TITLEMAP''' is a [[map]] which is loaded instead of the usual title screen when you start [[ZDoom]]. The player cannot actually play the TITLEMAP when it loads, rather, any keypress will cause the menu to pop up. TITLEMAP can be used to create a more dynamic and interesting title screen for your wad. If you have ever played ''Half-Life 2'' or ''Black Mesa Source'', you should be familiar with the effect. The main menu is done in the same exact way.
+
+==Creating a TITLEMAP==
+To make a TITLEMAP, just create a map as you normally would but make sure the map's lump name is '''TITLEMAP''' (as opposed to the more common names of '''MAPxx''' or '''ExMx'''.)  The player's start location serves as the initial camera point.  You can change the camera point by using [[ChangeCamera]], as usual.  It would be a good idea to use some scripting to add various interesting effects to the map so the scene is not completely static.
+
+==Scripting==
+It is possible to use [[Teleport_NewMap]] from within a TITLEMAP to load a different map. The [[GameType]] function will return GAME_TITLE_MAP while in a title map.
+
+==TITLEMAP Behavior==
+The TITLEMAP is loaded once ZDoom starts up.  Its behavior is the same as any other map, with a few key differences.
+*The player has no control over their character and cannot move around/shoot/use things or do anything at all.
+*Any keypress by the player will cause the main menu to appear.
+*The main menu '''will not''' pause the game like it does in singleplayer.  You can continue to observe the scripted actions going on in the background after the main menu has appeared.
+
+[[category:ZDoom special lumps]]
+
+==Examples==
+*[http://www.mediafire.com/file/ze83wfnd8izknyo/TITLEMAP.WAD/file Example PWAD ]</text>
+    <sha1>f3kntm59awxhj5x333sm1m8kv7ib2qm</sha1>
+  </revision>
+</page>

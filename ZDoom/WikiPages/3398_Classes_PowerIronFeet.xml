@@ -1,0 +1,89 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>Classes:PowerIronFeet</title>
+  <ns>0</ns>
+  <id>3398</id>
+  <revision>
+    <id>53738</id>
+    <parentid>53737</parentid>
+    <timestamp>2024-11-13T12:48:44Z</timestamp>
+    <contributor>
+      <username>Jekyll Grim Payne</username>
+      <id>2175</id>
+    </contributor>
+    <origin>53738</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="2993" sha1="i5o8apxj6o1xdn535gp4umip20lm7lx" xml:space="preserve">{{actor|
+| type = Power
+| name = Environment protection power
+| class = PowerIronFeet
+}}[[Classes]]: {{Class|Inventory}}&amp;rarr;{{Class|Powerup}}&amp;rarr;&lt;u&gt;PowerIronFeet&lt;/u&gt;&lt;br&gt;
+&amp;ensp;&amp;rarr;{{Class|PowerMask}}&lt;br&gt;
+
+{{: Powerup definition}}
+
+'''PowerIronFeet''' protects its owner from damage from some type of [[sector special]]-based [[damaging floor|damaging floors]], typically represented by radioactive nukage, toxic sludge, or burning lava (but the actual texture is of no consequence).
+
+In addition, this powerup also prevents the player from running out of air by continuously calling [[ResetAirSupply]] on the player and preventing damage from the {{c|'Drowning'}} [[Damage types|damage type]]. Air supply only comes into play in ZDoom/GZDoom maps that have some form of [[Deep water|underwater sections]], and if the map's [[MAPINFO/Map_definition#AirSupply|AirSupply]] value is not 0.
+
+The powerup's behavior can be customized with the following '''{{Property|Powerup.Mode}}''' values:
+*{{c|'Normal'}}
+:Default mode. The player is nearly immune to damage from damaging floors. Specifically, it protects against:
+:*{{c|dLight_Strobe_Hurt}}
+:*{{c|dDamage_Hellslime}}
+:*{{c|dDamage_Nukage}}
+:*{{c|dDamage_SuperHellslime}}
+:*{{c|sDamage_Hellslime}}
+:*{{c|sDamage_SuperHellslime}}
+:*The generalized [[Boom]] [[sector special#generalized flags|damage flags]].
+:There is about 1/40 chance that the protection will fail against Strobe_Hurt and SuperHellslimes during a given second. It does NOT protect at all against {{c|dDamage_LavaWimpy}}, {{c|dDamage_LavaHefty}} and {{c|dScroll_EastLavaDamage}}.
+*{{c|'Full'}}
+:Total protection mode. It is similar to 'Normal', but it also protects against the types of damaging floors that the Normal mode does not protect against, whether it is partial protection or not.
+
+If multiple powerups of this type with different modes are in effect, the Full mode takes priority.
+
+The powerup has the additional effect of reducing drowning damage to zero and resetting the player's air supply every tic.
+
+Like all other {{Class|Powerup}}s, items of this class are never used directly. Instead you have to create a new item that inherits from {{Class|PowerupGiver}} to give it to the player.
+
+=== [[ZScript]] definition ===
+{{ZScriptDefinitionNote|actors/inventory/powerups.zs}}
+&lt;syntaxhighlight lang="csharp"&gt;
+class PowerIronFeet : Powerup
+{
+	Default
+	{
+		Powerup.Duration -60;
+		Powerup.Color "00 ff 00", 0.125;
+		Powerup.Mode "Normal";
+	}
+	
+	override void AbsorbDamage (int damage, Name damageType, out int newdamage, Actor inflictor, Actor source, int flags)
+	{
+		if (damageType == 'Drowning')
+		{
+			newdamage = 0;
+		}
+	}
+
+	override void DoEffect ()
+	{
+		if (Owner.player != NULL)
+		{
+			Owner.player.mo.ResetAirSupply ();
+		}
+	}
+	
+}
+&lt;/syntaxhighlight&gt;
+
+=== [[DECORATE]] definition ===
+{{DecorateDefinitionNote}}
+ ACTOR &lt;u&gt;PowerIronFeet&lt;/u&gt; : {{Class|Powerup}} native
+ {
+   {{Property|Powerup.Duration}} -60
+   {{Property|Powerup.Color}} 0, 255, 0, 0.125
+ }</text>
+    <sha1>i5o8apxj6o1xdn535gp4umip20lm7lx</sha1>
+  </revision>
+</page>

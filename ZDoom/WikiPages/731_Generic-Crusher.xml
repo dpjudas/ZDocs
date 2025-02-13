@@ -1,0 +1,45 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>Generic Crusher</title>
+  <ns>0</ns>
+  <id>731</id>
+  <revision>
+    <id>53129</id>
+    <parentid>53125</parentid>
+    <timestamp>2024-09-28T06:27:34Z</timestamp>
+    <contributor>
+      <username>Blue Shadow</username>
+      <id>2021</id>
+    </contributor>
+    <minor />
+    <comment>/* Examples */ formatting</comment>
+    <origin>53129</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="1493" sha1="pdp4hq4hgv3h6pylmsy9svahdaykcql" xml:space="preserve">{{DISPLAYTITLE:Generic_Crusher}}
+{{Special|205|tag, dspeed, uspeed, silent, crush|General BOOM linetype|Crusher|type2=Ceiling}}&lt;br&gt;
+{{Special|169|tag, dspeed, uspeed, silent, crush|General BOOM linetype|Crusher|Generic_Crusher2|nosort=1}}&lt;br&gt;
+{{Special|284|tag, dspeed, uspeed, silent, crush|General BOOM linetype|Crusher|Generic_CrusherDist|nosort=1}}
+
+* ''tag'': Tag of affected sector 
+* ''dspeed'': How quickly the ceiling lowers 
+* ''uspeed'': How quickly the ceiling raises 
+* ''silent'': Set this to 1 to prevent the crusher from making noise 
+* ''crush'': Amount of damage to apply 
+
+This special encapsulates [[Boom]]'s generalized crushers. It is the same as [[Ceiling_CrushAndRaiseA]], except that it takes an argument to control the “noisiness” of the crusher.
+
+Unlike the other crushing specials where the [[crushing mode|crush mode]] is a parameter, the generic version uses a different special type because it already has all parameters in use. 
+'''Generic_Crusher''' uses Doom mode and '''Generic_Crusher2''' uses Hexen mode.
+
+'''Generic_CrusherDist''' is the same as '''Generic_Crusher''' except the ceiling stops 8 map units above the floor before rising rather than go all the way down.
+
+== Examples ==
+The below [[ACS]] script will start the crusher in sector tag 7, with a downward speed of 30 and an upward speed of 40. The crusher will be silent and will not damage the player.
+
+ script "startCrusher7" {{SType|Open}}
+ {
+     [[Generic_Crusher]](7, 30, 40, 1, 0);
+ }</text>
+    <sha1>pdp4hq4hgv3h6pylmsy9svahdaykcql</sha1>
+  </revision>
+</page>

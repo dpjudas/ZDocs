@@ -1,0 +1,86 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>CVARs</title>
+  <ns>0</ns>
+  <id>3886</id>
+  <revision>
+    <id>45559</id>
+    <parentid>43389</parentid>
+    <timestamp>2017-09-26T21:15:22Z</timestamp>
+    <contributor>
+      <username>Matt</username>
+      <id>135</id>
+    </contributor>
+    <comment>/* See also */</comment>
+    <origin>45559</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="3960" sha1="2wtompfpl3tbx0pchsyptqdzwhwrptf" xml:space="preserve">Console variables (CVARs) are used to alter the way ZDoom does something, such as changing the sound volume or the rendering method.
+
+__TOC__
+
+==Categories==
+
+CVAR categories can typically be determined by a prefix, followed by an underscore at the beginning of the CVAR's name (e.g. "vid_"); however, not all CVARs are formatted this way.  For ease of use, the wiki lists the CVARs in their individual categories where possible:
+
+* [[CVARs:Audio|Audio]]: Sound and music playback settings.
+* [[CVARs:Automap|Automap]]: General settings, full screen and overlay colors.
+* [[CVARs:Configuration|Configuration]]: Player settings, gameplay and compatibility options, bot and multiplayer settings, file storage, and miscellaneous options.
+* [[CVARs:Debug|Debug]]: Information on the game.
+* [[CVARs:Display|Display/Renderer]]: Interface and HUD options, renderer configuration.
+* [[CVARs:Messages|Messages]]: Message display options and chat settings.
+
+==Console variable types==
+
+There are six types of CVARs: Boolean, Integer, Float, String, Colour and Flag.
+
+=== boolean ===
+
+This type of variable represents a yes/no or on/off value. It can only be set to true or false. As shorthand, setting a boolean variable to 0 will set it to false, and setting it to anything non-zero will set it to true. 
+
+=== integer ===
+
+This is an ordinary number without a decimal point. For example, 1 is an integer, but 1.2 is not. 
+
+=== float ===
+
+This is an ordinary number that can have a decimal point. 
+
+=== string ===
+
+This is a series of text characters enclosed in quotes: For example, "Felix loitered lecherously on the lot" is a string. If you removed the quotes around it, then it would not be a string. 
+If you need to use quotes inside a string, preface it with a backslash.
+
+ Are you "The One" of old?
+
+would be written like this as a string: 
+
+ "Are you \"The One\" of old?"
+
+=== color ===
+
+Color CVARs are a special type of string variable represented by a series of three hexadecimal numbers.  These numbers represent the amount of red, green and blue (in that order) that make up the final color. For example, pure red would be represented as "ff 00 00". As a shorthand, you can set a color variable with one of several color names, and the RGB values will be set for you.
+
+&lt;!-- There are no flag CVARs that I can see, but I'll leave this here for now until I get the full list (urgh) added. --Wax --&gt;
+=== flag ===
+
+This type of variable mirrors a setting in [[DMFlags]] or DMFlags2. Setting its value will set the corresponding value in one of those variables, and getting its value will get the corresponding value from one of the other two variables. This is designed to make using [[DMFlags]] easier, because you don't have to memorize any numbers.
+
+==Usage==
+
+You can access and change CVARs in the ZDoom [[Console]], accessed by pressing the tilde (~) key by default.  If you enter a CVAR by itself at the prompt, ZDoom will tell you the CVAR's current value.  If you instead follow the CVAR with a value (e.g. "vid_drawfps 1") it will set the CVAR to that value.  Depending on the CVAR, this may have an immediate effect on the game.
+
+In addition, CVARs can be changed from the command line by using +set &lt;CVAR&gt; &lt;value&gt; (or simply +&lt;CVAR&gt; &lt;value&gt;, omitting the set command).  For example, to load ZDoom on MAP01 with sv_cheats set to true, you can use this command line:
+
+ zdoom.exe -iwad doom2.wad -warp 01 '''+sv_cheats 1'''
+
+It is also possible to set custom variables using the {{CCMD|C|set}} [[CCMDs|console command]].  Custom variables set in this way will only be stored for the current game session by default.  However, you can change this by subsequently using the {{CCMD|C|archivecvar}} command, which tells ZDoom the value should be saved to the [[configuration file]] and preserved.
+
+==See also==
+* [[CVARINFO]]
+* [[Custom CVARs with DECORATE]]
+* [[CVar (ZScript)|Accessing CVARs with the CVar struct in ZScript]]
+
+[[category:ZDoom console]]</text>
+    <sha1>2wtompfpl3tbx0pchsyptqdzwhwrptf</sha1>
+  </revision>
+</page>

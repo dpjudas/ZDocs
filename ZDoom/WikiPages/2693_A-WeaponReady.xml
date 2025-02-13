@@ -1,0 +1,83 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>A WeaponReady</title>
+  <ns>0</ns>
+  <id>2693</id>
+  <revision>
+    <id>52259</id>
+    <parentid>52245</parentid>
+    <timestamp>2024-04-04T11:09:58Z</timestamp>
+    <contributor>
+      <username>Jekyll Grim Payne</username>
+      <id>2175</id>
+    </contributor>
+    <minor />
+    <comment>/* Usage */</comment>
+    <origin>52259</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="3572" sha1="tslhvgtg4iadnmvify7jega1jpoqogr" xml:space="preserve">{{DISPLAYTITLE:A_WeaponReady}}
+{{doomwiki|A_WeaponReady}}
+
+'''{{class|Weapon}}'''
+
+{{c|action void '''A_WeaponReady'''(int ''flags'' }}={{c| 0)}}
+
+==Usage==
+'''A_WeaponReady''' is a {{class|Weapon}} function that allows the weapon to fire, bob, or be deselected. Normally it's called in a loop in the weapon's '''Ready''' [[Actor states|state sequence]], but it can also be called in other states to allow a player to re-fire at any point.
+
+'''Note:''' {{c|A_WeaponReady}} is a somewhat unique function in that it ''doesn't'' have to be called every [[Tic|tic]] in order to function property. I.e. doing this is perfectly okay:
+ WEAP A {{color|green|10}} '''A_WeaponReady''';
+
+The reason for this is that as soon as the function is called, it enables a flag that will allow the weapon to fire/switch for the whole duration of the state (10 tics in the example above), and that flag will only be lifted once the state ends. (The flag itself is stored in the [[Structs:PlayerInfo#Variables|&lt;code&gt;WeaponState&lt;/code&gt; field of the PlayerInfo struct]] of the weapon's owner).
+
+{{note|'''A_WeaponReady''' will ''ignore'' Reload, Zoom and User# keys by default. They must be enabled manually by using appropriate flags (lised below).}}
+
+=== Parameters ===
+*{{c|int '''flags'''}}
+:The function's default behavior can be changed by using flags listed below (multiple flags can be combined with &lt;code&gt;|&lt;/code&gt;):
+:* '''WRF_NOBOB''': The weapon's on-screen sprites will not bob.
+:* '''WRF_NOFIRE''': The weapon will not be made ready for firing (same as &lt;code&gt;WRF_NOPRIMARY|WRF_NOSECONDARY&lt;/code&gt;).
+:* '''WRF_NOSWITCH''': The weapon will not be made ready for deselection for the duration of this [[A_WeaponReady]] call.
+:* '''WRF_DISABLESWITCH''': Prevents from deselecting the weapon entirely until the next call to [[A_WeaponReady]]. (NOSWITCH puts deselection on hold, whereas DISABLESWITCH cancels the deselection entirely)
+:* '''WRF_NOPRIMARY''': The weapon will not be able to enter the '''Fire''' state sequence.
+:* '''WRF_NOSECONDARY''': The weapon will not be able to enter the '''AltFire''' state sequence.
+:* '''WRF_ALLOWRELOAD''': The weapon will jump to the '''Reload''' state sequence if the Reload key is currently being pressed.
+:* '''WRF_ALLOWZOOM''': The weapon will jump to the '''Zoom''' state sequence if the Zoom key is currently being pressed.
+:* '''WRF_ALLOWUSER#''': The weapon will jump to the '''User#''' state defined, where {{c|#}} can be a number from 1-4.
+
+== Examples ==
+   '''Ready''':
+     WEAP A 1 [[A_WeaponReady]]; {{color|green|//Makes the weapon ready to fire}}
+     Loop;
+ 
+   '''Fire''':
+     WEPF A 4;
+     WEPF B 4 [[A_FireProjectile]]({{class|Rocket|'Rocket'}});
+     WEPF C 4;
+     WEPF D 4 [[A_WeaponReady]]({{const|WRF_NOBOB}}|{{const|WRF_NOSWITCH}}); {{color|green|//Allows the weapon to refire, but without any weapon bobbing or switching}}
+     WEPF E 4;
+     Goto Ready;
+
+== [[ZScript]] definition ==
+{{ZScriptDefinitionNote|actors/inventory/weapons.zs#L430}}
+&lt;syntaxhighlight lang="csharp"&gt;
+	action void A_WeaponReady(int flags = 0)
+	{
+		if (!player) return;
+		DoReadyWeaponToSwitch(player, !(flags &amp; WRF_NoSwitch));
+		
+		if ((flags &amp; WRF_NoFire) != WRF_NoFire)	
+			DoReadyWeaponToFire(player.mo, !(flags &amp; WRF_NoPrimary), !(flags &amp; WRF_NoSecondary));
+
+		if (!(flags &amp; WRF_NoBob))
+			DoReadyWeaponToBob(player);
+
+		player.WeaponState |= GetButtonStateFlags(flags);														
+		DoReadyWeaponDisableSwitch(player, flags &amp; WRF_DisableSwitch);
+	}
+&lt;/syntaxhighlight&gt;
+
+[[category:Decorate Weapon functions]]{{DEFAULTSORT:WeaponReady}}</text>
+    <sha1>tslhvgtg4iadnmvify7jega1jpoqogr</sha1>
+  </revision>
+</page>

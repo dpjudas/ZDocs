@@ -1,0 +1,56 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>A Respawn</title>
+  <ns>0</ns>
+  <id>3662</id>
+  <revision>
+    <id>38451</id>
+    <parentid>37616</parentid>
+    <timestamp>2014-10-28T22:15:45Z</timestamp>
+    <contributor>
+      <username>Gez</username>
+      <id>1283</id>
+    </contributor>
+    <minor />
+    <comment>not supposed to be "exactly" like skill-based respawning</comment>
+    <origin>38451</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="1518" sha1="jht8kirbvqv4yc11sccvdsvewb0v196" xml:space="preserve">{{codepointer|Status change}}
+'''A_Respawn''' [(int ''flags'')]
+
+Respawns the calling actor at their initial starting point, and resets its stats in the process.  This behaves similarly to if the actor was respawned on the Nightmare skill. If there is a solid object at the spawn point, the respawn will fail, unless the '''RSF_TELEFRAG''' flag is set (see below).
+
+==Parameters==
+*''flags'': The following flags can be combined by using the pipe character &lt;tt&gt;|&lt;/tt&gt; between the constant names to alter the behavior of the function:
+**'''RSF_FOG''' — The respawn fog is shown when the actor reappears. This is the default behavior if the ''flags'' parameter is omitted.
+**'''RSF_KEEPTARGET''' — The calling actor's {{c|[[actor pointer|target]]}} is preserved after respawning.
+**'''RSF_TELEFRAG''' — If a solid telefragable object is in the spawn spot, it will be telefragged and the respawn will be successful.
+
+==Examples==
+This imp will stay dead for 3 seconds before respawning. If it is killed normally it will respawn without fog, but if it is gibbed, it will respawn with one.
+ ACTOR ImmortalImp : {{class|DoomImp}} replaces {{class|DoomImp}}
+ {
+   States
+   {
+   Death:
+     TROO I 8
+     TROO J 8 [[A_Scream]]
+     TROO K 6
+     TROO L 6 [[A_NoBlocking]]
+     TROO M 105
+     TROO M 0 [[A_Respawn]]({{const|false}})
+     Stop
+   XDeath:
+     TROO N 5
+     TROO O 5 [[A_XScream]]
+     TROO P 5
+     TROO Q 5 [[A_NoBlocking]]
+     TROO RST 5
+     TROO U 105
+     TROO U 0 [[A_Respawn]]
+     Stop
+   }
+  }</text>
+    <sha1>jht8kirbvqv4yc11sccvdsvewb0v196</sha1>
+  </revision>
+</page>

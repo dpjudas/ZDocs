@@ -1,0 +1,42 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>CollidedWith</title>
+  <ns>0</ns>
+  <id>9890</id>
+  <revision>
+    <id>52528</id>
+    <timestamp>2024-04-21T14:47:18Z</timestamp>
+    <contributor>
+      <username>Jekyll Grim Payne</username>
+      <id>2175</id>
+    </contributor>
+    <comment>Created page with "'''{{class|Actor}}'''  {{c|virtual void '''CollidedWith'''(Actor ''other'', bool ''passive'')}}  == Usage == Called after two actors have collided. Similar to {{c|CanCollide..."</comment>
+    <origin>52528</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="1085" sha1="5pdnc73vdfwf4sg9l6wmxyqpjduabkp" xml:space="preserve">'''{{class|Actor}}'''
+
+{{c|virtual void '''CollidedWith'''(Actor ''other'', bool ''passive'')}}
+
+== Usage ==
+Called after two actors have collided. Similar to {{c|[[CanCollideWith]]}}, but {{c|CanCollideWith}} is called ''before'' collision and, most importantly, doesn't guarantee that the collision will actually happen, in contrast to this function.
+
+Note, this virtual is called back ONLY when a collision actually occurs. If you want to check and abort a potential collision instead, e.g to stop an actor made of multiple smaller actors from colliding with itself, use {{c|[[CanCollideWith]]}} instead.
+
+=== Parameters ===
+*{{c|Actor '''other'''}}
+:The actor the caller collided with.
+*{{c|bool '''passive'''}}
+:Used to determine which actor is currently calling the function. If &lt;code&gt;false&lt;/code&gt;, the actor that caused the collision is the current caller; otherwise the caller is the actor that is being collided with.
+
+== Examples ==
+{{noexamples}}
+
+== See also ==
+* [[CanCollideWith]]
+* [[ZScript virtual functions]]
+
+[[Category:ZScript]]
+[[Category:Actor virtual functions]]</text>
+    <sha1>5pdnc73vdfwf4sg9l6wmxyqpjduabkp</sha1>
+  </revision>
+</page>

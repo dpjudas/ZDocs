@@ -1,0 +1,66 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>Classes:Zombie</title>
+  <ns>0</ns>
+  <id>2974</id>
+  <revision>
+    <id>40151</id>
+    <parentid>26265</parentid>
+    <timestamp>2015-05-22T07:04:51Z</timestamp>
+    <contributor>
+      <username>Blue Shadow</username>
+      <id>2021</id>
+    </contributor>
+    <minor />
+    <comment>/* DECORATE definition */ Updated</comment>
+    <origin>40151</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="1113" sha1="t4dgsa6qvvsaeuxlitlbthuaup06g1g" xml:space="preserve">{{Actor|
+| type = Monster
+| name = Zombie
+| class = Zombie
+| game = Strife
+| doomednum = 169
+| convid = 28
+}}[[Classes]]: {{Class}} &amp;rarr; {{Class|StrifeHumanoid}} &amp;rarr; &lt;u&gt;Zombie&lt;/u&gt;&lt;br&gt;
+Looks like a [[Classes:Peasant|peasant]]. Stands there. Gibs when killed.
+==== [[DECORATE]] definition ====
+ ACTOR &lt;u&gt;Zombie&lt;/u&gt; : {{Class|StrifeHumanoid}}
+ {
+   {{Property|Health}} 31
+   {{Property|Radius}} 20
+   {{Property|Height}} 56
+   {{Property|PainChance}} 0
+   +{{Flag|SOLID}}
+   +{{Flag|SHOOTABLE}}
+   +{{Flag|FLOORCLIP}}
+   +{{Flag|CANPASS}}
+   +{{Flag|CANPUSHWALLS}}
+   +{{Flag|ACTIVATEMCROSS}}
+   {{Property|MinMissileChance}} 150
+   {{Property|MaxStepHeight}} 16
+   {{Property|MaxDropOffHeight}} 32
+   {{Property|Translation}} 0
+   {{Property|DeathSound}} "zombie/death"
+   {{Property|CrushPainSound}} "misc/pcrush"
+   States
+   {
+   Spawn:
+     PEAS A 5 [[A_CheckTerrain]]
+     Loop
+   Pain:
+     AGRD A 5 [[A_CheckTerrain]]
+     Loop
+   Death:
+     GIBS M 5 [[A_TossGib]]
+     GIBS N 5 [[A_XScream]]
+     GIBS O 5 [[A_NoBlocking]]
+     GIBS PQRST 4 [[A_TossGib]]
+     GIBS U 5
+     GIBS V -1
+     Stop
+   }
+ }</text>
+    <sha1>t4dgsa6qvvsaeuxlitlbthuaup06g1g</sha1>
+  </revision>
+</page>

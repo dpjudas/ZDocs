@@ -1,0 +1,52 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>SetCamera</title>
+  <ns>0</ns>
+  <id>9591</id>
+  <revision>
+    <id>52878</id>
+    <parentid>52877</parentid>
+    <timestamp>2024-08-12T13:57:50Z</timestamp>
+    <contributor>
+      <username>Jekyll Grim Payne</username>
+      <id>2175</id>
+    </contributor>
+    <comment>Formatting, added parent class</comment>
+    <origin>52878</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="1090" sha1="44ajttx9yohduwggykd63bvgckixsf6" xml:space="preserve">
+'''{{class|Actor}}'''
+
+action native void '''SetCamera''' (Actor ''cam'', bool ''revert'' = false)
+
+== Usage ==
+Sets the players' camera to the actor specified on the ''cam'' parameter. Does nothing if not called from a player.
+
+=== Parameters ===
+*{{c|Actor '''cam'''}}
+:An actor pointer to the actor to set the calling players' view to.
+*{{c|bool '''revert'''}}
+:False by default, when set to true. The player will be able to revert back to their original view by moving. This is the same as in the [[ChangeCamera]] [[ACS]] function.
+
+== Examples ==
+This special pistol has an altfire that changes the players' camera to that of their [[Structs:PlayerInfo#Variables|attacker]], if any. But the player can get out of their attackers' view by simply moving.
+
+&lt;syntaxhighlight lang="csharp"&gt;
+class AttackerCamPistol : Pistol
+{
+	States
+	{
+	AltFire:
+		PISG A 4
+		{
+			//Sets the camera of the player to their attacker, if any. With the ability to revert back to their view by moving.
+			self.SetCamera(self.player.attacker,true);
+		}
+		Goto Ready;
+	}
+}&lt;/syntaxhighlight&gt;
+
+[[Category:ZScript]]</text>
+    <sha1>44ajttx9yohduwggykd63bvgckixsf6</sha1>
+  </revision>
+</page>

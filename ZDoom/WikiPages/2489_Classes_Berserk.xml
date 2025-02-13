@@ -1,0 +1,78 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>Classes:Berserk</title>
+  <ns>0</ns>
+  <id>2489</id>
+  <revision>
+    <id>53715</id>
+    <parentid>48135</parentid>
+    <timestamp>2024-11-13T11:28:20Z</timestamp>
+    <contributor>
+      <username>Jekyll Grim Payne</username>
+      <id>2175</id>
+    </contributor>
+    <origin>53715</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="1771" sha1="bgnifw30mgeyzk33manx2ujrmdbwbor" xml:space="preserve">{{Actor|
+| type = Powerup
+| name = Berserk
+| class = Berserk
+| game = Doom
+| doomednum = 2023
+| spawnid = 134
+| spawnname = T_BERSERK 
+}}[[Classes]]: [[Classes:Inventory|Inventory]]&amp;rarr;[[Classes:CustomInventory|CustomInventory]]&amp;rarr;&lt;u&gt;Berserk&lt;/u&gt;
+
+When a berserk pack (or inherited actor) is picked up, it heals 100 health and switches the player's weapon to the {{Class|Fist|fist}} (if available). The fist attack does 10 times as much damage as it would otherwise for the remainder of the level. However this doesn't apply when using a [[A_CustomPunch]] and chainsaw's [[A_Saw]].
+
+The Berserk pickup itself is a {{class|CustomInventory}}. The damage increase and screen reddering come from the '''{{class|PowerStrength}}''' powerup.
+
+=== [[ZScript]] definition ===
+{{ZScriptDefinitionNote|actors/doom/doomartifacts.zs}}
+&lt;syntaxhighlight lang="csharp"&gt;
+class Berserk : CustomInventory
+{
+	Default
+	{
+		+COUNTITEM
+		+INVENTORY.ALWAYSPICKUP
+		+INVENTORY.ISHEALTH
+		Inventory.PickupMessage "$GOTBERSERK";
+		Inventory.PickupSound "misc/p_pkup";
+	}
+	States
+	{
+	Spawn:
+		PSTR A -1 Bright;
+		Stop;
+	Pickup:
+		TNT1 A 0 A_GiveInventory("PowerStrength");
+		TNT1 A 0 HealThing(100, 0);
+		TNT1 A 0 A_SelectWeapon("Fist");
+		Stop;
+	}
+}&lt;/syntaxhighlight&gt;
+
+=== [[DECORATE]] definition ===
+{{DecorateDefinitionNote}}
+ ACTOR &lt;u&gt;Berserk&lt;/u&gt; : {{Class|CustomInventory}}
+ {
+   +{{Property|COUNTITEM}}
+   +{{Property|INVENTORY.ALWAYSPICKUP}}
+   {{Property|Inventory.PickupMessage}} "$GOTBERSERK" // "Berserk!"
+   {{Property|Inventory.PickupSound}} "misc/p_pkup"
+   States
+   {
+   Spawn:
+     PSTR A -1
+     Stop
+   Pickup:
+     TNT1 A 0 [[A_GiveInventory]]("{{Class|PowerStrength}}")
+     TNT1 A 0 [[HealThing]](100, 0)
+     TNT1 A 0 [[A_SelectWeapon]]("{{Class|Fist}}")
+     Stop
+   }
+ }</text>
+    <sha1>bgnifw30mgeyzk33manx2ujrmdbwbor</sha1>
+  </revision>
+</page>

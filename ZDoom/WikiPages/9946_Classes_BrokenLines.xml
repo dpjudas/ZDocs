@@ -1,0 +1,67 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>Classes:BrokenLines</title>
+  <ns>0</ns>
+  <id>9946</id>
+  <revision>
+    <id>53142</id>
+    <parentid>53133</parentid>
+    <timestamp>2024-09-28T17:55:03Z</timestamp>
+    <contributor>
+      <username>Gez</username>
+      <id>1283</id>
+    </contributor>
+    <minor />
+    <origin>53142</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="2487" sha1="ec9y5k0vk4xi87c35rtpjcndx3yu8de" xml:space="preserve">'''BrokenLines''' is a [[ZScript]] class designed to split [[String|text strings]] into multiple separate strings.
+
+This class has no fields exposed to ZScript, only methods.
+
+== Initialization ==
+An instance of this class can only be created by calling &lt;code&gt;fnt.BreakLines&lt;/code&gt; where {{c|fnt}} is a '''{{struct|Font}}''' object (see '''[[Structs:Font#Non-static|here]]'''). {{c|BreakLines}} splits the string so each separate string does exceed a given width in pixels (which, naturally, can only be done for a specific font, since different fonts have different glyph sizes).
+
+== Methods ==
+=== Non-static ===
+*{{c|native int '''Count'''()}}
+:Returns the total number of strings stored in the calling instance of BrokenLines.
+*{{c|native int '''StringWidth'''(int ''line'')}}
+:Returns the width in pixels of the given string stored in the calling instance of BrokenLines.
+:*{{c|int '''line'''}} — the index of the line.
+*{{c|native String '''StringAt'''(int ''line'')}}
+:Returns the given string stored in the calling instance of BrokenLines.
+:*{{c|int '''line'''}} — the index of the line.
+
+Note that line indexes in this class begin at 0, so if a BrokenLines instance contains 3 strings (calling {{c|Count()}} on it will return 3), the indexes of those strings will be 0, 1 and 2.
+
+== Examples ==
+This shows an example of using BrokenLines in an [[Events_and_handlers#RenderOverlay|event handler]]: a long string is broken into multiple lines so the width of each line doesn't exceed 256:
+&lt;syntaxhighlight lang="csharp"&gt;
+override void RenderOverlay(RenderEvent e)
+{
+	String teststring = "Officia nostrum suscipit laborum voluptates explicabo suscipit. Amet illum odit asperiores aut mollitia eaque. Est et officiis rerum. At recusandae est eos.";
+	Font fnt = Font.FindFont('BigUpper');
+
+	// Create an instance of BrokenLines and break the lines
+	// using the font initialized above:
+	BrokenLines brlines = fnt.BreakLines(teststring, 256);
+	double lineHeight = fnt.GetHeight(); //this will be used for vertical spacing
+	// Start printing at the top left corner:
+	Vector2 strPos = (0,0);
+	// Iterate over each separate string and draw it:
+	for (int i = 0; i &lt; brlines.Count(); i++)
+	{
+		Screen.DrawText(fnt, Font.CR_UNTRANSLATED, strPos.x, strPos.y, brlines.StringAt(i));
+		strPos.y += lineHeight; //move the position down according to the height of the font
+	}
+}&lt;/syntaxhighlight&gt;
+
+== See also ==
+* [[String]]
+* {{struct|Font}}
+
+[[Category:ZScript]]
+[[Category:Use of fonts]]</text>
+    <sha1>ec9y5k0vk4xi87c35rtpjcndx3yu8de</sha1>
+  </revision>
+</page>

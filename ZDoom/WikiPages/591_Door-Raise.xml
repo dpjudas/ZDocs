@@ -1,0 +1,58 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>Door Raise</title>
+  <ns>0</ns>
+  <id>591</id>
+  <revision>
+    <id>43890</id>
+    <parentid>40744</parentid>
+    <timestamp>2017-02-26T18:33:18Z</timestamp>
+    <contributor>
+      <username>Gez</username>
+      <id>1283</id>
+    </contributor>
+    <minor />
+    <comment>/* Conversions from linedef types */</comment>
+    <origin>43890</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="2277" sha1="l5zoymmjgxzbpg3coor9liynokm1a82" xml:space="preserve">{{DISPLAYTITLE:Door_Raise}}
+{{Special|12|tag, speed, delay, lighttag|Door|Raise}}
+* ''tag'': Tag of affected sector.
+* ''speed'': Door's [[Definitions#Sector_movement_speed|movement speed]].  Doom's standard doors move at 16, and blazing doors move at 64.
+* ''delay'': Tics until door closes.  Doom waits 150 tics.
+* ''lighttag'': Tag of sector to perform a gradual lighting effect in
+
+Raises the ceiling of all affected sectors to four units below the lowest surrounding ceiling. After the door is opened, it will be closed again after ''delay'' tics. If ''tag'' is 0, then the sector on the line's back side is used.
+
+If ''lighttag'' is non-zero a gradual lighting effect is done in the tagged sectors. The light is gradually changed between the darkest neighboring sector when the door is fully closed and the brightest neighboring sector when the door is fully open.
+
+== Conversions from linedef types ==
+The following Doom map format types can be converted as Door_Raise:
+{| {{prettytable}}
+!Type!!Conversion!!Trigger
+|-
+|{{icon|Doom}} 1: DR Door||Door_Raise (0, {{xlat|D_SLOW}}, {{xlat|VDOORWAIT}}, tag)||Player Use, Monsters Activate, Repeatable
+|-
+|{{icon|Doom}} 4: W1 Door||Door_Raise (tag, {{xlat|D_SLOW}}, {{xlat|VDOORWAIT}})||Player Cross, Monsters Activate
+|-
+|{{icon|Doom}} 29: S1 Door||Door_Raise (tag, {{xlat|D_SLOW}}, {{xlat|VDOORWAIT}})||Player Use
+|-
+|{{icon|Doom}} 63: SR Door||Door_Raise (tag, {{xlat|D_SLOW}}, {{xlat|VDOORWAIT}})||Player Use, Repeatable
+|-
+|{{icon|Doom}} 90: WR Door||Door_Raise (tag, {{xlat|D_SLOW}}, {{xlat|VDOORWAIT}})||Player Cross, Repeatable
+|-
+|{{icon|Heretic}} 100: WR Door Triple Speed||Door_Raise (tag, {{xlat|D_SLOW*3}}, {{xlat|VDOORWAIT}})||Player Cross, Repeatable
+|-
+|{{icon|Doom}} 105: WR Door Fast||Door_Raise (tag, {{xlat|D_FAST}}, {{xlat|VDOORWAIT}})||Player Cross, Repeatable
+|-
+|{{icon|Doom}} 108: W1 Door Fast||Door_Raise (tag, {{xlat|D_FAST}}, {{xlat|VDOORWAIT}})||Player Cross
+|-
+|{{icon|Doom}} 111: S1 Door Fast||Door_Raise (tag, {{xlat|D_FAST}}, {{xlat|VDOORWAIT}})||Player Use
+|-
+|{{icon|Doom}} 114: SR Door Fast||Door_Raise (tag, {{xlat|D_FAST}}, {{xlat|VDOORWAIT}})||Player Use, Repeatable
+|-
+|{{icon|Doom}} 117: DR Door Fast||Door_Raise (0, {{xlat|D_FAST}}, {{xlat|VDOORWAIT}}, tag)||Player Use, Repeatable
+|}</text>
+    <sha1>l5zoymmjgxzbpg3coor9liynokm1a82</sha1>
+  </revision>
+</page>

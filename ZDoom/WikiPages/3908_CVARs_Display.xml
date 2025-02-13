@@ -1,0 +1,1117 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>CVARs:Display</title>
+  <ns>0</ns>
+  <id>3908</id>
+  <revision>
+    <id>53322</id>
+    <parentid>52938</parentid>
+    <timestamp>2024-10-12T11:06:31Z</timestamp>
+    <contributor>
+      <username>Blue Shadow</username>
+      <id>2021</id>
+    </contributor>
+    <minor />
+    <comment>{{git}} -&gt; {{new}} for 4.13.0</comment>
+    <origin>53322</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="55759" sha1="dljfzjv3taszdjwfhijk4ddmwix3ayi" xml:space="preserve">These CVARs control various aspects of ZDoom's renderer and options relating to the in-game display.
+
+See the [[CVARs]] article for general information on how to access and edit variables.
+__TOC__
+==Game options==
+
+* '''{{LE|addrocketexplosion}}''' ([[CVARs#boolean|boolean]])
+:Default: false
+:When false, {{class|rocket}} explosions are drawn with normal translucency. When true, rocket explosions use additive translucency instead, producing a brighter effect. This affects the death state sequence of any {{class|actor}} with the {{Flag|DEHEXPLOSION}} flag.
+
+* '''{{LE|paletteflash}}''' ([[CVARs#integer|integer]])
+:Default: 0
+:Affects the [[palette flash]]es that happen in certain circumstances, notably in ''[[Hexen]]'' and ''[[Strife]]''. The value is combined from several palette flash flags.
+
+* '''{{LE|pf_hazard}}''' ([[CVARs#boolean|boolean]])
+:Default: false
+:If true, ZDoom uses accurate palette flashes for delayed poisoning from ''Strife'''s [[damaging floor]]s.
+
+* '''{{LE|pf_hexenweaps}}''' ([[CVARs#boolean|boolean]])
+:Default: false
+:If true, ZDoom uses accurate palette flashes for the {{Class|MWeapBloodscourge|Bloodscourge}} and {{Class|CWeapWraithverge|Wraithverge}} [[weapon]]s.
+
+* '''{{LE|pf_ice}}''' ([[CVARs#boolean|boolean]])
+:Default: false
+:If true, ZDoom uses accurate palette flashes for [[frozen death]].
+
+* '''{{LE|pf_poison}}''' ([[CVARs#boolean|boolean]])
+:Default: false
+:If true, ZDoom uses accurate palette flashes for [[poison]] damage.
+
+* '''{{LE|nomonsterinterpolation}}''' ([[CVARs#boolean|boolean]])
+: Default: false
+: Because [[ZDoom]] allows the framerate to go above 35 FPS, [[monster]] movement is interpolated by default so they move more smoothly and take advantage of the additional frames. However, the actual AI that moves them is still limited to the normal 35 [[tic]]s per second rate. In some situations, this may cause jerky or inaccurate movement when ZDoom attempts to interpolate. This option can be enabled so that monsters will only visibly move at the 35 FPS rate.
+
+* '''{{LE|transsouls}}''' ([[CVARs#float|float]])
+:Default: 0.75
+:Defines the level of alpha transparency for [[Classes:LostSoul|lost souls]] and other actors with the SoulTrans {{Property|RenderStyle}}. Values are clamped to stay between 0.25 and 1.
+
+* '''{{LE|telezoom}}''' ([[CVARs#boolean|boolean]])
+:Default: true
+:When true, teleporters will create an ''{{wp|Unreal}}''-like zooming effect when you use them.
+
+* '''{{LE|wipetype}}''' ([[CVARs#integer|integer]])
+:Default: 1
+:Selects the type of [[screen wipe]] to use. There are currently four possible settings for this cvar:
+:*0:No wipe
+:*1:Melt
+:*2:Burn
+:*3:Crossfade
+
+==Crosshair==
+* '''{{LE|crosshair}}''' ([[CVARs#integer|integer]])
+:Default: 0
+:If this cvar is non-zero, it draws a [[crosshair]]. If this cvar is negative, the crosshair is translucent, otherwise it is opaque. The specific crosshair drawn depends on the value of this cvar.
+
+* '''{{LE|crosshairon}}''' ([[CVARs#boolean|boolean]])
+:Default: true
+:Enables/disables the crosshair without changing the selected crosshair.
+
+* '''{{LE|crosshaircolor}}''' ([[CVARs#color|color]])
+:Default: "ff 00 00" {{color|#ff0000}}
+:This is the crosshair's color if crosshairhealth is false. 
+
+* '''{{LE|crosshairforce}}''' ([[CVARs#boolean|boolean]])
+:Default: false
+:By defaults mods may use [[A_SetCrosshair]] in a weapon definition to designate a [[crosshair]] to use for that weapon.  If you want to override this and force the game to use your own selected crosshair, set this CVAR to true.
+
+* '''{{LE|crosshairgrow}}''' ([[CVARs#boolean|boolean]])
+:Default: false
+:Set this to true if you want the [[crosshair]] to temporarily enlarge each time you pick up an item, provided that the item in question has a {{Property|Inventory.PickupMessage|pickup message}} assigned and the {{Flag|INVENTORY.QUIET|QUIET}} [[actor flags|flag]] cleared.
+
+* '''{{LE|crosshairhealth}}''' ([[CVARs#boolean|boolean]])
+:Default: true
+:When true, the [[crosshair]]'s color reflects your current health. Green is healthy, red is near death, and intermediate colors are somewhere in between. Set this to false, if you want the crosshair to have a constant color (specified by the crosshaircolor cvar) instead.
+
+* '''{{LE|crosshairscale}}''' ([[CVARs#float|float]])
+:Default: 1.0
+:A multiplier for the crosshair's size on the screen. Setting this to 0, draws the crosshair without scaling.
+
+==Chase camera==
+* '''{{LE|chase_dist}}''' ([[CVARs#float|float]])
+:Default: 90.0
+:This is how far away from the player the [[chasecam]] likes to be, but it will get closer as necessary to avoid going inside walls.
+
+* '''{{LE|chase_height}}''' ([[CVARs#float|float]])
+:Default: -8.0
+:This is the base height above the top of the player's head at which the [[chasecam]] will be positioned. Looking up and down will move the camera in the opposite direction so that the player stays at approximately the same height on the screen. Large values of this CVAR (either positive or negative) will produce strange output.
+
+* '''{{LE|chasedemo}}''' ([[CVARs#boolean|boolean]])
+:Default: false
+:If this CVAR is true, then [[demo]]s will automatically start with the [[chasecam]] active.
+
+* '''{{LE|r_deathcamera}}''' ([[CVARs#boolean|boolean]])
+:Default: false
+:If this CVAR is true, the player automatically goes into chasecam mode when dying. This use of the chasecam is not considered a cheat.
+
+==Decals==
+These CVARs affect [[decal]]s.
+
+* '''{{LE|cl_bloodsplats}}''' ([[CVARs#boolean|boolean]])
+:Default: true
+:When true, whenever something bleeds, it has a chance of leaving blood spots on nearby walls. Setting this to false might help performance on low-end machines.
+
+* '''{{LE|cl_maxdecals}}''' ([[CVARs#integer|integer]])
+:Default: 1024
+:This is the maximum number of decals that can exist in the game at one time. Decals are graphics that are placed on walls in response to blood splatter and projectile impacts.  Setting this to 0 will disable decals entirely.  This CVAR can be set to a maximum value of 2,147,483,647 which would allow an infinite number of decals for all intents and purposes.  Be aware, however, that hundreds of decals visible on the screen at one time can cause lag even on fast computers.
+
+* '''{{LE|cl_missiledecals}}''' ([[CVARs#boolean|boolean]])
+:Default: true
+:Set this to false if you don't want exploding missiles to leave scorch marks.
+
+* '''{{LE|cl_spreaddecals}}''' ([[CVARs#boolean|boolean]])
+:Default: true
+:ZDoom clips decals to sidedefs. In order to hide this, the game will create as many duplicate decals on adjoining sidedefs as needed to make it appear that there is only one unbroken decal on the wall. Set this cvar to false if you don't want this. 
+
+==Heads-Up Display (HUD)==
+* '''{{LE|displaynametags}}''' ([[CVARs#integer|integer]])
+:Default: 0
+:Determines whether [[inventory]] and [[weapon]] {{property|Tag|tags}} are shown when using {{CCMD|P|invnext}}, {{CCMD|P|invprev}}, {{CCMD|P|weapnext}}, and {{CCMD|P|weapprev}}. Possible values are:
+:*0: Don't show anything
+:*1: Show inventory tags
+:*2: Show weapon tags
+:*3: Show both inventory and weapon tags
+
+* '''{{LE|con_alpha}}''' ([[CVARs#float|float]])
+:Default: 0.75
+:Controls how transparent the [[console]] is when it is lowered. 
+
+* '''{{LE|hud_scale}}''' ([[CVARs#boolean|boolean]])
+:Default: false
+:Controls scaling of the fullscreen hud. At resolutions of 640x400 or above, setting this cvar to true will cause the icons to be scaled to approximately the same size they would be at 320x200. If this cvar is false, the icons will always be drawn without any scaling.
+
+* '''{{LE|nametagcolor}}''' ([[CVARs#integer|integer]])
+:Default: 5 ({{color|#FFCC00}} gold)
+:The color used to display weapon and inventory {{Property|Tag|tags}} when scrolling through them.
+
+* '''{{LE|screenblocks}}''' ([[CVARs#integer|integer]])
+:Default: 10
+:This CVAR determines the size of the view window. Valid values are in the range 3-12 inclusive. Attempts to set this cvar to values outside this range will be truncated. 10 shows the normal [[status bar]] at the bottom of the screen. 3 is the smallest view window, and 12 is full screen. 11 is also full screen, but includes a small overlaid heads-up display (which can be changed to the [[alternate HUD]] with [[#hud_althud|hud_althud]]).
+
+* '''{{LE|st_oldouch}}''' ([[CVARs#boolean|boolean]])
+:Default: false
+:If this CVAR is true, the [[mugshot]] will show the infamous "ouch face" when the player is healed by at least 20 points while taking damage, reestablishing the bogus behavior found in [[vanilla Doom]].
+
+* '''{{LE|st_scale}}''' ([[CVARs#boolean|boolean]])
+:Default: false
+:When this CVAR is true, the status bar will be scaled so that it covers the entire width of the screen in higher resolutions. At low resolutions this may look ugly, but at high resolutions it should look good enough.
+
+=== Alternate HUD ===
+The following variables all affect the [[alternate HUD]].
+
+* '''{{LE|hud_althud}}''' ([[CVARs#boolean|boolean]])
+:Default: false
+:Controls whether the [[alternate HUD]] is used in full-screen HUD mode ([[#screenblocks|screenblocks]] 11).
+
+* '''{{LE|hud_althud_forceinternal}}''' ([[CVARs#boolean|boolean]])
+:Default: false
+:Controls whether or not to allow a [[GameInfo_definition#AltHudClass|custom alternate HUD]] to be used instead of the internal one. If this is ''false'', a custom HUD is allowed to be used, otherwise, if it is ''true'', the internal one is always used.
+
+* '''{{LE|hud_althudscale}}''' ([[CVARs#integer|integer]])
+:Default: 2
+:Scale of the [[alternate HUD]].
+
+* '''{{LE|hud_ammo_red}}''' ([[CVARs#integer|integer]])
+:Default: 25
+:The percent value of the maximum below which the current ammo count will be displayed in red ({{color|#FF5566}}).
+
+* '''{{LE|hud_ammo_yellow}}''' ([[CVARs#integer|integer]])
+:Default: 50
+:The percent value below which the current armor rating will be displayed in yellow ({{color|#FFCC00}}). Greater values are displayed in green ({{color|#00CC00}}).
+
+* '''{{LE|hud_armor_green}}''' ([[CVARs#integer|integer]])
+:Default: 100
+:The percent value of the maximum below which the current ammo count will be displayed in green ({{color|#00CC00}}). Greater values are displayed in blue ({{color|#9999FF}}).
+
+* '''{{LE|hud_armor_red}}''' ([[CVARs#integer|integer]])
+:Default: 25
+:The value below which the current armor rating will be displayed in red ({{color|#FF5566}}).
+
+* '''{{LE|hud_armor_yellow}}''' ([[CVARs#integer|integer]])
+:Default: 50
+:The value below which the current armor rating will be displayed in yellow ({{color|#FFCC00}}).
+
+* '''{{LE|hud_berserk_health}}''' ([[CVARs#boolean|boolean]])
+:Default: true
+:If true, the {{Class|berserk}} icon is shown instead of the health icon when the player has a {{Class|PowerStrength}} active. If false, the health icon is displayed regardless. This also requires a berserk icon to be defined and valid ({{c|PSTRA0}} by default in Doom games).
+
+* '''{{LE|hud_health_green}}''' ([[CVARs#integer|integer]])
+:Default: 100
+:The value below which the current health total will be displayed in green ({{color|#00CC00}}). Greater values are displayed in blue ({{color|#9999FF}}).
+
+* '''{{LE|hud_health_red}}''' ([[CVARs#integer|integer]])
+:Default: 25
+:The value below which the current health total will be displayed in red ({{color|#FF5566}}).
+
+* '''{{LE|hud_health_yellow}}''' ([[CVARs#integer|integer]])
+:Default: 50
+:The value below which the current health total will be displayed in yellow ({{color|#FFCC00}}).
+
+==== HUD statistics ====
+* '''{{LE|hud_ammo_order}}''' ([[CVARs#integer|integer]])
+:Default: 0
+:Sets the order in which the ammo counters and their associated icons are drawn:
+:* 0: the icons are drawn on the left while the counters are drawn on the right.
+:* 1 or above: the icons are drawn on the right while the counters are drawn on the left.
+
+* '''{{LE|hud_showammo}}''' ([[CVARs#integer|integer]])
+:Default: 2
+:Manages the display of ammo:
+:* 0: displays ammo for the currently equipped weapon only.
+:* 1: displays ammo for weapons in the inventory only.
+:* 2: displays ammo for all available weapons, whether they are in the inventory or not.
+
+* '''{{LE|hud_showangles}}''' ([[CVARs#boolean|boolean]])
+:Default: false
+:While the [[automap]] is active, it shows player's current yaw, pitch and roll.
+
+* '''{{LE|hud_showitems}}''' ([[CVARs#boolean|boolean]])
+:Default: false
+:Toggles whether the player's tally of found [[item]]s is displayed.
+
+* '''{{LE|hud_showmonsters}}''' ([[CVARs#boolean|boolean]])
+:Default: true
+:Toggles whether the player's tally of killed [[monster]]s is displayed.
+
+* '''{{LE|hud_showscore}}''' ([[CVARs#boolean|boolean]])
+:Default: false
+:Toggles whether the player's [[score]] is displayed.
+
+* '''{{LE|hud_showsecrets}}''' ([[CVARs#boolean|boolean]])
+:Default: true
+:Toggles whether the player's tally of found [[secret]]s is displayed.
+
+* '''{{LE|hud_showstats}}''' ([[CVARs#boolean|boolean]])
+:Default: false
+:Toggles whether the player's [[accuracy]] and [[stamina]] are displayed.
+
+* '''{{LE|hud_showtime}}''' ([[CVARs#integer|integer]])
+:Default: 0
+:Selects whether a timer is shown in the upper-right corner of the screen. The time can show the level time, hub time, total game time, or system time; and the precision can go from hours and minutes only to also showing seconds. When set to level time, the precision can even go to milliseconds.
+:*0: Off
+:*1: Level time, down to milliseconds
+:*2: Level time, down to seconds
+:*3: Level time, down to minutes
+:*4: Hub time, down to seconds
+:*5: Hub time, down to minutes
+:*6: Game time, down to seconds
+:*7: Game time, down to minutes
+:*8: System time, down to seconds
+:*9: System time, down to minutes
+
+* '''{{LE|hud_showweapons}}''' ([[CVARs#boolean|boolean]])
+:Default: true
+:Toggles whether the weapons in the player's inventory are displayed.
+
+* '''{{LE|map_point_coordinates}}''' ([[CVARs#boolean|boolean]])
+:Default: true
+:While the [[automap]] is active, the coordinates displayed correspond to the position of the cursor at the center of the map. If false, the coordinates remain set to the player's position. 
+:When follow mode is on, the coordinates of the cursor and of the player should be the same except potentially for the Z coordinate. The cursor's Z position will always be that of the sector floor at this point; whereas a player might be flying, jumping, walking on things, or present above a [[3D floor]] or [[3D middle texture]].
+
+==== HUD colors ====
+The various hudcolor_* variables use [[TEXTCOLO]] color values:
+{| {{prettytable}}
+!code!!colspan="2"|color!!code!!colspan="2"|color!!code!!colspan="2"|color!!code!!colspan="2"|color!!code!!colspan="2"|color!!code!!colspan="2"|color!!code!!colspan="2"|color
+|-
+|0||reddish brick||{{color|#CC3333}}||1||tan||{{color|#D2B48C}}||2||gray||{{color|#CCCCCC}}||3||green||{{color|#00CC00}}||4||brown||{{color|#996633}}||5||gold||{{color|#FFCC00}}||6||red||{{color|#FF5566}}
+|-
+|7||blue||{{color|#9999FF}}||8||orange||{{color|#FFAA00}}||9||white||{{color|#DFDFDF}}||10||yellow||{{color|#EEEE33}}||12||black||{{color|#000000}}||13||light blue||{{color|#33EEFF}}||14||cream||{{color|#FFCC99}}
+|-
+|15||olive||{{color|#D1D8A8}}||16||dark green||{{color|#008C00}}||17||dark red||{{color|#800000}}||18||dark brown||{{color|#663333}}||19||purple||{{color|#9966CC}}||20||dark gray||{{color|#808080}}||21||cyan||{{color|#00DDDD}}
+|}
+* '''{{LE|hudcolor_ltim}}''' ([[CVARs#integer|integer]])
+:Default: 8 ({{color|#FFAA00}} orange)
+:The color used to display on the [[automap]] the time spent in the current visit of a level in a [[hub]].
+
+* '''{{LE|hudcolor_statnames}}''' ([[CVARs#integer|integer]])
+:Default: 6 ({{color|#FF5566}} red)
+:The color used to display the labels for the various statistics optionally shown as determined by the [[#HUD Statistics|hud_show*]] variables.
+
+* '''{{LE|hudcolor_stats}}''' ([[CVARs#integer|integer]])
+:Default: 3 ({{color|#00CC00}} green)
+:The color used to display the values for the various statistics optionally shown as determined by the [[#HUD Statistics|hud_show*]] variables.
+
+* '''{{LE|hudcolor_time}}''' ([[CVARs#integer|integer]])
+:Default: 6 ({{color|#FF5566}} red)
+:The color used to display on the [[automap]] the hub spent in the current [[hub]], or in the current level outside of a hub.
+
+* '''{{LE|hudcolor_titl}}''' ([[CVARs#integer|integer]])
+:Default: 10 ({{color|#EEEE33}} yellow)
+:The color used to display on the [[automap]] the level name.
+
+* '''{{LE|hudcolor_ttim}}''' ([[CVARs#integer|integer]])
+:Default: 5 ({{color|#FFCC00}} gold)
+:The color used to display on the [[automap]] the total time spent in the current game.
+
+* '''{{LE|hudcolor_xyco}}''' ([[CVARs#integer|integer]])
+:Default: 3 ({{color|#00CC00}} green)
+:The color used to display on the [[automap]] the player coordinates.
+
+* '''{{LE|hud_timecolor}}''' ([[CVARs#integer|integer]])
+:Default: 5 ({{color|#FFCC00}} gold)
+:The color used to display the optional timer on the normal view of the alternate HUD.
+
+=== Scoreboard ===
+These variables affect the [[scoreboard]] in [[multiplayer]].
+The various *color variables use [[TEXTCOLO]] color values:
+{| {{prettytable}}
+!code!!colspan="2"|color!!code!!colspan="2"|color!!code!!colspan="2"|color!!code!!colspan="2"|color!!code!!colspan="2"|color!!code!!colspan="2"|color!!code!!colspan="2"|color
+|-
+|0||reddish brick||{{color|#CC3333}}||1||tan||{{color|#D2B48C}}||2||gray||{{color|#CCCCCC}}||3||green||{{color|#00CC00}}||4||brown||{{color|#996633}}||5||gold||{{color|#FFCC00}}||6||red||{{color|#FF5566}}
+|-
+|7||blue||{{color|#9999FF}}||8||orange||{{color|#FFAA00}}||9||white||{{color|#DFDFDF}}||10||yellow||{{color|#EEEE33}}||12||black||{{color|#000000}}||13||light blue||{{color|#33EEFF}}||14||cream||{{color|#FFCC99}}
+|-
+|15||olive||{{color|#D1D8A8}}||16||dark green||{{color|#008C00}}||17||dark red||{{color|#800000}}||18||dark brown||{{color|#663333}}||19||purple||{{color|#9966CC}}||20||dark gray||{{color|#808080}}||21||cyan||{{color|#00DDDD}}
+|}
+
+* '''{{LE|sb_cooperative_enable}}''' ([[CVARs#boolean|boolean]])
+:Default: true
+:Controls whether the scoreboard is shown in [[cooperative]] mode.
+
+* '''{{LE|sb_cooperative_headingcolor}}''' ([[CVARs#integer|integer]])
+:Default: 6 ({{color|#FF5566}} red)
+:The color used for headings on the cooperative scoreboard.
+
+* '''{{LE|sb_cooperative_otherplayercolor}}''' ([[CVARs#integer|integer]])
+:Default: 2 ({{color|#CCCCCC}} gray)
+:The color used to display other players' names on the cooperative scoreboard.
+
+* '''{{LE|sb_cooperative_yourplayercolor}}''' ([[CVARs#integer|integer]])
+:Default: 3 ({{color|#00CC00}} green)
+:The color used to display your own name on the cooperative scoreboard.
+
+* '''{{LE|sb_deathmatch_enable}}''' ([[CVARs#boolean|boolean]])
+:Default: true
+:Controls whether the scoreboard is shown in [[deathmatch]] mode.
+
+* '''{{LE|sb_deathmatch_headingcolor}}''' ([[CVARs#integer|integer]])
+:Default: 6 ({{color|#FF5566}} red)
+:The color used for headings on the deathmatch scoreboard.
+
+* '''{{LE|sb_deathmatch_otherplayercolor}}''' ([[CVARs#integer|integer]])
+:Default: 2 ({{color|#CCCCCC}} gray)
+:The color used to display other players' names on the deathmatch scoreboard.
+
+* '''{{LE|sb_deathmatch_yourplayercolor}}''' ([[CVARs#integer|integer]])
+:Default: 3 ({{color|#00CC00}} green)
+:The color used to display your own name on the deathmatch scoreboard.
+
+* '''{{LE|sb_teamdeathmatch_enable}}''' ([[CVARs#boolean|boolean]])
+:Default: true
+:Controls whether the scoreboard is shown in [[team deathmatch]] mode.
+
+* '''{{LE|sb_teamdeathmatch_headingcolor}}''' ([[CVARs#integer|integer]])
+:Default: 6 ({{color|#FF5566}} red)
+:The color used for headings on the team deathmatch scoreboard.
+
+==Intermission screens==
+* '''{{LE|wi_noautostartmap}}''' ([[CVARs#boolean|boolean]])
+:Default: false
+:If this CVAR is true, the user has to manually end the 'entering level' page with the {{CCMD|P|+use}} command. By default, this screen is automatically left after 140 [[tic]]s (four seconds). In a network game, this effect is enabled if any player switches this on. Note that custom [[intermission script]]s can use the {{c|noautostartmap}} keyword to achieve the same effect; this CVAR being false will not override the presence of this keyword.
+
+* '''{{LE|wi_percents}}''' ([[CVARs#boolean|boolean]])
+:Default: false for ''[[Heretic]]'' and ''[[Hexen]]'', true for other games
+:When false, [[intermission]] statistics are printed as absolute values such as "7 of 9" as in ''[[Heretic]]''. When true, intermission stats are printed as percentages such as "50%".
+
+* '''{{LE|wi_showtotaltime}}''' ([[CVARs#boolean|boolean]])
+:Default: true
+:If true, show the total time spent on the current game during the intermission tally screen, in addition to the time spent on the completed level. If false, only the time spent on the completed level is shown.
+
+==Renderer==
+
+* '''{{LE|blood_fade_scalar}}''' ([[CVARs#float|float]])
+:Default: 1.0
+:Controls the intensity of the screen flash effect upon taking damage. Higher values increases the intensity while lower values decreases it. Setting this to 0, disables the effect.
+
+* '''{{LE|cl_bloodtype}}''' ([[CVARs#integer|integer]])
+:Default: 0
+:Controls how blood is drawn. Supported values are:
+:0: Blood is drawn as sprites
+:1: Blood is drawn as both sprites and [[particles]]
+:2: Blood is drawn as particles only
+
+* '''{{LE|cl_capfps}}''' ([[CVARs#boolean|boolean]])
+:Default: false
+:When true, the game is limited to 35 FPS, as it was originally in Doom. When false, the game frame rate will be as high as your machine is capable of (within the limits of {{CVAR|R|vid_maxfps}}, if set). You can use this in conjunction with {{CVAR|R|vid_vsync}} to control whether or not the maximum frame rate is restricted to your monitor's refresh rate.
+
+* '''{{LE|cl_customizeinvulmap}}''' ([[CVARs#boolean|boolean]])
+:Default: false
+:When true, it overrides the {{Property|Powerup.Color|inverse colormap}} of {{Class|powerup|powerups}}, allowing for the use of a custom colormap of the user's choice. The colormap is set through the two following variables.
+
+* '''{{LE|cl_custominvulmapcolor1}}''' ([[CVARs#color|color]])
+:Default: "00 00 1a" {{color|#00001a}}
+:One half component of the custom colormap used in place of the inverse colormap. Setting this is only meaningful if {{c|[[#cl_customizeinvulmap|cl_customizeinvulmap]]}} is set to true.
+
+* '''{{LE|cl_custominvulmapcolor2}}''' ([[CVARs#color|color]])
+:Default: "a6 a6 7a" {{color|#a6a67a}}
+:One half component of the custom colormap used in place of the inverse colormap. Setting this is only meaningful if  {{c|[[#cl_customizeinvulmap|cl_customizeinvulmap]]}} is set to true.
+
+* '''{{LE|cl_pufftype}}''' ([[CVARs#integer|integer]])
+:Default: 0
+:Controls how {{Class|BulletPuff|bullet puffs}} are drawn. Supported values are:
+:0: Puffs are drawn as sprites
+:1: Puffs are drawn as [[particles]]
+:2: Puffs are drawn as both, sprites and particles
+
+* '''{{LE|cl_rockettrails }}''' ([[CVARs#integer|integer]])
+:Default: 1
+:Controls whether or not {{Class|rocket}}s and {{class|grenade}}s leave trails of smoke behind them, as determined by the {{Flag|ROCKETTRAIL}} and {{Flag|GRENADETRAIL}} flags. Supported values are:
+:0: No rocket trail
+:1: [[Particle]] trail
+:2: Sprite trail (spawning {{Class|RocketSmokeTrail}} or {{Class|GrenadeSmokeTrail}} in the wake of the projectile)
+:3: Both particles and sprites
+:If an actor has both the ROCKETTRAIL and GRENADETRAIL flags, it can have both particle types trailing it, but only the rocket smoke sprites.
+
+* '''{{LE|fullscreen}}''' ([[CVARs#boolean|boolean]])
+:Default: true
+:If this CVAR is true, the game will be displayed fullscreen. Otherwise, it will be drawn in a window. Some video cards may require that you have fullscreen false in order to run [[ZDoom]].
+
+* '''{{LE|gamma}}''' ([[CVARs#float|float]])
+:Default: 1.0
+:Controls the amount of gamma correction applied to the display. 1.0 is equivalent to no correction, while larger numbers translate into a brighter display, and smaller numbers translate into a darker display. 0.0 is invalid and will be rejected. Negative numbers are technically invalid but will be accepted solely for the novelty value doing so provides. 
+:* '''{{LE|bgamma}}''' ([[CVARs#float|float]])
+::Default: 1.0
+::Controls the blue component of gamma correction. A value of 0 is ignored, otherwise it is used as a multiplier to the gamma value.
+:* '''{{LE|ggamma}}''' ([[CVARs#float|float]])
+::Default: 1.0
+::Controls the green component of gamma correction. A value of 0 is ignored, otherwise it is used as a multiplier to the gamma value.
+:* '''{{LE|rgamma}}''' ([[CVARs#float|float]])
+::Default: 1.0
+::Controls the red component of gamma correction. A value of 0 is ignored, otherwise it is used as a multiplier to the gamma value.
+
+* '''{{LE|pickup_fade_scalar}}''' ([[CVARs#float|float]])
+:Default: 1.0
+:Controls the intensity of the screen flash effect upon picking up items. Higher values increases the intensity while lower values decreases it. Setting this to 0, disables the effect.
+
+* '''{{LE|r_3dfloors}}''' ([[CVARs#boolean|boolean]])
+:Default: true
+:Setting this false will disable the display of [[3D floor]]s. 
+
+* '''{{LE|r_clearbuffer}}''' ([[CVARs#integer|integer]])
+:Default: 0
+:Clears the framebuffer between each frame. Several values are possible:
+:*0: By default, do not clear the buffer. This allows the {{dwicon|nolink=|hall_of_mirrors_effect|hall of mirrors effect}} to happen in certain conditions. Since the variable is not archived, it is reset to this value whenever ZDoom is run.
+:*1: Fill with black. This prevents HOMs and will generally make the affected area less noticeable.
+:*2: Fill with white. As with black, though the areas will generally be more noticeable.
+:*3: Fill in alternation with black and white, making the areas flash and helping them be more noticeable. This is roughly similar to [[Boom]]'s TNTHOM "cheat".
+:*4: Fill with each color of the [[palette]] in sequence, creating a pulsing effect.
+:*5: Fill with a random color. Seizure warning!
+
+* '''{{LE|r_columnmethod}}''' ([[CVARs#integer|integer]])
+:Default: 1
+:Selects which of two algorithms to use to draw sprites and masked textures. Method 0 is the original algorithm used by DOOM. Method 1 is a new algorithm optimized for Pentium IIs and can perform significantly better with that or comparable processors. Ironically, method 0 is slightly faster than method 1 on Pentium III and Athlon processors (though not significantly so).
+
+* '''{{LE|r_drawflat}}''' ([[CVARs#boolean|boolean]])
+:Default: false
+:When set to true, segs will be drawn as solid colors instead of textures. This is useful if you want to see how a node builder split a level's linedefs. Otherwise, it just looks ugly. 
+
+* '''{{LE|r_drawfuzz}}''' ([[CVARs#integer|integer]])
+:Default: 1
+:When set to 0, the "[[fuzz]]" effect on {{Class|spectre}}s and partially invisible players will be replaced with translucency. If set to 1, normal fuzz effect is used.
+:If set to 2, the "shadow" {{Property|RenderStyle}} is used. This emulates the rendering of fuzz in [[GZDoom]] when not using one of the pixel shaders.
+
+* '''{{LE|r_drawmirrors}}''' ([[CVARs#boolean|boolean]])
+:Default: true
+:Setting this false will disable the display of mirrors. 
+
+* '''{{LE|r_drawplayersprites}}''' ([[CVARs#boolean|boolean]])
+:Default: true
+:When false, the game will not draw the player's weapon or muzzle flash, which can be nice for screenshots. 
+
+* '''{{LE|r_drawtrans}}''' ([[CVARs#boolean|boolean]])
+:Default: true
+:Setting this to false will disable all translucency effects in the game.
+
+* '''{{LE|r_drawvoxels}}''' ([[CVARs#boolean|boolean]])
+:Default: true
+:Setting this to false will disable [[voxel]] display.
+
+* '''{{LE|r_fakecontrast}}''' ([[CVARs#integer|integer]])
+:Default: 1
+:This variable affects how [[fake contrast]] (the difference between sector light and wall light to make angles more contrasted) is handled. 0 disables it altogether ("even lighting"). The default value of 1 uses the vanilla fake contrast (only linedefs perfectly aligned with the X or Y axis are affected). A value of 2 ("smooth lighting") generalizes fake contrast to all angles, with values proportional to the angle.
+
+* '''{{LE|r_fogboundary}}''' ([[CVARs#boolean|boolean]])
+:Default: true
+:Setting this to false will disable the display of fog boundaries. Fog boundaries are sections where two areas with different fog colors meet. If the boundary is not drawn, then it will look like there is no fog at all in front of the boundary. Some old levels may look bad with fog boundary drawing enabled, which is why this cvar is available. 
+
+* '''{{LE|r_fullbrightignoresectorcolor}}''' ([[CVARs#boolean|boolean]])
+:Default: true
+:This changes the behavior of fullbright sprite states and [[Classes:PowerLightAmp|light-amplification goggles]] in the software renderer. Previously, and when this CVAR is set to false, the sector's color setting would override the fullbright state of the sprite. This changes it so that when a sprite is fullbright in non-fog sectors, it is always fullbright regardless of sector color settings. Additionally, this CVAR causes light-amplification goggles to change all sectors to white. Changing this to false enables ZDoom's old behavior.
+
+* '''{{LE|r_maxparticles}}''' ([[CVARs#integer|integer]])
+:Default: 4000
+:The maximum number of particles that will be rendered at once.
+
+* '''{{LE|r_np2}}''' ([[CVARs#boolean|boolean]])
+:Default: true
+:If this CVAR is true, [[ZDoom]] uses special code to handle non-power-of-two textures tiling vertically. Setting it to false uses the old behavior where the texture is artificially increased in height to a power of two, each column being prolonged by the data from the next column and the last being prolonged by a {{dw|tutti-frutti effect}}.
+
+* '''{{LE|r_particles}}''' ([[CVARs#boolean|boolean]])
+:Default: true
+:If set to true, particles are drawn. Otherwise, they aren't.
+
+* '''{{LE|r_quakeintensity}}''' ([[CVARs#float|float]])
+:Default: 1.0
+:Factor which scales the camera-shaking effects of ''Hexen''-style [[earthquake]]s. Value can be between 0 (no shaking) and 1 (normal shaking).
+
+* '''{{LE|r_skyboxes}}''' ([[CVARs#boolean|boolean]])
+:Default: true
+:Set this to false to disable the drawing of [[skybox]]es. Then every sky will be drawn as a standard sky instead of as a skybox.
+
+* '''{{LE|r_rail_smartspiral}}''' ([[CVARs#boolean|boolean]])
+:Default: false
+:If true, disable railgun spiral if the inner trail color is -1.
+
+* '''{{LE|r_rail_spiralsparsity}}''' ([[CVARs#integer|integer]])
+:Default: 1
+:Sets the sparsity of spiral [[particle]]s in railgun shots. The normal amount of particles is divided by this value; a value of 0 disable the spiral entirely.
+
+* '''{{LE|r_rail_trailsparsity}}''' ([[CVARs#integer|integer]])
+:Default: 1
+:Sets the sparsity of trail [[particle]]s in railgun shots. The normal amount of particles is divided by this value; a value of 0 disable the trail entirely.
+
+* '''{{LE|r_shadercolormaps}}''' ([[CVARs#boolean|boolean]])
+:Default: true
+:Set it to false to disable shaders for fixed colormap effects (e.g. invulnerability). This should only be necessary for SM1.4 cards with buggy drivers.
+
+* '''{{LE|r_skymode}}''' ([[CVARs#integer|integer]])
+:Default: 2
+:Chooses how short [[sky]] textures are handled. Possible values:
+:*0: Normal. Sky will tile when looking up or down.
+:*1: [[Sky stretching|Stretched]] sky.
+:*2: Capped sky. The top and bottom of the sky fade to their dominant colors.
+
+* '''{{LE|r_smoothlighting}}''' ([[CVARs#boolean|boolean]]) {{deprecated}}
+:Default: false
+:Forces smoothlighting to the walls in maps.
+:Replaced by r_fakecontrast in development versions.
+
+* '''{{LE|r_stretchsky}}''' ([[CVARs#boolean|boolean]]) {{deprecated}}
+:Default: true
+:Controls whether or not short sky textures are [[sky stretching|stretched]] so that you do not see them wrap when you look up or down. 
+
+* '''{{LE|r_vanillatrans}}''' ([[CVARs#integer|integer]])
+:Default: 0
+:Controls whether ZDoom's translucency enhancements of vanilla actors are allowed. This mostly concerns bright actors such as fireballs, lightning bolts, plasma shots, and so on, that are typically given an additive translucency {{Property|RenderStyle}} in ZDoom while the original games they are from made them opaque as they did not support additive translucency. Actors affected by this option are given the +{{Flag|ZDOOMTRANS}} flag; actors without this flag are not affected by this setting. Possible values:
+:*0: Force ZDoom translucency.
+:*1: Force vanilla opaqueness.
+:*2: Prefer ZDoom translucency. Turn translucency off only if a [[DEHACKED]] lump is loaded while no [[ZScript]] lump is present.
+:*3: Prefer vanilla opaqueness. Turn translucency on only if a [[DECORATE]] lump is loaded while no [[ZScript]] lump is present.
+
+* '''{{LE|r_viewsize}}''' ([[CVARs#string|string]])
+:This cvar contains the width and height of the current view window. This cvar is read only.
+
+* '''{{LE|r_radarclipper}}''' ([[CVARs#boolean|boolean]]) {{new|4.13.0}} (hardware renderers only)
+:Default: false
+:When true, and if the viewpoint's projection matrix is set to orthographic (see {{class|ViewPosition}} class), this prevents subsectors that are not visible from the camera's tracer's point-of-view from being rendered, unless it's been previously explored. In deathmatch, only currently visible subsectors will be rendered. Its behavior can be negated on a per map basis by setting the {{c|{{MapProperty|NoFogOfWar}}}} property in the [[Map definition]] sections of the [[MAPINFO]] lump. Has no effect in software rendering mode.
+
+* '''{{LE|r_dithertransparency}}''' ([[CVARs#boolean|boolean]]) {{new|4.13.0}} (hardware renderers only)
+:Default: false
+:When true, and if the viewpoint as set to be allowed to go out of bounds (see {{class|ViewPosition}} class), a dithering transparency effect is applied to level geometry elements (walls, floors, and ceilings) that obscure the {{class|PlayerPawn}} and up to twenty (hard-coded limit) closest alive [[Monster]] actors within view of the {{class|PlayerPawn}}. Has no effect in software rendering mode.
+
+===Direct3D===
+These variables affect [[ZDoom]]'s [[Direct3D]] renderer.
+
+* '''{{LE|d3d_antilag}}''' ([[CVARs#boolean|boolean]])
+:Default: true
+:Enables a technique meant to minimize input lag with [[#vid_vsync|vsync]] enabled: Two surfaces are alternately locked for read-only access each frame, forcing the driver to stop buffering more than one frame at a time. See [http://www.xyzw.de/c120.html xyzw.de/c120.html] for more details.
+
+* '''{{LE|d3d_showpacks}}''' ([[CVARs#integer|integer]])
+:Default: 0
+:?
+
+===OpenGL===
+{{openGLsmall}}
+* '''{{LE|gl_aalines}}''' ([[CVARs#boolean|boolean]])
+:Default: false
+:Choose whether to enable OpenGL-based anti-aliasing in the [[automap]].
+
+* '''{{LE|gl_attachedlights}}''' ([[CVARs#boolean|boolean]])
+:Default: true
+:Dead code, declared but not referenced anywhere.
+
+[[Image:BillboardAxes.png|right|thumb|160px|Y and XY billboarding.]]
+* '''{{LE|gl_billboard_mode}}''' ([[CVARs#integer|integer]])
+:Default: 0
+:Sets the default billboarding mode for sprites. The default value of 0 means to use Y-billboarding (sprites become paper-thin when looked at steep angles from above or below); a value of 1 means to use XY-billboarding (sprites are always facing the camera, which might make them appear at odd angles to the geometry). This is overridden by actors having the {{Flag|FORCEYBILLBOARD}} or {{Flag|FORCEXYBILLBOARD}} flags.
+:Note that some minor graphical glitches should be expected when XY-billboarded sprites are present near [[3D floor]]s.
+
+* '''{{LE|gl_billboard_particles}}''' ([[CVARs#boolean|boolean]])
+:Default: true
+:This is similar to gl_billboard_mode, but only applies to [[particle]]s. If true, XY-billboarding is always used for them; if false it depends on the gl_billboard_mode setting.
+
+* '''{{LE|gl_brightfog}}''' ([[CVARs#boolean|boolean]])
+:Default: false
+:Choose whether fog is rendered based on full brightness. In the software renderer, light level in colored fog is effectively used for fog density. This option looks good for bright, white fogs, and less so for dark, black fogs.
+
+* '''{{LE|gl_brightmap_shader}}''' ([[CVARs#boolean|boolean]])
+:Default: false
+:Chooses whether OpenGL shaders are used to handle brightmaps. This CVAR is only used with hardware limited to {{wp|GLSL|shader model 3}}. If shader model 4 is supported, shaders are always used for brightmaps; if support is limited to shader model 2, they are never used.
+
+* '''{{LE|gl_clamp_per_texture}}''' ([[CVARs#boolean|boolean]])
+:Default: false
+:Dead code, declared but not referenced anywhere.
+
+* '''{{LE|gl_colormap_shader}}''' ([[CVARs#boolean|boolean]])
+:Default: false
+:Chooses whether OpenGL shaders are used to handle colormaps. This CVAR is only used with hardware limited to {{wp|GLSL|shader model 3}}. If shader model 4 is supported, shaders are always used for colormaps; if support is limited to shader model 2, they are never used.
+
+* '''{{LE|gl_debug}}''' ([[CVARs#boolean|boolean]])
+:Default: false
+:If this CVAR is true, the OpenGL context is created in debug mode. This variable is only relevant during initialization and is not archived; if you want to see its effect you have to set it from the command line: {{c|gzdoom +{{CCMD|C|set}} gl_debug 1}} for example.
+
+* '''{{LE|gl_direct_state_change}}''' ([[CVARs#boolean|boolean]])
+:Default: true
+:
+
+* '''{{LE|gl_distfog}}''' ([[CVARs#integer|integer]])
+:Default: 70
+:This value is used to compute the distance fog table.
+
+* '''{{LE|gl_draw_sync}}''' ([[CVARs#boolean|boolean]])
+:Default: true
+:
+
+* '''{{LE|gl_dynlight_shader}}''' ([[CVARs#boolean|boolean]])
+:Default: false
+:Chooses whether OpenGL shaders are used to handle [[dynamic light]]s. This variable can only be set to true if the GLSL implementation available supports at least 1024 uniform variables and provides shader model 4 features.
+
+* '''{{LE|gl_enhanced_nightvision}}''' ([[CVARs#boolean|boolean]])
+:Default: true
+:Enables or disables the enhanced nightvision effect which changes how the {{Class|PowerLightAmp}} and {{Class|PowerTorch}} effects work. If false, they behave like the software renderer and merely give full brightness to everything. If true, however, the light amplification visor shows the world geometry in green and the sprites of monsters and items are in inverted colors; while everything illuminated by the torch lies in a flickering golden light. 
+
+* '''{{LE|gl_enhanced_nv_stealth}}''' ([[CVARs#integer|integer]])
+:Default: 3
+:If enhanced night vision is on, [[stealth monster]]s and other actors with the {{Flag|STEALTH}} flag or the {{c|Shadow}} {{Property|RenderStyle}} can be seen while an effect altering vision with a fixed colormap is active. Possible values are:
+:*0: Enhanced night vision has no effect.
+:*1: Infrared night vision makes stealth monsters visible and shadowed actors easier to see.
+:*2: Both infrared and torch have this effect of making such actors easier to see.
+:*3: Any sort of fixed colormap have this effect.
+
+* '''{{LE|gl_fog_shader}}''' ([[CVARs#boolean|boolean]])
+:Default: false
+:Chooses whether OpenGL shaders are used to handle fog. This CVAR is only used with hardware limited to {{wp|GLSL|shader model 3}}. If shader model 4 is supported, shaders are always used for fog; if support is limited to shader model 2, they are never used.
+
+* '''{{LE|gl_fogmode}}''' ([[CVARs#integer|integer]])
+:Default: 1
+:Chooses how distance fog is generated. Possible values are:
+:*0:No fog
+:*1:Standard fog
+:*2:Radial fog
+
+* '''{{LE|gl_forcemultipass}}''' ([[CVARs#boolean|boolean]])
+:Default: false
+:
+
+* '''{{LE|gl_fuzztype}}''' ([[CVARs#integer|integer]])
+:Default: 0
+:Defines how the {{Class|spectre}} [[fuzz]] effect ({{Property|RenderStyle}} {{c|Fuzzy}} or {{c|OptFuzzy}}) is handled. Possible values include:
+:*0: Shadow (equivalent to RenderStyle Shadow)
+:*1: Pixel fuzz
+:*2: Smooth fuzz
+:*3: Swirly fuzz
+:*4: Translucent fuzz
+:*6: Noise
+:*7: Smooth Noise
+
+* '''{{LE|gl_glow_shader}}''' ([[CVARs#boolean|boolean]])
+:Default: true
+:Chooses whether OpenGL shaders are used to handle glowing flats. This CVAR is only used with hardware limited to {{wp|GLSL|shader model 3}}. If shader model 4 is supported, shaders are always used for glowing flats; if support is limited to shader model 2, they are never used.
+
+* '''{{LE|gl_interpolate_model_frames}}''' ([[CVARs#boolean|boolean]])
+:Default: true
+:When this CVAR is true, [[model]] frames are interpolated, smoothing up their movement. This also concerns [[voxel]]s.
+
+* '''{{LE|gl_coronas}}''' ([[CVARs#boolean|boolean]])
+:Default: true
+:When this CVAR is true, GZDoom will render {{class|Corona|light coronas}}.
+
+* '''{{LE|gl_light_models}}''' ([[CVARs#boolean|boolean]])
+:Default: true
+:Unused. Only referenced in a disabled part of the code.
+
+* '''{{LE|gl_light_particles}}''' ([[CVARs#boolean|boolean]])
+:Default: true
+:If true, [[particle]]s are affected by [[dynamic light]]s.
+
+* '''{{LE|gl_light_sprites}}''' ([[CVARs#boolean|boolean]])
+:Default: true
+:If true, [[sprite]]s are affected by [[dynamic light]]s.
+
+* '''{{LE|gl_lightmode}}''' ([[CVARs#integer|integer]])
+:Default: 3 (Dark)
+:Sets the default lighting model to use in maps. Note that the choice made here can be overridden by the {{c|lightmode}} property in a [[MAPINFO]] [[map definition]].
+:*0 (Standard): Uses a standard OpenGL formula.  Dark sectors appear much lighter than they would in vanilla Doom.
+:*1 (Bright): Like 0 (Standard), but with very weak fog dropoff, keeping distant sectors relatively bright.
+:*2 (Doom): A close approximation to vanilla Doom, but still not quite as dark.
+:*3 (Dark): Identical to 2 (Doom), but without the brighter halo effect around the player.
+:*4 (Doom Legacy): Emulates the lighting model of the [[Doom Legacy]] 1.42 OpenGL renderer.  Visually about halfway between 0 (Standard) and 1 (Bright).
+:*5 (Build): GLSL-based emulation of Build lighting.  Similar to vanilla Doom near the player, but light drops off sharply to total darkness after a modest distance.
+:*8 (Software): GLSL-based emulation of the ZDoom software renderer's lighting, based on the equations used by Id to generate the original colormaps.  Virtually identical to original Doom.
+:*16 (Vanilla): GLSL-based emulation of vanilla Doom's lighting, in theory, but in practice appears a step darker overall.
+:If shaders are unavailable, the GLSL-based modes fall back to 2 (Doom).
+
+* '''{{LE|gl_lights}}''' ([[CVARs#boolean|boolean]])
+:Default: true
+:
+
+* '''{{LE|gl_lights_additive}}''' ([[CVARs#boolean|boolean]])
+:Default: false
+:
+
+* '''{{LE|gl_lights_checkside}}''' ([[CVARs#boolean|boolean]])
+:Default: true
+:
+
+* '''{{LE|gl_lights_intensity}}''' ([[CVARs#float|float]])
+:Default: 1.0
+:
+
+* '''{{LE|gl_lights_size}}''' ([[CVARs#float|float]])
+:Default: 1.0
+:
+
+* '''{{LE|gl_mask_sprite_threshold}}''' ([[CVARs#float|float]])
+:Default: 0.5
+:
+
+* '''{{LE|gl_mask_threshold}}''' ([[CVARs#float|float]])
+:Default: 0.5
+:
+
+* '''{{LE|gl_mirror_envmap}}''' ([[CVARs#boolean|boolean]])
+:Default: true
+:
+
+* '''{{LE|gl_mirrors}}''' ([[CVARs#boolean|boolean]])
+:Default: true
+:
+
+* '''{{LE|gl_no_skyclear}}''' ([[CVARs#boolean|boolean]])
+:Default: false
+:
+
+* '''{{LE|gl_nocoloredspritelighting}}''' ([[CVARs#boolean|boolean]])
+:Default: false
+:
+
+* '''{{LE|gl_noquery}}''' ([[CVARs#boolean|boolean]])
+:Default: false
+:
+
+* '''{{LE|gl_noskyboxes}}''' ([[CVARs#boolean|boolean]])
+:Default: false
+:
+
+* '''{{LE|gl_notexturefill}}''' ([[CVARs#boolean|boolean]])
+:Default: false
+:
+
+* '''{{LE|gl_particles_style}}''' ([[CVARs#integer|integer]])
+:Default: 2
+:
+
+* '''{{LE|gl_plane_reflection}}''' ([[CVARs#boolean|boolean]])
+:Default: true
+:
+
+* '''{{LE|gl_portals}}''' ([[CVARs#boolean|boolean]])
+:Default: true
+:
+
+* '''{{LE|gl_precache}}''' ([[CVARs#boolean|boolean]])
+:Default: false
+:
+
+* '''{{LE|gl_render_flats}}''' ([[CVARs#boolean|boolean]])
+:Default: true
+:
+
+* '''{{LE|gl_render_precise}}''' ([[CVARs#boolean|boolean]])
+:Default: false
+:
+
+* '''{{LE|gl_render_segs}}''' ([[CVARs#boolean|boolean]])
+:Default: false
+:
+
+* '''{{LE|gl_render_things}}''' ([[CVARs#boolean|boolean]])
+:Default: true
+:
+
+* '''{{LE|gl_render_walls}}''' ([[CVARs#boolean|boolean]])
+:Default: true
+:
+
+* '''{{LE|gl_sclipfactor}}''' ([[CVARs#float|float]])
+:Default: 1.8
+:
+
+* '''{{LE|gl_sclipthreshold}}''' ([[CVARs#float|float]])
+:Default: 10
+:
+
+* '''{{LE|gl_seamless}}''' ([[CVARs#boolean|boolean]])
+:Default: false
+:
+
+* '''{{LE|gl_sky_detail}}''' ([[CVARs#integer|integer]])
+:Default: 16
+:
+
+* '''{{LE|gl_sort_textures}}''' ([[CVARs#boolean|boolean]])
+:Default: true
+:
+
+* '''{{LE|gl_sprite_blend}}''' ([[CVARs#boolean|boolean]])
+:Default: false
+:
+
+* '''{{LE|gl_spritebrightfog}}''' ([[CVARs#boolean|boolean]])
+:Default: false
+:
+
+* '''{{LE|gl_spriteclip}}''' ([[CVARs#integer|integer]])
+:Default: 1
+:
+
+* '''{{LE|gl_texture}}''' ([[CVARs#boolean|boolean]])
+:Default: true
+:
+
+* '''{{LE|gl_texture_filter}}''' ([[CVARs#integer|integer]])
+:Default: 4
+:Sets the {{wp|Texture_filtering|texture filtering}} mode. The possible values are:
+:*0: None
+:*1: None (nearest mipmap)
+:*2: Linear
+:*3: Bilinear
+:*4: Trilinear
+:*5: None (linear mipmap)
+:*6: None (trilinear mipmap)
+
+* '''{{LE|gl_texture_filter_anisotropic}}''' ([[CVARs#integer|integer]])
+:Default: 8
+:
+
+* '''{{LE|gl_texture_format}}''' ([[CVARs#integer|integer]])
+:Default: 0
+:
+
+* '''{{LE|gl_texture_hqresize}}''' ([[CVARs#integer|integer]])
+:Default: 0
+:
+
+* '''{{LE|gl_texture_hqresize_fonts}}''' ([[CVARs#boolean|boolean]])
+:Default: true
+:
+
+* '''{{LE|gl_texture_hqresize_maxinputsize}}''' ([[CVARs#integer|integer]])
+:Default: 512
+:
+
+* '''{{LE|gl_texture_hqresize_sprites}}''' ([[CVARs#boolean|boolean]])
+:Default: true
+:
+
+* '''{{LE|gl_texture_hqresize_targets}}''' ([[CVARs#integer|integer]])
+:Default: 7
+:
+
+* '''{{LE|gl_texture_hqresize_textures}}''' ([[CVARs#boolean|boolean]])
+:Default: true
+:
+
+* '''{{LE|gl_texture_usehires}}''' ([[CVARs#boolean|boolean]])
+:Default: true
+:
+
+* '''{{LE|gl_texture_useshaders}}''' ([[CVARs#boolean|boolean]])
+:Default: true
+:
+
+* '''{{LE|gl_trimsprites}}''' ([[CVARs#boolean|boolean]])
+:Default: true
+:
+
+* '''{{LE|gl_usecolorblending}}''' ([[CVARs#boolean|boolean]])
+:Default: true
+:
+
+* '''{{LE|gl_usefb}}''' ([[CVARs#boolean|boolean]])
+:Default: false
+:
+
+* '''{{LE|gl_usevbo}}''' ([[CVARs#integer|integer]])
+:Default: 2
+:
+
+* '''{{LE|gl_vid_compatibility}}''' ([[CVARs#boolean|boolean]])
+:Default: false
+:
+
+* '''{{LE|gl_vid_multisample}}''' ([[CVARs#integer|integer]])
+:Default: 0
+:
+
+* '''{{LE|gl_warp_shader}}''' ([[CVARs#boolean|boolean]])
+:Default: false
+:
+
+* '''{{LE|gl_weaponlight}}''' ([[CVARs#integer|integer]])
+:Default: 8
+:
+
+* '''{{LE|gltest_slopeopt}}''' ([[CVARs#boolean|boolean]])
+:Default: false
+:
+
+* '''{{LE|maxviewpitch}}''' ([[CVARs#float|float]])
+:Default: 90.0
+:
+
+* '''{{LE|r_mirror_recursions}}''' ([[CVARs#integer|integer]])
+:Default: 4
+:
+
+* '''{{LE|skyoffset}}''' ([[CVARs#float|float]])
+:Default: 0.0
+:
+
+* '''{{LE|vid_brightness}}''' ([[CVARs#float|float]])
+:Default: 0
+:
+
+* '''{{LE|vid_contrast}}''' ([[CVARs#float|float]])
+:Default: 1
+:
+
+* &lt;del&gt;'''{{LE|vid_renderer}}'''&lt;/del&gt; ([[CVARs#integer|integer]])
+:&lt;del&gt;Default: 1&lt;/del&gt;
+:&lt;del&gt; GZDoom will run in either OpenGL mode (1) or software mode (0). Changing this requires a restart of the game.&lt;/del&gt; This option was removed after 2.7.1.
+
+*  '''{{LE|vid_preferbackend}}''' ([[CVARs#integer|integer]])
+:Default: 0
+: Selects the API for compositing the scene (world geometry + weapon sprites + menu).
+{| {{prettytable}}
+! id
+! Lower-level API on POSIX
+! Lower-level API on Windows
+|-
+| 0
+| SDL+OpenGL
+| OpenGL
+|-
+| 1
+| SDL+Vulkan (automatic fallback to GL when unavailable)
+| Vulkan
+|-
+| 2
+| SDL+OpenGL
+| Direct3D 9
+|-
+| 3
+| SDL+GLES2
+| ?
+|}
+
+(GZDoom 4.2.4 (POSIX) was the last to send Softpoly output to an SDL RGBA 2D context. Starting from 4.3.0, it always uses a GL window. Softpoly was later removed in 4.9.0 altogether.)
+
+* '''{{LE|vid_rendermode}}''' ([[CVARs#integer|integer]])
+:Default: 4
+
+{| {{prettytable}}
+! vid_rendermode
+! vid_preferbackend
+! World rasterized by
+|-
+| 0
+| -
+| Classic 2-point projection renderer, 8-bit
+|-
+| 1
+| -
+| Classic 2-point, truecolor
+|-
+| 4
+| 0
+| OpenGL
+|-
+| 4
+| 1
+| Vulkan/OpenGL (see vid_preferbackend table)
+|-
+| 4
+| 2
+| Softpoly 3-point projection renderer
+|}
+
+==Video adapter==
+* '''{{LE|vid_adapter}}''' ([[CVARs#integer|integer]]) ('''OpenGL or Win32 Only''')
+:Default: 1
+:Defines which screen is used if multiple monitors are available. A list of available video adapters can be obtained by using the {{CCMD|I|vid_listadapters}} [[console command]].
+
+* '''{{LE|vid_aspect}}''' ([[CVARs#integer|integer]])
+:Default: 0
+:Which aspect ratio is used.
+:*0: Autodetect appropriate aspect ratio.
+:*1: 16:9
+:*2: 16:10
+:*3: 4:3
+:*4: 5:4
+:*5: 17:10
+
+* '''{{LE|vid_attachedsurfaces}}''' ([[CVARs#boolean|boolean]]) ('''Win32 Only''')
+:Default: false
+:Controls how the game allocates video memory. False is the standard setting and will always produce a usable display. If you find that there are patches of pure black and pure white on the screen (especially noticeable when a demon is right in your face), try setting this to true. Certain old Windows 95 video drivers are said to need this fix, and it is also necessary under NT 4. Unfortunately, many new video drivers (including those under NT 4) will produce a scrambled display if the screen width is not 512 or 1024 pixels and this is set to true.
+
+* '''{{LE|vid_cursor}}''' ([[CVARs#string|string]])
+:Default: "None"
+:Which mouse cursor to use. This overrides the [[MAPINFO/GameInfo_definition|GameInfo]] {{c|cursorpic}} value. Default is "None" to use the GameInfo cursor, possible values include "-" (system cursor), or one of the graphics provided by [[ZDoom]]: "cursor", "chexcurs" (a waffle), "doomcurs" (the endgame bunny head), "herecurs" (the {{Class|GoldWand|elven wand}}), "hexncurs" (the Hexen logo's red X), or "strfcurs" (a sigil logo). It is possible to use custom cursors, as long as they fit the requirements (no more than 32x32).
+
+* '''{{LE|vid_defbits}}''' ([[CVARs#integer|integer]])
+:Default: 8
+:This cvar is meant to specify the default screen depth, but the setting is currently ignored because only 256-color (8-bit) display modes are supported.
+
+* '''{{LE|vid_defheight}}''' ([[CVARs#integer|integer]])
+:Default: 480
+:Specifies the default screen height to use if not overridden at the command line by the -height switch. 
+
+* '''{{LE|vid_defwidth}}''' ([[CVARs#integer|integer]])
+:Default: 640
+:Specifies the default screen width to use if not overridden at the command line with the -width switch. 
+
+* '''{{LE|vid_displaybits}}''' ([[CVARs#integer|integer]])
+:Default: 8
+:Controls how many bits per pixel the fullscreen display gets created with. The game is still rendered in 8-bit, but this is for the benefit of cards that don't support that or work better with non-8-bit displays.
+
+* '''{{LE|vid_forceddraw}}''' ([[CVARs#boolean|boolean]]) ('''Win32 Only''')
+:Default: false
+:Forces the use of {{wp|DirectDraw}} instead of [[Direct3D]] for blitting graphics to the screen or render window. Direct3D is generally preferable as it allows truecolor rendering for [[HUD]] graphics, but forcing the use of DirectDraw routines may solve problems caused by faulty drivers or aged hardware.
+
+* '''{{LE|vid_hw2d}}''' ([[CVARs#boolean|boolean]]) ('''Win32 Only''')
+:Default: true
+:If false, this disables hardware assistance for the 2D layer when using the [[Direct3D]] renderer. However, hardware rendering is still used to get the data to the screen, contrarily to [[#vid_forceddraw|vid_forceddraw]].
+
+* '''{{LE|vid_hwaalines}}''' ([[CVARs#boolean|boolean]]) ('''Win32 Only''')
+:Default: true
+:Controls whether Direct3D can use antialiased lines. Drivers tend to misreport that they cannot handle antialiasing even when they can, forcing ZDoom to take the issue out of their hands. If the [[automap]] displays thick and blurry lines, set this value to false.
+
+* '''{{LE|vid_maxfps}}''' ([[CVARs#integer|integer]]) ('''Not Mac OS X''')
+:Default: 200
+:If non-zero, this variable limits the frame rate to some arbitrary rate between 35 and 1000 FPS. Note that vid_maxfps 35 is ''not'' the same as {{CVAR|R|cl_capfps}} 1: cl_capfps caps the frame rate by tying the video update directly to the game timer. With vid_maxfps 35, the video update and game timer are running on separate timers, and results will not be as good as with cl_capfps 1, which uses only one timer. You can use this in conjunction with {{CVAR|R|vid_vsync}} to control whether or not the maximum frame rate is restricted to your monitor's refresh rate.
+
+* '''{{LE|vid_noblitter}}''' ([[CVARs#boolean|boolean]]) ('''Win32 Only''')
+:Default: true
+:Setting this to false will allow the use of the hardware to assist moving image data to video memory. When Randy initially wrote the code to use the blitter, it was faster than not using it. Now the blitter is slower, so the default is true. {{verification}}
+
+* '''{{LE|vid_nopalsubstitutions}}''' ([[CVARs#boolean|boolean]])
+:Default: false
+:Setting this to true will disable [[PALVERS]]-based graphics substitution in the 8-bit software renderer.
+
+* '''{{LE|vid_nowidescreen}}''' ([[CVARs#boolean|boolean]])
+:Default: false
+:Use this cvar to disable widescreen aspect ratio correction. When it is set to true, the only display ratio available is 4:3 (and 5:4 if [[#vid_tft|vid_tft]] is set).
+
+* '''{{LE|vid_palettehack}}''' ([[CVARs#boolean|boolean]]) ('''Win32 Only''')
+:Default: false
+:When this cvar is true, the game will refresh the palette every time the screen is redrawn. This can be useful with some buggy video drivers. If the display is fine without it, leave it that way because this can slightly slow things down. 
+
+* '''{{LE|vid_refreshrate}}''' ([[CVARs#integer|integer]]) ('''Win32 Only''')
+:Default: 0
+:If non-zero, specifies a custom refresh rate which overrides Windows' automatic refresh rate selection. This is useful if your video card is trying to run your monitor at a refresh rate it doesn't actually support for the given resolution. Normally this will not be needed, however. This is only meaningful in fullscreen mode.
+
+* '''{{LE|vid_showpalette}}''' ([[CVARs#integer|integer]])
+:Default: 0
+:Set this to a value between 1 and 9 inclusive to display in the upper left corner of the screen the current [[palette]] with a preset [[translation]]. This is a debugging tool used to detect interference with the system palette from other programs. 1 is the untranslated palette, 2 is translation 0, 3 is translation 1, etc. up to 8 for translation 6. 9 corresponds to the ice translation.
+:If a translation is not defined (for example, values 6 to 8 in ''[[Doom]]'' and ''[[Heretic]]''), the palette is left untranslated.
+
+* '''{{LE|vid_tft}}''' ([[CVARs#boolean|boolean]])
+:Default: false
+:When this CVAR is true, the 5:4 aspect ratio is available.
+
+* '''{{LE|vid_vsync}}''' ([[CVARs#boolean|boolean]]) ('''Not Linux''')
+:Default: false
+:Set this to false to disable syncing the frame rate to the vertical refresh rate. Not all video cards support disabling vsync, in which case this CVAR will be ignored. 
+
+* '''{{LE|win_x}}''' ([[CVARs#integer|integer]])
+* '''{{LE|win_y}}''' ([[CVARs#integer|integer]])
+:Default: -1
+:The horizontal (x) and vertical (y) location of the window when in windowed mode. If either value is such that the window would be placed off the screen, it will be forced into a position that keeps as much of the window onscreen as possible. (It will not choose a position less than 0.) This CVAR is only evaluated on startup, and changing it after the window is created will have no effect until ZDoom is restarted.
+
+==See also==
+
+*[[CVARs]]
+*[[CCMDs]]
+
+[[category:ZDoom console]]</text>
+    <sha1>dljfzjv3taszdjwfhijk4ddmwix3ayi</sha1>
+  </revision>
+</page>

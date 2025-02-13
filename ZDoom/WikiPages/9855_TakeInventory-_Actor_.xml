@@ -1,0 +1,100 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>TakeInventory (Actor)</title>
+  <ns>0</ns>
+  <id>9855</id>
+  <revision>
+    <id>52119</id>
+    <parentid>52105</parentid>
+    <timestamp>2024-03-27T17:03:04Z</timestamp>
+    <contributor>
+      <username>Jekyll Grim Payne</username>
+      <id>2175</id>
+    </contributor>
+    <minor />
+    <comment>Jekyll Grim Payne moved page [[TakeInventory (ZScript)]] to [[TakeInventory (Actor)]]: There's another ZScript version of TakeInventory, in ScriptUtil. The new name will be unambiguous.</comment>
+    <origin>52105</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="3092" sha1="togglpnniaagfow9hwlymj0q08893ot" xml:space="preserve">{{SameNameNote|ZScript|ACS|TakeInventory}}
+
+'''{{class|Actor}}'''
+
+{{c|bool '''TakeInventory'''(class&lt;Inventory&gt; ''itemclass'', int amount, bool ''fromdecorate'' }}={{c| false, bool ''notakeinfinite'' }}={{c| false)}}
+
+== Usage ==
+A ZScript-only variant of [[A_TakeInventory]]. Takes the specified amount of the specified {{class|Inventory}} class from the calling actor's inventory.
+
+=== Parameters ===
+*{{c|class&lt;Inventory&gt; '''itemclass'''}}
+:The name of the {{class|Inventory}} item class that should be taken.
+*{{c|int '''amount'''}}
+:The amount of the specified item to take.
+*{{c|bool '''fromdecorate'''}}
+:If this is &lt;code&gt;false&lt;/code&gt;, the ''notakeinfinite'' check is skipped. The item's amount is reduced, [[DepleteOrDestroy]] is called if it reached 0, and the function unconditionally returns &lt;code&gt;false&lt;/code&gt;.
+*{{c|bool '''notakeinfinite'''}}
+:If this is &lt;code&gt;true&lt;/code&gt; AND ''fromdecorate'' is &lt;code&gt;true&lt;/code&gt;, the item will not be taken if ''itemclass'' is an {{class|Ammo}} class and the user either has a {{class|PowerInfiniteAmmo}}-based powerup, or the [[CVARs:Configuration#sv_infiniteammo|{{c|sv_infiniteammo}}]] cheat is enabled.
+
+=== Return values ===
+*bool — The function may return &lt;code&gt;true&lt;/code&gt; or &lt;code&gt;false&lt;/code&gt; depending on the result:
+:*If the ''fromdecorate'' argument is &lt;code&gt;false&lt;/code&gt;, the function always returns &lt;code&gt;false&lt;/code&gt;.
+:*Otherwise, if the ''notakeinfinite'' argument is &lt;code&gt;true&lt;/code&gt;, ''itemclass'' is an {{class|Ammo}} class, and the caller has {{class|PowerInfiniteAmmo}} or uses the [[CVARs:Configuration#sv_infiniteammo|{{c|sv_infiniteammo}}]] cheat, the function returns &lt;code&gt;false&lt;/code&gt;.
+:*Otherwise, if after the '''TakeInventory''' call the caller still has some amount of ''itemclass' left, the function returns &lt;code&gt;true&lt;/code&gt;; if caller has none left, it returns &lt;code&gt;false&lt;/code&gt;.
+
+== [[ZScript]] definition ==
+{{ZScriptDefinitionNote|actors/inventory_util.zs#L139}}
+
+&lt;syntaxhighlight lang="csharp"&gt;
+	bool TakeInventory(class&lt;Inventory&gt; itemclass, int amount, bool fromdecorate = false, bool notakeinfinite = false)
+	{
+		amount = abs(amount);
+		let item = FindInventory(itemclass);
+
+		if (item == NULL)
+			return false;
+
+		if (!fromdecorate)
+		{
+			item.Amount -= amount;
+			if (item.Amount &lt;= 0)
+			{
+				item.DepleteOrDestroy();
+			}
+			// It won't be used in non-decorate context, so return false here
+			return false;
+		}
+
+		bool result = false;
+		if (item.Amount &gt; 0)
+		{
+			result = true;
+		}
+
+		// Do not take ammo if the "no take infinite/take as ammo depletion" flag is set
+		// and infinite ammo is on
+		if (notakeinfinite &amp;&amp;
+		(sv_infiniteammo || (player &amp;&amp; FindInventory('PowerInfiniteAmmo', true))) &amp;&amp; (item is 'Ammo'))
+		{
+			// Nothing to do here, except maybe res = false;? Would it make sense?
+			result = false;
+		}
+		else if (!amount || amount &gt;= item.Amount)
+		{
+			item.DepleteOrDestroy();
+		}
+		else item.Amount -= amount;
+
+		return result;
+	}
+&lt;/syntaxhighlight&gt;
+
+== Examples ==
+{{noexamples}}
+
+== See also ==
+* [[A_TakeInventory]]
+* [[GiveInventory (ZScript)]]
+
+[[Category:ZScript]]</text>
+    <sha1>togglpnniaagfow9hwlymj0q08893ot</sha1>
+  </revision>
+</page>

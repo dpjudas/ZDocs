@@ -1,0 +1,168 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>Cleaned-up third person camera</title>
+  <ns>0</ns>
+  <id>2923</id>
+  <revision>
+    <id>43494</id>
+    <parentid>37474</parentid>
+    <timestamp>2016-12-07T21:51:50Z</timestamp>
+    <contributor>
+      <username>Gez</username>
+      <id>1283</id>
+    </contributor>
+    <minor />
+    <comment>style</comment>
+    <origin>43494</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="4801" sha1="ns79ve4xfl6dn1667t3j5hrsr92q71a" xml:space="preserve">{{TOCright}}
+== Assumed knowledge ==
+
+It is assumed that before you begin this tutorial, you are familiar with the following concepts:
+
+&lt;div style="-moz-column-width: 10em; column-width: 10em;"&gt;
+* [[Arrays]]
+* [[ChangeCamera]]
+* [[Spawn]]
+* [[Definitions#Fixed_point_numbers|Fixed Point Numbers]]
+* [[Definitions#Fixed_point_angles|Fixed Point Angles]]
+* [[Definitions#Byte_angles|Byte Angles]]
+* [[GetActorX]]
+* [[GetActorY]]
+* [[GetActorZ]]
+* [[SetActorPosition]]
+* [[GetActorAngle]]
+* [[SetActorAngle]]
+* [[GetActorPitch]]
+* [[SetActorPitch]]
+* [[cos]]
+* [[sin]]
+&lt;/div&gt;
+
+Understanding these concepts is vital to understanding the following tutorial.
+
+==Use and advantages==
+The internal third person cam is preferable, but in a select few well-planned instances, scripts such as the following may be used instead. As the page title suggests, this script will control a camera that follows the player.
+
+Unlike other scripts that have been posted, this one is relatively free of clutter. This script set corrects old hacks used for [[sin]] and [[cos]], which did not work correctly in pre-[[ZDoom Community Build|96x]] versions. Aside from that, the math has been cleaned up drastically, and an emphasis was placed on multiplayer compatibility and using as few map level variables as possible. Instead of spawning, setting, and then removing the camera, this script uses the new [[SetActorPosition]] function to move the camera about. It also takes full advantage of the [[GetActorPitch]] and [[SetActorPitch]] functions for a fully three dimensional chase cam.
+
+==DECORATE==
+
+ actor ChaseCam
+ {
+   {{property|Height}} 16
+   {{property|Radius}} 8
+   +{{flag|NOGRAVITY}} +{{flag|NOBLOCKMAP}}
+   states
+   {
+   Spawn:
+     TNT1 A -1
+     stop
+   }
+ }
+
+==Script==
+===Setting things in motion===
+Using “ENTER” and “RESPAWN” scripts, the camera mode is turned on, and the main script is executed.  This is important for managing multiplayer compatibility.
+
+ //Third person camera simulation.
+ //solarsnowfall
+ 
+ #include "zcommon.acs"
+ 
+ #define C_TID		1000	//Default camera tid
+ #define MAX_R		128	//Maximum radius (or distance from the player)
+ #define ADJUST_R	8	//Amount to adjust the camera by
+ #define VIEW_HEIGHT	41.0	//The approximate height of the player's view
+ 
+ bool cam_mode[8];		//Variable for turning the camera on or off.
+ 	
+ Script 1 {{SType|Enter}}
+ {
+ 	cam_mode&amp;#91;[[PlayerNumber]] ()] = {{const|ON}};
+ 	[[ACS_ExecuteAlways]] (3, 0, [[PlayerNumber]] ());
+ }
+ 
+ Script 2 {{SType|Respawn}}
+ {
+ 	cam_mode&amp;#91;[[PlayerNumber]] ()] = {{const|ON}};
+ 	[[ACS_ExecuteAlways]] (3, 0, [[PlayerNumber]] ());
+ }
+
+===Generation of coordinates===
+This segment grabs the coordinates of the player and generates coordinates to spawn the camera. If it fails, the script is terminated and an error message is printed.
+
+ Script 3 (int p_num)
+ {
+ 	int r = MAX_R;
+ 	
+ 	while (cam_mode[p_num] == {{const|ON}})
+ 	{	
+ 		int a = [[GetActorAngle]] (0);
+ 		int p = [[GetActorPitch]] (0);
+ 		int x = [[GetActorX]] (0);
+ 		int y = [[GetActorY]] (0);
+ 		int z = [[GetActorZ]] (0) + VIEW_HEIGHT;
+ 		int xyr = r * [[cos]] (p) &gt;&gt; 16;
+ 		
+ 		if (![[ThingCountName]] ("ChaseCam", C_TID+p_num))
+ 		{
+ 			while (![[Spawn]] ("ChaseCam", x-[[cos]](a)*xyr, y-[[sin]](a)*xyr, z+[[sin]](p)*r, C_TID+p_num, a &gt;&gt; 8) &amp;&amp; r &gt; 0)
+ 			{
+ 				r -= ADJUST_R;
+ 				xyr = [[cos]] (p) * r &gt;&gt; 16;
+ 			}
+ 			
+ 			if (ThingCountName ("ChaseCam", C_TID + p_num))
+ 				ChangeCamera (C_TID + p_num, 0, 0);
+ 			else
+ 			{
+ 				cam_mode[p_num] = {{const|OFF}};
+ 				[[print]] (s:"Camera script failed to initialize.");
+ 			}
+ 		}
+
+If the camera was successfully spawned the spawn segment will now be skipped, and the script will begin moving the camera with the player.  If when trying to move the camera into position a failure occurs, the script recalculates the coordinates and attempts to move the camera towards the player.
+
+ 	        else
+ 		{
+ 			while (![[SetActorPosition]] (C_TID+p_num, x-[[cos]](a)*xyr, y-[[sin]](a)*xyr, z+[[sin]](p)*r, 0) &amp;&amp; r &gt; 0)
+ 			{
+ 				r -= ADJUST_R;
+ 				xyr = [[cos]] (p) * r &gt;&gt; 16;
+ 			}
+ 			
+ 			[[SetActorAngle]] (C_TID + p_num, a);
+ 			[[SetActorPitch]] (C_TID + p_num, p);
+ 			
+ 			if (r &lt; MAX_R) 
+                               r += ADJUST_R;
+ 		}
+ 		
+ 		[[delay]] (1);
+ 	}
+ }
+
+===Camera removal===
+Script 4 will turn the "camera mode" off and remove the player's camera when they die.  Script 5 will do the same if the player disconnects.
+
+ Script 4 {{SType|Death}}
+ {
+ 	cam_mode&amp;#91;[[PlayerNumber]] ()] = {{const|OFF}};
+ 	[[Thing_Remove]] (C_TID + [[PlayerNumber]] ());
+ }
+ 
+ Script 5 (int p_num) {{SType|Disconnect}}
+ {
+        cam_mode[p_num] = {{const|OFF}};
+        [[Thing_Remove]] (C_TID + p_num);
+ }
+
+== See also ==
+* [[Tutorials]]
+
+[[category:ACS guides]]
+[[Category:DECORATE guides]]</text>
+    <sha1>ns79ve4xfl6dn1667t3j5hrsr92q71a</sha1>
+  </revision>
+</page>

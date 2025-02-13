@@ -1,0 +1,81 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>Classes:Mummy</title>
+  <ns>0</ns>
+  <id>2908</id>
+  <revision>
+    <id>39444</id>
+    <parentid>34170</parentid>
+    <timestamp>2015-04-30T21:03:45Z</timestamp>
+    <contributor>
+      <username>Blue Shadow</username>
+      <id>2021</id>
+    </contributor>
+    <minor />
+    <comment>/* DECORATE definition */ Updated</comment>
+    <origin>39444</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="1653" sha1="sdmgxfcnie9r559wmvb3z2676d3jnvk" xml:space="preserve">{{Actor|
+| type = Monster
+| name = Golem
+| class = Mummy
+| game = Heretic
+| doomednum = 68
+| spawnid = 4
+| spawnname = T_MUMMY 
+}}[[Classes]]: &lt;u&gt;Mummy&lt;/u&gt;&lt;br&gt;
+&amp;ensp;&amp;rarr;[[Classes:MummyGhost|MummyGhost]]&lt;br&gt;
+&amp;ensp;&amp;rarr;[[Classes:MummyLeader|MummyLeader]]&lt;br&gt;
+&amp;ensp;&amp;ensp;&amp;rarr;[[Classes:MummyLeaderGhost|MummyLeaderGhost]]
+
+Golems are very common enemies in Heretic. At close range they smash the player with their fists and are dangerous in packs. Golems don't have much health.
+
+==== [[DECORATE]] definition ====
+ ACTOR &lt;u&gt;Mummy&lt;/u&gt;
+ {
+   {{Property|Health}} 80
+   {{Property|Radius}} 22
+   {{Property|Height}} 62
+   {{Property|Mass}} 75
+   {{Property|Speed}} 12
+   {{Property|PainChance}} 128
+   {{Property|Monster}}
+   +{{Flag|FLOORCLIP}}
+   {{Property|SeeSound}} "mummy/sight"
+   {{Property|AttackSound}} "mummy/attack1"
+   {{Property|PainSound}} "mummy/pain"
+   {{Property|DeathSound}} "mummy/death"
+   {{Property|ActiveSound}} "mummy/active"
+   {{Property|HitObituary}} "$OB_MUMMY"
+   {{Property|DropItem}} "{{Class|GoldWandAmmo}}", 84, 3
+   States
+   {
+   Spawn:
+     MUMM AB 10 [[A_Look]]
+     Loop
+   See:
+     MUMM ABCD 4 [[A_Chase]]
+     Loop
+   Melee:
+     MUMM E 6 [[A_FaceTarget]]
+     MUMM F 6 [[A_CustomMeleeAttack]]([[DECORATE_expressions#Mathematical_functions|random]][MummyAttack](1,8)*2, "mummy/attack2", "mummy/attack")
+     MUMM G 6
+     Goto See
+   Pain:
+     MUMM H 4
+     MUMM H 4 [[A_Pain]]
+     Goto See
+   Death:
+     MUMM I 5
+     MUMM J 5 [[A_Scream]]
+     MUMM K 5 [[A_SpawnItemEx]]("{{Class|MummySoul}}", 0, 0, 10, 0, 0, 1)
+     MUMM L 5
+     MUMM M 5 [[A_NoBlocking]]
+     MUMM NO 5
+     MUMM P -1
+     Stop
+   }
+ }</text>
+    <sha1>sdmgxfcnie9r559wmvb3z2676d3jnvk</sha1>
+  </revision>
+</page>

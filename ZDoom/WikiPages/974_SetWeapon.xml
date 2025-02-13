@@ -1,0 +1,104 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>SetWeapon</title>
+  <ns>0</ns>
+  <id>974</id>
+  <revision>
+    <id>35978</id>
+    <parentid>22780</parentid>
+    <timestamp>2013-03-01T02:18:13Z</timestamp>
+    <contributor>
+      <username>Deded007</username>
+      <id>1392</id>
+    </contributor>
+    <minor />
+    <comment>/* Examples */ links</comment>
+    <origin>35978</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="1852" sha1="t0bchk4kx7fjz75eh0j4kt54jt9u65l" xml:space="preserve">bool '''SetWeapon'''(str ''weaponname'');
+
+==Usage==
+
+Sets the player's current weapon to ''weaponname''. 
+
+Returns TRUE if the weapon was set successfully, and FALSE if not.
+
+Here is a listing of the weapons for each game:
+
+;Doom
+*Fist
+*Chainsaw
+*Pistol
+*Shotgun
+*SuperShotgun (Doom 2/Final Doom only)
+*Chaingun
+*RocketLauncher
+*PlasmaRifle
+*BFG9000
+
+;Heretic
+*Staff
+*Gauntlets
+*GoldWand
+*Crossbow
+*Blaster
+*SkullRod
+*PhoenixRod
+*Mace
+
+;Hexen
+*Fighter
+**FWeapFist
+**FWeapAxe
+**FWeapHammer
+**FWeapQuietus
+*Cleric
+**CWeapMace
+**CWeapStaff
+**CWeapFlame
+**CWeapWraithverge
+*Mage
+**MWeapWand
+**MWeapFrost
+**MWeapLightning
+**MWeapBloodscourge
+
+;Strife
+*PunchDagger
+*StrifeCrossbow
+*StrifeCrossbow2
+*AssaultGun
+*MiniMissileLauncher
+*StrifeGrenadeLauncher
+*StrifeGrenadeLauncher2
+*FlameThrower
+*Mauler
+*Mauler2
+
+Note that in the case of Hexen, one class cannot use another classes weapons, so if you make new sprites for the Fighter's Axe and then play as the Cleric, you will be able to pick up the Axe, but not use it. Outside of playing a Hexen game though, any weapon can be used anywhere else.
+
+Although the above list is complete, a full list of inventory can be seen at [[Inventory]], along with details on how to make a textfile containing a list.
+
+==Examples==
+
+This is the worst script ever:
+
+ script 666 {{SType|Enter}}
+ {
+     while({{const|TRUE}})
+     {
+         if ([[Random]](0, 1))
+             [[SetWeapon]]("{{class|Fist}}");
+         else
+             [[SetWeapon]]("{{class|RocketLauncher}}");
+ 	
+         [[Delay]](35*2);
+     }
+ }
+
+It randomly selects either the fist or rocket launcher every two seconds, making the player extremely frustrated and annoyed. Note that if the player does not have the weapon, there will be no result from this command. See [[CheckInventory]] to check for the weapon.
+
+[[category:ACS Inventory functions]]</text>
+    <sha1>t0bchk4kx7fjz75eh0j4kt54jt9u65l</sha1>
+  </revision>
+</page>

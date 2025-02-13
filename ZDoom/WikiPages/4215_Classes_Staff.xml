@@ -1,0 +1,61 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>Classes:Staff</title>
+  <ns>0</ns>
+  <id>4215</id>
+  <revision>
+    <id>39389</id>
+    <parentid>34105</parentid>
+    <timestamp>2015-04-29T17:48:52Z</timestamp>
+    <contributor>
+      <username>Blue Shadow</username>
+      <id>2021</id>
+    </contributor>
+    <minor />
+    <comment>/* DECORATE definition */ Updated</comment>
+    <origin>39389</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="1120" sha1="avnh6bqy6i4ig460fqrfvp1lod5zqpl" xml:space="preserve">{{Actor|
+| type = Weapon
+| name = Staff
+| class = Staff
+| game = Heretic
+}}[[Classes]]: [[Classes:Inventory|Inventory]]&amp;rarr;[[Classes:Weapon|Weapon]]&amp;rarr;[[Classes:HereticWeapon|HereticWeapon]]&amp;rarr;&lt;u&gt;Staff&lt;/u&gt;&lt;br&gt;
+&amp;ensp;&amp;rarr;[[Classes:StaffPowered|StaffPowered]]&lt;br&gt;
+[[Classes:HereticPlayer|Corvus]]'s ironshod staff. Useless against ghosts.
+
+
+==== [[DECORATE]] definition ====
+ ACTOR &lt;u&gt;Staff&lt;/u&gt; : {{Class|HereticWeapon}}
+ {
+   {{Property|Weapon.SelectionOrder}} 3800
+   +{{Flag|THRUGHOST}}
+   +{{Flag|WIMPY_WEAPON}}
+   +{{Flag|MELEEWEAPON}}
+   {{Property|Weapon.SisterWeapon}} "{{Class|StaffPowered}}"
+   {{Property|Obituary}} "$OB_MPSTAFF"
+   {{Property|Tag}} "$TAG_STAFF"
+ 
+   action native [[A_StaffAttack]](int damage, class&lt;Actor&gt; puff);
+ 
+   States
+   {
+   Ready:
+     STFF A 1 [[A_WeaponReady]]
+     Loop
+   Deselect:
+     STFF A 1 [[A_Lower]]
+     Loop
+   Select:
+     STFF A 1 [[A_Raise]]
+     Loop
+   Fire:
+     STFF B 6
+     STFF C 8 [[A_StaffAttack]]([[DECORATE_expressions#Mathematical_functions|random]][StaffAttack](5, 20), "{{Class|StaffPuff}}")
+     STFF B 8 [[A_ReFire]]
+     Goto Ready
+   }
+ }</text>
+    <sha1>avnh6bqy6i4ig460fqrfvp1lod5zqpl</sha1>
+  </revision>
+</page>

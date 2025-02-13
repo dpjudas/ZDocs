@@ -1,0 +1,53 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>SetPNG</title>
+  <ns>0</ns>
+  <id>3490</id>
+  <revision>
+    <id>32309</id>
+    <parentid>26145</parentid>
+    <timestamp>2012-03-31T16:35:32Z</timestamp>
+    <contributor>
+      <username>Gez</username>
+      <id>1283</id>
+    </contributor>
+    <comment>example</comment>
+    <origin>32309</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="2689" sha1="avt8pwdg9aoqzogcgrx82zsburjs2oc" xml:space="preserve">'''SetPNG''' is a little command-line tool written by Randy Heit which can be used to set sprite offsets in [[PNG]] files and create alpha map decals. While people may prefer the more intuitive graphical interface of [[SLumpEd]] which can do the same thing and much more, SetPNG can be used in batch scripts (.bat files) to perform this operation automatically on a large number of sprites.
+
+Due to setpng's source having gone missing, it was rewritten under the name '''grabpng''' by bagheadspidey. (See Links section below.)
+
+==Options==
+;-alph
+:Create alPh chunk in output file.
+;-noalph
+:Remove alPh chunk from source file.
+;-grab &lt;x&gt; &lt;y&gt;
+:Set contents of [[grAb]] chunk in output file.
+;-z
+:Recompress IDAT chunks. If you saved the PNG with an older version of Photoshop, you might want to do this, because Photoshop used to do a very poor job of compressing PNG files. However, using [http://www.advsys.net/ken/utils.htm PNGOut] with the /k1 option will produce even better compression, and grabpng does not even have this option.
+
+===Examples===
+  setpng -alph -grab &lt;x&gt; &lt;y&gt; &lt;infile.png&gt; &lt;outfile.png&gt;
+This will turn &lt;infile.png&gt; into an alpha map called &lt;outfile.png&gt; with the given &lt;x&gt; and &lt;y&gt; offsets. The source image should be in grayscale. To add offsets to a file without turning it into an alpha map, do not use the -alph option.
+
+==Chunks==
+PNG chunks can be likened to WAD lumps, they are a specific subpart of the file. Contrarily to lumps, they are case-sensitive: The first letter is upper-case for "critical" chunks (without which the image cannot work) and lower-case for "ancillary" chunks (which can be ignored). The second letter is upper case for public chunks (part of the standard specifications) or lower case for "private" chunks (non-standard, which is the case here for the alPh and grAb chunks). The third letter has no given role yet and is thus always upper case, and the last letter indicates whether image manipulation software that does not recognize the chunk should delete it (upper-case) or keep it (lower-case).
+
+;IDAT
+:IDAT chunks contain the image data proper.
+;grAb
+:The [[grAb]] chunk contains the sprite's X and Y offsets, setting them is presumably the main reason for using SetPNG.
+;alPh
+:The alPh chunk is used to indicate that a grayscale image is actually an alpha map, and is primarily intended for use with decals. This chunk was created because the PNG specification has no standardized way for storing alpha channels without image data.
+
+== See also ==
+
+* {{forum|grabpng forum thread|t=19876}}
+* [http://code.google.com/p/grabpng/ grabpng page at Google Code]
+* {{forum|setpng download|root=download/file|id=301}}
+[[Category:Tools]]</text>
+    <sha1>avt8pwdg9aoqzogcgrx82zsburjs2oc</sha1>
+  </revision>
+</page>

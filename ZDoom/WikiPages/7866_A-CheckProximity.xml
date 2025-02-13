@@ -1,0 +1,91 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>A CheckProximity</title>
+  <ns>0</ns>
+  <id>7866</id>
+  <revision>
+    <id>49468</id>
+    <parentid>45586</parentid>
+    <timestamp>2022-08-08T18:36:35Z</timestamp>
+    <contributor>
+      <username>JSO x</username>
+      <id>2479</id>
+    </contributor>
+    <minor />
+    <comment>/* Examples */ "House of the Devil.WAD" already released, so I'll clear this ancient note.</comment>
+    <origin>49468</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="4228" sha1="hhjud98ogd202rkmg5gu7bjidevar8k" xml:space="preserve">{{codepointer|Jump}}
+state '''A_CheckProximity''' (str ''jump'', str ''classname'', float ''distance'' [, int ''count'' [, int ''flags'' [, int ''ptr'']]])
+{{JumpNotice}}
+==Usage==
+Performs a check to see if an actor of type ''classname'' is within ''distance'', and checks to see the population within distance is greater or equal to ''count''. These conditions can be modified with ''flags'' and will count any actor, as long as it is the same ''classname''. Can be performed based upon the actor's pointer as well. For use in ACS, see [[CheckProximity]].
+
+===Parameters===
+*''jump'': The state to jump to when the number of actor ''classname'' is found.
+*''classname'': The name of the actor to check for.
+*''distance'': Determines how far this function should search for the actors, similar to [[A_JumpIfCloser]]. Must be greater than 0.
+*''count'': The number of actors the function must find within ''distance'' in order to jump. Default is 1.
+*''flags'': Can be combined using the '|' separator. Default is 0.
+**'''CPXF_ANCESTOR''': Search the inheritance of an actor, if it has any, for a partial match akin to [[CheckClass]].
+**'''CPXF_NOZ''': Disables Z height checking -- the function will only care about the actor being in range for X and Y coordinates, regardless of how high or low an actor is.
+:*'''CPXF_CHECKSIGHT''': Restricts actor counting to only those which can be seen.
+
+Only one of the two following may be used due to mutual exclusion:
+:*'''CPXF_COUNTDEAD''': By default, the function only counts living actors. This causes the function to also accept dead ones. This only makes sense for monsters.
+:*'''CPXF_DEADONLY''': Inverses the function to only count dead monsters instead of living ones.
+
+Only one of the two following may be used due to mutual exclusion:
+:*'''CPXF_LESSOREQUAL''': The function will jump if it finds the number of actors equivalent to number or less, instead of greater.
+:*'''CPXF_EXACT''': The function will only jump if the exact number is found defined by ''count''.
+
+Specifying one of the following flags makes the jump state optional to define, allowing a blank state "" to be used:
+:*'''CPXF_SETTARGET''': Sets the first actor matching ''classname'' as the calling actor's target.
+:*'''CPXF_SETMASTER''': Sets the first actor matching ''classname'' as the calling actor's master.
+:*'''CPXF_SETTRACER''': Sets the first actor matching ''classname'' as the calling actor's tracer.
+
+The following flags rely on using one of the SET* flags above:
+:*'''CPXF_FARTHEST''': The actor gets the furthest ''classname'' actor within ''distance'' from the pointer's location.
+:*'''CPXF_CLOSEST''': The actor gets the closest ''classname'' actor within ''distance'' to the pointer's location.
+:*'''CPXF_SETONPTR''': The pointer exchange is set on the calling actor's pointer instead of itself.
+
+*''ptr'': The [[actor pointer]] to do the checking around. The jump is only performed by the original calling actor, however. Default is {{c|{{const|AAPTR_DEFAULT}}}}.
+
+== Examples ==
+This [[Classes:Zombieman|Zombieman]] waits until a nearby archvile of his type (Nightmare) appears. Here the function is used for prevent resurrection by an incorrect type of archvile. 
+
+
+ Actor NightmareZombie: Zombieman
+ {
+   {{property|RenderStyle}} Subtract
+   States
+   {
+   Death:
+     POSS H 5
+     POSS I 5 [[A_Scream]]
+     POSS J 0 [[A_DropItem]]( "Clip" )
+     POSS J 0 [[A_UnsetShootable]]     // Don't "[[A_Fall]]" because [[Classes:Archvile|archviles]] can react to this function too.
+     POSS J 5 [[A_UnsetSolid]]
+     POSS K 5
+   Death.Wait:
+     POSS L 5
+     POSS L 0 '''A_CheckProximity'''( "Death.HelpMe", "NightmareArch", 64 )
+     Loop
+   Death.HelpMe:
+     POSS L 1 CanRaise '''A_CheckProximity'''( "Death.Wait", "[[Classes:Archvile|Archvile]]", 64 )
+     POSS L 0 CanRaise '''A_CheckProximity'''( "Death.HelpMe", "NightmareArch", 64 )
+     Goto Death.Wait
+   XDeath:
+     POSS M 5
+     POSS N 5 [[A_XScream]]
+     POSS O 5 [[A_NoBlocking]]
+     POSS PQRST 5
+     POSS U 100000      // By default, [[Classes:Archvile|archviles]] can only resurrect those who are in a state with a "-1" durability.
+     Wait
+   }
+ }
+ 
+[[category:Decorate Jump functions]]{{DEFAULTSORT:CheckProximity}}</text>
+    <sha1>hhjud98ogd202rkmg5gu7bjidevar8k</sha1>
+  </revision>
+</page>

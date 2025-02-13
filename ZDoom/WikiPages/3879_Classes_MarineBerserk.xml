@@ -1,0 +1,55 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>Classes:MarineBerserk</title>
+  <ns>0</ns>
+  <id>3879</id>
+  <revision>
+    <id>48887</id>
+    <parentid>48465</parentid>
+    <timestamp>2021-12-27T11:10:04Z</timestamp>
+    <contributor>
+      <username>Jekyll Grim Payne</username>
+      <id>2175</id>
+    </contributor>
+    <comment>updated in accordance with updated ZScriptDefinitionNote template</comment>
+    <origin>48887</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="744" sha1="bcgbnxa852990xk5hz96anak9gxhgqo" xml:space="preserve">{{Actor|
+| type = Monster
+| name = Space Marine with Berserk Pack
+| class = MarineBerserk
+| game = Doom
+| doomednum = 9102
+}}
+[[Classes]]: [[Classes:ScriptedMarine|ScriptedMarine]]&amp;rarr;&lt;u&gt;MarineBerserk&lt;/u&gt;
+
+A [[Classes:ScriptedMarine|scripted marine]] with a [[Classes:Fist|fist]] weapon in [[Classes:Berserk|berserk]] mode.
+
+==== [[ZScript]] definition ====
+{{ZScriptDefinitionNote|actors/doom/scriptedmarine.zs}}
+ class MarineBerserk : MarineFist
+ {
+ 	States
+ 	{
+ 	Melee:		
+ 		Goto Super::Melee.Berserk;
+ 	Missile:
+ 		Stop;
+ 	}
+ }
+
+==== [[DECORATE]] definition ====
+{{DecorateDefinitionNote}}
+ ACTOR &lt;u&gt;MarineBerserk&lt;/u&gt;: {{Class|ScriptedMarine}}
+ {
+   States
+   {
+   Melee:      
+     Goto Super::Melee.Berserk
+   Missile:
+     Stop
+   }
+ }</text>
+    <sha1>bcgbnxa852990xk5hz96anak9gxhgqo</sha1>
+  </revision>
+</page>

@@ -1,0 +1,77 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>Structs:WorldEvent</title>
+  <ns>0</ns>
+  <id>9985</id>
+  <revision>
+    <id>53537</id>
+    <parentid>53536</parentid>
+    <timestamp>2024-11-02T00:21:21Z</timestamp>
+    <contributor>
+      <username>Jekyll Grim Payne</username>
+      <id>2175</id>
+    </contributor>
+    <origin>53537</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="2910" sha1="omiiil96yapvou159oairk99e6wk3ns" xml:space="preserve">'''WorldEvent''' is a [[ZScript]] [[Structs|struct]] used to pass around data by [[Events and handlers|event handler]] World* virtual functions, such as [[WorldThingSpawned]], [[WorldLoaded]] and many others. Like with most other struct-using functions, the purpose of the struct is to easily pass varying and sometimes large amounts of data without having to rely on individual arguments in each function.
+
+{{note|Which values are available and which remain null is wholly determined by which event handler function you're overriding. As such, looking at this struct in isolation is arguably not particularly useful. This page exists mainly for the sake of completeness of documentation.}}
+
+== Fields ==
+=== Readonly ===
+*{{c| bool '''IsSaveGame'''}}
+:Utilized by {{c|WorldLoaded}} and {{c|WorldUnloaded}} in a {{class|StaticEventHandler}}. True if a save is being loaded.
+
+*{{c| bool '''IsReopen'''}}
+:Utilized by {{c|WorldLoaded}}. True if the map is a part of a hub and is being revisited.
+
+*{{c| String '''NextMap'''}}
+:Utilized by {{c|WorldUnloaded}}. Contains the name of the next map.
+
+*{{c| Actor '''Thing'''}}
+:Utilized by multiple {{c|WorldThing}}* events. Contains a pointer to the actor that the event is triggered for/by.
+
+*{{c| Actor '''Inflictor'''}}
+:Utilized by {{c|[[WorldThingDied]]}} and {{c|[[WorldThingDamaged]]}}. Contains a pointer to the [[puff]] or the [[projectile]] that dealt damage to the actor.
+
+*{{c| int '''Damage'''}}
+:Utilized by all events that somehow interact with damage, be it an actor or a line.
+
+*{{c| Actor '''DamageSource'''}}
+*{{c| AName '''DamageType'''}}
+*{{c| AEDmgFlags '''DamageFlags'''}}
+*{{c| Adouble '''DamageAngle'''}}
+:These are utilized by {{c|[[WorldThingDamaged]]}}.
+
+*{{c| Line '''ActivatedLine'''}}
+:Utilized by {{c|WorldLineActivated}}/{{c|WorldLinePreactivated}}. Contains a pointer to the relevant {{struct|Line}}.
+
+*{{c| int '''ActivationType'''}}
+:Utilized by {{c|WorldLineActivated}}/{{c|WorldLinePreactivated}}. Contains the {{struct|Line}}'s activation type.
+
+*{{c| SectorPart '''DamageSectorPart'''}}
+*{{c| Line '''DamageLine'''}}
+*{{c| Sector '''DamageSector'''}}
+*{{c| int '''DamageLineSide'''}}
+*{{c| vector3 '''DamagePosition'''}}
+*{{c| bool '''DamageIsRadius'''}}
+:These are utilized by {{c|WorldSectorDamaged}} and {{c|WorldLineDamaged}}.
+
+*{{c| State '''CrushedState'''}}
+:Utilized by {{c|WorldThingGround}}. Contains a pointer to the crushed actor's [[Actor states#Crush|Crush state]].
+
+=== Modifiable ===
+*{{c| bool '''ShouldActivate'''}}
+:Utilized by {{c|WorldLinePreActivated}}. If set to &lt;code&gt;false&lt;/code&gt;, the line's activation will be blocked.
+*{{c| int '''NewDamage'''}}
+:Utilized by {{c|WorldSectorDamaged}} and {{c|WorldLineDamaged}}. Allows modifying the damage dealt to the {{struct|Line}}/{{struct|Sector}}
+
+== See also ==
+* [[Events and handlers]]
+
+[[Category:ZScript]]
+[[Category:Structs]]
+[[Category:Event handlers]]</text>
+    <sha1>omiiil96yapvou159oairk99e6wk3ns</sha1>
+  </revision>
+</page>

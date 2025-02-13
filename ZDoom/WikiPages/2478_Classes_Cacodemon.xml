@@ -1,0 +1,165 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>Classes:Cacodemon</title>
+  <ns>0</ns>
+  <id>2478</id>
+  <revision>
+    <id>48925</id>
+    <parentid>48438</parentid>
+    <timestamp>2021-12-27T11:16:13Z</timestamp>
+    <contributor>
+      <username>Jekyll Grim Payne</username>
+      <id>2175</id>
+    </contributor>
+    <comment>updated in accordance with updated ZScriptDefinitionNote template</comment>
+    <origin>48925</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="3181" sha1="0b7xmih2owz69qb6ltbfnt0qu9ur5xf" xml:space="preserve">{{Actor|
+| type = Monster
+| name = Cacodemon
+| class = Cacodemon
+| game = Doom
+| doomednum = 3005
+| thingindex = 15
+| spawnid = 19
+| spawnname = T_CACODEMON
+}}
+
+[[Classes]]: &lt;u&gt;Cacodemon&lt;/u&gt;&lt;br&gt;
+&amp;ensp;&amp;rarr;[[Classes:DeadCacodemon|DeadCacodemon]]&lt;br&gt;
+&amp;ensp;&amp;rarr;[[Classes:StealthCacodemon|StealthCacodemon]]
+
+
+The Cacodemon has nothing better to do than to fly around and shoot [[Classes:CacodemonBall|purple balls]] at you through their mouth. They like biting up close so it's a good idea to keep your distance.
+
+
+==== [[ZScript]] definition ====
+{{ZScriptDefinitionNote|actors/doom/cacodemon.zs}} 
+ class Cacodemon : Actor
+ {
+ 	Default
+ 	{
+ 		{{Property|Health}} 400;
+ 		{{Property|Radius}} 31;
+ 		{{Property|Height}} 56;
+ 		{{Property|Mass}} 400;
+ 		{{Property|Speed}} 8;
+ 		{{Property|PainChance}} 128;
+ 		{{Property|Monster}};
+ 		+{{Flag|FLOAT}} +{{Flag|NOGRAVITY}}
+ 		{{Property|SeeSound}} "caco/sight";
+ 		{{Property|PainSound}} "caco/pain";
+ 		{{Property|DeathSound}} "caco/death";
+ 		{{Property|ActiveSound}} "caco/active";
+ 		{{Property|Obituary}} "$OB_CACO";
+ 		{{Property|HitObituary}} "$OB_CACOHIT";
+ 		{{Property|Tag}} "$FN_CACO";
+ 	}
+ 	States
+ 	{
+ 	Spawn:
+ 		HEAD A 10 [[A_Look]];
+ 		Loop;
+ 	See:
+ 		HEAD A 3 [[A_Chase]];
+ 		Loop;
+ 	Missile:
+ 		HEAD B 5 [[A_FaceTarget]];
+ 		HEAD C 5 [[A_FaceTarget]];
+ 		HEAD D 5 BRIGHT [[A_HeadAttack]];
+ 		Goto See;
+ 	Pain:
+ 		HEAD E 3;
+ 		HEAD E 3 [[A_Pain]];
+ 		HEAD F 6;
+ 		Goto See;
+ 	Death:
+ 		HEAD G 8;
+ 		HEAD H 8 [[A_Scream]];
+ 		HEAD I 8;
+ 		HEAD J 8;
+ 		HEAD K 8 [[A_NoBlocking]];
+ 		HEAD L -1 [[A_SetFloorClip]];
+ 		Stop;
+ 	Raise:
+ 		HEAD L 8 [[A_UnSetFloorClip]];
+ 		HEAD KJIHG 8;
+ 		Goto See;
+ 	}
+ }
+ 
+ extend class Actor
+ {
+ 	void [[A_HeadAttack]]()
+ 	{
+ 		let targ = target;
+ 		if (targ)
+ 		{
+ 			if (CheckMeleeRange())
+ 			{
+ 				int damage = random[pr_headattack](1, 6) * 10;
+ 				[[A_StartSound]] (AttackSound, CHAN_WEAPON);
+ 				int newdam = target.DamageMobj (self, self, damage, "Melee");
+ 				targ.TraceBleed (newdam &gt; 0 ? newdam : damage, self);
+ 			}
+ 			else
+ 			{
+ 				// launch a missile
+ 				SpawnMissile (targ, "CacodemonBall");
+ 			}
+ 		}
+ 	}
+ }
+
+==== [[DECORATE]] definition ====
+{{DecorateDefinitionNote}}
+ ACTOR &lt;u&gt;Cacodemon&lt;/u&gt;
+ {
+   {{Property|Health}} 400
+   {{Property|Radius}} 31
+   {{Property|Height}} 56
+   {{Property|Mass}} 400
+   {{Property|Speed}} 8
+   {{Property|PainChance}} 128
+   {{Property|Monster}}
+   +{{Flag|FLOAT}}
+   +{{Flag|NOGRAVITY}}
+   {{Property|SeeSound}} "caco/sight"
+   {{Property|PainSound}} "caco/pain"
+   {{Property|DeathSound}} "caco/death"
+   {{Property|ActiveSound}} "caco/active"
+   {{Property|Obituary}} "$OB_CACO"
+   {{Property|HitObituary}} "$OB_CACOHIT"
+   States
+   {
+   Spawn:
+     HEAD A 10 [[A_Look]]
+     Loop
+   See:
+     HEAD A 3 [[A_Chase]]
+     Loop
+   Missile:
+     HEAD BC 5 [[A_FaceTarget]]
+     HEAD D 5 Bright [[A_HeadAttack]]
+     Goto See
+   Pain:
+     HEAD E 3
+     HEAD E 3 [[A_Pain]]
+     HEAD F 6
+     Goto See
+   Death:
+     HEAD G 8
+     HEAD H 8 [[A_Scream]]
+     HEAD IJ 8
+     HEAD K 8 [[A_NoBlocking]]
+     HEAD L -1 [[A_SetFloorClip]]
+     Stop
+   Raise:
+     HEAD L 8 [[A_UnSetFloorClip]]
+     HEAD KJIHG 8
+     Goto See
+   }
+ }</text>
+    <sha1>0b7xmih2owz69qb6ltbfnt0qu9ur5xf</sha1>
+  </revision>
+</page>

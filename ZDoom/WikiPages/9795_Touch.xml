@@ -1,0 +1,176 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>Touch</title>
+  <ns>0</ns>
+  <id>9795</id>
+  <revision>
+    <id>52547</id>
+    <parentid>51504</parentid>
+    <timestamp>2024-04-22T11:52:51Z</timestamp>
+    <contributor>
+      <username>Jekyll Grim Payne</username>
+      <id>2175</id>
+    </contributor>
+    <minor />
+    <comment>/* Examples */</comment>
+    <origin>52547</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="4600" sha1="q2jribp0p6h99d5mfb2csr0ppnog6tg" xml:space="preserve">'''{{class|Actor}}'''
+
+{{c|virtual void '''Touch''' (Actor ''toucher'')}}
+
+==Usage==
+A [[ZScript virtual functions|virtual function]] called by actors with the when another actor comes in contact with them. This doesn't handle general collision (see [[CanCollideWith]] for that); instead, this function is mainly utilized by {{class|Inventory}} items: when a player actor touches the item, the item will call &lt;code&gt;Touch()&lt;/code&gt; to try and be picked up by that actor.
+
+If the item is picked up, &lt;code&gt;Touch()&lt;/code&gt; also prints its {{property|PickupMessage}} and plays its {{property|PickupSound}} for the toucher. Note, those are handled by separate functions: [[PrintPickupMessage]] and [[PlayPickupSound]] respectively. The process of the item being placed in the toucher's inventory is also not handled in &lt;code&gt;Touch()&lt;/code&gt; directly, instead it's handled in [[CallTryPickup]].
+
+This function can also be called directly, such as &lt;code&gt;&lt;itempointer&gt;.Touch(&lt;actorpointer&gt;)&lt;/code&gt;, even if the item and the actor are not at the same position. This forces the item to perform its pickup sequence.
+
+This function is also utilized by the {{class|SpectralMonster}} class to let it hurt the player when touching them.
+
+=== Parameters ===
+*{{c|Actor '''toucher'''}}
+:The actor who is attempting to pick up this item.
+
+== [[ZScript]] definition ==
+{{ZScriptDefinitionNote|actors/inventory/inventory.zs#L806}}
+This function is actually empty in the base {{class|Actor}} class and does nothing. The base {{class|Inventory}} class, however, uses this override:
+
+&lt;syntaxhighlight lang="csharp"&gt;
+	override void Touch (Actor toucher)
+	{
+		bool localPickUp;
+		let player = toucher.player;
+		if (player)
+		{
+			// If a voodoo doll touches something, pretend the real player touched it instead.
+			toucher = player.mo;
+			// Client already picked this up, so ignore them.
+			if (HasPickedUpLocally(toucher))
+				return;
+
+			localPickUp = CanPickUpLocally(toucher) &amp;&amp; !ShouldStay() &amp;&amp; !ShouldRespawn();
+		}
+
+		bool localview = toucher.CheckLocalView();
+
+		if (!toucher.CanTouchItem(self))
+			return;
+
+		Inventory give = self;
+		if (localPickUp)
+		{
+			give = Inventory(Spawn(GetClass()));
+			if (!give)
+				return;
+		}
+
+		bool res;
+		[res, toucher] = give.CallTryPickup(toucher);
+		if (!res)
+		{
+			if (give != self)
+				give.Destroy();
+
+			return;
+		}
+
+		// This is the only situation when a pickup flash should ever play.
+		if (PickupFlash != NULL &amp;&amp; !ShouldStay())
+		{
+			Spawn(PickupFlash, Pos, ALLOW_REPLACE);
+		}
+
+		if (!bQuiet)
+		{
+			PrintPickupMessage(localview, PickupMessage ());
+
+			// Special check so voodoo dolls picking up items cause the
+			// real player to make noise.
+			if (player != NULL)
+			{
+				PlayPickupSound (player.mo);
+				if (!bNoScreenFlash &amp;&amp; player.playerstate != PST_DEAD)
+				{
+					player.bonuscount = BONUSADD;
+				}
+			}
+			else
+			{
+				PlayPickupSound (toucher);
+			}
+		}							
+
+		// [RH] Execute an attached special (if any)
+		DoPickupSpecial (toucher);
+
+		if (bCountItem)
+		{
+			if (player != NULL)
+			{
+				player.itemcount++;
+			}
+			level.found_items++;
+		}
+
+		if (bCountSecret)
+		{
+			Actor ac = player != NULL? Actor(player.mo) : toucher;
+			ac.GiveSecret(true, true);
+		}
+
+		if (localPickUp)
+			PickUpLocally(toucher);
+
+		//Added by MC: Check if item taken was the roam destination of any bot
+		for (int i = 0; i &lt; MAXPLAYERS; i++)
+		{
+			if (players[i].Bot != NULL &amp;&amp; self == players[i].Bot.dest)
+				players[i].Bot.dest = NULL;
+		}
+	}
+&lt;/syntaxhighlight&gt;
+
+== Examples ==
+This is an example of calling {{c|Touch()}} directly rather than overriding it. This version of Doom's {{class|HealthBonus}} will be instantly picked up by any player who enters the 256 radius around it:
+&lt;syntaxhighlight lang="csharp"&gt;
+class HealthBonus_AutoPickup : HealthBonus
+{
+	override void Tick()
+	{
+		super.Tick();
+		// Do nothing if this item is frozen or has the NOSECTOR flag
+		// (is in the process of being respawned):
+		if (isFrozen() || bNOSECTOR)
+		{
+			return;
+		}
+
+		double dist = 256;
+		let bti = BlockThingsIterator.Create(self, dist);
+		while (bti.Next())
+		{
+			let act = bti.thing;
+			if (act.player &amp;&amp; act.health &gt; 0 &amp;&amp; Distance3D(act) &lt;= dist)
+			{
+				Touch(act);
+				break;
+			}
+		}
+	}
+}&lt;/syntaxhighlight&gt;
+
+Note, in contrast to [[CallTryPickup#Examples|a similar example using &lt;code&gt;CallTryPickup()&lt;/code&gt;]], this example will also print the item's pickupmessage and play its pickupsound.
+
+== See also ==
+* [[CallTryPickup]]
+* [[TryPickup]]
+* [[Use]]
+* [[Actor virtual functions]]
+
+[[Category:ZScript]]
+[[Category:Inventory]]
+[[Category:ZScript virtual functions]]</text>
+    <sha1>q2jribp0p6h99d5mfb2csr0ppnog6tg</sha1>
+  </revision>
+</page>

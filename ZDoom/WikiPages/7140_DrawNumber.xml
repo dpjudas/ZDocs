@@ -1,0 +1,61 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>DrawNumber</title>
+  <ns>0</ns>
+  <id>7140</id>
+  <revision>
+    <id>45089</id>
+    <parentid>44481</parentid>
+    <timestamp>2017-05-02T14:06:12Z</timestamp>
+    <contributor>
+      <username>Blue Shadow</username>
+      <id>2021</id>
+    </contributor>
+    <minor />
+    <comment>Remove {{new}}</comment>
+    <origin>45089</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="3649" sha1="jo3pyip12152x9vgsv301ghuhlj3e3h" xml:space="preserve">{{sbarinfo|&lt;size&gt;, &lt;&lt;nowiki&gt;font&gt;&lt;/nowiki&gt;, &lt;color&gt;, &lt;value&gt;, [flags, ...,] &lt;x&gt;, &lt;y&gt; [, &lt;fontspacing&gt;] [, &lt;low_color&gt;, &lt;low_value&gt; [, &lt;high_color&gt;, &lt;high_value&gt;]]}}
+Draws a number at the specified location. The first argument specifies the size of the number in digits (Doom's statusbar is set to size 3, for three-digit numbers). The [[font]] must be a ZDoom font or defined in [[FONTDEFS]].  The font will be translated to {{c|color}}, which can be a color defined in [[TEXTCOLO]]. {{c|Fontspacing}} will put the specified amount of pixels between each character (default is 0).  If a {{c|low_color}} is provided, then that color will be used if the value is less than or equal to {{c|low_value}}.  If a  {{c|high_color}}} is provided then that color will be used when the value is greater than or equal to {{c|high_value}}.
+
+For value, you can either supply a constant number, an inventory item, or one of the following:
+;Health:The player's current health level.
+;Accuracy:Amount of accuracy upgrades received.
+;Armor:The amount of armor the player is currently carrying.
+;ArmorClass:Draws the {{Class|HexenArmor|''Hexen'' armor class}} of the player.
+;Ammo1:The amount of primary ammo for the current weapon.
+;Ammo2:The amount of secondary ammo for the current weapon.
+;Frags:The number of frags the player has achieved.
+;Keys:The number of keys picked up.
+;Kills:The number of monsters that have been killed.
+;Monsters:The total number of monsters in the map.
+;Items:Number of items picked up.
+;TotalItems:Total number of items in the map.
+;SavePercent:Indicates the percentage of damage absorbed by armor.
+;Secrets:Number of secrets found.
+;Score:Current player score (see [[ACS actor properties|APROP_Score]] and {{Class|ScoreItem}})
+;Stamina:Amount of stamina upgrades received.
+;TotalSecrets:Total number of secrets in the map.
+;AirTime:The player's remaining air supply (in seconds) when underwater.
+;Ammo &lt;AmmoType&gt;:The amount of the specified ammo the player is holding.
+;AmmoCapacity &lt;AmmoType&gt;:The maximum amount of the specified ammo the player can hold.
+;Ammo1Capacity:The maximum amount of primary ammo the player can hold for the current weapon.
+;Ammo2Capacity:The maximum amount of secondary ammo the player can hold for the current weapon.
+;PowerupTime &lt;[[Classes:PowerupGiver|PowerupGiver]]&gt;:Displays the amount of time left for a given powerup.
+;GlobalVar &lt;num&gt;:Prints the specified global variable in acs.
+;GlobalArray &lt;num&gt;:Prints the value in a global array with the index of the playernumber.
+;IntCvar &lt;num&gt;: Prints the cvar specified. Can be a server/user int or bool.
+
+{{c|Flags}} are:
+;alignment({left|center|right}):Changes the alignment of the string.
+;fillzeros:Fills the number up to size with zeros.  If the number is negative the negative sign will take the first digit's position and the size will be changed accordingly.
+;whennotzero:Only draws the number if the value is not zero.
+;drawshadow[(&lt;xOffset&gt;, &lt;yOffset&gt;)]:Draws a translucent shadow effect under the number. If offsets are not given, it defaults to two pixels to the right and two pixels down.
+;interpolate(&lt;speed&gt;):Interpolates the value drawn.
+;dontcap:Draws the lower digits of the number instead of capping.
+;prefix(value, pad):Prefixes the number with the specified strings.  The value part can be anything that drawstring accepts, but the pad must be a string.  When not using a constant for the value part drawstring's caching functionality is disabled.
+
+Also keep in mind that for DrawNumber and [[DrawString]], text will be right-justified, so coordinates specified should be the ''rightmost'' portion and not the leftmost like with images.</text>
+    <sha1>jo3pyip12152x9vgsv301ghuhlj3e3h</sha1>
+  </revision>
+</page>

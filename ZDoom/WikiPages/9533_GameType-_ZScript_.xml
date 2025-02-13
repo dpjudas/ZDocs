@@ -1,0 +1,76 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>GameType (ZScript)</title>
+  <ns>0</ns>
+  <id>9533</id>
+  <revision>
+    <id>50099</id>
+    <parentid>50006</parentid>
+    <timestamp>2023-01-27T00:30:12Z</timestamp>
+    <contributor>
+      <username>Inkoalawetrust</username>
+      <id>2604</id>
+    </contributor>
+    <minor />
+    <comment>Removed link broken by the syntax highlighting.</comment>
+    <origin>50099</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="2091" sha1="immri8t5uaxf54wtsmb9tp0dafvgejf" xml:space="preserve">__NOTOC__{{ZScriptNote}}
+
+{{c|static Int '''GameType'''();}} {{Deprecated}}
+
+{{c|'''GameInfo.GameType'''}}
+
+The current, non-deprecated method for checking the game type is checking the value of {{c|GameInfo.GameType}}, which is a static field. ''GameType()'' is simply a wrapper that returns said variable.
+
+== Usage ==
+
+Stores a value corresponding to the current game.
+
+=== Values ===
+
+Below are the values GameInfo.GameType returns for each game or combination of games.
+
+* '''GAME_Any''': Returned if the game type is anything else besides the other Doom engine games.
+* '''GAME_Doom''': Returned if the current game is any of the Doom games.
+* '''GAME_Heretic''': Returned if the current game is Heretic.
+* '''GAME_Hexen''': Returned if the current game is Hexen.
+* '''GAME_Strife''': Returned if the current game is Strife.
+* '''GAME_Chex''': Returned if the current game is any of the Chex Quest games.
+* '''GAME_Raven''': Returned if the current game is either Heretic or Hexen.
+* '''GAME_DoomChex''': Returned if the current game is any of the Chex Quest or Doom games.
+* '''GAME_DoomChexStrife''': Ditto, but is also returned if the game is Strife.
+
+== Examples ==
+
+This actor will spawn a different basic enemy in front of itself depending on the Doom engine game it is spawned in. Then be destroyed.
+&lt;syntaxhighlight lang="csharp"&gt;
+Class GameSpecificEnemy : Actor
+{
+	Override Void PostBeginPlay()
+	{
+		Super.PostBeginPlay();
+		
+		If (GameInfo.GameType &amp; GAME_Any)
+			A_Log ("I don't know what game this is, so I can't spawn anything.");
+		Else If (GameInfo.GameType &amp; GAME_Doom)
+			A_SpawnItemEx ("DoomImp",128);
+		Else If (GameInfo.GameType &amp; GAME_Heretic)
+			A_SpawnItemEx ("Mummy",128);
+		Else If (GameInfo.GameType &amp; GAME_Hexen)
+			A_SpawnItemEx ("Ettin",128);
+		Else If (GameInfo.GameType &amp; GAME_Strife)
+			A_SpawnItemEx ("Acolyte",128);
+		Else If (GameInfo.GameType &amp; GAME_Chex)
+			A_SpawnItemEx ("ArmoredFlemoidusBipedicus",128);
+		Else
+			A_Log ("I don't know what game this is, so I can't spawn anything.");
+			
+		Destroy();
+	}
+}&lt;/syntaxhighlight&gt;
+
+[[Category:ZScript]]</text>
+    <sha1>immri8t5uaxf54wtsmb9tp0dafvgejf</sha1>
+  </revision>
+</page>

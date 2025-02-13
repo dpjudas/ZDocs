@@ -1,0 +1,71 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>Delay</title>
+  <ns>0</ns>
+  <id>917</id>
+  <revision>
+    <id>35788</id>
+    <parentid>30967</parentid>
+    <timestamp>2013-02-10T19:29:05Z</timestamp>
+    <contributor>
+      <username>Deded007</username>
+      <id>1392</id>
+    </contributor>
+    <minor />
+    <comment>formatting</comment>
+    <origin>35788</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="1610" sha1="osfzp8quztvm4h0gpt9z51u3ge3wsvh" xml:space="preserve">void '''Delay''' (int ''tics'');
+
+== Usage ==
+
+Delays the script for the specified amount of time.
+
+=== Parameters ===
+
+* ''tics'': The amount of time to wait in [[Definitions#Tics|tics]].
+
+== Examples ==
+
+'''Delay''' is a very common command. A useful application of it is to prevent infinite loops and the consequential “Runaway script x terminated” error. For example:
+
+ script 1 {{SType|Enter}}
+ {
+     int health;
+     while ({{const|TRUE}})
+     {
+         health = [[GetActorProperty]] (0, {{const|APROP_HEALTH}});
+         [[Print]] (s:"You have ", d:health, s:" health!");
+     }
+ }
+
+This script will cause a runaway error because in will try to tell the player their health endlessly in a single tic without stopping. Adding a slight delay will result in the desired effect, a pointless health update that lasts forever, telling the player their own health.
+
+ script 1 {{SType|Enter}}
+ {
+     int health;
+     while ({{const|TRUE}})
+     {
+         health = [[GetActorProperty]] (0, {{const|APROP_HEALTH}});
+         [[Print]] (s:"You have ", d:health, s:" health!");
+         [[Delay]] (1); // Wait for next frame
+     }
+ }
+
+----
+
+The other obvious use is to delay events in a script. For example, the behavior of the door that is used in the trap for the first key in E1M6 of Doom can be simulated with a script like this:
+
+ script 12 (int sector, int speed, int seconds)
+ {     
+     [[Door_Close]] (sector, speed);
+     [[Delay]] (35*seconds);
+     [[Door_Open]] (sector, speed);
+ }
+
+Although this behavior can be achieved using [[Door_CloseWaitOpen]] anyway.
+
+[[category:ACS Wait functions]]</text>
+    <sha1>osfzp8quztvm4h0gpt9z51u3ge3wsvh</sha1>
+  </revision>
+</page>

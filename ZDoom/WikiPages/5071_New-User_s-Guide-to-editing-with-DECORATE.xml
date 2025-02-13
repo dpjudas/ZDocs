@@ -1,0 +1,120 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>New User's Guide to editing with DECORATE</title>
+  <ns>0</ns>
+  <id>5071</id>
+  <revision>
+    <id>40578</id>
+    <parentid>28558</parentid>
+    <timestamp>2015-12-21T08:14:54Z</timestamp>
+    <contributor>
+      <username>Jekyll Grim Payne</username>
+      <id>2175</id>
+    </contributor>
+    <minor />
+    <origin>40578</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="5554" sha1="d87s53c7zmggsh0hs9ik3itl2z4te7f" xml:space="preserve">For this tutorial, we're going to go introduce you to [[DECORATE]] and make a zombieman that has 1,000 health and runs at 2x normal speed.
+
+Make a new file named "DECORATE.txt" (the name is important), and open it. Now let's set up our actor by putting this code into the file:
+ actor ZombieMan
+ {
+ 
+ }
+STOP. This is wrong. There already is an actor in the game named "ZombieMan". Our actor needs to have a unique name. Change the code to this:
+ actor SuperZombieMan
+ {
+ 
+ }
+We want our SuperZombieMan to start with all the properties of a regular ZombieMan, so we could just copy the ZombieMan's original code and paste it into DECORATE.txt. But that takes too much code and is redundant. Use inheritance to make our actor use all of the properties from ZombieMan as a base:
+ actor SuperZombieMan : ZombieMan
+We want our SuperZombieMan to be in the game. We could have him replace all ZombieMan actors in the game by adding "replaces ZombieMan", but let's mix things up a little:
+ actor SuperZombieMan : ZombieMan replaces ArmorBonus
+
+Now we can get to doing things interesting. We want to set the health to 1,000 now, so:
+ actor SuperZombieMan : ZombieMan replaces ArmorBonus
+ {
+   health 1000
+ }
+Next, we want to set him to 2x speed. But first, we need to know the speed of a regular ZombieMan. So go to the Zdoom Wiki's [[Main Page]], click [[Classes|Lists of actor classes]], click [[Classes:Doom|Doom classes]], and go to [[Classes:ZombieMan|ZombieMan]].
+
+Take a look at the code for a second. You'll see the line "speed 8" in there. So if we want 2x ZombieMan speed, we need to put the line "speed 16" in ours:
+ actor SuperZombieMan : ZombieMan replaces ArmorBonus
+ {
+   health 1000
+   speed 16
+ }
+For the heck of it, let's change the obituary message to something new:
+ actor SuperZombieMan : ZombieMan replaces ArmorBonus
+ {
+   health 1000
+   speed 16
+   obituary "%o was slaughtered by a strangely powerful zombie."
+ }
+The %o is replaced with the player's name. There are other symbols that can be used too, and you can look at the [[Actor_properties#Obituaries]] page for them.
+
+Now let's do something with states... we're going to make it so when he's shot, he immediately shoots a fireball like an imp at its target. Set up the code:
+ actor SuperZombieMan : ZombieMan replaces ArmorBonus
+ {
+   health 1000
+   speed 16
+   obituary "%o was slaughtered by a strangely powerful zombie."
+   states
+   {
+   Pain:
+ 
+   }
+ }
+Now we want our SuperZombieMan to go through his shooting animations when he is firing the fireball. Still have the [[Classes:ZombieMan]] page open? Copy and paste the Missile state into our new Pain state:
+ actor SuperZombieMan : ZombieMan replaces ArmorBonus
+ {
+   health 1000
+   speed 16
+   obituary "%o was slaughtered by a strangely powerful zombie."
+   states
+   {
+   Pain:
+     POSS E 10 A_FaceTarget
+     POSS F 8 A_PosAttack
+     POSS E 8
+     goto See
+   }
+ }
+The '''POSS''' part defines what sprite-set to use. POSS refers to the ZombieMan's sprite-set. The E and F after it on the lines refers to the specific frame to use. The POSS E frame has the ZombieMan aiming his gun, and the POSS F frame has the gun flashing brightly. The numbers tell the game how long to stay on this frame. The numbers are measured in tics, which are 1/35 of a second for zdoom. So 35 tics = 1 second.
+Let's edit the timings down so it's a bit quicker:
+     POSS E 5 A_FaceTarget
+     POSS F 5 A_PosAttack
+     POSS E 4
+     goto See
+After the number, there is a text string starting with "A_". These are called [[Action_functions|codepointers]], which tell the actor to do some action at the beginning of this frame. A_FaceTarget should be self-explanatory, making the actor look directly at its target (usually the player). A_PosAttack is the codepointer to make the actor do a ZombieMan attack (shooting a weak bullet with pretty bad accuracy, and playing the noise of shooting).
+We want to change it to an Imp attack.
+Let's look up the doomimp decorate code. Go back to the [[Classes:Doom|Doom classes]] page, and go to the [[Classes:DoomImp|DoomImp]] page. In the Missile state, you'll see two codepointers used. One is the same A_FaceTarget codepointer, but the other is A_TroopAttack. That's the one we want.
+So back in our DECORATE.txt file, change the A_PosAttack to A_TroopAttack. This is our file:
+ actor SuperZombieMan : ZombieMan replaces ArmorBonus
+ {
+   health 1000
+   speed 16
+   obituary "%o was slaughtered by a strangely powerful zombie."
+   states
+   {
+   Pain:
+     POSS E 5 A_FaceTarget
+     POSS F 5 A_TroopAttack
+     POSS E 4
+     goto See
+   }
+ }
+
+Now to run our DECORATE.txt in zdoom.
+*In linux, run in a terminal "./zdoom DECORATE.txt".
+*In windows, drag and drop the DECORATE.txt file onto zdoom.exe.
+When zdoom starts up, start a new game, and you'll immediately find our new SuperZombieMan standing where the skull armor bonus was.
+Press ~ to open the console, type "give all&lt;enter&gt;", and press ~ again to give yourself some good weaponry to fight our enemy.
+
+''If you're playing [http://freedoom.sourceforge.net/ Freedoom], there aren't any skull armor bonuses in the first level, so you can spawn a SuperZombieMan by typing "summon SuperZombieMan" into the console, or change it so that SuperZombieMan replaces a different [[Classes:Doom|Doom class]].''
+
+'''Optional:''' To package this DECORATE.txt with a level, you can use a wad-editing tool such as SlumpEd to import our file into the wad or simply put the file into a [[Using_ZIPs_as_WAD_replacement|zip / pk3 file]].
+[[Category:DECORATE guides]]</text>
+    <sha1>d87s53c7zmggsh0hs9ik3itl2z4te7f</sha1>
+  </revision>
+</page>

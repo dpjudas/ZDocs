@@ -1,0 +1,106 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>Menus</title>
+  <ns>0</ns>
+  <id>4977</id>
+  <revision>
+    <id>51129</id>
+    <parentid>45266</parentid>
+    <timestamp>2023-12-20T18:14:56Z</timestamp>
+    <contributor>
+      <username>Jekyll Grim Payne</username>
+      <id>2175</id>
+    </contributor>
+    <comment>/* Changing the menus */ Added mention of the Menu ZScript class</comment>
+    <origin>51129</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="4379" sha1="a094lgv7m6mlnkqk1zbc3j2j72i6c0j" xml:space="preserve">The [[ZDoom]] '''menus''' emulate closely the menus of the selected game, but have a number of additional features.
+
+== Using menus ==
+To bring up the main menu from within the game, hit the "Escape" key. Menus can also be opened from the [[console]]; the most important menus have a dedicated console command to open them; but all menus can be opened with the &lt;tt&gt;openmenu&lt;/tt&gt; command by using their [[MENUDEF]] name.
+
+For example, the [[Miscellaneous options]] menu does not have a dedicated console command, but it can be opened from the console with the command &lt;tt&gt;openmenu MiscOptions&lt;/tt&gt;. For another example, the [[Mouse options]] menu does have a dedicated console command (&lt;tt&gt;menu_mouse&lt;/tt&gt;), so it can be opened from the console either with &lt;tt&gt;menu_mouse&lt;/tt&gt; or with &lt;tt&gt;openmenu mouseoptions&lt;/tt&gt;.
+
+When the menu system is entered, the first menu opened is the "root" menu. From this root menu, submenus can be opened; hitting the "Escape" key leaves the current menu and goes back up a level to the previous. Leaving the root menu returns you to the game.
+
+With mouse support, the mouse's "back" button can be used as well, if any; or optionally a "back" button can be shown in a corner of the screen.
+
+Most of the menus are submenus of the [[options menu]]; they are a user-friendly interface to modifying [[console variable]]s or executing [[console command]]s. In the pages describing them, the name of the console variable or command is indicated in italics after the name of the menu entry.
+
+== Changing the menus ==
+Menus can be modified with the [[MENUDEF]] lump. Note, however, that several menus have content that is generated automatically; for example the [[new game menu]]s depends on the content of [[MAPINFO]] and [[KEYCONF]]. Note also that some of the menus cannot be changed at all.
+
+Entirely new menus can be created in [[ZScript]] based on the {{class|Menu|Menu class}}.
+
+== Menu hierarchy ==
+The general menu hierarchy, with a few differences depending on the game, is as thus:
+*[[Main menu]]
+**[[New game menu]]
+***[[class selection menu]]
+****[[episode selection menu]]
+*****[[skill selection menu]]
+**[[Options menu]]
+***[[Customize controls]]
+***[[Mouse options]]
+***[[Joystick options]]
+***[[Player setup]]
+***[[Gameplay options]]
+***[[Compatibility options]]
+***[[Automap options]]
+****[[Set custom colors]]
+****[[Customize map controls]]
+***[[HUD options]]
+****[[Scaling options]]
+****[[Alternative HUD]]
+****[[Message options]]
+***[[Miscellaneous options]]
+***[[Network options]]
+***[[Sound options]]
+****[[OpenAL options]]
+****[[Advanced sound options]]
+*****[[GUS configuration]]
+*****[[FluidSynth configuration]]
+*****[[TiMidity++ configuration]]
+*****[[WildMIDI configuration]]
+****[[Module replayer options]]
+***[[Display options]]
+****[[OpenGL options]]
+*****[[Texture options]]
+****[[Software renderer options]]
+*****[[Truecolor options]]
+****[[Dynamic light options]]
+****[[Scoreboard options]]
+***[[Set video mode]]
+***[[Change rendering output]]
+**[[Game files menu]]
+***[[Load game menu]]
+***[[Save game menu]]
+**[[Info menu]]
+**[[Quit menu]]
+
+== Gallery of main menus ==
+&lt;gallery&gt;
+File:MenuBlasphemer.png|In [[Blasphemer]].
+File:MenuChex.png|In [[Chex Quest]].
+File:MenuChex3.png|In [[Chex Quest 3]].
+File:MenuFreedoom.png|In [[Freedoom]].
+File:MenuHacx.png|In [[Hacx]].
+File:MenuHarmony.png|In [[Harmony]].
+File:MenuHeretic.png|In [[Heretic]].
+File:MenuHexen.png|In [[Hexen]].
+File:MenuPlutonia.png|In [[Final Doom|Plutonia]].
+File:MenuShareware.png|In [[Doom|Shareware Doom]].
+File:MenuStrife.png|In [[Strife]].
+File:MenuUrbanBrawl.png|In [[Action Doom 2: Urban Brawl|Urban Brawl]].
+&lt;/gallery&gt;
+
+== Notes ==
+* The [[Strife]] conversation system is actually a special menu.
+* Entering the menus in single-player mode pauses the game; however it does not pause the renderer, so animated textures (for example) continue cycling through their animation.
+* In [[multiplayer]], menus do not pause the game.
+* For a long time, the main menu order was inverted in ZDoom, with "Load game" and "Save game" directly under "New game"; whereas the original engines had "Options" in second position instead. For this reason, the menu order is different in [[Urban Brawl]] from the rest of the games. The inverted order can be obtained by putting &lt;tt&gt;swapmenu = true&lt;/tt&gt; in the [[GameInfo definition]] of a mod.
+
+[[Category:Menus|*]]</text>
+    <sha1>a094lgv7m6mlnkqk1zbc3j2j72i6c0j</sha1>
+  </revision>
+</page>

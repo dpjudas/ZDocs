@@ -1,0 +1,96 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>Classes:Object</title>
+  <ns>0</ns>
+  <id>8963</id>
+  <revision>
+    <id>54158</id>
+    <parentid>53690</parentid>
+    <timestamp>2025-01-29T11:32:05Z</timestamp>
+    <contributor>
+      <username>Inkoalawetrust</username>
+      <id>2604</id>
+    </contributor>
+    <comment>Documented S_StartSoundAt().</comment>
+    <origin>54158</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="5669" sha1="fmocrrjq3vt5e8epmnm5ve0q56w5e53" xml:space="preserve">{{ZScriptNote}}
+'''Object''' is the very front-most class which all other classes inherit from, either directly or through other inheriting classes.
+
+== Fields ==
+=== Variables ===
+*{{c|native bool '''bDestroyed'''}}
+:If ''true'', this object has been destroyed, either by the engine or using the ''Destroy'' method. Existing references to it will become {{c|null}} soon. New references to it (such as the statement &lt;tt&gt;Object b = a;&lt;/tt&gt; when {{c|a.bDestroyed}} is {{c|true}}) cannot be created; attempting to do so will create a {{c|null}} reference instead.
+=== Constants ===
+*{{c|const '''TICRATE''' {{=}} 35}}
+:The number of [[tic|tics]] in a second. In the future this may potentially become a variable, so using {{const|TICRATE}} rather than {{c|35}} is preferable throughout [[ZScript]].
+
+== Methods ==
+=== Non-static ===
+*{{c|void '''[[Destroy]]'''()}}
+*:Removes the calling class instance from the level.
+*{{c|virtualscope void '''[[ZScript virtual functions#Object|OnDestroy]]'''}}()
+*:Virtual callback for triggering custom special behavior when an object is destroyed.
+=== Static ===
+*{{c|static int '''[[G_SkillName]]'''()}}
+*:Returns the name of the currently selected skill. i.e "I'm Too Young To Die"
+*{{c|static int '''[[G_SkillPropertyInt]]'''(int ''p'')}}
+*:Returns the flags that the currently selected skill has, such as if it [[makes monsters fast by default|Fast monsters]].
+*{{c|static double '''[[G_SkillPropertyFloat]]'''(int ''p'')}}
+*:Returns the decimal properties of the current skill level, such as how much the health of hostile monsters is multiplied by.
+*{{c|static vector3, int '''[[G_PickDeathmatchStart]]'''()}} {{deprecated}}
+*{{c|static vector3, int '''[[G_PickPlayerStart]]'''}}(int ''pnum'', int ''flags'' =0) {{deprecated}}
+*{{c|static int '''[[GameType (ZScript)|GameType]]'''()}}
+*:Used in conjunction with the gameinfo. prefix to return what game the code is running in.
+*{{c|static void '''S_Sound'''}}(Sound ''sound_id'', int ''channel'', float ''volume'' = 1, float ''attenuation'' = ATTN_NORM) {{deprecated}}
+*{{c|static void '''[[S_StartSound]]'''}}(Sound ''sound_id'', int ''channel'', int ''flags'' = 0, float ''volume'' = 1, float ''attenuation'' = ATTN_NORM)
+*:Start playing a sound from the object. This should be used over S_Sound(), since it supports passing sound flags.
+*{{c|static void '''S_StartSoundAt'''}}(Vector3 ''pos'', Sound ''sound_id'', int ''channel'', int ''flags'' = 0, float ''volume'' = 1, float ''attenuation'' = ATTN_NORM)
+*:Functions exactly like ''S_StartSound'', except that it plays the sound at the specified position, instead of attaching it to the calling object. {{git|a1460e8}}
+*{{c|static void '''[[S_PauseSound]]'''}}(bool ''notmusic'', bool ''notsfx'')
+*:Pauses all audio playing. ''notmusic'' can be used to keep map music playing, and ''notsfx'' can be used to keep all other game sounds playing.
+*{{c|static void '''[[S_ResumeSound]]'''}}(bool ''notsfx'')
+*:Resumes all audio playback. ''notsfx'' can be used to make the function keep general sound effects (As opposed to music) stopped.
+*{{c|static bool '''[[S_ChangeMusic]]'''}}(String ''music_name'', int ''order'' = 0, bool ''looping'' = true, bool ''force'' = false)
+*:Change the music currently playing in the map.
+*{{c|static float '''[[S_GetLength]]'''}}(Sound ''sound_id'')
+*:Gets the length of the sound file specified by ''sound_id'' and returns it in seconds.
+*{{c|static void '''[[MarkSound]]'''}}(Sound ''snd'')
+*:Marks the specified sound for precaching. {{verification}}
+*{{c|static void '''[[C_MidPrint]]'''}}(string ''fontname'', string ''textlabel'', bool ''bold'' = false)
+*{{c|static uint '''[[BAM]]'''}}(double ''angle'')
+*{{c|static void '''[[SetMusicVolume (ZScript)|SetMusicVolume]]'''}}(float ''volume'')
+*:Sets the volume of the music on the map.
+*{{c|static Object '''[[GetNetworkEntity]]'''}}(uint ''id'') {{new|4.13.0}}
+*:Gets the networked entity to whom ''id'' is assigned to. {{verification}} {{moreinfo}}
+*{{c|static void '''[[EnableNetworking]]'''}}(bool ''enable'') {{new|4.13.0}}
+*:Enables or disables networking on the object. Cannot be used to change the networking status of actors. {{verification}} {{moreinfo}}
+*{{c|static uint '''[[GetNetworkID]]'''}}() {{new|4.13.0}}
+*:Returns the objects' network ID.
+*{{c|static uint '''[[MSTime]]'''}}()
+*:{{moreinfo}}
+*{{c|static double '''[[MSTimeF]]'''}}()
+*:{{moreinfo}}
+*{{c|static void '''[[ThrowAbortException]]'''}}(string ''fmt'')
+*:Causes the game to have a VM abort, ''fmt'' can be used to also print a custom message for the abort.
+*{{c|static Function&lt;void&gt; '''[[Function pointers#Function finding|FindFunction]]'''}}(Class&lt;Object&gt; ''cls'', Name ''fn'')
+
+== Intrinsic functions ==
+This is the list of intrinsics shared by all objects. A list of the math specific intrinsics can be found at [[DECORATE expressions]]
+
+*clearscope bool '''IsAbstract'''()
+*:Returns if this class is [[ZScript classes#abstract|abstract]].
+*clearscope Object '''GetParentClass'''()
+*:Gets the class this object inherits from.
+*clearscope Name '''GetClassName'''()
+*:Returns the name of the class.
+*clearscope Class&lt;Object&gt; '''GetClass'''()
+*:[[ZScript data types#Class types|Returns a pointer to the class this object is in general, as opposed to the specific object.]]
+*clearscope Object '''[[New]]'''(Class&lt;Object&gt; ''type'')
+*:Creates a new instance of the specified class and returns a pointer to it. This is the function used to create new instances of generic objects and [[Thinker|thinkers]]. However, special creation functions are needed for certain classes such as actors and {{class|VisualThinker|visual thinkers}}.
+
+== See also ==
+* [[ZScript]]</text>
+    <sha1>fmocrrjq3vt5e8epmnm5ve0q56w5e53</sha1>
+  </revision>
+</page>

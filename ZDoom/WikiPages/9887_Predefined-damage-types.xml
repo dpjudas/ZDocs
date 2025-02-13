@@ -1,0 +1,213 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>Predefined damage types</title>
+  <ns>0</ns>
+  <id>9887</id>
+  <revision>
+    <id>54105</id>
+    <parentid>52400</parentid>
+    <timestamp>2024-12-31T11:54:07Z</timestamp>
+    <contributor>
+      <username>Jekyll Grim Payne</username>
+      <id>2175</id>
+    </contributor>
+    <origin>54105</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="4863" sha1="gi06izrx5ohbayc8q1egfzrpyrmn6vg" xml:space="preserve">This is a list of predefined [[damage types]], and their means-of-death (MOD) constant names and values. Note, the constants are only readable in [[ACS]] and are not exposed to [[ZScript]], but they are associated with specific [[ZScript]]-readable damage types.
+
+[[ACS]] functions and action specials may require either a damage type name or the MOD constant/value. Creating [[custom damage types]] is possible.
+
+{| class="wikitable sortable" border="1"
+|-
+! [[ZScript]]/[[DECORATE]] Damage type name
+! ACS constant (means of death)
+! width="50%" | Description
+! Obituary code
+! Default obituary string
+|-
+| {{LE|None|Normal|none}}
+| MOD_UNKNOWN (0)
+| The internal name for generic damage, as in “no special reason”.
+|
+| “%o died”
+|-
+|
+| MOD_ROCKET (5)
+| {{Class|Rocket}} projectile
+| OB_ROCKET
+| “%o should have stood back”
+|-
+|
+| MOD_R_SPLASH (6)
+| {{Class|Rocket}} splash damage
+| OB_R_SPLASH
+| “%o should have stood back”
+|-
+|
+| MOD_PLASMARIFLE (7)
+| Fried
+|
+|
+|-
+|
+| MOD_BFG_BOOM (8)
+| {{Class|BFG9000|BFG}} {{Class|BFGBall|blast}} (primary attack)
+|
+|
+|-
+| {{LE|BFGSplash}}
+| MOD_BFG_SPLASH (9)
+| {{Class|BFG9000|BFG}} secondary attack tracers, as used by [[A_BFGSpray]]
+|
+|
+|-
+|
+| MOD_CHAINSAW (10)
+| Chopped to meat
+|
+|
+|-
+|
+| MOD_SSHOTGUN (11)
+| Shot by {{Class|shotgun}}
+|
+|
+|-
+| {{LE|Drowning}}
+| MOD_WATER (12)
+| Used during [[drowning]]. This damage type ignores [[armor]].
+| OB_WATER
+| “%o can't swim.”
+|-
+| {{LE|Slime}}
+| MOD_SLIME (13)
+| Used by Doom's [[damaging floor]]s (eg. green and brown slime, blood).
+| OB_SLIME
+| “%o mutated”
+|-
+| {{LE|Fire}}
+| MOD_LAVA (14)
+| Used by many, many actors: {{Class|SorcererFX1}}, {{Class|VolcanoBlast}}, {{Class|VolcanoTBlast}}, {{Class|PhoenixFX1}}, {{Class|Demon1FX1}}, {{Class|Demon2FX1}}, {{Class|FireBall}}, {{Class|MinotaurFX1}}, {{Class|FlameMissile}}, and {{Class|PhosphorousFire}}. Resisted to some degree by many others: {{Class|Loremaster}}, {{Class|Macil1}}, {{Class|Oracle}}, {{Class|Programmer}} and {{Class|StrifeBishop}}. Also used by some terrain effects (if a damagetype of "lava" is given in a [[TERRAIN]] lump, it is remapped to fire damage). And finally used by [[A_DropFire]], [[A_VileAttack]], [[A_VolcBallImpact]], and any projectile inheriting from {{Class|MageStaffFX2}}.
+| OB_LAVA
+| “%o melted”
+|-
+| {{LE|Crush}}
+| MOD_CRUSH (15)
+| Used by [[crusher]]s.
+| OB_CRUSH
+| “%o was squished”
+|-
+| {{LE|Telefrag}}
+| MOD_TELEFRAG (16)
+| Applied by telefragging (teleporting on top of another actor).
+| OB_MPTELEFRAG
+| “%o was telefragged”
+|-
+| {{LE|Falling}}
+| MOD_FALLING (17)
+| Used for [[falling damage]].
+| OB_FALLING
+| “%o fell too far”
+|-
+| {{LE|Suicide}}
+| MOD_SUICIDE (18)
+| Used by the {{CCMD|D|kill}} command
+| OB_SUICIDE
+| “%o suicides”
+|-
+|
+| MOD_BARREL (19)
+|
+| OB_BARREL
+| “%o went boom”
+|-
+| {{LE|Exit}}
+| MOD_EXIT (20)
+| Special type of damage inflicted in some [[deathmatch]] game modes when a player tries to use the exit.
+| OB_EXIT
+| “%o tried to leave”
+|-
+|
+| MOD_SPLASH (21)
+|
+| OB_SPLASH
+|“%o stood in the wrong spot”
+|-
+| {{LE|Melee}}
+| MOD_HIT (22)
+| Default for melee attacks.
+|
+|
+|-
+| {{LE|Railgun}}
+| MOD_RAILGUN (23)
+| Used by [[railgun]] attacks if no other damage type is given.
+|
+| “%o was railed by %k”
+|-
+| {{LE|Ice}}
+| MOD_ICE (24)
+| Actor froze to death. Used by the {{Class|IceGuy}}, {{Class|IceGuyFX}}, {{Class|IceGuyFX2}}, {{Class|IceShard}} and {{Class|FrostMissile}}.
+|
+|
+|-
+| {{LE|Disintegrate}}
+| MOD_DISINTEGRATE (25)
+| Used by the {{Class|Mauler}}'s {{Class|MaulerPuff|puff}} and the {{Class|Mauler2}}'s {{Class|MaulerTorpedo|torpedo}}.
+|
+|
+|-
+| {{LE|Poison}}
+| MOD_POISON (26)
+| [[Poison]]ed (e.g. {{Class|CWeapStaff|serpent staff}}). As a damage type, this only affects players.
+|
+|
+|-
+| {{LE|PoisonCloud}}
+|
+| Same as Poison, but poisons the player to the worst possible degree and doesn't inflict any damage at all if the player is already poisoned to some extent. See {{Class|PoisonCloud}}.
+|
+|
+|-
+| {{LE|Electric}}
+| MOD_ELECTRIC (27)
+| Automatically used by missiles inheriting from {{Class|Lightning}}, {{Class|centaur}}s are vulnerable to it.
+|
+|
+|-
+| {{LE|Massacre}}
+| (1000)
+| Used by the “{{CCMD|D|kill}} monsters” console cheat.
+|
+|
+|-
+| {{LE|DrainLife}}
+|
+| Supposedly used by the {{Class|Sigil}} on its user, according to code comments. (But not used in fact.)
+|
+|
+|-
+| {{LE|Extreme}}
+|
+| Using this damage type forces an extreme death, similar to the {{flag|EXTREMEDEATH}} flag
+|
+|
+|-
+| {{LE|InstantDeath}}
+|
+| Used by “instant death” sectors. (See [[Sector specials]].)
+|
+|
+|-
+| {{LE|Quake}}
+|
+| Used by [[earthquake]] effects.
+|
+|
+|}
+[[Category:Technical aspects]]
+
+In ZScript more specific information can be obtained by checking the {{c|inflictor}} and {{c|source}} pointers in functions like {{function|DamageMobj}}, {{function|ModifyDamage}} and similar.</text>
+    <sha1>gi06izrx5ohbayc8q1egfzrpyrmn6vg</sha1>
+  </revision>
+</page>

@@ -1,0 +1,59 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>Classes:PhosphorousGrenade</title>
+  <ns>0</ns>
+  <id>4801</id>
+  <revision>
+    <id>40144</id>
+    <parentid>36468</parentid>
+    <timestamp>2015-05-22T07:00:55Z</timestamp>
+    <contributor>
+      <username>Blue Shadow</username>
+      <id>2021</id>
+    </contributor>
+    <minor />
+    <comment>/* DECORATE definition */ Updated</comment>
+    <origin>40144</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="1025" sha1="rfurw58vdvi9m1wmz3h6vd9e0daz11p" xml:space="preserve">{{Actor|
+| type = Explosive
+| name = White phosphorous grenade
+| class = PhosphorousGrenade
+| game = Strife
+| convid = 107
+}}[[Classes]]: &lt;u&gt;PhosphorousGrenade&lt;/u&gt;&lt;br&gt;
+{{desc}}
+==== [[DECORATE]] definition ====
+ ACTOR &lt;u&gt;PhosphorousGrenade&lt;/u&gt;
+ {
+   {{Property|Speed}} 15
+   {{Property|Radius}} 13
+   {{Property|Height}} 13
+   {{Property|Mass}} 20
+   {{Property|Damage}} 1
+   {{Property|ReactionTime}} 40
+   {{Property|Projectile}}
+   -{{Flag|NOGRAVITY}}
+   +{{Flag|STRIFEDAMAGE}}
+   +{{Flag|BOUNCEONACTORS}}
+   +{{Flag|EXPLODEONWATER}}
+   {{Property|BounceType}} "Doom"
+   {{Property|MaxStepHeight}} 4
+   {{Property|BounceFactor}} 0.5
+   {{Property|BounceCount}} 2
+   {{Property|SeeSound}} "weapons/phgrenadeshoot"
+   {{Property|DeathSound}} "weapons/phgrenadebang"
+   {{Property|Obituary}} "$OB_MPPHOSPHOROUSGRENADE" // "%o took a flame bath in %k's phosphorous pyre."
+   States
+   {
+   Spawn:
+     GRIN AB 3 [[A_Countdown]]
+     Loop
+   Death:
+     BNG3 A 2 [[A_SpawnItemEx]]("{{Class|PhosphorousFire}}")
+     Stop
+   }
+ }</text>
+    <sha1>rfurw58vdvi9m1wmz3h6vd9e0daz11p</sha1>
+  </revision>
+</page>

@@ -1,0 +1,90 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>Hudmessageonactor</title>
+  <ns>0</ns>
+  <id>5033</id>
+  <revision>
+    <id>47134</id>
+    <parentid>45816</parentid>
+    <timestamp>2020-02-04T14:08:27Z</timestamp>
+    <contributor>
+      <username>Gez</username>
+      <id>1283</id>
+    </contributor>
+    <minor />
+    <origin>47134</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="2990" sha1="rfc1suqioc3b3oltbsfkwn3lkty3nhf" xml:space="preserve">This function will either place text, or a sprite (depending on parameters used) on the screen relative to the position of an actor. For this to work, an actor must have a thing ID.
+==Parameters==
+* ''tid'': The thing ID of the actor. The X and Y position with which to display the message is calculated from the activator and target actor's X, Y, Z, pitch and angle.
+* ''msgID'': A unique message ID number, messages with lower ids will overlap those with higher ids.
+* ''hudX'': The horizontal scale of the HUD. Larger values make the text/sprite smaller on the X axis. The default is 640.
+* ''hudY'': The vertical scale of the HUD. Larger values make the text/sprite smaller on the Y axis. The default is 480.
+* ''xOffset'': The horizontal offset of the HUD message. Negative values move it further to the left, positive values further to the right.
+* ''yOffset'': The vertical offset of the HUD message. Negative values move it further up to the top, positive values further down to the bottom.
+* ''range'': The minimum distance that must be met between the activator and target actor for the HUD message to appear.
+* ''sprite'': Use a sprite instead of text. Must be a valid sprite name. Passing -1 means that no sprite will be used.
+* ''text'': The text to be displayed. If a sprite is used, the text will be overridden and not displayed.
+* ''holdTime'': The duration which to display the HUD message. Defaults to 0.1.
+* ''colour'': A string constant that specifies the text colour. Valid values can be found in the [[HudMessage#Parameters|HudMessage]] documentation.
+
+ //Original code by Isle
+ function void HudMessageOnActor(int tid, int msgID, int hudX, int hudY, int xOffset, int yOffset, int range, str sprite, str text, int holdTime, str colour)
+ {
+ 		
+ 	int dist, angle, vang, pitch, x, y;
+ 	
+ 	if (holdTime == 0) { holdTime = 0.1; }	
+ 	if (hudX == 0) { hudX = 640; }
+ 	if (hudY == 0) { hudY = 480; }
+ 	
+ 	if(sprite != -1)
+ 	{
+ 		
+ 		SetFont(sprite);
+ 		text = "A";
+ 		
+ 	}
+ 	
+ 	SetHudSize(hudX, hudY, 1);
+ 	x = GetActorX(tid) - GetActorX(0);
+ 	y = GetActorY(tid) - GetActorY(0);
+ 	
+ 	vang = VectorAngle(x,y);
+ 	angle = (vang - GetActorAngle(0) + 1.0) % 1.0;
+ 	
+ 	if(((vang+0.125)%0.5) &gt; 0.25) dist = FixedDiv(y, sin(vang));
+ 	else dist = FixedDiv(x, cos(vang));
+ 	
+ 	if ((angle &lt; 0.23 || angle &gt; 0.85) &amp;&amp; (dist &gt;&gt; 16) &lt; range)
+ 	{
+ 		
+ 		if (GetActorPitch(0) &gt;= -0.5 &amp;&amp; GetActorPitch(0) &lt;= 0.5)
+ 		{
+  
+ 			pitch = VectorAngle(dist, GetActorZ(tid) - (GetActorZ(0) + GetActorViewHeight(0)));
+ 			pitch += FixedMul(GetActorPitch(0), 1.2) % 1.0;
+  
+ 			if ((hudX/2) * sin(angle) != 0 &amp;&amp; cos(angle) != 0 &amp;&amp; (hudX/2) * sin(pitch) != 0 &amp;&amp; cos(pitch) != 0)
+ 			{
+ 				
+ 				x = hudX/2 - ((hudX/2) * sin(angle) / cos(angle));
+ 				y = hudY/2 - ((HUDX/2) * sin(pitch) / cos(pitch));
+ 				
+ 				x+=xOffset;
+ 				y+=yOffset;
+ 				
+ 				HudMessage(s:text; HUDMSG_PLAIN, msgID, colour, (x &lt;&lt; 16), (y &lt;&lt; 16), holdTime);
+ 				
+ 			}
+ 			
+ 		}
+ 		
+ 	}
+ 	
+ }
+
+[[category:Sample ACS functions]]</text>
+    <sha1>rfc1suqioc3b3oltbsfkwn3lkty3nhf</sha1>
+  </revision>
+</page>

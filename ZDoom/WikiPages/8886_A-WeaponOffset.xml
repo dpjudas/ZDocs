@@ -1,0 +1,52 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>A WeaponOffset</title>
+  <ns>0</ns>
+  <id>8886</id>
+  <revision>
+    <id>48210</id>
+    <parentid>48207</parentid>
+    <timestamp>2020-12-29T17:47:06Z</timestamp>
+    <contributor>
+      <username>Blue Shadow</username>
+      <id>2021</id>
+    </contributor>
+    <minor />
+    <origin>48210</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="1728" sha1="pzyek1ysrlmb6oi8nmry7xb64q6e4zs" xml:space="preserve">__NOTOC__{{codepointer|Weapon}}
+void '''A_WeaponOffset''' [(double ''wx'' [, double ''wy'' [, int ''flags'']]])]
+
+== Usage ==
+This function can only be called on weapons. Offsets a weapon by the defined amount of ''wx'' and ''wy'' similar to the [[Offset]] frame keyword. This function has the following differences from the aforementioned function:
+
+*Offsets are floats, not integers.
+*Offsets are not lost when firing a weapon.
+*Offsets stack on top of weapon bobbing and behave independently, allowing you to use {{c|[[A_WeaponReady]]}} without losing offsets.
+*Specifying the default coordinates does not serve as a preservative. They are absolute.
+*Offsets can go beyond screen limitations.
+*Because this is an action function itself, [[DECORATE_expressions|Decorate expressions]] can be used.
+
+This function is the same as calling {{c|[[A_OverlayOffset]]}} with the layer parameter set to PSPF_WEAPON.
+
+=== Parameters ===
+*''wx'': adjusts horizontal position based on positive (right) or negative (left) numbers. Default is 0.
+*''wy'': adjusts vertical position. Larger values lower the weapon, and vice versa. Default is 32.
+*''flags'': flags can be combined with the | separator. Default is 0:
+:*'''WOF_KEEPX''' — ''wx'' parameter will not be used.
+:*'''WOF_KEEPY''' — ''wy'' parameter will not be used.
+:*'''WOF_ADD''' — Adds the current x and y parameters to the current offsets instead of overriding them. Also implies interpolation (see below).
+:*'''WOF_INTERPOLATE''' — Interpolates the offset between tics, smoothing out the animation.
+
+== Examples ==
+{{noexamples}}
+
+== See also ==
+*[[A_Overlay]]
+*[[A_OverlayFlags]]
+*[[A_OverlayOffset]]
+
+{{DEFAULTSORT:WeaponOffset}}[[category:Decorate Weapon functions]]</text>
+    <sha1>pzyek1ysrlmb6oi8nmry7xb64q6e4zs</sha1>
+  </revision>
+</page>

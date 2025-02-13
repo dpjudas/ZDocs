@@ -1,0 +1,52 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>Creating 3D bridges</title>
+  <ns>0</ns>
+  <id>5451</id>
+  <revision>
+    <id>33488</id>
+    <parentid>25653</parentid>
+    <timestamp>2012-07-20T09:19:18Z</timestamp>
+    <contributor>
+      <username>Gez</username>
+      <id>1283</id>
+    </contributor>
+    <minor />
+    <comment>3D floors are no longer OpenGL only</comment>
+    <origin>33488</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="2531" sha1="5ldtfuaq1sp2jur6bnh0vuurok6r9ok" xml:space="preserve">Due to Doom's (and thus ZDoom's) rendering engine limitations, true 3D cannot really be made; unless you want to use [[Sector_Set3dFloor|3D floors]].
+
+However, you can make working bridges in ZDoom by using {{Class|InvisibleBridge}} and a few linedef tricks.
+
+In your [[level editor]] of choice, make two platforms and an obstacle in between; in this example a nukage pool is used. The sectors have a ceiling height of 256, the platforms have a floor of 0 and the nukage pool has a floor of -128. You will obviously need a player start so you can play the map.
+
+[[Image:BridgeExample1.png]]
+
+Now, assuming we want one of those bridges shaped like a row of X:es, put into the pool one segment of that bridge, an X. Here we have a 64x64 one, composed of four sectors.
+
+[[Image:BridgeExample2.png]]
+
+Now, select all of the linedefs of the X and:
+:*give each a *middle* texture of STEP2 (any other STEP works fine as well), to both front and back sidedefs
+:*set the Y offset, again of both front and back side, to the negative of the subtraction of the ceiling height of the sector the pit and the floor height of the planes, or ''yoffset = -(pitceilingheight-planefloorheight)''. So, the ceiling height is 256 in both platforms and the pit and the platform's floor height is 0, so the sidedefs' Y-offsets must be -(256-0) = -256.
+
+Next, copy the linedefs so that you'll get the complete bridge. It is a good idea to merge all pit sectors into one sector again.
+
+[[Image:BridgeExample3.png]]
+
+Now, you have a choice. You can either use {{Class|InvisibleBridge}} or {{Class|CustomBridge}} things, or you can set the [[linedefs]] as 3D mid-textures.
+
+* With bridge things, the Z height should be the subtraction of the plane floor height and the pit floor height. In the case here that is 128 - 0 = 128. Also, the arguments for a custom bridge need to be set. The first argument is the radius of the segment, 64/2 = 32 in my case, and the second argument the thickness. STEP2 is 16x'''8''' in size, so the second argument should be 8 in this example.
+
+* With 3D mid textures, the method to use depends on the [[map format]]. In [[UDMF]], you simply set the linedef's &lt;tt&gt;midtex3d&lt;/tt&gt; flag to true. In Hexen format, you need to use [[Line_SetIdentification]] with 32 as the value in "moreflags". In Doom format, you have to set a custom [[map translator]] in [[MAPINFO]], such as maybe the one used for [[Eternity Engine]] maps.
+
+[[Image:BridgeExample4.png]]
+
+The bridge is now finished!
+
+[[Image:BridgeExample6.png]]
+[[Category:Guides]]</text>
+    <sha1>5ldtfuaq1sp2jur6bnh0vuurok6r9ok</sha1>
+  </revision>
+</page>

@@ -1,0 +1,45 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>CheckInventory</title>
+  <ns>0</ns>
+  <id>971</id>
+  <revision>
+    <id>35673</id>
+    <parentid>22904</parentid>
+    <timestamp>2013-02-10T01:46:29Z</timestamp>
+    <contributor>
+      <username>Deded007</username>
+      <id>1392</id>
+    </contributor>
+    <minor />
+    <comment>formatting</comment>
+    <origin>35673</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="979" sha1="4khckcs3r1m7wscfu04oyi0m9bdk0ln" xml:space="preserve">int '''CheckInventory'''(str ''inventory_item'');
+
+==Usage==
+
+Checks the inventory of the actor who activated the script for the item specified by ''inventory_item''. For a list of possible inventory items, see [[Inventory]].
+
+The function will return the number of items the actor carries. Keep in mind that for active powerups, you cannot check for the pickup item. You have to check for the internal {{Class|powerup}} item.
+
+==Examples==
+
+An example of a script which for no good reason gives terrible advice to the player:
+
+ script 52 (void)
+ {
+ 	if ([[CheckInventory]]("{{class|Shotgun}}") &amp;&amp; [[CheckInventory]]("{{class|Shell}}") &gt; 20)
+ 		[[Print]](s:"Use the shotgun to take out those 20 imps!");
+ 	else
+ 		[[Print]](s:"Run away from the imps you loser!");
+ }
+
+If the player has the shotgun and 20 shells, it tells them to use the shotgun on some imps. Otherwise it tells the player to run away.
+
+==See also==
+* [[CheckActorInventory]]
+[[category:ACS Inventory functions]]</text>
+    <sha1>4khckcs3r1m7wscfu04oyi0m9bdk0ln</sha1>
+  </revision>
+</page>

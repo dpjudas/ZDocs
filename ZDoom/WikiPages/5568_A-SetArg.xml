@@ -1,0 +1,59 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>A SetArg</title>
+  <ns>0</ns>
+  <id>5568</id>
+  <revision>
+    <id>46120</id>
+    <parentid>35096</parentid>
+    <timestamp>2018-07-04T09:01:31Z</timestamp>
+    <contributor>
+      <username>JSO x</username>
+      <id>2479</id>
+    </contributor>
+    <minor />
+    <comment>Added a missed colon.</comment>
+    <origin>46120</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="1196" sha1="s2re2y3of6kz09um7ioljjp0zdsabux" xml:space="preserve">{{codepointer|Status change}}
+'''A_SetArg''' (int ''position'', int ''value'')
+
+Changes the calling actor's {{Property|Args|args}}[''position''] field to ''value''.
+== Examples ==
+
+This {{Class|HealthBonus|health bonus}} will have a float bobbing movement (like Heretic's and Hexen's powerups and items) if its first argument (Args[0]) is higher than 0.  It won't enter the FloatBobMovement state more than once because Args[0] will be changed to 0 if the actor enters this state.
+
+ ACTOR FloatBobHealthBonus : {{Class|HealthBonus}}
+ {
+  States
+  {
+  Spawn:
+    BON1 A 0 [[A_JumpIf]](Args[0]&gt;0, "FloatBobMovement")
+    BON1 ABCDCB 6
+    Loop
+  FloatBobMovement:
+    BON1 A 0 '''A_SetArg'''(0, 0)
+    BON1 A 0 [[A_ChangeFlag]]("{{flag|FLOATBOB}}", 1)
+    Goto Spawn
+  }
+ }
+
+This actor will have the same behavior as {{Class|Sorcerer2|D'Sparil}}
+
+ ACTOR NewSorcerer2 : {{Class|Sorcerer2}}
+ {
+   States
+   {
+   Death:
+     SDTH A 8 '''A_SetArg'''(4, 7) //Replicates [[A_Sor2DthInit]]
+     Goto Super::Death+2
+   DeathLoop:
+     SDTH DE 7
+     SDTH F 7 '''A_SetArg'''(4, Args[4]-1)
+     SDTH F 0 [[A_JumpIf]](Args[4]&gt;0,"DeathLoop") //Replicates [[A_Sor2DthLoop]]
+     Goto Super::DeathLoop +4
+   }
+ }</text>
+    <sha1>s2re2y3of6kz09um7ioljjp0zdsabux</sha1>
+  </revision>
+</page>

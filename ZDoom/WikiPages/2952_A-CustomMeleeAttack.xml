@@ -1,0 +1,63 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>A CustomMeleeAttack</title>
+  <ns>0</ns>
+  <id>2952</id>
+  <revision>
+    <id>54194</id>
+    <parentid>53814</parentid>
+    <timestamp>2025-02-07T14:22:23Z</timestamp>
+    <contributor>
+      <username>Jekyll Grim Payne</username>
+      <id>2175</id>
+    </contributor>
+    <minor />
+    <comment>/* Examples */</comment>
+    <origin>54194</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="2004" sha1="tjk203vi3ppgu3o13fsrilksusq3sx5" xml:space="preserve">{{DISPLAYTITLE:A_CustomMeleeAttack}}
+'''{{class|Actor}}'''
+
+void '''A_CustomMeleeAttack'''(int ''damage'' = 0, sound ''meleesound'' = "", sound ''misssound'' = "", name ''damagetype'' = "none", bool ''bleed'' = true)
+
+==Usage==
+A customizable melee attack for [[monster]]s. Causes the actor to execute a melee attack with the specified parameters.
+
+The function calls {{c|[[A_FaceTarget]]}} and checks if the caller's {{c|target}} is within {{Property|MeleeRange|melee range}}, damaging it if it is and playing ''meleesound''. If the target is outside melee range, however, ''misssound'' sound is played and no damage is dealt to the target. If there is no target, the function does nothing when it is called.
+
+Both ''meleesound'' and ''missound'' are played on the "weapon" [[Sound channels|channel]] ({{const|{{c|CHAN_WEAPON}}}}).
+
+===Parameters===
+* {{c|int '''damage'''}}
+:The amount of damage to perform. This can be an exact value or an expression. Default is 0.
+* {{c|sound '''meleesound'''}}
+:The sound to make when the melee successfully hits. Default is {{c|""}}, for no sound.
+* {{c|sound '''misssound'''}}
+:The sound to make when the melee attack misses. Default is {{c|""}}, for no sound.
+* {{c|name '''damagetype'''}}
+:The type of damage to do. Default is {{c|"Melee"}}.
+* {{c|bool '''bleed'''}}
+:If &lt;code&gt;true&lt;/code&gt;, target bleeds when hit. This only produces blood [[decal]]s on nearby walls. Default is &lt;code&gt;true&lt;/code&gt;.
+
+==Examples==
+This is the {{Class|revenant}}'s melee sequence:
+
+  Melee:
+    SKEL G 1 [[A_FaceTarget]];
+    SKEL G 6 [[A_SkelWhoosh]];
+    SKEL H 6 [[A_FaceTarget]];
+    SKEL I 6 [[A_SkelFist]];
+    goto See;
+
+The same sequence could be simulated this way:
+
+  Melee:
+    SKEL G 1 [[A_FaceTarget]];
+    SKEL G 6 [[A_SkelWhoosh]];
+    SKEL H 6 [[A_FaceTarget]];
+    SKEL I 6 [[A_CustomMeleeAttack]](random(1, 10) * 6, "skeleton/melee"); {{comment|Does not make any sound when missing}}
+
+[[category:Decorate Generic Attack functions]]{{DEFAULTSORT:CustomMeleeAttack}}</text>
+    <sha1>tjk203vi3ppgu3o13fsrilksusq3sx5</sha1>
+  </revision>
+</page>

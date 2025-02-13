@@ -1,0 +1,104 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>ZScript classes</title>
+  <ns>0</ns>
+  <id>8955</id>
+  <revision>
+    <id>53656</id>
+    <parentid>53288</parentid>
+    <timestamp>2024-11-11T11:14:25Z</timestamp>
+    <contributor>
+      <username>Jekyll Grim Payne</username>
+      <id>2175</id>
+    </contributor>
+    <comment>/* {{c|play}}, {{c|ui}} */</comment>
+    <origin>53656</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="3927" sha1="6w8je9ibc4pqehslu09k3713116csto" xml:space="preserve">{{ZScriptNote}}
+ZScript classes are similar to [http://www.cplusplus.com/doc/tutorial/classes/ C++ classes] which may contain a variety of data.
+
+== Internal classes ==
+Below is a list of internal classes used in ZDoom. Classes inheriting from other classes use a colon, much like how DECORATE performs inheritance. These classes are only accessible to ZScript itself (save for Actor)
+* [[Object]]
+** [[ThinkerIterator]] : [[Object]]
+** [[ActorIterator]] : [[Object]]
+** [[BlockThingsIterator]] : [[Object]]
+** {{class|SpotState}} : [[Object]]
+** {{class|StaticEventHandler}} : [[Object]]
+** {{class|Thinker}} : [[Object]]
+*** {{class|Actor}} : [[Thinker]]
+*** {{class|Ceiling}} : [[Thinker]]
+*** {{class|Floor}} : [[Thinker]]
+*** {{class|VisualThinker}} : [[Thinker]]
+* [[Service]]
+* [[String]]
+* [[LevelPostProcessor]]
+
+== Cross-Mod Support ==
+Currently there is not much ability to check between loading different mods on top of primary ones (like addons), but there is a way to check if a class exists.
+
+ // Checked at compile time. This will error upon loading if the class is missing.
+ class&lt;Actor&gt; cls = "MissingNameOfClass";
+
+ // Checked at run time instead of compile time. 'cls' will just be null if the actor class isn't defined.
+ string classname = "MissingNameOfClass";
+ class&lt;Actor&gt; cls = classname;
+
+Class names are checked at compile time by default. However, using a string in place of a name forces the engine to rely upon run-time instead. A simple check will allow compatibility for addons:
+
+ if (cls)
+ {
+     A_SpawnItemEx(cls,...);
+ }
+
+== Modifiers ==
+Certain words may appear after the name of a class and (if any) its parent class. This example uses the {{c|abstract}} modifier:
+ class SomeClass : Actor abstract
+ {}
+
+=== {{c|abstract}} ===
+Marks a class as &lt;dfn&gt;abstract&lt;/dfn&gt;, which means it can only be used as a parent class, and cannot be spawned or instantiated directly.
+ &lt;span style="color:green"&gt;// Trying to instantiate with new('One') is a compile error.&lt;/span&gt;
+ class One abstract
+ {}
+ 
+ &lt;span style="color:green"&gt;// But new('Two') is allowed, because it's not abstract.&lt;/span&gt;
+ class Two : One
+ {}
+This can be used on classes only, not [[structs]]. Abstract classes also allow you to define [[ZScript virtual functions#Abstract functions|abstract functions]].
+
+A class pointer can be checked for abstraction using '''IsAbstract()''' like such:
+ static bool CheckAbstract(Class&lt;Object&gt; obj)
+ {
+ 	return (!obj || obj.IsAbstract());
+ }
+
+
+
+=== {{c|play}}, {{c|ui}}, {{c|data}} ===
+By default new objects are marked as belonging to the data [[Object scopes and versions#Scoping system|&lt;u&gt;scope&lt;/u&gt;]] ({{c|data}} can also be specified explicitly, but if nothing is specified, it's considered data-scoped implicitly). If the object is a class based on another class, it'll inherit its scope as well.
+
+{{c|play}} or {{c|ui}} mark the object as belonging to play or UI scope respectively.
+
+Can be used on both classes and structs.
+
+== Extending Classes ==
+Classes may be extended, but the class must be part of the same mod. I.e. one can have extensions occur in a separate file within the archive, but not a separate archive itself. 
+I.e. extending class Actor is impossible since it's defined within gzdoom.pk3 archive. Any attempt to extend a class in another archive file will result in an error at compile time.
+
+Similarly, attempting to extend a class before its definition is read will also fail. Also, due to the way the #include directive works (adding the file to a list of files to be compiled), extending a class that is on a deeper level of inclusion than the extension results in an error on start-up, as the extension is then read before the class.
+
+Extending a class allows extra definitions to be added when needed, for ease of organization.
+
+ extend class MyClass
+ {
+     // Insert new functions, variables, and the like here.
+ }
+
+== See also ==
+* [[ZScript]]
+
+[[Category:ZScript]]</text>
+    <sha1>6w8je9ibc4pqehslu09k3713116csto</sha1>
+  </revision>
+</page>

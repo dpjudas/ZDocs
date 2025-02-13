@@ -1,0 +1,60 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>Teleport NoFog</title>
+  <ns>0</ns>
+  <id>668</id>
+  <revision>
+    <id>44998</id>
+    <parentid>44589</parentid>
+    <timestamp>2017-05-02T12:00:17Z</timestamp>
+    <contributor>
+      <username>Blue Shadow</username>
+      <id>2021</id>
+    </contributor>
+    <minor />
+    <comment>Remove {{new}}</comment>
+    <origin>44998</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="2172" sha1="enpmzrcc1uhi3menji586rnc5l499pz" xml:space="preserve">{{DISPLAYTITLE:Teleport_NoFog}}
+{{Special|71|tid, useangle, tag, keepheight|Teleport|NoFog}}
+
+* ''tid'': Thing ID of the destination spot 
+* ''useangle'': specifies how the angle of the teleport exit is used
+* ''tag'': Tag of destination sector
+* ''keepheight'': if set, the thing will keep the same height relative to the floor
+
+
+
+Teleports the activating thing to a new location, but without fog or a delay.
+
+There are different modes how the teleport exit's angle is used:
+
+* '''0''': Hexen-compatible: Do not change angle and velocity at all.
+* '''1''': Strife-compatible: Always use the teleport exit's angle
+* '''2''': Boom-compatible: Adjust relatively to the teleport exit's angle, but in the wrong direction. This replicates a Boom bug that never got fixed.
+* '''3''': Boom-fixed: Adjust relatively to the teleport exit's angle.
+
+If ''tag'' is 0, it will use a random teleport destination out of those with the matching tid. This can be restricted to certain sectors if ''tag'' is non-zero. If ''tid'' is 0 and the tag is non-zero, it will use the first teleport destination found in the first sector with the matching tag.
+
+== Conversions from linedef types ==
+The following Doom map format types can be converted as Teleport_NoFog:
+{| {{prettytable}}
+!Type!!Conversion!!Trigger
+|-
+|{{icon|Strife}} 185:WR Teleport (Silent) || Teleport_NoFog(0, 1, tag) || Player Cross, Repeatable, Monsters Activate
+|-
+|{{icon|Boom}} 207:W1 Teleport Preserve Direction (Silent) || Teleport_NoFog(0, 2, tag, 1) || Player Cross, Monsters Activate
+|-
+|{{icon|Boom}} 208:WR Teleport Preserve Direction (Silent) || Teleport_NoFog(0, 2, tag, 1) || Player Cross, Repeatable, Monsters Activate
+|-
+|{{icon|Boom}} 209:S1 Teleport Preserve Direction (Silent) || Teleport_NoFog(0, 2, tag, 1) || Player Use, Monsters Activate
+|-
+|{{icon|Boom}} 210:SR Teleport Preserve Direction (Silent) || Teleport_NoFog(0, 2, tag, 1) || Player Use, Repeatable, Monsters Activate
+|-
+|{{icon|Boom}} 268:W1 Teleport Monsters Only (Silent) || Teleport_NoFog(0, 2, tag, 1) || Monster Cross
+|-
+|{{icon|Boom}} 269:WR Teleport Monsters Only (Silent) || Teleport_NoFog(0, 2, tag, 1) || Monster Cross, Repeatable
+|}</text>
+    <sha1>enpmzrcc1uhi3menji586rnc5l499pz</sha1>
+  </revision>
+</page>

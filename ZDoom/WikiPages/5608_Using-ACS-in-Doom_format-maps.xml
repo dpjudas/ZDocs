@@ -1,0 +1,67 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>Using ACS in Doom-format maps</title>
+  <ns>0</ns>
+  <id>5608</id>
+  <revision>
+    <id>38212</id>
+    <parentid>36007</parentid>
+    <timestamp>2014-08-29T09:02:38Z</timestamp>
+    <contributor>
+      <username>Cpt. Carmack</username>
+      <id>2022</id>
+    </contributor>
+    <comment>huh?</comment>
+    <origin>38212</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="3060" sha1="arljiiql5rzdu40fhygm1cylh8exf5t" xml:space="preserve">It is possible to get some level specific [[ACS]] scripts to work in a [[map format|Doom-format]] map by making them into library scripts and loading them through [[LOADACS]]. Then they can be made map-specific by checking the result of [[GetLevelInfo]] (LEVELINFO_LEVELNUM).
+
+It is advised to use [[UDMF]] or, if your [[level editor]] of choice does not support this format, then the Hexen format. However, situation may arise when you do not want to modify an existing map; maybe to make an addon to a mod you did not author for example. A case could be made where [[MAPINFO]] and a [[map translator|custom xlat lump]] could allow to restore functionality through ACS to a mod originally meant for another source port and using features unsupported in ZDoom.
+
+For how to create library scripts, read the article on [[libraries]]. Do not forget the #library directive! Without it, the script will compile without reporting errors, but it will simply not work in the level. You also need to use it to give your library a name so that it can be loaded with LOADACS. Once compiled, your library must be placed in the ACS namespace for it to be found; that is to say in a [[WAD]] file between A_START and A_END markers, or in a [[PK3]] within an ACS/ subdirectory of the root folder. The LOADACS lump itself must be in the general namespace: outside of marker or directly in the root folder.
+
+Make your scripts as normal, and use the [[GetLevelInfo]] function to differentiate between different levels. This simple example merely display map names.
+ #library "mylibrar"
+ #include "zcommon.acs"
+ Script 1 {{SType|Open}}
+ {
+     int mnam = [[GetLevelInfo]] ({{const|LEVELINFO_LEVELNUM}});
+     if (mnam == 1)
+     {
+         [[SetFont]]("BIGFONT");
+         [[HudMessage]](s:"First map";
+         {{const|HUDMSG_FADEINOUT}}, 1, 8, 0.5, 0.0, 5.0, 3.0, 3.0);
+     }
+     else if (mnam == 2)
+     {
+         [[SetFont]]("BIGFONT");
+         [[HudMessage]](s:"Second map";
+         {{const|HUDMSG_FADEINOUT}}, 9, 16, 0.5, 0.0, 5.0, 3.0, 3.0);
+     }
+     else if (mnam == 3)
+     {
+         [[SetFont]]("BIGFONT");
+         [[HudMessage]](s:"Third map";
+         {{const|HUDMSG_FADEINOUT}}, 11, 16, 0.5, 0.0, 5.0, 3.0, 3.0);
+     }
+     else if (mnam == 4)
+     {
+         [[SetFont]]("BIGFONT");
+         [[HudMessage]](s:"Fourth map";
+         {{const|HUDMSG_FADEINOUT}}, 13, 16, 0.5, 0.0, 5.0, 3.0, 3.0);
+     }
+     else
+     {
+         [[SetFont]]("BIGFONT");
+         [[HudMessage]](s:"Fifth map, presumably";
+         {{const|HUDMSG_FADEINOUT}}, 15, 17, 0.5, 0.0, 5.0, 3.0, 3.0);
+     }
+ }
+
+In this example, you only have five maps. Calling "else" will work as long as the player is not able to access any other maps even with console, as the only other number that will be returned is "5", giving you this number. This is a simplistic and not extremely useful example. Presumably, you'd create many other scripts and call them from the main ENTER or OPEN script depending on level; rather than sticking everything into a single script.
+
+
+[[Category:ACS guides]]</text>
+    <sha1>arljiiql5rzdu40fhygm1cylh8exf5t</sha1>
+  </revision>
+</page>

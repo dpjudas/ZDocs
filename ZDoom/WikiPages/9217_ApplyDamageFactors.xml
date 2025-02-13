@@ -1,0 +1,61 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>ApplyDamageFactors</title>
+  <ns>0</ns>
+  <id>9217</id>
+  <revision>
+    <id>52799</id>
+    <parentid>52399</parentid>
+    <timestamp>2024-07-07T11:34:07Z</timestamp>
+    <contributor>
+      <username>Jekyll Grim Payne</username>
+      <id>2175</id>
+    </contributor>
+    <comment>/* Examples */</comment>
+    <origin>52799</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="1968" sha1="n5ly2r6wqn5kd7aiby2ldr384blpqli" xml:space="preserve">{{note|This should not be confused with '''[[ApplyDamageFactor]]'''.}}
+
+'''[[Classes:Actor|Actor]]'''
+
+{{c|clearscope static int '''ApplyDamageFactors''' (class&lt;Inventory&gt; ''itemcls'', Name ''damagetype'', int ''damage'', int ''defdamage'')}}
+
+==Usage==
+Returns the value passed to ''damage'' after adjustment, which is done by multiplying it with the chosen {{Property|DamageFactor|damage factor}} from the specified item class. If the chosen damage factor does not exist among the item's damage factors, ''damage'' is returned as is. If the item does not define any damage factors, the function returns the value passed to ''defdamage'' without any adjustments.
+
+This function is generally used as part of set ups to adjust the damage an actor receives or inflicts.
+
+===Parameters===
+*{{c|class&lt;Inventory&gt; '''itemcls'''}}
+:The item class from which to get the damage factors.
+*{{c|Name '''damagetype'''}}
+:The desired damage factor, referenced by its damage type.
+*{{c|int '''damage'''}}
+:The value to multiply the damage factor with.
+*{{c|int '''defdamage'''}}
+:The fall-back value to return if the item does not define any damage factors.
+
+==Examples==
+{{c|{{Class|PowerDamage}}}} (and {{class|Powerup|powerups}} based on it) uses this function when modifying the damage its owner deals, so that [[Damage type|damage types]] could be specified in the powerup:
+
+ override void '''ModifyDamage''' (int damage, Name damageType, out int newdamage, bool passive, Actor inflictor, Actor source, int flags)
+ {
+     if (!passive &amp;&amp; damage &gt; 0)
+     {
+         newdamage = [[DECORATE expressions|max]](1, [[ApplyDamageFactors]]([[GetClass]](), damageType, damage, damage * 4));
+ 
+         if (Owner != null &amp;&amp; newdamage &gt; damage)
+         {
+             Owner.[[A_StartSound]](ActiveSound, {{const|CHAN_AUTO}}, {{const|CHANF_DEFAULT}}, 1.0, {{const|ATTN_NONE}});
+         }
+     }
+ }
+
+==See also==
+*[[ModifyDamage]]
+
+[[Category:ZScript]]
+[[Category:Actor static functions]]</text>
+    <sha1>n5ly2r6wqn5kd7aiby2ldr384blpqli</sha1>
+  </revision>
+</page>

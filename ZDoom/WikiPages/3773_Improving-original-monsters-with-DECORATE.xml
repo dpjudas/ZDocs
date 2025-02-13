@@ -1,0 +1,73 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>Improving original monsters with DECORATE</title>
+  <ns>0</ns>
+  <id>3773</id>
+  <revision>
+    <id>52201</id>
+    <parentid>44839</parentid>
+    <timestamp>2024-04-02T14:58:46Z</timestamp>
+    <contributor>
+      <username>Jekyll Grim Payne</username>
+      <id>2175</id>
+    </contributor>
+    <minor />
+    <comment>indentation</comment>
+    <origin>52201</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="2365" sha1="tpndpjwindge0pt15bor2j5up4sgekm" xml:space="preserve">[[DECORATE]] can do more than creating new stuff, you can also use it to improve the original [[monster]]s. Sometimes they act strangely, and DECORATE can help to remove these little quirks.
+
+== Improvement examples ==
+Take a close look at the  [[Cacodemon]]. When it dies, it collapses in the air or slowly collapses after hitting the floor, but we all would expect it to smash on the ground, splashing its guts out instead. So let's fix this quirk.
+
+ actor Cacodemon2 : [[Cacodemon]] replaces [[Cacodemon]]
+ {
+  {{Property|BloodColor}} "blue"
+  states
+  {
+  Death:
+    HEAD G 4 [[A_SetSolid]]
+    HEAD G 4 [[A_SetShootable]]
+    HEAD H 8 [[A_Scream]]
+    HEAD H -1
+    stop
+  Crash:
+    HEAD I 4 [[A_PlaySound]] ("*fist") //I had no better sound, so feel free to use another.
+    HEAD J 4
+    HEAD K 2 [[A_NoBlocking]]
+    HEAD K 1 [[A_UnsetSolid]]
+    HEAD K 1 [[A_UnSetShootable]]
+    HEAD L -1 [[A_SetFloorClip]]
+    stop
+  Raise:
+    HEAD L 8 [[A_UnSetFloorClip]]
+    HEAD KJIHG 8
+    goto See
+  }
+ }
+
+This DECORATE code, for example, improves the [[Cacodemon]] a little bit now.
+You can shoot it in the air, and it blocks any shots while falling.
+When it hits the ground, the state "Crash" is called (this state is called every time an actor is dead and hits the floor); it contains the code for collapsing and resetting the old corpse behavior (unshootable etc.)
+It's obviously not the best solution for it, but still a nice improvement when they drop after shooting them on maps with a high ceiling.
+
+It also changes the Cacodemon's blood color to blue rather than the default red color, as the Cacodemon's insides appear blue when he dies.
+
+Some other monsters can be improved just by simply changing their blood color. For example, the [[Baron of Hell]] and [[Hell Knight]]'s blood color can be changed to green because they bleed out a green pool of blood upon dying.
+
+ actor BaronofHell2 : [[Baron of Hell|BaronOfHell]] replaces [[Baron of Hell|BaronOfHell]]
+ {
+   {{Property|BloodColor}} "green"
+ }
+
+However, the [[Hell Knight]] will not be affected by the change since it's still going to inherit from the original Baron of Hell. As such, you'll need to modify it as well to reflect the change.
+
+ actor HellKnight2 : [[Hell Knight|HellKnight]] replaces [[Hell Knight|HellKnight]]
+ {
+   {{Property|BloodColor}} "green"
+ }
+
+[[Category:DECORATE guides]]</text>
+    <sha1>tpndpjwindge0pt15bor2j5up4sgekm</sha1>
+  </revision>
+</page>

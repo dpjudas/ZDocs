@@ -1,0 +1,93 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>Classes:AltHUD</title>
+  <ns>0</ns>
+  <id>9765</id>
+  <revision>
+    <id>53463</id>
+    <parentid>51109</parentid>
+    <timestamp>2024-10-31T10:18:03Z</timestamp>
+    <contributor>
+      <username>Jekyll Grim Payne</username>
+      <id>2175</id>
+    </contributor>
+    <origin>53463</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="4494" sha1="38d0p6qzf6qk38a8gbitfh40xq6nu58" xml:space="preserve">{{ZScriptNote}}
+
+'''AltHud''' is a class used by GZDoom to draw its alternative HUD ({{c|hud_althud}} [[CVAR]] must be set to true). New alternative HUDs can be created based on this class. The main difference between AltHUD and {{class|BaseStatusBar}} is that AltHUD draws using absolute screen coordinates and doesn't utilize the same scaling as BaseStatusBar. It also doesn't support [[Aspect_ratio_correction#HUD_graphics|aspect scaling]] (the value of the {{c|hud_aspectscale}} CVAR is ignored). AltHUD mainly utilizes the [[Structs:Screen|Screen struct]] functions to perform drawing.
+
+Using this class is not recommended if the author wants to make a HUD that supports scaling.
+
+Note, to see your HUD in the game, it MUST be added via the [[MAPINFO/GameInfo_definition|GameInfo block of the MAPINFO lump]] as follows:
+&lt;syntaxhighlight lang="cs"&gt;
+GameInfo
+{
+  StatusBarClass = "MyCustomHUD" //replaces the base HUD
+  AltHUDClass = "MyCustomAltHUD" //replaces the alternative HUD
+}&lt;/syntaxhighlight&gt;
+
+See '''[[ZScript HUDs]]''' for details.
+
+==Methods==
+===Static===
+*static int '''GetDigitCount'''(int value)
+*native static int, int, int '''GetLatency'''()
+
+===Dynamic===
+*void '''DrawImageToBox'''(TextureID tex, int x, int y, int w, int h, double trans = 0.75, bool animate = false)
+:Draws an image into a box with its bottom center at the bottom center of the box. The image is scaled down if it doesn't fit.
+*void '''DrawHudText'''(Font fnt, int color, String text, int x, int y, double trans = 0.75)
+:Draws a text but uses a fixed width for all characters.
+*void '''DrawHudNumber'''(Font fnt, int color, int num, int x, int y, double trans = 0.75)
+:Draws a number with a fixed width for all digits
+*void '''AddAmmoToList'''(readonly&lt;Weapon&gt; weapdef)
+:Adds ammo to the list of ammo classes to draw.
+*int, int '''GetAmmoTextLengths'''(PlayerInfo CPlayer)
+:Checks the {{class|Ammo|ammo types}} carried by the player and returns the longest length of the strings representing the current amount of ammo and the maximum amount of ammo (to make sure the block displaying all ammo fits where it should).
+*void '''DrawCoordinateEntry'''(int xpos, int ypos, String coordstr, Font fnt = nullptr)
+:Utilized by '''DrawCoordinates'''
+
+===Virtual===
+*virtual void '''Init'''()
+:Called when the HUD is initialized
+*virtual void '''DrawInGame'''(PlayerInfo CPlayer)
+:Contains all the other drawing functions, except '''DrawAutomap'''.
+*virtual void '''DrawAutomap'''(PlayerInfo CPlayer)
+:Draws level name and time while the [[Automap|automap]] is open.
+*virtual void '''DrawTimeString'''(Font fnt, int color, int timer, int x, int y, double trans = 0.75)
+:Draws a time string as hh:mm:ss
+:virtual void '''DrawStatus'''(PlayerInfo CPlayer, int x, int y)
+:Draw the status (number of kills, score, secrets, items)
+*virtual void '''DrawStatLine'''(int x, in out int y, String prefix, String text)
+:Utilized by '''DrawStatus''' to draw specific lines
+*virtual void '''DrawHealth'''(PlayerInfo CPlayer, int x, int y)
+:Draws player health
+*virtual void '''DrawArmor'''(BasicArmor barmor, HexenArmor harmor, int x, int y)
+:Draws player armor (supporting {{class|HexenArmor|Hexen armor}})
+*virtual int '''DrawKeys'''(PlayerInfo CPlayer, int x, int y)
+:Draws collected {{class|Key|keys}}. Uses their Spawn sprites rather than {{property|Inventory.icon|icons}}.
+*virtual bool '''DrawOneKey'''(int xo, int x, int y, in out int c, Key inv)
+:Utilized by '''DrawKeys'''
+*virtual int '''DrawAmmo'''(PlayerInfo CPlayer, int x, int y)
+:Draws all ammo the player posseses, ordered by weapon slots.
+*virtual void '''DrawWeapons'''(PlayerInfo CPlayer, int x, int y)
+:Draws possessed {{class|Weapon|weapons}}.
+*virtual void DrawOneWeapon(PlayerInfo CPlayer, int x, in out int y, Weapon weapon)
+:Utilized by '''DrawWeapons'''
+*virtual void '''DrawInventory'''(PlayerInfo CPlayer, int x,int y)
+:Draws {{class|Inventory|inventory items}} carried by the player (utilizes '''DrawImageToBox''' for drawing)
+*virtual void '''DrawFrags'''(PlayerInfo CPlayer, int x, int y)
+:Draws [[Frag|frags]] in multiplayer
+*virtual void '''DrawCoordinates'''(PlayerInfo CPlayer, bool withmapname)
+:Draws the player's current map coordinates
+*virtual bool '''DrawTime'''(int y)
+:Draws the time on the AltHUD. Different display options are supported based on the {{c|hud_showtime}} CVAR value.
+*virtual void '''DrawPowerups'''(PlayerInfo CPlayer, int y)
+:Draws active {{class|Powerup|powerups}}.
+
+[[Category:ZScript]]
+[[Category:BaseStatusBar]]</text>
+    <sha1>38d0p6qzf6qk38a8gbitfh40xq6nu58</sha1>
+  </revision>
+</page>

@@ -1,0 +1,72 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>Classes:Mauler</title>
+  <ns>0</ns>
+  <id>4795</id>
+  <revision>
+    <id>40141</id>
+    <parentid>36577</parentid>
+    <timestamp>2015-05-22T06:59:44Z</timestamp>
+    <contributor>
+      <username>Blue Shadow</username>
+      <id>2021</id>
+    </contributor>
+    <minor />
+    <comment>/* DECORATE definition */ Updated</comment>
+    <origin>40141</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="1593" sha1="entrwro5hcwpj59uoa1jtnozjllo4c7" xml:space="preserve">{{Actor|
+| type = Weapon
+| name = Mauler
+| class = Mauler
+| game = Strife
+| doomednum = 2004
+| convid = 193, 187, 191
+}}[[Classes]]: [[Classes:Inventory|Inventory]]&amp;rarr;[[Classes:Weapon|Weapon]]&amp;rarr;[[Classes:StrifeWeapon|StrifeWeapon]]&amp;rarr;&lt;u&gt;Mauler&lt;/u&gt;&lt;br&gt;
+&amp;ensp;&amp;rarr;[[Classes:Mauler2|Mauler2]]&lt;br&gt;
+This is one of the two types of Mauler in the game Strife, it fires several hitscan shots which disintegrate foes.
+In Strife1.wad, the sprites are actually named BLST* and are [[Sprite renaming|renamed at load-time]] by ZDoom.
+==== [[DECORATE]] definition ====
+ ACTOR &lt;u&gt;Mauler&lt;/u&gt; : {{Class|StrifeWeapon}}
+ {
+   +{{Flag|FLOORCLIP}}
+   {{Property|Weapon.SelectionOrder}} 300
+   {{Property|Weapon.AmmoUse1}} 20
+   {{Property|Weapon.AmmoGive1}} 40
+   {{Property|Weapon.AmmoType1}} "{{Class|EnergyPod}}"
+   {{Property|Weapon.SisterWeapon}} "{{Class|Mauler2}}"
+   {{Property|Inventory.Icon}} "TRPDA0"
+   {{Property|Tag}} "$TAG_MAULER1" // "Mauler"
+   {{Property|Inventory.PickupMessage}} "$TXT_MAULER" // "You picked up the mauler."
+   {{Property|Obituary}} "$OB_MPMAULER1" // "%o was zapped by %k."
+ 
+   action native [[A_FireMauler1]]();
+ 
+   States
+   {
+   Ready:
+     MAUL FGHA 6 [[A_WeaponReady]]
+     Loop
+   Deselect:
+     MAUL A 1 [[A_Lower]]
+     Loop
+   Select:
+     MAUL A 1 [[A_Raise]]
+     Loop
+   Fire:
+     BLSF A 5 Bright [[A_FireMauler1]] // see {{Class|MaulerPuff}}
+     MAUL B 3 Bright [[A_Light1]]
+     MAUL C 2 [[A_Light2]]
+     MAUL DE 2
+     MAUL A 7 [[A_Light0]]
+     MAUL H 7
+     MAUL G 7 [[A_CheckReload]]
+     Goto Ready
+   Spawn:
+     TRPD A -1
+     Stop
+   }
+ }</text>
+    <sha1>entrwro5hcwpj59uoa1jtnozjllo4c7</sha1>
+  </revision>
+</page>

@@ -1,0 +1,80 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>Classes:MapRevealer</title>
+  <ns>0</ns>
+  <id>2738</id>
+  <revision>
+    <id>48336</id>
+    <parentid>48335</parentid>
+    <timestamp>2021-03-09T09:21:36Z</timestamp>
+    <contributor>
+      <username>Jekyll Grim Payne</username>
+      <id>2175</id>
+    </contributor>
+    <origin>48336</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="1659" sha1="6vym8047pv1lsi5ybdrjlykhtm9tato" xml:space="preserve">{{Actor|
+| type = Internal
+| name = Map revealer
+| class = MapRevealer
+}}[[Classes]]: [[Classes:Inventory|Inventory]]&amp;rarr;&lt;u&gt;MapRevealer&lt;/u&gt;&lt;br&gt;
+&amp;ensp;&amp;rarr;[[Classes:Allmap|Allmap]]&lt;br&gt;
+&amp;ensp;&amp;rarr;[[Classes:StrifeMap|StrifeMap]]&lt;br&gt;
+&amp;ensp;&amp;rarr;[[Classes:SuperMap|SuperMap]]
+
+
+&lt;u&gt;MapRevealer&lt;/u&gt;s make the entire automap visible. Essentially this is like Doom's [[Classes:Allmap|computer map]] without predefined sprites.
+
+
+=== Custom map revealers ===
+Any item that inherits from &lt;u&gt;MapRevealer&lt;/u&gt; can always be picked up and will make the entire level visible in the automap. This class doesn't define any properties and only uses the [[Classes:Inventory|Inventory properties]] that are related to picking up the item (i.e. pickup message and pickup sound) and the respawn time.
+
+'''Examples:'''
+====[[ZScript]]====
+ Class TheMap : &lt;u&gt;MapRevealer&lt;/u&gt; 1337
+ {
+   Default
+   {
+      inventory.pickupsound "misc/p_pkup";
+      inventory.pickupmessage "Cool map item!";
+      inventory.respawntics 2010;
+      +COUNTITEM
+   }
+   States
+   {
+   Spawn:
+     MMAP A -1 bright;
+     stop;
+   }
+ }
+
+====[[DECORATE]]====
+ actor TheMap : &lt;u&gt;MapRevealer&lt;/u&gt; 1337
+ {
+   inventory.pickupsound "misc/p_pkup"
+   inventory.pickupmessage "Cool map item!"
+   inventory.respawntics 2010
+   +COUNTITEM
+   states
+   {
+   Spawn:
+     MMAP A -1 bright
+     stop
+   }
+ }
+===MapRevealer definition===
+==== [[ZScript]] definition ====
+ class MapRevealer : Inventory
+ {
+ 	override bool TryPickup (in out Actor toucher)
+ 	{
+ 		level.allmap = true;
+ 		GoAwayAndDie ();
+ 		return true;
+ 	}
+ }
+==== [[DECORATE]] definition ====
+ ACTOR &lt;u&gt;MapRevealer&lt;/u&gt; : {{Class|Inventory}} native {}</text>
+    <sha1>6vym8047pv1lsi5ybdrjlykhtm9tato</sha1>
+  </revision>
+</page>

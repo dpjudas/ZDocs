@@ -1,0 +1,42 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>Build</title>
+  <ns>0</ns>
+  <id>6167</id>
+  <revision>
+    <id>47129</id>
+    <parentid>43512</parentid>
+    <timestamp>2020-02-04T12:58:36Z</timestamp>
+    <contributor>
+      <username>Redneckerz</username>
+      <id>2602</id>
+    </contributor>
+    <minor />
+    <comment>Added link to Raze</comment>
+    <origin>47129</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="2343" sha1="c0xdu69uqx4kcqm8ase6ltmyp5vvo83" xml:space="preserve">'''{{wp|Build}}''' is an engine developed by Ken Silverman for Apogee Software/3D Realms. [[ZDoom]] borrows a few elements from Build for various purposes.
+
+{{cquote|{{forum|p=495208|Here's a summary of the Build code in ZDoom that I wrote a few months ago:}}
+
+The slopes themselves were (and still are) entirely my own code. The part that's from Build is the wall boundary calculations. The way Doom did it was too imprecise for any useful sloping, so I was in the process of rewriting it to use the standard perspective divide equations, then Build's source was released, and I saw I was going in the same direction as it, so I just used its code to save myself some time. Here's a list of Build-touched functions:
+
+* &lt;s&gt;'''R_AddLine''' everything before {{c|backsector {{=}} line-&gt;backsector}}&lt;/s&gt; (''note: This has been completely refactored since this article was written.'')
+* &lt;s&gt;'''R_RenderDecal''' uses the same projection code as R_AddLine. It's just standard perspective divide stuff.&lt;/s&gt; (''note: Code has been merged with the refactored version from R_AddLine'')
+* &lt;s&gt;'''wallscan/maskwallscan/transmaskwallscan''' multicolumn rasterizers straight from Build&lt;/s&gt; (''note: removed in {{cs|60ae4a8}}'')
+* &lt;s&gt;'''OWallMost/WallMost''' calculate top and bottom edges of walls, also straight from build&lt;/s&gt; (''note: removed in {{cs|547973c}}'')
+* &lt;s&gt;'''PrepWall/PrepLWall''' calculate texture coordinates and scales along a wall, for use with wallscan&lt;/s&gt; (''note: these functions had already eliminated the vast majority of Build code long ago, but {{cs|6417c1a7}} rewrites the remaining part entirely so there's nothing left anymore'')
+* &lt;s&gt;'''a.asm''' everything in here&lt;/s&gt; (''note: removed in {{cs|a118903}}'')
+
+There might be others, but I'm pretty sure that's all of it. The &lt;s&gt;wallscan and&lt;/s&gt; prepwall routines are basically all for splitting up R_RenderSegLoop so that it can draw four columns at a time instead of just one, which can be significantly faster depending on the processor's cache. You could remove those and go back to the old R_RenderSegLoop without affecting slopes, but there will be a performance hit.}}
+
+In addition, [[voxel]]s are also rendered with Build code. (The code to load a voxel object in memory, though, is custom.)
+==See also==
+* [[Polymost]]
+* [[ZDuke]]
+* [[Raze]]
+
+[[Category:Technical aspects]]</text>
+    <sha1>c0xdu69uqx4kcqm8ase6ltmyp5vvo83</sha1>
+  </revision>
+</page>

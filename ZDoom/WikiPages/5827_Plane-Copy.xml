@@ -1,0 +1,49 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>Plane Copy</title>
+  <ns>0</ns>
+  <id>5827</id>
+  <revision>
+    <id>44600</id>
+    <parentid>33210</parentid>
+    <timestamp>2017-04-02T17:27:24Z</timestamp>
+    <contributor>
+      <username>Gez</username>
+      <id>1283</id>
+    </contributor>
+    <comment>xlat</comment>
+    <origin>44600</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="1777" sha1="7m5f4a7hdq18am7wh36n3a85873uz3q" xml:space="preserve">{{DISPLAYTITLE:Plane_Copy}}
+{{Special|118|front floor, front ceiling, back floor, back ceiling, share|Miscellaneous|use=line}}
+
+This is an alternative to using [[slopes|slope copy things]]. On a single-sided linedef, only the first two argument are relevant. As all slope-related specials, it is only valid during initialization.
+
+* ''front floor'': Tag of the sector whose plane to copy. The floor plane of the first tagged sector found will be copied for the front sector's floor plane. If this parameter is left to zero, no copy takes place.
+* ''front ceiling'': Same thing, but for the ceiling plane. The tagged sector's ceiling plane is copied.
+* ''back floor'': Same as front floor, but for back sector.
+* ''back ceiling'': Same as front ceiling, but for back sector.
+* ''share'': if non-zero, the slope from one side of the linedef can be copied by the other side, as such:
+:1 &amp;mdash; front floor slope is copied to back floor slope
+:2 &amp;mdash; back floor slope is copied to front floor slope
+:4 &amp;mdash; front ceiling slope is copied to back ceiling slope
+:8 &amp;mdash; back ceiling slope is copied to front ceiling slope
+A front and a ceiling value can be combined, so 5, 6, 9 and 10 are also valid values. Conflicting values such as 3 or 12 are ignored.
+
+Slope copies from tagged sectors are performed first, followed by shared slopes across the line.
+
+
+== Conversions from linedef types ==
+The following Doom map format types can be converted as Plane_Copy:
+{| {{prettytable}}
+!Type!!Conversion!!Trigger
+|-
+|{{icon|Eternity}} 394:Slope_FrontFloorToTaggedSlope || Plane_Copy  (tag, 0) || 
+|-
+|{{icon|Eternity}} 395:Slope_FrontCeilingToTaggedSlope || Plane_Copy  (0, tag) || 
+|-
+|{{icon|Eternity}} 396:Slope_FrontFloorAndCeilingToTaggedSlope || Plane_Copy (tag, tag) || 
+|}</text>
+    <sha1>7m5f4a7hdq18am7wh36n3a85873uz3q</sha1>
+  </revision>
+</page>

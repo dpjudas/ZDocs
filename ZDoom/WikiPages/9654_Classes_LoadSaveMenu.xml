@@ -1,0 +1,121 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>Classes:LoadSaveMenu</title>
+  <ns>0</ns>
+  <id>9654</id>
+  <revision>
+    <id>49874</id>
+    <timestamp>2022-11-23T01:11:33Z</timestamp>
+    <contributor>
+      <username>Boondorl</username>
+      <id>2606</id>
+    </contributor>
+    <comment>Created page with "LoadSaveMenu is a subclass of [[Classes:ListMenu|ListMenu]] and is the basis for creating both the save and load game menus. It uses a special SavegameManager API in order to..."</comment>
+    <origin>49874</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="6350" sha1="qsasof782pgfjnd7rhhdp3cg4lrdk4f" xml:space="preserve">LoadSaveMenu is a subclass of [[Classes:ListMenu|ListMenu]] and is the basis for creating both the save and load game menus. It uses a special SavegameManager API in order to access and write to save data. This menu only needs to be inherited from if you want ZDoom-styled save and load menus. The SavegameManager is independent of this class so entirely custom ones can be created in their place.
+
+== Fields ==
+*SavegameManager '''manager''' - Contains the API for accessing and manipulating save data
+*int '''TopItem''' - The index of the save file that's at the visible top of the list
+*int '''Selected''' - The index of the currently selected save file
+*int '''savepicLeft''' The leftmost bound of the box for drawing the save file picture
+*int '''savepicTop''' The upper bound of the box for drawing the save file picture
+*int '''savepicWidth''' The width of the box for drawing the save file picture
+*int '''savepicHeight''' The height of the box for drawing the save file picture
+*int '''rowHeight''' - How tall each row in the save list is measured in pixels
+*int '''listboxLeft''' - The leftmost bound of the box for the save list
+*int '''listboxRight''' - The rightmost bound of the box for the save list
+*int '''listboxTop''' - The upper bound of the box for the save list
+*int '''listboxWidth''' - The width of the box for the save list
+*int '''listboxHeight''' - The height of the box for the save list
+*int '''listboxRows''' - The number of rows in the save list
+*int '''commentLeft''' - The leftmost bound of the box for the save file text
+*int '''commentTop''' - The upper bound of the box for the save file text
+*int '''commentWidth''' - The width of the box for the save file text
+*int '''commentHeight''' - The height of the box for the save file text
+*int '''commentRows''' - The number of rows in the save file text box
+*bool '''mEntering''' - If set to true, the user is currently inputting a name for the file
+*TextEnterMenu '''mInput''' - If not null, this is the menu that is currently letting the player input text for the file's name
+*double '''FontScale''' - The current scalar for all text being drawn in the menu
+*BrokenLines '''BrokenSaveComment''' - Contains the SavegameManager's SaveCommentString text broken down into multiple lines so it fits within the save file text box
+
+== Methods ==
+=== Virtual ===
+*void '''DrawFrame'''(int ''left'', int ''top'', int ''width'', int ''height'')
+
+=== Overrides ===
+*void '''Init'''(Menu ''parent'', ListMenuDescriptor ''desc'')
+*void '''OnDestroy'''()
+*bool '''OnUIEvent'''(UIEvent ''ev'')
+*bool '''MenuEvent'''(int ''mkey'', bool ''fromcontroller'')
+*bool '''MouseEvent'''(int ''type'', int ''x'', int ''y'')
+*void '''Drawer'''()
+
+=== Non-static ===
+*''private'' void '''SetWindows'''()
+*void '''UpdateSaveComment'''()
+
+== Save Manager ==
+&lt;code&gt;SavegameManager&lt;/code&gt; is a struct that contains the API for accessing save files alongside data about the currently selected node. All save game manipulation and handling is done through this API.
+
+=== Fields ===
+*int '''WindowSize''' - Does nothing by default
+*SaveGameNode '''quickSaveSlot''' - The current save file that gets quick saved to
+*''readonly'' string '''SaveCommentString''' - Contains either the description or drive location for the save file based on whether '''ExtractSaveData'''() or '''SetFileInfo'''() is used respectively
+
+=== Static Methods ===
+*SavegameManager '''GetManager'''()
+:Gets the global SavegameManager. Despite being a struct this needs to be used to properly set it.
+
+=== Non-static Methods ===
+*void '''ReadSaveStrings'''()
+:Loads all the save files into memory so they can be accessed by the API
+*void '''UnloadSaveData'''()
+:Clears all the manager's data pertaining to the currently selected save file e.g. the comment string
+*int '''RemoveSaveSlot'''(int ''index'')
+:Deletes the save file at the given index and loads in the next available save file. Returns the index of the newly selected save file
+:*''index'' - The save file to delete
+*void '''LoadSavegame'''(int ''Selected'')
+:Loads the given save file at the index
+:*''Selected'' - The save file to load
+*void '''DoSave'''(int ''Selected'', string ''savegamestring'')
+:Saves the game with the given save file at the index.
+:*''Selected'' - The save file to save to
+:*''savegamestring'' - The name of the save file to use
+*int '''ExtractSaveData'''(int ''index'')
+:Gets the data for the given save file at the index e.g. the comment string. Returns the index of the newly loaded save file
+:*''index'' - The save file to load. If -1 is passed, gets the last accessed save file
+*void '''ClearSaveStuff'''()
+:Similar to '''UnloadSaveData'''() but also clears quickSaveSlot
+*bool '''DrawSavePic'''(int ''x'', int ''y'', int ''w'', int ''h'')
+:Draws the currently loaded save file's picture if it has one. Returns true if it had one
+:*''x'' - The x position on the screen
+:*''y'' - The y position on the screen
+:*''w'' - The width to use for the image
+:*''h'' - The height to use for the image
+*void '''SetFileInfo'''(int ''Selected'')
+:Sets SaveCommentString to a formatted string that contains the drive location for the save file at the given index
+:*''Selected'' - The save file to reference
+*int '''SavegameCount'''()
+:Returns the total number of save files
+*SaveGameNode '''GetSavegame'''(int ''i'')
+:Returns the save file at the given index
+:*''i'' - The save file to get
+*void '''InsertNewSaveNode'''()
+:Inserts a default save node at the beginning of the list. Used to make sure the beginning of the list is always a new save slot. Generally called when the menu is opened
+*bool '''RemoveNewSaveNode'''()
+:Removes the default save node at the beginning of the list. Generally called when the menu is closed so that the node isn't stored. Returns false if the beginning of the list was not the default save node
+
+== Save Nodes ==
+&lt;code&gt;SaveGameNode&lt;/code&gt; is a struct that contains information about a save file.
+
+=== Fields ===
+*string '''SaveTitle''' - The name of the save file
+*''readonly'' string '''FileName''' - The full name of the file in the drive
+*bool '''bOldVersion''' - If set to true, the save file was an older version of ZDoom and is not compatible.
+*bool '''bMissingWads''' - If set to true, the save file is missing WADs it was saved with
+*bool '''bNoDelete''' - If set to true, this save file cannot be removed</text>
+    <sha1>qsasof782pgfjnd7rhhdp3cg4lrdk4f</sha1>
+  </revision>
+</page>

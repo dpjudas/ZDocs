@@ -1,0 +1,57 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>A TakeFromTarget</title>
+  <ns>0</ns>
+  <id>2903</id>
+  <revision>
+    <id>43420</id>
+    <parentid>43076</parentid>
+    <timestamp>2016-11-22T14:07:41Z</timestamp>
+    <contributor>
+      <username>Major Cooke</username>
+      <id>1703</id>
+    </contributor>
+    <origin>43420</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="2418" sha1="oxthkxmyd9vsbyj73z1xl15ws8tsxxe" xml:space="preserve">__NOTOC__{{codepointer|Inventory}}
+bool '''A_TakeFromTarget''' (string ''type'' [, int ''amount'' [, int ''flags'' [, pointer ''forward_ptr'']]])
+
+== Usage ==
+Removes ''count'' items of type ''type'' from the inventory of the actor's current target. The minimum amount of item of a type in an inventory is zero, removing a greater amount than what the target actually possesses will not result in a negative amount.
+
+=== Parameters ===
+*''type'': The inventory item to take.
+*''amount'': The amount to take. If this is 0 or a value which is equal to or greater than the number of samples in the inventory, the item is cleared from the inventory unless it has the {{Flag|INVENTORY.KEEPDEPLETED}} flag set, and in which case, its amount is merely reduced to 0. Default is 0.
+*''flags'': There is at the moment only one flag:
+**'''TIF_NOTAKEINFINITE''' — If this flag is set, nothing is taken if the ''type'' is an {{Class|Ammo}} and the player benefits from infinite ammo (either from {{Class|PowerInfiniteAmmo|a powerup}} or {{CVAR|C|sv_infiniteammo|a cheat}}).
+*''forward_ptr'': The actor to take the item from. This is an [[actor pointer]], which can be any of the following:
+**'''AAPTR_DEFAULT''' — The calling actor's {{c|target}} (default value).
+**'''AAPTR_NULL''' — No actor at all.
+**'''AAPTR_TARGET''' — The {{c|target}} of the calling actor's {{c|target}}, if any.
+**'''AAPTR_MASTER''' — The {{c|master}} of the calling actor's {{c|target}}, if any.
+**'''AAPTR_TRACER''' — The {{c|tracer}} of the calling actor's {{c|target}}, if any.
+Remember that the nature of these pointers depend on the actor type and is not always intuitive.
+
+=== Return value ===
+The function returns ''true'' if the number of samples of ''type'' in the pointed-to actor's inventory (before attempting removal) is greater than zero, otherwise it returns ''false''.
+
+== Examples ==
+This demon tries to run up to you and steal your ammo!
+
+ ACTOR BanditDemon : {{Class|Demon}}
+ {
+     States
+     {
+     Melee:
+         SARG E 8 [[A_FaceTarget]]
+         SARG E 0 [[A_TakeFromTarget]]("{{Class|Clip}}", 10)
+         SARG E 0 [[A_TakeFromTarget]]("{{Class|Shell}}", 4)
+         SARG E 0 [[A_TakeFromTarget]]("{{Class|RocketAmmo}}", 1)
+         SARG E 0 [[A_TakeFromTarget]]("{{Class|Cell}}", 20)
+         SARG E 18 [[A_ChangeFlag]]("{{flag|FRIGHTENED}}", {{const|TRUE}}) // Demon makes a run for it.
+         Goto See
+     }
+ }</text>
+    <sha1>oxthkxmyd9vsbyj73z1xl15ws8tsxxe</sha1>
+  </revision>
+</page>

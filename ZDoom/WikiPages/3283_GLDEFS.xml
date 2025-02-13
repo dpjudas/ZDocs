@@ -1,0 +1,641 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>GLDEFS</title>
+  <ns>0</ns>
+  <id>3283</id>
+  <revision>
+    <id>54154</id>
+    <parentid>54153</parentid>
+    <timestamp>2025-01-28T01:57:30Z</timestamp>
+    <contributor>
+      <username>Jay</username>
+      <id>4158</id>
+    </contributor>
+    <comment>Document vkdoom global shaders</comment>
+    <origin>54154</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="30749" sha1="ex59xznvs3ckwpukr7mxtfqndz0qhh4" xml:space="preserve">{{OpenGL}}
+
+'''GLDEFS''' lumps allow to define several effects that are supported only by the OpenGL hardware renderer used in [[GZDoom]] and [[Zandronum]]. Outside of [[ZDoom]]-derived [[source port]]s, [[PrBoom|GLBoom+]] supports some features of the lump (notably, [[skybox]] definitions) and features its own extensions, documented {{dw|GLBoom+|on the Doom wiki}}.
+
+__TOC__
+
+Because [[ZDoomGL]] did it so, a number of game-specific aliases are supported as well as GLDEFS:
+ DOOMDEFS (for Doom)
+ HTICDEFS (for Heretic)
+ HEXNDEFS (for Hexen)
+ STRFDEFS (for Strife)
+When playing a game, the content of the lumps that do not correspond to that game are ignored. However, given the absence of actor name conflicts between these games, using one of these aliases is rather pointless. Further, this system is not extended to games whose support was more recently added to ZDoom, such as Chex Quest.
+
+You can use #include statements in any of these lumps. For example, you could find this in a pk3 file:
+ #include actors/monsters.gl
+ #include actors/missiles.gl
+ #include actors/decorations.gl
+Or, the same organization but in a wad file:
+ #include MONSLITE
+ #include MISLLITE
+ #include DECOLITE
+
+== Top-level commands ==
+The following commands control certain aspects of the lump and are placed outside of any block.
+* '''{{LE|lightsizefactor}}''' ''&lt;value&gt;''
+:Default is 1.0
+:A size multiplier for attenuated dynamic lights. It affects a light's size and secondary size. It applies to any attenuated light defined after it and is inherited by included sub-lumps, but it only lasts for the lump it is set in.
+
+:This was added to mitigate {{forum|a problem|t=60280}} with attenuated lights getting reduced in size, even on OpenGL 3+. The intent of the shrinking was to account for higher brightness of non-attenuated lights on OpenGL 2 and was never meant to be active on more modern versions.
+
+:To rectify light definitions which exhibit the broken behavior, the factor should be set to 0.667.
+
+== Dynamic lights ==
+GLDEFS allow to define dynamic lights, similar to the {{Class|DynamicLight}} actors, that are bound to chosen states of chosen actors. They are created and destroyed automatically when needed and follow their bound actor on the map.
+
+=== Dynamic light definitions ===
+
+A dynamic light in defined in this manner:
+
+ &lt;''lighttype''&gt; &lt;''LIGHTNAME''&gt;
+ {
+     ...
+ }
+
+*''lighttype'': The type of light. This can be "PointLight", "FlickerLight", "FlickerLight2", "PulseLight" or "SectorLight".
+*''LIGHTNAME'': The name of the light (to be used later when binding it to objects/frames).
+
+Inside the brackets you define the light properties. These differ for the different types of lights. Properties between [square brackets] are optional. Here are examples of each type:
+
+&lt;syntaxhighlight lang="csharp"&gt;
+pointlight POINT
+{
+    color &lt;RED&gt; &lt;GREEN&gt; &lt;BLUE&gt;
+    size &lt;SIZE&gt;
+    [offset &lt;X&gt; &lt;Y&gt; &lt;Z&gt;]
+    [spot &lt;INNER&gt; &lt;OUTER&gt;]
+    [subtractive &lt;SUB&gt;]
+    [attenuate &lt;ATT&gt;]
+    [noshadowmap &lt;NSH&gt;]
+    [dontlightself &lt;DLS&gt;]
+    [dontlightactors &lt;DLA&gt;]
+    [dontlightothers &lt;DLO&gt;]
+    [dontlightmap &lt;DLM&gt;]
+}
+&lt;/syntaxhighlight&gt;
+* ''RED'', ''GREEN'' and ''BLUE'': Color components (each between 0.0 and 1.0).
+* ''SIZE'': Size of the light, in map units.
+* ''X'', ''Y'' and ''Z'': The offset for the light in map units. '''This is relative to a thing's sprite, not the world, so the Y axis is height and the Z axis is depth'''. Defaults to 0,0,0.
+* ''INNER'', ''OUTER'': Inner and outer angles to specify a spot light. Inner should be smaller than outer.
+* ''SUB'': Either 1 or 0. Subtractive lights 'darken' the area around them rather than light them.
+* ''ATT'': Either 1 or 0. Attenuated lights illuminate surfaces depending on surface angle — surfaces that are not facing the light will get progressively less illuminated.
+* ''DLS'': Either 1 or 0. If dontlightself is set to 1, the dynamic light will not affect the actor to which it is attached to.
+* ''DLA'': Either 1 or 0. If dontlightactors is set to 1, the dynamic light will not affect any actors, and only light up the level geometry.
+* ''NSH'': Either 1 or 0. If noshadowmap is set to 1, the dynamic light will not emit any shadowmaps on the level, which are shadows that are emitted by lights when they hit void surfaces.
+* ''DLO'': Either 1 or 0. If dontlightothers is set to 1, the dynamic light will not light any other actors besides the one it is attached to.
+* ''DLM'': Either 1 or 0. If dontlightmap is set to 1, the dynamic light will not light up the maps' geometry, and only cast light on actors.
+
+&lt;syntaxhighlight lang="csharp"&gt;
+pulselight PULSE
+{
+    color &lt;RED&gt; &lt;GREEN&gt; &lt;BLUE&gt;
+    size &lt;SIZE&gt;
+    secondarySize &lt;SECSIZE&gt;
+    interval &lt;INTERVAL&gt;
+    [offset &lt;X&gt; &lt;Y&gt; &lt;Z&gt;]
+    [subtractive &lt;SUB&gt;]
+    [attenuate &lt;ATT&gt;]
+    [dontlightself &lt;DLS&gt;]
+    [dontlightactors &lt;DLA&gt;]
+    [noshadowmap &lt;NSH&gt;]
+    [dontlightothers &lt;DLO&gt;]
+    [dontlightmap &lt;DLM&gt;]
+} 
+&lt;/syntaxhighlight&gt;
+* ''SECSIZE'': The size to 'pulse' to. In the same units as ''SIZE''. This value must be greater than ''SIZE''.
+* ''INTERVAL'': The time it takes to complete a full pulse (in seconds).
+
+&lt;syntaxhighlight lang="csharp"&gt;
+flickerlight FLICKER
+{
+    color &lt;RED&gt; &lt;GREEN&gt; &lt;BLUE&gt;
+    size &lt;SIZE&gt;
+    secondarySize &lt;SECSIZE&gt;
+    chance &lt;CHANCE&gt;
+    [offset &lt;X&gt; &lt;Y&gt; &lt;Z&gt;]
+    [subtractive &lt;SUB&gt;]
+    [attenuate &lt;ATT&gt;]
+    [noshadowmap &lt;NSH&gt;]
+    [dontlightself &lt;DLS&gt;]
+    [dontlightactors &lt;DLA&gt;]
+    [dontlightothers &lt;DLO&gt;]
+    [dontlightmap &lt;DLM&gt;]
+}
+&lt;/syntaxhighlight&gt;
+* ''SECSIZE'': The second size to flicker (will alternate between ''SIZE'' and ''SECSIZE''). ''SECSIZE'' must be greater than ''SIZE''.
+* ''CHANCE'': The chance, ''each frame'', that it will flicker to the second size. The value ranges from 0.0 (never) and 1.0 (always).
+
+&lt;syntaxhighlight lang="csharp"&gt;
+flickerlight2 FLICKER2
+{
+    color &lt;RED&gt; &lt;GREEN&gt; &lt;BLUE&gt;
+    size &lt;SIZE&gt;
+    secondarySize &lt;SECSIZE&gt;
+    interval &lt;INTERVAL&gt;
+    [offset &lt;X&gt; &lt;Z&gt; &lt;Y&gt;]
+    [subtractive &lt;SUB&gt;]
+    [attenuate &lt;ATT&gt;]
+    [noshadowmap &lt;NSH&gt;]
+    [dontlightself &lt;DLS&gt;]
+    [dontlightactors &lt;DLA&gt;]
+    [dontlightothers &lt;DLO&gt;]
+    [dontlightmap &lt;DLM&gt;]
+}
+&lt;/syntaxhighlight&gt;
+* ''SIZE'' and ''SECSIZE'': Lower and upper bounds for the size (the light will pick a random value between the two). ''SECSIZE'' must be greater than ''SIZE''.
+* ''INTERVAL'': The time between 'flickering' to a new random size. Same as for pulselight, but 0.1 is one second, not 1.0.
+
+The sectorlight takes its intensity from the light level of the sector it's in.
+
+&lt;syntaxhighlight lang="csharp"&gt;
+sectorlight SECLIGHT
+{
+    color &lt;RED&gt; &lt;GREEN&gt; &lt;BLUE&gt;
+    scale &lt;SCALE&gt;
+    [offset &lt;X&gt; &lt;Z&gt; &lt;Y&gt;]
+    [subtractive &lt;SUB&gt;]
+    [attenuate &lt;ATT&gt;]
+    [noshadowmap &lt;NSH&gt;]
+    [dontlightself &lt;DLS&gt;]
+    [dontlightactors &lt;DLA&gt;]
+    [dontlightothers &lt;DLO&gt;]
+    [dontlightmap &lt;DLM&gt;]
+}
+&lt;/syntaxhighlight&gt;
+* ''SCALE'': How much of the containing sector's intensity to use (between 0.0 and 1.0)
+
+=== Dynamic light binding ===
+
+Once dynamic lights are defined, they must be bound to actors. There are two possible methods to do so; the binding can be done directly in the actors' [[DECORATE]] code, or in the GLDEFS lump. The most important difference is that bindings made in DECORATE code are preserved through inheritance, whereas bindings made in GLDEFS are applied only to the actor itself and not its descendants. For the first method, see the [[actor states]] article. The GLDEFS method follows.
+
+&lt;syntaxhighlight lang="csharp"&gt;
+object [CLASSNAME]
+{
+    frame [SPRITENAME]
+    {
+         light [LIGHTNAME]
+         ...
+    }
+    ...
+}
+&lt;/syntaxhighlight&gt;
+*'''CLASSNAME''': An actor class. A full list of these can be found at the ZDoom wiki.
+*'''SPRITENAME''': The first few characters of the sprite name. This can be either a sprite name (four characters) or a frame name (five characters). For example, "MISL" will bind the light to all frames (used by that object) using a "MISL" sprite; whereas "MISLA" will bind the light specifically to the "MISLA" frame.
+*'''LIGHTNAME''': The name of a previously defined light (see above). It is possible to bind multiple lights to a single object, however only at most two lights will be used on a given frame: the one bound for this object to this frame in particular, and the one bound to the sprite. If several lights are bound for the same object to the same sprite or frame, only the last binding applies.
+
+=== Example ===
+
+&lt;syntaxhighlight lang="csharp"&gt;
+pointlight BLURSPHERE1
+{
+    color 1.0 0.0 0.0
+    size 40
+    offset 0 16 0
+}
+
+pointlight BLURSPHERE2
+{
+    color 0.0 0.0 1.0
+    size 32
+    offset 0 16 0
+}
+
+pointlight BLURSPHERE3
+{
+    color 0.0 0.0 1.0
+    size 24
+    offset 0 16 0
+} 
+
+pointlight BLURSPHERE4
+{
+    color 0.0 0.0 1.0
+    size 16
+    offset 0 16 0
+}
+
+pointlight BLURSPHERE5
+{
+    color 0.0 0.0 1.0
+    size 8
+    offset 0 16 0
+} 
+
+object BlurSphere
+{
+    frame PINS { light BLURSPHERE1 }
+    frame PINSA { light BLURSPHERE2 }
+    frame PINSB { light BLURSPHERE3 }
+    frame PINSC { light BLURSPHERE4 }
+    frame PINSD { light BLURSPHERE5 }
+}
+&lt;/syntaxhighlight&gt;
+This binds the light BLURSPHERE1 to all of the BlurSphere's frames (PINS*) for the red sphere, and extra lights on top of it (BLURSPHERE2-5 to PINSA-D) for the animated blue blob in the middle.
+
+== Skybox definitions ==
+{{Note|[[GZDoom]] is also able to parse the [[Vavoom]] SKYBOXES lump. See [http://web.archive.org/web/*/http://www.vavoom-engine.com/wiki/index.php?title{{=}}Tutorials:Skyboxes here] for more information.}}
+
+The GLDEFS lump can also be used to define skyboxes similar to those used in Quake II, made from a textured cube. The textures must be specially polarized so that the skybox will not appear to be a cube when seen in the game. A skybox is defined with the skybox &lt;name&gt; line, and followed by a list of textures within bracket. The given name can then be used as a texture name for the sky in [[MAPINFO]].
+
+There are two options, a six-texture skybox and a three-texture skybox.
+
+If the skybox has six square graphics, one for each face of the cube, you must specify all six of them in order: North, East, South, West, Top, Bottom.
+&lt;syntaxhighlight lang="csharp"&gt;
+Skybox MYSKY6 [fliptop]
+{
+  MYSKY6_N
+  MYSKY6_E
+  MYSKY6_S
+  MYSKY6_W
+  MYSKY6_T
+  MYSKY6_B
+}
+&lt;/syntaxhighlight&gt;
+If the skybox has only three square graphics, there must be one for the four walls and one each for the top and the bottom. The order is similar: Wall, Top, Bottom.
+&lt;syntaxhighlight lang="csharp"&gt;
+Skybox MYSKY3 [fliptop]
+{
+  MYSKY3_W
+  MYSKY3_T
+  MYSKY3_B
+}
+&lt;/syntaxhighlight&gt;
+Note that this feature was accidentally implemented with a non-standard skybox graphic as reference so the top face was inadvertently flipped. To use skyboxes made for games like Quake 2, Quake 3 or Half-Life you either need to flip the top image yourself or use the '''fliptop''' keyword. 
+
+The bottom picture must be aligned with the north picture so that it fits right just under it. The top picture must likewise be aligned so that it fits right just above the north picture, but after that it must be mirrored horizontally and rotated 180°. Skyboxes made for other games may not fit these specifications unless you use the '''fliptop''' keyword.
+
+== Brightmaps ==
+
+Another feature of the GLDEFS lump is to define brightmaps that can be used to alter the brightness of given pixels within an otherwise static image. Brightmaps can be defined for sprites, flats and textures, but not for patches. This can be used, for example, to make back-lit computer screens, an enemy whose eyes glow in the dark, or to light up only the weapon part of an image when an enemy fires, rather than lighting the whole enemy.
+
+To create a brightmap, first an image must be created that defines the base brightness of each pixel in the image. Black represents 0 brightness (no change) while white represents full-bright. Normal light is grayscaled, but it is possible to use color in order to tint the light. Note that this is the ''minimum'' light level the pixel will show at; if the area the monster is standing in is not completely pitch-black, the pixels will be lit to the ambient surrounding light level. Therefore, an enemy standing in an area with full brightness (such as a sector with a light level of 255) will be completely unaffected by his associated brightmap.
+
+Once the image is created, the following definition needs to be added to the GLDEFS lump to link each sprite image to its brightmap:
+
+&lt;syntaxhighlight lang="csharp"&gt;
+brightmap &lt;flat|sprite|texture&gt; &lt;IMAGE&gt;
+{
+   map &lt;BRIGHTMAP&gt;
+   [iwad]
+   [thiswad]
+   [disablefullbright]
+}
+&lt;/syntaxhighlight&gt;
+One of the keywords ''flat'', ''sprite'' or ''texture'' must be used. &lt;IMAGE&gt; is the name of the graphic within the WAD. Examples are PLAYF1 or BAL1A0. Whenever this graphic is displayed in the game, the specified &lt;BRIGHTMAP&gt; will be applied. &lt;BRIGHTMAP&gt; can be a lump name (for a WAD file), or a complete path to the image in a PK3 file.
+
+If the ''iwad'' keyword is present within the definition, then the brightmap will not be applied if the image is replaced by a loaded PWAD. This is useful so that if the user is loading a PWAD that replaces a given enemy, the brightmap doesn't end up trying to apply itself to a graphic which no longer represents the same thing, possibly resulting in an incorrectly-lit enemy or decoration. In general, you don't need to worry about adding this keyword if you're creating brightmaps for your custom creations.
+
+The ''thiswad'' keyword acts as the ''iwad'' keyword, but only for sprites contained in the same file as the definitions. It can be used if you expect your mod to have its custom graphics overridden by another mod; making it mostly useful for autoloaded sprite packs. If both ''iwad'' and ''thiswad'' are given to the same definition, it will be applied if the sprite is either from the iwad or from the wad.
+
+The ''disablefullbright'' keyword causes the renderer to ignore the ''bright'' keyword applied to a frame within [[DECORATE]]. This can allow a user to override fullbright sprites that would otherwise nullify the effects of a brightmap. It's useful for player modifications because you can create an enemy which uses bright frames for its attacks, which will be seen by players who do not opt to allow brightmaps, or whose hardware doesn't support it. For everyone else, the brightmaps will override these bright frames.
+
+===Automatic assignment===
+For short-name graphics, automatic brightmap assignment is possible without the need for GLDEFS; all brightmap graphics that are placed inside the {{c|brightmaps/auto}} directory (or alternatively, the {{c|materials/brightmaps/auto}} directory) are automatically assigned to the same-named graphics.
+
+== Glowing flats ==
+
+Floor and ceiling textures can be made to glow. This effect works well for materials such as lava, computer screens, lamps, and so on. While the effect can be added to both flats and textures, it will only work when said flats and textures are applied on a floor or ceiling; if applied to a wall they will simply not glow.
+
+The syntax is of this form:
+ Glow
+ {
+ 	Flats
+ 	{
+ 		''flat name''
+ 		''flat name''
+ 		''flat name''
+ 		...
+ 	}
+ 	Walls
+ 	{
+ 		''texture name''
+ 		''texture name''
+ 		''texture name''
+ 		...
+ 	}
+ 	Texture "''flat name''", ''color''[, ''glow height''] [, &lt;tt&gt;fullbright&lt;/tt&gt;]
+ }
+
+Use a '''Flats''' block to define a list of flats that have to glow. The glow will use default settings: the glow height is 64, the color is averaged from the mapped picture, and the flat is set to be fullbright. Use a '''Walls''' block in the same way, but for textures. Despite the "walls" moniker, keep in mind that they do not work if actually set on a wall; only on floors and ceilings.
+
+Use a '''Texture''' entry to define the parameters yourself. Contrarily to "Flats" and "Walls", "Texture" is not a block and only define the glow for a single texture. The '''color''' parameter must be either a RGB hex triplet, such as C010A8, or one of the recognized X11R6 color name, such as SlateGray1 or PowderBlue. Optionally, a glow height parameter can be given to set how high the glow goes, this must be an integer. Optionally as well, the definition can be finished with the '''fullbright''' keyword. If this keyword is not given, the affected texture will not be set to be fullbright.
+
+== {{LE|Hardware shaders|Hardware Shaders}} ==
+Custom hardware fragment (ie pixel) [http://www.opengl.org/documentation/glsl/ GLSL] shaders can be written and applied to sprites, flates, and textures, or to screenspace.
+
+{{Note|It's possible to use the HardwareShader block to apply material shaders (shaders attached to a specific graphic), but the [[#Material shaders|Material]] block generally is more robust for this purpose. However, the HardwareShader block is still necessary to create [[#Post-processing shaders|post-processind (screenspace) shaders]].}}
+
+This requires a two step process.
+
+The first step is to write a complying shader function. Each fragment shader requires a single function, '''Process''', to be correctly defined. The function returns a '''vec4''' that corresponds to the color your pixel should be. The function takes in a single '''vec4''' parameter called '''color'''. This value has already had lighting and fog applied to it, and consequently should be multiplied in to your result.
+
+This function must be saved in your archive as a text lump. The following example is how GZDoom implements the [[ANIMDEFS|warping graphics]] feature:
+&lt;syntaxhighlight lang="glsl"&gt;
+uniform float timer;
+vec4 Process(vec4 color)
+{
+  vec2 texCoord = gl_TexCoord[0].st;
+  const float pi = 3.14159265358979323846;
+  vec2 offset = vec2(0,0);
+  offset.y = sin(pi * 2.0 * (texCoord.x + timer * 0.125)) * 0.1;
+  offset.x = sin(pi * 2.0 * (texCoord.y + timer * 0.125)) * 0.1;
+  texCoord += offset;
+  return getTexel(texCoord) * color;
+}&lt;/syntaxhighlight&gt;
+
+While warped graphics would not normally allow you to apply a fragment shader to them (being implemented internally via a compliant Process function), extending this shader and applying it to your textures independently of ANIMDEFS will allow you to create advanced warp effects.
+
+The second step to implementing custom fragment shaders is to define a HardwareShader entry in GLDEFS. Only one shader can be defined per valid graphic. A definition takes the following form:
+&lt;syntaxhighlight lang="csharp"&gt;
+HardwareShader [Type] &lt;LumpName&gt;
+{
+	Shader "&lt;File&gt;"
+}&lt;/syntaxhighlight&gt;
+
+[Type] is an optional and is '''one''' of either Flat, Sprite, Texture, or PostProcess (see below.) This is useful to prevent ambiguity if the same name is used by several graphics of different kinds. &lt;LumpName&gt; corresponds to the graphic to which it is applied. &lt;File&gt; corresponds to the text lump containing your '''Process''' function.
+
+Optional settings are:
+* ''NoMipmap'': Disables {{wp|mipmapping}}. {{new|4.13.1}}
+* ''Speed &lt;Value&gt;'': Multiplier to be applied to the '''timer''' uniform.
+* ''Define &lt;Name&gt; [= &lt;Value&gt;]'': Adds ''#define'' into the shader. Value is optional.
+* ''Texture &lt;Name&gt; "&lt;Source&gt;"'': Adds a readable texture uniform to the shader.
+
+==== Post-processing shaders ====
+Post-processing (screenspace) shaders have the syntax:
+&lt;syntaxhighlight lang="csharp"&gt;
+HardwareShader PostProcess &lt;Type&gt;
+{
+	shader "&lt;FILE&gt;" &lt;VERSION&gt;
+    [name "&lt;NAME&gt;"]
+	[uniform &lt;TYPE&gt; &lt;NAME&gt;]
+	[uniform &lt;TYPE&gt; &lt;NAME&gt; = &lt;DEFAULT VALUE&gt;]
+	[uniform &lt;TYPE&gt; &lt;NAME&gt; = CVar &lt;NAME&gt;] 
+    [texture &lt;NAME&gt; &lt;IMAGE&gt;]
+    [enabled]
+}&lt;/syntaxhighlight&gt;
+
+Where &lt;Type&gt; is either BeforeBloom, Scene, or Screen. BeforeBloom shaders are applied before bloom, Scene shaders are applied to the processed scene, and Screen shaders are applied to the 2D HUD as well. &lt;Version&gt; is the GLSL version. Use '''330''' unless you know what you're doing.
+
+The following contents are optional for post-processing shaders:
+* ''Name "&lt;Name&gt;"'': Sets the shader name for modifying it via [[ZScript]].
+* ''Uniform &lt;Type&gt; &lt;Name&gt; [= &lt;Default Value&gt;]'': Adds a modifiable uniform to the shader, which is modifiable via ZScript with the '''[[Structs:PPShader|PPShader.SetUniform]]''' functions. &lt;Type&gt; can be either ''int'', ''float'', ''vec2'', or ''vec3''.
+* ''Uniform &lt;Type&gt; &lt;Name&gt; = CVar &lt;Name&gt;'': Adds a uniform bound to the value of a CVar.
+* ''Texture &lt;Name&gt; "&lt;Source&gt;"'': Adds a readable texture uniform to the shader.
+* ''Enabled'': Enables the shader by default, otherwise it is disabled by default. Can be changed from ZScript with the '''[[Structs:PPShader|PPShader.SetEnabled]]''' function.
+
+Post-processing shaders use the standard OpenGL '''void main()''' function rather than GZDoom's '''Process''' function, and output is done by writing to the implicit ''FragColor'' variable. It is recommended you learn how standard OpenGL shaders work before using them, information which can easily be searched online.
+
+The ''stat gpu'' console command can be used to check how resource intensive your shaders are.
+
+=== Advanced shader topics ===
+
+In GLSL, there are three basic data input types: '''attribute''', '''uniform''', and '''varying'''. '''uniform''' and '''varying''' data types are the only types available to custom fragment shaders. '''uniform''' values are set by GZDoom or ZScript; while '''varying''' values are those that have been processed by the vertex shader. It is recommended that you do not use these unless you are experienced in GLSL.
+
+The following uniform variables are always available to your shaders:
+*'''int fogenabled'''
+*'''vec4 fogcolor'''
+*'''vec3 dlightcolor'''
+*'''vec3 camerapos'''
+*'''float desaturation_factor'''
+*'''vec4 topglowcolor'''
+*'''vec4 bottomglowcolor'''
+*'''int texturemode'''
+*'''sampler2D tex'''
+*'''float timer'''
+:If you wish to use the '''timer''' uniform, you '''must''' define it yourself at the top of your shader file.
+
+If the '''DYNLIGHT''' define is defined, the following uniform variables available:
+*'''ivec3 lightrange'''
+*'''vec4 lights[256]'''
+:Only if MAXLIGHTS128 is not defined
+*'''vec4 lights[128]'''
+:Only if MAXLIGHTS128 is defined
+
+The following '''varying''' variables are always available to your shaders:
+*'''float uLightFactor'''
+*'''vec2 glowdist'''
+*'''vec4 pixelpos'''
+*'''vec4 fogparm'''
+
+The X and Y coordinates are between 0.0 and 1.0. If you want to have the dimension of the image in texel, you can use the {{c|textureSize}} function, in this way:
+&lt;syntaxhighlight lang="glsl"&gt;
+ivec2 texSize = textureSize(tex, 0);
+&lt;/syntaxhighlight&gt;In this line, {{c|ivec2}} corresponds to a 2D vector of integers, {{c|texSize}} is the name of the variable (you can use a different one if you want), {{c|tex}} is the name of the texture sampler, and 0 specifies we want its maximum dimensions (not those of a mipmap level). The image dimensions will then be available as texSize.x and texSize.y.
+
+== Materials ==
+Textures can be defined to be rendered as materials, using more modern rendering methods than the Doom engine's single bitmap. Two different material shaders are recognized: {{wp|normal mapping}} + {{wp|specularity}} and {{wp|physically based rendering}}.
+
+{{Warning|PBR materials are not fully implemented in GZDoom; while the metalness and roughness definitions are functional, the lack of environment mapping makes metal reflectivity trend towards black.  Without the aid of a custom environment shader, it is strongly recommended to avoid PBR and rely on normal mapping + specularity.}}
+
+In the first case, the base texture is the diffuse texture, and you need to specify normal and specular maps. In the second case, the base texture is the albedo texture, and you need to specify normal, roughness, metallic, and ambient occlusion. In both cases, a brightmap can also be optionally specified.
+
+The syntax is of this form:
+
+&lt;syntaxhighlight lang="csharp"&gt;
+material &lt;flat|sprite|texture&gt; &lt;IMAGE&gt;
+{
+   [normal &lt;IMAGE&gt;]
+   [specular &lt;IMAGE&gt;]
+   [metallic &lt;IMAGE&gt;]
+   [roughness &lt;IMAGE&gt;]
+   [ao &lt;IMAGE&gt;]
+   [brightmap &lt;IMAGE&gt;]
+   [glossiness &lt;NUMBER&gt;]
+   [specularlevel &lt;NUMBER&gt;]
+   [iwad]
+   [thiswad]
+   [disablefullbright]
+   [nomipmap] // (New from 4.13.1)
+   [shader &lt;FILE&gt;]
+   [define &lt;NAME&gt; [= &lt;VALUE&gt;]]
+   [texture &lt;NAME&gt; &lt;IMAGE&gt;]
+}
+&lt;/syntaxhighlight&gt;
+
+{{Infobox|title=New in VKDoom|bgcolor=#fff5f5|bordercolor=#c4afaf|
+VKDoom also supports the following fields in materials:
+&lt;syntaxhighlight lang="csharp"&gt;
+   vertshader &lt;FILE&gt;
+   varying [noperspective | flat] &lt;TYPE&gt; &lt;NAME&gt; // defines a varying used to pass data between the vertex and frag shaders, optionally, noperspective or flat can be specified to change how the value is interpolated between vertices
+   uniform &lt;TYPE&gt; &lt;NAME&gt; = CVar &lt;NAME&gt; // defines an uniform for vertex/frag shaders and binds it to a cvar
+   uniform &lt;TYPE&gt; &lt;NAME&gt; = Field &lt;NAME&gt; //   defines an uniform for vertex/frag shaders and binds it to an actor field
+&lt;/syntaxhighlight&gt;
+
+=== Global Shaders ===
+
+VKDoom supports overriding the base shaders per-class, per-map, or globally (overriding globally is for ipk3s only), and it only supports shader/vertshader/define/texture/varying/uniform as properties.
+
+Instead of:
+&lt;syntaxhighlight lang="csharp"&gt;
+material &lt;flat|sprite|texture&gt; &lt;IMAGE&gt;
+&lt;/syntaxhighlight&gt;
+
+Global Shaders use:
+&lt;syntaxhighlight lang="csharp"&gt;
+globalshader &lt;TYPE&gt;
+globalshader &lt;TYPE&gt; class &lt;CLASSX&gt; [, &lt;CLASSY&gt;, &lt;CLASSZ&gt;, ...]
+globalshader &lt;TYPE&gt; map &lt;MAPX&gt; [, &lt;MAPY&gt;, &lt;MAPZ&gt;, ...]
+&lt;/syntaxhighlight&gt;
+
+with type being one of:
+&lt;ul&gt;
+&lt;li&gt;default&lt;/li&gt;
+&lt;li&gt;warp (warp1 + warp2)&lt;/li&gt;
+&lt;li&gt;defaultwarp (default + warp)&lt;/li&gt;
+&lt;li&gt;specular&lt;/li&gt;
+&lt;li&gt;pbr&lt;/li&gt;
+&lt;li&gt;base (default + warp + specular + pbr)&lt;/li&gt;
+&lt;li&gt;paletted&lt;/li&gt;
+&lt;li&gt;notexture&lt;/li&gt;
+&lt;li&gt;nonfuzz (defaultwarp + specular + pbr + paletted + notexture)&lt;/li&gt;
+&lt;li&gt;fuzz (basicfuzz + smoothfuzz + swirlyfuzz + translucentfuzz + jaggedfuzz + noisefuzz + smoothnoisefuzz + softwarefuzz)&lt;/li&gt;
+&lt;li&gt;all (nonfuzz + fuzz)&lt;/li&gt;
+&lt;/ul&gt;
+
+
+this is the material shader shared between all the base shaders (this will not work properly for gzdoom shaders, but in vkdoom, as long as you use  `SetMaterialProps`, all textures will be fetched correctly, no matter if your shader is specular/pbr/etc):
+&lt;syntaxhighlight lang="glsl"&gt;
+void SetupMaterial(inout Material material)
+{
+	vec2 texCoord = GetTexCoord();
+	SetMaterialProps(material, texCoord);
+}
+&lt;/syntaxhighlight&gt;
+
+most shaders will want to override either default/defaultwarp or base, anything else will need extra care (and digging into vkdoom.pk3 to see what those specific material shaders do) since they handle things differently
+
+&lt;/div&gt;
+}}
+Note [[#Hardware shaders|legacy hardware shaders]] are not supported with materials. Use [[#Material shaders|material shaders]] instead. This also means that they cannot be [[ANIMDEFS#Warping graphics|warped]].
+
+Note ''texture'' is an additional input texture used for custom [[#Material shaders|material shaders]].
+
+=== Material folders ===
+
+To avoid needing to define each material, automatic assignments are made through the following directories:
+* materials/brightmaps/auto/
+* materials/normalmaps/auto/
+* materials/specular/auto/
+* materials/metallic/auto/
+* materials/roughness/auto/
+* materials/ao/auto/
+This means that a graphic named {{c|materials/normalmaps/auto/example}} will automatically be assigned as the normal map for a texture named {{c|example}}.
+
+Even with these auto-definitions, you will still need to create a material-definition in order to change the {{c|glossiness}} and {{c|specularlevel}} from the default of 1.  This will likely be necessary for shinier materials, such as metal, as the default is ''very'' subtle.  Experimentation is recommended: surfaces with a polished sheen should be 4, while highly reflective surfaces may need to be as high as 8.
+
+=== Material shaders ===
+
+You can apply shaders to materials.
+The entrypoint is function SetupMaterial:
+
+&lt;syntaxhighlight lang="glsl"&gt;
+void SetupMaterial(inout Material mat)
+{
+}
+&lt;/syntaxhighlight&gt;
+The structure is zero initialized.
+Material structure is defined as:
+
+&lt;syntaxhighlight lang="glsl"&gt;
+struct Material
+{
+   vec4 Base;
+   vec4 Bright;
+   vec4 Glow;
+   vec3 Normal;
+   vec3 Specular;
+   float Glossiness;
+   float SpecularLevel;
+   float Metallic;
+   float Roughness;
+   float AO;
+};
+&lt;/syntaxhighlight&gt;
+* ''Base:'' base color of the material.
+* ''Bright:'' minimum brightness level of each channel (rgba)
+* ''Glow:'' used internally by glow GLDEF definitions &amp; UDMF sector glow - do not use
+* ''Normal:'' normal of the material.
+* ''Specular:'' specular reflection color.
+* ''Glossiness:'' how much specular reflection will be scattered 
+* ''SpecularLevel:'' specular reflection strength.
+* ''Metallic:'' metallic property of the material.
+* ''Roughness:'' roughness of the texture.
+* ''AO:'' ambient occlusion.
+
+
+{{Infobox|title=New in VKDoom|bgcolor=#fff5f5|bordercolor=#c4afaf|
+=== Vertex Shaders ===
+
+&lt;syntaxhighlight lang="glsl"&gt;
+void ModifyVertex()
+{
+}
+&lt;/syntaxhighlight&gt;
+
+Vertex shaders can modify the output values of vertex shaders, by directly setting the value of the output fields, ex.:
+* ''gl_Position'': position of vertex
+* ''vTexCoord'': vertex UV coordinate
+* ''vWorldNormal'': normal of vertex
+* ''pixelpos'': position of vertex in map
+
+these fields can both be read and modified to achieve the desired effect.
+}}
+
+==== Texture samplers ====
+The coordinates for the texture offset are stored in a variable ''vTexCoord''.
+
+Base color can be fetched using getTexel function, which takes coordinates as an input.
+
+The other material channels/textures can be fetched using built-in GLSL function ''texture''. 
+
+Following samplers are available if the ''PBR'' define is defined:
+* normaltexture
+* metallictexture
+* roughnesstexture
+* aotexture
+
+Following samplers are available if the ''SPECULAR'' define is defined:
+* normaltexture
+* speculartexture
+
+In addition these samplers are always available:
+* brighttexture
+* detailtexture
+* glowtexture
+
+== Colorization ==
+Colorization is the ability to specify color blending for applying to textures.
+
+The syntax is as follows:
+&lt;syntaxhighlight lang="csharp"&gt;
+colorization &lt;name&gt;
+{
+    [DesaturationFactor &lt;float&gt;]
+    [Invert]
+    [AddColor &lt;color&gt;]
+    [ModulateColor &lt;color&gt; [, &lt;alpha&gt;]]
+    [BlendColor &lt;color&gt;, &lt;mode&gt; [, &lt;alpha&gt;]]
+}
+&lt;/syntaxhighlight&gt;
+* ''DesaturationFactor:'' {{moreinfo}}
+* ''Invert:'' If specified, inverts the colors.
+* ''AddColor:'' {{moreinfo}}
+* ''ModulateColor:'' {{moreinfo}}
+* ''BlendColor:'' {{moreinfo}} Alpha is a range between 0.0 to 1.0. Mode can be one of the following:
+** '''None''' - {{moreinfo}}
+** '''Alpha''' - {{moreinfo}}
+** '''Screen''' - {{moreinfo}}
+** '''Overlay''' - {{moreinfo}}
+** '''Hardlight''' - {{moreinfo}}
+
+== External links ==
+* [https://www.khronos.org/opengl/wiki/OpenGL_Shading_Language Official GLSL documentation]</text>
+    <sha1>ex59xznvs3ckwpukr7mxtfqndz0qhh4</sha1>
+  </revision>
+</page>

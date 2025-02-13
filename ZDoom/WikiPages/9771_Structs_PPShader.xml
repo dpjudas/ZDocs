@@ -1,0 +1,46 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>Structs:PPShader</title>
+  <ns>0</ns>
+  <id>9771</id>
+  <revision>
+    <id>51212</id>
+    <timestamp>2024-01-16T11:50:14Z</timestamp>
+    <contributor>
+      <username>Jekyll Grim Payne</username>
+      <id>2175</id>
+    </contributor>
+    <comment>Created page with "The PPShader struct contains functions that interact with post-processing [[Shaders|shaders]]. Post-processing shaders are shaders that affect the whole viewport and are defin..."</comment>
+    <origin>51212</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="1865" sha1="euvfyhovnidn1y7v3r0jaboms8hcsq4" xml:space="preserve">The PPShader struct contains functions that interact with post-processing [[Shaders|shaders]]. Post-processing shaders are shaders that affect the whole viewport and are defined with the [[GLDEFS#Post-processing_shaders|HardwareShader block in GLDEFS]].
+
+'''Note:''' When called in play scope, PPShader methods will affect all players' viewports. If there's a need to only enable the shader for a specific player, a manual check is needed to ensure they're the console player. For example, if a shader is to be applied when the player picks up a {{class|Powerup|custom powerup}}, it could be done like this:
+&lt;syntaxhighlight lang="csharp"&gt;
+override void InitEffect()
+{
+	Super.InitEffect();
+	if (owner &amp;&amp; owner.player &amp;&amp; owner.PlayerNumber() == consoleplayer)
+	{
+		PPShader.SetEnabled("MyShader", true);
+	}
+}&lt;/syntaxhighlight&gt;
+
+==Methods==
+All of the methods are defined as native and clearscope.
+
+===Static===
+*{{c|clearscope static void '''SetEnabled'''(string ''shaderName'', bool ''enable'')}}
+:Toggles the specified shader on or off. ''shaderName'' is the name of the shader (the .fp file under the {{c|/shaders/}} folder in the [[PK3]]). If ''enable'' is &lt;code&gt;true&lt;/code&gt;, enables the shader; otherwise disables it.
+*{{c|clearscope static void '''SetUniform1f'''(string ''shaderName'', string ''uniformName'', float ''value'')}}
+*{{c|clearscope static void '''SetUniform2f'''(string ''shaderName'', string ''uniformName'', vector2 ''value'')}}
+*{{c|clearscope static void '''SetUniform3f'''(string ''shaderName'', string ''uniformName'', vector3 ''value'')}}
+*{{c|clearscope static void '''SetUniform1i'''(string ''shaderName'', string ''uniformName'', int ''value'')}}
+:These modify the value specified by the ''uniformName'' in the specified shader. ''value'' is the new value.
+
+[[Category:ZScript]]
+[[Category:OpenGL features]]
+[[Category:GZDoom features]]</text>
+    <sha1>euvfyhovnidn1y7v3r0jaboms8hcsq4</sha1>
+  </revision>
+</page>

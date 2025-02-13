@@ -1,0 +1,242 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>ZScript global variables</title>
+  <ns>0</ns>
+  <id>8979</id>
+  <revision>
+    <id>51729</id>
+    <parentid>51082</parentid>
+    <timestamp>2024-02-11T12:25:36Z</timestamp>
+    <contributor>
+      <username>Jekyll Grim Payne</username>
+      <id>2175</id>
+    </contributor>
+    <comment>added skill</comment>
+    <origin>51729</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="9724" sha1="gkiflfewi6nh1lauul0ihr42gwr9s66" xml:space="preserve">{{ZScriptNote}}
+
+[[ZScript]] possesses several global variables accessible by all classes.
+
+{| class="wikitable"
+|-
+! Type !! Name !! Writable? !! Use/meaning
+|-
+| Array&lt;class&gt; || AllClasses || no || An array that contains all classes currently available.
+|-
+| Array&lt;class&lt;Actor&gt; &gt; || AllActorClasses || no || An array that contains all Actor classes currently available.
+|-
+| Array&lt;@PlayerClass&gt; || PlayerClasses || no || An array that contains objects related to all player classes currently available.
+|-
+| Array&lt;@PlayerSkin&gt; || PlayerSkins || no || An array that contains objects related to all player skins currently available.
+|-
+| Array&lt;@Team&gt; || Teams || no || An array that contains objects related to all teams currently available.
+|-
+| Array&lt;@TerrainDef&gt; || Terrains || no || An array that contains all available TerrainDefs in the game.
+|-
+| int || validcount || yes || Internal variable used to avoid processing of the same data during one render frame.
+|-
+| bool || multiplayer || no || Set to true if the game has multiple players.
+|-
+| bool || deathmatch || no || Set to true if the game mode is [[Multiplayer|deathmatch]].
+|-
+| bool || teamplay || no || Set to true if the game mode is team deathmatch.
+|-
+| @KeyBindings || Bindings || yes || Pointer to the '''[[Structs:KeyBindings|KeyBindings struct]]''' that contains functionality related to getting keybindings for gameplay.
+|-
+| @KeyBindings || AutomapBindings || yes || Object that contains functionality related to getting keybindings for the automap.
+|-
+| @DehInfo || deh || yes || Play-scoped struct that contains internal values used by DeHackEd-parsing code.
+|-
+| @GameInfoStruct || gameinfo || no || A struct that contains information related to the game info set in MAPINFO.
+|-
+| int || skill || no || The current difficulty level, starting at 0 for the lowest skill.
+|-
+| bool || netgame || no || UI-scoped variable that's set to true if the game is networked.
+|-
+| bool || automapactive || no || Set to true if the player's automap is active.
+|-
+| EGameAction (int) || gameaction || no || Deeply internal variable used to get/set the current engine state.
+Possible values:
+* {{c|ga_nothing}}
+* {{c|ga_loadlevel}}
+* {{c|ga_newgame}}
+* {{c|ga_newgame2}}
+* {{c|ga_recordgame}}
+* {{c|ga_loadgame}}
+* {{c|ga_loadgamehidecon}}
+* {{c|ga_loadgameplaydemo}}
+* {{c|ga_autoloadgame}}
+* {{c|ga_savegame}}
+* {{c|ga_autosave}}
+* {{c|ga_playdemo}}
+* {{c|ga_completed}}
+* {{c|ga_slideshow}}
+* {{c|ga_worlddone}}
+* {{c|ga_screenshot}}
+* {{c|ga_togglemap}}
+* {{c|ga_fullconsole}}
+|-
+| EGameState (int) || gamestate || no || Internal variable that dictates the current state of the game.
+Possible values:
+* {{c|GS_LEVEL}} - In a level
+* {{c|GS_INTERMISSION}} - [[Intermission]] screen
+* {{c|GS_FINALE}}
+* {{c|GS_DEMOSCREEN}}
+* {{c|GS_FULLCONSOLE}} - Fullscreen console
+* {{c|GS_HIDECONSOLE}} - The menu just did something that should hide fs console
+* {{c|GS_STARTUP}} - Console is fullscreen, and game is just starting
+* {{c|GS_TITLELEVEL}} - A combination of GS_LEVEL and GS_DEMOSCREEN
+* {{c|GS_INTRO}}
+* {{c|GS_CUTSCENE}}
+* {{c|GS_MENUSCREEN}} = {{c|GS_DEMOSCREEN}}
+|-
+| TextureID || skyflatnum || no || Stores the TextureID for the flat that sets skies in maps.
+|-
+| Font || smallfont || no || Default font type for small fonts.
+|-
+| Font || smallfont2 || no || Default font type for secondary small fonts.
+|-
+| Font || bigfont || no || Default font type for big fonts.
+|-
+| Font || confont || no || Default font type for console fonts.
+|-
+| Font || NewConsoleFont || no || Default font type for new console fonts.
+|-
+| Font || NewSmallFont || no || Default font type for new small fonts.
+|-
+| Font || AlternativeSmallFont || no || Default font types for alternative small fonts.
+|-
+| Font || OriginalSmallFont || no || Default font type for vanilla small fonts.
+|-
+| Font || OriginalBigFont || no || Default font type for vanilla big fonts.
+|-
+| Font || intermissionfont || no || Default font type for intermission fonts.
+|-
+| int || CleanXFac || no || X scale for best fitting a 320x200 area to the screen without fractional steps
+|-
+| int || CleanYFac || no || Y scale for best fitting a 320x200 area to the screen without fractional steps
+|-
+| int || CleanWidth || no || Virtual width of the screen given CleanXFac
+|-
+| int || CleanHeight || no || Virtual height of the screen given CleanYFac
+|-
+| int || CleanXFac_1 || no || Same as CleanXFac but subtracted by 1. Will not go below a value of 1.
+|-
+| int || CleanYFac_1 || no || Same as CleanYFac but subtracted by 1. Will not go below a value of 1.
+|-
+| int || CleanWidth_1 || no || Virtual width of the screen given CleanXFac_1
+|-
+| int || CleanHeight_1 || no || Virtual height of the screen given CleanYFac_1
+|-
+| int || menuactive || yes || UI-scoped variable that's set to true if a menu is open.
+|-
+| @FOptionMenuSettings || OptionMenuSettings || no || A struct that contains information about settings related to the options menu.
+|-
+| int || gametic || no || Stores how many tics have passed since the game started.
+|-
+| bool || demoplayback || no || Set to true if currently playing back a demo file.
+|-
+| int || BackbuttonTime || yes || UI-scoped variable that tracks the alpha fading of the menu back button image.
+|-
+| float || BackbuttonAlpha || yes || UI-scoped variable that stores the alpha value of the menu back button image.
+|-
+| int || Net_Arbitrator || no || The player number for the player currently considered the host of a net game.
+|-
+| {{class|BaseStatusBar}} || StatusBar || yes || UI-scoped variable that stores a pointer to the status bar.
+|-
+| [[Classes:Weapon|Weapon]] || WP_NOCHANGE || no || An internal constant to describe the case when PlayerInfo.PendingWeapon doesn't have a value.
+|-
+| int || LocalViewPitch || yes || Stores the player's current pitch change during a tic.
+|-
+| @MusPlayingInfo || musplaying || no || A struct that contains information about the current music playing.
+|-
+| bool || generic_ui || no || If true generic fonts are used instead of game-specific ones.
+|-
+| @PlayerInfo[] || players || yes || Play-scoped array containing all PlayerInfo structs of players in the level.
+|-
+| bool[] || playeringame || no || An array that defines whether the specified PlayerInfo struct in players is set.
+|-
+| int || consoleplayer || no || The player number of the current client.
+|-
+| LevelLocals || level || yes || Play-scoped struct that contains various level-related data.
+|-
+| int || paused || no || If true, Doom's special pause mode is active.
+|-
+| uint8 || ConsoleState || no || The current state of ZDoom's console. Can be '''c_up''', '''c_down''', '''c_falling''', or '''c_rising'''.
+|}
+
+== Creating global variables ==
+There are two methods available for handling global variables: '''EventHandlers''' and '''Thinkers'''. Each has their advantages and disadvantages.
+
+EventHandlers come in two flavors: '''EventHandler''', which is only available within maps but are saved, and '''StaticEventHandler''', which persist outside of maps but are never saved to savegames. See [[Events and handlers]] for more information on how to set up an event handler. If you have global data that only needs to be loaded once at the game's launch, consider using a StaticEventHandler so that the data doesn't need to be recalculated every time a new level is loaded.
+
+Individual EventHandler classes can be referenced using the Find() function, as below.
+&lt;syntaxhighlight lang="csharp"&gt;
+class MyEventHandler : EventHandler
+{
+    int myGlobalInt;
+}
+
+// Example of accessing MyEventHandler from an actor.
+class MyClass : Actor
+{
+    MyEventHandler event;
+
+    override void PostBeginPlay()
+    {
+        super.PostBeginPlay();
+
+        // Be sure to call the proper '''Find'''() method for the type of EventHandler you are using or problems may occur.
+        // EventHandler.'''Find'''() for EventHandler and StaticEventHandler.'''Find'''() for StaticEventHandler
+        event = MyEventHandler(EventHandler.Find("MyEventHandler"));
+        if (event)
+        {
+            event.myGlobalInt = 1;
+            Console.Printf("My global int is: %d", event.myGlobalInt);
+        }
+    }
+}&lt;/syntaxhighlight&gt;
+
+All [[Thinker|Thinkers]], by contrast, are saved to savegames. Using a [[ThinkerIterator]] is slower than the StaticEventHandler's Find function, but a [[Thinker]] with the statnum '''STAT_STATIC''' is the only way to store information for the duration of a play session, saved and loaded or not. This performance hit can be mitigated by keeping a reference to the [[Thinker]] being used for global variables in either the actors needing to reference it or another, higher global variable keeper, such as an EventHandler.
+&lt;syntaxhighlight lang="csharp"&gt;
+class MyGlobalVariables : Thinker
+{
+    int testVar;
+
+    static MyGlobalVariables Get()
+    {
+        ThinkerIterator it = ThinkerIterator.Create("MyGlobalVariables", STAT_INFO); // Change this to STAT_STATIC if your thinker persists between maps.
+        let p = MyGlobalVariables(it.Next());
+        if (!p)
+        {
+            p = new("MyGlobalVariables");
+            p.ChangeStatNum(STAT_INFO); // Change this to STAT_STATIC if persisting between maps is desired.
+        }
+
+        return p;
+    }
+}
+ 
+// Example of an actor accessing the above thinker's variables.
+class MyClass : Actor
+{
+    MyGlobalVariables globalVars;
+
+    override void PostBeginPlay()
+    {
+        super.PostBeginPlay();
+
+        globalVars = MyGlobalVariables.Get();
+        if (globalVars)
+        {
+            globalVars.testVar++;
+            Console.Printf("My global int is: %d", globalVars.testVar);
+        }
+    }
+}&lt;/syntaxhighlight&gt;
+
+[[Category:ZScript]][[Category:Editing concepts]][[Category:Features]]</text>
+    <sha1>gkiflfewi6nh1lauul0ihr42gwr9s66</sha1>
+  </revision>
+</page>

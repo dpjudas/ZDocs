@@ -1,0 +1,28 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>A AddPlayerRain</title>
+  <ns>0</ns>
+  <id>5528</id>
+  <revision>
+    <id>32098</id>
+    <parentid>32096</parentid>
+    <timestamp>2012-03-08T21:41:59Z</timestamp>
+    <contributor>
+      <username>Gez</username>
+      <id>1283</id>
+    </contributor>
+    <minor />
+    <origin>32098</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="812" sha1="6id03jl5a5gnukmz92dva3hp27hsomc" xml:space="preserve">{{codepointer|Status change|r=Heretic}}
+'''A_AddPlayerRain'''&lt;br /&gt;
+(no parameters)
+
+Does nothing if the calling actor has no valid target, or its target is dead. This function is meant to be called by a projectile, and uses the caller's {{c|target}} field to know who shot the caller.
+
+If the target does not already have a {{Class|RainTracker}} it its inventory, creates one and puts it in. A rain tracker can only store two "rains", so if an existing one is already tracking two existing rains, the oldest of the two is set to terminate and the calling actor replaces it. The way it does so is by setting to 16 the health of the rain with the smallest amount of hit points, and let [[A_SkullRodStorm]] whittle the rest away quickly.
+
+This codepointer is restricted to {{Class|HornRodFX2}} and derived classes.</text>
+    <sha1>6id03jl5a5gnukmz92dva3hp27hsomc</sha1>
+  </revision>
+</page>

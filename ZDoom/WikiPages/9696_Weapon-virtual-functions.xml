@@ -1,0 +1,69 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>Weapon virtual functions</title>
+  <ns>0</ns>
+  <id>9696</id>
+  <revision>
+    <id>53835</id>
+    <parentid>52990</parentid>
+    <timestamp>2024-11-22T10:31:45Z</timestamp>
+    <contributor>
+      <username>Jekyll Grim Payne</username>
+      <id>2175</id>
+    </contributor>
+    <minor />
+    <origin>53835</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="3155" sha1="8yi9uy6f0yrpnakaumpoy9pb8nc1oi5" xml:space="preserve">*{{c|int}}, {{c|int}} '''[[CheckAddToSlots]]'''()
+:Called when the level is first loaded if the weapon has neither a defined slot number property nor is assigned to a slot in a player class. Returns the slot number of the weapon and its slot priority multiplied by 65536.
+
+*{{c|State}} '''[[GetReadyState]]'''()
+:Returns the weapon's Ready state. Called by multiple functions when setting a weapon to its Ready state (e.g. [[A_Raise]]).
+
+*{{c|State}} '''[[GetUpState]]'''()
+:Returns the weapon's Select state. Called when a pending weapon becomes the player's current weapon.
+
+*{{c|State}} '''[[GetDownState]]'''()
+:Returns the weapon's Deselect state. Called when a pending weapon has been queued up and the current weapon needs to be lowered.
+
+*{{c|State}} '''[[GetAtkState]]'''(bool ''hold'')
+:Returns the weapon's Fire state. Called by PlayerPawn's fire function.
+:*''hold'' - If true, returns the Hold state instead if one is found, otherwise returning Fire.
+
+*{{c|State}} '''[[GetAltAtkState]]'''(bool ''hold'')
+:Returns the weapon's Altfire state. Called by PlayerPawn's alt fire function
+:*''hold'' - If true, returns the AltHold state instead if one is found, otherwise returning Altfire.
+
+*{{c|void}} '''[[PlayUpSound]]'''(Actor ''origin'')
+:Plays the weapon's UpSound. Called when a pending weapon becomes the player's current weapon.
+:*''origin'' - The actor to play the sound from.
+
+*{{c|void}} '''[[EndPowerup]]'''()
+:Called when a [[Classes:PowerWeaponLevel2|Tome of Power]] expires and the weapon is currently powered up.
+
+*{{c|bool}} '''[[CheckAmmo]]'''(int ''fireMode'', bool ''autoSwitch'', bool ''requireAmmo = false'', int ''ammocount = -1'')
+:Called when the game checks to see if a weapon has enough ammo either for firing or for switching to. Returns true if the weapon has enough ammo.
+
+*{{c|bool}} '''[[DepleteAmmo]]'''(bool ''altFire'', bool ''checkEnough = true'', int ''ammouse = -1'')
+:Called to consume ammo when attacking.
+
+*{{c|ui}} {{c|Vector2}} '''[[ModifyBobLayer]]'''(Vector2 ''Bob'', int ''layer'', double ''ticfrac'')
+:Allows modifying the weapon bob values after they have been calculated by the &lt;code&gt;BobWeapon()&lt;/code&gt; call on the PlayerPawn.
+:*''bob'' - the bob value received from &lt;code&gt;BobWeapon()&lt;/code&gt;.
+:*''layer'' - the number of the layer that is bobbing.
+:*''ticfrac'' - current tic fraction.
+:By default the function returns &lt;code&gt;bob&lt;/code&gt; unmodified.
+
+*{{c|ui}} {{c|Vector3}}, {{c|Vector3}} '''[[ModifyBobLayer3D]]'''(Vector3 ''Translation'', Vector3 ''Rotation'', int ''layer'', double ''ticfrac'')
+:Allows modifying the weapon bob values for 3D-model-based weapons after they have been calculated by the &lt;code&gt;BobWeapon3D()&lt;/code&gt; call on the PlayerPawn.
+:*''Translation'' - the 3D position value received from &lt;code&gt;BobWeapon3D()&lt;/code&gt;.
+:*''Rotation'' - the 3D rotation value received from &lt;code&gt;BobWeapon3D()&lt;/code&gt;.
+:*''layer'' - the number of the layer that is bobbing.
+:*''ticfrac'' - current tic fraction.
+:By default the function returns &lt;code&gt;Translation, Rotation&lt;/code&gt; unmodified.
+
+*{{c|ui}} {{c|Vector3}} '''[[ModifyBobPivotLayer3D]]'''(int ''layer'', double ''ticfrac'')
+:{{moreinfo}}</text>
+    <sha1>8yi9uy6f0yrpnakaumpoy9pb8nc1oi5</sha1>
+  </revision>
+</page>

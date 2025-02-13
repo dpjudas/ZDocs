@@ -1,0 +1,107 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>Function Prototypes</title>
+  <ns>0</ns>
+  <id>5001</id>
+  <revision>
+    <id>19550</id>
+    <parentid>19548</parentid>
+    <timestamp>2008-08-27T19:31:24Z</timestamp>
+    <contributor>
+      <username>HotWax</username>
+      <id>28</id>
+    </contributor>
+    <origin>19550</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="6730" sha1="4q3wsk2sjeaum8cdywpga4bi9eofztv" xml:space="preserve">Any page on the wiki which describes an [[ACS]] or [[Decorate]] function will start with a '''Function Prototype''' displaying how the function should be used in code.  This page has been created to guide users on how to read these prototypes and appropriately implement the functions in code.
+
+Starting simply, each prototype has two parts:  The function name (in bold) and a ''parameter list''.  For example:
+
+ '''DoSomethingCool''' (int ''whattodo'', int ''wheretodoit'')
+
+In this example, '''DoSomethingCool''' is the name of the function (and should also be the name of the wiki article being viewed).  When using this function in code, this is the exact text you should type.  Although the capitalization doesn't matter, the spelling is critical -- both ACS and Decorate will fail to recognize a function unless the name is perfectly spelled.
+
+The remainder of the line consists of the ''parameter list''.  This will always be enclosed in parenthesis and contain one or more parameters separated by commas.  In this example, the function takes two parameters:
+
+ (int ''whattodo'', int ''wheretodoit'')
+
+The first part of a parameter is the [[Data Types|variable type]].  Both of these variables are integer types, so they are represented by the abbreviation "int".  After the variable type comes the name of the parameter, which is just there to describe what this parameter does.  If this were an actual function, you could expect that the first parameter (''whattodo'') would determine what effect this function has, and the second parameter (''wheretodoit'') would determine where the effect would occur.
+
+An example of what this might look like in ACS would be:
+
+ DoSomethingCool (16, 392);
+
+Here, the 16 would be passed to the function as ''whattodo'', and the 392 would be passed as ''wheretodoit''.
+
+Some functions will not take parameters -- they do only one specific thing each time and so there is no additional data to pass.  These functions will appear similar to this on the wiki:
+
+ DoSomethingSimple
+ ''(no parameters)''
+
+When these functions are used in Decorate, you can simply type the name of the function and leave it at that.  For example:
+
+ TNT1 A 0 A_DoSomethingSimple
+
+In ACS, you still have to give a parameter list, even though you're not putting anything in it.  This is so that ACS recognizes what you have typed as a function call.  For example:
+
+ DoSomethingSimple ();
+
+Finally, some functions take ''optional'' parameters.  When a parameter is optional, that part of the ''parameter list'' will be in square brackets.  This lets the reader know that they can safely omit those parameters if they just want ZDoom to use the defaults.  Many parameters will also have a default value if they are not specified, and those values are present in the prototype as well.  An example might be:
+
+ '''A_FlexibleFunction''' (int ''whattodo'' [, string ''whotoaffect'' [, bool ''invisible'' = false]])
+
+This might look complicated at first, but it will tell you everything you need to know about how to successfully use this function.  First is the function name, '''A_FlexibleFunction''' is the name of the function being used.  ''whattodo'' is a ''required parameter'' that is an integer type.  Because the parameter is required, this would result in an error:
+
+ BADG Y 5 A_FlexibleFunction
+
+However, this would work:
+
+ BADG Y 5 A_FlexibleFunction (13)
+
+Simply put, when a parameter is required, ''it must be specified for your code to function.''
+
+The other two parameters in the example function are optional.  The first is a string parameter called ''whotoaffect''.  The second is a boolean parameter called ''invisible''.  This second parameter also has a default value of "false" when it is not specified.  This means that the following two lines would result in the same function call:
+
+ BADG Y 5 A_FlexibleFunction (13, "Blueguy")
+ BADG Y 5 A_FlexibleFunction (13, "Blueguy", false)
+
+In the first case, because the 3rd parameter isn't specified, it defaults to false.  The second line explicitly specifies this, which is redundant in this case because there's no change.  The line is still perfectly legal, however.
+
+In some cases, it may be required to specify a parameter using its default value in order to be allowed to specify a parameter that comes later in the list.  Take this example function:
+
+ '''SampleTeleportFunction''' (int ''tag'' [, int ''tid'' = 0 [, bool ''silent'' = false]])
+
+Here is a function that takes one required parameter (''tag'') and can optionally take two more (''tid'' and ''silent'').  If you simply want to teleport the player to a given sector, you might just use this simple line in your ACS code:
+
+ SampleTeleportFunction (32);
+
+Since you don't need to specify the teleport destination by TID, it is left out.  However, this will always create a normal teleport.  What if you wanted it to be silent, without specifying the TID?  You could try this, but it would not work as intended:
+
+ SampleTeleportFunction (32, true);
+
+What you might think this is doing is teleporting the player to sector 32 using a silent teleport effect.  However, ZDoom applies the parameters in the order they appear, so "true" is actually being taken as the ''tid'' parameter.  Worse, this will not even result in a compilation error because "true" is technically a valid value -- it translates to the integer 1.  So what you are doing here is trying to teleport the player to the destination with a TID of 1 in the sector tagged 32.  This might cause unpredictable results, and in any case the teleport will still not be silent because the third parameter is assumed to be "false"!
+
+To correct this, you must specify the second parameter's default value, like so:
+
+ SampleTeleportFunction (32, 0, true);
+
+Now ZDoom knows which value belongs to which parameter, and the function behaves as intended.
+
+In rare cases, a function might exist in which the entire parameter list is optional.  Here is an example of a real function where this is the case:
+
+ '''A_Explode''' [(int ''explosiondamage'' = 128, int ''explosionradius'' = 128 [, bool ''hurtshooter'' = true [, bool ''alert'' = true]])] 
+
+See how the first square bracket denoting optional information is outside the opening parenthesis of the parameter list?  This indicates that if you're OK with the default values, you can simply omit all the parameters entirely, like so:
+
+ BOOM E 1 A_Explode
+
+Alternatively, you can use the function with a parameter list, as in this example:
+
+ BOOM E 1 A_Explode (90, 128, false)
+
+Because the parameter list is optional, both of these are examples of valid syntax. (Note the second example again demonstrating using a default value to gain access to the next parameter)
+
+[[category:Guides]]</text>
+    <sha1>4q3wsk2sjeaum8cdywpga4bi9eofztv</sha1>
+  </revision>
+</page>

@@ -1,0 +1,90 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>Custom damage types (ZScript)</title>
+  <ns>0</ns>
+  <id>9872</id>
+  <revision>
+    <id>52404</id>
+    <parentid>52257</parentid>
+    <timestamp>2024-04-11T17:19:57Z</timestamp>
+    <contributor>
+      <username>Jekyll Grim Payne</username>
+      <id>2175</id>
+    </contributor>
+    <minor />
+    <origin>52404</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="4323" sha1="784ntd832aqwxdalvbm65rv7axfkap5" xml:space="preserve">Users can specify custom damage types using the DamageType [[Actor properties|actor property]] along with custom states. A number of [[damage types]] are predefined, but you can create more.
+
+You can specify the type of damage a projectile inflicts using the {{Property|DamageType}} property:
+
+ class Fireball : Actor
+ {
+     Default
+     {
+         {{Property|Projectile}};
+         {{Property|DamageType}} 'Fire';
+     ...
+
+{{note|In [[ZScript]] the name of the damage type MUST be enclosed in quotation marks. Both double and single quotation marks will work (because damage type is a [[ZScript_variables#Names|{{c|Name}}]]-type field), but omitting them (in contrast to [[DECORATE]]) is not allowed.}}
+
+In case of a [[hitscan]] or a melee attack the damage type should be defined in the [[puff]] actor used by that attack (meaning this will always require creating a custom puff). Damage types are never defined in monster or weapon actors directly.
+
+You can then create corresponding custom Pain, Death, Wound and Crash [[Actor states|states]] in your actors that are called instead of the normal states when this type of damage is inflicted.  You do this by using the form ''State''.''DamageType'':
+
+ class MyZombie : {{Class|ZombieMan}}
+ {
+     Default
+     {
+         {{Property|PainChance}} '{{DamageType|Fire}}', 255;
+     } 
+     States 
+     {
+     Pain.{{DamageType|Fire}}:
+          ZMBF AB 3;
+          ZMBF C 5 [[A_StartSound]]("myzombie/Burn");
+          ZMBF D 3;
+          goto See;
+     Death.{{DamageType|Fire}}:
+          ZMBF EFG 3;
+          ZMBF H 2 [[A_StartSound]]("myzombie/BurnDeath");
+          ZMBF IJ 3;
+          ZMBF K 3 [[A_NoBlocking]];
+          ZMBF L -1;
+          stop;
+     }
+ }
+
+As you can see in the above example, you can also specify a pain chance for each type of custom damage you have defined.  This can allow enemies that will always be affected by fire damage (as above) but never by ice damage, for example.
+
+You can also create monsters that are resistant, or vulnerable, to a particular type of custom damage.  You do this with the {{Property|DamageFactor}} [[Actor properties|property]], using the format '''DamageFactor''' ''"DamageType"'', ''multiplier''.
+
+ class RaiDoom : {{Class|DoomImp}} replaces {{Class|CellPack}}
+ {
+     Default
+     {
+         {{Property|Health}} 200;
+         +{{Flag|MISSILEMORE}}
+         +{{Flag|MISSILEEVENMORE}}
+         {{Property|Speed}} 16;
+         {{Property|DamageFactor}} 'Pikachu', 0.2; {{comment|it's not very effective...}}
+         {{Property|DamageFactor}} 'Squirtle', 1.8;  {{comment|it's super effective!}}
+    }
+ }
+
+== Usage ==
+Damage types in [[ZScript]] should be used for only one purpose: applying damage with different factors, and occasionally creating unique [[Actor states|Death state sequences]] based on the damage type that killed the actor.
+
+Using damage types for scripting purposes is NOT recommended. If you want things like "this projectile makes actors react in a specific way (but not related to damage)", consider using proper methods for this, such as:
+* '''[[DoSpecialDamage]]''' - a virtual function called by projectiles when they hit an actor. This can be used to make projectiles do specific things to their victims (such as push them around, modify their visuals, move them, etc.). For example, {{class|LoreShot}} uses this.
+* '''[[DamageMobj]]''' - a virtual function called by all actors when they take damage. Can be used to make specific actors react in a specific way when they're damaged by other specific attacks or actors.
+* '''[[Events_and_handlers#WorldThingDamaged|WorldThingDamaged]]''' and '''[[Events_and_handlers#WorldThingDied|WorldThingDied]]''' - {{class|EventHandler}} virtual functions triggered when actors on the map are damaged or killed, respectively. Can be utilized to make something extra happen under specific conditions.
+* '''[[ModifyDamage]]''' - a virtual function similar to [[DamageMobj]] but called by {{class|Inventory}} items. Can modify the damage the owner of the iteam receives ''or'' deals.
+
+== Damagetype declarations ==
+Aside from declaring damage types and factors in specific actors, they can also be defined globally through [[MAPINFO]]. See the '''[[MAPINFO/Damage type definition]]''' page for explanation and examples.
+
+[[Category:ZScript guides]]</text>
+    <sha1>784ntd832aqwxdalvbm65rv7axfkap5</sha1>
+  </revision>
+</page>

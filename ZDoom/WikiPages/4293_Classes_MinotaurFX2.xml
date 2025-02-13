@@ -1,0 +1,53 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>Classes:MinotaurFX2</title>
+  <ns>0</ns>
+  <id>4293</id>
+  <revision>
+    <id>34962</id>
+    <parentid>18159</parentid>
+    <timestamp>2012-11-14T04:00:35Z</timestamp>
+    <contributor>
+      <username>Blue Shadow</username>
+      <id>2021</id>
+    </contributor>
+    <comment>/* DECORATE definition */ Updated.</comment>
+    <origin>34962</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="967" sha1="2pip2p91ia87b3t1hnynieev1tu7zhe" xml:space="preserve">{{Actor|
+| type = Explosive
+| name = Maulotaur floor flame
+| class = MinotaurFX2
+| game = Raven
+}}[[Classes]]: [[Classes:MinotaurFX1|MinotaurFX1]]&amp;rarr;&lt;u&gt;MinotaurFX2&lt;/u&gt;&lt;br&gt;
+&amp;ensp;&amp;rarr;[[Classes:MinotaurFX3|MinotaurFX3]]&lt;br&gt;
+The running flame created by an impact on the ground from a [[Classes:Minotaur|maulotaur]]'s maul. The native action [[A_MntrFloorFire]] spawns a new [[Classes:MinotaurFX3|MinotaurFX3]] every time it is called.
+
+==== [[DECORATE]] definition ====
+ ACTOR &lt;u&gt;MinotaurFX2&lt;/u&gt; : {{Class|MinotaurFX1}}
+ {
+   {{Property|Radius}} 5
+   {{Property|Height}} 12
+   {{Property|Speed}} 14
+   {{Property|FastSpeed}} 20
+   {{Property|Damage}} 4
+   +{{Flag|FLOORHUGGER}}
+   {{Property|ExplosionDamage}} 24
+   {{Property|DeathSound}} "minotaur/fx2hit"
+ 
+   action native [[A_MntrFloorFire]]();
+ 
+   States
+   {
+   Spawn:
+     FX13 A 2 Bright [[A_MntrFloorFire]]
+     Loop
+   Death:
+     FX13 I 4 Bright [[A_Explode]]
+     FX13 JKLM 4 Bright
+     Stop
+   }
+ }</text>
+    <sha1>2pip2p91ia87b3t1hnynieev1tu7zhe</sha1>
+  </revision>
+</page>

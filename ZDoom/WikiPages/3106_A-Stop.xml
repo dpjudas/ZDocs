@@ -1,0 +1,40 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>A Stop</title>
+  <ns>0</ns>
+  <id>3106</id>
+  <revision>
+    <id>40682</id>
+    <parentid>35094</parentid>
+    <timestamp>2016-01-13T08:25:29Z</timestamp>
+    <contributor>
+      <username>Edward850</username>
+      <id>1492</id>
+    </contributor>
+    <comment>Additional state jump note for players</comment>
+    <origin>40682</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="780" sha1="lk28rkt52hrb8sarfk3etp3nu2t6vw7" xml:space="preserve">{{codepointer|Missile movement}}
+'''A_Stop'''
+
+(no parameters)
+
+This stops the actor's current movement by setting its acceleration and speed to 0. This can also be used on players, monsters and anything else that is moving vertically or horizontally. Additionally when used on a player, it'll jump them to their idle state if it exists, otherwise their spawn state.
+
+== Examples ==
+This Lost Soul flies through the air to attack but stops after a short distance. Without '''A_Stop''' it would return to its See state while still flying towards its target.
+ ACTOR SoulStopper : {{Class|LostSoul}}
+ {
+   States
+   {
+   Missile:
+     SKUL C 10 bright [[A_FaceTarget]]
+     SKUL D 4 bright [[A_SkullAttack]]
+     SKUL CDCDCDC 4 Bright
+     SKUL C 0 '''A_Stop'''
+     Goto See
+   }
+ }</text>
+    <sha1>lk28rkt52hrb8sarfk3etp3nu2t6vw7</sha1>
+  </revision>
+</page>

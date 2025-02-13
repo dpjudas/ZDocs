@@ -1,0 +1,64 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>A GiveToTarget</title>
+  <ns>0</ns>
+  <id>2900</id>
+  <revision>
+    <id>43419</id>
+    <parentid>43054</parentid>
+    <timestamp>2016-11-22T14:07:14Z</timestamp>
+    <contributor>
+      <username>Major Cooke</username>
+      <id>1703</id>
+    </contributor>
+    <origin>43419</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="2193" sha1="5admx2rojz9xm8cwskn58wh95zxie19" xml:space="preserve">__NOTOC__{{DISPLAYTITLE:A_GiveToTarget}}
+bool '''A_GiveToTarget''' (string ''type'' [, int ''amount'' [, pointer ''forward_ptr'']])
+
+== Usage ==
+Tries to add ''count'' items of type ''type'' to the calling actor's current target's inventory. This function will not add more items than can be carried. Note that when an actor dies its target is automatically set to the killer. Projectiles also target the actor which shot them when they are fired.
+
+If ''type'' is an item derived from {{c|{{Class|Health}}}}, then the amount received is the result of multiplying ''count'' by the item's {{Property|Inventory.Amount|amount}}, e.g. if ''type'' is {{c|{{Class|Medikit}}}} and ''count'' is 2, then the amount of health received would be 50 points, not 2.
+
+===Parameters===
+*''type'': the item to give. This should be a valid {{Class|Inventory|inventory item}}.
+*''amount'': the number of samples of this item to give. Default is 0, which is interpreted as 1.
+*''forward_ptr'': the actor to give the item to, with the calling actor's target being the context, here, as opposed to the caller itself. This is an [[actor pointer#Custom scripting|actor pointer selector]]. Default is {{c|{{const|AAPTR_DEFAULT}}}}, which corresponds to the calling actor's target.
+
+=== Return value ===
+The function returns ''true'' if the item is successfully received, otherwise it returns ''false''.
+
+== Examples ==
+This function can be used to reward players with items for killing certain monsters.
+
+ Death:
+   CYBR H 10 '''A_GiveToTarget'''("Credits", 1000)
+   CYBR I 10 [[A_Scream]]
+   CYBR JKL 10
+   CYBR M 10 [[A_NoBlocking]]
+   CYBR NO 10
+   CYBR P 30
+   CYBR P -1 [[A_BossDeath]]
+   stop
+
+
+If this imp dies, it gives a {{Class|BlurSphere|partial invisibility sphere}} to its target's (killer's) master.
+ ACTOR BlurSphereDoomImp : {{Class|DoomImp}}
+ {
+     States
+     {
+     Death:
+         TROO A 0 [[A_GiveToTarget]]("{{Class|BlurSphere}}", 1, {{const|AAPTR_MASTER}})
+         Goto Super::Death
+ 
+     XDeath:
+         TROO A 0 [[A_GiveToTarget]]("{{Class|BlurSphere}}", 1, {{const|AAPTR_MASTER}})
+         Goto Super::XDeath
+     }
+ }
+
+[[category:Decorate Inventory functions]]{{DEFAULTSORT:GiveToTarget}}</text>
+    <sha1>5admx2rojz9xm8cwskn58wh95zxie19</sha1>
+  </revision>
+</page>

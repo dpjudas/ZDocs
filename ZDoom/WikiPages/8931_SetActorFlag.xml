@@ -1,0 +1,49 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>SetActorFlag</title>
+  <ns>0</ns>
+  <id>8931</id>
+  <revision>
+    <id>45141</id>
+    <parentid>44491</parentid>
+    <timestamp>2017-05-02T14:43:34Z</timestamp>
+    <contributor>
+      <username>Blue Shadow</username>
+      <id>2021</id>
+    </contributor>
+    <minor />
+    <comment>Remove {{new}}</comment>
+    <origin>45141</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="935" sha1="33pdgh69x7huee3vvwdc1aubc9ter6v" xml:space="preserve">__NOTOC__
+int '''SetActorFlag''' (int ''tid'', str ''flagname'', bool ''value'');
+
+== Usage ==
+Change the value of a [[Actor flags|flag]] on the actor(s) with the specified TID.
+
+=== Parameters ===
+*''tid'': TID of the actor(s) to affect. Use 0 to refer to the activator.
+*''flagname'': Name of the flag to change.
+*''value'': The new flag value.
+
+=== Return value ===
+The number of actors affected. Actors that match the TID but don't have the flag are not counted (e.g. changing a [[Actor_flags#Players|player flag]] on a non-player).
+
+==Example==
+
+This script spawns a {{class|Soulsphere}} as a secret item.
+
+  script "SpawnSecretSoulsphere" (int spottid)
+  {
+    int soulsphere_tid = 100;
+    if ([[SpawnSpotForced]]("Soulsphere", spottid, soulsphere_tid))
+    {
+      SetActorFlag(soulsphere_tid, "[[Actor_flags#COUNTSECRET|COUNTSECRET]]", {{const|true}});
+    }
+  }
+== See also ==
+* [[CheckFlag]]
+[[category:ACS Actor functions]]</text>
+    <sha1>33pdgh69x7huee3vvwdc1aubc9ter6v</sha1>
+  </revision>
+</page>

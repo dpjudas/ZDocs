@@ -1,0 +1,121 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>Aspect ratio correction</title>
+  <ns>0</ns>
+  <id>9608</id>
+  <revision>
+    <id>54168</id>
+    <parentid>52730</parentid>
+    <timestamp>2025-01-29T12:23:17Z</timestamp>
+    <contributor>
+      <username>Jekyll Grim Payne</username>
+      <id>2175</id>
+    </contributor>
+    <origin>54168</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="15286" sha1="0xhr1btfy7z2b5g5t3axasdclkcvek6" xml:space="preserve">[[File:Zombieman aspect scaling.png|thumb|Zombieman in the game (aspect-corrected) vs the source sprite (appears squished)]]
+Aspect ratio correction (also referred to as Y-stretching, pixel stretching, vertical stretching or pixelratio) is an effect that results in everything you see in Doom — the world geometry, the HUD and the sprites — to be vertically stretched to 120% of its original size. This effect emulates the fact that vanilla Doom (and many other games of that era) ran at the resolution of 320x200, which has a ratio of 16:10, but was rendered on 4:3 monitors that were common at the time; this resulted in the image being vertically stretched, and its pixels were not square. All vanilla Doom assets were created with this effect in mind: if you view Doom sprites with [[SLADE]], you may notice that the original images appear vertically squished compared to the way they appear in the game (this is especially noticeable on round objects, such as [[Classes:BlurSphere|the invisibility power-up]] or a [[Cacodemon]]. (You can learn more about this effect and see examples on [https://doomwiki.org/wiki/Aspect_ratio The Doom Wiki]).
+
+In short, Doom pixels aren't square (by default). This is something that has to be taken into account when creating custom assets, and there are different ways to handle it, depending on the type of asset. If pixel stretching is ignored, it results in assets that look visibly stretched, different from what the author intended. One common example is things like scoped weapon sprites (or other circular elements), where the scope will appear as an ellipse instead of a circle unless the sprite was initially made with pixel stretching in mind.
+
+===Note on the values===
+The pixels and the world in Doom are rendered 20% taller than the original values are. This means that a 64x64 sprite by default appears stretched as if it was 64x76.8 pixels (64 * 1.2 = 76.8). If you want to scale a sprite down, its vertical resolution has to be '''divided''' by 1.2, which is equivalent to reducing it to 83.333...% (not 80%!) of the original value (e.g. 76.8 / 1.2 = 64).
+
+Note, you're not actually required to make assets this way, and the actual method of approaching vertical stretching is different depending on the type of asset; this is just a general reminder on how percentages work.
+
+==Viewport==
+Everything you see on the screen is vertically stretched by default. Taking world geometry as an example, if you create a room 128x128x128 map units, it'll appear as if it's taller than it is wide instead of looking like a proper cube. The same effect applies to actor sprites, which are stretched by default.
+
+This effect can be easily controlled by the author via [[MAPINFO]] by using the [[MAPINFO_options_for_GZDoom%27s_GL_renderer|'''pixelratio''']] option. The default value is 1.2, which makes the world stretched; using 1.0 will make it square. This option is a simple post-processing effect that applies to the screen, it doesn't actually change any interactions in the game.
+
+However, pixelratio doesn't affect ''everything'' you see:
+* Sprites drawn on the screen by [[Classes:Weapon|weapons]] and [[CustomInventory]], as well as [[HUD]] are unaffected by pixelratio, they need to be handled separately.
+* 3D models are rendered with square polygons by default, their scale is determined only by the Scale property in [[MODELDEF]].
+These cases are covered below.
+
+==Actor sprites==
+Actor sprites can be scaled separately from the world, by using the ''Scale'' (as well as ''XScale'' and ''YScale'') [[Actor_properties#Rendering|actor properties]]. Note, these values are added on top of the viewport scaling defined with [[MAPINFO_options_for_GZDoom%27s_GL_renderer|pixelratio]].
+
+If you're making a project that has its own maps and sprites created specifically for those maps, you can simply define the desired pixelratio and forget about it (pixelratio 1.0 will make sure actors are rendered square, just like the world). For a fully stanalone project (such as a TC or a full game) nowadays there's not much reason to stick to the Doom pixelratio of 1.2.
+
+However, if you're making custom sprites for a mod that is meant to work with vanilla levels or otherwise work with pixelratio 1.2, you'll have to vertically scale the sprites in such a way that they don't actually appear as stretched, since the world will be subject to the default vertical stretching. There are 2 primary ways to do it:
+
+* Use '''YScale 0.833334''' in the properties of every actor. (Normally values like 0.834 or just 0.83 will be close enough that the players normally won't notice.) This will counteract the vertical stretching applied to the world, making sure the actor's sprite is rendered the same way you see in in SLADE or your graphics software.
+* Initially create your asset to be squished, like vanilla Doom assets were, so that pixel stretching renders them to the correct size. For example, if you want to create a sprite that appears as a 64x64 square, you need to make it around 64x53 pixels (53 * 1.2 = 63.6 — close enough). 
+** Note, from a technical perspective this is naturally a more difficult method, since you will have to actually draw the sprite in a squished form. You could draw the sprite normally and then scale it down vertically in a graphics software, but downscaling at low resolution usually causes significant distortions or artifacts in the graphics, so this is not recommended.
+** Some graphics editing programs allow defining a custom pixel ratio, so that you can create a ratio of 1:1.2, which will make the images you're editing appear already stretched in real-time, the way they're rendered in GZDoom. In Photoshop this can be done by navigating to ''View &gt; Pixel Aspect Ratio &gt; Custom Pixel Aspect Ratio''. Aseprite also allows creating and importing custom pixel ratio, as described [https://community.aseprite.org/t/custom-pixel-aspect-ratio/1976 here].
+
+==On-screen sprites==
+Sprites drawn on the screen by [[Classes:Weapon|weapons]] or [[CustomInventory]] (which are the only two classes that can draw on the screen) are handled entirely separately from the viewport and are unaffected by [[MAPINFO_options_for_GZDoom%27s_GL_renderer|pixelratio]]. The ''scale'' properties also don't affect on-screen sprites, since they can only change the appearance of the pickup (i.e. the sprites defined in the Spawn [[Actor_states|state sequence]] for that weapon/item).
+
+There are several ways to scale the sprites meant to be drawn on the screen:
+* The simplest way is to use the '''{{Property|Weapon.WeaponScaleY}}''' property. The default value is 1.2 (stretched like the world), so you simply need to use the value of 1.0 to make the sprites appear the way the original graphic looks.
+* Use the graphic as a [[Patch|patch]] (by putting it in the ''patches/'' folder in your PK3) and add it to the [[TEXTURES]] lump (in SLADE: select the images, right click, choose Graphic &gt; Add to TEXTUREx). After that double-click the TEXTURES lump in SLADE to open the visual TEXTURES editor, and make sure you tick the '''Apply Scale''' in the top panel to the right; then set '''Offset Type''' in the bottom left to ''HUD'' to view the sprite the way it will appear in the game. After that navigate to the '''Scale''' section below and set the second value to 1.2. Note, TEXTURES uses inverse scale, so setting the Y scale to 1.2 will scale it ''down'' to the exact value you want (while using numbers below 1.0 will make it larger). Don't forget to define the sprite as a sprite by setting the '''Type''' field to Sprite, because patches added to TEXTURES are added as textures by default, which means the game won't see them as sprites.
+** The only downside of this method is that it's cumbersome to perform for multiple sprites. Technically you can edit the values on only one sprite, then open the TEXTURES lump in a text editor, like Notepad++, and just copy-paste the values to other sprites (and find &amp; replace "texture" with "sprite" to make sure they're in the correct namespace), but it can still be a slow process.
+* You can also use [[A_OverlayScale]] (GZDoom only) to scale any sprite layer to the desired value (for example, &lt;code&gt;A_OverlayScale(OverlayID(), 1, 0.83334)&lt;/code&gt; will scale the calling layer to be square), but you have to remember to call it at the beginning of every state sequence, and also take it into account if you're using this function in other places to scale the sprite, so it's also not always convenient.
+* Finally, you can initially create your sprites to be squished, so that they get scaled to their proper size in the game, as described [[#Actor_sprites|above]].
+
+==HUD graphics==
+Images drawn by the HUD/statusbar (as well as other UI elements, such as menus) are also unaffected by pixelratio and are scaled separately from the world or on-screen sprites drawn by Weapon/CustomInventory. Every UI function has its own arguments for scaling, but talking about HUDs specifically, there are several aspects at play:
+* '''User interface scale''': This is an option that lets the user adjust the visual size of the HUD however they like. It can be found in GZDoom under ''Options &gt; HUD Options &gt; Scaling Options''. The default value is "Adapt to screen size," meaning the HUD is upscaled or downscaled to match the screen resolution, while the other values can make the HUD bigger or smaller. This option doesn't affect vertical stretching, it simply defines the size of the HUD elements, so that the players can make the HUD comfortable for them.
+* '''Aspect ratio''': Also found under ''Options &gt; HUD Options &gt; Scaling Options'' (can also be changed with the '''hud_aspectscale''' [[CVARs|console variable]]), this option actually controls whether the HUD is vertically stretched or not. The default value is 1.2 (stretch like in vanilla Doom), but in contrast to all the cases above, this is actually fully under the player's control and can't be enforced.
+
+If your HUD has elements that look visibly bad when subjected to pixel stretching (such as clearly defined circles or squares), HUD aspect ratio may become a problem for you. Currently there are only 2 ways you can work around it:
+
+* Make your HUD ''forcescaled''. This can be done by calling '''BeginHUD()''' with the ''forcescaled'' argument set to true in your ZScript HUD (see [[Classes:BaseStatusBar|BaseStatusBar]]), or by using the ''forcescaled'' flag in in your [[SBARINFO]] [[StatusBar]]. A forcescaled HUD ignores HUD aspect ratio and always draws the images exactly as you define them. 
+** The problem with this method is that it also ignores the user interface scale option, which means the players won't be able to adjust the size of the HUD to their liking.
+
+* (ZScript only) You can create your own drawing functions for your [[Classes:BaseStatusBar|ZScript HUD]] that will check the value of the '''hud_aspectscale''' CVAR and conditionally multiply every element's vertical scale ''and'' position (since it's affected by scale) by 0.83334%, so that they're automatically downscaled if the CVAR is true, effectively remaining unaffected by the HUD aspect ratio setting.
+Here's an example of how to create a wrapper for the [[DrawImage (BaseStatusBar)|'''DrawImage()''']] function that will do exactly that:
+
+&lt;syntaxhighlight lang="csharp"&gt;
+class MyCustomHUD : BaseStatusBar 
+{
+	transient CVar aspectScale; //this will cache the CVAR value
+	
+	// This is a verstion of DrawImage() that automatically adjusts
+	// the graphic's position and scale to effectively ignore
+	// the value of the hud_aspectscale CVAR:
+	void NoAspectDrawImage(String texture, Vector2 pos, int flags = 0, double Alpha = 1., Vector2 box = (-1, -1), Vector2 scale = (1, 1)) 
+	{
+		// Cache the CVar value to a local variable to avoid 
+		// calling GetCVar() every time. Note, this optimization
+		// is largely unnecessary since GZDoom 4.9 where user
+		// CVar reading was made much less resource-intensive:
+		if (aspectScale == null)
+		{
+			aspectScale = CVar.GetCvar('hud_aspectscale',CPlayer);
+		}
+		// Divide vertical scaling and position by 1.2 to counteract
+		// aspect scaling:
+		if (aspectScale.GetBool() == true) 
+		{
+			scale.y /= 1.2;
+			pos.y /= 1.2;
+		}
+		DrawImage(texture, pos, flags, Alpha, box, scale);
+	}
+}&lt;/syntaxhighlight&gt;
+
+Once you've done this, you'll simply need to call NoAspectDrawImage instead of the regular DrawImage to draw in your HUD.
+
+Notes:
+* Caching user CVars is not as important in modern GZDoom, since around version 4.9 &lt;code&gt;GetCVar()&lt;/code&gt; has become fairly performant. It's still recommended if you have dozens of user CVars that you need to check every tic or frame.
+* The variable that caches the CVar has to be defined as &lt;code&gt;transient&lt;/code&gt; because it shouldn't be written into save games, although doing that in UI-scoped classes (like BaseStatusBar) is not important, since they're not serialized by default.
+
+==3D Models==
+3D models are unaffected by [[MAPINFO_options_for_GZDoom%27s_GL_renderer|'''pixelratio''']] and are instead drawn with proper cubic polygons. The only two values that affect models are the actor's ''scale'' property (or ''Weapon.WeaponScaleX/Weapon.WeaponScaleY'' if this is an on-screen weapon model), and the ''Scale'' of the model in [[MODELDEF]].
+
+''However'', models by default also come with with a bug: they are subjected to aspect correction if their pitch or roll changes, which basically means that modifying a model's pitch/roll distorts it. This specific bug can be disabled with the '''CORRECTPIXELSTRETCH''' flag in the model's [[MODELDEF]] definition: if used, the model will retain its size without distortions at all times.
+
+If you're creating a mod with models without maps, and you just want to have evenly-sized 3D models, you can normally use them as-is (possibly with the CORRECTPIXELSTRETCH flag). However, if you want the size of the models to match the world geometry, you need to alter the model's Z scale in [[MODELDEF]] to match the current pixelratio value. This may be important if, for example, you're using models as complex level props (such as arches, columns, frames, etc.), especially if the models are using the same textures as the world. So, for example, with the default pixelratio 1.2 you need to use '''Scale 1 1 1.2''' in your MODELDEF definitions; with pixelratio of 1.0 you can leave the scale at 1 1 1, and so on.
+
+Note: 
+* '''Important:''' While the models themselves are unaffected by pixelratio, the hitbox of the actors they're attached to is. With sprite objects this isn't a problem since they're scaled with the world, but with models you can easily get a mismatch: e.g. if the model is 56 units tall, the actor's height is set to 56 but you're using pixelratio 1.2, the actor's hitbox will be vertically stretched by x1.2 but the model won't be, so the actor will become physically taller than it is visually.
+* First-person models used by weapons can be scaled the same way as weapon sprites: with '''WeaponScaleX'''/'''WeaponScaleY''' and [[A_OverlayScale]].
+* When exporting world geometry as models from [https://forum.zdoom.org/viewtopic.php?t=66745 Ultimate Doom Builder], the models' Z scale will be automatically set to 1.2 to match the default pixelratio.
+
+[[Category:Technical aspects]]</text>
+    <sha1>0xhr1btfy7z2b5g5t3axasdclkcvek6</sha1>
+  </revision>
+</page>

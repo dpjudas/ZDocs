@@ -1,0 +1,51 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>A AlertMonsters</title>
+  <ns>0</ns>
+  <id>2662</id>
+  <revision>
+    <id>44133</id>
+    <parentid>41079</parentid>
+    <timestamp>2017-03-20T11:20:42Z</timestamp>
+    <contributor>
+      <username>Gez</username>
+      <id>1283</id>
+    </contributor>
+    <minor />
+    <comment>removing "new" for GZDoom 2.4.0 release</comment>
+    <origin>44133</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="1994" sha1="3aaw9z4tc69um7nczkrgv0okvxodd8w" xml:space="preserve">{{codepointer|Monster AI}}
+'''A_AlertMonsters''' [(float ''maxrange'' [, int ''flags''])]
+
+==Usage==
+This can be used on [[weapon]]s, [[projectile]]s and [[monster]]s:
+*For monsters it alerts all monsters in hearing range of the current monster's target.
+*For projectiles it alerts all monsters in hearing range of the projectile's shooter.
+*For weapons it alerts all monsters in hearing range of the player holding the weapon.
+
+This function does nothing on monsters which already have a target.
+
+===Parameters===
+* ''maxrange'': The maximum distance from the calling actor at which monsters can still be alerted. Note that this is a simple distance check to the alerter. The "sound" still travels the normal distance. Default is {{c|0}} (unlimited range)
+* ''flags'': The following flags can be combined by using the {{!}} character between the constant names:
+** '''AMF_TARGETEMITTER''' — Causes alerted monsters to chase the actor which emitted the alert. Note that the alerter must be alive and has the {{Flag|SHOOTABLE}} flag to be chased (this is standard ZDoom behavior, not a fault of the feature).
+** '''AMF_TARGETNONPLAYER''' — Allows a monster to alert others to its own target when that target is not a player. Note that AMF_TARGETEMITTER implies that non-players can be targeted, so there is no need to use both at once.
+** '''AMF_EMITFROMTARGET''' — Causes the alert to be emitted from the actor that is being warned about, instead of the calling actor. Note that this is inherently pointless when using AMF_TARGETEMITTER.
+
+
+'''Note:''' The ''maxrange'' will be foiled if {{c|{{CVAR|C|compat_soundtarget}}}} is true, since it makes monsters rely purely on whether sound was heard in the [[sector]] in which they are, rather than what the monster itself heard.
+
+== Examples ==
+
+The {{Class|StrifeZap1}} actor class uses this function to wake up enemies when the projectile explodes.
+
+ Death:
+   ZAP1 A 3 [[A_AlertMonsters]]
+   ZAP1 BCDEFE 3
+   ZAP1 DCB 2
+   ZAP1 A 1
+   Stop</text>
+    <sha1>3aaw9z4tc69um7nczkrgv0okvxodd8w</sha1>
+  </revision>
+</page>

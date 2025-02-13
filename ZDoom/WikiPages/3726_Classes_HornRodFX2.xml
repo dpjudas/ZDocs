@@ -1,0 +1,64 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>Classes:HornRodFX2</title>
+  <ns>0</ns>
+  <id>3726</id>
+  <revision>
+    <id>34144</id>
+    <parentid>26294</parentid>
+    <timestamp>2012-09-02T11:35:29Z</timestamp>
+    <contributor>
+      <username>Blue Shadow</username>
+      <id>2021</id>
+    </contributor>
+    <comment>/* DECORATE definition */ Updated.</comment>
+    <origin>34144</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="1891" sha1="pxy5prk4atn3whz5ma3ie6hu3s0efhi" xml:space="preserve">{{Actor|
+| type = Explosive
+| name = Hellstaff projectile
+| class = HornRodFX2
+| game = Heretic
+}}[[Classes]]: &lt;u&gt;HornRodFX2&lt;/u&gt;&lt;br&gt;
+
+The large, rain-creating projectile from the [[Classes:ArtiTomeOfPower|powered-up]] [[Classes:SkullRod|hellstaff]]. On a direct impact, [[Classes:Sorcerer2|D'Sparil]] has a 37.5% chance of avoiding any damage and attempting teleportation; the damage is avoided even if the attempted teleportation fails. The native action [[A_AddPlayerRain]] uses one [[Classes:RainTracker|RainTracker]] item to keep track of previous rains created by the same player; the item contains two pointers to rains and will terminate the oldest of the two whenever a third is created. The native action [[A_SkullRodStorm]] decreases its health by one every time it is called and removes the projectile if its health reaches 0 or if the player who fird it left the game. As long as it is not destroyed, it randomly spawns a [[Classes:RainPillar|RainPillar]] which deals damage.
+
+==== [[DECORATE]] definition ====
+ ACTOR &lt;u&gt;HornRodFX2&lt;/u&gt; native
+ {
+   {{Property|Radius}} 12
+   {{Property|Height}} 8
+   {{Property|Speed}} 22
+   {{Property|Damage}} 10
+   {{Property|Health}} 140
+   {{Property|Projectile}}
+   {{Property|RenderStyle}} Add
+   {{Property|SeeSound}} "weapons/hornrodpowshoot"
+   {{Property|DeathSound}} "weapons/hornrodpowhit"
+   {{Property|Obituary}} "$OB_MPPSKULLROD"
+ 
+   action native [[A_AddPlayerRain]]();
+   action native [[A_HideInCeiling]]();
+   action native [[A_SkullRodStorm]]();
+ 
+   States
+   {
+   Spawn:
+     FX00 C 3 Bright
+     FX00 D 3 Bright [[A_SeekerMissile]](10, 30)
+     FX00 E 3 Bright
+     FX00 F 3 Bright [[A_SeekerMissile]](10, 30)
+     Loop
+   Death:
+     FX00 H 5 Bright [[A_AddPlayerRain]]
+     FX00 I 5 Bright
+     FX00 J 4 Bright
+     FX00 KLM 3 Bright
+     FX00 G 1 [[A_HideInCeiling]]
+     FX00 G 1 [[A_SkullRodStorm]]
+     Wait
+   }
+ }</text>
+    <sha1>pxy5prk4atn3whz5ma3ie6hu3s0efhi</sha1>
+  </revision>
+</page>

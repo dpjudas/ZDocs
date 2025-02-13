@@ -1,0 +1,57 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>Classes:KnightAxe</title>
+  <ns>0</ns>
+  <id>3400</id>
+  <revision>
+    <id>39442</id>
+    <parentid>34167</parentid>
+    <timestamp>2015-04-30T21:02:48Z</timestamp>
+    <contributor>
+      <username>Blue Shadow</username>
+      <id>2021</id>
+    </contributor>
+    <minor />
+    <comment>/* DECORATE definition */ Updated</comment>
+    <origin>39442</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="1033" sha1="j05jp04fjpezarhmqqu4gyxspmo1vs3" xml:space="preserve">{{Actor|
+| type = Explosive
+| name = Ethereal axe
+| class = KnightAxe
+| game = Heretic
+| spawnid = 127
+| spawnname = T_KNIGHTAXE 
+}}[[Classes]]: &lt;u&gt;KnightAxe&lt;/u&gt;&lt;br&gt;
+&amp;ensp;&amp;rarr;[[Classes:RedAxe|RedAxe]]&lt;br&gt;
+A spinning axe, glowing with green light, tossed by [[Classes:Knight|undead warriors]]. Its trajectory can be affected by wind, current, and other [[Carrying sector|types of "conveyor belt" sectors]], a phenomenon easy to notice in the large secret area of E1M1 in Heretic.
+
+==== [[DECORATE]] definition ====
+ ACTOR &lt;u&gt;KnightAxe&lt;/u&gt;
+ {
+   {{Property|Radius}} 10
+   {{Property|Height}} 8
+   {{Property|Speed}} 9
+   {{Property|FastSpeed}} 18
+   {{Property|Damage}} 2
+   {{Property|Projectile}}
+   -{{Flag|NOBLOCKMAP}}
+   -{{Flag|ACTIVATEIMPACT}}
+   -{{Flag|ACTIVATEPCROSS}}
+   +{{Flag|WINDTHRUST}}
+   +{{Flag|THRUGHOST}}
+   {{Property|DeathSound}} "hknight/hit"
+   States
+   {
+   Spawn:
+     SPAX A 3 Bright [[A_PlaySound]]("hknight/axewhoosh")
+     SPAX BC 3 Bright
+     Loop
+   Death:
+     SPAX DEF 6 Bright
+     Stop
+   }
+ }</text>
+    <sha1>j05jp04fjpezarhmqqu4gyxspmo1vs3</sha1>
+  </revision>
+</page>

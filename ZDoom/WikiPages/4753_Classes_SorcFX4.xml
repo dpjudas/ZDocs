@@ -1,0 +1,52 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>Classes:SorcFX4</title>
+  <ns>0</ns>
+  <id>4753</id>
+  <revision>
+    <id>34604</id>
+    <parentid>34596</parentid>
+    <timestamp>2012-10-21T11:03:33Z</timestamp>
+    <contributor>
+      <username>Blue Shadow</username>
+      <id>2021</id>
+    </contributor>
+    <comment>Added a description.</comment>
+    <origin>34604</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="822" sha1="mpv06wukmc84gdac44ju567q214tcs1" xml:space="preserve">{{Actor|
+| type = Explosive
+| name = Heresiarch purple flames
+| class = SorcFX4
+| game = Hexen
+}}[[Classes]]: &lt;u&gt;SorcFX4&lt;/u&gt;
+
+A purple fireball fired by the {{Class|Heresiarch}} that does a [[A_Explode|splash damage]] on impact; as a form of attack, the monster fires quite a few of them rapidly in a whiplash pattern.
+==== [[DECORATE]] definition ====
+ ACTOR &lt;u&gt;SorcFX4&lt;/u&gt;
+ {
+   {{Property|Speed}} 12
+   {{Property|Radius}} 10
+   {{Property|Height}} 10
+   {{Property|Projectile}}
+   -{{Flag|ACTIVATEIMPACT}}
+   -{{Flag|ACTIVATEPCROSS}}
+   {{Property|DeathSound}} "SorcererBallExplode"
+ 
+   action native [[A_SorcFX4Check]]();
+ 
+   States
+   {
+   Spawn:
+     SBS4 ABC 2 Bright [[A_SorcFX4Check]]
+     Loop
+   Death:
+     SBS4 D 2 Bright
+     SBS4 E 2 Bright [[A_Explode]](20, 128)
+     SBS4 FGH 2 Bright
+     Stop
+   }
+ }</text>
+    <sha1>mpv06wukmc84gdac44ju567q214tcs1</sha1>
+  </revision>
+</page>

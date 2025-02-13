@@ -1,0 +1,89 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>Classes:InventoryBarState</title>
+  <ns>0</ns>
+  <id>9986</id>
+  <revision>
+    <id>53558</id>
+    <parentid>53556</parentid>
+    <timestamp>2024-11-06T09:39:21Z</timestamp>
+    <contributor>
+      <username>Jekyll Grim Payne</username>
+      <id>2175</id>
+    </contributor>
+    <comment>/* Static */</comment>
+    <origin>53558</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="4311" sha1="3cyoyxy1wea38a8q4uulkxystplgvgv" xml:space="preserve">{{class|InventoryBarState}} is a [[Object_scopes_and_versions#Scoping_system|UI-scoped]] [[ZScript]] class normally utilized by ZScript HUDs (classes based on {{class|BaseStatusBar}}) to draw the inventory bar. The drawing itself is usually done with the [[DrawInventoryBar (ZScript)|'''DrawInventoryBar''']] function.
+
+This class is normally initiated in {{class|BaseStatusBar}}'s '''Init''' function, and stores all information about the items that must be shown in the bar (which, at the minimum, requires that the item has the {{flag|Inventory.INVBAR}} flag).
+
+== Methods ==
+=== Static ===
+{{c|InventoryBarState '''Create'''(HUDFont ''indexfont'' }}={{c| null, int ''cr'' }}={{c| Font.CR_UNTRANSLATED, double ''itemalpha'' }}={{c| 1., String ''boxgfx'' }}={{c| "ARTIBOX", String ''selgfx'' }}={{c| "SELECTBO", Vector2 ''innersize'' }}={{c| (0, 0), String ''leftgfx'' }}={{c| "INVGEML1", String ''rightgfx'' }}={{c| "INVGEMR1", Vector2 ''arrowoffs'' }}={{c| (0, 0), int flags }}={{c| 0)}}
+:Initializes this class.
+*{{c|HUDFont '''indexfont'''}}
+:The {{class|HUDFont}} class to be used as the font to draw item amount numbers. Defaults to "indexfont" if left unspecified.
+*{{c|int '''cr'''}}
+:The color of the font to be used. Contains a text color value as defined in the [[Structs:Font#Font_colors|Font struct]]. If the font wasn't specified, the font will default to "indexfont", and this will be set to {{c|Font.CR_Gold}}.
+*{{c|double '''itemalpha'''}}
+:Translucency of the item icons.
+*{{c|String '''boxgfx'''}}
+:Name of the texture to be used as an item bar's box.
+*{{c|String '''selgfx'''}}
+:Name of the texture to be used as the selector.
+*{{c|Vector2 '''innersize'''}}
+:The inner size of the box where the item is drawn.
+*{{c|String '''leftgfx'''}}
+:Name of the texture for the arrow pointing left (when there are some more item icons to the left that don't fit in the currently drawn bar).
+*{{c|String '''rightgfx'''}}
+:Name of the texture for the arrow pointing right (when there are some more item icons to the right that don't fit in the currently drawn bar).
+*{{c|Vector2 '''arrowoffs'''}}
+:Determines the offset of the arrow that appears if there are too many icons to fit into the bar. {{moreinfo}}
+*{{c|int '''flags'''}}
+:Flags that determine the position of the bar. Multiple flags can be combined with &lt;code&gt;|&lt;/code&gt;. The following are available:
+{{: BaseStatusBar SCREEN flags}}
+
+
+{{c|InventoryBarState '''CreateNoBox'''(HUDFont ''indexfont'' }}={{c| null, int ''cr'' }}={{c| Font.CR_UNTRANSLATED, double ''itemalpha'' }}={{c| 1., Vector2 ''boxsize'' }}={{c| (32, 32), String ''selgfx'' }}={{c| "SELECTBO", Vector2 ''innersize'' }}={{c| (0, 0), String ''leftgfx'' }}={{c| "INVGEML1", String ''rightgfx'' }}={{c| "INVGEMR1", Vector2 ''arrowoffs'' }}={{c| (0, 0), int flags }}={{c| 0)}}
+:Same as {{c|Create()}}, but doesn't draw any boxes behind the items: only item icons and a selector are drawn. The arguments are the same with the exception of the {{c|boxgfx}} argument, which is not used.
+
+== Variables ==
+These variables are readable and modifiable, but primarily they're meant to be set with the {{c|Create()}} method (documented above) rather than directly.
+*{{c|TextureID '''box'''}}
+:{{struct|TextureID}} of an item bar's box.
+*{{c|TextureID '''selector'''}}
+:{{struct|TextureID}} of the selector.
+*{{c|Vector2 '''boxsize'''}}
+:The size of the item icon box.
+*{{c|Vector2 '''boxofs'''}}
+:{{moreinfo}}
+*{{c|Vector2 '''selectofs'''}}
+:Selector position offsets.
+*{{c|Vector2 '''innersize'''}}
+:Inner size of the item's box.
+*{{c|TextureID '''left'''}}
+:Left arrow {{struct|TextureID|texture}}.
+*{{c|TextureID '''right'''}}
+:Right arrow {{struct|TextureID|texture}}.
+*{{c|Vector2 '''arrowoffset'''}}
+:Arrow offsets.
+*{{c|double '''itemalpha'''}}
+:Translucency of the item icons.
+*{{c|HUDFont '''amountfont'''}}
+:{{class|HUDFont}} used to display the numbers.
+*{{c|int '''cr'''}}
+:Font color as defined in the [[Structs:Font#Font_colors|Font struct]].
+*{{c|int '''flags'''}}
+:DI* flags.
+
+== See also ==
+* [[DrawInventoryBar (ZScript)]]
+* {{class|BaseStatusBar}}
+* [https://github.com/ZDoom/gzdoom/blob/d85d04f4217817d815bbf3542449f81f1c506a6d/wadsrc/static/zscript/ui/statusbar/statusbar.zs#L18 InventoryBarState class on GZDoom GitHub]
+
+[[Category:ZScript]]
+[[Category:BaseStatusBar]]</text>
+    <sha1>3cyoyxy1wea38a8q4uulkxystplgvgv</sha1>
+  </revision>
+</page>

@@ -1,0 +1,219 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>Loops</title>
+  <ns>0</ns>
+  <id>6998</id>
+  <revision>
+    <id>35665</id>
+    <parentid>35620</parentid>
+    <timestamp>2013-02-10T01:13:15Z</timestamp>
+    <contributor>
+      <username>Deded007</username>
+      <id>1392</id>
+    </contributor>
+    <minor />
+    <comment>/* Examples */  formatting and fixes</comment>
+    <origin>35665</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="7982" sha1="fs6e5jlghvkktsx871yxjv94tprqz6q" xml:space="preserve">This is a summary of the looping-methods (iteration) supported by ACS. For a more elaborate beginner's introduction to the concept of loops, you may also take a look at [[FOR and WHILE loops]].
+
+All loop types have a condition as part of their definition, which the programmer uses to determine how many times the contents of the loop are executed. The loop runs as long as the condition is true, unless it uses the keyword "UNTIL" which defines a loop that runs until the condition is true.
+
+A loop can either contain a single statement, or a group of statements contained in "curly braces". Using curly braces might be a good idea even when you need just a single statement; it is generally easier to see what the code does, and you are less likely to misplace statements when you change your code later.
+
+The syntax examples use ''italics'' for descriptive words (that would be replaced by actual code). The rest is literal code.
+
+Typical descriptive words are:
+
+''condition'': A statement that evaluates to TRUE (non-0) or FALSE (0). This determines whether or not to (re-)execute the loop.
+
+''statements'': Any valid ACS code, either a single ACS statement (terminated by a semicolon), or code enclosed in curly braces; { [[Print]](s:"Hello world"); }
+==Loop types==
+'''{{LE|While}}'''
+
+SYNTAX: while (''condition'') ''statements''
+
+The ''condition'' is checked before every execution. The code (called ''statements'') is executed/re-executed as long as the ''condition'' is true.
+
+It is possible to achieve every kind of looping using while-loops, but the other types of loops will often be a lot more convenient. When there is a more convenient method, it is usually also at least as efficient, and possibly marginally better.
+
+'''{{LE|Do-while}}'''
+
+SYNTAX: do ''statements'' while (''condition'');
+
+The ''statements'' are executed once, then the ''condition'' is checked for every re-execution. The code is re-executed as long as the ''condition'' is true.
+
+Note the trailing semicolon; when the condition is at the end of the loop, it requires a semicolon at the end.
+
+Evaluating the condition only for re-executions is useful when you know you will/need to execute the loop at least once. (Either because the condition is guaranteed to be true the first time, meaning that you don't need to check, or because the code has to execute at least once.)
+
+To achieve the equivalent code with a while-loop as with a do-while-loop, you would have to write the statements to execute twice; once before the loop, and once within.
+
+
+'''{{LE|Until}}'''
+
+SYNTAX: until (''condition'') ''statements''
+
+The ''condition'' is checked before every execution. The code (called ''statements'') is executed/re-executed as long as the ''condition'' is NOT true.
+
+
+'''{{LE|Do-until}}'''
+
+SYNTAX: do ''statements'' until (''condition'');
+
+Note the trailing semicolon; when the condition is at the end of the loop, it requires a semicolon at the end.
+
+The ''statements'' are executed once, then the ''condition'' is checked for every re-execution. The code is re-executed as long as the ''condition'' is NOT true.
+
+
+'''{{LE|For}}'''
+
+SYNTAX: for (''initializer''; ''condition''; ''counting expression'') ''statements''
+
+If you are not familiar with the for-loop, you may want to refer to [[FOR and WHILE loops]].
+
+A for-loop normally uses a single variable as a counter. This counter is normally assigned an initial value in ''initializer'' (an assignment statement), and then checked in ''condition''. The condition is checked before each execution of the loop. The ''counting expression'' is another assignment operation, executed at the end of each execution of the loop.
+
+You can, but are not required to, declare a new variable with the ''initializer'' statement. There is no special [[scope]] for a variable declared in a for-loop initializer; its scope will be the [[Script_types|script]] or [[Functions|function]].
+
+It is normal for the initializer to be an assignment, the condition to be a less-than/more-than/...or-equal condition, and for the counting expression to be an addition or subtraction. However, this is not required.
+
+It is possible to change the value of the counter during processing of a for-loop, but that is an uncommon practice, and the usual recommendation is not to do so.
+
+==Examples==
+
+Task: Delay until all barons are gone, then end the level. Delaying a little too long is not a problem.
+
+Condition for execution: The delay needs to execute as long as Thing_Count(T_BARON) is not 0.
+
+'''While'''
+
+ while ([[ThingCount]]({{const|T_BARON}})) // ThingCount() can be used as condition directly, we stay in loop if condition is non-0
+ {
+     [[delay]](15);
+ }
+ [[Exit_Normal]](0);
+
+'''Until'''
+
+ until (![[ThingCount]]({{const|T_BARON}})) // ThingCount() must be negated with !
+ {
+     [[delay]](15);
+ }
+ [[Exit_Normal]](0);
+
+The above demonstrates a case where a while-loop is clearly the best choice. The next example will show a case where the until-loop has the advantage.
+
+Task: Delay until a lost soul is spawned, then print a message. (May be caused by a pain elemental in the map, or some scripted behaviour.)
+
+Condition for execution: The delay needs to execute as long as Thing_Count(T_LOSTSOUL) is 0.
+
+'''While'''
+
+ while (![[ThingCount]]({{const|T_LOSTSOUL}})) // "!" means NOT. Stay in the loop as long as you do not count any lost souls.
+ {
+     [[delay]](1);
+ }
+ [[print]](s:"It begins...");
+
+'''Until'''
+
+ until ([[ThingCount]]({{const|T_LOSTSOUL}})) // Stay in the loop as long as you count no lost souls.
+ {
+     [[delay]](1);
+ }
+ [[print]](s:"It begins...");
+
+
+Task: Delay for at least 15 tics, and delay until all barons are gone. Then end the level.
+
+Condition for execution: The delay needs to execute as long as Thing_Count(T_BARON) is not 0, and at least once.
+
+'''While'''
+
+ [[delay]](15); // delay at least 15 tics
+ while ([[ThingCount]]({{const|T_BARON}})) // ThingCount() can be used as condition directly, we stay in loop if condition is non-0
+ {
+     [[delay]](15);
+ }
+ [[Exit_Normal]](0);
+
+
+'''Do-while'''
+
+ do // no condition for the first execution
+ {
+     [[delay]](15); // executes at least once
+ } while([[ThingCount]]({{const|T_BARON}}));
+ [[Exit_Normal]](0);
+
+
+Task: Wait until the activator is under open sky (signified by the ceiling texture) and end the level. Detection needs not be more precise than 50 ticks. Delay for at least 50 ticks no matter what.
+
+Condition for execution: Delay unless the ceiling proves to have F_SKY1 or F_SKY2 texture.
+
+'''While'''
+ [[delay]](50);
+ while (! ([[CheckActorCeilingTexture]](0, "F_SKY1") || [[CheckActorCeilingTexture]](0, "F_SKY2")) )
+ {
+     [[delay]](50);
+ }
+ [[Exit_Normal]](0);
+
+'''Until'''
+ [[delay]](50);
+ until ([[CheckActorCeilingTexture]](0, "F_SKY1") || [[CheckActorCeilingTexture]](0, "F_SKY2"))
+ {
+     [[delay]](50);
+ }
+ [[Exit_Normal]](0);
+
+'''Do-until'''
+ do
+ {
+     [[delay]](50);
+ } until ([[CheckActorCeilingTexture]](0, "F_SKY1") || [[CheckActorCeilingTexture]](0, "F_SKY2"));
+ [[Exit_Normal]](0);
+
+
+
+Task: [[Spawn]] 7 archvile flames in a row using a [[fixed point]] distance of 100.
+
+Information: integers (x,y,z) indicate the starting position. integers (vx, vy, vz) indicate a length 100.0 vector.
+
+Condition: As long as the code has executed less than seven times, it needs to execute again.
+
+'''While'''
+ int counter = 0; // declare and assign the initial value (0 by default)
+ while (counter &lt; 7)
+ {
+     [[Spawn]]("{{class|ArchvileFire}}", x,y,z);
+     x += vx;
+     y += vy;
+     z += vz;
+     counter++; // increasing the value of counter inside the loop
+ }
+
+'''While'''
+ int counter = 0;
+ while (counter++ &lt; 7) // increasing the value of counter immediately after using it
+ {
+     [[Spawn]]("{{class|ArchvileFire}}", x,y,z);
+     x += vx;
+     y += vy;
+     z += vz;     
+ }
+
+'''For'''
+ for (int counter = 0; counter &lt; 7; counter++)
+ {
+     [[Spawn]]("{{class|ArchvileFire}}", x,y,z);
+     x += vx;
+     y += vy;
+     z += vz;     
+ }
+
+[[Category:ACS]]</text>
+    <sha1>fs6e5jlghvkktsx871yxjv94tprqz6q</sha1>
+  </revision>
+</page>

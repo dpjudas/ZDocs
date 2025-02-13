@@ -1,0 +1,51 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>Classes:PowerShadow</title>
+  <ns>0</ns>
+  <id>4708</id>
+  <revision>
+    <id>53735</id>
+    <parentid>52299</parentid>
+    <timestamp>2024-11-13T12:37:08Z</timestamp>
+    <contributor>
+      <username>Jekyll Grim Payne</username>
+      <id>2175</id>
+    </contributor>
+    <origin>53735</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="1185" sha1="5novxywufho9p908hmuzfnvsvrugbxn" xml:space="preserve">{{actor|
+| type = Power
+| name = Shadow power
+| class = PowerShadow
+}}[[Classes]]: {{Class}} &amp;rarr; {{Class|Inventory}} &amp;rarr; {{Class|Powerup}} &amp;rarr; {{Class|PowerInvisibility}} &amp;rarr;&lt;u&gt;PowerShadow&lt;/u&gt;&lt;br&gt;
+
+{{: Powerup definition}}
+
+'''PowerShadow''' is a subtype of {{class|PowerInvisibility}}. It works the same way, but it adds the {{flag|Inventory.HUBPOWER}} flag (which means it won't be taken away when travelling between levels inside a [[hub]]) and sets {{property|Powerup.Mode}} to "Cumulative", which means receiving more powerups of the same type will extend its duration rather than reset it to default max value.
+
+== [[ZScript]] definition ==
+{{ZScriptDefinitionNote|actors/inventory/powerups.zs}}
+&lt;syntaxhighlight lang="csharp"&gt;
+class PowerShadow : PowerInvisibility
+{
+	Default
+	{
+		+INVENTORY.HUBPOWER
+		Powerup.Duration -55;
+		Powerup.Strength 75;
+		Powerup.Mode "Cumulative";
+	}
+}&lt;/syntaxhighlight&gt;
+
+== [[DECORATE]] definition ==
+{{DecorateDefinitionNote}}
+ ACTOR &lt;u&gt;PowerShadow&lt;/u&gt; : {{Class|PowerInvisibility}}
+ {
+   +{{Flag|INVENTORY.HUBPOWER}}
+   {{Property|Powerup.Duration}} -55
+   {{Property|Powerup.Strength}} 75
+   {{Property|Powerup.Mode}} "Cumulative"
+ }</text>
+    <sha1>5novxywufho9p908hmuzfnvsvrugbxn</sha1>
+  </revision>
+</page>

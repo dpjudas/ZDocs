@@ -1,0 +1,50 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>A RaiseMaster</title>
+  <ns>0</ns>
+  <id>5457</id>
+  <revision>
+    <id>53235</id>
+    <parentid>46789</parentid>
+    <timestamp>2024-10-06T11:36:57Z</timestamp>
+    <contributor>
+      <username>Jekyll Grim Payne</username>
+      <id>2175</id>
+    </contributor>
+    <origin>53235</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="1191" sha1="9gnn6ksehsxv1w55h193h2jylna7n7k" xml:space="preserve">{{codepointer|Monster AI}}
+'''A_RaiseMaster''' [(int ''flags'')]
+
+==Usage==
+Resurrects the calling actor's master. Currently the only function that sets the necessary information is [[A_SpawnItemEx]].
+
+===Parameters===
+*''flags'': The following flags can be combined using the bit-wise OR operator (|):
+**'''RF_TRANSFERFRIENDLINESS''' — the resurrected actors will change their affiliation to match that of the calling actor.
+**'''RF_NOCHECKPOSITION''' — resurrect the actor without checking for room.
+
+Monsters spawned with [[A_SpawnProjectile]] are not affected by this. [[A_SpawnProjectile]] was never designed to spawn monsters.
+
+== Examples ==
+The following is a variant of the {{Class|DoomImp|doom imp}}, a monster whose sole purpose is to revive its master through its death. Upon dying, its death state triggers [[A_RaiseMaster]], reviving the monster who spawned it with the master/child flag.
+ ACTOR SacrificialImp : {{Class|DoomImp}}
+ {
+   States
+   {
+   Death:
+     TROO I 8 
+     TROO J 8 [[A_Scream]]
+     TROO K 6 [[A_RaiseMaster]]
+     TROO L 6 [[A_NoBlocking]]
+     TROO M -1
+     Stop
+   }
+ }
+
+--------
+{{Planned Parenthood}}
+[[Category:Monster resurrection functions]]</text>
+    <sha1>9gnn6ksehsxv1w55h193h2jylna7n7k</sha1>
+  </revision>
+</page>

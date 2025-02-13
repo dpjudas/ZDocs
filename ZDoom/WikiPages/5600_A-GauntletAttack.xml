@@ -1,0 +1,47 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>A GauntletAttack</title>
+  <ns>0</ns>
+  <id>5600</id>
+  <revision>
+    <id>38647</id>
+    <parentid>30940</parentid>
+    <timestamp>2015-01-02T07:05:01Z</timestamp>
+    <contributor>
+      <username>JaecM</username>
+      <id>2159</id>
+    </contributor>
+    <minor />
+    <comment>Added an example</comment>
+    <origin>38647</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="2013" sha1="er8ygr0ajtsa4qqwieaarvr58f2uk2d" xml:space="preserve">{{DISPLAYTITLE:A_GauntletAttack}}
+'''A_GauntletAttack''' (int ''power'')&lt;br&gt;
+
+Shakes the weapon sprites randomly by moving it up to two units to the left and to the bottom. The actual attack depends on whether ''power'' is true or not.
+
+In "normal" mode, it performs a melee attack with a wide spread and using {{Class|GauntletPuff1}} as the puff. In "power" mode, the attack has a greater range (up to 256 map units), narrower spread, and using {{Class|GauntletPuff2}} instead. In either mode, the attack deals 2d8 points of damage, but in "power" mode, the player is given half the damage as health (this sum is not affected by any damage factor or armor absorption the target might have).
+
+If the player has no target, there is a 25% chance that the player's extra light intensity (as affected by the [[A_Light]] codepointers) is inverted, being set to 0 if it was positive or to 1 if it was null. In addition, the sound "weapons/gauntletson" is played on the AUTO channel, and the function stops here. 
+
+If there was a target, it is either the sound "weapons/gauntletshit" (normal mode) or "weapons/gauntletspowhit" (power mode) that is played on the AUTO channel. The weapon flickers randomly when using this codepointer, there is 25% chance the extra light intensity is set to 0, 37.5% that is is set to 1, and 37.5% that it is set to 2. The player using the calling weapon also turns by up to 4.5° to face the target, and is given the MF_JUSTATTACKED flag.
+
+This codepointer is restricted to {{Class|Gauntlets}} and derived classes.
+
+== Examples ==
+This example is taken straight from the Gauntlets from Heretic.
+
+  Fire:
+    GAUN B 4 [[A_PlayWeaponSound]]("weapons/gauntletsuse")
+    GAUN C 4
+    //Intentional fall-through
+  Hold:
+    GAUN DEF 4 Bright [[A_GauntletAttack]](0)
+    GAUN C 4 [[A_ReFire]]
+    GAUN B 4 [[A_Light0]]
+    Goto Ready
+
+[[Category:Decorate Heretic functions]] [[Category:Decorate Weapon attack functions]] [[Category:Decorate Restricted functions]]{{DEFAULTSORT:GauntletAttack}}</text>
+    <sha1>er8ygr0ajtsa4qqwieaarvr58f2uk2d</sha1>
+  </revision>
+</page>

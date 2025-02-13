@@ -1,0 +1,46 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>A BarrelDestroy</title>
+  <ns>0</ns>
+  <id>3661</id>
+  <revision>
+    <id>52582</id>
+    <parentid>34264</parentid>
+    <timestamp>2024-05-03T15:11:20Z</timestamp>
+    <contributor>
+      <username>Jekyll Grim Payne</username>
+      <id>2175</id>
+    </contributor>
+    <origin>52582</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="685" sha1="sc5xcybya02tur7cme9cagsvri85pyr" xml:space="preserve">{{codepointer|Doom|Special action}}
+
+'''{{class|Actor}}'''
+
+{{c|void '''A_BarrelDestroy'''()}}
+
+== Usage ==
+Removes the calling actor unless the game is in a multiplayer mode and the [[Console Commands|sv_barrelrespawn]] CVAR is set. This function is used by Doom's [[Classes:ExplosiveBarrel|barrel]] to selectively respawn in multiplayer games.
+
+== [[ZScript]] definition ==
+{{ZScriptDefinitionNote|actors/doom/doommisc.zs#L37}}
+&lt;syntaxhighlight lang="csharp"&gt;
+	void A_BarrelDestroy()
+	{
+		if (sv_barrelrespawn)
+		{
+			Height = Default.Height;
+			bInvisible = true;
+			bSolid = false;
+		}
+		else
+		{
+			Destroy();
+		}
+	}&lt;/syntaxhighlight&gt;
+
+== See also ==
+* [[Classes:ExplosiveBarrel]]</text>
+    <sha1>sc5xcybya02tur7cme9cagsvri85pyr</sha1>
+  </revision>
+</page>

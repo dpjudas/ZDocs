@@ -1,0 +1,55 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>Sky</title>
+  <ns>0</ns>
+  <id>7206</id>
+  <revision>
+    <id>47609</id>
+    <parentid>47283</parentid>
+    <timestamp>2020-06-01T11:37:11Z</timestamp>
+    <contributor>
+      <username>Gez</username>
+      <id>1283</id>
+    </contributor>
+    <comment>add DoomWiki template</comment>
+    <origin>47609</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="3581" sha1="gkzmh0mmcla3j7553l0yyi1l9ion50z" xml:space="preserve">{{doomwiki}}
+The '''sky''' in Doom engine games is a wall [[texture]] cylindrically projected and displayed in place of a [[flat]]. [[ZDoom]] also allows to use geometrically constructed [[skybox]]es with special [[camera]]s instead of an automatically generated cylinder.
+
+The [[OpenGL]] renderer used in [[GZDoom]] and [[Zandronum]] uses a spherical projection instead. The sky texture is rendered twice, on each hemisphere. The taller the texture, the further below the lower hemisphere will be "pushed away" on this projection, however it will not be removed entirely. (So, unless using a skybox, sky texture tiling will always happen in OpenGL; whereas the effect can be replaced by [[sky stretching]] in software.)
+
+The flat which is replaced by a sky projection is determined in a [[MAPINFO]] [[GameInfo definition]] with the {{c|skyflatname}} property. By default, it is {{c|F_SKY1}} in ''[[Doom]]'', ''[[Hacx]]'', ''[[Heretic]]'' and most other games; it is, however, {{c|F_SKY}} in ''[[Hexen]]'' and {{c|F_SKY001}} in ''[[Strife]]''.
+
+The choice of the texture projected as the sky is set in a [[MAPINFO]] [[map definition]] with the {{c|sky1}} and, optionally, {{c|sky2}} properties. It can be overridden by using a skybox or by using the [[MBF]] sky transfer effect ([[Static_Init]] property 255).
+
+==Alternate sky==
+Since ''[[Hexen]]'' features two different skies per level, {{c|sky1}} and {{c|sky2}} as defined in [[MAPINFO]], it provides a mechanism to use two different skies in the same map, provided that a [[#Double sky|double sky]] is not used. Normal [[sector]]s with a sky flat will show sky1, however sectors of [[sector specials|type]] 200 will show sky2. The alternate sky is also used by [[lightning]].
+
+If more skies than two are needed in a map, using [[skybox]]es or [[Static_Init]] is necessary.
+
+==Double sky==
+''[[Hexen]]'' introduced the double sky effect, also known as '''parallax sky'''. If the {{c|doublesky}} property is set in a [[map definition]], the two textures indicated for {{c|sky1}} and {{c|sky2}} will be combined: the areas of sky1 which are of color index 0 will be transparent and show the sky2 texture. This becomes interesting when both skies are given different speed values.
+
+Note that double sky requires both sky textures to have the same dimensions.
+
+==Effects==
+If there is a ceiling height difference between two neighboring sectors using a sky ceiling, the upper wall texture on the [[linedef]]s separating both sectors will not be displayed, creating the illusion that the sky is continuous. This is referred to as the {{dw|sky hack}} in the Doom engine source code, and is used in many original levels to vary the heights of buildings in an outside area. Projectiles that hit a sky flat, or the upper part of a linedef hidden by the sky, will vanish entirely instead of exploding as they would on a non-sky ceiling or wall. Note that this sky hack is '''not''' extended to sky floors.
+
+Sectors with a sky ceiling are considered to be outside. This affects [[fog]] and [[lightning]]. Sectors without a sky ceiling need to be of [[sector specials|type]] 87 to use the outside fog value, and of type 197 to use the outside lightning effect. Sky floors do not result in a sector being considered to be outside for any purpose.
+
+==Sky stretching==
+{{:Sky stretching}}
+
+==See also==
+* [[ChangeSky]] ([[ACS]] function)
+* {{CCMD|D|changesky|Changesky}} ([[console command]])
+* [[Skybox]]
+* {{Class|SkyPicker}}
+* {{Class|SkyViewpoint}}
+* [[Sky stretching]]
+* [[Static_Init]]
+[[Category:Glossary]][[Category:Technical aspects]]</text>
+    <sha1>gkzmh0mmcla3j7553l0yyi1l9ion50z</sha1>
+  </revision>
+</page>

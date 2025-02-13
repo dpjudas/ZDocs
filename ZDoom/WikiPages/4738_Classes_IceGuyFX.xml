@@ -1,0 +1,55 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>Classes:IceGuyFX</title>
+  <ns>0</ns>
+  <id>4738</id>
+  <revision>
+    <id>34763</id>
+    <parentid>34762</parentid>
+    <timestamp>2012-10-25T13:51:57Z</timestamp>
+    <contributor>
+      <username>Blue Shadow</username>
+      <id>2021</id>
+    </contributor>
+    <comment>Added a description.</comment>
+    <origin>34763</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="877" sha1="a00woxz2cwlg69wo01bgbicwj072880" xml:space="preserve">{{Actor|
+| type = Explosive
+| name = Wendigo ice bolt
+| class = IceGuyFX
+| game = Hexen
+}}[[Classes]]: &lt;u&gt;IceGuyFX&lt;/u&gt;
+
+The ice projectile fired by an {{Class|IceGuy|ice golem}}; on impact, it bursts into eight damaging {{Class|IceGuyFX2|ice shards}}.
+==== [[DECORATE]] definition ====
+ ACTOR &lt;u&gt;IceGuyFX&lt;/u&gt;
+ {
+   {{Property|Speed}} 14
+   {{Property|Radius}} 8
+   {{Property|Height}} 10
+   {{Property|Damage}} 1
+   {{Property|DamageType}} "Ice"
+   {{Property|Projectile}}
+   -{{Flag|ACTIVATEIMPACT}}
+   -{{Flag|ACTIVATEPCROSS}}
+   {{Property|DeathSound}} "IceGuyMissileExplode"
+ 
+   action native [[A_IceGuyMissileExplode]]();
+ 
+   States
+   {
+   Spawn:
+     ICPR ABC 3 Bright [[A_SpawnItemEx]]("{{Class|IceFXPuff}}", 0, 0, 2)
+     Loop
+   Death:
+     ICPR D 4 Bright
+     ICPR E 4 Bright [[A_IceGuyMissileExplode]]
+     ICPR FG 4 Bright
+     ICPR H 3 Bright
+     Stop
+   }
+ }</text>
+    <sha1>a00woxz2cwlg69wo01bgbicwj072880</sha1>
+  </revision>
+</page>

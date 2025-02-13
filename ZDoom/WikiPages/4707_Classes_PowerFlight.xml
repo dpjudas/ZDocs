@@ -1,0 +1,161 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>Classes:PowerFlight</title>
+  <ns>0</ns>
+  <id>4707</id>
+  <revision>
+    <id>53725</id>
+    <parentid>36542</parentid>
+    <timestamp>2024-11-13T12:11:53Z</timestamp>
+    <contributor>
+      <username>Jekyll Grim Payne</username>
+      <id>2175</id>
+    </contributor>
+    <origin>53725</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="3062" sha1="hkrp4760mrvan19xouqq6d291oqlic7" xml:space="preserve">{{actor|
+| type = Power
+| name = Flight power
+| class = PowerFlight
+}}[[Classes]]: [[Classes:Inventory|Inventory]]&amp;rarr;[[Classes:Powerup|Powerup]]&amp;rarr;&lt;u&gt;PowerFlight&lt;/u&gt;&lt;br&gt;
+
+{{: Powerup definition}}
+
+'''PowerFlight''' allows its owner to fly by giving them the {{flag|FLY}} and {{flag|NOGRAVITY}} flags.
+
+=== [[ZScript]] definition ===
+{{ZScriptDefinitionNote|actors/inventory/powerups.zs}}
+&lt;syntaxhighlight lang="csharp"&gt;
+class PowerFlight : Powerup
+{
+	Default
+	{
+		Powerup.Duration -60;
+		+INVENTORY.HUBPOWER
+	}
+
+	clearscope bool HitCenterFrame;
+
+	//===========================================================================
+	//
+	// APowerFlight :: InitEffect
+	//
+	//===========================================================================
+
+	override void InitEffect ()
+	{
+		Super.InitEffect();
+		Owner.bFly = true;
+		Owner.bNoGravity = true;
+		if (Owner.pos.Z &lt;= Owner.floorz)
+		{
+			Owner.Vel.Z = 4;	// thrust the player in the air a bit
+		}
+		if (Owner.Vel.Z &lt;= -35)
+		{ // stop falling scream
+			Owner.A_StopSound (CHAN_VOICE);
+		}
+	}
+
+	//===========================================================================
+	//
+	// APowerFlight :: DoEffect
+	//
+	//===========================================================================
+
+	override void Tick ()
+	{
+		// The Wings of Wrath only expire in multiplayer and non-hub games
+		if (!multiplayer &amp;&amp; level.infinite_flight)
+		{
+			EffectTics++;
+		}
+		Super.Tick ();
+	}
+
+	//===========================================================================
+	//
+	// APowerFlight :: EndEffect
+	//
+	//===========================================================================
+
+	override void EndEffect ()
+	{
+		Super.EndEffect();
+		if (Owner == NULL || Owner.player == NULL)
+		{
+			return;
+		}
+
+		if (!(Owner.bFlyCheat))
+		{
+			if (Owner.pos.Z != Owner.floorz)
+			{
+				Owner.player.centering = true;
+			}
+			Owner.bFly = false;
+			Owner.bNoGravity = false;
+		}
+	}
+
+	//===========================================================================
+	//
+	// APowerFlight :: DrawPowerup
+	//
+	//===========================================================================
+
+	override TextureID GetPowerupIcon ()
+	{
+		// If this item got a valid icon use that instead of the default spinning wings.
+		if (Icon.isValid())
+		{
+			return Icon;
+		}
+
+		TextureID picnum = TexMan.CheckForTexture ("SPFLY0", TexMan.Type_MiscPatch);
+		int frame = (Level.maptime/3) &amp; 15;
+
+		if (!picnum.isValid())
+		{
+			return picnum;
+		}
+		if (Owner.bNoGravity)
+		{
+			if (HitCenterFrame &amp;&amp; (frame != 15 &amp;&amp; frame != 0))
+			{
+				return picnum + 15;
+			}
+			else
+			{
+				HitCenterFrame = false;
+				return picnum + frame;
+			}
+		}
+		else
+		{
+			if (!HitCenterFrame &amp;&amp; (frame != 15 &amp;&amp; frame != 0))
+			{
+				HitCenterFrame = false;
+				return picnum + frame;
+			}
+			else
+			{
+				HitCenterFrame = true;
+				return picnum+15;
+			}
+		}
+	}
+}
+
+&lt;/syntaxhighlight&gt;
+
+=== [[DECORATE]] definition ===
+{{DecorateDefinitionNote}}
+ ACTOR &lt;u&gt;PowerFlight&lt;/u&gt; : {{Class|Powerup}} native
+ {
+   {{Property|Powerup.Duration}} -60
+   +{{Flag|INVENTORY.HUBPOWER}}
+ }</text>
+    <sha1>hkrp4760mrvan19xouqq6d291oqlic7</sha1>
+  </revision>
+</page>

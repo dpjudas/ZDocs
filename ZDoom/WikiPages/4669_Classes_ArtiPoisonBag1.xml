@@ -1,0 +1,62 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>Classes:ArtiPoisonBag1</title>
+  <ns>0</ns>
+  <id>4669</id>
+  <revision>
+    <id>53617</id>
+    <parentid>34561</parentid>
+    <timestamp>2024-11-08T11:50:49Z</timestamp>
+    <contributor>
+      <username>Jekyll Grim Payne</username>
+      <id>2175</id>
+    </contributor>
+    <comment>/* DECORATE definition */</comment>
+    <origin>53617</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="1170" sha1="0s81oetqfwpe0yscctr02dwy6ist0q7" xml:space="preserve">{{Actor|
+| type = Artifact
+| name = Poison cloud fléchette
+| class = ArtiPoisonBag1
+| game = Hexen
+}}[[Classes]]: [[Classes:Inventory|Inventory]]&amp;rarr;[[Classes:ArtiPoisonBag|ArtiPoisonBag]]&amp;rarr;&lt;u&gt;ArtiPoisonBag1&lt;/u&gt;&lt;br&gt;
+
+The [[Classes:ArtiPoisonBag|fléchette]] as used by [[Hexen]]'s [[Classes:ClericPlayer|Cleric]].  When used, it is [[Classes:PoisonBag|dropped on the spot]], quickly bursting into a [[Classes:PoisonCloud|cloud of poison gas]].
+
+=== [[ZScript]] definition ===
+{{ZScriptDefinitionNote|actors/hexen/flechette.zs#L271}}
+&lt;syntaxhighlight lang="cs"&gt;
+class ArtiPoisonBag1 : ArtiPoisonBag
+{
+	Default
+	{
+		Inventory.Icon "ARTIPSB1";
+		Tag "$TAG_ARTIPOISONBAG1";
+	}
+	
+	override bool Use (bool pickup)
+	{
+		Actor mo = Spawn("PoisonBag", Owner.Vec3Offset(
+			16 * cos(Owner.angle),
+			24 * sin(Owner.angle),
+			-Owner.Floorclip + 8), ALLOW_REPLACE);
+		if (mo)
+		{
+			mo.target = Owner;
+			return true;
+		}
+		return false;
+	}
+	
+}
+&lt;/syntaxhighlight&gt;
+=== [[DECORATE]] definition ===
+{{DecorateDefinitionNote}}
+ ACTOR &lt;u&gt;ArtiPoisonBag1&lt;/u&gt; : {{Class|ArtiPoisonBag}} native
+ {
+   {{Property|Inventory.Icon}} "ARTIPSB1"
+   {{Property|Tag}} "$TAG_ARTIPOISONBAG1"
+ }</text>
+    <sha1>0s81oetqfwpe0yscctr02dwy6ist0q7</sha1>
+  </revision>
+</page>

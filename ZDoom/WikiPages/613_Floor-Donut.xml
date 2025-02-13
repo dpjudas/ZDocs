@@ -1,0 +1,49 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>Floor Donut</title>
+  <ns>0</ns>
+  <id>613</id>
+  <revision>
+    <id>44673</id>
+    <parentid>37851</parentid>
+    <timestamp>2017-04-03T19:14:38Z</timestamp>
+    <contributor>
+      <username>Gez</username>
+      <id>1283</id>
+    </contributor>
+    <comment>xlat</comment>
+    <origin>44673</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="1229" sha1="jovsyd2gufdhtjrgxein5xftalq17ch" xml:space="preserve">{{DISPLAYTITLE:Floor_Donut}}
+{{Special|250|ptag, pspeed, sspeed|Floor|Donut}}
+
+* ''ptag'': Tag of the pillar in the center of the donut 
+* ''pspeed'': How quickly to lower the pillar 
+* ''sspeed'': How quickly to raise the surrounding sector's floor 
+
+Performs {{dw|Linedef_type#Donuts|a donut action}} on the specified sectors.
+
+== Examples ==
+In this example, the donut's pillar has a {{c|[[tag]]}} of 1, the pillar lowers with a speed of 10 and the floor around the pillar raises with a speed of 15, after which its floor is changed to that of the sector around. 
+ Script 1 (void)
+ {
+    [[Floor_Donut]](1, 10, 15);
+    [[Print]](s:"Unflooding the area, moving the column down...");
+ }
+
+== Conversions from linedef types ==
+The following Doom map format types can be converted as :
+{| {{prettytable}}
+!Type!!Conversion!!Trigger
+|-
+|{{icon|Doom}} 9:S1 Floor Donut || Floor_Donut (tag, DORATE, DORATE) || Player Use
+|-
+|{{icon|Boom}} 146:W1 Floor Donut Raise || Floor_Donut (tag, DORATE, DORATE) || Player Cross
+|-
+|{{icon|Boom}} 155:WR Floor Donut Raise || Floor_Donut (tag, DORATE, DORATE) || Player Cross, Repeatable
+|-
+|{{icon|Boom}} 191:SR Floor Donut Raise || Floor_Donut (tag, DORATE, DORATE) || Player Use, Repeatable
+|}</text>
+    <sha1>jovsyd2gufdhtjrgxein5xftalq17ch</sha1>
+  </revision>
+</page>

@@ -1,0 +1,178 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>Print</title>
+  <ns>0</ns>
+  <id>975</id>
+  <revision>
+    <id>51050</id>
+    <parentid>50686</parentid>
+    <timestamp>2023-11-30T21:31:30Z</timestamp>
+    <contributor>
+      <username>Marrub</username>
+      <id>2058</id>
+    </contributor>
+    <comment>verified escape sequences, removed one that actually doesn't exist in ACC</comment>
+    <origin>51050</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="6005" sha1="7k8w81ra14ik00iv0ppgmidbanweq4h" xml:space="preserve">void '''Print'''(''item(s)'');
+
+==Usage==
+
+'''Print''' will print something to the activating player's screen. This can be text or variables or any combination of the two. Note that '''Print''' is fairly inflexible (there is no way to modify the position on screen or the time the message stays up) so you may wish to consider using [[HudMessage]] instead.
+
+'''Print''' will only display for the activator of the script, so if another player activates a script with a '''Print''' statement in it, then it will only be displayed for that other player and you will not see it. For printing to all players, see [[PrintBold]]. If a script is activated by something that is not a player at all then the message will simply not be displayed anywhere. 
+
+{{note|''Do not use Print as a debug tool.'' In many scripting and programming languages it is quite common to check that a complex code executes properly by {{wp|Debugging#Techniques|tracing}} its operation with {{c|print}} or {{c|printf}} statements; in ACS, you need to use [[Log]] or [[PrintBold]] or the trace will possibly not display at all, making it look like the script does not actually run.}}
+
+===Cast type===
+;Item syntax:
+:&lt;''cast type''&gt;:&lt;''expression''&gt;
+
+The string can be built up of any number of these items, separated by commas. The cast type is used to differentiate what type of data is being displayed. The table below shows the available options.
+
+{| {{prettytable}}
+!cast type
+!description
+|-
+|a
+|prints a character array. (Ex.: '''a:arrayname''')
+a:(''arrayname''[, int ''starting_index''[, int ''size_limit'']]) prints the character array specified by ''arrayname'' starting from ''starting_index'', printing only up to ''size_limit'' characters.
+|-
+|b
+|binary number
+|-
+|c
+|character
+|-
+|d
+|decimal number (integer, same as '''i''')
+|-
+|f
+|fixed point number
+|-
+|i
+|decimal number (integer, same as '''d''')
+|-
+|k
+|prints the key(s) (up to 2) that the player has bound to the specified command. (Ex.: '''k:"+use"''')
+|-
+|l
+|localized string from [[LANGUAGE]]
+|-
+|n
+|name, ''expression'' could be:
+*'''PRINTNAME_LEVELNAME''' - Prints the level name (e.g., "Entryway").
+*'''PRINTNAME_LEVEL''' - Prints the map lump name (e.g., "MAP01").
+*'''PRINTNAME_SKILL''' - Prints the skill name (e.g., "Hurt me plenty").
+*'''PRINTNAME_NEXTLEVEL''' - Prints the map lump name of the next map.
+*'''PRINTNAME_NEXTSECRET''' - Prints the map lump name of the next secret map.
+
+&lt;br /&gt;
+Using 0 as ''expression'' prints the name of the activator (a tag name if the activator isn't a player, [[Player_setup#Name|player name]] otherwise). Values greater than 0 will print the name of the ''n''-th player (one-based).
+|-
+|s
+|string
+|-
+|x
+|hexadecimal number
+|}
+
+===Escape sequence===
+The other special characters to note are escaped characters. A new line is started with '''\n'''. A backslash character is placed with '''\\''', except there is no graphic for backslash by default in Doom.
+
+Escape sequences are contained within a string. They begin with the backslash character: '\'.
+
+Available escape sequences, as handled by the &lt;tt&gt;strbin&lt;/tt&gt; function in cmdlib.cpp, include:
+
+{| {{prettytable}}
+!sequence
+!description
+|-
+|\OOO||Inserts a character by the octal value of its ASCII code. OOO must be a valid three-digit octal number.
+|-
+|\a||Beep—no function in engine
+|-
+|\b||Backspace—no function in engine
+|-
+|\cCODE||Beginning of a color escape sequence, [[#Colors|see below]] for color codes.
+|-
+|\f||Form feed—no function in engine
+|-
+|\n||New line
+|-
+|\r||Carriage return—no function in engine
+|-
+|\t||Tabulation—no function in engine
+|-
+|\v||Vertical tabulation—no function in engine
+|-
+|\xXX||Inserts a character by the hexadecimal value of its ASCII code. XX must be a valid two-digit hexadecimal number.
+|-
+|\"||Double quotations. This is the only way to insert double quotes properly into the string, since they otherwise terminate without the backslash.
+|}
+
+==Colors==
+You can add color to lines of text by using the &lt;code&gt;\cX&lt;/code&gt; escape code, where X is one of the codes from the table below. (ZScript constants are for [[ZScript]] only and are not supported by &lt;code&gt;Print()&lt;/code&gt;).
+{{: Text colors}}
+
+The color will revert back to the default message color at the end of every line, therefore a &lt;code&gt;\cX&lt;/code&gt; escape must be on every line where color is needed. Using &lt;code&gt;\c-&lt;/code&gt; also clears color, so that printed messages (obituaries, pickup messages, etc.) with player names within them will retain their individual colors.
+
+For example,
+ [[print]](s:"\cgRoses are red\n\chViolets are blue\n\cjSilver for me\n\cfGold for you");
+will be displayed as [[Image:printcolor.png]].
+
+You can also use the syntax &lt;code&gt;\c[colorname]&lt;/code&gt;, where ''colorname'' is a name of a color as defined in the [[TEXTCOLO]] lump.
+
+For example,
+ [[print]](s:"\c[Green]This is green");
+Would print
+ &lt;font color="green"&gt;This is green&lt;/font&gt;
+
+But on some versions of the engine this variant will not print only one symbol after escape sequence to stdout (not in in-game console), e. g. previous example on the OS console will be shown as "GreenThis is green".
+
+==Examples==
+
+Some basic uses of print.
+
+ script 1 (void)
+ {
+ 	int x = 10;
+ 	[[Print]](s:"This is a string");   //prints "This is a string"
+ 	[[Delay]](35*5);
+ 	
+ 	[[Print]](d:x);   //prints "10"
+ 	[[Delay]](35*5);
+ 	
+ 	[[Print]](s:"This is x: ", d:x);   //prints "This is x: 10"
+ 	[[Delay]](35*5);
+ 	
+ 	[[Print]](s:"I need ", d:x, s:" shells");   //prints "I need 10 shells"
+ }
+
+----
+
+Another example of a (potentially) useful debugging script which continually updates the player on their current game coordinates:
+
+ script 1 {{SType|Enter}}
+ {
+ 	While({{const|TRUE}})
+ 	{
+ 		[[Print]](f:[[GetActorX]](0), s:" : ",
+ 			f:[[GetActorY]](0));
+ 		[[Delay]](10);
+ 	}
+ }
+
+----
+
+This example tells the user to press whatever key they have bound to +use:
+
+ script 1 (void)
+ {
+        [[Print]](s:"Press ", k:"+use", s:" to use this ladder.");
+ }
+
+[[category:ACS HUD functions]]</text>
+    <sha1>7k8w81ra14ik00iv0ppgmidbanweq4h</sha1>
+  </revision>
+</page>

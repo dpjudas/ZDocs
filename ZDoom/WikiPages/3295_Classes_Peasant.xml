@@ -1,0 +1,116 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>Classes:Peasant</title>
+  <ns>0</ns>
+  <id>3295</id>
+  <revision>
+    <id>38411</id>
+    <parentid>36594</parentid>
+    <timestamp>2014-10-25T12:22:02Z</timestamp>
+    <contributor>
+      <username>Blue Shadow</username>
+      <id>2021</id>
+    </contributor>
+    <comment>/* DECORATE definition */ Change(s) from git commit 5513966.</comment>
+    <origin>38411</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="2875" sha1="pi8zfzkw2gajqxu5j2bnv05g4k1nfsx" xml:space="preserve">{{Actor|
+| type = Monster
+| name = Peasant
+| class = Peasant
+| game = Strife
+}}[[Classes]]: [[Classes:StrifeHumanoid|StrifeHumanoid]]&amp;rarr;&lt;u&gt;Peasant&lt;/u&gt;&lt;br&gt;
+{|
+|&amp;ensp;&amp;rarr;[[Classes:Peasant1|Peasant1]]&lt;br&gt;
+&amp;ensp;&amp;rarr;[[Classes:Peasant2|Peasant2]]
+|&amp;ensp;&amp;rarr;[[Classes:Peasant3|Peasant3]]&lt;br&gt;
+&amp;ensp;&amp;rarr;[[Classes:Peasant4|Peasant4]]
+|&amp;ensp;&amp;rarr;[[Classes:Peasant5|Peasant5]]&lt;br&gt;
+&amp;ensp;&amp;rarr;[[Classes:Peasant6|Peasant6]]
+|&amp;ensp;&amp;rarr;[[Classes:Peasant7|Peasant7]]&lt;br&gt;
+&amp;ensp;&amp;rarr;[[Classes:Peasant8|Peasant8]]
+|&amp;ensp;&amp;rarr;[[Classes:Peasant9|Peasant9]]&lt;br&gt;
+&amp;ensp;&amp;rarr;[[Classes:Peasant10|Peasant10]]
+|&amp;ensp;&amp;rarr;[[Classes:Peasant11|Peasant11]]&lt;br&gt;
+&amp;ensp;&amp;rarr;[[Classes:Peasant12|Peasant12]]
+|&amp;ensp;&amp;rarr;[[Classes:Peasant13|Peasant13]]&lt;br&gt;
+&amp;ensp;&amp;rarr;[[Classes:Peasant14|Peasant14]]
+|&amp;ensp;&amp;rarr;[[Classes:Peasant15|Peasant15]]&lt;br&gt;
+&amp;ensp;&amp;rarr;[[Classes:Peasant16|Peasant16]]
+|&amp;ensp;&amp;rarr;[[Classes:Peasant17|Peasant17]]&lt;br&gt;
+&amp;ensp;&amp;rarr;[[Classes:Peasant18|Peasant18]]
+|&amp;ensp;&amp;rarr;[[Classes:Peasant19|Peasant19]]&lt;br&gt;
+&amp;ensp;&amp;rarr;[[Classes:Peasant20|Peasant20]]
+|&amp;ensp;&amp;rarr;[[Classes:Peasant21|Peasant21]]&lt;br&gt;
+&amp;ensp;&amp;rarr;[[Classes:Peasant22|Peasant22]]
+|}
+
+This is the regular [[Strife]] Peasant with a tan-coloured tunic. This particular peasant does not appear in-game but is used as a base class for all others.
+
+==== [[DECORATE]] definition ====
+ ACTOR &lt;u&gt;Peasant&lt;/u&gt; : {{Class|StrifeHumanoid}}
+ {
+   {{Property|Health}} 31
+   {{Property|PainChance}} 200
+   {{Property|Speed}} 8
+   {{Property|Radius}} 20
+   {{Property|Height}} 56
+   {{Property|Monster}}
+   +{{Flag|NEVERTARGET}}
+   -{{Flag|COUNTKILL}}
+   +{{Flag|NOSPLASHALERT}}
+   +{{Flag|FLOORCLIP}}
+   +{{Flag|JUSTHIT}}
+   {{Property|MinMissileChance}} 150
+   {{Property|MaxStepHeight}} 16
+   {{Property|MaxDropoffHeight}} 32
+   {{Property|SeeSound}} "peasant/sight"
+   {{Property|AttackSound}} "peasant/attack"
+   {{Property|PainSound}} "peasant/pain"
+   {{Property|DeathSound}} "peasant/death"
+   {{Property|HitObituary}} "$OB_PEASANT" // "%o should have never picked a fight with a civilian."
+   States
+   {
+   Spawn:
+     PEAS A 10 [[A_Look2]]
+     Loop
+   See:
+     PEAS AABBCCDD 5 [[A_Wander]]
+     Goto Spawn
+   Melee:
+     PEAS E 10 [[A_FaceTarget]]
+     PEAS F 8 [[A_CustomMeleeAttack]](2*[[DECORATE_expressions#Mathematical_functions|random]][PeasantAttack](1, 5)+2)
+     PEAS E 8
+     Goto See
+   Pain:
+     PEAS O 3
+     PEAS O 3 [[A_Pain]]
+     Goto Melee
+   Wound:
+     PEAS G 5
+     PEAS H 10 [[A_GetHurt]]
+     PEAS I 6
+     Goto Wound+1
+   Death:
+     PEAS G 5
+     PEAS H 5 [[A_Scream]]
+     PEAS I 6
+     PEAS J 5 [[A_NoBlocking]]
+     PEAS K 5
+     PEAS L 6
+     PEAS M 8
+     PEAS N 1400
+     GIBS U 5
+     GIBS V 1400
+     Stop
+   XDeath:
+     GIBS M 5 [[A_TossGib]]
+     GIBS N 5 [[A_XScream]]
+     GIBS O 5 [[A_NoBlocking]]
+     GIBS PQRS 4 [[A_TossGib]]
+     Goto Death+8
+   }
+ }</text>
+    <sha1>pi8zfzkw2gajqxu5j2bnv05g4k1nfsx</sha1>
+  </revision>
+</page>

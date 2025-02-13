@@ -1,0 +1,52 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>A SetRoll</title>
+  <ns>0</ns>
+  <id>7792</id>
+  <revision>
+    <id>46757</id>
+    <parentid>46756</parentid>
+    <timestamp>2019-06-29T03:32:09Z</timestamp>
+    <contributor>
+      <username>Blue Shadow</username>
+      <id>2021</id>
+    </contributor>
+    <minor />
+    <comment>/* Examples */ there isn't a "NODELAY" actor flag</comment>
+    <origin>46757</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="1532" sha1="6mygdoiiqv9zq91qzgwyynr65h7j7kf" xml:space="preserve">{{gzdoomfeature}}
+{{codepointer|Status change}}
+'''A_SetRoll''' (float ''roll'' [, int ''flags'' [, int ''ptr'']])
+
+== Usage ==
+Sets the calling or pointed to actor's roll to the value of the first parameter. It can be used with the ''roll'' [[DECORATE expressions#Variables|DECORATE variable]] to modify the actor's current roll. This affects the player camera, models and the sprites of actors with the {{Flag|ROLLSPRITE}} flag.
+
+For players, the view is rolled and so is the model, if one is supplied.. Positive numbers rotate the screen counter-clockwise (left side rising, right side lowering), while negative numbers rotate it clockwise (right side rising, left side lowering).
+
+=== Parameters ===
+* ''roll'': The actor's new roll, in degrees. The range is [0,359].
+* ''flags'': The following flags can be combined by using the pipe character | between the constants names:
+** '''SPF_INTERPOLATE''': Interpolates the view, smoothing it out over the delay of 1 tic.
+* ''ptr'': The actor to change its roll. This is an [[actor pointer]]. Default is {{c|{{const|AAPTR_DEFAULT}}}}, which corresponds to the calling actor.
+
+==Examples==
+This example is of a floating object that is rotated randomly between 0 and 359 degrees every time it is loaded into the game.
+
+ ACTOR RotatedThing
+ {
+   {{Property|Radius}} 32
+   {{Property|Height}} 64
+   +{{Flag|NOGRAVITY}}
+   +{{Flag|ROLLSPRITE}}
+   +{{Flag|ROLLCENTER}}
+   States
+   {
+   Spawn:
+     FBTE A -1 [[Actor states#NoDelay|NoDelay]] [[A_SetRoll]](random(0, 359))
+     Stop
+   }
+ }</text>
+    <sha1>6mygdoiiqv9zq91qzgwyynr65h7j7kf</sha1>
+  </revision>
+</page>

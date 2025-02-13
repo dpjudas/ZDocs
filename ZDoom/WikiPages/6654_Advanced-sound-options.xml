@@ -1,0 +1,137 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>Advanced sound options</title>
+  <ns>0</ns>
+  <id>6654</id>
+  <revision>
+    <id>47889</id>
+    <parentid>47888</parentid>
+    <timestamp>2020-10-06T21:09:48Z</timestamp>
+    <contributor>
+      <username>Wohlstand</username>
+      <id>2594</id>
+    </contributor>
+    <minor />
+    <comment>/* libOPNMIDI */ Added OPNA note</comment>
+    <origin>47889</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="8909" sha1="i4qgc3aii2vmmysa5gfk7m4ahg27zu1" xml:space="preserve">{{menutrail|Main menu|Options menu|Sound options}}
+[[File:AdvancedSoundOptions.png|thumb|The advanced sound options menu in [[Doom II]].]]
+The '''advanced sound options''' menu allows to fine-tune certain sound system settings. Its [[MENUDEF]] name is {{c|AdvSoundOptions}} and it can be summoned with the {{c|{{CCMD|O|menu_advsound}}}} console command.
+
+*'''{{LE|Sample rate|snd_samplerate}}''' (Default/4000 Hz/8000 Hz/11025 Hz/22050 Hz/32000 Hz/44100 Hz/48000 Hz)
+:{{c|{{CVAR|S|snd_samplerate}}}}
+:Chooses which sample rate to use. The default uses the system's default sample rate.
+
+==OPL synthesis==
+*'''{{LE|Number of emulated OPL chips|opl_numchips}}''' (1&amp;mdash;8 by 1 increments)
+:{{c|{{CVAR|S|opl_numchips}}}}
+:This allows to choose the number of virtual OPL chips used in the [[OPL emulator]] when rendering [[MIDI]] songs. ([[Music format#OPL (AdLib) formats|Raw OPL]] is still limited to two chips at most.) Using only one chip can make emulation up to twice as fast, but it is not really enough to play Doom's music, and most old sound cards had either two OPL2 chips or one OPL3 chip (which acts like two OPL2 chips).
+*'''{{LE|Full MIDI stero panning|opl_fullpan}}''' (On/Off)
+:{{c|{{CVAR|S|opl_fullpan}}}}
+:The OPL emulators in ZDoom support all 127 panning positions allowed by the [[MIDI]] standard. However, actual OPL chips only supported mono (OPL2) or had stereo limited to three panning positions (OPL3). This option allows to enable or disable full stereo panning when using OPL emulation.
+*'''{{LE|OPL Emulator Core|opl_core}}''' (MAME OPL2/DOSBox OPL3/Java OPL3/Nuked OPL3)
+:{{c|{{CVAR|S|opl_core}}}}
+:This allows to choose which OPL emulator core to use. The MAME core corresponds to a {{wp|Yamaha YM3812}} (OPL2), while the other cores correspond to {{wp|Yamaha YMF262}} (OPL3).
+
+==libADLMIDI==
+*'''{{LE|OPL Emulator Core|adl_emulator_id}}''' (DOSBox OPL3/Nuked OPL3/Nuked OPL3 v1.7.4/Opal OPL3/Java OPL3)
+:{{c|{{CVAR|S|adl_emulator_id}}}}
+:This allows to choose which [[libADLMIDI]] core to use. All cores correspond to {{wp|Yamaha YMF262}} (OPL3).
+*'''{{LE|Run emulator at PCM rate|adl_run_at_pcm_rate}}'''
+:{{c|{{CVAR|S|adl_run_at_pcm_rate}}}}
+:This allows to increase performance of DOSBox core by reducing of running cycles which will also decrease accuracy of the sound (some percussions will be affected).
+*'''{{LE|Number of emulated OPL chips|adl_chips_count}}''' (1&amp;mdash;32 by 1 increments)
+:{{c|{{CVAR|S|adl_chips_count}}}}
+:This allows to choose the number of virtual OPL chips used in the [[libADLMIDI]] when rendering [[MIDI]] songs. Using only one chip can make emulation up to twice as fast, but it is not really enough to play Doom's music, and most old sound cards had either two OPL2 chips or one OPL3 chip (which acts like two OPL2 chips).
+*'''{{LE|Full MIDI stero panning|adl_fullpan}}''' (On/Off)
+:{{c|{{CVAR|S|adl_fullpan}}}}
+:The libADLMIDI in GZDoom support all 127 panning positions allowed by the [[MIDI]] standard. However, actual OPL chips only supported mono (OPL2) or had stereo limited to three panning positions (OPL3). This option allows to enable or disable full stereo panning when using libADLMIDI.
+*'''{{LE|Volume model|adl_volume_model}}''' (Auto/Generic/Native OPL3/DMX/Apogee/9x/AIL/HMI)
+:{{c|{{CVAR|S|adl_volume_model}}}}
+:This allows to choose which volume level formula will be used to convert MIDI volume into the scale of OPL3 chip.
+*'''{{LE|OPL Bank|adl_bank}}'''
+:{{c|{{CVAR|S|adl_bank}}}}
+:This allows to choose one of embedded libADLMIDI's FM banks.
+*'''{{LE|Use custom WOPL bank|adl_use_custom_bank}}'''
+:{{c|{{CVAR|S|adl_use_custom_bank}}}}
+:This allows to turn libADLMIDI into use of custom bank file instead of embedded one. Note: If custom bank wasn't choosen or it's where broken, the embedded bank will be used as the fallback.
+*'''{{LE|WOPL Bank file|adl_custom_bank}}'''
+:{{c|{{CVAR|S|adl_custom_bank}}}}
+:File path to custom WOPL bank will be used by libADLMIDI when custom bank mode is turned on.
+
+==libOPNMIDI==
+*'''{{LE|OPN2 Emulator Core|opn_emulator_id}}''' (MAME YM2612/Nuked OPN2/GENS 2.10/Neko Project II Kai/MAME YM2608/PMDWin OPNA)
+:{{c|{{CVAR|S|opn_emulator_id}}}}
+:This allows choosing which [[libOPNMIDI]] core to use. All cores correspond to {{wp|Yamaha YM2612}} (OPN2) amd {{wp|Yamaha YM2608}} (OPNA).
+*'''{{LE|Run emulator at PCM rate|opn_run_at_pcm_rate}}'''
+:{{c|{{CVAR|S|opn_run_at_pcm_rate}}}}
+:This allows to increase performance of Mame YM2612 and GENS cores by reducing of running cycles which will also decrease accuracy of the sound (some percussions will be affected).
+*'''{{LE|Number of emulated OPN2 chips|opn_chips_count}}''' (1&amp;mdash;32 by 1 increments)
+:{{c|{{CVAR|S|opn_chips_count}}}}
+:This allows to choose the number of virtual OPN chips used in the [[libOPNMIDI]] when rendering [[MIDI]] songs. Using only one chip can make emulation up to twice as fast, but it is not really enough to play Doom's music. Note that each chip gives 6 voices polyphony, therefore it's recommended to use at least two chips to have proper music playing.
+*'''{{LE|Full MIDI stereo panning|opn_fullpan}}''' (On/Off)
+:{{c|{{CVAR|S|opn_fullpan}}}}
+:The libOPNMIDI in GZDoom support all 127 panning positions allowed by the [[MIDI]] standard. However, actual OPN2 chips only stereo limited to three panning positions. This option allows to enable or disable full stereo panning when using libOPNMIDI.
+
+*'''{{LE|Use custom WOPN bank|opn_use_custom_bank}}'''
+:{{c|{{CVAR|S|opn_use_custom_bank}}}}
+:This allows turning libOPNMIDI into the use of a custom bank file instead of an embedded one. Note: If the custom bank wasn't chosen or it's where broken, the embedded bank will be used as the fallback.
+*'''{{LE|WOPN Bank file|opn_custom_bank}}'''
+:{{c|{{CVAR|S|opn_custom_bank}}}}
+:File path to custom WOPN bank will be used by libOPNMIDI when custom bank mode is turned on.
+
+==GUS Emulation==
+*'''{{LE|GUS config file|midi_config}}''' (text field)
+:{{c|{{CVAR|S|midi_config}}}}
+:File path to the fallback Gravis Ultrasound or TiMidity configuration file, used if [[DMXGUS]] is absent or not parsed.
+*'''{{LE|MIDI voices|midi_voices}}''' (16&amp;mdash;256 by 4 increments)
+:{{c|{{CVAR|S|midi_voices}}}}
+:How many voices are available to the [[GUS]] emulator.
+*'''{{LE|Read DMXGUS lumps|midi_dmxgus}}''' (On/Off)
+:{{c|{{CVAR|S|midi_dmxgus}}}}
+:Whether [[DMXGUS]] lumps should be parsed.
+*'''{{LE|GUS memory size|gus_memsize}}''' (Unlimited/256K/512K/768K/1024K)
+:{{c|{{CVAR|S|gus_memsize}}}}
+:Which level of patch remapping should be used. If you want to use patch remapping, be warned that generally, only the 1024K hardware was considered.
+
+==FluidSynth==
+*'''{{LE|Patch set|fluid_patchset}}''' (text field)
+:{{c|{{CVAR|S|fluid_patchset}}}}
+:File paths to the [[sound fonts]] used by FluidSynth. These can be either absolute paths, or just the filename if the patch resides in one of the directories listed in the &lt;tt&gt;[SoundfontSearch.Directories]&lt;/tt&gt; section of the [[configuration file|ini]]. The .sf2 extension can be safely omitted. Multiple patches can be specified by delimiting the paths with a ';' on Windows, or a ':' on other platforms.
+*'''{{LE|Gain|fluid_gain}}''' (0&amp;mdash;10 by 0.5 increments)
+:{{c|{{CVAR|S|fluid_gain}}}}
+:Which amount of gain is applied to the rendered MIDI sound.
+*'''{{LE|Reverb|fluid_reverb}}''' (On/Off)
+:{{c|{{CVAR|S|fluid_reverb}}}}
+:Whether FluidSynth applies {{wp|reverberation}} to the rendered MIDI sound. This is independent of the in-game [[REVERBS|reverb environments]].
+*'''{{LE|MIDI voices|fluid_voices}} (16&amp;mdash;4096 by 16 increments)
+:{{c|{{CVAR|S|fluid_voices}}}}
+:How many voices are available simultaneously for playing MIDI instruments. 16 is the minimum required by the {{wp|General MIDI}} standard.
+
+==TiMidity++==
+*'''{{LE|Path for executable|timidity_exe}} (text field)
+:{{c|{{CVAR|S|timidity_exe}}}}
+:File path to the TiMidity executable.
+*'''{{LE|Reverb|timidity_reverb}}''' (On/Off)
+:{{c|{{CVAR|S|timidity_reverb}}}}
+:Whether TiMidity++ applies {{wp|reverberation}} to the rendered MIDI sound. This is independent of the in-game [[REVERBS|reverb environments]].
+*'''{{LE|Chorus|timidity_chorus}}''' (On/Off)
+:{{c|{{CVAR|S|timidity_chorus}}}}
+:Whether TiMidity++ should apply a {{wp|chorus effect}} to the rendered MIDI sound.
+*'''{{LE|Relative volume|timidity_mastervolume}} (0&amp;mdash;4 by 0.2 increments)
+:{{c|{{CVAR|S|timidity_mastervolume}}}}
+:Adjusts the volume of the MIDI sound produced by TiMidity++. This is combined with the general music volume.
+
+==WilMIDI==
+*'''{{LE|WildMidi config file|wildmidi_config}} (text field)
+:{{c|{{CVAR|S|wildmidi_config}}}}
+:File path to the WildMIDI configuration file.
+*'''{{LE|Reverb|wildmidi_reverb}}''' (On/Off)
+:{{c|{{CVAR|S|wildmidi_reverb}}}}
+:Whether WildMIDI applies {{wp|reverberation}} to the rendered MIDI sound. This is independent of the in-game [[REVERBS|reverb environments]].
+
+[[Category:Menus]]</text>
+    <sha1>i4qgc3aii2vmmysa5gfk7m4ahg27zu1</sha1>
+  </revision>
+</page>

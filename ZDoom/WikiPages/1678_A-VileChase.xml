@@ -1,0 +1,47 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>A VileChase</title>
+  <ns>0</ns>
+  <id>1678</id>
+  <revision>
+    <id>47242</id>
+    <parentid>36133</parentid>
+    <timestamp>2020-03-18T15:35:44Z</timestamp>
+    <contributor>
+      <username>Gez</username>
+      <id>1283</id>
+    </contributor>
+    <minor />
+    <comment>doomwiki link</comment>
+    <origin>47242</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="920" sha1="65ng6zjh3ivo68lt5dl25nf260k0yyt" xml:space="preserve">{{codepointer|Monster AI}}'''A_VileChase'''
+{{doomwiki|A_VileChase}}
+
+(no parameters)
+
+{{superseded|A_Chase}}
+
+==Usage==
+This function makes the calling actor advance on its target. The actor may enter an attack state (if it has one) at any time. If the calling actor comes into contact with a corpse, it will enter the “'''Heal'''” state (if one exists) and resurrect the actor in question (provided the actor being revived has a “'''Raise'''” state defined).
+
+The function is named after Doom II's {{Class|Archvile}}, where the “healing” ability originated from.
+
+== Examples ==
+The archvile uses [[A_VileChase]] since it is able to revive monsters, entering its heal state whenever
+it comes across the corpse of a monster that can be revived.
+ ACTOR {{Class|Archvile}} 64
+ {
+   States
+   {
+   See:
+     VILE AABBCCDDEEFF 2 [[A_VileChase]]
+     Loop
+   Heal:
+     VILE "[\]" 10 Bright
+     Goto See
+   }
+ }</text>
+    <sha1>65ng6zjh3ivo68lt5dl25nf260k0yyt</sha1>
+  </revision>
+</page>

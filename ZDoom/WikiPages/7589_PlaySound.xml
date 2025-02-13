@@ -1,0 +1,42 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>PlaySound</title>
+  <ns>0</ns>
+  <id>7589</id>
+  <revision>
+    <id>47607</id>
+    <parentid>46730</parentid>
+    <timestamp>2020-05-31T14:05:45Z</timestamp>
+    <contributor>
+      <username>Blue Shadow</username>
+      <id>2021</id>
+    </contributor>
+    <minor />
+    <origin>47607</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="1838" sha1="12v1d9ahsbhd3uq3aoc79s59b4i9n1j" xml:space="preserve">void '''PlaySound''' (int ''tid'', str ''sound'' [, int ''channel'' [, fixed ''volume'' [, bool ''looping'' [, fixed ''attenuation'' [, bool ''local'']]]]])
+
+== Usage ==
+Plays a sound at a thing. This is similar to {{c|[[A_PlaySound]]}} [[action functions|action function]] except it will not default to playing {{c|"weapons/pistol"}} sound. If ''[[TID|tid]]'' is 0, the sound will be played by the activator of the script.
+
+=== Parameters ===
+*''tid'': the [[TID]] of the actor to play the sound from.
+*''sound'': the sound to play, as defined in [[SNDINFO]].
+*''channel'': the [[Sound channels|channel]] to play the sound on. Default is {{c|{{Const|CHAN_BODY}}}}.
+*''volume'': the volume of the sound. This ranges from 0.0 (mute) to 1.0 (full volume). Default is 1.0.
+*''looping'': whether the sound should loop or not. If ''true'', the sound loops, otherwise it does not. Default is ''false''.
+*''attenuation'': how quickly the sound fades with distance from its source. The higher the value the quicker the sound fades out. The following are the standard attenuation values:
+**'''ATTN_NONE'''&amp;nbsp;&amp;mdash; 0 (no attenuation; the sound can be heard regardless of the distance).
+**'''ATTN_NORM'''&amp;nbsp;&amp;mdash; 1.0 (normal attenuation; this is the default value).
+**'''ATTN_IDLE'''&amp;nbsp;&amp;mdash; 1.001
+**'''ATTN_STATIC'''&amp;nbsp;&amp;mdash; 3.0 (the sound diminish very rapidly with distance).
+*''local'': If ''true'', the sound is played if the player is either looking out the eyes of the actor from which the sound is coming, or said actor is the player and the player is looking out the eyes of a non-[[monster]] actor. Also, the sound is played with ATTN_NONE. Default is ''false''.
+
+== Examples ==
+*[https://www.mediafire.com/file/hiu3eq8gafaaop1/play_a_sound.wad/file   Example map : Play some sounds ]
+
+
+[[category:ACS Sound functions]]</text>
+    <sha1>12v1d9ahsbhd3uq3aoc79s59b4i9n1j</sha1>
+  </revision>
+</page>

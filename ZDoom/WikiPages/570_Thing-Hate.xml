@@ -1,0 +1,105 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>Thing Hate</title>
+  <ns>0</ns>
+  <id>570</id>
+  <revision>
+    <id>32902</id>
+    <parentid>31012</parentid>
+    <timestamp>2012-05-14T11:00:48Z</timestamp>
+    <contributor>
+      <username>Gez</username>
+      <id>1283</id>
+    </contributor>
+    <minor />
+    <comment>oldref</comment>
+    <origin>32902</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="4654" sha1="4g4msp5casp1azvzyhquv26jcbhe44x" xml:space="preserve">{{DISPLAYTITLE:Thing_Hate}}
+{{Special|177|hater, hatee, type|Thing|Hate}}
+
+* ''hater'': the TID of the hater ''(monster that will hate and attack)''
+* ''hatee'': the TID of the hatee ''(monster that is to be hated by the hater)''
+* ''type'': the type of hate that this will be:
+*:0&amp;nbsp;&amp;mdash; Just hate one specific actor
+*:1&amp;nbsp;&amp;mdash; Hate actors with given TID and attack players when shot
+*:2&amp;nbsp;&amp;mdash; Same as 1, but will go after enemies without seeing them first
+*:3&amp;nbsp;&amp;mdash; Hunt actors with given TID and also players
+*:4&amp;nbsp;&amp;mdash; Same as 3, but will go after monsters without seeing them first
+*:5&amp;nbsp;&amp;mdash; Hate actors with given TID and ignore player attacks
+*:6&amp;nbsp;&amp;mdash; Same as 5, but will go after enemies without seeing them first
+
+==Usage==
+
+This forces a thing to hate another thing. If set for monsters, it will cause that monster to go after the hatee rather than the player. Both the hatee and the hater must be alive and have at least 1 health for this to have any effect. Note that if the hater is friendly to the player, it will do nothing.
+
+A TID of 0 refers to the activator of a script. As this is often the player, this means you can use '''Thing_Hate(tid, 0, 4)''' to make a monster go after a player without seeing him first.
+
+The various types of hate have slight differences, described in detail here. By “distracted”, it is meant that the monster is shot by the player and it changes its target of attack. The player can harm the monster without changing its target, but it will attack the player after its current target is defeated.
+
+;Type 0
+:The monster will waken and attack the target. If distracted it will also attack the player. Assuming it wins and is not distracted, it will return to being a normal monster afterwards.
+
+;Type 1
+:The monster will attack the target upon sight. If distracted, it will also attack the player. Assuming it wins and is not distracted, it will return to sleep afterwards and ignore the player unless it is harmed.
+
+;Type 2
+:The monster will waken and attack the target. If distracted, it will also attack the player. Assuming it wins and is not distracted, it will return to sleep afterwards and ignore the player unless it is harmed.
+
+;Type 3
+:The monster will attack the target upon sight. If distracted, it will also attack the player. Assuming it wins and is not distracted, it will return to being a normal monster afterwards.
+
+;Type 4
+:The same as type 0.
+
+;Type 5
+:The monster will attack the target upon sight. It will never attack the player before or after.
+
+;Type 6
+:The monster will waken and attack the target. It will never attack the player before or after.
+
+Although it seems a bit complicated, there are three basic types with a slight variation for each. These are: attack like a demon (3 and 4), attack like an ally to the player (5 and 6), and attack like an ally of the player unless friendly fire occurs (1 and 2). The slight variation is to waken the monster (even numbers) or not (odd numbers).
+
+==Examples==
+
+This script makes all monster with thing id of 100 waken and try to attack the player at the start of the map:
+
+ script 1 ENTER
+ {
+ 	Thing_Hate(100, 0, 0);
+ }
+
+This script uses “ENTER” instead of “OPEN” because OPEN is run by the map, but ENTER is run by each player on entering the map. See [[script types]].
+
+As this script is very simple and only uses one command, '''Thing_Hate''' could be invoked with a switch, a line or a thing such an [[Thing executed specials|Actor enters sector]] thing rather than by a script such as this.
+
+----
+
+The following script runs a cutscene where some marines attack some demons. It takes three parameters, the TID of the marines, the TID of the demons, and the TID of a camera to show the action from.
+
+ script 1 (int marines, int demons, int cam)
+ {
+ 	[[ChangeCamera]](cam, 1, 0);
+ 	[[PrintBold]](s:"The marines are storming\n
+ 		the demon's stronghold!");
+ 
+ 	Thing_Hate(marines, demons, 6);
+ 	Thing_Hate(demon, marines, 3);
+ 
+ 	[[Delay]](35*10);
+ 
+ 	ChangeCamera(0, 1, 0);
+ }
+
+The first two lines set up the cutscene to a [[Classes:SecurityCamera|camera]] and explain what is happening. The '''Thing_Hate''' lines set up the battle. The marines are awakened and set to be allies of the player. The demons are idle, but will attack the marines or player on sight. This gives the illusion of the marines acting like other players. The last two lines let the action unfold a little then end the cutscene.
+
+Note that groups of enemies can be made to fight using '''Thing_Hate''' in such a way.
+
+== See also ==
+*[[Classes:HateTarget|HateTarget]]
+
+==External links==
+* {{oldref}}</text>
+    <sha1>4g4msp5casp1azvzyhquv26jcbhe44x</sha1>
+  </revision>
+</page>

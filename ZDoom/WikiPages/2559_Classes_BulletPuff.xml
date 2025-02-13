@@ -1,0 +1,78 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>Classes:BulletPuff</title>
+  <ns>0</ns>
+  <id>2559</id>
+  <revision>
+    <id>53639</id>
+    <parentid>48902</parentid>
+    <timestamp>2024-11-08T12:06:02Z</timestamp>
+    <contributor>
+      <username>Jekyll Grim Payne</username>
+      <id>2175</id>
+    </contributor>
+    <origin>53639</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="1382" sha1="efcuul79lqh7bluwq5duhsl97e5fr7w" xml:space="preserve">{{Actor|
+| type = Explosive
+| name = Bullet puff
+| class = BulletPuff
+| game = Doom
+| spawnid = 131
+| spawnname = T_PUFF 
+}}[[Classes]]: &lt;u&gt;BulletPuff&lt;/u&gt;
+
+A '''[[puff]]''' actor spawned by weapon and monster hitscan attacks (i.e. bullets) in Doom. Note that you are ''not'' required to inherit from this class to create your own puffs; puffs are just regular actors and don't need to inherit from a specific class. See the '''[[Puff]]''' pages for details on puff behavior.
+
+==== [[ZScript]] definition ====
+{{ZScriptDefinitionNote|actors/doom/doommisc.zs#L54}}
+ class BulletPuff : Actor
+ {
+ 	Default
+ 	{
+ 		+{{Flag|NOBLOCKMAP}}
+ 		+{{Flag|NOGRAVITY}}
+ 		+{{Flag|ALLOWPARTICLES}}
+ 		+{{Flag|RANDOMIZE}}
+ 		+{{Flag|ZDOOMTRANS}}
+ 		{{Property|RenderStyle}} "Translucent";
+ 		{{Property|Alpha}} 0.5;
+ 		{{Property|VSpeed}} 1;
+ 		{{Property|Mass}} 5;
+ 	}
+ 	States
+ 	{
+ 	Spawn:
+ 		PUFF A 4 Bright;
+ 		PUFF B 4;
+ 	Melee:
+ 		PUFF CD 4;
+ 		Stop;
+ 	}
+ }
+==== [[DECORATE]] definition ====
+{{DecorateDefinitionNote}}
+ ACTOR &lt;u&gt;BulletPuff&lt;/u&gt;
+ {
+   +{{Flag|NOBLOCKMAP}}
+   +{{Flag|NOGRAVITY}}
+   +{{Flag|ALLOWPARTICLES}}
+   +{{Flag|RANDOMIZE}}
+   {{Property|RenderStyle}} Translucent
+   {{Property|Alpha}} 0.5
+   {{Property|VSpeed}} 1
+   {{Property|Mass}} 5
+   States
+   {
+   Spawn:
+     PUFF A 4 Bright
+     PUFF B 4
+     // Intentional fall-through
+   Melee:
+     PUFF CD 4
+     Stop
+   }
+ }</text>
+    <sha1>efcuul79lqh7bluwq5duhsl97e5fr7w</sha1>
+  </revision>
+</page>

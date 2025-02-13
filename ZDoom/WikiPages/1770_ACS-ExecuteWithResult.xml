@@ -1,0 +1,144 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>ACS ExecuteWithResult</title>
+  <ns>0</ns>
+  <id>1770</id>
+  <revision>
+    <id>50130</id>
+    <parentid>50129</parentid>
+    <timestamp>2023-02-07T02:47:02Z</timestamp>
+    <contributor>
+      <username>Boondorl</username>
+      <id>2606</id>
+    </contributor>
+    <minor />
+    <comment>/* Return values in ZScript */</comment>
+    <origin>50130</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="5094" sha1="lgi81czfyo36syesa422c7n44tyatzf" xml:space="preserve">{{DISPLAYTITLE:ACS_ExecuteWithResult}}
+{{Special|84|script, s_arg1, s_arg2, s_arg3, s_arg4|ACS|ExecuteWithResult}}
+==Usage==
+
+This is like [[ACS_ExecuteAlways]], except the [[script]] is always run on the current map, and the return value is whatever the [[script]] sets with [[SetResultValue]].
+
+=== Parameters ===
+* ''script'': Script to execute 
+* ''s_arg1'': First argument passed to the script 
+* ''s_arg2'': Second argument passed to the script 
+* ''s_arg3'': Third argument passed to the script 
+* ''s_arg4'': Fourth argument passed to the script
+
+==Examples==
+
+This special has a slightly unusual behaviour as most scripts are not designed to functionally return a value. It is possible, however. The syntax fits together like this:
+
+ script 1 (void)
+ {
+     [[Print]](d:[[ACS_ExecuteWithResult]](2, 0, 0, 0)); //prints 667
+ }
+ 
+ script 2 (void)
+ {
+     [[SetResultValue]](667);
+ }
+
+The point of creating a script like this is slightly overlooked by the use of [[functions]]. Functions cannot use [[Delay]] or other waiting commands. '''ACS_ExecuteWithResult''' can use them, but the result has to be decided before they are used. This means that '''ACS_ExecuteWithResult''' is sort of like a hybrid between a normal script and a function.
+
+The purpose of this special would be to have other time-dependent events happen after the result is determined.
+
+Another notable use of '''ACS_ExecuteWithResult''' is with switch animations. If the result value of the executed script is '''FALSE''', the switch animation and sound will not play when the switch is hit. If the result is '''TRUE''', the switch will animate. One example might be a switch which only responds to a specific weapon. Normally, any line marked as projectile activated will play a switch animation when hit by any weapon. Setting up a script like the following allows for more pleasing behavior. The switch only animates when it is hit with the pistol:
+
+ script 1 (void)
+ {
+     if( [[CheckWeapon]]("{{class|Pistol}}") ) {
+         [[Print]](s:"You shot me with the pistol.");
+         [[SetResultValue]]( {{const|TRUE}} ); // Cause the switch to animate
+     } else {
+         [[SetResultValue]]( {{const|FALSE}} ); // The switch will not animate if you use another weapon
+     }
+ }
+
+
+'''ACS_ExecuteWithResult''' can also be used in [[DECORATE expressions]]:
+
+ actor ReloadingPistol : {{class|Weapon}}
+ {
+   states
+   {
+   Ready:
+     PISG A 0 [[A_JumpIfInventory]] ("PistolClip", 0, 2)
+     PISG A 0 [[A_JumpIf]](1 == ([[ACS_ExecuteWithResult]](999,0,0,0)), "Reload")
+     PISG A 1 [[A_WeaponReady]]
+     loop
+   }
+ }
+
+== Return values in ZScript ==
+
+Similar to DECORATE, this function can also be used in ZScript and returns an integer. There are a few ways to convert this integer to different types making it less limiting than it may appear.
+
+==== Booleans ====
+
+Booleans are, internally, just an integer that can be a value of 0 or 1. In this case, setting the result value to TRUE or FALSE will handle it.
+
+ // In ACS
+ SetResultValue(TRUE);
+
+ // In ZScript
+ bool result = ACS_ExecuteWithResult(/*..*/);
+
+==== Floating points ====
+
+Floating point values in ACS are stored as 16-bit fixed point integers. What this means is that the actual number is multiplied by 2&lt;sup&gt;16&lt;/sup&gt;, reserving 16 bits for the whole portion and 16 bits for the fractional portion. Returning a floating point value from ACS will return it as a 16-bit fixed point integer, so to convert it, all that needs to be done is dividing it by 2&lt;sup&gt;16&lt;/sup&gt;.
+
+ // In ACS
+ SetResultValue(5.2);
+
+ // In ZScript
+ // Make sure the number you're dividing by is a floating point number to prevent
+ // integer division which will remove the fractional portion
+ double result = ACS_ExecuteWithResult(/*..*/) / 65536.0;
+
+==== Strings/Sounds/Names ====
+
+Strings are returned as their index in the global ACS string table. Using '''LookupString()''' they can be converted back to the string and then implicitly converted to Names and Sounds as well.
+
+ // In ACS
+ SetResultValue("MyResult");
+
+ // In ZScript
+ string result = level.LookupString(ACS_ExecuteWithResult(/*..*/));
+ 
+ // Implicit conversions
+ Name result = level.LookupString(ACS_ExecuteWithResult(/*..*/));
+ Sound result = level.LookupString(ACS_ExecuteWithResult(/*..*/));
+
+==== TextureIDs ====
+
+While texture ids cannot be returned directly, a string holding the texture name can, which can then be converted.
+
+ // In ACS
+ SetResultValue("TEXNAME");
+
+ // In ZScript
+ TextureID result = TexMan.CheckForTexture(level.LookupString(ACS_ExecuteWithResult(/*..*/)));
+
+==== Colors ====
+
+In ZScript, a color is treated very similarly to an integer. Hex values in particular are useful for setting colors since each ARGB channel refers to 8 bits in the integer:
+
+ 0x  00   00   00   00
+   alpha red green blue
+
+ // In ACS
+ SetResultValue(0xFFFF0000); // Returns fully opaque red
+
+ // In ZScript
+ Color result = ACS_ExecuteWithResult(/*..*/);
+
+Also, unlike the other ACS specials, '''ACS_ExecuteWithResult''' can pass a fourth script parameter, making it useful as a line special.
+
+{{script functions}}</text>
+    <sha1>lgi81czfyo36syesa422c7n44tyatzf</sha1>
+  </revision>
+</page>

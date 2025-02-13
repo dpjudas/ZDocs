@@ -1,0 +1,92 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>Installation and execution of ZDoom</title>
+  <ns>0</ns>
+  <id>1510</id>
+  <revision>
+    <id>48503</id>
+    <parentid>44881</parentid>
+    <timestamp>2021-04-10T09:31:50Z</timestamp>
+    <contributor>
+      <username>Gez</username>
+      <id>1283</id>
+    </contributor>
+    <minor />
+    <comment>/* Logfile */</comment>
+    <origin>48503</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="6491" sha1="aooitmz7n2jrfa3rgmjpds3wzk7gusi" xml:space="preserve">==How to install ZDoom==
+
+# Download the latest [[GZDoom]] (currently {{latest}}). Alternatively, you can get an unofficial development build from [http://devbuilds.drdteam.org/ DRD Team].
+# Extract all the files from the ZIP file into a new directory.
+# When using a new folder make sure to include an [[IWAD]] in the ZDoom directory. Alternatively, you can set the DOOMWADDIR {{wp|environment_variable|environment variable}} to point to the directory in which the IWADs are kept. Furthermore, if you obtained Doom-engine games through {{dw|GOG.com}} or {{dw|Steam}}, ZDoom can find them automatically. Finally, additional directories can be added by editing the &lt;tt&gt;[IWADSearch.Directories]&lt;/tt&gt; section of the [[configuration file|ini]].
+
+===Mac OS X Instructions===
+
+# Copy the included app bundle to your applications directory.
+# IWAD files should be placed in your Library folder.
+
+==How to start ZDoom==
+To play an unmodified game, simply double-click gzdoom.exe, or a shortcut to it, or call it from a command line. If several [[IWAD]]s are found, a [[IWAD selection box|selection screen]] will show up asking you which game you want to play.
+
+For playing mods, you need to tell ZDoom to load the relevant mod files. Since ZDoom does not integrate a [[frontend]] for choosing mods, the following are just a series of standard methods to open an executable with one or several files as parameters. These methods are for Windows; for Linux or Mac OS X you will have to extrapolate.
+
+===Using a frontend===
+This might be the best method. Select a [[frontend]] and install it. Instead of starting ZDoom directly, start the frontend. This will let you select which mod to load and set additional [[command line parameters]] as well. Refer to the frontend's documentation.
+
+===Drag-and-drop===
+The simplest method. Select the mod files to load, and then drag and drop them over ZDoom's executable. If the mod files are not in the same directory as ZDoom, you will need to open a file manager window in each directory. You can also drag the mod file over a shortcut to the ZDoom executable.
+
+===Send to===
+Add a shortcut to ZDoom in your SendTo folder. Depending on the version of Windows you use, the path to the SendTo folder may differ. In XP, it is in C:\Documents and Settings\&lt;userid&gt;\SendTo. For Vista or later, it is in %APPDATA%\Microsoft\Windows\SendTo.
+
+Simply add a shortcut to ZDoom in that folder, and now you can right-click-&gt;send to-&gt;ZDoom any file you want. You can edit the shortcut to add [[command line parameters]] to it as well.
+
+Note that you may need to set Windows Explorer to show hidden and system files for it to accept to show you the SendTo folder.
+
+===Open with===
+In Windows Explorer, select Tools -&gt; Folder Options, then under "File Types" associate the file types ''wad'' with gzdoom.exe. (If .wad is not listed in the "Extension" column, click on "New" to create it.) Once this is done, you can double-click on a wad file and it'll launch ZDoom with that file automatically. If the file type is associated with several programs (for example, ZDoom and other [[source port]]s), then use '''right-click -&gt; Open With''' to select ZDoom.
+
+You have to do this for each file type that can be loaded in ZDoom (wad, pk3, zip...).
+
+===Shell extension===
+You can create shell extensions in Windows Explorer to make new context menu entries. As for the "Open With" method, select Tools -&gt; Folder Options, then under 'File Types', select the wad extension (if it is not already present, create it), then click on "Advanced" near it. Click "New..." to create a new action. In the "Action" field, describe what you want the shell extension to display, for example, "Play with ZDoom". In the "Application used to perform action" field, place an instruction for the shell extension to activate, with the full path to gzdoom.exe (between quotes if there are spaces in a directory name), followed by -file "%1".
+
+Right clicking on WAD files should now list whatever you marked earlier in the '''Action''' field, and should perform the action listed in the second field. Again, you will have to do this for each file type.
+
+===With the command line===
+A simple command line window can be shown with Start-&gt;Run (or the Windows key + R keyboard shortcut). Click on "Browse" to find gzdoom.exe, and then you can add [[command line parameters]] as needed; for example to load "foobar.wad" from the same directory, simply add "foobar.wad" after gzdoom.exe on that command line.
+
+Another possibility is to open a command line window. With Vista or 7, hold shift while right-clicking in an empty area of the ZDoom folder, or on the ZDoom folder itself. The "Open command window here" option will appear. You can now type your command line with the appropriate parameters, as explained above.
+
+===With batch files===
+You can create {{wp|batch_file|batch files}} for combinations of mods and other command line parameters that you use often. Just type the command line in a text file, rename it with a .bat extension, and then you can double-click on the batch file.
+
+Note that you may need to set Windows Explorer not to hide known file extensions in order to actually change a text file's extension from .txt to .bat.
+
+===Logfile===
+When ZDoom or GZDoom begins to load it sets up the required environment and checks for possible errors. This is reflected in a log which quickly scrolls down the screen just before the menu is shown.
+
+While there are several methods to access this log, the two most useful methods are:
+# start the program with a batch file, which contains ' gzdoom +logfile mylog.txt '
+# in the ZDoom directory, create a file named autoexec.cfg and in it put this text line: ' logfile mylog.txt '
+
+Then, every time ZDoom or GZDoom is started, the text file ' mylog.txt ' is generated.
+
+Note: instead of mylog.txt you can call it whatever seems appropriate, eg ' startup.txt '
+
+===Using the terminal (for Mac OS X)===
+To start ZDoom from Mac OS X's Terminal, you must navigate inside GZDoom.app first. The actual executable program file is in /GZDoom.app/Content/MacOS/. To run it, navigate to that folder and type this:
+ ./gzdoom -file (files.wad)
+ZDoom for Mac OS X will display the same IWAD selection box as any other version of ZDoom.
+
+== Related Links ==
+
+* {{plainlink|[http://zdoom.org/Download Official ZDoom download page]}} - Official builds and source packages
+
+* [http://devbuilds.drdteam.org/gzdoom/ DRDteam] - Development builds
+
+[[Category:Guides]]</text>
+    <sha1>aooitmz7n2jrfa3rgmjpds3wzk7gusi</sha1>
+  </revision>
+</page>

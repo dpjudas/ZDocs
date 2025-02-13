@@ -1,0 +1,52 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>DECORATE format specifications</title>
+  <ns>0</ns>
+  <id>1049</id>
+  <revision>
+    <id>52163</id>
+    <parentid>42607</parentid>
+    <timestamp>2024-04-01T23:22:39Z</timestamp>
+    <contributor>
+      <username>Jekyll Grim Payne</username>
+      <id>2175</id>
+    </contributor>
+    <origin>52163</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="3292" sha1="fg8b6rc7rc6mquahvn2q3hw9taqbsdp" xml:space="preserve">{{WarnDecorateDeprecated}}
+
+This page describes the format to create a new [[actor]] in the [[DECORATE]] lump:
+
+ actor ''classname'' [ : ''parentclassname''] [replaces ''replaceclassname''] [''doomednum'']
+ {
+   ''properties''
+   ''flags''
+   ...
+ }
+
+* ''classname''
+** The name this new actor is referenced by in the game. While ZDoom will accept a much larger range of values for the name, this should for best compatibility be a valid identifier (alphanumeric plus underscores, but not starting with a digit).
+* ''parentclassname''
+** The name of a parent class this new actor inherits its attributes from (optional). If none is specified, the parent class is {{Class|Actor}}.
+* ''replaceclassname''
+** The name of the class this class replaces (optional). This works at a higher level than using duplicate ''doomednum''s and will affect all attempts to spawn the replaced actor in the map. However, this does not affect effect that create the actor through other means, such as giving an [[Creating new inventory items|inventory item]] directly to a player. Player actors are handled differently from other actors, so this method also does not work for [[Creating new player classes|custom player classes]]. Skill definitions may specify other replacement for an actor, and occurs prior to Decorate replacement.
+* ''doomednum''
+** [[Editor number]] for this actor (optional). This is the number used to distinguish the actor from other [[thing]]s in map. If the actor is intended to be placed in a map editor, it should have an editor number. The actual number value is generally arbitrary but should avoid conflicting with [[standard editor numbers|already used numbers]].
+
+An actor definition consists of [[Actor properties|properties]], [[Actor flags|flags]] and [[Actor states|state definitions]]. In the state definitions you can call [[Action functions]].
+
+Actor properties and flags define the general behavior of an actor.
+
+States define the various sprite animations of an actor.
+
+Action functions (also known as "code pointers") cause the actor to perform some particular action when the frame that calls them is shown. They form the basis of almost all enemy and weapon behavior in the game. Instead of using one of the special action functions you can also use almost any [[action special]] that is available in [[ACS]].
+
+Comments are supported. Both types of C-style comments ({{c|//}} to end of line, and {{c|/*}} to {{c|*/}}) are allowed. While not part of the specification, certain [[editing tools]], such as [[Doom Builder]] and [[SLADE 3]], make use of specific comments for special purposes, these usually start with {{c|//$}}.
+
+== Including Decorate scripts into others ==
+Using the {{c|#include "&lt;full_path_and_lump_name&gt;"}} directive, you can include other Decorate scripts, for example, if you wanted to organize your data into subfolders; a common practice is to place Decorate lumps into {{c|actors/}} subfolder of a {{c|[[PK3]]}}-file, leaving only the main {{c|decorate.txt}} in the root directory, that includes them. That also allows to precisely set the loading order of lumps, in case of some actors used in several places, in order to avoid loading errors. The directive may appear in any place other than actor definition.
+
+[[Category:DECORATE guides| ]]</text>
+    <sha1>fg8b6rc7rc6mquahvn2q3hw9taqbsdp</sha1>
+  </revision>
+</page>

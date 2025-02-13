@@ -1,0 +1,188 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>Classes:PowerInvulnerable</title>
+  <ns>0</ns>
+  <id>2832</id>
+  <revision>
+    <id>53736</id>
+    <parentid>38413</parentid>
+    <timestamp>2024-11-13T12:41:06Z</timestamp>
+    <contributor>
+      <username>Jekyll Grim Payne</username>
+      <id>2175</id>
+    </contributor>
+    <origin>53736</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="3931" sha1="ldn5lg15pi3c2ldd557heqv5i4vcesl" xml:space="preserve">{{actor|
+| type = Power
+| name = Invulnerability power
+| class = PowerInvulnerable
+}}[[Classes]]: [[Classes:Inventory|Inventory]]&amp;rarr;[[Classes:Powerup|Powerup]]&amp;rarr;&lt;u&gt;PowerInvulnerable&lt;/u&gt;&lt;br&gt;
+&amp;ensp;&amp;ensp; [[Hierarchical class list|(more)]]
+
+{{: Powerup definition}}
+
+'''PowerInvulnerable''' prevents its owner from receiving any damage.
+
+The basic behavior can be further customized by setting the following values to its '''{{property|Powerup.Mode}}''' property:
+* {{c|'Reflective'}} — the {{flag|REFLECTIVE}} flag will be given to the owner, causing them to reflect projectiles that hit them
+* {{c|'Ghost'}} — the {{flag|NONSHOOTABLE}} flag will be given to the owner, causing any projectiles fired at them to pass through
+
+=== [[ZScript]] definition ===
+{{ZScriptDefinitionNote|actors/inventory/powerups.zs}}
+&lt;syntaxhighlight lang="csharp"&gt;
+class PowerInvulnerable : Powerup
+{
+	Default
+	{
+		Powerup.Duration -30;
+		inventory.icon "SPSHLD0";
+	}
+
+	//===========================================================================
+	//
+	// APowerInvulnerable :: InitEffect
+	//
+	//===========================================================================
+
+	override void InitEffect ()
+	{
+		Super.InitEffect();
+		Owner.bRespawnInvul = false;
+		Owner.bInvulnerable = true;
+		if (Mode == 'None' &amp;&amp; Owner is "PlayerPawn")
+		{
+			Mode = PlayerPawn(Owner).InvulMode;
+		}
+		if (Mode == 'Reflective')
+		{
+			Owner.bReflective = true;
+		}
+	}
+
+	//===========================================================================
+	//
+	// APowerInvulnerable :: DoEffect
+	//
+	//===========================================================================
+
+	override void DoEffect ()
+	{
+		Super.DoEffect ();
+
+		if (Owner == NULL)
+		{
+			return;
+		}
+		Owner.bInvulnerable = true;
+		if (Mode == 'Reflective')
+		{
+			Owner.bReflective = true;
+		}
+		if (Mode == 'Ghost')
+		{
+			if (!Owner.bShadow)
+			{
+				// Don't mess with the translucency settings if an
+				// invisibility powerup is active.
+				let alpha = Owner.Alpha;
+				if (!(Level.maptime &amp; 7) &amp;&amp; alpha &gt; 0 &amp;&amp; alpha &lt; 1)
+				{
+					if (alpha == HX_SHADOW)
+					{
+						alpha = HX_ALTSHADOW;
+					}
+					else
+					{
+						alpha = 0;
+						Owner.bNonShootable = true;
+					}
+				}
+				if (!(Level.maptime &amp; 31))
+				{
+					if (alpha == 0)
+					{
+						Owner.bNonShootable = false;
+						alpha = HX_ALTSHADOW;
+					}
+					else
+					{
+						alpha = HX_SHADOW;
+					}
+				}
+				Owner.A_SetRenderStyle(alpha, STYLE_Translucent);
+			}
+			else
+			{
+				Owner.bNonShootable = false;
+			}
+		}
+	}
+
+	//===========================================================================
+	//
+	// APowerInvulnerable :: EndEffect
+	//
+	//===========================================================================
+
+	override void EndEffect ()
+	{
+		Super.EndEffect();
+
+		if (Owner == NULL)
+		{
+			return;
+		}
+
+		Owner.bRespawnInvul = false;
+		Owner.bInvulnerable = false;
+		if (Mode == 'Ghost')
+		{
+			Owner.bNonShootable = false;
+			if (!bShadow)
+			{
+				// Don't mess with the translucency settings if an
+				// invisibility powerup is active.
+				Owner.A_SetRenderStyle(1, STYLE_Normal);
+			}
+		}
+		else if (Mode == 'Reflective')
+		{
+			Owner.bReflective = false;
+		}
+
+		if (Owner.player != NULL)
+		{
+			Owner.player.fixedcolormap = PlayerInfo.NOFIXEDCOLORMAP;
+		}
+	}
+
+	//===========================================================================
+	//
+	// APowerInvulnerable :: AlterWeaponSprite
+	//
+	//===========================================================================
+
+	override void AlterWeaponSprite (VisStyle vis, in out int changed)
+	{
+		if (Owner != NULL)
+		{
+			if (Mode == 'Ghost' &amp;&amp; !(Owner.bShadow))
+			{
+				vis.Alpha = min(0.25 + Owner.Alpha * 0.75, 1.);
+			}
+		}
+	}
+}
+&lt;/syntaxhighlight&gt;
+
+=== [[DECORATE]] definition ===
+{{DecorateDefinitionNote}}
+ ACTOR &lt;u&gt;PowerInvulnerable&lt;/u&gt; : {{Class|Powerup}} native
+ {
+   {{Property|Powerup.Duration}} -30
+   {{Property|Inventory.Icon}} "SPSHLD0"
+ }</text>
+    <sha1>ldn5lg15pi3c2ldd557heqv5i4vcesl</sha1>
+  </revision>
+</page>

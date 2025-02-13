@@ -1,0 +1,104 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>Classes:FireDemon</title>
+  <ns>0</ns>
+  <id>4452</id>
+  <revision>
+    <id>39488</id>
+    <parentid>35487</parentid>
+    <timestamp>2015-04-30T21:31:09Z</timestamp>
+    <contributor>
+      <username>Blue Shadow</username>
+      <id>2021</id>
+    </contributor>
+    <minor />
+    <comment>/* DECORATE definition */ Updated</comment>
+    <origin>39488</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="2243" sha1="armmd8h2zjo8nljxyr5uqrj5rmt69zh" xml:space="preserve">{{Actor|
+| type = Monster
+| name = Afrit
+| class = FireDemon
+| game = Hexen
+| doomednum = 10060
+| spawnid = 5
+| spawnname = T_FIREGARGOYLE 
+}}[[Classes]]: &lt;u&gt;FireDemon&lt;/u&gt;
+
+A close cousin of the [[Classes:HereticImp|gargoyles]] from Heretic, the afrit looks like a small black gargoyle wreathed in flames. It is more aggressive and mobile than the gargoyles, though, and often sends volleys of [[Classes:FireDemonMissile|fireballs]] while strafing.
+==== [[DECORATE]] definition ====
+ ACTOR &lt;u&gt;FireDemon&lt;/u&gt;
+ {
+   {{Property|Health}} 80
+   {{Property|ReactionTime}} 8
+   {{Property|PainChance}} 1
+   {{Property|Speed}} 13
+   {{Property|Radius}} 20
+   {{Property|Height}} 68
+   {{Property|Mass}} 75
+   {{Property|Damage}} 1
+   {{Property|Monster}}
+   +{{Flag|DROPOFF}}
+   +{{Flag|NOGRAVITY}}
+   +{{Flag|FLOAT}}
+   +{{Flag|FLOORCLIP}}
+   +{{Flag|INVULNERABLE}}
+   +{{Flag|TELESTOMP}}
+   {{Property|SeeSound}} "FireDemonSpawn"
+   {{Property|PainSound}} "FireDemonPain"
+   {{Property|DeathSound}} "FireDemonDeath"
+   {{Property|ActiveSound}} "FireDemonActive"
+   {{Property|Obituary}} "$OB_FIREDEMON" // "%o tasted an Afrit's fire."
+ 
+   action native [[A_FiredRocks]]();
+   action native [[A_FiredChase]]();
+   action native [[A_FiredAttack]]();
+   action native [[A_FiredSplotch]]();
+ 
+   States
+   {
+   Spawn:
+     FDMN X 5 Bright
+     FDMN EFG 10 Bright [[A_Look]]
+     Goto Spawn+1
+   See:
+     FDMN E 8 Bright
+     FDMN F 6 Bright
+     FDMN G 5 Bright
+     FDMN F 8 Bright
+     FDMN E 6 Bright
+     FDMN G 7 Bright [[A_FiredRocks]]
+     FDMN HI 5 Bright
+     FDMN J 5 Bright [[A_UnSetInvulnerable]]
+   Chase:
+     FDMN ABC 5 Bright [[A_FireDChase]]
+     Loop
+   Pain:
+     FDMN D 0 Bright [[A_UnSetInvulnerable]]
+     FDMN D 6 Bright [[A_Pain]]
+     Goto Chase
+   Missile:
+     FDMN K 3 Bright [[A_FaceTarget]]
+     FDMN KKK 5 Bright [[A_FiredAttack]]
+     Goto Chase
+   Crash:
+   XDeath:
+     FDMN M 5 [[A_FaceTarget]]
+     FDMN N 5 [[A_NoBlocking]]
+     FDMN O 5 [[A_FiredSplotch]]
+     Stop
+   Death:
+     FDMN D 4 Bright [[A_FaceTarget]]
+     FDMN L 4 Bright [[A_Scream]]
+     FDMN L 4 Bright [[A_NoBlocking]]
+     FDMN L 200 Bright
+     Stop
+   Ice:
+     FDMN R 5 [[A_FreezeDeath]]
+     FDMN R 1 [[A_FreezeDeathChunks]]
+     Wait
+   }
+ }</text>
+    <sha1>armmd8h2zjo8nljxyr5uqrj5rmt69zh</sha1>
+  </revision>
+</page>

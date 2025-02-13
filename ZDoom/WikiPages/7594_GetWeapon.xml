@@ -1,0 +1,57 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>GetWeapon</title>
+  <ns>0</ns>
+  <id>7594</id>
+  <revision>
+    <id>48815</id>
+    <parentid>40906</parentid>
+    <timestamp>2021-10-13T03:25:59Z</timestamp>
+    <contributor>
+      <username>Blue Shadow</username>
+      <id>2021</id>
+    </contributor>
+    <comment>more info + formatting + styling</comment>
+    <origin>48815</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="1531" sha1="9xmjcpgk8pforr5qwcy8mwczqt8n7ty" xml:space="preserve">str '''GetWeapon''' (void)
+
+==Usage==
+Retrieves the class name of the [[weapon]] currently equipped by the script activator. As only the player can have weapons, the function returns meaningful results only if the activator is a player.
+
+===Return value===
+Returns the class name of the weapon currently equipped by the script activator, as a string, if the activator is a player. If not, the function returns {{c|"None"}}.
+
+==Examples==
+This script gives the player a little bit of ammunition depending on the currently equipped weapon.
+ script "AmmoProvider" (void)
+ {
+     str weapon = [[GetWeapon]]();
+ 
+     if ([[StrIcmp]](weapon, "{{Class|Pistol}}") == 0 || StrIcmp(weapon, "{{Class|Chaingun}}") == 0)
+     {
+         [[GiveInventory]]("{{Class|Clip}}", 10);
+         [[Log]](s:"Received a clip.");
+     }
+     else if (StrIcmp(weapon, "{{Class|Shotgun}}") == 0 || StrIcmp(weapon, "{{Class|SuperShotgun}}") == 0)
+     {
+         GiveInventory("{{Class|Shell}}", 4);
+         Log(s:"Received 4 shotgun shells.");
+     }
+     else if (StrIcmp(weapon, "{{Class|RocketLauncher}}") == 0)
+     {
+         GiveInventory("{{Class|RocketAmmo}}", 1);
+         Log(s:"Received a rocket.");
+     }
+     else if (StrIcmp(weapon, "{{Class|PlasmaRifle}}") == 0 || StrIcmp(weapon, "{{Class|BFG9000}}") == 0)
+     {
+         GiveInventory("{{Class|Cell}}", 20);
+         Log(s:"Received an energy cell.");
+     }
+     else [[Print]](s:"A firearm needs to be equipped first to receive ammo for it");
+ }
+
+[[category:ACS Information functions]]</text>
+    <sha1>9xmjcpgk8pforr5qwcy8mwczqt8n7ty</sha1>
+  </revision>
+</page>

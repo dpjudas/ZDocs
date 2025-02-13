@@ -1,0 +1,142 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>Classes:PowerupGiver</title>
+  <ns>0</ns>
+  <id>2728</id>
+  <revision>
+    <id>53743</id>
+    <parentid>51713</parentid>
+    <timestamp>2024-11-13T12:59:45Z</timestamp>
+    <contributor>
+      <username>Jekyll Grim Payne</username>
+      <id>2175</id>
+    </contributor>
+    <origin>53743</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="5894" sha1="ajs5mfhrmltyucbu82o41d6op6k89t1" xml:space="preserve">{{Actor|
+| type = Internal
+| name = Inventory
+| class = Inventory
+}}[[Classes]]: [[Classes:Inventory|Inventory]]&amp;rarr;&lt;u&gt;PowerupGiver&lt;/u&gt;&lt;br&gt;
+&amp;ensp;&amp;rarr;[[Classes:ArtiFly|ArtiFly]]&lt;br&gt;
+&amp;ensp;&amp;rarr;[[Classes:ArtiInvisibility|ArtiInvisibility]]&lt;br&gt;
+&amp;ensp;&amp;rarr;[[Classes:ArtiInvulnerability|ArtiInvulnerability]]&lt;br&gt;
+&amp;ensp;&amp;rarr;[[Classes:ArtiInvulnerability2|ArtiInvulnerability2]]&lt;br&gt;
+&amp;ensp;&amp;rarr;[[Classes:ArtiSpeedBoots|ArtiSpeedBoots]]&lt;br&gt;
+&amp;ensp;&amp;rarr;[[Classes:ArtiTomeOfPower|ArtiTomeOfPower]]&lt;br&gt;
+&amp;ensp;&amp;rarr;[[Classes:ArtiTorch|ArtiTorch]]&lt;br&gt;
+&amp;ensp;&amp;rarr;[[Classes:BlurSphere|BlurSphere]]&lt;br&gt;
+&amp;ensp;&amp;rarr;[[Classes:EnvironmentalSuit|EnvironmentalSuit]]&lt;br&gt;
+&amp;ensp;&amp;rarr;[[Classes:Infrared|Infrared]]&lt;br&gt;
+&amp;ensp;&amp;rarr;[[Classes:InvulnerabilitySphere|InvulnerabilitySphere]]&lt;br&gt;
+&amp;ensp;&amp;rarr;[[Classes:RadSuit|RadSuit]]&lt;br&gt;
+&amp;ensp;&amp;rarr;[[Classes:Scanner|Scanner]]&lt;br&gt;
+&amp;ensp;&amp;rarr;[[Classes:ShadowArmor|ShadowArmor]]&lt;br&gt;
+&amp;ensp;&amp;rarr;[[Classes:Targeter|Targeter]]&lt;br&gt;
+
+A &lt;u&gt;PowerupGiver&lt;/u&gt; is used to give one of the existing powerups to the player using or picking up this item. &lt;u&gt;PowerupGiver&lt;/u&gt; is never used directly, it is only used as a base class for many predefined inventory items (e.g. the [[Classes:BlurSphere|partial invisibility sphere]] of Doom) or as a base to define new powerup pickups.
+
+{{Note|If you're designing a custom powerup that is ''not'' meant to be spawned on the map, and instead is only meant to be given to the player directly (via scripts), defining a powerup giver for that powerup is unnecessary. Just make a powerup based on the {{class|Powerup}} class and use it directly. The sole function of a powerup giver is to be a ''pickup'' for a specific powerup; if there's no pickup, there's no need for a powerup giver.}}
+
+Powerup givers can be either placed in the player's inventory and then activated manually (this is how they work in [[Classes:Heretic#Powerups|Heretic]], for example), or, if they have the {{flag|INVENTORY.AUTOACTIVATE}} flag, they are immediately consumed and give the player the {{class|Powerup}} associated with this powerup giver via the {{property|Powerup.Type}} property (this is how all [[Classes:Doom#Powerups|Doom powerups]] work). Powerup givers utilize their '''[[Use]]''' function to give the player the powerup.
+
+{{class|PowerupGiver}} and {{class|Powerup}} have a lot of identical properties, such as {{property|Powerup.Duration}} and others. When a PowerupGiver is consumed (picked up or used from inventory), it ''transfers'' its values to the Powerup it gives. Conversely, if PowerupGiver is not involved and the Powerup is given directly, the Powerup will utilize the values defined in it. As such, if you're creating a Powerup that can be given both directly and from a PowerupGiver, make sure the properties are defined properly in both classes.
+
+== Using in [[ZScript]] and [[DECORATE]] ==
+There are two ways to define a powerup giver item:
+*Items that activate automatically when the player picks them up
+:To do this, set the {{flag|INVENTORY.AUTOACTIVATE}} flag. Normally, the {{property|Inventory.MaxAmount}} property should be set to 0 in this case.
+*Items that go into the player's inventory and have to be used to do their work.
+:To do this, do ''not'' set the AUTOACTIVATE flag, and define {{property|Inventory.Amount}} and {{property|Inventory.MaxAmount}} as you would for any normal items.
+
+Powerup givers support these special properties in addition to the basic [[Classes:Inventory|Inventory properties]]:
+{{:PowerupGiver properties}}
+
+{{Note|If you want to display an icon in your {{class|BaseStatusBar|HUD}} while the powerup is active, you ''must'' define {{property|Inventory.Icon}} for your Powerup. Defining it in PowerupGiver will only define the icon used while the giver is in your inventory, but it will not be displayed for the powerup itself when it's active.}}
+
+== Examples ==
+{{noexamples}}
+
+== [[ZScript]] definition ==
+{{ZScriptDefinitionNote|actors/inventory/powerups.zs#L1}}
+&lt;syntaxhighlight lang="csharp"&gt;
+class PowerupGiver : Inventory
+{
+	
+	Class&lt;Actor&gt; PowerupType;
+	int EffectTics;		// Non-0 to override the powerup's default tics
+	color BlendColor;	// Non-0 to override the powerup's default blend
+	Name Mode;			// Meaning depends on powerup - used for Invulnerability and Invisibility
+	double Strength;	// Meaning depends on powerup - currently used only by Invisibility
+	
+	property prefix: Powerup;
+	property Strength: Strength;
+	property Mode: Mode;
+	
+	Default
+	{
+		Inventory.DefMaxAmount;
+		+INVENTORY.INVBAR
+		+INVENTORY.FANCYPICKUPSOUND
+		Inventory.PickupSound "misc/p_pkup";
+	}
+	
+	//===========================================================================
+	//
+	// APowerupGiver :: Use
+	//
+	//===========================================================================
+
+	override bool Use (bool pickup)
+	{
+		if (PowerupType == NULL) return true;	// item is useless
+		if (Owner == null) return true;
+
+		let power = Powerup(Spawn (PowerupType));
+
+		if (EffectTics != 0)
+		{
+			power.EffectTics = EffectTics;
+		}
+		if (BlendColor != 0)
+		{
+			if (BlendColor != Powerup.SPECIALCOLORMAP_MASK | 65535) power.BlendColor = BlendColor;
+			else power.BlendColor = 0;
+		}
+		if (Mode != 'None')
+		{
+			power.Mode = Mode;
+		}
+		if (Strength != 0)
+		{
+			power.Strength = Strength;
+		}
+
+		power.bAlwaysPickup |= bAlwaysPickup;
+		power.bAdditiveTime |= bAdditiveTime;
+		power.bNoTeleportFreeze |= bNoTeleportFreeze;
+		if (power.CallTryPickup (Owner))
+		{
+			return true;
+		}
+		power.GoAwayAndDie ();
+		return false;
+	}
+}&lt;/syntaxhighlight&gt;
+
+== [[DECORATE]] definition ==
+{{DecorateDefinitionNote}}
+ ACTOR &lt;u&gt;PowerupGiver&lt;/u&gt; : {{Class|Inventory}} native
+ {
+   {{Property|Inventory.DefMaxAmount}}
+   +{{Flag|INVENTORY.INVBAR}}
+   +{{Flag|INVENTORY.FANCYPICKUPSOUND}}
+   {{Property|Inventory.PickupSound}} "misc/p_pkup"
+ }
+
+[[Category:ZScript]]
+[[Category:Inventory]]
+[[Category:DECORATE]]</text>
+    <sha1>ajs5mfhrmltyucbu82o41d6op6k89t1</sha1>
+  </revision>
+</page>

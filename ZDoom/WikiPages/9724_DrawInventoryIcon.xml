@@ -1,0 +1,48 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>DrawInventoryIcon</title>
+  <ns>0</ns>
+  <id>9724</id>
+  <revision>
+    <id>50751</id>
+    <parentid>50749</parentid>
+    <timestamp>2023-10-08T15:19:27Z</timestamp>
+    <contributor>
+      <username>Jekyll Grim Payne</username>
+      <id>2175</id>
+    </contributor>
+    <comment>/* Parameters */ box → boxsize</comment>
+    <origin>50751</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="1460" sha1="kw8wfp7kc3xbph2t6x14magkmn7vl4h" xml:space="preserve">__NOTOC__
+[[Classes:BaseStatusBar|'''BaseStatusBar''']]
+
+void '''DrawInventoryIcon'''(Inventory ''item'', Vector2 ''pos'', int ''flags'' = 0, double ''alpha'' = 1.0, Vector2 ''boxsize'' = (-1, -1), Vector2 ''scale'' = (1.,1.))
+
+==Usage==
+Functions similarly to [[DrawTexture_(BaseStatusBar)|DrawTexture]], but automatically obtains a specified item's icon and draws it. 
+
+Uses [[GetIcon]] to obtain the icon. As such, the flags of that function can be passed to the '''flags''' parameter to determine how the icon is obtained {{verification}}.
+
+===Parameters===
+*{{c|Inventory '''item'''}}
+:A pointer to an instance of an [[Classes:Inventory|Inventory class]] (for example, obtained via [[FindInventory]]).
+{{: BaseStatusBar position argument}}
+*{{c|int '''flags'''}}
+{{: BaseStatusBar SCREEN flags}}
+{{: BaseStatusBar ITEM flags}}
+*{{c|double '''alpha'''}}
+:Determines the translucency of the image in the 0.0-1.0 range.
+*{{c|vector2 '''boxsize'''}}
+:Determines the size of the box the image will be drawn in. If the size is smaller than the image, the image will be scaled to the size. The default value of {{c|(-1, -1)}} doesn't apply any box.
+*{{c|vector2 '''scale'''}}
+:Determines the scale of the image.
+
+==Example==
+Draw the icon of the player's currently equipped weapon at the bottom left corner of the screen:
+&lt;syntaxhighlight lang="csharp"&gt;
+DrawInventoryIcon(CPlayer.readyweapon, (0,0), DI_SCREEN_LEFT_BOTTOM|DI_ITEM_LEFT_BOTTOM);
+&lt;/syntaxhighlight&gt;</text>
+    <sha1>kw8wfp7kc3xbph2t6x14magkmn7vl4h</sha1>
+  </revision>
+</page>

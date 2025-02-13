@@ -1,0 +1,86 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>Creating new sprite graphics</title>
+  <ns>0</ns>
+  <id>1488</id>
+  <revision>
+    <id>54007</id>
+    <parentid>54006</parentid>
+    <timestamp>2024-12-03T11:36:36Z</timestamp>
+    <contributor>
+      <username>Jekyll Grim Payne</username>
+      <id>2175</id>
+    </contributor>
+    <comment>/* See also */</comment>
+    <origin>54007</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="4270" sha1="rkt3pwi1vxncu6uuyy42oql2epr8sl4" xml:space="preserve">When creating new sprite graphics, remember the lumpname format for the graphics. First comes the unique 4-letter sprite identifier: 
+
+{{c|'''XXXX'''}}
+
+Next comes the frame letter, which can range from A-Z. Think of a frame as a single animation step for this creature. Which frame is displayed at any given time depends on the current state of the monster and how you've setup its frames in the [[DECORATE]] lump. It is also possible to use the characters [, \, and ]; note that if you use them then the frame string referencing them in [[DECORATE]] code must be placed within quote marks (").
+
+{{c|XXXX'''{{color|limegreen|A}}'''}}
+
+Each frame must have 1, 8, or 16 rotations. The number following the frame letter does two things:  sets this graphic as the specified rotation for the frame, and tells ZDoom how many rotations the frame will have. If you have only 1 (which will look the same from all sides and will seem to "turn" with you as you move around it -- barrels, corpses, etc), you use the number 0 in the single rotation for this frame. If it's going to have 8, you use the numbers 1-8. If it's going to have 16, you still use 1-8, and then use 9, A, B, C, D, E, F, and G, which will display between the other 8 frames as you rotate around the enemy. 
+
+{{c|XXXXA'''{{color|limegreen|2}}'''}}
+
+Another feature of Doom (and therefore ZDoom) is automatic mirroring. Using this, a single graphic can be reversed and used for two rotations, saving space in the WAD. To do this, you add an optional extra frame letter and rotation number to the end of the sprite name: 
+
+{{c|XXXXA2'''{{color|limegreen|A8}}'''}}
+
+The graphic we just created will display as the XXXX sprite during the A frame when the actor is being seen from its front-left or front-right. For one of those, ZDoom will automatically reverse the graphic.
+
+[[File:SLADE_Monster_Angles.jpg]]
+
+== Mirroring ==
+
+The optional mirroring allowed by the format is used to reduce the number of graphics needed to complete a full sprite set. This can be seen in all the original [[IWAD]]s for [[monster]]s. The technique should also work fine with 16 rotations, though the following explanations are for the classic 8 rotations.
+
+Take the classic 4-frame (ABCD) walk sequence. In A and B, the monster steps forward with its left foot and comes to rest. In C and D, the monster steps forward with its right foot and comes to rest.
+
+To do this perfectly, you'd need 8 angles each for all four frames, so a total of 32 sprite angles:
+:A1, A2, A3, A4, A5, A6, A7, A8
+:B1, B2, B3, B4, B5, B6, B7, B8
+:C1, C2, C3, C4, C5, C6, C7, C8
+:D1, D2, D3, D4, D5, D6, D7, D8
+
+By using mirroring on each frame, you can shorten each frame from 8 sprite angles to 5 sprite angles.
+
+:A1, A2A8, A3A7, A4A6, A5
+:B1, B2B8, B3B7, B4B6, B5
+:C1, C2C8, C3C7, C4C6, C5
+:D1, D2D8, D3D7, D4D6, D5
+
+This totals 20 sprite frames, saving 12. When the monster becomes mirrored it may shift from a right-foot-first to a left-foot-first in mid-stride.
+
+The A frames and C are essentially mirrored copies of the monster's movement. If we rearrange the frames to reflect this, we can mirror the correct positions by crossing over frame boundaries.
+:A1, A2C8, A3C7, A4C6, A5&lt;br&gt; 
+:B1, B2D8, B3D7, B4D6, B5&lt;br&gt; 
+:C1, C2A8, C3A7, C4A6, C5&lt;br&gt; 
+:D1, D2B8, D3B7, D4B6, D5&lt;br&gt; 
+
+This also totals 20 sprite frames, saving 12. This method will eliminate the mirrored effect present in the first layout.
+
+Consider mirroring the entire 8-angle sprite set to its counter:
+:A1C1, A2C8, A3C7, A4C6, A5C5, A6C4, A7C3, A8C2
+:B1D1, B2D8, B3D7, B4D6, B5D5, B6D4, B7D3, B8D2
+:C1A1, C2A8, C3A7, C4A6, C5A5, C6A4, C7A3, C8A2
+:D1B1, D2B8, D3B7, D4B6, D5B5, D6B4, D7B3, D8B2
+
+We now have 32 angles for the 4 frames, which mirror properly to the opposite sequence. Doom will read any sprite angle declaration in the second position as a mirror of the first. Knowing this, we can remove the entire second set of sprite frames and get the same effect:&lt;br&gt; 
+:A1C1, A2C8, A3C7, A4C6, A5C5, A6C4, A7C3, A8C2
+:B1D1, B2D8, B3D7, B4D6, B5D5, B6D4, B7D3, B8D2
+
+Totaling 16 frames, saving 16.
+
+If you come away with nothing else from that description, let it be this: Using the last method means less work for the sprite artist!
+
+==See also==
+*[[Sprite]]
+
+[[category:Guides]]</text>
+    <sha1>rkt3pwi1vxncu6uuyy42oql2epr8sl4</sha1>
+  </revision>
+</page>

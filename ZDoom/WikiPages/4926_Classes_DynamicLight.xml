@@ -1,0 +1,107 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>Classes:DynamicLight</title>
+  <ns>0</ns>
+  <id>4926</id>
+  <revision>
+    <id>52676</id>
+    <parentid>52043</parentid>
+    <timestamp>2024-05-18T01:56:30Z</timestamp>
+    <contributor>
+      <username>Blue Shadow</username>
+      <id>2021</id>
+    </contributor>
+    <minor />
+    <comment>/* DynamicLight properties */ should be "Type", not "SpotOuterAngle".</comment>
+    <origin>52676</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="4419" sha1="hbbdhr283pk2tm7it53hcexjsj6tbsl" xml:space="preserve">{{Actor|
+| type = Internal
+| name = Dynamic light
+| class = DynamicLight
+| game = OpenGL
+}}[[Classes]]: &lt;u&gt;DynamicLight&lt;/u&gt;&lt;br&gt;
+&amp;ensp;&amp;rarr;[[Classes:PointLight|PointLight]]&lt;br&gt;
+&amp;ensp;&amp;ensp;&amp;rarr;[[Classes:PointLightAdditive|PointLightAdditive]]&lt;br&gt;
+&amp;ensp;&amp;ensp;&amp;rarr;[[Classes:PointLightFlicker|PointLightFlicker]]&lt;br&gt;
+&amp;ensp;&amp;ensp;&amp;rarr;[[Classes:PointLightFlickerRandom|PointLightFlickerRandom]]&lt;br&gt;
+&amp;ensp;&amp;ensp;&amp;rarr;[[Classes:PointLightPulse|PointLightPulse]]&lt;br&gt;
+&amp;ensp;&amp;ensp;&amp;rarr;[[Classes:PointLightSubtractive|PointLightSubtractive]]&lt;br&gt;
+&amp;ensp;&amp;ensp;&amp;rarr;[[Classes:SectorPointLight|SectorPointLight]]&lt;br&gt;
+&amp;ensp;&amp;rarr;[[Classes:VavoomLight|VavoomLight]]&lt;br&gt;
+&amp;ensp;&amp;ensp;&amp;rarr;[[Classes:VavoomLightColor|VavoomLightColor]]&lt;br&gt;
+&amp;ensp;&amp;ensp;&amp;rarr;[[Classes:VavoomLightWhite|VavoomLightWhite]]&lt;br&gt;
+
+The base class for all dynamic lights. Lights can be toggled on and off with [[Thing_Activate]] and [[Thing_Deactivate]].
+
+New lights can be created in [[ZScript]] to modify their behavior and properties dynamically.
+
+Note, it's not possible to define or modify the actor considered the source of the light in ZScript. As such, some of the features listed below are not dynamically accessible or modifiable.
+
+== DynamicLight properties ==
+* '''DynamicLight.SpotInnerAngle''' ''value''
+:The inner angle of the light. Used only for spotlights.
+* '''DynamicLight.SpotOuterAngle''' ''value''
+:The outer angle of the light. Used only for spotlights.
+* '''DynamicLight.Type''' "''value''"
+:The type of the dynamic light as a string. Possible values:
+:* {{c|"Point"}} — PointLight
+:* {{c|"Pulse"}} — PulseLight
+:* {{c|"Flicker"}} — FlickerLight
+:* {{c|"Sector"}} — SectorLight
+:* {{c|"RandomFlicker"}} — RandomFlighterLight
+
+== DynamicLight flags ==
+*{{c|'''DynamicLight.SUBTRACTIVE'''}}
+:Makes the light subtractive. Subtractive lights are "inverted", thus darkening the surrounding area instead of illuminating it.
+:Related [[GLDEFS]] keyword: &lt;code&gt;subtractive 1&lt;/code&gt;
+*{{c|'''DynamicLight.ADDITIVE'''}}
+:Makes the light additive. 
+:Related [[GLDEFS]] keyword: {{moreinfo}}
+*{{c|'''DynamicLight.DONTLIGHTSELF'''}}
+:Prevents the light from illuminating the actor it's attached to.
+:Related [[GLDEFS]] keyword: &lt;code&gt;dontlightself 1&lt;/code&gt;
+*{{c|'''DynamicLight.ATTENUATE'''}}
+:Makes the light attenuated. Attenuated lights can interact with [[GLDEFS#Materials|materials]].
+:Related [[GLDEFS]] keyword: &lt;code&gt;attenuate 1&lt;/code&gt;
+*{{c|'''DynamicLight.NOSHADOWMAP'''}}
+:The dynamic light will not emit any shadowmaps on the level, which are shadows that are emitted by lights when they hit void surfaces.
+:Related [[GLDEFS]] keyword: &lt;code&gt;noshadowmap 1&lt;/code&gt;
+*{{c|'''DynamicLight.DONTLIGHTACTORS'''}}
+:Stops the light from illuminating {{class|Actor|actors}}.
+*{{c|'''DynamicLight.SPOT'''}}
+:Related [[GLDEFS]] keyword: &lt;code&gt;dontlightactors 1&lt;/code&gt;
+*{{c|'''DynamicLight.DONTLIGHTOTHERS'''}}
+:The light will ''only'' illuminate the actor it's attached to (effectively, the inverse of {{c|DONTLIGHTSELF}}).
+:Related [[GLDEFS]] keyword: &lt;code&gt;dontlightothers 1&lt;/code&gt;
+*{{c|'''DynamicLight.DONTLIGHTMAP'''}}
+:The light will only illuminate actors, not geometry.
+:Related [[GLDEFS]] keyword: &lt;code&gt;dontlightmap 1&lt;/code&gt;
+
+== Fields ==
+=== Public ===
+* {{c|double '''SpotInnerAngle'''}}
+:The inner angle of the light. Used only for spotlights.
+* {{c|double '''SpotOuterAngle'''}}
+:The outer angle of the light. Used only for spotlights.
+=== Private ===
+* {{c|private int '''lighttype'''}}
+:The type of the light. Not modifiable directly, can only be set through the {{c|DynamicLight.Type}} property in the Default block.
+* {{c|private int '''lightflags'''}}
+:The flags used by the light. Not modifiable directly, can only be set through flags in the Default block.
+
+== Methods ==
+=== Public ===
+*{{c|native void '''SetOffset'''(Vector3 ''offset'')}}
+:Sets the light's offset from its source. (Note, the source itself cannot be set from ZScript, only via [[GLDEFS]] {{verification}})
+=== Private ===
+These methods cannot be called from ZScript directly.
+*{{c|private native void '''AttachLight'''()}}
+:Attaches the light to its source.
+*{{c|private native void '''ActivateLight'''()}}
+:Activates the light. This can be called indirectly by calling [[Activate]] on the light.
+*{{c|private native void '''DeactivateLight'''()}}
+:Deactivates the light. This can be called indirectly by calling [[Deactivate]] on the light.</text>
+    <sha1>hbbdhr283pk2tm7it53hcexjsj6tbsl</sha1>
+  </revision>
+</page>

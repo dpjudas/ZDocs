@@ -1,0 +1,89 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>Classes:StrifeBishop</title>
+  <ns>0</ns>
+  <id>4776</id>
+  <revision>
+    <id>39964</id>
+    <parentid>35385</parentid>
+    <timestamp>2015-05-17T15:12:46Z</timestamp>
+    <contributor>
+      <username>Blue Shadow</username>
+      <id>2021</id>
+    </contributor>
+    <minor />
+    <comment>/* DECORATE definition */ Updated</comment>
+    <origin>39964</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="2113" sha1="2gof18wszw727q6ar69ae1raowh91vt" xml:space="preserve">{{Actor|
+| type = Monster
+| name = The Bishop
+| class = StrifeBishop
+| game = Strife
+| doomednum = 187
+| convid = 64
+}}[[Classes]]: {{Class}} &amp;rarr; &lt;u&gt;StrifeBishop&lt;/u&gt;&lt;br&gt;
+The Bishop is the second Strife Boss. This tall guy fires homing rockets, and has a little more health than a {{Class|Crusader}}.
+==== [[DECORATE]] definition ====
+ ACTOR &lt;u&gt;StrifeBishop&lt;/u&gt;
+ {
+   {{Property|Health}} 500
+   {{Property|PainChance}} 128
+   {{Property|Speed}} 8
+   {{Property|Radius}} 40
+   {{Property|Height}} 56
+   {{Property|Mass}} 500
+   {{Property|Monster}}
+   +{{Flag|NOBLOOD}}
+   +{{Flag|NOTDMATCH}}
+   +{{Flag|FLOORCLIP}}
+   +{{Flag|INCOMBAT}}
+   +{{Flag|NOICEDEATH}}
+   +{{Flag|NEVERRESPAWN}}
+   {{Property|DamageFactor}} "{{DamageType|Fire}}", 0.5
+   {{Property|MinMissileChance}} 150
+   {{Property|MaxDropoffHeight}} 32
+   {{Property|SeeSound}} "bishop/sight"
+   {{Property|PainSound}} "bishop/pain"
+   {{Property|DeathSound}} "bishop/death"
+   {{Property|ActiveSound}} "bishop/active"
+   {{Property|DropItem}} "{{Class|CrateOfMissiles}}", 256, 20
+   {{Property|Obituary}} "$OB_STFBISHOP" // "%o was blown away by the Bishop."
+   States
+   {
+   Spawn:
+     MLDR A 10 [[A_Look]]
+     Loop
+   See:
+     MLDR AABBCCDD 3 [[A_Chase]]
+     Loop
+   Missile:
+     MLDR E 3 [[A_FaceTarget]]
+     MLDR F 2 Bright [[A_CustomMissile]]("{{Class|BishopMissile}}", 64, 0, 0, CMF_AIMOFFSET)
+     Goto See
+   Pain:
+     MLDR D 1 [[A_Pain]]
+     Goto See
+   Death:
+     MLDR G 3 Bright
+     MLDR H 5 Bright [[A_Scream]]
+     MLDR I 4 Bright [[A_TossGib]]
+     MLDR J 4 Bright [[A_Explode]](64, 64, 1, 1)
+     MLDR KL 3 Bright
+     MLDR M 4 Bright [[A_NoBlocking]]
+     MLDR N 4 Bright
+     MLDR O 4 Bright [[A_TossGib]]
+     MLDR P 4 Bright
+     MLDR Q 4 Bright [[A_TossGib]]
+     MLDR R 4 Bright
+     MLDR S 4 Bright [[A_TossGib]]
+     MLDR T 4 Bright
+     MLDR U 4 Bright [[A_TossGib]]
+     MLDR V 4 Bright [[A_SpawnItemEx]]("{{Class|AlienSpectre2}}", 0, 0, 0, 0, 0, [[DECORATE_expressions#Mathematical_functions|random]][spectrespawn](0, 255)*0.0078125,
+                                   0, SXF_NOCHECKPOSITION)
+     Stop
+   }
+ }</text>
+    <sha1>2gof18wszw727q6ar69ae1raowh91vt</sha1>
+  </revision>
+</page>

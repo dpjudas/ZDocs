@@ -1,0 +1,60 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>Classes:WraithBuried</title>
+  <ns>0</ns>
+  <id>4722</id>
+  <revision>
+    <id>39697</id>
+    <parentid>34942</parentid>
+    <timestamp>2015-05-02T21:45:43Z</timestamp>
+    <contributor>
+      <username>Blue Shadow</username>
+      <id>2021</id>
+    </contributor>
+    <minor />
+    <comment>/* DECORATE definition */ Updated</comment>
+    <origin>39697</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="1026" sha1="97f247xh650rk8u0wciaq6tua0x6zz0" xml:space="preserve">{{Actor|
+| type = Monster
+| name = Burried reiver
+| class = WraithBuried
+| game = Hexen
+| doomednum = 10011
+| spawnid = 9
+| spawnname = T_WRAITHBURIED 
+}}[[Classes]]: [[Classes:Wraith|Wraith]]&amp;rarr;&lt;u&gt;WraithBuried&lt;/u&gt;&lt;br&gt;
+Exactly the same as a standard Reiver, except those are buried in the ground and raise when they see the player, simulating an 'undead' effect, as they appear in a graveyard.
+==== [[DECORATE]] definition ====
+ ACTOR &lt;u&gt;WraithBuried&lt;/u&gt; : {{Class|Wraith}}
+ {
+   {{Property|Height}} 68
+   -{{Flag|SHOOTABLE}}
+   -{{Flag|SOLID}}
+   +{{Flag|DONTMORPH}}
+   +{{Flag|DONTBLAST}}
+   +{{Flag|SPECIALFLOORCLIP}}
+   +{{Flag|STAYMORPHED}}
+   +{{Flag|INVISIBLE}}
+   {{Property|PainChance}} 0
+ 
+   action native [[A_WraithRaiseInit]]();
+   action native [[A_WraithRaise]]();
+ 
+   States
+   {
+   Spawn:
+     Goto Super::Look
+   See:
+     WRTH A 2 [[A_WraithRaiseInit]]
+     WRTH A 2 [[A_WraithRaise]]
+     WRTH A 2 [[A_FaceTarget]]
+     WRTH BB 2 [[A_WraithRaise]]
+     Goto See+1
+   Chase:
+     Goto Super::See
+   }
+ }</text>
+    <sha1>97f247xh650rk8u0wciaq6tua0x6zz0</sha1>
+  </revision>
+</page>

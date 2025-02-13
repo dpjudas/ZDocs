@@ -1,0 +1,96 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>ChangeLevel (ZScript)</title>
+  <ns>0</ns>
+  <id>9530</id>
+  <revision>
+    <id>51916</id>
+    <parentid>51914</parentid>
+    <timestamp>2024-03-07T13:42:50Z</timestamp>
+    <contributor>
+      <username>Jekyll Grim Payne</username>
+      <id>2175</id>
+    </contributor>
+    <minor />
+    <comment>/* Parameters */</comment>
+    <origin>51916</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="3013" sha1="3mkoyvxw2wj14087yxgmfk0bpqbu5cm" xml:space="preserve">__NOTOC__{{ZScriptNote}}
+
+&lt;small style="opacity:.8"&gt;{{c|struct [[LevelLocals]]}}&lt;/small&gt;&lt;br /&gt;
+{{c|void '''ChangeLevel'''(string &lt;var&gt;LevelName&lt;/var&gt;, int &lt;var&gt;Position&lt;/var&gt;, int &lt;var&gt;Flags&lt;/var&gt;, int &lt;var&gt;Skill&lt;/var&gt;)}}
+&lt;br /&gt;
+
+== Usage ==
+
+Changes the level the player is in, similar to the [[ChangeLevel]] [[ACS]] function.
+
+=== Parameters ===
+
+*{{c|String &lt;var&gt;LevelName&lt;/var&gt;}}
+:The name of the level to change to.
+
+*{{c|int &lt;var&gt;Position&lt;/var&gt;}}
+:The player start spot to start the new level at.
+
+*{{c|int &lt;var&gt;Flags&lt;/var&gt;}}
+:The flags to use for the level change. Multiple flags can be combined with &lt;code&gt;|&lt;/code&gt;:
+:* '''CHANGELEVEL_KEEPFACING''': The player spawns in the new level retaining the same, pitch, angle, and roll they had before the function was called.
+:* '''CHANGELEVEL_RESETINVENTORY''': Reset the players' inventory to the defaults for their [[player class]].
+:* '''CHANGELEVEL_NOMONSTERS''': Remove all the monsters from the level the player enters.
+:* '''CHANGELEVEL_CHANGESKILL''': Change the skill level of the level.
+:* '''CHANGELEVEL_NOINTERMISSION''': Don't show the intermission screens between the previous level and the one being entered.
+:* '''CHANGELEVEL_RESETHEALTH''': Reset the players' health to the default for their player class.
+:* '''CHANGELEVEL_PRERAISEWEAPON''': Start the level with the players' weapon already raised.
+
+*{{c|int &lt;var&gt;Skill&lt;/var&gt;}}
+:Changes the skill level of the map that will be entered. Possible values: {{verification}}
+:*{{c|SKILL_VERY_EASY}}
+:*{{c|SKILL_EASY}}
+:*{{c|SKILL_NORMAL}}
+:*{{c|SKILL_HARD}}
+:*{{c|SKILL_VERY_HARD}}
+
+== Examples ==
+
+Below is the code for a Cyberdemon that when killed, changes the current level to a level with the name of "FinalMap", and resets the players' inventory and health.
+
+ class SuperDuperCyberdemon : {{Class|Cyberdemon}}
+ {
+ 	Default
+ 	{
+ 		{{Property|Health}} 10000;
+ 		{{Property|DamageMultiply}} 2.0;
+ 		{{Property|Scale}} 2.0;
+ 		{{Property|Radius}} 80;
+ 		{{Property|Height}} 220;
+ 		{{Property|PainChance}} 10;
+ 		{{Property|Speed}} 6;
+ 	}
+ 	bool BeginLevelExitTimer; &lt;span style="color:green"&gt;//If set to true, the timer below will increment every tick.&lt;/span&gt;
+ 	int ExitTimer; &lt;span style="color:green"&gt;//The timer used to give a delay to the Cyberdemon changing the level.&lt;/span&gt;
+ 	override void Die (Actor Source, Actor Inflictor, int DmgFlags, Name MeansOfDeath)
+ 	{
+ 		Super.Die (Source, Inflictor, DmgFlags, MeansOfDeath);
+ 		BeginLevelExitTimer = True;
+ 		Return Super.Die (Source, Inflictor, DmgFlags, MeansOfDeath);
+ 	}
+ 	override void Tick()
+ 	{
+ 		Super.Tick();
+ 		if (BeginLevelExitTimer)
+ 		{
+ 			ExitTimer++; &lt;span style="color:green"&gt;//Increment the timer.&lt;/span&gt;
+ 		}
+ 		if (ExitTimer &gt;= 35*5)
+ 		{
+ 			Level.ChangeLevel("&lt;span style="color:green"&gt;FinalMap&lt;/span&gt;",0,{{Const|CHANGELEVEL_RESETINVENTORY}}|{{Const|CHANGELEVEL_RESETHEALTH}}|{{Const|CHANGELEVEL_CHANGESKILL}}); &lt;span style="color:green"&gt;//Change level.&lt;/span&gt;
+ 		}
+ 	}
+ }
+
+[[Category:ZScript]]
+[[Category:LevelLocals]]</text>
+    <sha1>3mkoyvxw2wj14087yxgmfk0bpqbu5cm</sha1>
+  </revision>
+</page>

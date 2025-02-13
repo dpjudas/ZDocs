@@ -1,0 +1,46 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>HitWater</title>
+  <ns>0</ns>
+  <id>9456</id>
+  <revision>
+    <id>53427</id>
+    <parentid>53369</parentid>
+    <timestamp>2024-10-23T09:34:12Z</timestamp>
+    <contributor>
+      <username>Blue Shadow</username>
+      <id>2021</id>
+    </contributor>
+    <minor />
+    <origin>53427</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="1589" sha1="5roogcfrrwyozc7sweo0kyh55u26d9a" xml:space="preserve">__NOTOC__
+{{ZScriptNote}}
+'''{{class|Actor}}'''
+
+{{c|bool '''HitWater''' (Sector ''sec'', Vector3 ''pos'', bool ''checkabove'' {{=}} false, bool ''alert'' {{=}} true, bool ''force'' {{=}} false)}}&lt;br&gt;
+{{c|bool '''HitWater''' (Sector ''sec'', Vector3 ''pos'', bool ''checkabove'' {{=}} false, bool ''alert'' {{=}} true, bool ''force'' {{=}} false, int ''flags'' {{=}} 0)}} {{git|12d1afc}}
+
+== Usage ==
+Checks if the given sector has liquid terrain. If so, spawns a splash at the position.
+
+=== Parameters ===
+*''sec'' - The sector to check.
+*''pos'' - The 3D position to check at. This is not relative to the Actor. Also spawns the splash at this location.
+*''checkabove'' - False by default. If true, don't spawn the splash if the position is above the center of the Actor.
+*''alert'' - True by default. If true, non-small splashes will alert enemies.
+*''force'' - False by default. If true, check the terrain for the specified sector and ignore any 3D sectors that belong to it.
+*''flags'' - The flags that modify the behavior of the function. More flags can be added with the | separator. {{git|12d1afc}}
+** THW_SMALL: Always spawn the terrains' small splash, if there's one. Otherwise, the function will only spawn a small splash if the callers' {{property|mass}} is below 10.
+** THW_NOVEL: Spawn a splash even if the actor has no velocity. Otherwise, the function will only make splashes for players and monsters if they've at least got a vertical velocity of -6.
+
+=== Return value ===
+Returns true if the sector has liquid terrain.
+
+== Examples ==
+{{noexamples}}
+
+[[Category:ZScript]]</text>
+    <sha1>5roogcfrrwyozc7sweo0kyh55u26d9a</sha1>
+  </revision>
+</page>

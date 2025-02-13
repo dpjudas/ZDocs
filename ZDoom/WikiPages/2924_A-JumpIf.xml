@@ -1,0 +1,45 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>A JumpIf</title>
+  <ns>0</ns>
+  <id>2924</id>
+  <revision>
+    <id>42392</id>
+    <parentid>42343</parentid>
+    <timestamp>2016-02-25T18:30:13Z</timestamp>
+    <contributor>
+      <username>Marisa Heit</username>
+      <id>5</id>
+    </contributor>
+    <comment>Add return type</comment>
+    <origin>42392</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="738" sha1="48a04tepjef98gvs0glyj6iuzjx7ili" xml:space="preserve">{{DISPLAYTITLE:A_JumpIf}}
+state '''A_JumpIf''' (''expression'', int ''offset'')&lt;br&gt;
+state '''A_JumpIf''' (''expression'', str "''state''")
+{{JumpNotice}}
+Jumps ''offset'' amount of states forward, or to the state label ''state'', if ''expression'' evaluates to true. See [[DECORATE expressions]] for more information on expressions.
+
+==Examples==
+
+Example of a projectile that “fizzles out” if it enters water:
+
+ actor FizzleBall : [[classes:DoomImpBall|DoomImpBall]]
+ {  
+   states
+   {
+   Spawn:
+     BAL1 AB 4 bright
+     BAL1 A 0 [[A_JumpIf]](waterlevel == 2, "DeepWater")
+     loop
+   DeepWater:
+     BAL1 A 0 [[A_PlaySound]]("Fizzle")
+     FIZZ ABC 6
+     stop
+   }
+ }
+
+[[category:Decorate Jump functions]]{{DEFAULTSORT:JumpIf}}</text>
+    <sha1>48a04tepjef98gvs0glyj6iuzjx7ili</sha1>
+  </revision>
+</page>

@@ -1,0 +1,121 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>Classes:PlayerPawn</title>
+  <ns>0</ns>
+  <id>2890</id>
+  <revision>
+    <id>54208</id>
+    <parentid>51008</parentid>
+    <timestamp>2025-02-08T22:48:18Z</timestamp>
+    <contributor>
+      <username>Boondorl</username>
+      <id>2606</id>
+    </contributor>
+    <minor />
+    <comment>/* Client Prediction (ZScript only) */</comment>
+    <origin>54208</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="4677" sha1="jpts46ry4a37e9kdvq2q4p9bpvb0qa8" xml:space="preserve">{{Actor|
+| type = Internal
+| name = Player pawn
+| class = PlayerPawn
+}}[[Classes]]: &lt;u&gt;PlayerPawn&lt;/u&gt;&lt;br&gt;
+&amp;ensp;&amp;rarr;[[Classes:DoomPlayer|DoomPlayer]]&lt;br&gt;
+&amp;ensp;&amp;ensp;&amp;rarr;[[Classes:ChexPlayer|ChexPlayer]]&lt;br&gt;
+&amp;ensp;&amp;rarr;[[Classes:ClericPlayer|ClericPlayer]]&lt;br&gt;
+&amp;ensp;&amp;rarr;[[Classes:ChickenPlayer|ChickenPlayer]]&lt;br&gt;
+&amp;ensp;&amp;rarr;[[Classes:FighterPlayer|FighterPlayer]]&lt;br&gt;
+&amp;ensp;&amp;rarr;[[Classes:HereticPlayer|HereticPlayer]]&lt;br&gt;
+&amp;ensp;&amp;rarr;[[Classes:MagePlayer|MagePlayer]]&lt;br&gt;
+&amp;ensp;&amp;rarr;[[Classes:PigPlayer|PigPlayer]]&lt;br&gt;
+&amp;ensp;&amp;rarr;[[Classes:PlayerChunk|PlayerChunk]]&lt;br&gt;
+&amp;ensp;&amp;rarr;[[Classes:StrifePlayer|StrifePlayer]]&lt;br&gt;
+
+&lt;u&gt;PlayerPawn&lt;/u&gt; is the base class for player actors. By inheriting from it you can create [[Creating new player classes|custom player classes]].
+
+==== Using in [[ZScript]] and [[DECORATE]] ====
+The &lt;u&gt;PlayerPawn&lt;/u&gt; base class defines the following properties which are available to all player subclasses:
+{{:Player properties}}
+PlayerPawn-specific flags also exist:
+{{:Player flags}}
+
+==== [[ZScript]] definition ====
+The full ZScript definition is too long for this page. Please find the full definition on [https://github.com/ZDoom/gzdoom/blob/master/wadsrc/static/zscript/actors/player/player.zs#L13 GZDoom Github].
+
+==== [[DECORATE]] definition ====
+{{DecorateDefinitionNote}}
+ ACTOR &lt;u&gt;PlayerPawn&lt;/u&gt; native
+ {
+   {{Property|Health}} 100
+   {{Property|Radius}} 16
+   {{Property|Height}} 56
+   {{Property|Mass}} 100
+   {{Property|Painchance}} 255
+   {{Property|Speed}} 1
+   +{{Flag|SOLID}}
+   +{{Flag|SHOOTABLE}}
+   +{{Flag|DROPOFF}}
+   +{{Flag|PICKUP}}
+   +{{Flag|NOTDMATCH}}
+   +{{Flag|FRIENDLY}}
+   +{{Flag|SLIDESONWALLS}}
+   +{{Flag|CANPASS}}
+   +{{Flag|CANPUSHWALLS}}
+   +{{Flag|FLOORCLIP}}
+   +{{Flag|WINDTHRUST}}
+   +{{Flag|TELESTOMP}}
+   +{{Flag|NOBLOCKMONST}}
+   {{Property|Player.AttackZOffset}} 8
+   {{Property|Player.JumpZ}} 8
+   {{Property|Player.GruntSpeed}} 12
+   {{Property|Player.FallingScreamSpeed}} 35, 40
+   {{Property|Player.ViewHeight}} 41
+   {{Property|Player.UseRange}} 64
+   {{Property|Player.ForwardMove}} 1,1
+   {{Property|Player.SideMove}} 1,1
+   {{Property|Player.ColorRange}} 0,0
+   {{Property|Player.SoundClass}} "player"
+   {{Property|Player.DamageScreenColor}} "ff 00 00"
+   {{Property|Player.MugShotMaxHealth}} 0
+   {{Property|Player.FlechetteType}} "ArtiPoisonBag3"
+   {{Property|Player.AirCapacity}} 1
+   {{Property|Obituary}} "$OB_MPDEFAULT"
+ }
+
+== Client Prediction (ZScript only) ==
+Certain actions the player takes can have prediction when playing in a multiplayer game. This means that the code is being ran on the client's end but has not yet been verified with all other players in the game currently. This is done to help the player feel they have better control over their character than having to wait for verification to perform an action. Not all actions should be predicted, however (e.g. activating a sector's action if the game hasn't verified the player is actually there yet). You can check if a player is currently predicting by seeing if the CF_PREDICTING flag is set in their PlayerInfo pointer:
+    player.cheats &amp; CF_PREDICTING
+This flag is set and unset internally. Below are special actions that happen while predicting:
+:*3D floor, sector, fake sector, thing, and most line actions won't be triggered when hit
+:*When teleporting
+::*Teleport fog will not be spawned at either the origin spot or the destination
+::*Enemies will not be telefragged
+:*The player's idle state won't be set when they stop moving in general
+:*The player's run state won't be set when they start moving
+:*If the player lands from a fall, only the camera bobbing will be applied (other actions like fall damage and grunting aren't)
+:*The player won't call their items' DoEffect() virtual
+:*Poison damage won't tick
+:*HitWater() will not spawn a splash and always returns false
+:*Collision damage functionality outside of {{Flag|SKULLFLY}} will not be applied to things the player hits
+:*Teleport line specials can still be used
+:*Grunt sounds will not be played while bouncing off a wall on ice
+:*The player's jump sound won't be played
+:*If the player is falling and hits water, their fall scream won't be stopped if they have one
+:*If the player presses fly up while they have the flight artifact, it won't automatically activate
+:*Certain player functions are not called
+::*MorphPlayerThink()
+::*CheckUse()
+::*CheckUndoMorph()
+::*TickPSprites()
+::*CheckPoison()
+::*CheckDegeneration()
+::*CheckAirSupply()
+:*Palette flashes won't be modified (e.g. taking damage, picking up an item up)
+:*PowerSpeed won't do its visual effects
+:*PowerTimeFreezer won't tick
+
+== Voodoo dolls ==
+{{: Voodoo doll}}</text>
+    <sha1>jpts46ry4a37e9kdvq2q4p9bpvb0qa8</sha1>
+  </revision>
+</page>

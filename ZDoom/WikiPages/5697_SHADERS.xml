@@ -1,0 +1,101 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>SHADERS</title>
+  <ns>0</ns>
+  <id>5697</id>
+  <revision>
+    <id>24538</id>
+    <parentid>24537</parentid>
+    <timestamp>2009-10-13T20:13:46Z</timestamp>
+    <contributor>
+      <username>Gez</username>
+      <id>1283</id>
+    </contributor>
+    <minor />
+    <origin>24538</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="4744" sha1="i0orc9yjzwlr3xwwocdj7h89nfnn1d6" xml:space="preserve">{{OpenGL|[[ZDoomGL]]}}
+
+The shaders in [[ZDoomGL]] are designed to make it fairly simple for content creators (mappers or texture artists) to utilize some of the advanced features available in a hardware engine. These features include blending modes, translations, rotation and scaling.
+__TOC__
+== Components of a shader ==
+ shader &lt;ORIGTEX&gt; [MORETEX ...]
+ {
+   compatibility any
+   detailTex DTEX1
+   layer &lt;TEXNAME&gt;
+   {
+     alpha cycle sin 1.0 0.0 2.0
+     blend GL_SRC_ALPHA GL_ONE_MINUS_SRC_ALPHA
+     color cycle cos 1.0 1.0 1.0 0.5 0.5 0.5 2.0
+     center 0.0 0.0
+     offset 0.0 0.0
+     rotate 0.0
+     rotation 0.0
+     scale 1.0 1.0
+     texgen none
+     vector cycle -1.0 1.0 -1.0 1.0 2.0
+     vectorFunc sin cos
+   }
+ }
+
+;compatibility &lt; any | hardware | software &gt;
+:Shaders are broken up into three categories: generic, hardware and software. Hardware and software shaders are to specify separate shaders for the [[OpenGL]] and software renderer and the generic shaders work for both. Right now software shaders are ignored.
+
+;detailTex &lt; texname &gt;
+:This field specifies the detail texture to use. This texture may be a defined texture in the [[TEXTURES]] lump. Currently not implemented.
+
+;layer &lt; texname &gt;
+:Shaders are made up of 1 or more texture layers. The texture used is defined by the texname, which is just the name of a texture or flat. You can also use textures defined in the [[TEXTURES]] lump for shader layers. By specifying how the layers behave with the layer properties, you can create some interesting effects!
+
+;alpha &lt; 0.0..1.0 &gt; (cyclable)
+:This specifies the alpha value of the layer. Note that the base layer always takes on the alpha value of the source geometry.
+
+;blend &lt; source constants &gt; &lt; destination constants&gt;
+:This allows you to specify the blending mode for this layer. This field mirrors the usage of [http://www.opengl.org/documentation/specs/man_pages/hardcopy/GL/html/gl/blendfunc.html glBlendFunc].
+
+;center &lt; normalized x/y coordinate &gt;
+:This allows you to specify the center of rotation for the layer. The normalized values range from 0.0..1.0, where 1.0 is the full width or height of the texture.
+
+;color &lt; normalized rgb triplet &gt; (cyclable)
+:You can use this field to modify the color of the layer, allowing you to tint textures without having to apply a translation to them. An rgb triplet is just the RGB value in floating point form: "1.0 1.0 1.0" would be white and "1.0 0.0 0.0" would be red.
+
+;offset &lt; normalized x/y coordinate &gt;
+:This sets the default translation for the layer so you can align textures easily. The normalized coordinate is the same as in center.
+
+;rotate &lt; 0.0..360.0 &gt;
+:Sets the default rotation (in degrees) of the layer.
+
+;rotation &lt; 0.0..360.0 &gt;
+:This sets how far to rotate the layer each second.
+
+;scale &lt; x/y value &gt;
+:This is basically a multiplier for the width and height of the layer. A value of "1.0 1.0" would use the actual texture dimensions while a value of "0.5 0.5" would shrink the texture to half its actual size.
+
+;texgen &lt; none | sphere &gt;
+:This allows you to treat the layer as a spherical environment map. If set to "sphere", only the alpha, blend and color fields will affect this layer.
+
+;vector &lt; x/y value &gt; (cyclable)
+:This sets the distance to pan the layer each second. A value of "1.0 1.0" would pan the texture it's entire width and height each second.
+
+;vectorFunc &lt; sin | cos | linear &gt;
+:This sets the cycle method for the vector components. A value of "sin linear" would cycle the vector X component using a sine wave and cycle the vector Y component linearly.
+
+== Cyclable Fields ==
+Cyclable fields allow you to modify the values of certain fields over time between two values. Interpolation can happen in a linear fashion (default), or can follow a sine or cosine wave, providing a smoother cycle. To cycle a field, just add the keyword "cycle" after the field name, followed by either "sin" or "cos" if you want a sine/cosine cycle and then the start and end values followed by the cycle duration:
+
+ alpha cycle sin 1.0 0.0 2.0
+
+This example would cycle the alpha value between 1.0 (fully opaque) and 0.0 (fully transparent) over two seconds. Cycling the color field is a bit more complex:
+
+ color cycle 1.0 0.0 0.0 0.0 0.0 1.0 4.0
+
+This example would cycle the color between red (1.0 0.0 0.0) and blue (0.0 0.0 1.0) over 4 seconds. The only field that breaks this format is the vector field. You don't specify the method to cycle in the vector field, but instead use the vectorFunc field:
+
+ vector cycle 0.2 0.0 0.1 0.0 8.0
+ vectorFunc sin cos
+
+This example would cycle the X vector between 0.2 and 0.0 using a sine wave and would cycle the Y vector between 0.1 and 0.0 using a cosine wave over a duration of 8 seconds.</text>
+    <sha1>i0orc9yjzwlr3xwwocdj7h89nfnn1d6</sha1>
+  </revision>
+</page>

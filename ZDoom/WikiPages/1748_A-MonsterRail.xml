@@ -1,0 +1,42 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>A MonsterRail</title>
+  <ns>0</ns>
+  <id>1748</id>
+  <revision>
+    <id>36252</id>
+    <parentid>36246</parentid>
+    <timestamp>2013-04-27T10:12:51Z</timestamp>
+    <contributor>
+      <username>Gez</username>
+      <id>1283</id>
+    </contributor>
+    <minor />
+    <origin>36252</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="714" sha1="5x1y6rxi5nns0cb0b09cx687htisek2" xml:space="preserve">{{codepointer|Generic Attack}}'''A_MonsterRail'''
+
+(no parameters)
+
+
+Performs a [[railgun]] attack. The amount of damage this attack inflicts is specified with the calling actor's {{c|{{Property|Damage}}}} property.
+
+== Examples ==
+This is a railgun zombie. It fires a railgun shot that deals 15 damage. The attack sound was edited to give a railgun sound effect to the monster when fired, instead of the {{Class|ZombieMan|zombie}}'s default {{Class|pistol}} shot sound.
+
+ ACTOR RailgunZombie : {{Class|ZombieMan}}
+ {
+   {{Property|Damage}} 15
+   {{Property|AttackSound}} "weapons/rbeam"
+   States
+   {
+   Missile:
+     POSS E 10 [[A_FaceTarget]]
+     POSS F 8 [[A_MonsterRail]]
+     POSS E 8
+     Goto See
+   }
+ }</text>
+    <sha1>5x1y6rxi5nns0cb0b09cx687htisek2</sha1>
+  </revision>
+</page>

@@ -1,0 +1,46 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>GetSectorCeilingZ</title>
+  <ns>0</ns>
+  <id>1541</id>
+  <revision>
+    <id>44121</id>
+    <parentid>41055</parentid>
+    <timestamp>2017-03-20T11:13:08Z</timestamp>
+    <contributor>
+      <username>Gez</username>
+      <id>1283</id>
+    </contributor>
+    <minor />
+    <comment>removing "new" for GZDoom 2.4.0 release</comment>
+    <origin>44121</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="1396" sha1="su41xsqi3n9xvvyvmciw011dxu8m2f7" xml:space="preserve">__NOTOC__
+int '''GetSectorCeilingZ''' (int ''tag'', int ''x'', int ''y'');
+
+== Usage ==
+This returns the [[sector]] ceiling height at coordinates [''x'', ''y''].
+
+=== Parameters ===
+* ''tag'': [[tag]] of the sector.
+* ''x'', ''y'': coordinates of the point (not [[Fixed point numbers|fixed point]] value!).
+
+=== Return value ===
+Returns the sector ceiling height at coordinates [''x'', ''y''] as a [[Fixed point numbers|fixed point]] value. When used on sectors which share tags, it will return the ceiling height of the sector with the lowest sector number and the matching tag. If the sector is flat (ceiling is not [[slope]]d), this will just return the ceiling height no matter where the coordinates are specified, so [0, 0] is as good as anywhere. If the sector is sloped and the coordinates are specified in an area outside of the the sector, a projected height (the height the ceiling would be if the sector were extended to that area) is returned. If ''tag'' is 0, the function returns the ceiling height of whatever sector is found at [''x'', ''y''].
+
+== Examples ==
+This example will print the ceiling height in the sector of the specified tag at the coordinates of the specified tid.
+
+ script 1 (int tag, int tid)
+ {
+   int x, y, z;
+   x = GetActorX(tid) &gt;&gt; 16;
+   y = GetActorY(tid) &gt;&gt; 16;
+   z = GetSectorCeilingZ(tag, x, y);
+   print(f:z);
+ }
+
+[[category:ACS Information functions]]</text>
+    <sha1>su41xsqi3n9xvvyvmciw011dxu8m2f7</sha1>
+  </revision>
+</page>

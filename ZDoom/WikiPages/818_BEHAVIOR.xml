@@ -1,0 +1,32 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>BEHAVIOR</title>
+  <ns>0</ns>
+  <id>818</id>
+  <revision>
+    <id>31161</id>
+    <parentid>30746</parentid>
+    <timestamp>2011-07-31T11:44:17Z</timestamp>
+    <contributor>
+      <username>Zom-B</username>
+      <id>1511</id>
+    </contributor>
+    <comment>'S' is 0x53, not 51. and scrips indeed use 53</comment>
+    <origin>31161</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="2026" sha1="gbowf0sx02y8k0n4b4edn3n6yrrjhre" xml:space="preserve">'''BEHAVIOR''' is the [[lump]] that contains a map's [[ACS|scripts]] in compiled form. If your level uses any scripting at all, it is polite to also provide your scripts' source in the [[SCRIPTS]] lump (import it after the BEHAVIOR lump it corresponds to). If your resource editor takes issue with many lumps named SCRIPTS being in your wad (you should only encounter this if you have multiple scripted levels), the SCRIPTS lump can be named something like SCRIPT01, SCRIPT02, or something similar. The name of the SCRIPTS lump is not relevant to [[ZDoom]]. ZDoom does not use it, it is only a reference for other people to use to see what your level's [[scripts]] are actually doing.
+
+The presence of a BEHAVIOR lump is used to determine [[map format]] as it is the most easily detected difference between a Doom-format map and a Hexen-format map. Only Hexen-format maps and [[UDMF]] maps can have a BEHAVIOR lump; a Doom-format map with a BEHAVIOR lump added to it would not be interpreted correctly and may even crash the engine: the [[THINGS]] and [[LINEDEFS]] records are in a different format.
+
+== Technical details ==
+There exist three different formats for ACS bytecode:
+# Original Hexen format, or ACS0, identified by the ACS\0 (0x41435300) header at the start of the lump and the absence of a different header before its directory.
+# Old ZDoom enhanced format, or ACSE, identified by the ACSE (0x41435345) header at the start of the lump or before the directory. This format was used to introduce several of ZDoom's oldest additions to ACS.
+# New ZDoom enhanced format, or ACSe, identified by the ACSe (0x41435365) header at the start of the lump or before the directory. This format supports all ZDoom additions.
+
+When [[ACC]] is used with the &lt;tt&gt;-h&lt;/tt&gt; parameter, it will use the lowest possible format required to successfully compile the scripts, which means ACSe if recent ZDoom additions are used, ACSE if older ZDoom enhancement are used, and Hexen if only vanilla features are used.
+
+[[category:Map lumps]]</text>
+    <sha1>gbowf0sx02y8k0n4b4edn3n6yrrjhre</sha1>
+  </revision>
+</page>

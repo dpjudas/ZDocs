@@ -1,0 +1,65 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>Classes:RatBuddy</title>
+  <ns>0</ns>
+  <id>3115</id>
+  <revision>
+    <id>39918</id>
+    <parentid>35327</parentid>
+    <timestamp>2015-05-04T22:40:48Z</timestamp>
+    <contributor>
+      <username>Blue Shadow</username>
+      <id>2021</id>
+    </contributor>
+    <minor />
+    <comment>/* DECORATE definition */ Updated</comment>
+    <origin>39918</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="1031" sha1="fl1tzrukqla7ai8esn7fwizkl8hxyaj" xml:space="preserve">{{Actor|
+| type = Monster
+| name = Rat
+| class = RatBuddy
+| game = Strife
+| doomednum = 85
+| convid = 202, 196, 200
+}}[[Classes]]: &lt;u&gt;RatBuddy&lt;/u&gt;&lt;br&gt;
+A harmless and invulnerable (because not shootable) rat that follows the player around. Mildly annoying.
+==== [[DECORATE]] definition ====
+ ACTOR &lt;u&gt;RatBuddy&lt;/u&gt;
+ {
+   {{Property|Health}} 5
+   {{Property|Speed}} 13
+   {{Property|Radius}} 10
+   {{Property|Height}} 16
+   +{{Flag|NOBLOOD}}
+   +{{Flag|FLOORCLIP}}
+   +{{Flag|CANPASS}}
+   +{{Flag|ISMONSTER}}
+   +{{Flag|INCOMBAT}}
+   {{Property|MinMissileChance}} 150
+   {{Property|MaxStepHeight}} 16
+   {{Property|MaxDropoffHeight}} 32
+   {{Property|Tag}} "$TAG_RATBUDDY" // "rat buddy"
+   {{Property|SeeSound}} "rat/sight"
+   {{Property|DeathSound}} "rat/death"
+   {{Property|ActiveSound}} "rat/active"
+   States
+   {
+   Spawn:
+     RATT A 10 [[A_Look]]
+     Loop
+   See:
+     RATT AABB 4 [[A_Chase]]
+     Loop
+   Melee:
+     RATT A 8 [[A_Wander]]
+     RATT B 4 [[A_Wander]]
+     Goto See
+   Death:
+     MEAT Q 700
+     Stop
+   }
+ }</text>
+    <sha1>fl1tzrukqla7ai8esn7fwizkl8hxyaj</sha1>
+  </revision>
+</page>

@@ -1,0 +1,118 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>Creating new ammo types</title>
+  <ns>0</ns>
+  <id>9189</id>
+  <revision>
+    <id>52614</id>
+    <parentid>48645</parentid>
+    <timestamp>2024-05-09T16:00:15Z</timestamp>
+    <contributor>
+      <username>Jekyll Grim Payne</username>
+      <id>2175</id>
+    </contributor>
+    <origin>52614</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="3257" sha1="glbz42sxfoaydabrutxa6j7cycmcgzs" xml:space="preserve">Creating new ammo types is a little trickier than creating regular objects or monsters. With ammo types you can't use inheritance, because inheriting from an existing type of ammo, like [[Shell]], would just create another pickup of the ''same'' ammo type. (This is actually how pickup variations are created, for example [[Classes:ShellBox|Box of Shells]] is created by inheriting from [[Shell]].) In addition to that, you also need to modify the weapon so that it uses your newly-created ammo type, simple replacement won't affect the weapons.
+
+== Checklist of things to do to introduce a new ammo type ==
+
+* Create a new ammo type by inheriting from [[Classes:Ammo|Ammo]] actor
+* (Optional) Create a bigger pickup for your new ammo type by inheriting from it
+* Modify your weapon so that [[Actor_properties#Weapons|it uses your ammo]] instead of the original
+* Don't forget to [[Weapon_slots|bind your weapon to a slot]]
+
+Even if you want to modify something minor, like ammo capacity, you'll have to do all of the above.
+
+An example of a new Shell type that is identical to original Shell except you can carry 100 without backpack and 300 with backpack:
+
+==== [[ZScript]] definition ====
+ Class BigShell : Ammo replaces Shell //"replaces" in this case only means it'll spawn instead of Shell
+ {
+ 	Default
+ 	{
+ 		Inventory.PickupMessage "$GOTSHELLS"; // "Picked up 4 shotgun shells."
+ 		Inventory.Amount 4;
+ 		Inventory.MaxAmount 100;
+ 		Ammo.BackpackAmount 16;
+ 		Ammo.BackpackMaxAmount 300;
+ 		Inventory.Icon "SHELA0"	;
+ 	}
+ 	States
+ 		{
+ 		Spawn:
+ 			SHEL A -1;
+ 			Stop;
+ 		}
+ }
+ 
+ Class BigShellBox : BigShell replaces ShellBox
+ {
+ 	Default
+ 	{
+ 		Inventory.PickupMessage "$GOTSHELLBOX"; // "Picked up a box of shotgun shells."
+ 		Inventory.Amount 20;
+ 	}
+ }
+ 
+ Class Shotgun_Custom : Shotgun replaces Shotgun
+ {
+ 	Default
+ 	{
+ 		weapon.ammotype "BigShell"; //this makes Shotgun use new ammo
+ 		weapon.slotnumber 3; //without this you'll still have vanilla Shotgun bound to slot 3
+ 	}
+ }
+ 
+ Class SuperShotgun_Custom: SuperShotgun replaces SuperShotgun
+ {
+ 	Default 
+ 	{
+ 		weapon.ammotype "BigShell"; //this makes SuperShotgun also use new ammo
+ 		weapon.slotnumber 3;
+ 		weapon.slotpriority 0;
+ 	}
+ }
+ 
+==== [[DECORATE]] definition {{deprecated}} ====
+ Actor BigShell : Ammo replaces Shell //"replaces" in this case only means it'll spawn instead of Shell
+ {
+ 	Inventory.PickupMessage "$GOTSHELLS" // "Picked up 4 shotgun shells."
+ 	Inventory.Amount 4
+ 	Inventory.MaxAmount 100
+ 	Ammo.BackpackAmount 16
+ 	Ammo.BackpackMaxAmount 300
+ 	Inventory.Icon "SHELA0"	
+ 	States
+ 		{
+ 		Spawn:
+ 			SHEL A -1
+ 			Stop
+ 		}
+ }
+ 
+ Actor BigShellBox : BigShell replaces ShellBox
+ {
+ 	Inventory.PickupMessage "$GOTSHELLBOX" // "Picked up a box of shotgun shells."
+ 	Inventory.Amount 20
+ }
+ 
+ Actor Shotgun_Custom : Shotgun replaces Shotgun
+ {
+ 	weapon.ammotype "BigShell" //this makes Shotgun use new ammo
+ 	weapon.slotnumber 3 //without this you'll still have vanilla Shotgun bound to slot 3
+ }
+ 
+ Actor SuperShotgun_Custom: SuperShotgun replaces SuperShotgun
+ {
+ 	weapon.ammotype "BigShell" //this makes SuperShotgun also use new ammo
+ 	weapon.slotnumber 3
+ 	weapon.slotpriority 0
+ }
+
+[[Category:Guides]]
+[[Category:ZScript guides]]
+[[Category:DECORATE guides]]</text>
+    <sha1>glbz42sxfoaydabrutxa6j7cycmcgzs</sha1>
+  </revision>
+</page>

@@ -1,0 +1,64 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>A SpawnActorLine</title>
+  <ns>0</ns>
+  <id>9019</id>
+  <revision>
+    <id>49966</id>
+    <parentid>43746</parentid>
+    <timestamp>2022-12-16T17:46:08Z</timestamp>
+    <contributor>
+      <username>Caligari 87</username>
+      <id>90</id>
+    </contributor>
+    <minor />
+    <comment>syntax highlight</comment>
+    <origin>49966</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="1392" sha1="d7qrv96r6njygymogifjerdin2terx8" xml:space="preserve">{{DISPLAYTITLE:A_SpawnActorLine}}
+[[Category:Custom action functions]]
+void '''A_SpawnActorLine''' (string ''classname'', Vector3 ''pointA'', Vector3 ''pointB'', double ''units'' = 1)
+
+== Usage ==
+Spawns actors in a line from ''pointA'' to ''pointB''.
+
+== Parameters ==
+*''classname'': The type of actor to spawn (eg, "ZombieMan")
+*''pointA'': The point to start spawning actors from
+*''pointB'': The point to stop spawning actors at
+*''units'': The number of units between each actor that is spawned
+
+== Implementing into your mod ==
+Add the following [[ZScript]] function to your actor of choice. This does not need to be repeated for classes which inherit from another already possessing this function.
+
+&lt;syntaxhighlight lang="csharp"&gt;
+action void A_SpawnActorLine(string classname, Vector3 pointA, Vector3 pointB, double units = 1)
+{
+	// get a vector pointing from A to B
+	let pointAB = pointB - pointA;
+
+	// get distance
+	let dist = pointAB.Length();
+
+	// normalize it
+	pointAB /= dist == 0 ? 1 : dist;
+
+	// iterate in units of 'units'
+	for (double i = 0; i &lt; dist; i += units)
+	{
+		// we can now use 'pointA + i * pointAB' to
+		// get a position that is 'i' units away from
+		// pointA, heading in the direction towards pointB
+		let position = pointA + i * pointAB;
+		Spawn(classname, position);
+	}
+}
+&lt;/syntaxhighlight&gt;
+
+The function is now ready for use.
+
+== Examples ==
+{{noexamples}}</text>
+    <sha1>d7qrv96r6njygymogifjerdin2terx8</sha1>
+  </revision>
+</page>

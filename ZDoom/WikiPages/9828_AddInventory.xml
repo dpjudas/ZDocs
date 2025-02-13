@@ -1,0 +1,73 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>AddInventory</title>
+  <ns>0</ns>
+  <id>9828</id>
+  <revision>
+    <id>51686</id>
+    <parentid>51684</parentid>
+    <timestamp>2024-02-06T17:10:31Z</timestamp>
+    <contributor>
+      <username>Jekyll Grim Payne</username>
+      <id>2175</id>
+    </contributor>
+    <comment>/* Usage */ Updated description</comment>
+    <origin>51686</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="1840" sha1="8wwe28adqn37tcy16uc0xm8hbkngivs" xml:space="preserve">'''{{class|Actor}}'''
+
+{{c|virtual void '''AddInventory'''(Inventory ''item'')}}
+
+==Usage==
+A [[ZScript virtual functions|virtual function]] called by an {{class|Actor|actor}} to attach a specific, already existing {{class|Inventory}} item to their inventory. In contrast to [[GiveInventory (Actor)|GiveInventory]] and similar functions, this doesn't create a new item but is meant to attach an instance of an item that already exists in the world.
+
+Can be overridden to add custom behavior executed by actors when they receive items.
+
+=== Parameters ===
+*{{c|Inventory ''item''}}
+:A pointer to an item that should be placed in the calling actor's inventory.
+
+== [[ZScript]] definition ==
+{{ZScriptDefinitionNote|actors/inventory_util.zs#L31}}
+Various actors may override this function, but the base {{class|Actor}} class defines it as follows:
+
+&lt;syntaxhighlight lang="csharp"&gt;
+	virtual void AddInventory (Inventory item)
+	{
+		// Check if it's already attached to an actor
+		if (item.Owner != NULL)
+		{
+			// Is it attached to us?
+			if (item.Owner == self)
+				return;
+
+			// No, then remove it from the other actor first
+			item.Owner.RemoveInventory (item);
+		}
+
+		item.Owner = self;
+		item.Inv = Inv;
+		Inv = item;
+
+		// Each item receives an unique ID when added to an actor's inventory.
+		// This is used by the DEM_INVUSE command to identify the item. Simply
+		// using the item's position in the list won't work, because ticcmds get
+		// run sometime in the future, so by the time it runs, the inventory
+		// might not be in the same state as it was when DEM_INVUSE was sent.
+		Inv.InventoryID = InventoryID++;
+	}
+&lt;/syntaxhighlight&gt;
+
+== Examples ==
+{{noexamples}}
+
+== See also ==
+* [[ZScript virtual functions]]
+
+[[Category:ZScript]]
+[[Category:Actor virtual functions]]
+[[Category:Inventory]]
+[[Category:ZScript virtual functions]]</text>
+    <sha1>8wwe28adqn37tcy16uc0xm8hbkngivs</sha1>
+  </revision>
+</page>

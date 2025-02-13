@@ -1,0 +1,311 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>CVARs:Automap</title>
+  <ns>0</ns>
+  <id>3903</id>
+  <revision>
+    <id>53203</id>
+    <parentid>48247</parentid>
+    <timestamp>2024-10-03T12:25:46Z</timestamp>
+    <contributor>
+      <username>Blue Shadow</username>
+      <id>2021</id>
+    </contributor>
+    <comment>/* General settings */ interaction between am_showmaplabel and "Label" MAPINFO property</comment>
+    <origin>53203</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="16004" sha1="m5yzu4i9ycjfykz77r3y3krrmr5gnbo" xml:space="preserve">These [[CVARs|console variables]] affect the display of the in-game [[automap]].  You can access the automap using the togglemap [[CCMDs|command]].
+
+See the [[CVARs]] article for general information on how to access and edit variables.
+__TOC__
+==General settings==
+
+* '''{{LE|am_cheat}}''' ([[CVARs#integer|integer]])
+:default: 0
+:The status of the automap [[cheat]].  This value can be changed directly from the console to cheat, or it can be modified the old fashioned way with cheat codes. Valid values are:
+:*0: No cheat.  Only level architecture the player has seen is shown.
+:*1: All architecture is shown, regardless of whether or not the player has seen it.  Equivalent to one input of the Doom '''iddt''' cheat.
+:*2: In addition to the previous, shows all things in the map as arrows pointing in the direction they are facing.  Equivalent to two inputs of the Doom '''iddt''' cheat.
+:*3: In addition to the previous, all things are wrapped in a box showing their size.  There is no '''iddt''' cheat for this, as this functionality was added to ZDoom and is not a carryover from vanilla Doom.
+:*4-6: They are the same as modes 1-3, respectively, except that lines flagged as "hidden" are not shown.
+
+* '''{{LE|am_colorset}}''' ([[CVARs#integer|integer]])
+:default: 0
+:Which color set to use when drawing automap. Possible values are:
+:*0: Custom (uses the "fullscreen" and "overlay" map colors below)
+:*1: ''[[Doom]]'' colors
+:*2: ''[[Strife]]'' colors
+:*3: ''[[Heretic]]'' and ''Hexen'' colors
+:Certain features of the automap are restricted when not using the custom color set. For example, the ''Doom'' and ''Strife'' color sets do not show locked door colors; and teleporters, exits, and non-door trigger lines are only shown with a custom set.
+
+* '''{{LE|am_customcolors}}''' ([[CVARs#boolean|boolean]])
+:default: true
+:If set to ''true'', it uses [[MAPINFO/Automap_definition|mod-defined color settings for the automap]] (if any), thus overriding the end-user's own color settings.
+
+* '''{{LE|am_drawmapback}}''' ([[CVARs#boolean|boolean]])
+:default: true
+:Chooses if the [[AUTOPAGE]] map background is drawn.
+
+* '''{{LE|am_followplayer}}''' ([[CVARs#boolean|boolean]])
+:default: true
+:This console variable corresponds to whether the automap is in follow-mode (true) or not (false).
+
+* '''{{LE|am_map_secrets}}''' ([[CVARs#integer|integer]])
+:default: 1
+:Selects whether the boundaries of secret sectors should be drawn with a special color. Valid values are 0 (no), 1 (only when found) and 2 (always). If this is set to 2, the boundaries of undiscovered secret sectors are drawn in their own color.
+
+* '''{{LE|am_markcolor}}''' ([[CVARs#integer|integer]])
+:default: 2 ({{color|#CCCCCC}} gray)
+:The color in which to draw the [[font]] used for the map marks. This has no effect on the "AMMNUMx" mark font choice as it is not a font.
+
+* '''{{LE|am_markfont}}''' ([[CVARs#string|string]])
+:default: "AMMNUMx"
+:The [[font]] used for drawing the map marks. Possible values are:
+:*"AMMNUMx": uses the AMMNUM(0-9) graphics. This is not a font.
+:*"SmallFont": the small font.
+:*"BigFont": the big font.
+:*"ConsoleFont": the console font.
+
+* '''{{LE|am_overlay}}''' ([[CVARs#integer|integer]])
+:default: 0
+:Normally, the togglemap [[CCMDs|command]] switches the automap between fully off and fully on. Setting this cvar to "1" will enable an intermediate automap mode in which the automap is drawn over the top of the 1st-person view, allowing you to view the map without taking you away from the game world. Using togglemap will then cycle between the three modes. Setting this cvar to "2" will enable overlay automap only. Using togglemap will then cycle between the two modes.
+
+* '''{{LE|am_rotate}}''' ([[CVARs#boolean|boolean]])
+:default: false
+:Normally, the automap is always drawn such that north is at the top of the screen. Setting this cvar to "1" causes the automap to be drawn so that lines toward the top of the screen are always directly in front of the player's view. This can be particularly useful when the automap is overlayed. 
+
+* '''{{LE|am_showalllines}}''' ([[CVARs#integer|integer]])
+:default: -1
+:Enable or disable the effect of the "hidden" linedef flag. The default value of -1 keeps hidden lines hidden. 0 shows them all. A positive value shows them only if the map exceeds the corresponding percentage of "abusive" hidden lines; a line is considered abusively hidden if it is a single-sided and not part of a control sector.
+
+* '''{{LE|am_showitems}}''' ([[CVARs#boolean|boolean]])
+:default: false
+:When true, the fullscreen automap will display a count of all the "special" items you have found on the map. These are the same items that are used to determine the Items stat on the intermission screen.
+
+* '''{{LE|am_showkeys}}''' ([[CVARs#boolean|boolean]])
+:default: true
+:If true, {{Class|Key|keys}} are shown when using a map cheat to show items by a large key symbol instead of the usual triangle. Further, the color in which a key is drawn is corresponds to the color defined in [[LOCKDEFS]] for the first lock that this key can open.
+
+* '''{{LE|am_showkeys_always}}''' ([[CVARs#boolean|boolean]])
+:default: false
+:Similar to {{c|am_showkeys}} above, except that the keys are unconditionally shown.
+
+* '''{{LE|am_showmaplabel}}''' ([[CVARs#integer|integer]])
+:default: 2
+:Sets whether the map label (that is to say, the lump name of the map marker) is displayed in the automap before the map name. Possible values are 0 (never), 1 (always) and 2 (not for hubs). If a map has its own {{MapProperty|Label|label}} set through [[MAPINFO]], the label is always displayed regardless of this variable's value.
+
+* '''{{LE|am_showmonsters}}''' ([[CVARs#boolean|boolean]])
+:default: true
+:When true, the fullscreen automap will display a count of the number of monsters that have been killed in the current level and the total number of monsters in the level. 
+
+* '''{{LE|am_showsecrets}}''' ([[CVARs#boolean|boolean]])
+:default: true&lt;br&gt;
+:When true, the fullscreen automap will display a count of the number of secrets that have been found in the current level and the total number of secrets in the level. 
+
+* '''{{LE|am_showthingsprites}}''' ([[CVARs#integer|integer]])
+:default: 0&lt;br&gt;
+:Shows actors on the automap as the sprites they represent in-game instead of simple triangles when the {{c|am_cheat}} [[console variable]] is set to 2 or 3. Valid values are:
+:*0: Disables the option, showing the actors as simple triangles.
+:*1: Shows the front angle of the sprite.
+:*2: Shows the front angle of the sprite with animation.
+:*3: Shows the actor's sprite with animation and rotation.
+
+* '''{{LE|am_showtime}}''' ([[CVARs#boolean|boolean]])
+:default: true
+:When true, the fullscreen automap will display the total amount of time you have been in a level (excluding time that has been paused).
+
+* '''{{LE|am_showtotaltime}}''' ([[CVARs#boolean|boolean]])
+:default: false
+:When true, the fullscreen automap will display the total amount of time you have been in a game (excluding time that has been paused).
+
+* '''{{LE|am_showtriggerlines}}''' ([[CVARs#integer|integer]])
+:default: 0
+:Controls the drawing of lines with a player-triggerable action special on them in a different color:
+:*0: Option is disabled.
+:*1: Triggerable lines are colorized except doors.
+:*2: Triggerable lines are colorized including doors.
+
+* '''{{LE|am_textured}}''' ([[CVARs#boolean|boolean]])
+:default: false
+:If true, the full-screen automap will be textured, showing the floor textures of each subsector. The automap accounts for [[3D floor]]s, if any are present, by showing the top texture of the highest 3D floor below the player's eye but above the normal floor.
+:Note that textured automap require [[GL node]]s to be available. ZDoom can build GL nodes while loading the map, but will not do so unless needed. If you load a map without GL nodes, turning textured automap on will not take effect; though you can save and reload to force generation of GL nodes.
+
+==Fullscreen map colors==
+
+* '''{{LE|am_backcolor}}''' ([[CVARs#color|color]])
+:default: "6c 54 40" {{color|#6c5440}}
+:The color of the automap background. Changes to this cvar take effect the next time the automap is activated. 
+
+* '''{{LE|am_cdwallcolor}}''' ([[CVARs#color|color]])
+:default: "4c 38 20" {{color|#4c3820}}
+:The color of two-sided lines that have a different ceiling height on each side. 
+
+* '''{{LE|am_efwallcolor}}''' ([[CVARs#color|color]])
+:default: "66 55 55" {{color|#665555}}
+:The color of [[3D floor]] boundaries.
+
+* '''{{LE|am_fdwallcolor}}''' ([[CVARs#color|color]])
+:default: "88 70 58" {{color|#887058}}
+:The color of two-sided lines that have a different floor height on each side. 
+
+* '''{{LE|am_gridcolor}}''' ([[CVARs#color|color]])
+:default: "8b 5a 2b" {{color|#8b5a2b}}
+:The color of the automap grid.
+
+* '''{{LE|am_interlevelcolor}}''' ([[CVARs#color|color]])
+:default: "ff 00 00" {{color|#ff0000}}
+:The color of inter-level teleporters. These are teleporters that teleport you to a different map. 
+
+* '''{{LE|am_intralevelcolor}}''' ([[CVARs#color|color]])
+:default: "00 00 ff" {{color|#0000ff}}
+:The color of intra-level teleporters. These are teleporters that teleport you to a different location on the same map. 
+
+* '''{{LE|am_lockedcolor}}''' ([[CVARs#color|color]])
+:default: "00 00 98" {{color|#000098}}
+:The color of lines that open locked doors, provided the lock does not have a color defined in [[LOCKDEFS]].
+
+* '''{{LE|am_notseencolor}}''' ([[CVARs#color|color]])
+:default: "6c 6c 6c" {{color|#6c6c6c}}
+:The color of lines on the automap that haven't yet been seen. Visible with a computer area map. 
+
+* '''{{LE|am_secretsectorcolor}}''' ([[CVARs#color|color]])
+:default: "ff 00 ff" {{color|#ff00ff}}
+:The color of secret sector boundary lines on the automap. See [[#am_map_secret|am_map_secret]].
+
+* '''{{LE|am_secretwallcolor}}''' ([[CVARs#color|color]])
+:default: "00 00 00" {{color|#000000}}
+:The color of lines that are marked secret when you are using [[#am_cheat|am_cheat]]. When you aren't using the automap [[cheat]], secret walls are drawn the same color as one-sided lines.
+
+* '''{{LE|am_specialwallcolor}}''' ([[CVARs#color|color]])
+:default: "ff ff ff" {{color|#ffffff}}
+:The color of lines with a triggerable, non-door [[action special]]. See [[#showtriggerlines|showtriggerlines]].
+
+* '''{{LE|am_thingcolor}}''' ([[CVARs#color|color]])
+:default: "fc fc fc" {{color|#fcfcfc}}
+:The color of things revealed with the map cheat. Note that certain types of things can have a different color, as indicated by the following CVARs. 
+
+* '''{{LE|am_thingcolor_citem}}''' ([[CVARs#color|color]])
+:default: "fc fc fc" {{color|#fcfcfc}}
+:The color of {{Flag|COUNTITEM|count items}} revealed with the map cheat. 
+
+* '''{{LE|am_thingcolor_friend}}''' ([[CVARs#color|color]])
+:default: "fc fc fc" {{color|#fcfcfc}}
+:The color of allied players and friendly monsters revealed with the map cheat. 
+
+* '''{{LE|am_thingcolor_item}}''' ([[CVARs#color|color]])
+:default: "fc fc fc" {{color|#fcfcfc}}
+:The color of items revealed with the map cheat.
+
+* '''{{LE|am_thingcolor_monster}}''' ([[CVARs#color|color]])
+:default: "fc fc fc" {{color|#fcfcfc}}
+:The color of hostile monsters revealed with the map cheat. 
+
+* '''{{LE|am_thingcolor_ncmonster}}''' ([[CVARs#color|color]])
+:default: "fc fc fc" {{color|#fcfcfc}}
+:The color of non-counted, non-friendly monsters revealed with the map cheat. 
+
+* '''{{LE|am_tswallcolor}}''' ([[CVARs#color|color]])
+:default: "88 88 88" {{color|#888888}}
+:The color of two-sided lines that don't have any difference in floor or ceiling heights on either side. Only seen using map cheat.
+
+* '''{{LE|am_unexploredsecretcolor}}''' ([[CVARs#color|color]])
+:default: "ff 00 ff" {{color|#ff00ff}}
+:The color of undiscovered secret sector boundary lines on the automap. See [[#am_map_secret|am_map_secret]].
+
+* '''{{LE|am_wallcolor}}''' ([[CVARs#color|color]])
+:default: "2c 18 08" {{color|#2c1808}}
+:The color of one-sided and secret walls in the automap.
+
+* '''{{LE|am_xhaircolor}}''' ([[CVARs#color|color]])
+:default: "80 80 80" {{color|#808080}}
+:The color of the "crosshair" dot in the center of the automap. 
+
+* '''{{LE|am_yourcolor}}''' ([[CVARs#color|color]])
+:default: "fc e8 d8" {{color|#fce8d8}}
+:The color of the arrow representing the player in single player games.
+
+==Overlay map colors==
+
+* '''{{LE|am_ovcdwallcolor}}''' ([[CVARs#color|color]])
+:default: "00 88 44" {{color|#008844}}
+:The color of two-sided lines that have a different ceiling height on each side when the map is overlayed.
+
+* '''{{LE|am_ovefwallcolor}}''' ([[CVARs#color|color]])
+:default: "00 88 44" {{color|#008844}}
+:The color of [[3D floor]] boundaries when the map is overlayed.
+
+* '''{{LE|am_ovfdwallcolor}}''' ([[CVARs#color|color]])
+:default: "00 88 44" {{color|#008844}}
+:The color of two-sided lines that have a different floor height on each side when the map is overlayed.
+
+* '''{{LE|am_ovotherwallscolor}}''' ([[CVARs#color|color]])
+:default: "00 88 44" {{color|#008844}}
+:The color of passable lines on the automap when the map is overlayed. 
+
+* '''{{LE|am_ovsecretsectorcolor}}''' ([[CVARs#color|color]])
+:default: "00 ff ff" {{color|#00ffff}}
+:The color of secret sector boundary lines on the automap when the map is overlayed. See [[#am_map_secret|am_map_secret]].
+
+* '''{{LE|am_ovspecialwallcolor}}''' ([[CVARs#color|color]])
+:default: "ff ff ff" {{color|#ffffff}}
+:The color of lines with a triggerable, non-door [[action special]] when the map is overlayed. See [[#showtriggerlines|showtriggerlines]].
+
+* '''{{LE|am_ovtelecolor}}''' ([[CVARs#color|color]])
+:default: "ff ff 00" {{color|#ffff00}}
+:The color of teleporters (both inter- and intra-level) on the overlayed automap.
+
+* '''{{LE|am_ovthingcolor}}''' ([[CVARs#color|color]])
+:default: "e8 88 00" {{color|#e88800}}
+:The color of things visible with the automap cheat when the map is overlayed. 
+
+* '''{{LE|am_ovthingcolor_citem}}''' ([[CVARs#color|color]])
+:default: "e8 88 00" {{color|#e88800}}
+:The color of {{Flag|COUNTITEM|count items}} revealed with the map cheat when the map is overlayed. 
+
+* '''{{LE|am_ovthingcolor_friend}}''' ([[CVARs#color|color]])
+:default: "e8 88 00" {{color|#e88800}}
+:The color of allied players and friendly monsters revealed with the map cheat when the map is overlayed. 
+
+* '''{{LE|am_ovthingcolor_item}}''' ([[CVARs#color|color]])
+:default: "e8 88 00" {{color|#e88800}}
+:The color of items revealed with the map cheat when the map is overlayed.
+
+* '''{{LE|am_ovthingcolor_monster}}''' ([[CVARs#color|color]])
+:default: "e8 88 00" {{color|#e88800}}
+:The color of hostile monsters revealed with the map cheat when the map is overlayed.
+
+* '''{{LE|am_ovthingcolor_ncmonster}}''' ([[CVARs#color|color]])
+:default: "e8 88 00" {{color|#e88800}}
+:The color of non-counted, non-friendly monsters revealed with the map cheat when the map is overlayed.
+
+* '''{{LE|am_ovunexploredsecretcolor}}'''  ([[CVARs#color|color]])
+:default: "00 ff ff" {{color|#00ffff}}
+:The color of undiscovered secret sector boundary lines on the automap when the map is overlayed. See [[#am_map_secret|am_map_secret]].
+
+* '''{{LE|am_ovunseencolor}}''' ([[CVARs#color|color]])
+:default: "00 22 6e" {{color|#00226e}}
+:The color of unseen lines on the automap when the map is overlayed. 
+
+* '''{{LE|am_ovwallcolor}}''' ([[CVARs#color|color]])
+:default: "00 ff 00" {{color|#00ff00}}
+:The color of impassable walls when the automap is overlayed. 
+
+* '''{{LE|am_ovyourcolor}}''' ([[CVARs#color|color]])
+:default: "fc e8 d8" {{color|#fce8d8}}
+:The color of the arrow representing the player in single player games when the map is overlayed.
+
+==Miscellaneous==
+* '''{{LE|am_showsubsector}}''' ([[CVARs#integer|integer]])
+:default: -1
+:If set to a positive or null value no larger than the amount of subsectors in the map, the corresponding subsector will be drawn. This has no use beyond debugging.
+
+==See also==
+* [[Automap]]
+* [[Automap options]]
+* [[CCMDs]]
+* [[CVARs]]
+
+[[category:ZDoom console]]</text>
+    <sha1>m5yzu4i9ycjfykz77r3y3krrmr5gnbo</sha1>
+  </revision>
+</page>

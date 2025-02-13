@@ -1,0 +1,138 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>A FireProjectile</title>
+  <ns>0</ns>
+  <id>8975</id>
+  <revision>
+    <id>53830</id>
+    <parentid>53776</parentid>
+    <timestamp>2024-11-22T10:21:34Z</timestamp>
+    <contributor>
+      <username>Jekyll Grim Payne</username>
+      <id>2175</id>
+    </contributor>
+    <minor />
+    <origin>53830</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="6154" sha1="qeuye1h9jbgi63g6eq4l5jkcqnmkb6d" xml:space="preserve">'''[[Classes:StateProvider|StateProvider]]'''
+{{DISPLAYTITLE:A_FireProjectile}}
+{{c|action Actor, Actor '''A_FireProjectile'''(class&lt;Actor&gt; ''missiletype'', double ''angle'' {{=}} 0, bool ''useammo'' {{=}} true, double ''spawnofs_xy'' {{=}} 0, double ''spawnheight'' {{=}} 0, EFireCustomMissileFlags ''flags'' {{=}} 0, double ''pitch'' {{=}} 0)}}
+
+==Usage==
+Fires a projectile from a {{Class|Weapon}} or a {{Class|CustomInventory}}. Optionally you can specify an angle and a spawn offset.
+
+This serves as a replacement for [[A_FireCustomMissile]] which has a pitch miscalculation in it.
+
+===Parameters===
+*{{c|class&lt;Actor&gt; '''missiletype'''}}
+:The class name of the projectile to fire.
+*{{c|double '''angle'''}}
+:Adds this much offset to the actor's angle, which is aimed at the target first. Default is 0.
+*{{c|bool '''useammo'''}}
+:If true, the function will consume ammo. The type of ammo is determined by the [[Actor properties#Weapon.AmmoType1|AmmoType1]]/[[Actor properties#Weapon.AmmoType2|AmmoType2]] properties, and the amount consumed is determined by [[Actor properties#Weapon.AmmoUse1|AmmoUse1]]/[[Actor properties#Weapon.AmmoUse2|AmmoUse2]].
+:If there's a need to consume ammo manually, pass false to this argument and use [[DepleteAmmo]] to consume ammo.
+*{{c|double '''spawnofs_xy'''}}
+:Moves the projectile spawn point to the right if positive, left if negative. Default is 0.
+*{{c|double '''spawnheight'''}}
+:Raises the projectile spawn point on the actor by this amount in units. Default is 0, which spawns at the player's attack height.
+*{{c|EFireCustomMissileFlags '''flags'''}}
+:Customizes the behavior of the function. Multiple flags can be combined by using the bitwise OR operator (&lt;code&gt;|&lt;/code&gt;) between the constant names:
+:*'''{{c|FPF_AIMATANGLE}}''' — Alternate autoaim behavior, relevant when playing with [[autoaim]]. Autoaiming is based off of the projectile's trajectory instead of the player's aim. If this flag is set, the engine looks at the horizontal line of fire projected for the projectile, independent of the player's aim. If the horizontal line of fire cuts close enough to a valid target (again ignoring vertical aim), that projectile will fire directly towards that target. If this flag is ''not'' set, the engine looks at the player's horizontal aim. If the horizontal line of fire cuts close enough to a valid target (ignoring vertical aim), the resulting projectile will fire with the vertical angle adjusted to aim directly at the target.
+:*'''{{c|FPF_TRANSFERTRANSLATION}}''' — Transfer Translation. The projectile fired uses the same translation as the actor that fired it. In most cases, this will be the player.
+:*'''{{c|FPF_NOAUTOAIM}}''' — Disables [[autoaim]] for this attack.
+*{{c|double '''pitch'''}}
+:Offsets the projectile's aim vertically by this amount. Positive values aim down, while negative values aim up. The value is added on top of player's pitch and isn't absolute.
+
+===Return values===
+'''A_FireProjectile''' returns two Actor pointers, both pointing to the projectile that was fired. While they point to the same actor, they're created with different conditions:
+* The first pointer is only created if the projectile managed to enter its [[Actor states|Spawn state sequence]]. If the projectile is fired an an enemy, object or a wall at a point-blank range, it'll instead immediately enter its Death (Crash, XDeath, etc.) state sequence, completely skipping Spawn, and this pointer will be '''null'''.
+* The second pointer is ''always'' created, regardless of the state sequence the projectile entered.
+As such, if there's a need to modify some properties of the projectile, the second pointer should be used, because the first one is simply not guaranteed to exist. (The second pointer should still be null-checked for safety, but normally it will never be null).
+
+Example:
+
+&lt;syntaxhighlight lang="csharp"&gt;
+// Create two pointers:
+Actor p1, p2;
+// Cast both of them to the projectile:
+[p1, p2] = A_FireProjectile("Rocket");
+// Modify the resulting projectile's damage:
+if (p2)
+{
+	p2.SetDamage(80);
+}
+&lt;/syntaxhighlight&gt;
+
+== Examples ==
+&lt;syntaxhighlight lang="csharp"&gt;
+   Fire:
+      TRIF A 5 Bright A_FireProjectile("RifleBullet", spawnofs_xy:8, spawnheight:8);
+      TRIF B 5 Bright;
+      TRIG A 10;
+      TRIG B 0 A_Refire;
+      Goto Ready;
+&lt;/syntaxhighlight&gt;
+
+== [[ZScript]] definition ==
+{{ZScriptDefinitionNote|actors/inventory/stateprovider.zs#L210}}
+&lt;syntaxhighlight lang="csharp"&gt;
+action Actor, Actor A_FireProjectile(class&lt;Actor&gt; missiletype, double angle = 0, bool useammo = true, double spawnofs_xy = 0, double spawnheight = 0, int flags = 0, double pitch = 0)	
+{
+	let player = self.player;
+	if (!player) return null, null;
+
+	let weapon = player.ReadyWeapon;
+
+	FTranslatedLineTarget t;
+
+		// Only use ammo if called from a weapon
+	if (useammo &amp;&amp; weapon &amp;&amp; stateinfo != null &amp;&amp; stateinfo.mStateType == STATE_Psprite)
+	{
+		if (!weapon.DepleteAmmo(weapon.bAltFire, true))
+			return null, null;	// out of ammo
+	}
+
+	if (missiletype) 
+	{
+		double ang = self.Angle - 90;
+		Vector2 ofs = AngleToVector(ang, spawnofs_xy);
+		double shootangle = self.Angle;
+
+		if (flags &amp; FPF_AIMATANGLE) shootangle += angle;
+
+		// Temporarily adjusts the pitch
+		double saved_player_pitch = self.Pitch;
+		self.Pitch += pitch;
+
+		Actor misl, realmisl;
+		[misl, realmisl] = SpawnPlayerMissile (missiletype, shootangle, ofs.X, ofs.Y, spawnheight, t, false, (flags &amp; FPF_NOAUTOAIM) != 0);
+		self.Pitch = saved_player_pitch;
+
+		if (realmisl &amp;&amp; flags &amp; FPF_TRANSFERTRANSLATION)
+			realmisl.Translation = Translation;
+
+		// automatic handling of seeker missiles
+		if (misl)
+		{
+			if (t.linetarget &amp;&amp; !t.unlinked &amp;&amp; misl.bSeekerMissile)
+				misl.tracer = t.linetarget;
+			if (!(flags &amp; FPF_AIMATANGLE))
+			{
+				// This original implementation is to aim straight ahead and then offset
+				// the angle from the resulting direction. 
+				misl.Angle += angle;
+				misl.VelFromAngle(misl.Vel.XY.Length());
+			}
+		}
+		return misl, realmisl;
+	}
+	return null, null;
+}&lt;/syntaxhighlight&gt;
+
+[[Category:ZScript]]
+[[Category:DECORATE]]
+[[category:Decorate Weapon attack functions]]
+[[Category:StateProvider]]</text>
+    <sha1>qeuye1h9jbgi63g6eq4l5jkcqnmkb6d</sha1>
+  </revision>
+</page>

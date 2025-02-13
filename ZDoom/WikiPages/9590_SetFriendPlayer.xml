@@ -1,0 +1,50 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>SetFriendPlayer</title>
+  <ns>0</ns>
+  <id>9590</id>
+  <revision>
+    <id>49145</id>
+    <timestamp>2022-05-19T00:59:02Z</timestamp>
+    <contributor>
+      <username>Inkoalawetrust</username>
+      <id>2604</id>
+    </contributor>
+    <comment>Created the page.</comment>
+    <origin>49145</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="770" sha1="fpgkuoytv6un828w2jjial4gpo091yg" xml:space="preserve">Void '''SetFriendPlayer''' ([[PlayerInfo]] ''Player'')
+
+== Usage ==
+Sets the calling actors' friendplayer (The player they work for.) to the specified player. Keep in the mind that changing an actors' friendplayer is only really relevant in [[multiplayer]] games.
+
+=== Parameters ===
+*''Player'' - The specific player to the set the actors' friendplayer to.
+
+== Examples ==
+This Imp is {{flag|FRIENDLY|friendly}} to players. But will defect to whichever player pressed use on him.
+
+ Class DefectingImp : {{class|DoomImp}} Replaces DoomImp
+ {
+ 	Default
+ 	{
+ 		+Friendly;
+ 	}
+ 	Override Bool [[Used]] (Actor User)
+ 	{
+ 		Super.Used (User);
+ 		
+ 		If (User &amp;&amp; User.Player)
+ 		{
+ 			'''SetFriendPlayer''' (User.Player);
+ 		}
+ 		
+ 		Return True;
+ 	}
+ }
+
+
+[[Category:ZScript]]</text>
+    <sha1>fpgkuoytv6un828w2jjial4gpo091yg</sha1>
+  </revision>
+</page>

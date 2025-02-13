@@ -1,0 +1,51 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>Classes:Volcano</title>
+  <ns>0</ns>
+  <id>4156</id>
+  <revision>
+    <id>39386</id>
+    <parentid>34101</parentid>
+    <timestamp>2015-04-29T17:46:43Z</timestamp>
+    <contributor>
+      <username>Blue Shadow</username>
+      <id>2021</id>
+    </contributor>
+    <minor />
+    <comment>/* DECORATE definition */ Updated</comment>
+    <origin>39386</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="654" sha1="2aao72n3zoi4iv1kxjcv3yaat9e9rav" xml:space="preserve">[[File:Class_Volcano_Doom.jpg|thumb|Several volcanoes in a Doom II setting.]]{{Actor|
+| type = Hazard
+| name = Volcano
+| class = Volcano
+| game = Heretic
+| doomednum = 87
+| spawnid = 150
+| spawnname = T_VOLCANO
+}}[[Classes]]: &lt;u&gt;Volcano&lt;/u&gt;&lt;br&gt;
+A miniature volcano that spouts gouts of fire.
+
+==== [[DECORATE]] definition ====
+ ACTOR &lt;u&gt;Volcano&lt;/u&gt;
+ {
+   {{Property|Radius}} 12
+   {{Property|Height}} 20
+   +{{Flag|SOLID}}
+ 
+   action native [[A_VolcanoSet]]();
+   action native [[A_VolcanoBlast]]();
+ 
+   States
+   {
+   Spawn:
+     VLCO A 350
+     VLCO A 35 [[A_VolcanoSet]]
+     VLCO BCDBCD 3
+     VLCO E 10 [[A_VolcanoBlast]]
+     Goto Spawn+1
+   }
+ }</text>
+    <sha1>2aao72n3zoi4iv1kxjcv3yaat9e9rav</sha1>
+  </revision>
+</page>

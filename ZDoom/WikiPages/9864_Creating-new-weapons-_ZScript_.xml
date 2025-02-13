@@ -1,0 +1,242 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>Creating new weapons (ZScript)</title>
+  <ns>0</ns>
+  <id>9864</id>
+  <revision>
+    <id>52608</id>
+    <parentid>52347</parentid>
+    <timestamp>2024-05-08T10:11:56Z</timestamp>
+    <contributor>
+      <username>Jekyll Grim Payne</username>
+      <id>2175</id>
+    </contributor>
+    <minor />
+    <comment>/* How to see your weapon in the game */</comment>
+    <origin>52608</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="15429" sha1="7qc1w69jcpix52nvu8xypkjt8co7r28" xml:space="preserve">Weapons are classes based on the {{class|Weapon}} class, which is a subtype of {{class|Inventory}}. Like items, they can be placed in the player's inventory, but in addition to that they can display sprite animations on the player's screen and perform attacks when the player presses fire/altfire buttons.
+
+'''Note:''' This tutorial uses custom sprites, which are not provided. You should provide sprites with these names or adapt the code to use standard sprite names if you want to actually test this code in GZDoom.
+
+== [[ZScript]] code ==
+This is an example of a basic weapon that very closely imitates {{class|SuperShotgun|Doom's Super Shotgun}}:
+
+   class UberShotgun : {{Class|Weapon}}
+   {
+      Default
+      {
+          {{Property|Inventory.PickupSound}} "misc/usgpickup";
+          {{Property|Inventory.PickupMessage}} "Picked up the Ubser Shotgun!"; {{LanguageCodeNote}}
+          {{Property|Weapon.SelectionOrder}} 350;
+          {{Property|Weapon.AmmoType}} "Shell";
+          {{Property|Weapon.AmmoGive}} 12;
+          {{Property|Weapon.AmmoUse}} 4;
+          {{Property|Weapon.SlotNumber}} 3;
+          {{Property|AttackSound}} "weapons/ubersgf"; {{comment|This sound will be played automatically by A_FireBullets}}
+      }
+      [[Actor states|States]]
+      {
+      {{comment|This sequence is entered when the weapon spawns in the world}}
+      {{comment|or is dropped from inventory:}}
+      Spawn: 
+         USGP A -1;
+         Stop;
+      {{comment|This sequence is used while you have this weapon selected:}}
+      Ready: 
+         USHG A 1 [[A_WeaponReady]]; {{comment|Allows the weapon to be fired or deselected}}
+         Loop;
+      {{comment|This sequence is entered when you select this weapon:}}
+      Select:
+         USHG A 1 [[A_Raise]]; {{color|darkgreen|//Keeps raising the weapon's sprite until it reaches 32, then jumps to ready}}
+         Loop;
+      {{comment|This sequence is entered when you deselect the current selected weapon:}}
+      Deselect:
+         USHG A 1 [[A_Lower]]; {{color|darkgreen|//Keeps lowering the weapon's sprite until it's below the screen}}
+         Loop; 
+      {{comment|The attack sequence. Entered while the player presses the Fire button}}
+      {{comment|while the weapon was ready:}}
+      Fire:
+         USHG A 3;
+         USHG A 7 
+         {
+             [[A_FireBullets]] (13.4, 9.2, 50, 10);
+             [[A_GunFlash]](); {{comment|Plays the weapon's Flash sequence on a separate layer}}
+         }
+         USHG B 7;
+         USHG C 7 [[A_CheckReload]]; {{comment|If the weapon has run out of ammo here, it'll be deselected without playing the rest of the animation}}
+         USHG D 7 [[A_StartSound]]("weapons/sshoto", CHAN_WEAPON);
+         USHG E 7;
+         USHG F 7 [[A_StartSound]] ("weapons/sshotl", CHAN_WEAPON);
+         USHG G 6;
+         [[TNT1]] A 0 [[A_StartSound]] ("weapons/sshotc", CHAN_WEAPON);
+         USHG HHHHHHAAAAA 1 [[A_ReFire]];
+         Goto Ready;
+      {{comment|The weapon's flash animation which is drawn on a separate layer:}}
+      Flash:
+         USGF A 6 bright [[A_Light1]];
+         Goto LightDone; {{comment|LightDone is a built-in state that resets the light created by [[A_Light1]] and similar functions}}
+      }
+   }
+
+Now that big chunk of code describes the functions and states of a shotgun. Let's analyse this code.
+
+== Defining an actor == 
+*&lt;code&gt;class UberShotgun : Weapon&lt;/code&gt;
+:Creates a new {{class|Actor|actor}} class UberShotgun based on the {{class|Weapon}} class. In order to make a weapon, the actor ''always'' has to inherit from {{class|Weapon}} or another actor that ''does'' inherit from {{class|Weapon}} (for example, {{class|Shotgun}}).
+
+All Doom weaposn inherit from the {{class|DoomWeapon}} class. It's an extremely simple class that doesn't define anything unique besides {{property|Weapon.KickBack}}. You may or may not inherit from it.
+
+The brackets &lt;code&gt;{ }&lt;/code&gt; define the start and end of the code block. All the information pertaining to this actor ''must'' be within these brackets.
+
+=== Actor properties ===
+The actor properties are provided within the &lt;code&gt;Default { }&lt;/code&gt; block. The full list of all possible actor properties can be seen [[Actor properties|'''here''']].
+
+Weapons utilize a number of [[Actor properties#Inventory|Inventory properties]], such as {{property|Inventory.PickupSound}} and {{property|Inventory.PickupMessage}}.
+
+Next there are various [[Actor properties|#Weapon|weapon properties]], such as the ammo type the weapon uses, and how much it uses with each shot.
+
+*'''{{Property|Weapon.AmmoType}} "Shell"'''
+:Defines the primary ammo type used by the weapon.
+
+*'''{{Property|Weapon.AmmoGive}} 12'''
+:How much ammo of the primary type the weapon will give as soon as it's pixed up. This is NOT the maximum amount of ammo it can hold (that is defined in the ammo itself through ammo's {{property|Inventory.MaxAmount}} property).
+
+*'''{{Property|Weapon.AmmoUse}} 4'''
+:How much ammo the weapon will use when firing the weapon. The ammo is consumed when one of the attack function is called; in the example above it's [[A_FireBullets]]. Note, attack functions can be explicitly set to not consume ammo (see the function page for details).
+
+*'''{{Property|Weapon.SlotNumber}} 3'''
+:Attaches the weapon to slot 3. There are other ways to set [[weapon slots]], but this is the simplest by far. 
+
+*'''{{Property|AttackSound}} "weapons/ubersgf"'''
+:The [[SNDINFO]] sound that will be played automatically when the weapon calls [[A_FireBullets]] or some other attack functions (such as [[A_CustomPunch]]). Note, this doesn't have to be used; it's perfectly possible to play a sound manually with [[A_StartSound]].
+:Projectile weapons normally don't use it; instead, the projectile itself will play its {{property|SeeSound}}. See {{class|Rocket}} for an example.
+
+*'''{{Property|Weapon.SelectionOrder}} 350'''
+:Determines the weapon's selection priority. When a weapon runs out of ammo, you'll be automatically switched to the weapon with the highest available priority. Note, this number words in reverse: '''the lower the number, the higher the priorty'''. So if you run out of ammo, you might switch to the Super Shotgun, rather than the Pistol, because its priority is higher.
+
+There are other properties you can set here, but they are not all required for every weapon. This weapon [[using inheritance|inherits]] all of its missing properties from the original shotgun. Like the pickup message, if we wanted to define a custom pickup message, then we could put in a line of code that looks like this; 
+
+=== Actor states ===
+
+The next chunk in the code defines the [[Actor states]] of the weapon. There's a list of actor states that are entered automatically when certain things happen. Custom states can be added as well and entered with custom instructions, but this isn't used in the example above.
+
+You can find most of the information about states on the '''[[Actor states]]''' page. A few extra general notes:
+
+* The states block begins with the keyword &lt;code&gt;States&lt;/code&gt;, and the block itself is surrounded by curly braces &lt;code&gt;{ }&lt;/code&gt;.
+* Certain states are entered automatically:
+:* '''Select'''
+::Used when the weapon is selected. Usually [[A_Raise]] is called here to raise the sprite.
+:* '''Deselect'''
+::Used when the weapon is deselected. [[A_Lower]] is required here to lower the sprite and perform deselection.
+:* '''Ready'''
+::Entered automatically from Select. This sequence is then looped while the weapon is ready to fire. [[A_WeaponReady]] must be called here in order to let the weapon fire or be deselected.
+:* '''Fire'''
+::Entered when the player presses the Fire button while the weapon was calling [[A_WeaponReady]].
+::Often [[A_ReFire]] is used in this sequence, to allow the playere to automatically continue firing by holding the Fire button. If this happens, the animation defined after the [[A_ReFire]] call will be cut short, and will only play in full if the player didn't hold [[A_ReFire]].
+
+Let's look at our weapon's state sequences:
+
+==== Spawn ====
+      Spawn: 
+         USGP A -1;
+         Stop;
+
+Spawn is the state sequence the weapon will be in when it is spawned as a pickup. This state definition is very simple. The shotgun lying on the ground will display the sprite USGPA until it's picked up by the player.
+
+This sequence is not looped. The USGP A sprite is shown once, and due to its duration being -1, it's not animated further. Since we don't have any animation in the Spawn sequence, this is desired.
+
+==== Ready ==== 
+      Ready: 
+         USHG A 1 [[A_WeaponReady]]; {{comment|Allows the weapon to be fired or deselected}}
+         Loop;
+
+This state will be entered when the weapon has been selected. The action [[A_WeaponReady]] tells GZDoom that the weapon is ready, i.e. it can fire, be deselected, and freely bob. The sprite, USHGA, is the image of the shotgun when it's not doing anything.
+
+Note that this sequence is looped, so [[A_WeaponReady]] is being called continuously.
+
+==== Select and Deselect ====
+      {{comment|This sequence is entered when you select this weapon:}}
+      Select:
+         USHG A 1 [[A_Raise]]; {{color|darkgreen|//Keeps raising the weapon's sprite until it reaches 32, then jumps to ready}}
+         Loop;
+      {{comment|This sequence is entered when you deselect the current selected weapon:}}
+      Deselect:
+         USHG A 1 [[A_Lower]]; {{color|darkgreen|//Keeps lowering the weapon's sprite until it's below the screen}}
+         Loop; 
+
+By default, when a weapon is selected, its sprite is drawn off the screen. The action [[A_Raise]] moves the sprite up, and by looping the state sequence, the weapon will be moved until its sprite is at the correct vertical position, at which point the game will go to the Ready state sequence. 
+
+The speed of selection can be increased, because [[A_Raise]] has a speed argument. The default value is 6; by using &lt;code&gt;A_Raise(12)&lt;/code&gt;, for example, you will make the raising animation twice as fast. The same rule applies to [[A_Lower]] which can be sped up.
+
+==== Fire ====
+The Fire state sequence is entered when the player presses the Fire button ''while'' the weapon was calling [[A_WeaponReady]]:
+      Fire:
+         USHG A 3;
+         USHG A 7 
+         {
+             [[A_FireBullets]] (13.4, 9.2, 50, 10);
+             [[A_GunFlash]](); {{comment|Plays the weapon's Flash sequence on a separate layer}}
+         }
+         USHG B 7;
+         USHG C 7 [[A_CheckReload]]; {{comment|If the weapon has run out of ammo here, it'll be deselected without playing the rest of the animation}}
+         USHG D 7 [[A_StartSound]]("weapons/sshoto", CHAN_WEAPON);
+         USHG E 7;
+         USHG F 7 [[A_StartSound]] ("weapons/sshotl", CHAN_WEAPON);
+         USHG G 6;
+         [[TNT1]] A 0 [[A_StartSound]] ("weapons/sshotc", CHAN_WEAPON);
+         USHG HHHHHHAAAAA 1 [[A_ReFire]];
+         goto Ready;
+
+The weapon uses [[A_FireBullets]] to perform an attack, and [[A_GunFlash]] to draw the Flash state sequence on a different layer (above the weapon). Note, GZDoom is not limited to [[A_GunFlash]] for this; in many cases using [[A_Overlay]] may be a better option (for example, to draw the flash below the weapon rather than on top of it.
+
+[[A_CheckReload]] checks if the player has enough ammo to make ''another'' shot. If not, the weapon will be immediately deselected without playing the rest of the animation. Doom's {{class|SuperShotgun}} uses it, but it's not obligatory. You can play the whole state sequence instead, and the weapon will be deselected the next time the player tries to fire without having ammo.
+
+Note this bit:
+         USHG A 7 
+         {
+             [[A_FireBullets]] (13.4, 9.2, 50, 10);
+             [[A_GunFlash]](); {{comment|Plays the weapon's Flash sequence on a separate layer}}
+         }
+
+Here, an [[Anonymous functions|anonymous function]] is created with the help of another code block. This attaches two separate functions ([[A_FireBullets]] and [[A_GunFlash]]) to the USGHA sprite and executes them together.
+
+Afterwards, three sounds are played with [[A_StartSound]] (shotgun opening and closing).
+
+After that in &lt;code&gt;USHG HHHHHHAAAAA 1 A_ReFire&lt;/code&gt; the weapon is allowed to refire. If the player was holding the Fire button by the time this part of the code is reached, the USGH HHHHHAAAA animation will NOT be actually played, and instead the weapon will go back to the beginning of Fire.
+
+Note, [[A_ReFire]] detects when the player presses Fire, but, in contrast to [[A_WeaponReady]], it does NOT allow switching the weapon mid-animation. You ''can'' use [[A_WeaponReady]] instead of [[A_ReFire]] to enable cancelling the animation not only by firing but also by switching. However, [[A_ReFire]] has a few extra special behaviors that are described on the function's page.
+
+Note, if you want the weapon to have two different animations for the first shot and for all subsequent shots, you can also define the '''Hold''' [[Actor states|state sequence]]: if it exists, [[A_ReFire]] will jump to it instead of jumping back to Fire.
+
+If the player wasn't holding the Fire button, the whole USGH HHHHHAAAA animation will be played, and &lt;code&gt;goto Ready&lt;/code&gt; will send the weapon back to the Ready sequence.
+
+==== Flash ====
+
+The last sequence in the weapon is Flash:
+      Flash:
+         USGF A 6 bright [[A_Light1]];
+         Goto LightDone;
+
+This sequence is created when [[A_GunFlash]] is called in the Fire sequence, and is immediately drawn as a &lt;u&gt;separate sprite layer&lt;/u&gt; on top of the main sprite layer. This is mostly done so that the weapon's muzzle flash could be a separate sprite and can be drawn full bright.
+
+Note, using [[A_GunFlash]] is not a requirement nowadays. You can use [[A_Overlay]] to draw the same state sequence elsewhere, for example ''below'' the weapon.
+
+The sequence uses [[A_Light1]] which slightly illuminates the whole level. Nowadays, you can also use different methods, such as [[A_AttachLight]] to attach a [[Dynamic light|dynamic light]] instead.
+
+&lt;code&gt;goto LightDone&lt;/code&gt; sends the state sequence to the built-in '''LightDone''' state sequence. It's defined in the base {{class|Weapon|Weapon class}}. All it does is call [[A_Light0]] to disable lighting effects set by [[A_Light1]] previously, and then destroys the sprite layer (since it's a separate layer and we don't need it to exist all the time). Note, using &lt;code&gt;goto LightDone&lt;/code&gt; is common but is NOT a requirement. You can safely replace it with a manual call:
+
+      Flash:
+         USGF A 6 bright [[A_Light1]];
+         [[TNT1]] A 0 [[A_Light0]]; {{color|darkgreen|//Remove the light}}
+         stop; {{color|darkgreen|//Destroy this sprite layer}}
+
+== How to see your weapon in the game ==
+New actors can appear in the game either by [[Actor_replacement|&lt;u&gt;replacing an existing actor&lt;/u&gt;]] (this is how gameplay mods ''without'' custom maps do it) or by giving them an [[MAPINFO/Editor_number_definition|&lt;u&gt;editor number&lt;/u&gt;]] and placing it into your map in the [[Ultimate Doom Builder|map editor]].
+
+Note, if you want this weapon to be available to the player from the start (like {{class|Pistol}} and {{class|Fist}} in Doom), you will need to define a custom player class and add this weapon to it through the {{property|Player.StartItem}} property (see details [[Actor_replacement#Starting_player_items|'''here''']]).
+
+[[Category:ZScript guides]]</text>
+    <sha1>7qc1w69jcpix52nvu8xypkjt8co7r28</sha1>
+  </revision>
+</page>

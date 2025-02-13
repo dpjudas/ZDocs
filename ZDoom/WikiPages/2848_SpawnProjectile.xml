@@ -1,0 +1,53 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>SpawnProjectile</title>
+  <ns>0</ns>
+  <id>2848</id>
+  <revision>
+    <id>49273</id>
+    <parentid>49272</parentid>
+    <timestamp>2022-06-10T22:23:44Z</timestamp>
+    <contributor>
+      <username>Blue Shadow</username>
+      <id>2021</id>
+    </contributor>
+    <minor />
+    <comment>/* Examples */</comment>
+    <origin>49273</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="1318" sha1="41mol3ot3onn5wb8kpdppb5jozi8kia" xml:space="preserve">void '''SpawnProjectile''' (int ''tid'', string ''type'', int ''angle'', int ''speed'', int ''vspeed'', int ''gravity'', int ''newtid'');
+
+== Usage ==
+
+'''SpawnProjectile''' is similar to the [[Thing_Projectile]], [[Thing_ProjectileGravity]], and [[Thing_Projectile2]] specials, but instead of using a spawn ID you pass an actor's [[Classes|class]] name.
+
+== Examples ==
+This script will fire an {{Class|DoomImpBall|imp's fireball}} from the script activator's position, using the activator's angle, with a speed of 20.
+ script 1 (void)
+ {
+     [[SpawnProjectile]](0, "DoomImpBall", [[GetActorAngle]](0) &gt;&gt; 8, 20, 0, 0, 0);
+ }
+
+This script will make actors with a [[TID]] of 10 fire a {{Class|CacodemonBall|Cacodemon's fireball}} every 10 tics, with an angle of 128 and a speed of 40.
+
+ script 2 {{SType|OPEN}}
+ {
+     [[SpawnProjectile]](10, "CacodemonBall", 128, 40, 0, 0, 0);
+     [[Delay]](10);
+     [[Restart]];
+ }
+
+This script will fire a random projectile at a random angle from a thing with TID 1 as specified by the projectile array at a horizontal speed of 20.
+
+ str projectile[3] = {"DoomImpBall", "CacodemonBall", "{{class|BaronBall}}"};
+ 
+ script 3 (void)
+ {
+     [[SpawnProjectile]](1, projectile[ [[random]](0, 2) ], random(0, 255), 20, 0, 0, 0);
+ }
+
+{{spawn functions}}
+[[category:ACS Actor functions]]</text>
+    <sha1>41mol3ot3onn5wb8kpdppb5jozi8kia</sha1>
+  </revision>
+</page>

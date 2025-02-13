@@ -1,0 +1,80 @@
+<page xmlns="http://www.mediawiki.org/xml/export-0.11/">
+  <title>CVARs:Debug</title>
+  <ns>0</ns>
+  <id>3906</id>
+  <revision>
+    <id>49990</id>
+    <parentid>45739</parentid>
+    <timestamp>2022-12-19T15:20:05Z</timestamp>
+    <contributor>
+      <username>Inkoalawetrust</username>
+      <id>2604</id>
+    </contributor>
+    <comment>Documented the i_timescale CVAR, since it did not seem to be mentioned anywhere else on the wiki.</comment>
+    <origin>49990</origin>
+    <model>wikitext</model>
+    <format>text/x-wiki</format>
+    <text bytes="3524" sha1="r2qpepqsm62q2x48fxs7q7s2gwt8r2g" xml:space="preserve">These [[CVARs|console variables]] can be used for debugging purposes.
+
+See the [[CVARs]] article for general information on how to access and edit variables.
+
+* '''{{LE|debuganimated}}''' ([[CVARs#boolean|boolean]])
+:Default: false
+:When enabled, prints to the [[console]] some debug information while reading the [[ANIMATED]] lump. Since this variable is not archived and all control lumps have been already loaded when the console is available, this can only be used if set from the [[command line parameters|command line]] or an [[CCMDs#AutoExec|autoexec.cfg]] file.
+
+* '''{{LE|developer}}''' ([[CVARs#integer|integer]])
+:Default: 0
+:Prints various debugging messages to the [[console]]. Setting this to a value from 1 to 4 controls the severity level, with the levels being:
+:*'''1''': errors
+:*'''2''': warnings
+:*'''3''': notifications
+:*'''4''': everything
+
+* '''{{LE|dumpspawnedthings}}''' ([[CVARs#boolean|boolean]])
+:Default: false
+:Enables a listing of all things in the map and the actor type they spawned while a level is being loaded. (This does not concern things spawned during the game.)
+
+* '''{{LE|idmypos}}''' ([[CVARs#boolean|boolean]])
+:Default: false
+:When true, constantly displays the player's current position and view angle. It also displays the current map's name ([[alternate HUD]] only).
+
+* '''{{LE|noise}}''' ([[CVARs#boolean|boolean]])
+:Default: false
+:When set to true, the current status of all sound channels is displayed on the screen. Internally, this console variable is called {{c|noisedebug}}.
+
+* '''{{LE|profilethinkers}}''' ([[CVARs#boolean|boolean]])
+:Default: false
+:When set to true, a print out of all actors/classes, their total counts for the map, and the time in ms being taken up by their thinkers, are displayed in the console.
+
+* '''{{LE|showloadtimes}}''' ([[CVARs#boolean|boolean]])
+:Default: false
+:When set to true, various performance counters will be printed to the console whenever a map is loaded.
+
+* '''{{LE|script_debug}}''' ([[CVARs#boolean|boolean]])
+:Default: false
+:If set to true, the [[FraggleScript]] parser will log its tokens to the [[console]].
+
+* '''{{LE|ticker}}''' ([[CVARs#boolean|boolean]])
+:Default: false
+:When true, draws a series of dots at the bottom of the screen representing the number of [[tic]]s it took to display the current frame. (One tic is 1/35th of a second.) When -devparm is specified on the command line, this CVAR is automatically set to true. You can get a rough idea of your FPS by counting the number of lit dots and dividing that from 35. A better way would be to use [[#vid_fps|vid_fps]]. 
+
+* '''{{LE|tilt}}''' ([[CVARs#boolean|boolean]])
+:Default: false
+:Setting this to true causes all planes to be drawn using the sloped drawer, even if they aren't sloped. 
+
+* '''{{LE|vid_fps}}''' ([[CVARs#boolean|boolean]])
+:Default: false
+:When true, displays the average framerate over the past second in the upper-right corner of the screen. Because the Doom engine's internal game rate and frame rate are linked, the framerate will never be (much) above 35 fps if {{CVAR|R|cl_capfps}} is true.
+
+* '''{{LE|i_timescale}}''' ([[CVARs#float|float]])
+:Default: 1.0
+:Controls the speed of '''''the entire game program'''''. This means that changing the value of this CVAR can speed up or slow down not only the game world, but also everything else in the game, including the UI. The minimum time scale value possible is 0.05. This CVAR can not be changed in [[netgame]]s.
+
+==See also==
+*[[CVARs]]
+*[[CCMDs]]
+
+[[category:ZDoom console]]</text>
+    <sha1>r2qpepqsm62q2x48fxs7q7s2gwt8r2g</sha1>
+  </revision>
+</page>
