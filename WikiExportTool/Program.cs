@@ -21,6 +21,7 @@ namespace WikiExportTool
                 if (command == "export")
                 {
                     WikiExporter.ExportPages();
+                    WikiExporter.ExportCategories();
                     return 0;
                 }
                 else if (command == "convert" && args.Length == 2)

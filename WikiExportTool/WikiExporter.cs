@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Newtonsoft.Json.Linq;
+using System;
 using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.IO;
@@ -18,6 +19,24 @@ namespace WikiExportTool
         {
             public string pageId;
             public string title;
+        }
+
+        public static void ExportCategories()
+        {
+            var list = new JArray();
+            foreach (string categoryName in GetAllCategories())
+            {
+                var pages = new JArray();
+                foreach (string pageId in GetCategoryPages(categoryName))
+                    pages.Add(pageId);
+
+                var categoryItem = new JObject();
+                categoryItem["name"] = categoryName;
+                categoryItem["pages"] = pages;
+                list.Add(categoryItem);
+            }
+
+            File.WriteAllText("categories.json", list.ToString(Newtonsoft.Json.Formatting.Indented), new UTF8Encoding(false));
         }
 
         public static List<string> GetAllCategories()

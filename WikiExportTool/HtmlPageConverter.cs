@@ -48,10 +48,12 @@ namespace WikiExportTool
 					searchIndex.keys[page.Title] = new List<int> { index };
             }
 
-			foreach (string categoryName in WikiExporter.GetAllCategories())
+            var categories = JArray.Parse(File.ReadAllText(Path.Combine(pagesPath, "categories.json"), new UTF8Encoding(false)));
+            foreach (JObject item in categories)
 			{
+				var categoryName = (string)item["name"];
 				var categoryItem = new ContentItem(categoryName, "");
-				foreach (string pageId in WikiExporter.GetCategoryPages(categoryName))
+				foreach (string pageId in item["pages"])
 				{
 					if (pages.ContainsKey(pageId))
 					{
@@ -78,7 +80,92 @@ namespace WikiExportTool
 			content.Append(page.Title);
 			content.Append("</h1>");
             content.Append("<content-view>");
-            content.Append(page.Content);
+			foreach (WikiToken token in WikiText.Parse(page.Content))
+			{
+				if (token.Type == WikiTextTokenType.Heading1)
+				{
+					content.Append("<h1>");
+					content.Append(token.Value);
+					content.Append("</h1>");
+				}
+				else if (token.Type == WikiTextTokenType.Heading2)
+				{
+					content.Append("<h2>");
+					content.Append(token.Value);
+					content.Append("</h2>");
+				}
+				else if (token.Type == WikiTextTokenType.Heading3)
+				{
+					content.Append("<h3>");
+					content.Append(token.Value);
+					content.Append("</h3>");
+				}
+				else if (token.Type == WikiTextTokenType.Heading4)
+				{
+					content.Append("<h4>");
+					content.Append(token.Value);
+					content.Append("</h4>");
+				}
+				else if (token.Type == WikiTextTokenType.Heading5)
+				{
+					content.Append("<h5>");
+					content.Append(token.Value);
+					content.Append("</h5>");
+				}
+				else if (token.Type == WikiTextTokenType.Heading6)
+				{
+					content.Append("<h6>");
+					content.Append(token.Value);
+					content.Append("</h6>");
+				}
+				else if (token.Type == WikiTextTokenType.Italic)
+				{
+					content.Append("<i>");
+					content.Append(token.Value);
+					content.Append("</i>");
+				}
+				else if (token.Type == WikiTextTokenType.Bold)
+				{
+					content.Append("<b>");
+					content.Append(token.Value);
+					content.Append("</b>");
+				}
+				else if (token.Type == WikiTextTokenType.BoldItalic)
+				{
+					content.Append("<b><i>");
+					content.Append(token.Value);
+					content.Append("</i></b>");
+				}
+				else if (token.Type == WikiTextTokenType.Comment)
+				{
+				}
+                else if (token.Type == WikiTextTokenType.Link)
+                {
+                    content.Append("<b>[[");
+                    content.Append(token.Value);
+                    content.Append("]]</b>");
+                }
+                else if (token.Type == WikiTextTokenType.Command)
+                {
+                    content.Append("<b>{{");
+                    content.Append(token.Value);
+                    content.Append("}}</b>");
+                }
+                else if (token.Type == WikiTextTokenType.XmlTagOpen)
+                {
+                }
+                else if (token.Type == WikiTextTokenType.XmlTagClose)
+                {
+                }
+                else if (token.Type == WikiTextTokenType.NewLine)
+                {
+                    content.Append("<p>");
+                }
+                else
+                {
+					content.Append(token.Value);
+				}
+            }
             content.Append("</content-view>");
 
             return PageHtml
@@ -249,15 +336,18 @@ a:hover { color: #0b434a; }
 
 .page {
 	margin: 15px;
+	font: 14px/20px ""Segoe UI"", ""Tahoma"", sans-serif;
+
+	h1 { margin: 15px 0; font-size: 1.2em; font-weight: bold; }
+	h2 { margin: 15px 0; font-size:1.1em; font-weight:bold; }
+	h3 { margin: 12px 0; font-weight: bold; }
+	ul { padding-left: 20px; }
+	p { margin: 12px 0; }
+	pre { white-space: pre-line; }
 
 	content-view {
-		h1 { margin: 15px 0; font-size: 1.2em; font-weight: bold; }
-		h2 { margin: 15px 0; font-size:1.1em; font-weight:bold; }
-		h3 { margin: 10px 0; font-weight: bold; }
-		ul { padding-left: 20px; }
-
-		white-space: pre-line;
-		line-height: 18px;
+		/* white-space: pre-line;
+		line-height: 18px;*/
 		/* font: 12px/16px ""Consolas"", ""Courier New"", sans-serif; */
 	}
 }

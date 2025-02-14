@@ -18,7 +18,7 @@ namespace WikiExportTool
         public static SortedDictionary<string, WikiPage> LoadPages(string path)
         {
             var pages = new SortedDictionary<string, WikiPage>();
-            foreach (string filename in Directory.GetFiles(path))
+            foreach (string filename in Directory.GetFiles(path, "*.xml"))
             {
                 XDocument pageXml = XDocument.Parse(File.ReadAllText(filename, Encoding.UTF8));
                 string ns = pageXml.Root.Name.NamespaceName;
