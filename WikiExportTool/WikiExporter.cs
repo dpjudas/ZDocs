@@ -20,6 +20,94 @@ namespace WikiExportTool
             public string title;
         }
 
+        public static List<string> GetAllCategories()
+        {
+            Console.Write("Retrieving category list from the wiki");
+
+            using (var client = new HttpClient())
+            {
+                string continueKey = "accontinue";
+                string continueValue = "";
+
+                var categories = new List<string>();
+
+                while (true)
+                {
+                    NameValueCollection queryString = System.Web.HttpUtility.ParseQueryString(string.Empty);
+                    queryString.Add("action", "query");
+                    queryString.Add("list", "allcategories");
+                    queryString.Add("format", "xml");
+                    queryString.Add("aclimit", "500");
+                    if (continueValue != "")
+                        queryString.Add(continueKey, continueValue);
+                    string url = apiUrl + queryString.ToString();
+
+                    XDocument doc = XDocument.Parse(client.GetStringAsync(url).Result);
+                    foreach (XElement item in doc.Element("api").Element("query").Element("allcategories").Elements("c"))
+                    {
+                        categories.Add(item.Value);
+                    }
+
+                    XElement continueElement = doc.Element("api").Element("continue");
+                    if (continueElement == null || string.IsNullOrEmpty(continueElement.Attribute("continue").Value))
+                        break;
+                    continueValue = continueElement.Attribute(continueKey).Value;
+
+                    Console.Write(".");
+
+                    // Don't rape the wiki while we do this
+                    Thread.Sleep(1000);
+                }
+
+                Console.WriteLine("");
+
+                return categories;
+            }
+        }
+
+        public static List<string> GetCategoryPages(string categoryName)
+        {
+            Console.WriteLine("Retrieving category members for '{0}' from the wiki", categoryName);
+
+            using (var client = new HttpClient())
+            {
+                string continueKey = "cmcontinue";
+                string continueValue = "";
+
+                var pages = new List<string>();
+
+                while (true)
+                {
+                    NameValueCollection queryString = System.Web.HttpUtility.ParseQueryString(string.Empty);
+                    queryString.Add("action", "query");
+                    queryString.Add("list", "categorymembers");
+                    queryString.Add("cmtitle", "Category: " + categoryName);
+                    queryString.Add("format", "xml");
+                    queryString.Add("cmlimit", "500");
+                    if (continueValue != "")
+                        queryString.Add(continueKey, continueValue);
+                    string url = apiUrl + queryString.ToString();
+
+                    XDocument doc = XDocument.Parse(client.GetStringAsync(url).Result);
+                    foreach (XElement item in doc.Element("api").Element("query").Element("categorymembers").Elements("cm"))
+                    {
+                        pages.Add(item.Attribute("pageid").Value);
+                    }
+
+                    XElement continueElement = doc.Element("api").Element("continue");
+                    if (continueElement == null || string.IsNullOrEmpty(continueElement.Attribute("continue").Value))
+                        break;
+                    continueValue = continueElement.Attribute(continueKey).Value;
+
+                    // Don't rape the wiki while we do this
+                    Thread.Sleep(1000);
+                }
+
+                return pages;
+            }
+        }
+
+
         static List<AllPagesItem> GetAllPages()
         {
             Console.Write("Retrieving page list from the wiki");

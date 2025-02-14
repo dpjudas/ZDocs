@@ -39,7 +39,6 @@ namespace WikiExportTool
 
 				string pageFilename = page.Id + ".html";
                 File.WriteAllText(pageFilename, CreatePageHtml(page), new UTF8Encoding(false));
-                contentList.Add(new ContentItem(page.Title, pageFilename));
 
 				int index = searchIndex.items.Count;
                 searchIndex.items.Add(new ContentItem(page.Title, pageFilename));
@@ -47,6 +46,24 @@ namespace WikiExportTool
 					searchIndex.keys[page.Title].Add(index);
 				else
 					searchIndex.keys[page.Title] = new List<int> { index };
+            }
+
+			foreach (string categoryName in WikiExporter.GetAllCategories())
+			{
+				var categoryItem = new ContentItem(categoryName, "");
+				foreach (string pageId in WikiExporter.GetCategoryPages(categoryName))
+				{
+					if (pages.ContainsKey(pageId))
+					{
+						WikiPage page = pages[pageId];
+						if (!page.Redirect)
+						{
+							string pageFilename = page.Id + ".html";
+							categoryItem.items.Add(new ContentItem(page.Title, pageFilename));
+						}
+					}
+                }
+                contentList.Add(categoryItem);
             }
 
             File.WriteAllText("index.html", IndexHtml, new UTF8Encoding(false));
@@ -170,7 +187,7 @@ h1, h2, h3, h4, h5 { font-family: inherit; font-weight: inherit; font-weight: in
 /***************************************************************************/
 /* base page style */
 
-body { background: white; font: 12px/16px ""Segoe UI"", ""Tahoma"", sans-serif; color: black; }
+body { background: #333; font: 12px/16px ""Segoe UI"", ""Tahoma"", sans-serif; color: #eee; }
 a, a:hover, a:visited { color: #157f8d; text-decoration: none; }
 a:hover { color: #0b434a; }
 
@@ -187,16 +204,17 @@ a:hover { color: #0b434a; }
 
 .sidepanel {
 	width: 300px;
-	background: rgb(240, 240, 240);
-	border-right: 1px solid rgb(200,200,200);
+	background: #555;
+	border-right: 1px solid #333;
 }
 
 .searchbox {
 	margin: 10px 10px 5px 10px;
 	padding: 2px 10px;
-	border: 1px solid #dddddd;
-	background: white;
+	border: 1px solid #666;
+	background: #333;
 	line-height: 25px;
+	color: #eee;
 }
 
 .searchbox:focus {
@@ -222,25 +240,25 @@ a:hover { color: #0b434a; }
 }
 
 .listviewitem-text:hover {
-	background: rgb(200,200,255);
+	background: rgb(60,60,130);
 }
 
 .content {
-	border-left: 1px solid rgb(255,255,255);
+	border-left: 1px solid #333;
 }
 
 .page {
 	margin: 15px;
 
-	h1 {
-		font-weight: bold;
-		margin: 15px 0;
-		font-size: 1.2em;
-	}
-
 	content-view {
+		h1 { margin: 15px 0; font-size: 1.2em; font-weight: bold; }
+		h2 { margin: 15px 0; font-size:1.1em; font-weight:bold; }
+		h3 { margin: 10px 0; font-weight: bold; }
+		ul { padding-left: 20px; }
+
 		white-space: pre-line;
-		font: 12px/16px ""Consolas"", ""Courier New"", sans-serif;
+		line-height: 18px;
+		/* font: 12px/16px ""Consolas"", ""Courier New"", sans-serif; */
 	}
 }
 
