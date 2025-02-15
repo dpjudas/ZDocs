@@ -75,6 +75,9 @@ namespace WikiExportTool
 
 		static string CreatePageHtml(WikiPage page)
 		{
+			int listItemDepth = 0;
+			int newlineCount = 0;
+
             var content = new StringBuilder();
 			content.Append("<h1>");
 			content.Append(page.Title);
@@ -82,6 +85,20 @@ namespace WikiExportTool
             content.Append("<content-view>");
 			foreach (WikiToken token in WikiText.Parse(page.Content))
 			{
+				if (newlineCount > 1 && token.Type != WikiTextTokenType.ListItem)
+				{
+                    while (listItemDepth > 0)
+                    {
+                        content.Append("</ul>");
+                        listItemDepth--;
+                    }
+                }
+
+                if (token.Type != WikiTextTokenType.NewLine)
+					newlineCount = 0;
+				else
+					newlineCount++;
+
 				if (token.Type == WikiTextTokenType.Heading1)
 				{
 					content.Append("<h1>");
@@ -141,9 +158,24 @@ namespace WikiExportTool
 				}
                 else if (token.Type == WikiTextTokenType.Link)
                 {
-                    content.Append("<b>[[");
-                    content.Append(token.Value);
-                    content.Append("]]</b>");
+					int splitter = token.Value.IndexOf('|');
+					string pageName;
+					string linkText;
+					if (splitter == -1)
+					{
+						pageName = token.Value;
+						linkText = token.Value;
+					}
+					else
+					{
+						pageName = token.Value.Substring(0, splitter);
+						linkText = token.Value.Substring(splitter + 1);
+					}
+					content.Append("<a href=\"");
+					content.Append(pageName);
+					content.Append("\">");
+                    content.Append(linkText);
+                    content.Append("</a>");
                 }
                 else if (token.Type == WikiTextTokenType.Command)
                 {
@@ -156,6 +188,20 @@ namespace WikiExportTool
                 }
                 else if (token.Type == WikiTextTokenType.XmlTagClose)
                 {
+                }
+                else if (token.Type == WikiTextTokenType.ListItem)
+                {
+					while (listItemDepth < token.Depth)
+					{
+                        content.Append("<ul>");
+                        listItemDepth++;
+                    }
+                    while (listItemDepth > token.Depth)
+                    {
+                        content.Append("</ul>");
+                        listItemDepth--;
+                    }
+                    content.Append("<li>");
                 }
                 else if (token.Type == WikiTextTokenType.NewLine)
                 {
@@ -275,8 +321,8 @@ h1, h2, h3, h4, h5 { font-family: inherit; font-weight: inherit; font-weight: in
 /* base page style */
 
 body { background: #333; font: 12px/16px ""Segoe UI"", ""Tahoma"", sans-serif; color: #eee; }
-a, a:hover, a:visited { color: #157f8d; text-decoration: none; }
-a:hover { color: #0b434a; }
+a, a:hover, a:visited { color: orange; text-decoration: none; }
+a:hover { color: orange; }
 
 /***************************************************************************/
 /* controls */
@@ -338,17 +384,15 @@ a:hover { color: #0b434a; }
 	margin: 15px;
 	font: 14px/20px ""Segoe UI"", ""Tahoma"", sans-serif;
 
-	h1 { margin: 15px 0; font-size: 1.2em; font-weight: bold; }
-	h2 { margin: 15px 0; font-size:1.1em; font-weight:bold; }
-	h3 { margin: 12px 0; font-weight: bold; }
+	h1 { margin: 15px 0; font-size: 1.3em; font-weight: bold; }
+	h2 { margin: 20px 0 15px 0; font-size: 1.2em; font-weight:bold; font-style: italic }
+	h3 { margin: 15px 0 10px 0; font-weight: bold; }
 	ul { padding-left: 20px; }
 	p { margin: 12px 0; }
 	pre { white-space: pre-line; }
 
 	content-view {
-		/* white-space: pre-line;
-		line-height: 18px;*/
-		/* font: 12px/16px ""Consolas"", ""Courier New"", sans-serif; */
+		line-height: 18px;
 	}
 }
 
@@ -513,6 +557,17 @@ function itemSelected(element, item) {
 	listviewItems.forEach(x => removeClass(x, ""selected""));
 	addClass(element, ""selected"");
 	content.setAttribute(""src"", item.src);
+
+	if (item.items != undefined) {
+		if (item.open) {
+			item.open = false;
+			item.childrenDiv.style.display = ""none"";
+		}
+		else {
+			item.open = true;
+			item.childrenDiv.style.display = """";
+		}
+	}
 }
 
 function addItem(parent, item, level) {
@@ -527,7 +582,11 @@ function addItem(parent, item, level) {
 	listviewItems.push(element);
 	parent.appendChild(element);
 	if (item.items != undefined) {
-		item.items.forEach(childitem => addItem(element, childitem, level + 1));
+		item.childrenDiv = document.createElement(""div"");
+		item.childrenDiv.style.display = ""none"";
+		item.open = false;
+		parent.appendChild(item.childrenDiv);
+		item.items.forEach(childitem => addItem(item.childrenDiv, childitem, level + 1));
 	}
 }
 

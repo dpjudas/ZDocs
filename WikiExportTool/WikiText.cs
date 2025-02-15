@@ -26,12 +26,14 @@ namespace WikiExportTool
         Heading6,
         Link, // [[ ]]
         Command, // {{ }}
+        ListItem,
     }
 
     internal class WikiToken
     {
         public WikiTextTokenType Type;
         public string Value;
+        public int Depth;
     }
 
     internal class WikiText
@@ -77,11 +79,20 @@ namespace WikiExportTool
                     if (CheckToken("===", "===", WikiTextTokenType.Heading3, text, ref i, ref lastpos, tokens)) continue;
                     if (CheckToken("==", "==", WikiTextTokenType.Heading2, text, ref i, ref lastpos, tokens)) continue;
                     if (CheckToken("=", "=", WikiTextTokenType.Heading1, text, ref i, ref lastpos, tokens)) continue;
-                }
 
-                if (text[i] == '*')
-                {
-                    // To do: list item
+                    if (text[i] == '*')
+                    {
+                        int depth = 1;
+                        while (i + depth < text.Length && text[i + depth] == '*')
+                            depth++;
+
+                        if (i != lastpos)
+                            tokens.Add(new WikiToken { Type = WikiTextTokenType.Text, Value = text.Substring(lastpos, i - lastpos) });
+                        tokens.Add(new WikiToken { Type = WikiTextTokenType.ListItem, Depth = depth });
+                        i += depth;
+                        lastpos = i;
+                        continue;
+                    }
                 }
 
                 if (text[i] == '<')
